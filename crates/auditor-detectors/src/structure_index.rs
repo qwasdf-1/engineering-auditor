@@ -7,6 +7,8 @@ use auditor_ast::{ControlRegionKind, ReferenceKind, SourceSpan, SymbolKind};
 use crate::ast_scan::{self, AstScan};
 use crate::{util, Language, SourceRole};
 
+#[path = "structure_batches.rs"]
+mod batches;
 #[path = "structure_build.rs"]
 mod build;
 #[path = "structure_declared_metrics.rs"]

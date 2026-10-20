@@ -168,7 +168,8 @@ Language contract: see [`language-support.md`](./language-support.md).
 Detects loop-dependent read queries through known database or repository
 receivers. The query arguments must reference the loop binding. Write methods,
 batch APIs, preloading/eager-loading calls, and queries independent of the loop
-are semantic negatives.
+are semantic negatives, and so is a query in a loop that walks batches, pages,
+or windows (see `per_item_external_io`).
 
 Evidence includes the proven receiver, query method and arguments, loop
 binding, exact spans, database-read effect, and query cost model.

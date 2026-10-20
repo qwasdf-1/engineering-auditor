@@ -62,6 +62,7 @@ fn effects_for_call(
                 function: function.name.clone(),
                 line: call.line,
                 loop_line: enclosing_loop.map(|loop_fact| loop_fact.span.start_line),
+                batched_loop: enclosing_loop.is_some_and(StructureLoop::walks_batches),
                 kind,
                 subject: effect_subject(kind, call, aliases, output.as_ref()),
                 loop_variant: input.as_deref().is_some_and(|expression| {
@@ -124,6 +125,7 @@ pub(super) fn inherited_effect(
         function: function.name.clone(),
         line: call.line,
         loop_line: enclosing_loop.map(|loop_fact| loop_fact.span.start_line),
+        batched_loop: enclosing_loop.is_some_and(StructureLoop::walks_batches),
         kind,
         subject: None,
         artifact: facts.artifact,
@@ -194,6 +196,7 @@ fn go_cache_effects(file: &StructureFile) -> Vec<SystemEffect> {
                 function: function.name.clone(),
                 line,
                 loop_line: None,
+                batched_loop: false,
                 kind,
                 subject: Some(subject.clone()),
                 loop_variant: false,

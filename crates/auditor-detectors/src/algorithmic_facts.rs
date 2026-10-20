@@ -643,6 +643,7 @@ fn collect_queries_in_loops(
         }
         let Some((loop_fact, binding)) =
             dependent_loop_binding(file, owner, call, &shape.arguments)
+                .filter(|(loop_fact, _)| !loop_fact.walks_batches())
         else {
             continue;
         };

@@ -212,7 +212,7 @@ pub(super) fn java_fact_capability_files(
         "per_item_external_io" => (
             "import java.net.URI;\nimport java.net.http.*;\nimport java.util.*;",
             "void fetchAll(List<String> urls, HttpClient client) throws Exception {\n        for (String url : urls) {\n            consume(client.send(HttpRequest.newBuilder(URI.create(url)).build(), HttpResponse.BodyHandlers.ofString()));\n        }\n    }",
-            "void fetchAll(String batch, HttpClient client) throws Exception {\n        consume(client.send(HttpRequest.newBuilder(URI.create(batch)).build(), HttpResponse.BodyHandlers.ofString()));\n    }",
+            "void fetchAll(String batch, HttpClient client) throws Exception {\n        consume(client.send(HttpRequest.newBuilder(URI.create(batch)).build(), HttpResponse.BodyHandlers.ofString()));\n    }\n\n    void fetchPages(List<String> pages, HttpClient client) throws Exception {\n        for (String page : pages) {\n            consume(client.send(HttpRequest.newBuilder(URI.create(page)).build(), HttpResponse.BodyHandlers.ofString()));\n        }\n    }",
         ),
         "repeated_expensive_initialization" => (
             "import java.util.*;\nimport java.util.regex.Pattern;",

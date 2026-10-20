@@ -296,3 +296,34 @@ fn a_nested_function_counts_its_own_nesting() {
     assert_eq!(deepest, Some(1));
     std::fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn loops_over_batches_pages_and_windows_walk_batches() {
+    let walks = |binding: &str, iterable: &str| {
+        StructureLoop {
+            owner: None,
+            binding: vec![binding.to_string()],
+            iterable: Some(iterable.to_string()),
+            iterable_span: None,
+            span: SourceSpan {
+                start_byte: 0,
+                end_byte: 0,
+                start_line: 1,
+                start_column: 0,
+                end_line: 1,
+                end_column: 0,
+            },
+            control_region: 0,
+        }
+        .walks_batches()
+    };
+    assert!(walks("purlBatch", "purls"));
+    assert!(walks("page", "range(10)"));
+    assert!(walks("group", "ids.chunks(100)"));
+    assert!(walks("part", "Lists.partition(ids, 100)"));
+    assert!(walks("part", "itertools.batched (ids, 50)"));
+    assert!(!walks("item", "items"));
+    assert!(!walks("pages_seen", "counts"));
+    assert!(!walks("part", "self.batches"));
+    assert!(!walks("part", "rechunks(ids)"));
+}

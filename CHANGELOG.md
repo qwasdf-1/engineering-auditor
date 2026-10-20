@@ -57,6 +57,12 @@ are unchanged.
   literal equal to the target's name (`api_key: "api_key"`). Target words
   are split on case too, so the existing suffixes (`_env`, `_header`, ..)
   now match camelCase targets.
+- `per_item_external_io` and `n_plus_one_query_in_loop` no longer report a
+  loop that already walks groups of items: a binding whose last word is
+  `batch`, `chunk`, `page`, `window`, `partition`, or `shard`, or an
+  iterable that calls a batching function (`chunks`, `chunked`, `batched`,
+  `partition`, `windows`, `paginate`, ..). This removes 5 findings from the
+  46-repository corpus, all one request per batch or per page.
 - `hot_path_linear_membership` reads a Python set or dict display or
   comprehension by its outer braces, so
   `{(e["path"], e["kind"]) for e in rows.get("allow", [])}` is a set even

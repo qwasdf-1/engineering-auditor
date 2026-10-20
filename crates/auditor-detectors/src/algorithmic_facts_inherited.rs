@@ -119,7 +119,8 @@ fn repeated(
         }
         Operation::Query { receiver, method } => {
             let arguments = bound_arguments(site, &carried.params)?;
-            let (loop_fact, binding) = dependent_loop_binding(file, owner, call, &arguments)?;
+            let (loop_fact, binding) = dependent_loop_binding(file, owner, call, &arguments)
+                .filter(|(loop_fact, _)| !loop_fact.walks_batches())?;
             Some(AlgorithmicFactKind::QueryInLoop {
                 receiver: receiver.clone(),
                 method: method.clone(),

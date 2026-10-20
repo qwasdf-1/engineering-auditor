@@ -461,7 +461,7 @@ fn systems_capability_files(
         ("blocking_io_in_async_context", _, true) => "async function load() { consume(fs.readFileSync('input')) }\n",
         ("blocking_io_in_async_context", _, false) => "function load() { consume(fs.readFileSync('input')) }\n",
         ("per_item_external_io", "python", true) => "def fetch_all(ids, client):\n    for item_id in ids:\n        consume(client.get(item_id))\n",
-        ("per_item_external_io", "python", false) => "def fetch_all(ids, client):\n    response = client.get(ids)\n    for item in response:\n        consume(item)\n",
+        ("per_item_external_io", "python", false) => "def fetch_all(ids, client):\n    response = client.get(ids)\n    for item in response:\n        consume(item)\n    for batch in chunked(ids, 100):\n        consume(client.get(batch))\n    for page in range(10):\n        consume(client.get(page))\n",
         ("per_item_external_io", _, true) => "function fetchAll(ids) { for (const id of ids) consume(fetch(id)) }\n",
         ("per_item_external_io", _, false) => "function fetchAll(ids) { const response = fetch(ids); for (const item of response) consume(item) }\n",
         ("repeated_expensive_initialization", "python", true) => "import re\ndef validate(items):\n    for item in items:\n        parser = re.compile('[a-z]+')\n        consume(parser, item)\n",
@@ -693,7 +693,7 @@ fn cross_collection_source(language: &str, positive: bool) -> Option<String> {
 fn n_plus_one_source(language: &str, positive: bool) -> Option<String> {
     let source = match (language, positive) {
         ("python", true) => "def load(ids: list[int], repo: Repository):\n    for item_id in ids:\n        consume(repo.find_by_id(item_id))\n",
-        ("python", false) => "def load(ids: list[int], repo: Repository):\n    consume(repo.find_many(ids))\n",
+        ("python", false) => "def load(ids: list[int], repo: Repository):\n    consume(repo.find_many(ids))\n    for chunk in chunked(ids, 50):\n        consume(repo.find_by_id(chunk))\n",
         ("javascript", true) => "function load(ids, repo) { for (const id of ids) consume(repo.find_by_id(id)) }\n",
         ("javascript", false) => "function load(ids, repo) { consume(repo.find_many(ids)) }\n",
         _ => return None,

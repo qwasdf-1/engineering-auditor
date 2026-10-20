@@ -134,6 +134,11 @@ Reports external network or repository I/O whose arguments depend on the active
 loop binding. Batched calls, writes, invariant calls, and local computation are
 excluded. Database/repository read queries owned by
 `n_plus_one_query_in_loop` remain disjoint.
+A loop that already walks groups of items is excluded too: its binding's
+last word is `batch`, `chunk`, `page`, `window`, `partition`, or `shard`
+(`purlBatch`, `page`), or its iterable calls a batching function (`chunks`,
+`chunked`, `batched`, `partition`, `windows`, `paginate`, ..). One operation
+per group is the batched form.
 
 ### `repeated_expensive_initialization`
 

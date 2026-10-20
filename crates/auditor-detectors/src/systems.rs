@@ -198,7 +198,7 @@ pub(crate) fn blocking_io_in_async_context_findings(index: &SystemsIndex) -> Vec
 
 pub(crate) fn per_item_external_io_findings(index: &SystemsIndex) -> Vec<Finding> {
     distinct_effects(index, |effect| {
-        effect.loop_line.is_some() && effect.kind == EffectKind::ExternalIo
+        effect.loop_line.is_some() && effect.kind == EffectKind::ExternalIo && !effect.batched_loop
     })
     .into_iter()
     .map(|effect| {

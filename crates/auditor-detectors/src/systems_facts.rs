@@ -61,6 +61,8 @@ pub(crate) struct SystemEffect {
     pub(crate) value_lineage: Option<String>,
     /// The artifact or constructor input depends on the enclosing loop variable.
     pub(crate) loop_variant: bool,
+    /// The enclosing loop handles a batch, chunk, page, or window per pass.
+    pub(crate) batched_loop: bool,
     pub(crate) operation: String,
     pub(crate) in_async: bool,
     pub(crate) in_hot_path: bool,
