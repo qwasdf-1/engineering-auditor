@@ -1,7 +1,9 @@
 name: Ecosystem
 
 # Opt-in precision and churn check: scans the pinned ecosystem corpus with two
-# Engineering Auditor revisions and uploads the per-detector diff.
+# Engineering Auditor revisions, uploads the per-detector diff, and fails when
+# the new revision leaves more files of any language unparsed than
+# eval/ecosystem/syntax.json allows.
 on:
   workflow_dispatch:
     inputs:
@@ -34,6 +36,11 @@ jobs:
         run: >-
           python3 tooling/ecosystem/run.py compare
           --rev-a "${{ inputs.base }}" --rev-b HEAD
+
+      - name: Check syntax coverage
+        run: >-
+          python3 tooling/ecosystem/run.py syntax-check
+          "$(git rev-parse --short=12 HEAD)"
 
       - name: Upload results
         if: always()

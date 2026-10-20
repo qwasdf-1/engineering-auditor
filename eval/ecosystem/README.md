@@ -43,6 +43,21 @@ never moves another detector's standing. Labels from both slices share each
 detector's label file; `precision` takes both scan labels so neither slice's
 labels read as stale.
 
+## Syntax coverage
+
+A scan's `summary.json` counts, per language, the files whose syntax tree
+has errors: `recovered` (structural detectors read them without the
+declarations holding the errors) and `unparsed` (they skip them).
+`syntax.json` records those counts for each slice, and
+`run.py syntax-check <label>` fails when any language's unparsed count rises
+above it; the Ecosystem workflow runs it on the new revision. After a change
+that parses more files, record the improvement:
+
+```sh
+python3 tooling/ecosystem/run.py syntax-check <label> --write
+python3 tooling/ecosystem/run.py syntax-check <label> --slice applications --write
+```
+
 ## Precision labels
 
 `labels/<detector>.json` holds adjudicated samples keyed by finding-ID v3

@@ -12,6 +12,8 @@ findings, so the slice never moves another detector's standing.
   diff A B           compare two scan labels per detector and repository
   compare --rev-a X --rev-b Y
                      build both revisions, scan the corpus with each, and diff
+  syntax-check L     fail if scan L leaves more files of any language unparsed
+                     than eval/ecosystem/syntax.json allows (`--write` records)
 
 Checkouts, builds, and results live under $EA_ECOSYSTEM_CACHE (default
 target/ecosystem). Checkouts are depth-1, so history-dependent detectors such
@@ -27,6 +29,10 @@ import sys
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tooling.ecosystem import syntax_coverage  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = REPO_ROOT / "eval" / "ecosystem" / "manifest.json"
@@ -117,6 +123,7 @@ def summarize(reports) -> dict:
         })
     return {
         "repositories": repositories,
+        "syntax": syntax_coverage.syntax_summary(report for _, report in reports.values()),
         "by_detector": {
             detector: {
                 "total": entry["total"],
@@ -307,6 +314,10 @@ def main(argv=None) -> int:
                                           default=REPO_ROOT / "target" / "release" / "auditor")
     commands.choices["compare"].add_argument("--rev-a", required=True)
     commands.choices["compare"].add_argument("--rev-b", required=True)
+    syntax = commands.add_parser("syntax-check")
+    syntax.add_argument("label")
+    syntax.add_argument("--slice", choices=sorted(SLICES), default="library")
+    syntax.add_argument("--write", action="store_true", help="record the scan as the baseline")
     diff = commands.add_parser("diff")
     diff.add_argument("label_a")
     diff.add_argument("label_b")
@@ -314,6 +325,9 @@ def main(argv=None) -> int:
 
     if args.command == "diff":
         return run_diff(args.label_a, args.label_b)
+    if args.command == "syntax-check":
+        summary = json.loads((cache_root() / "results" / args.label / "summary.json").read_text(encoding="utf-8"))
+        return syntax_coverage.check(summary, args.slice, args.write)
     repositories = load_manifest(args.only, args.slice)
     if args.command == "fetch":
         fetch(repositories)

@@ -4,6 +4,11 @@
 
 ### Added
 
+- The ecosystem runner records per-language syntax coverage (files
+  recovered from syntax errors, and files still unparsed) in each scan
+  summary. `run.py syntax-check` fails when a scan leaves more files of any
+  language unparsed than `eval/ecosystem/syntax.json` allows, and the
+  Ecosystem workflow runs it.
 - `per_item_external_io` and `blocking_io_in_async_context` follow calls into
   repository functions: a call inherits the external-I/O and blocking-I/O
   effects of the function it invokes, through up to four calls. Findings
