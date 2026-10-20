@@ -639,6 +639,66 @@ These are not fixed. They drove the Task 8 profile decisions (see
   (vendored docopt's help exit), `unused_assignment` in C++ (yaml-cpp's
   `util/` and `contrib/`), and `stringly_typed_parameter` in Python and
   TypeScript (`mode` mirroring `open()`, a media-type value).
+- **Found by the Semgrep comparison (2026-10-20).** `sql_injection` reports
+  SQL formatted from identifiers it cannot parameterize: a configured schema
+  name and constant table names (all 17 corpus findings, mostly
+  dependency-track's v4 migrator), and a constant template macro.
+  `unsafe_deserialization` reports `yaml.load(.., Loader=yaml.SafeLoader)`.
+  `random_for_security` reports test-data generators, multipart boundaries,
+  and cache-busting values (2 of 20 sampled are true positives).
+  `shell_execution` reports uptime-kuma's `extra/` release scripts, which
+  the source-role rules classify as production.
+
+## Comparison with Semgrep
+
+**Provisional.** One model labelled these findings (`model:claude-opus-5-5`)
+without corroboration, so the counts are not part of the precision results
+above.
+
+Semgrep 1.181.0 ran with the free registry rulesets `p/default`, `p/secrets`,
+and the Python, JavaScript, TypeScript, Java, Go, Rust, C, C#, and Kotlin
+packs (metrics off) over the 46 corpus checkouts: the 40 pinned repositories
+and six applications (apprise, dependency-track, hoppscotch, lychee,
+miniflux, uptime-kuma). It reported 1,768 findings, 1,767 of them security
+rules; 699 are GitHub Actions and 173 HTML rules, which no Engineering Auditor
+detector covers. Engineering Auditor reported 14,187 findings, of which
+Semgrep's free rules have no counterpart for the structural, algorithmic,
+systems, optimization, and test-quality detectors.
+
+Six Engineering Auditor detectors overlap with Semgrep rule families.
+Findings within three lines in the same file count as agreement. Labels
+follow the verdict standard above, applied to each tool's own claim; a
+Semgrep finding outside production code (88 of 95 deserialization and 89 of
+97 credential findings are in tests and examples) is out of scope and not
+counted.
+
+| Detector | Agreed (TP / FP) | Engineering Auditor only (TP / FP) | Semgrep only, production (TP / FP) |
+|---|---|---|---|
+| `eval_in_production` | 5 / 0 | 2 / 0 (hoppscotch's script sandbox) | none |
+| `unsafe_deserialization` | 4 / 0 | 0 / 1 (`SafeLoader`) | 0 / 6 (pickle dumps, own in-memory data) |
+| `hardcoded_credential` | none | 1 / 0 (a PostHog key in backend code) | 1 / 5 (a logged access token; a dummy bcrypt hash, a protocol-mandated MD5) |
+| `shell_execution` | 1 / 6 (release scripts) | 3 / 10 (fmt's `std::system(format(..))`, two server execs; release scripts) | 0 / 8 (literal commands, an Action's own inputs) |
+| `sql_injection` | none | 0 / 17 (identifiers) | 0 / 8, 1 unclear (Dapper internals, a configured-query monitor) |
+| `random_for_security` | none | 2 / 17, 1 unclear, of 81 sampled 20 (zlib's PKWARE header, a digest-auth nonce) | none in production |
+
+On the overlap, neither tool is precise: excluding `random_for_security`,
+Engineering Auditor's labelled findings are 16 true positives of 50, and
+Semgrep's 11 of 44. Engineering Auditor's unique true positives (8, among
+them a format-string shell command in fmt and a weak random source in
+zlib's encryption) outnumber Semgrep's (1, an access token written to a
+debug log, a check Engineering Auditor lacks). Semgrep's value here is
+breadth outside source code (CI configuration, HTML) and fixtures;
+Engineering Auditor's is the catalog beyond security. Each checkout was
+scanned with:
+
+```sh
+semgrep scan --metrics=off --disable-version-check --timeout 30 --json \
+  --config p/default --config p/secrets --config p/python \
+  --config p/javascript --config p/typescript --config p/java \
+  --config p/golang --config p/rust --config p/c --config p/csharp \
+  --config p/kotlin --output <repo>.json <checkout>
+```
+
 ## Known Limitations
 
 - **Finding-ID ordinals.** Same-named functions in one file (Java `process`
