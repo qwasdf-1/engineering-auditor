@@ -14,17 +14,18 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
   through at most four calls. Calls on values whose type is unknown, such as
   methods of an injected service (`this.userService.find(..)`), are never
   followed, so the work such a call does stays hidden.
-- A file whose syntax tree contains any error gets no structural analysis:
-  no structural, algorithmic, systems, or optimization findings, and no
-  symbols in the repository graph. Lexical and complexity metrics still run.
-  The scan report does not yet list these files. TypeScript sources the
-  TypeScript grammar rejects are re-parsed as TSX. On the 46-repository
-  corpus, 595 of 17,185 files (3.5%) are still skipped. Most are C and C++
-  files using macros the macro blanking does not cover (31% of the corpus's
-  C files and 27% of its C++); the rest are C# with
-  `#if` branches that split a declaration, and newer syntax that the
-  grammars do not read yet: Java record patterns, TypeScript variance
-  annotations and `export type *`, and Kotlin annotated function types.
+- A file with syntax errors is analyzed without the declarations that hold
+  them: each erroneous top-level item or type member is quarantined (blanked
+  and parsed again), and structural detectors see the rest. Findings inside
+  a quarantined declaration are missed, and a file is skipped entirely when
+  recovery would quarantine half of it or errors remain. The report marks
+  such files `recovered` or `unparsed`. On the 46-repository corpus, 361
+  files are recovered (about 10% of their bytes quarantined) and 234 of
+  17,185 are still skipped. Most of both are C and C++ files whose macros
+  the macro handling does not expand; the rest are C# `#if` branches that
+  split a declaration, and syntax that the grammars do not read yet (Java
+  record patterns, TypeScript variance annotations and `export type *`,
+  Kotlin annotated function types).
 - Reflection, plugin loading, and entry points defined outside the scanned
   code are not resolved, so reachability findings such as `dead_code` and
   `orphan_symbol` exclude what they cannot prove.

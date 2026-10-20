@@ -109,6 +109,7 @@ pub use repository_graph::{
 };
 use scan_filters::{
     analysis_files, check_catalog_contract, finding_matches_changed_scope, invalid_detector_output,
+    mark_syntax,
 };
 pub(crate) use source_discovery::{
     discover_audited_files_with_filter, generated_vs_source_findings, AuditedFile,
@@ -622,7 +623,7 @@ fn analyze_repository_run(
                 .map_or(true, |path| !excluded.contains(&path))
         });
     }
-    let analysis_files = analysis_files(&files, method);
+    let mut analysis_files = analysis_files(&files, method);
     files.sort_by(|left, right| {
         (source_role_rank(left.role), &left.relative)
             .cmp(&(source_role_rank(right.role), &right.relative))
@@ -662,6 +663,7 @@ fn analyze_repository_run(
         .map(|output| run.write_repository_map(&files, output, profile))
         .transpose()?;
     run.verify_indexes_released()?;
+    mark_syntax(&mut analysis_files, &files, &run.context.repo_ast);
     let mut findings = run.into_findings(&request.scope);
     findings.retain(|finding| {
         registry::detector_spec(&finding.detector).is_none_or(|spec| {

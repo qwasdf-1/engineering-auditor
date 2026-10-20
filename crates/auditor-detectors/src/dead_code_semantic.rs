@@ -65,14 +65,21 @@ pub(super) fn reference_counts(
                     *references.entry(name.to_string()).or_insert(0) += 1;
                 }
             }
-            for attribute in ast_scan::nodes_of_kind(
+            // A declaration quarantined for a syntax error may still use a
+            // definition; its words count, so recovery cannot orphan one.
+            let quarantined = tree
+                .quarantined()
+                .iter()
+                .flat_map(|quarantine| util::identifiers(&quarantine.text));
+            let attributes = ast_scan::nodes_of_kind(
                 tree.root_node(),
                 &["attribute_item", "inner_attribute_item"],
-            ) {
-                for identifier in util::identifiers(attribute.text()) {
-                    if names.contains(identifier.as_str()) {
-                        *references.entry(identifier).or_insert(0) += 1;
-                    }
+            )
+            .into_iter()
+            .flat_map(|attribute| util::identifiers(attribute.text()));
+            for identifier in quarantined.chain(attributes) {
+                if names.contains(identifier.as_str()) {
+                    *references.entry(identifier).or_insert(0) += 1;
                 }
             }
         },

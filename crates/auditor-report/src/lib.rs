@@ -266,6 +266,10 @@ pub struct AnalysisCoverage {
     pub exact_fact_spans: usize,
     pub external_inputs: usize,
     pub graph_complete: bool,
+    /// Files parsed only after quarantining declarations with syntax errors.
+    pub syntax_recovered_files: usize,
+    /// Files whose syntax errors kept them out of structural analysis.
+    pub syntax_unparsed_files: usize,
 }
 
 #[derive(Clone, Debug)]
@@ -503,7 +507,17 @@ fn analysis_coverage(report: &AuditReport) -> AnalysisCoverage {
         exact_fact_spans: 0,
         external_inputs: report.external_inputs.len(),
         graph_complete: false,
+        syntax_recovered_files: syntax_count(report, "recovered"),
+        syntax_unparsed_files: syntax_count(report, "unparsed"),
     }
+}
+
+fn syntax_count(report: &AuditReport, status: &str) -> usize {
+    report
+        .files
+        .iter()
+        .filter(|file| file.syntax.as_deref() == Some(status))
+        .count()
 }
 
 fn analysis_contract_digest(report: &AuditReport) -> String {
@@ -639,6 +653,7 @@ mod tests {
                 source_role: "production".to_string(),
                 analysis_method: "ast".to_string(),
                 extractor_version: 1,
+                syntax: None,
             }],
             vec![detector()],
             vec![CapabilityExecution {

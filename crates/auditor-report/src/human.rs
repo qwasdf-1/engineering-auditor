@@ -180,6 +180,14 @@ fn coverage_section(report: &AuditReport) -> MarkdownSection {
         ("Repository findings", coverage.repository_findings),
         ("Exact fact spans", coverage.exact_fact_spans),
         ("External inputs", coverage.external_inputs),
+        (
+            "Files recovered from syntax errors",
+            coverage.syntax_recovered_files,
+        ),
+        (
+            "Files skipped for syntax errors",
+            coverage.syntax_unparsed_files,
+        ),
     ]));
     fields.extend([
         field("Evidence graph complete", coverage.graph_complete),

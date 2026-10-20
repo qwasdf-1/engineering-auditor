@@ -198,3 +198,53 @@ fn typescript_sources_with_jsx_parse_through_the_tsx_grammar() {
         .root_node()
         .has_error());
 }
+
+fn function_names(tree: &AstTree) -> Vec<String> {
+    tree.function_spans()
+        .iter()
+        .map(|span| span.name.clone())
+        .collect()
+}
+
+#[test]
+fn declarations_with_syntax_errors_are_quarantined_in_a_recovered_tree() {
+    let source = "int clean(int a) {\n  return a + 1;\n}\n\nint broken(int a) {\n  return a +* ;\n}\n\nint after(int b) {\n  return b;\n}\n";
+    let tree = parser().parse(&AstLang::C, source).unwrap();
+    // The tree as written keeps its errors for owners that tolerate them.
+    assert!(tree.root_node().has_error());
+    assert!(tree.quarantined().is_empty());
+    let recovered = tree.error_free().expect("recoverable");
+    assert!(!recovered.root_node().has_error());
+    assert_eq!(function_names(recovered), ["clean", "after"]);
+    let quarantined = recovered.quarantined();
+    assert_eq!(quarantined.len(), 1);
+    assert_eq!((quarantined[0].start_line, quarantined[0].end_line), (5, 7));
+    assert!(quarantined[0].text.starts_with("int broken"));
+    // Offsets and lines are kept: `after` is still on line 9.
+    assert_eq!(recovered.function_spans()[1].start_line, 9);
+    assert_eq!(recovered.source().len(), source.len());
+}
+
+#[test]
+fn a_function_split_by_an_error_is_quarantined_whole() {
+    let source = "int clean(int a) {\n  int total = a * 2 + 1;\n  if (total > 10) {\n    total -= 10;\n  }\n  return total;\n}\n\nint other(int a) {\n  int total = a * 3 + 1;\n  while (total > 10) {\n    total -= 10;\n  }\n  return total;\n}\n\nint split(int a) {\n  int b = 0;\n#ifdef WIDE\n  if (a) {\n#else\n  if (!a) {\n#endif\n    b = 1;\n  }\n  return b;\n}\n";
+    let tree = parser().parse(&AstLang::C, source).unwrap();
+    assert!(tree.root_node().has_error());
+    let recovered = tree.error_free().expect("recoverable");
+    assert_eq!(function_names(recovered), ["clean", "other"]);
+    for quarantine in recovered.quarantined() {
+        for span in recovered.function_spans().iter() {
+            assert!(
+                span.end_byte <= quarantine.start_byte || quarantine.end_byte <= span.start_byte
+            );
+        }
+    }
+}
+
+#[test]
+fn a_source_mostly_in_error_is_not_recovered() {
+    let source = "int clean(void) { return 0; }\n@@@ ### $$$ %%% ^^^ &&& *** ((( ))) {{{ }}} [[[ ]]] !!! ~~~ \n";
+    let tree = parser().parse(&AstLang::C, source).unwrap();
+    assert!(tree.root_node().has_error());
+    assert!(tree.error_free().is_none());
+}

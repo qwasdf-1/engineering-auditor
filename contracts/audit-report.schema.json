@@ -132,7 +132,8 @@
         "bytes": { "type": "integer", "minimum": 0 },
         "source_role": { "$ref": "#/$defs/source_role" },
         "analysis_method": { "enum": ["auto", "ast", "token"] },
-        "extractor_version": { "type": "integer", "minimum": 1 }
+        "extractor_version": { "type": "integer", "minimum": 1 },
+        "syntax": { "enum": ["recovered", "unparsed"] }
       }
     },
     "language_support": {
@@ -367,7 +368,9 @@
         "repository_findings": { "type": "integer", "minimum": 0 },
         "exact_fact_spans": { "type": "integer", "minimum": 0 },
         "external_inputs": { "type": "integer", "minimum": 0 },
-        "graph_complete": { "type": "boolean" }
+        "graph_complete": { "type": "boolean" },
+        "syntax_recovered_files": { "type": "integer", "minimum": 0 },
+        "syntax_unparsed_files": { "type": "integer", "minimum": 0 }
       }
     },
     "external_input": {

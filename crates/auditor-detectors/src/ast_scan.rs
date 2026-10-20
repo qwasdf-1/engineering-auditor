@@ -81,9 +81,11 @@ pub(crate) fn visit_ast_files(
         else {
             continue;
         };
-        if tree.root_node().has_error() {
+        // A tree with syntax errors is visited as recovered, without the
+        // declarations holding them, or not at all.
+        let Some(tree) = tree.error_free() else {
             continue;
-        }
+        };
         visit(file, tree, language);
     }
 }
@@ -116,8 +118,8 @@ pub(crate) fn map_ast_files<'files, R: Send>(
     let parsed: Vec<_> = eligible
         .into_iter()
         .filter_map(|(file, language, _)| {
-            let tree = repo_ast.get(&file.absolute)?;
-            (!tree.root_node().has_error()).then_some((file, tree, language))
+            let tree = repo_ast.get(&file.absolute)?.error_free()?;
+            Some((file, tree, language))
         })
         .collect();
     auditor_core::parallel_map(&parsed, |(file, tree, language)| map(file, tree, *language))

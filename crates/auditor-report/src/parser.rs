@@ -249,7 +249,16 @@ fn parse_analysis_coverage(object: &Map<String, Value>) -> Result<crate::Analysi
             .get("graph_complete")
             .and_then(Value::as_bool)
             .ok_or_else(|| "analysis_coverage requires boolean graph_complete".to_string())?,
+        syntax_recovered_files: optional_count(coverage, "syntax_recovered_files"),
+        syntax_unparsed_files: optional_count(coverage, "syntax_unparsed_files"),
     })
+}
+
+fn optional_count(object: &Map<String, Value>, key: &str) -> usize {
+    object
+        .get(key)
+        .and_then(Value::as_u64)
+        .map_or(0, |count| count as usize)
 }
 
 fn parse_external_inputs(object: &Map<String, Value>) -> Result<Vec<crate::ExternalInput>, String> {

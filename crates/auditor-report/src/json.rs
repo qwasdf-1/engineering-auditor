@@ -120,7 +120,7 @@ fn coverage_value(report: &AuditReport) -> Value {
     .into_iter()
     .map(|(key, value)| (key.to_string(), json!(value)))
     .collect::<Map<_, _>>();
-    json!({
+    let mut value = json!({
         "capability_modes": capability_modes,
         "detector_language_claims": coverage.detector_language_claims,
         "exact_fact_spans": coverage.exact_fact_spans,
@@ -132,7 +132,16 @@ fn coverage_value(report: &AuditReport) -> Value {
         "repository_findings": coverage.repository_findings,
         "requested_method": coverage.requested_method,
         "source_files": coverage.source_files,
-    })
+    });
+    for (key, count) in [
+        ("syntax_recovered_files", coverage.syntax_recovered_files),
+        ("syntax_unparsed_files", coverage.syntax_unparsed_files),
+    ] {
+        if count > 0 {
+            value[key] = json!(count);
+        }
+    }
+    value
 }
 
 fn baseline_value(report: &AuditReport) -> Value {
@@ -177,7 +186,7 @@ fn detector_value(detector: &DetectorReport) -> Value {
 }
 
 fn file_value(file: &FileReport) -> Value {
-    json!({
+    let mut value = json!({
         "analysis_method": file.analysis_method,
         "bytes": file.bytes,
         "catalog_language": file.catalog_language,
@@ -185,7 +194,11 @@ fn file_value(file: &FileReport) -> Value {
         "language": file.language,
         "path": file.path,
         "source_role": file.source_role,
-    })
+    });
+    if let Some(syntax) = &file.syntax {
+        value["syntax"] = json!(syntax);
+    }
+    value
 }
 
 fn external_input_value(input: &ExternalInput) -> Value {

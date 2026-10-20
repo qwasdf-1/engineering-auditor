@@ -57,6 +57,19 @@ are unchanged.
 
 ### Fixed
 
+- A file with syntax errors is no longer dropped from structural analysis.
+  Each top-level item or type member holding an error is quarantined:
+  blanked with spaces, keeping every offset and line, and the source is
+  parsed again until it parses cleanly, with every remaining function whole.
+  Structural, algorithmic, systems, and optimization detectors analyze the
+  recovered tree; complexity owners keep reading the tree as written. A file
+  is skipped only when recovery would quarantine half of it. Report files
+  carry an optional `syntax` (`recovered` or `unparsed`), and
+  `analysis_coverage` adds optional `syntax_recovered_files` and
+  `syntax_unparsed_files`. On the 46-repository corpus, 361 more files get
+  structural analysis, adding 599 findings (two of them real N+1 queries in
+  dependency-track); six clone findings change ID because a recovered file
+  joins their clone class. 234 files are still skipped.
 - TypeScript sources the TypeScript grammar rejects are re-parsed with the
   TSX grammar, so `.tsx` files with JSX get structural analysis instead of
   being skipped. On the 46-repository corpus, 247 of the 268 TypeScript

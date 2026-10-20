@@ -6,6 +6,8 @@ mod complexity;
 mod extract;
 mod languages;
 mod macro_blanking;
+mod parse;
+mod quarantine;
 mod semantic;
 
 pub use complexity::{
@@ -19,6 +21,7 @@ pub use extract::{
 pub use languages::function_node_kinds;
 pub use languages::AstLang;
 pub use languages::SUPPORTED_LANGUAGES;
+pub use quarantine::Quarantine;
 pub use semantic::{
     AssignmentFact, CallFact, ControlRegionFact, ControlRegionKind, ImportFact, LiteralFact,
     LoopFact, ReferenceFact, ReferenceKind, SemanticFileFacts, SourceSpan, SymbolFact, SymbolKind,
@@ -26,70 +29,6 @@ pub use semantic::{
 
 pub struct AstParser {
     parser: Parser,
-}
-
-impl AstParser {
-    pub fn new() -> Result<Self, String> {
-        let mut parser = Parser::new();
-        let lang = languages::get_language(&AstLang::Rust)?;
-        parser
-            .set_language(&lang)
-            .map_err(|e| format!("failed to set language: {e}"))?;
-        Ok(Self { parser })
-    }
-
-    pub fn parse(&mut self, lang: &AstLang, source: &str) -> Result<AstTree, String> {
-        self.parse_shared(lang, Arc::<str>::from(source))
-    }
-
-    pub fn parse_shared(&mut self, lang: &AstLang, source: Arc<str>) -> Result<AstTree, String> {
-        let language = languages::get_language(lang)?;
-        self.parser
-            .set_language(&language)
-            .map_err(|e| format!("failed to set language: {e}"))?;
-        let parsed = if matches!(lang, AstLang::C | AstLang::Cpp) {
-            macro_blanking::blank_macros(&source, *lang == AstLang::Cpp)
-        } else {
-            std::borrow::Cow::Borrowed(source.as_ref())
-        };
-        let mut tree = self
-            .parser
-            .parse(parsed.as_ref(), None)
-            .ok_or_else(|| "failed to parse source".to_string())?;
-        if tree.root_node().has_error() {
-            if let Some(alternate) = self.parse_alternate(lang, parsed.as_ref())? {
-                tree = alternate;
-            }
-        }
-        Ok(AstTree {
-            tree,
-            source,
-            language: *lang,
-            function_spans: OnceLock::new(),
-            semantic_facts: OnceLock::new(),
-        })
-    }
-}
-
-impl AstParser {
-    /// The tree of `lang`'s alternate grammar, when it parses `source`
-    /// without error: TypeScript sources are often TSX.
-    fn parse_alternate(
-        &mut self,
-        lang: &AstLang,
-        source: &str,
-    ) -> Result<Option<tree_sitter::Tree>, String> {
-        let Some(language) = languages::alternate_language(lang) else {
-            return Ok(None);
-        };
-        self.parser
-            .set_language(&language)
-            .map_err(|e| format!("failed to set language: {e}"))?;
-        Ok(self
-            .parser
-            .parse(source, None)
-            .filter(|tree| !tree.root_node().has_error()))
-    }
 }
 
 /// Repository-wide AST cache. Parsed trees are cached by file path and reused
@@ -167,6 +106,12 @@ pub struct AstTree {
     tree: Tree,
     source: Arc<str>,
     language: AstLang,
+    /// Declarations blanked to recover this tree from a source with syntax
+    /// errors; empty for a tree of the source as written.
+    quarantined: Vec<Quarantine>,
+    /// For a tree with syntax errors, the tree recovered without the
+    /// declarations holding them, when recovery succeeds.
+    recovered: Option<Box<AstTree>>,
     function_spans: OnceLock<Arc<[FunctionSpan]>>,
     semantic_facts: OnceLock<Arc<SemanticFileFacts>>,
 }
@@ -180,8 +125,26 @@ impl AstTree {
         }
     }
 
+    /// The source the tree was parsed from; in a recovered tree, with the
+    /// quarantined declarations blanked.
     pub fn source(&self) -> &str {
         &self.source
+    }
+
+    /// The declarations removed to recover this tree from syntax errors.
+    pub fn quarantined(&self) -> &[Quarantine] {
+        &self.quarantined
+    }
+
+    /// This tree when it has no syntax error, else the tree recovered
+    /// without the declarations holding its errors, if recovery succeeded.
+    /// Owners that need a whole, error-free tree read this one.
+    pub fn error_free(&self) -> Option<&AstTree> {
+        if self.tree.root_node().has_error() {
+            self.recovered.as_deref()
+        } else {
+            Some(self)
+        }
     }
 
     pub fn shared_source(&self) -> Arc<str> {

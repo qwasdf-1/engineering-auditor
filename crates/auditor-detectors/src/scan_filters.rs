@@ -38,8 +38,36 @@ pub(super) fn analysis_files(
             source_role: file.role.as_str().to_string(),
             analysis_method: method.as_str().to_string(),
             extractor_version: auditor_core::EXTRACTOR_VERSION,
+            syntax: None,
         })
         .collect()
+}
+
+/// Marks each analysis file whose parsed tree has syntax errors as
+/// `recovered` or `unparsed`.
+pub(super) fn mark_syntax(
+    analysis_files: &mut [auditor_core::AnalysisFile],
+    files: &[AuditedFile],
+    repo_ast: &auditor_ast::RepoAst,
+) {
+    let status = files
+        .iter()
+        .filter_map(|file| {
+            let tree = repo_ast.get(&file.absolute)?;
+            if !tree.root_node().has_error() {
+                return None;
+            }
+            let status = if tree.error_free().is_some() {
+                "recovered"
+            } else {
+                "unparsed"
+            };
+            Some((file.relative.to_string_lossy().replace('\\', "/"), status))
+        })
+        .collect::<std::collections::HashMap<_, _>>();
+    for file in analysis_files {
+        file.syntax = status.get(&file.path).map(|status| status.to_string());
+    }
 }
 
 /// A finding must keep its detector's catalog contract: a declared ID of the

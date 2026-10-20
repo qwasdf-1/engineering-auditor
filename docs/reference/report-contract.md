@@ -51,6 +51,14 @@ contract versions, and `analysis_contract_digest`, plus:
   coverage, and complete evidence graph v2;
 - a repository-map reference and an engineering-review envelope.
 
+A file whose syntax tree has errors carries `syntax`: `recovered` when it
+parsed after the declarations holding the errors were quarantined (blanked
+and parsed again, keeping every offset), so structural owners analyzed the
+rest of it; `unparsed` when recovery failed and structural owners skipped
+it. Lexical and complexity owners read every parsed file either way.
+`analysis_coverage` counts them as `syntax_recovered_files` and
+`syntax_unparsed_files`. All three fields are omitted when zero or absent.
+
 Analysis-affecting inputs, including an authoritative repository graph or
 co-edit journal, are content-digested into analysis identity. Baseline policy,
 repository-map publication, review policy, prompts, provider calls, and review

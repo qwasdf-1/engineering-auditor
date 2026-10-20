@@ -1368,3 +1368,4 @@ include!("lib_test_java_api.rs");
 include!("lib_test_js_api.rs");
 include!("lib_test_python_api.rs");
 include!("lib_test_rust_api.rs");
+include!("lib_test_syntax.rs");

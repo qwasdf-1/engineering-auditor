@@ -258,6 +258,11 @@ pub struct AnalysisFile {
     pub source_role: String,
     pub analysis_method: String,
     pub extractor_version: u32,
+    /// `recovered` when the file parsed only after quarantining the
+    /// declarations holding syntax errors, `unparsed` when syntax errors
+    /// kept it out of structural analysis; `None` when it parsed as written
+    /// or was not parsed.
+    pub syntax: Option<String>,
 }
 
 #[derive(Clone, Debug)]
