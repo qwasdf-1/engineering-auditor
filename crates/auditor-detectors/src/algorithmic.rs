@@ -545,24 +545,40 @@ fn finding(
     message: String,
 ) -> Finding {
     let cost = fact.cost();
-    auditor_core::finding!(
+    let (message, confidence) = match fact.via.as_deref() {
+        Some(via) => (
+            format!(
+                "{}, through `{}`.",
+                message.trim_end_matches('.'),
+                via.split(" (").next().unwrap_or(via)
+            ),
+            Confidence::Medium,
+        ),
+        None => (message, Confidence::High),
+    };
+    let finding = auditor_core::finding!(
         detector,
         category,
         spec.title,
         message,
         spec.severity,
-        Confidence::High,
+        confidence,
         &fact.path,
         Some(fact.line),
-    )
-    .with_recommendation(spec.recommendation)
-    .with_evidence("function", fact.function.clone())
-    .with_evidence("cost_model", spec.cost_model)
-    .with_evidence("cost_expression", cost.observed.normalized())
-    .with_evidence("cost_terms", cost.observed.terms())
-    .with_evidence("cost_composition", cost.observed.composition())
-    .with_evidence("alternative_cost_expression", cost.alternative.normalized())
-    .with_evidence("cost_confidence_boundary", cost.confidence_boundary)
+    );
+    let finding = match &fact.via {
+        Some(via) => finding.with_evidence("via", via.clone()),
+        None => finding,
+    };
+    finding
+        .with_recommendation(spec.recommendation)
+        .with_evidence("function", fact.function.clone())
+        .with_evidence("cost_model", spec.cost_model)
+        .with_evidence("cost_expression", cost.observed.normalized())
+        .with_evidence("cost_terms", cost.observed.terms())
+        .with_evidence("cost_composition", cost.observed.composition())
+        .with_evidence("alternative_cost_expression", cost.alternative.normalized())
+        .with_evidence("cost_confidence_boundary", cost.confidence_boundary)
 }
 
 /// Evidence for an operation a loop repeats on `receiver`: the loop's span,

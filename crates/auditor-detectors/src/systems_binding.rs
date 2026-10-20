@@ -142,13 +142,13 @@ impl<'a> Site<'a> {
 
     /// The argument bound to the parameter at `position`, unless a named
     /// argument makes the positional binding unknown.
-    fn argument(&self, position: usize) -> Option<&'a str> {
+    pub(super) fn argument(&self, position: usize) -> Option<&'a str> {
         let argument = self.arguments.get(position)?.trim();
         (!is_named(argument)).then_some(argument)
     }
 
     /// The caller's variable passed as the parameter at `position`.
-    fn subject(&self, position: usize) -> Option<String> {
+    pub(super) fn subject(&self, position: usize) -> Option<String> {
         let argument = self.argument(position)?;
         let plain = argument
             .trim_start_matches(['&', '*'])
@@ -179,6 +179,11 @@ impl<'a> Scope<'a> {
                 .map_or(&[], Vec::as_slice),
             name,
         }
+    }
+
+    /// Positions of the parameters `text` names.
+    pub(super) fn positions(&self, text: &str) -> Vec<usize> {
+        parameter_positions(text, self.parameters)
     }
 
     pub(super) fn value(&self, subject: &str) -> Value {

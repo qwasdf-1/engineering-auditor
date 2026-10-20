@@ -202,6 +202,16 @@ impl<'a> Lookup<'a> {
     }
 }
 
+/// A function as `name (path:line)`.
+pub(crate) fn describe(
+    structure: &StructureIndex,
+    (file_index, symbol_index): SymbolRef,
+) -> String {
+    let file = &structure.files()[file_index];
+    let symbol = &file.symbols[symbol_index];
+    format!("{} ({}:{})", symbol.name, file.path, symbol.line)
+}
+
 fn unique(mut candidates: impl Iterator<Item = SymbolRef>) -> Option<SymbolRef> {
     let first = candidates.next()?;
     candidates.all(|other| other == first).then_some(first)

@@ -18,6 +18,7 @@ mod block_strings;
 mod braced_statement_shapes;
 mod c_api_rules;
 mod call_graph;
+mod call_summaries;
 mod churn;
 mod cognitive;
 pub(crate) mod config;
@@ -252,6 +253,9 @@ struct DetectorContext<'a> {
     optimization: Option<optimization_facts::OptimizationIndex>,
     systems: Option<systems_facts::SystemsIndex>,
     structure: Option<structure_index::StructureIndex>,
+    /// Built with the first index that follows calls; released with
+    /// `structure`.
+    call_graph: Option<call_graph::CallGraph>,
     repo_ast: auditor_ast::RepoAst,
     #[cfg(feature = "graph-analysis")]
     graph_inputs: &'a GraphInputs,
@@ -393,6 +397,9 @@ impl RemainingIndexUsers {
         }
         if owner.uses_structure_index() {
             release_index(&mut users.structure, &mut context.structure);
+            if context.structure.is_none() {
+                context.call_graph = None;
+            }
         }
     }
 
@@ -488,16 +495,7 @@ impl<'a> ScanRun<'a> {
         if owner.uses_structure_index() {
             self.ensure_structure_index();
         }
-        if owner.uses_algorithmic_index() && self.context.algorithmic.is_none() {
-            self.context.algorithmic = Some(algorithmic_facts::AlgorithmicIndex::build(
-                self.context.structure.as_ref().expect("structure index"),
-            ));
-        }
-        if owner.uses_systems_index() && self.context.systems.is_none() {
-            self.context.systems = Some(systems_facts::SystemsIndex::build(
-                self.context.structure.as_ref().expect("structure index"),
-            ));
-        }
+        self.ensure_call_following_indexes(owner);
         if owner.uses_optimization_index() && self.context.optimization.is_none() {
             self.context.optimization = Some(optimization_facts::OptimizationIndex::build(
                 self.context.structure.as_ref().expect("structure index"),
@@ -602,6 +600,26 @@ impl<'a> ScanRun<'a> {
             &mut self.context.structure,
         );
         Ok(artifact)
+    }
+
+    /// The algorithmic and systems indexes, which share one call graph.
+    fn ensure_call_following_indexes(&mut self, owner: registry::DetectorOwner) {
+        let context = &mut self.context;
+        let algorithmic = owner.uses_algorithmic_index() && context.algorithmic.is_none();
+        let systems = owner.uses_systems_index() && context.systems.is_none();
+        if algorithmic || systems {
+            let structure = context.structure.as_ref().expect("structure index");
+            let graph = context
+                .call_graph
+                .get_or_insert_with(|| call_graph::CallGraph::build(structure));
+            if algorithmic {
+                context.algorithmic =
+                    Some(algorithmic_facts::AlgorithmicIndex::build(structure, graph));
+            }
+            if systems {
+                context.systems = Some(systems_facts::SystemsIndex::build(structure, graph));
+            }
+        }
     }
 
     fn ensure_structure_index(&mut self) {
@@ -747,6 +765,7 @@ fn analyze_repository_run(
         optimization: None,
         systems: None,
         structure: None,
+        call_graph: None,
         repo_ast: auditor_ast::RepoAst::new(),
         #[cfg(feature = "graph-analysis")]
         graph_inputs: _graph_inputs,

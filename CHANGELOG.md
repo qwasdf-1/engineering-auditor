@@ -18,6 +18,14 @@
   rewrites one artifact itself. Helper and cross-file recall rises to 14 of
   29 each. No corpus finding changes: the detector reports nothing there,
   directly or through calls.
+- `repeated_sort_in_loop` and `n_plus_one_query_in_loop` follow calls into
+  repository functions: a function that sorts a parameter, or issues a read
+  query whose arguments name its parameters, passes the operation to its
+  callers by parameter position, through up to four calls. Helper and
+  cross-file recall rises to 24 of 29 each. Neither detector reports
+  anything on the 46-repository corpus, directly or through calls. The call
+  graph is now built once per scan and shared by the indexes that follow
+  calls.
 - A seeded recall benchmark (`tooling/recall/`, `eval/recall/`) for the
   algorithmic, systems, and optimization detectors: 116 cases in Rust,
   Python, TypeScript, Go, and Java, each putting a known problem directly in

@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use auditor_ast::{SourceSpan, SymbolKind};
 
+use crate::call_graph::CallGraph;
 use crate::structure_index::{
     StructureAssignment, StructureCall, StructureFile, StructureIndex, StructureLoop,
     StructureSymbol,
@@ -54,6 +55,9 @@ pub(crate) struct AlgorithmicFact {
     pub(crate) function: String,
     pub(crate) line: usize,
     pub(crate) kind: AlgorithmicFactKind,
+    /// The called functions, as `name (path:line)` joined by ` -> `, through
+    /// which the operation is reached; `None` when the function performs it.
+    pub(crate) via: Option<String>,
 }
 
 impl AlgorithmicFact {
@@ -151,7 +155,7 @@ pub(crate) struct AlgorithmicIndex {
 }
 
 impl AlgorithmicIndex {
-    pub(crate) fn build(structure: &StructureIndex) -> Self {
+    pub(crate) fn build(structure: &StructureIndex, graph: &CallGraph) -> Self {
         let mut facts = Vec::new();
         for file in structure.files().iter().filter(|file| file.emittable) {
             for (owner, function) in file.symbols.iter().enumerate().filter(|(_, symbol)| {
@@ -160,6 +164,7 @@ impl AlgorithmicIndex {
                 collect_function_facts(file, owner as u32, function, &mut facts);
             }
         }
+        inherited::inherited_facts(structure, graph, &mut facts);
         facts.sort_by(|left, right| {
             (&left.path, left.line, &left.function).cmp(&(&right.path, right.line, &right.function))
         });
@@ -201,6 +206,7 @@ fn push_fact(
         function: function.name.clone(),
         line,
         kind,
+        via: None,
     });
 }
 
@@ -274,44 +280,50 @@ fn collect_repeated_sorts(
         if !is_default_sort(&shape.method, &shape.arguments) {
             continue;
         }
-        let Some(loop_fact) = nearest_loop(file, owner, call.control_region) else {
+        let Some(kind) = repeated_sort(file, owner, aliases, call, shape.root) else {
             continue;
         };
-        let loop_collection = loop_collection(loop_fact, aliases);
-        if declared_within(file, &shape.root, loop_fact.span)
-            || rebound_within(file, owner, &shape.root, loop_fact.span)
-            || loop_collection.as_deref() == Some(&shape.root)
-            || loop_bindings(loop_fact)
-                .iter()
-                .any(|binding| binding == &shape.root)
-        {
-            continue;
-        }
-        let scope = MutationScope {
-            owner,
-            root: &shape.root,
-            aliases,
-            region: Some(loop_fact.control_region),
-            except: Some(call.span),
-        };
-        if !mutation_lines(file, scope.clone()).is_empty() {
-            continue;
-        }
-        let argument_calls = calls_receiving_collection(file, &scope);
-        push_fact(
-            file,
-            function,
-            call.line,
-            AlgorithmicFactKind::RepeatedSort {
-                receiver: shape.root,
-                loop_span: loop_fact.span,
-                sort_span: call.span,
-                collection_kind: CollectionKind::LinearSequence,
-                argument_calls,
-            },
-            facts,
-        );
+        push_fact(file, function, call.line, kind, facts);
     }
+}
+
+/// A sort of `root` at `call` that a loop repeats while `root` is
+/// unchanged: not declared, rebound, iterated, or mutated in the loop.
+fn repeated_sort(
+    file: &StructureFile,
+    owner: u32,
+    aliases: &BTreeMap<String, String>,
+    call: &StructureCall,
+    root: String,
+) -> Option<AlgorithmicFactKind> {
+    let loop_fact = nearest_loop(file, owner, call.control_region)?;
+    if declared_within(file, &root, loop_fact.span)
+        || rebound_within(file, owner, &root, loop_fact.span)
+        || loop_collection(loop_fact, aliases).as_deref() == Some(&root)
+        || loop_bindings(loop_fact)
+            .iter()
+            .any(|binding| binding == &root)
+    {
+        return None;
+    }
+    let scope = MutationScope {
+        owner,
+        root: &root,
+        aliases,
+        region: Some(loop_fact.control_region),
+        except: Some(call.span),
+    };
+    if !mutation_lines(file, scope.clone()).is_empty() {
+        return None;
+    }
+    let argument_calls = calls_receiving_collection(file, &scope);
+    Some(AlgorithmicFactKind::RepeatedSort {
+        receiver: root,
+        loop_span: loop_fact.span,
+        sort_span: call.span,
+        collection_kind: CollectionKind::LinearSequence,
+        argument_calls,
+    })
 }
 
 fn collect_sort_selections(
@@ -659,6 +671,8 @@ mod cost_collectors;
 mod effects;
 #[path = "algorithmic_facts_front_removal.rs"]
 mod front_removal;
+#[path = "algorithmic_facts_inherited.rs"]
+mod inherited;
 #[path = "algorithmic_facts_semantics.rs"]
 mod semantics;
 #[path = "algorithmic_facts_structure.rs"]

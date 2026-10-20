@@ -1,5 +1,6 @@
 use super::*;
 use crate::ast_scan::AstScan;
+use crate::call_graph::CallGraph;
 use crate::{util, AnalysisMethod, AuditedFile, Language, SourceRole};
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -26,7 +27,7 @@ fn go_preallocation_uses_range_and_append_facts() {
         &cache,
         &mut repo_ast,
     ));
-    let algorithmic = AlgorithmicIndex::build(&structure);
+    let algorithmic = AlgorithmicIndex::build(&structure, &CallGraph::build(&structure));
     let optimization = OptimizationIndex::build(&structure, &algorithmic);
     assert!(
         optimization.facts.iter().any(|fact| matches!(
@@ -114,7 +115,7 @@ fn build_optimization(
         &cache,
         &mut repo_ast,
     ));
-    let algorithmic = AlgorithmicIndex::build(&structure);
+    let algorithmic = AlgorithmicIndex::build(&structure, &CallGraph::build(&structure));
     let optimization = OptimizationIndex::build(&structure, &algorithmic);
     (structure, optimization, root)
 }

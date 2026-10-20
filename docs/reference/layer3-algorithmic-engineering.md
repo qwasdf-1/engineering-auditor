@@ -64,6 +64,20 @@ collection by annotation, JavaScript proves it by the JSDoc block before the
 function (`@param {string[]} wanted`), so a string's `includes` is never read
 as array membership.
 
+## Operations Through Calls
+
+`repeated_sort_in_loop` and `n_plus_one_query_in_loop` follow calls into
+repository functions, through up to four resolved calls
+(`call_graph.rs`; see [Effects Through Calls](./layer4-systems-engineering.md#effects-through-calls)).
+A function that sorts one of its parameters, or issues a read query whose
+arguments name its parameters, passes that operation to its callers by
+parameter position, and each call binds it to its arguments. A loop call is
+then reported at the call site when the bound collection is unchanged by the
+loop (a sort) or a bound query argument references the loop binding (a
+query), with `via` evidence naming the helper chain and Medium confidence. A
+named argument leaves the binding unknown, so no finding follows from it.
+The other algorithmic owners read the function's own code only.
+
 ---
 
 ## `nested_quadratic_iteration` (full-only)

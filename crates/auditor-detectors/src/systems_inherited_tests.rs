@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::ast_scan::AstScan;
+use crate::call_graph::CallGraph;
 use crate::structure_index::StructureIndex;
 use crate::systems::loop_artifact_rewrite_findings;
 use crate::systems_facts::SystemsIndex;
@@ -43,10 +44,13 @@ fn rewrites(name: &str, source: &str) -> Vec<String> {
         &cache,
         &mut repo_ast,
     ));
-    let messages = loop_artifact_rewrite_findings(&SystemsIndex::build(&structure))
-        .into_iter()
-        .map(|finding| finding.message)
-        .collect();
+    let messages = loop_artifact_rewrite_findings(&SystemsIndex::build(
+        &structure,
+        &CallGraph::build(&structure),
+    ))
+    .into_iter()
+    .map(|finding| finding.message)
+    .collect();
     let _ = std::fs::remove_dir_all(root);
     messages
 }

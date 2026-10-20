@@ -12,9 +12,8 @@
 //! value local to a function on the call path pairs only with effects of
 //! the same call.
 
-use std::collections::HashMap;
-
-use crate::call_graph::{CallGraph, SymbolRef};
+use crate::call_graph::{describe, CallGraph, SymbolRef};
+use crate::call_summaries::{self, summarized_calls};
 use crate::structure_index::StructureIndex;
 
 use super::systems_binding::{file_scopes, Artifact, FileScopes, Scope, Site, Value};
@@ -51,44 +50,39 @@ pub(super) fn inherited_effects(
     direct: &[Vec<SystemEffect>],
 ) -> Vec<Vec<SystemEffect>> {
     let scopes = file_scopes(structure);
-    let summaries = summarize(structure, graph, &scopes, direct);
-    structure
-        .files()
-        .iter()
-        .enumerate()
-        .map(|(file_index, file)| {
-            file.calls
-                .iter()
-                .enumerate()
-                .filter_map(|(call_index, call)| {
-                    let target = graph.target(file_index, call_index)?;
-                    let carried = summaries.get(&target)?;
-                    let callee = describe(structure, target);
-                    let site = Site::new(call, &scopes[file_index]);
-                    Some(
-                        carried
-                            .iter()
-                            .filter_map(|carried| {
-                                let via = std::iter::once(callee.clone())
-                                    .chain(carried.via.iter().cloned())
-                                    .collect::<Vec<_>>()
-                                    .join(" -> ");
-                                let facts = bind_facts(carried, &site)?;
-                                inherited_effect(
-                                    file,
-                                    call,
-                                    (carried.kind, &carried.operation),
-                                    facts,
-                                    via,
-                                )
-                            })
-                            .collect::<Vec<_>>(),
-                    )
-                })
-                .flatten()
-                .collect()
-        })
-        .collect()
+    let own = own_effects(structure, &scopes, direct);
+    let summaries = call_summaries::summarize(
+        (structure, graph),
+        &own,
+        MAX_DEPTH,
+        |site, effect| {
+            let caller = scope(structure, &scopes, site.caller?);
+            let binding = Site::new(site.call, &scopes[site.file]);
+            through(&describe(structure, site.target), effect, &binding, &caller)
+        },
+        add,
+    );
+    let mut inherited = vec![Vec::new(); structure.files().len()];
+    for site in summarized_calls(structure, graph, &summaries) {
+        let file = &structure.files()[site.file];
+        let callee = describe(structure, site.target);
+        let binding = Site::new(site.call, &scopes[site.file]);
+        inherited[site.file].extend(site.carried.iter().filter_map(|carried| {
+            let via = std::iter::once(callee.clone())
+                .chain(carried.via.iter().cloned())
+                .collect::<Vec<_>>()
+                .join(" -> ");
+            let facts = bind_facts(carried, &binding)?;
+            inherited_effect(
+                file,
+                site.call,
+                (carried.kind, &carried.operation),
+                facts,
+                via,
+            )
+        }));
+    }
+    inherited
 }
 
 /// A carried effect's artifact facts bound to the call site, or `None` for
@@ -110,26 +104,7 @@ fn bind_facts(carried: &Carried, site: &Site) -> Option<BoundFacts> {
     Some(facts)
 }
 
-type Summaries = HashMap<SymbolRef, Vec<Carried>>;
-
-fn summarize(
-    structure: &StructureIndex,
-    graph: &CallGraph,
-    scopes: &[FileScopes],
-    direct: &[Vec<SystemEffect>],
-) -> Summaries {
-    let own = own_effects(structure, scopes, direct);
-    let mut summaries = own.clone();
-    for _ in 1..MAX_DEPTH {
-        let next = deepen(structure, graph, scopes, (&own, &summaries));
-        let settled = same_shape(&next, &summaries);
-        summaries = next;
-        if settled {
-            break;
-        }
-    }
-    summaries
-}
+type Summaries = call_summaries::Summaries<Carried>;
 
 fn scope<'a>(
     structure: &StructureIndex,
@@ -185,39 +160,6 @@ fn own_effect(effect: &SystemEffect, scope: &Scope) -> Option<Carried> {
     Some(carried)
 }
 
-/// Each function's own effects plus its callees' current summaries: one
-/// more call deep than `summaries`.
-fn deepen(
-    structure: &StructureIndex,
-    graph: &CallGraph,
-    scopes: &[FileScopes],
-    (own, summaries): (&Summaries, &Summaries),
-) -> Summaries {
-    let mut next = own.clone();
-    for (file_index, file) in structure.files().iter().enumerate() {
-        for (call_index, call) in file.calls.iter().enumerate() {
-            let (Some(owner), Some(target)) = (call.owner, graph.target(file_index, call_index))
-            else {
-                continue;
-            };
-            let caller = (file_index, owner as usize);
-            let Some(carried) = summaries.get(&target).filter(|_| target != caller) else {
-                continue;
-            };
-            let callee = describe(structure, target);
-            let site = Site::new(call, &scopes[file_index]);
-            let caller_scope = scope(structure, scopes, caller);
-            let summary = next.entry(caller).or_default();
-            for effect in carried {
-                if let Some(effect) = through(&callee, effect, &site, &caller_scope) {
-                    add(summary, effect);
-                }
-            }
-        }
-    }
-    next
-}
-
 /// A callee's carried effect as the caller carries it.
 fn through(callee: &str, effect: &Carried, site: &Site, caller: &Scope) -> Option<Carried> {
     let mut carried = Carried {
@@ -237,16 +179,6 @@ fn through(callee: &str, effect: &Carried, site: &Site, caller: &Scope) -> Optio
             .map(|artifact| artifact.through(site, caller));
     }
     Some(carried)
-}
-
-/// Summaries only grow, so equal sizes mean nothing changed.
-fn same_shape(next: &Summaries, previous: &Summaries) -> bool {
-    next.len() == previous.len()
-        && next.iter().all(|(key, effects)| {
-            previous
-                .get(key)
-                .is_some_and(|old| old.len() == effects.len())
-        })
 }
 
 /// Keeps one carried I/O effect per kind, the first and shallowest, and
@@ -270,12 +202,6 @@ fn add(summary: &mut Vec<Carried>, carried: Carried) {
 
 fn is_artifact(kind: EffectKind) -> bool {
     matches!(kind, EffectKind::ArtifactRead | EffectKind::ArtifactWrite)
-}
-
-fn describe(structure: &StructureIndex, (file_index, symbol_index): SymbolRef) -> String {
-    let file = &structure.files()[file_index];
-    let symbol = &file.symbols[symbol_index];
-    format!("{} ({}:{})", symbol.name, file.path, symbol.line)
 }
 
 #[cfg(test)]

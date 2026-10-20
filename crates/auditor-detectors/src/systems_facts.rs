@@ -2,13 +2,13 @@
 
 use std::collections::BTreeMap;
 
+use crate::call_graph::CallGraph;
 use crate::structure_index::StructureIndex;
 use crate::Language;
 
 use super::systems_effects::extract_effects;
 use super::systems_inherited::inherited_effects;
 use super::systems_topology::build_topology;
-use crate::call_graph::CallGraph;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 #[repr(usize)]
@@ -117,11 +117,11 @@ pub(crate) struct SystemsIndex {
 }
 
 impl SystemsIndex {
-    pub(crate) fn build(structure: &StructureIndex) -> Self {
+    pub(crate) fn build(structure: &StructureIndex, graph: &CallGraph) -> Self {
         let topology = build_topology(structure);
         let direct: Vec<Vec<SystemEffect>> =
             structure.files().iter().map(extract_effects).collect();
-        let inherited = inherited_effects(structure, &CallGraph::build(structure), &direct);
+        let inherited = inherited_effects(structure, graph, &direct);
         let effects = structure
             .files()
             .iter()
