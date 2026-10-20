@@ -9,13 +9,22 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
   would need them stay silent rather than guess. Your language's own linters
   (Clippy, Ruff, ESLint, golangci-lint, and others) use type information and
   catch defects Engineering Auditor cannot.
-- Algorithmic and systems detectors mostly need the expensive call to appear
-  directly in the loop or async function. Only external-I/O and blocking-I/O
-  effects are followed through calls into repository functions; for sorts,
-  queries, regex compilation, and artifact rewrites, a helper that does the
-  work hides it. 9 of 29 seeded helper cases are caught
-  ([`eval/recall/`](../eval/recall/README.md)). Calls on values whose type
-  is unknown are never followed.
+- Algorithmic, systems, and optimization detectors follow calls into
+  repository functions only when the call resolves to one certain target,
+  through at most four calls. Calls on values whose type is unknown, such as
+  methods of an injected service (`this.userService.find(..)`), are never
+  followed, so the work such a call does stays hidden.
+- A file whose syntax tree contains any error gets no structural analysis:
+  no structural, algorithmic, systems, or optimization findings, and no
+  symbols in the repository graph. Lexical and complexity metrics still run.
+  The scan report does not yet list these files. TypeScript sources the
+  TypeScript grammar rejects are re-parsed as TSX. On the 46-repository
+  corpus, 595 of 17,185 files (3.5%) are still skipped. Most are C and C++
+  files using macros the macro blanking does not cover (31% of the corpus's
+  C files and 27% of its C++); the rest are C# with
+  `#if` branches that split a declaration, and newer syntax that the
+  grammars do not read yet: Java record patterns, TypeScript variance
+  annotations and `export type *`, and Kotlin annotated function types.
 - Reflection, plugin loading, and entry points defined outside the scanned
   code are not resolved, so reachability findings such as `dead_code` and
   `orphan_symbol` exclude what they cannot prove.

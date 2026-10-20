@@ -57,6 +57,10 @@ are unchanged.
 
 ### Fixed
 
+- TypeScript sources the TypeScript grammar rejects are re-parsed with the
+  TSX grammar, so `.tsx` files with JSX get structural analysis instead of
+  being skipped. On the 46-repository corpus, 247 of the 268 TypeScript
+  files that failed to parse now parse.
 - Java try-with-resources locals (`try (Store store = open())`) are local
   variables: `too_many_locals` counts them, and detectors that read a local's
   declared type see them. An unnamed resource (`var _ = ..`) declares nothing.

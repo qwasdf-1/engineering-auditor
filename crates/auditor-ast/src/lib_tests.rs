@@ -174,3 +174,27 @@ fn supported_language_list_is_parseable() {
         assert!(can_parse(language), "expected {language:?} to be parseable");
     }
 }
+
+#[test]
+fn typescript_sources_with_jsx_parse_through_the_tsx_grammar() {
+    let mut parser = parser();
+    let jsx = "export function Card({ title }: { title: string }) {\n  return <div className=\"card\">{title}</div>;\n}\n";
+    let tree = parser.parse(&AstLang::TypeScript, jsx).unwrap();
+    assert!(!tree.root_node().has_error());
+    assert_eq!(tree.root_node().language(), AstLang::TypeScript);
+    // A generic arrow and an angle-bracket assertion, which TSX rejects,
+    // keep the TypeScript grammar.
+    let generic = "const id = <T>(value: T): T => value;\nconst n = <number>input;\n";
+    assert!(!parser
+        .parse(&AstLang::TypeScript, generic)
+        .unwrap()
+        .root_node()
+        .has_error());
+    // A source neither grammar reads keeps its errors.
+    let broken = "function ( {\n";
+    assert!(parser
+        .parse(&AstLang::TypeScript, broken)
+        .unwrap()
+        .root_node()
+        .has_error());
+}

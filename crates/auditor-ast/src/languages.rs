@@ -132,6 +132,15 @@ pub fn get_language(lang: &AstLang) -> Result<TsLanguage, String> {
     Ok(TsLanguage::from(GRAMMARS[idx].grammar))
 }
 
+/// A second grammar for sources of `lang` that its own grammar rejects:
+/// TSX for TypeScript, whose JSX the TypeScript grammar cannot read.
+pub fn alternate_language(lang: &AstLang) -> Option<TsLanguage> {
+    match lang {
+        AstLang::TypeScript => Some(TsLanguage::from(tree_sitter_typescript::LANGUAGE_TSX)),
+        _ => None,
+    }
+}
+
 pub fn function_node_kinds() -> &'static [&'static str] {
     static KINDS: std::sync::OnceLock<Vec<&'static str>> = std::sync::OnceLock::new();
     KINDS.get_or_init(|| {

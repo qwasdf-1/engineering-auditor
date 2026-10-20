@@ -52,10 +52,15 @@ impl AstParser {
         } else {
             std::borrow::Cow::Borrowed(source.as_ref())
         };
-        let tree = self
+        let mut tree = self
             .parser
             .parse(parsed.as_ref(), None)
             .ok_or_else(|| "failed to parse source".to_string())?;
+        if tree.root_node().has_error() {
+            if let Some(alternate) = self.parse_alternate(lang, parsed.as_ref())? {
+                tree = alternate;
+            }
+        }
         Ok(AstTree {
             tree,
             source,
@@ -63,6 +68,27 @@ impl AstParser {
             function_spans: OnceLock::new(),
             semantic_facts: OnceLock::new(),
         })
+    }
+}
+
+impl AstParser {
+    /// The tree of `lang`'s alternate grammar, when it parses `source`
+    /// without error: TypeScript sources are often TSX.
+    fn parse_alternate(
+        &mut self,
+        lang: &AstLang,
+        source: &str,
+    ) -> Result<Option<tree_sitter::Tree>, String> {
+        let Some(language) = languages::alternate_language(lang) else {
+            return Ok(None);
+        };
+        self.parser
+            .set_language(&language)
+            .map_err(|e| format!("failed to set language: {e}"))?;
+        Ok(self
+            .parser
+            .parse(source, None)
+            .filter(|tree| !tree.root_node().has_error()))
     }
 }
 
