@@ -674,6 +674,8 @@ mod effects;
 mod front_removal;
 #[path = "algorithmic_facts_inherited.rs"]
 mod inherited;
+#[path = "algorithmic_facts_queries.rs"]
+mod queries;
 #[path = "algorithmic_facts_semantics.rs"]
 mod semantics;
 #[path = "algorithmic_facts_structure.rs"]
@@ -683,6 +685,7 @@ use collections::*;
 use cost_collectors::*;
 use effects::*;
 use front_removal::collect_front_removals;
+use queries::{is_read_query, query_receiver_is_proven};
 use semantics::*;
 use structure::*;
 

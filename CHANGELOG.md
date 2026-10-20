@@ -33,6 +33,14 @@
   no nested call or member of `self`, `this`, or a parameter), and a helper
   decorated with `@functools.cache` or `@lru_cache` is excluded. Helper and
   cross-file recall rises to 29 of 29 each; the corpus is unchanged.
+- `n_plus_one_query_in_loop` recognizes more stores and lookups. Reads of
+  one record by key (`getObjectByUuid`, `findUserById`) count as queries, and
+  receivers are proven by Java field types, try-with-resources locals, `var`
+  locals bound to `new` of a store type, query-manager, persistence-manager
+  and entity-manager types, and JavaScript bindings imported from
+  `redbean-node` or `knex`. On the 46-repository corpus the detector reports
+  its first 6 findings, all real per-item queries (dependency-track and
+  uptime-kuma), one of them through a helper.
 - A seeded recall benchmark (`tooling/recall/`, `eval/recall/`) for the
   algorithmic, systems, and optimization detectors: 116 cases in Rust,
   Python, TypeScript, Go, and Java, each putting a known problem directly in
@@ -49,6 +57,9 @@ are unchanged.
 
 ### Fixed
 
+- Java try-with-resources locals (`try (Store store = open())`) are local
+  variables: `too_many_locals` counts them, and detectors that read a local's
+  declared type see them. An unnamed resource (`var _ = ..`) declares nothing.
 - `hardcoded_credential` no longer reports credential-named constants that
   name something about a credential: a target whose last word is a
   location, kind, owner, version, route, prefix or label

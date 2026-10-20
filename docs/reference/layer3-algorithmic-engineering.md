@@ -166,7 +166,20 @@ Language contract: see [`language-support.md`](./language-support.md).
 ## `n_plus_one_query_in_loop` (full-only)
 
 Detects loop-dependent read queries through known database or repository
-receivers. The query arguments must reference the loop binding. Write methods,
+receivers. The query arguments must reference the loop binding.
+
+A query method is one of the fixed query names (`query`, `query_row`,
+`fetch_one`, `find_one`, `find_unique`, ...) or a read of one record by key:
+`get`, `find`, `load`, or `fetch`, then `by`, ending in `id`, `uuid`, or `key`
+(`findById`, `getObjectByUuid`, `findUserById`), but not a lookup that writes
+when the record is missing (`getOrCreateById`). A receiver is proven when its
+name reads as a store (`repo`, `repository`, `database`, `connection`,
+`session`); when it is declared with a store type (repository, database,
+connection, session, query client or manager, persistence or entity manager,
+Go `sql.DB`/`Tx`/`Conn`) as a parameter or local of the function, including
+a Java try-with-resources local or a `var` bound to `new` of such a type, or
+as a Java field; or when it is a JavaScript module-level binding imported
+from a module whose export queries directly (`redbean-node`, `knex`). Write methods,
 batch APIs, preloading/eager-loading calls, and queries independent of the loop
 are semantic negatives, and so is a query in a loop that walks batches, pages,
 or windows (see `per_item_external_io`).

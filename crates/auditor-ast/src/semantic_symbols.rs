@@ -142,11 +142,8 @@ fn declared_symbol_kind(node: AstNode<'_>, node_kind: NodeKind<'_>) -> Option<Sy
     if is_non_declaration(node, node_kind) {
         return None;
     }
-    // A JavaScript class expression (`module.exports = class Store {}`).
-    if node_kind.0 == "class"
-        && matches!(node.language(), AstLang::JavaScript | AstLang::TypeScript)
-    {
-        return Some(SymbolKind::Class);
+    if let Some(kind) = embedded_declared_kind(node, node_kind) {
+        return Some(kind);
     }
     if languages::function_node_kinds().contains(&node_kind.0) {
         return Some(function_kind(node, node_kind));
@@ -157,6 +154,21 @@ fn declared_symbol_kind(node: AstNode<'_>, node_kind: NodeKind<'_>) -> Option<Sy
     SYMBOL_KIND_GROUPS
         .iter()
         .find_map(|(kinds, kind)| kinds.contains(&node_kind.0).then_some(*kind))
+}
+
+/// Declarations inside another construct: a JavaScript class expression
+/// (`module.exports = class Store {}`), and a Java try-with-resources local
+/// (`try (Store store = open())`). A resource naming an existing variable,
+/// or unnamed (`var _ = ..`), declares nothing.
+fn embedded_declared_kind(node: AstNode<'_>, node_kind: NodeKind<'_>) -> Option<SymbolKind> {
+    match (node_kind.0, node.language()) {
+        ("class", AstLang::JavaScript | AstLang::TypeScript) => Some(SymbolKind::Class),
+        ("resource", AstLang::Java) => node
+            .child_by_field_name("name")
+            .is_some_and(|name| name.text() != "_")
+            .then_some(SymbolKind::Variable),
+        _ => None,
+    }
 }
 
 /// Go decides its parameters and type declarations itself.

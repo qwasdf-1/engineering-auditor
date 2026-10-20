@@ -88,9 +88,9 @@ fn collect_symbols(
                 parent: symbol.parent,
                 declaration: match symbol.kind {
                     SymbolKind::Parameter => Some(bounded_declaration(source)),
-                    // A Java local's declared type (`List<String> names`).
-                    SymbolKind::Variable if file.language == Language::Java => {
-                        source.split('=').next().map(bounded_declaration)
+                    // A Java local's or field's declared type (`List<String> names`).
+                    SymbolKind::Variable | SymbolKind::Field if file.language == Language::Java => {
+                        Some(bounded_declaration(&java_declaration(source)))
                     }
                     // A Kotlin function's annotations and modifiers, through
                     // `fun` (visibility, `external`).
@@ -161,6 +161,27 @@ fn collect_symbols(
             }
         })
         .collect()
+}
+
+/// A Java declaration's type and name; for `var`, the type it constructs
+/// (`var store = new Store(..)` reads as `Store store`).
+fn java_declaration(source: &str) -> String {
+    let (head, initializer) = source.split_once('=').unwrap_or((source, ""));
+    let words = crate::util::identifiers(head);
+    let constructed = initializer
+        .trim_start()
+        .strip_prefix("new ")
+        .and_then(|rest| rest.split(['(', '<', '{', '[']).next())
+        .map(str::trim)
+        .filter(|name| !name.is_empty());
+    match (
+        words.iter().any(|word| word == "var"),
+        constructed,
+        words.last(),
+    ) {
+        (true, Some(constructed), Some(name)) => format!("{constructed} {name}"),
+        _ => head.to_string(),
+    }
 }
 
 fn declaration_binding(source: &str) -> Option<String> {
