@@ -84,6 +84,7 @@ mod structural;
 mod structural_semantic;
 mod structure_index;
 mod systems;
+mod systems_binding;
 mod systems_effect_classification;
 mod systems_effects;
 mod systems_facts;

@@ -8,22 +8,17 @@
 //! context.
 //!
 //! Artifact reads and writes carry their artifact and value lineage
-//! relative to the summarized function: a value that is one of its
-//! parameters binds to the call's argument at that position, and a value
-//! local to a function on the call path keeps a name qualified by that
-//! function, so it pairs only with effects of the same call.
+//! relative to the summarized function ([`super::systems_binding`]), so a
+//! value local to a function on the call path pairs only with effects of
+//! the same call.
 
-use std::collections::{BTreeMap, HashMap};
-
-use auditor_ast::SymbolKind;
+use std::collections::HashMap;
 
 use crate::call_graph::{CallGraph, SymbolRef};
-use crate::structure_index::{StructureCall, StructureFile, StructureIndex};
+use crate::structure_index::StructureIndex;
 
-use super::systems_effects::{
-    assignment_aliases, call_arguments, inherited_effect, normalize_subject, simple_subject,
-    BoundFacts,
-};
+use super::systems_binding::{file_scopes, Artifact, FileScopes, Scope, Site, Value};
+use super::systems_effects::{inherited_effect, BoundFacts};
 use super::systems_facts::{EffectKind, SystemEffect};
 
 const INHERITED: [EffectKind; 4] = [
@@ -39,26 +34,6 @@ const MAX_DEPTH: usize = 4;
 /// Artifact effects one summary keeps; further ones are dropped.
 const MAX_ARTIFACT_EFFECTS: usize = 8;
 
-/// A value relative to the summarized function.
-#[derive(Clone, Debug, PartialEq)]
-enum Value {
-    /// The function's parameter at this position, receivers excluded.
-    Param(usize),
-    /// A value local to a function on the call path, qualified by it.
-    Local(String),
-}
-
-#[derive(Clone, Debug, PartialEq)]
-struct Artifact {
-    text: String,
-    /// Positions of the summarized function's parameters `text` names.
-    params: Vec<usize>,
-    /// `text` is exactly the parameter `params[0]`.
-    is_param: bool,
-    /// The artifact varies with a loop or argument on the call path.
-    variant: bool,
-}
-
 #[derive(Clone)]
 struct Carried {
     kind: EffectKind,
@@ -67,68 +42,6 @@ struct Carried {
     via: Vec<String>,
     artifact: Option<Artifact>,
     lineage: Option<Value>,
-}
-
-/// Per-file facts the binding needs: assignment aliases and each
-/// function's parameter names.
-struct FileScopes {
-    aliases: BTreeMap<String, String>,
-    parameters: HashMap<u32, Vec<String>>,
-}
-
-/// The calling side of one call: its arguments and the caller's names.
-struct Site<'a> {
-    arguments: Vec<&'a str>,
-    aliases: &'a BTreeMap<String, String>,
-}
-
-impl<'a> Site<'a> {
-    fn new(call: &'a StructureCall, scopes: &'a FileScopes) -> Self {
-        Self {
-            arguments: call_arguments(call),
-            aliases: &scopes.aliases,
-        }
-    }
-
-    /// The argument bound to the parameter at `position`, unless a named
-    /// argument makes the positional binding unknown.
-    fn argument(&self, position: usize) -> Option<&'a str> {
-        let argument = self.arguments.get(position)?.trim();
-        (!is_named(argument)).then_some(argument)
-    }
-
-    /// The caller's variable passed as the parameter at `position`.
-    fn subject(&self, position: usize) -> Option<String> {
-        let argument = self.argument(position)?;
-        let plain = argument
-            .trim_start_matches(['&', '*'])
-            .trim_start_matches("mut ")
-            .trim();
-        plain
-            .chars()
-            .all(|character| character.is_alphanumeric() || character == '_')
-            .then(|| simple_subject(plain))
-            .flatten()
-            .map(|subject| normalize_subject(&subject, self.aliases))
-    }
-}
-
-/// The function a value is expressed relative to.
-struct Scope<'a> {
-    parameters: &'a [String],
-    name: String,
-}
-
-impl Scope<'_> {
-    fn value(&self, subject: &str) -> Value {
-        self.parameters
-            .iter()
-            .position(|parameter| parameter == subject)
-            .map_or_else(
-                || Value::Local(format!("{}::{subject}", self.name)),
-                Value::Param,
-            )
-    }
 }
 
 /// The inherited effects of each file's calls, indexed like `direct`.
@@ -184,39 +97,17 @@ fn bind_facts(carried: &Carried, site: &Site) -> Option<BoundFacts> {
     if !is_artifact(carried.kind) {
         return Some(BoundFacts::default());
     }
-    let value_lineage = match carried.lineage.as_ref()? {
-        Value::Local(token) => token.clone(),
-        Value::Param(position) => site.subject(*position)?,
-    };
     let mut facts = BoundFacts {
-        value_lineage: Some(value_lineage),
+        value_lineage: Some(carried.lineage.as_ref()?.bind(site)?),
         ..BoundFacts::default()
     };
     if let Some(artifact) = &carried.artifact {
-        let (text, inputs, variant) = bind_artifact(artifact, site);
-        facts.artifact = Some(text);
-        facts.artifact_inputs = inputs.into_iter().map(str::to_string).collect();
-        facts.variant = variant;
+        let bound = artifact.bind(site);
+        facts.artifact = Some(bound.text);
+        facts.artifact_inputs = bound.inputs.into_iter().map(str::to_string).collect();
+        facts.variant = bound.variant;
     }
     Some(facts)
-}
-
-/// The artifact's call-site text, the arguments it depends on, and whether
-/// it varies regardless of the caller's loop.
-fn bind_artifact<'a>(artifact: &Artifact, site: &Site<'a>) -> (String, Vec<&'a str>, bool) {
-    let mut variant = artifact.variant;
-    let mut inputs = Vec::new();
-    for position in &artifact.params {
-        match site.argument(*position) {
-            Some(argument) => inputs.push(argument),
-            None => variant = true,
-        }
-    }
-    let text = match (artifact.is_param, inputs.first()) {
-        (true, Some(argument)) => (*argument).to_string(),
-        _ => artifact.text.clone(),
-    };
-    (text, inputs, variant)
 }
 
 type Summaries = HashMap<SymbolRef, Vec<Carried>>;
@@ -240,48 +131,16 @@ fn summarize(
     summaries
 }
 
-fn file_scopes(structure: &StructureIndex) -> Vec<FileScopes> {
-    structure
-        .files()
-        .iter()
-        .map(|file| FileScopes {
-            aliases: assignment_aliases(file),
-            parameters: parameters(file),
-        })
-        .collect()
-}
-
-/// Each function's parameter names in order, without receivers.
-fn parameters(file: &StructureFile) -> HashMap<u32, Vec<String>> {
-    let mut parameters: HashMap<u32, Vec<String>> = HashMap::new();
-    for symbol in &file.symbols {
-        if symbol.kind != SymbolKind::Parameter
-            || matches!(symbol.name.as_str(), "self" | "cls" | "this")
-        {
-            continue;
-        }
-        if let Some(parent) = symbol.parent {
-            parameters
-                .entry(parent)
-                .or_default()
-                .push(symbol.name.clone());
-        }
-    }
-    parameters
-}
-
 fn scope<'a>(
     structure: &StructureIndex,
     scopes: &'a [FileScopes],
     function: SymbolRef,
 ) -> Scope<'a> {
-    Scope {
-        parameters: scopes[function.0]
-            .parameters
-            .get(&(function.1 as u32))
-            .map_or(&[], Vec::as_slice),
-        name: describe(structure, function),
-    }
+    Scope::new(
+        &scopes[function.0],
+        function.1,
+        describe(structure, function),
+    )
 }
 
 /// The inheritable effects each function performs itself.
@@ -318,27 +177,12 @@ fn own_effect(effect: &SystemEffect, scope: &Scope) -> Option<Carried> {
     };
     if is_artifact(effect.kind) {
         carried.lineage = Some(scope.value(effect.value_lineage.as_deref()?));
-        carried.artifact = effect.artifact.as_ref().map(|text| {
-            let params = parameter_positions(text, scope.parameters);
-            Artifact {
-                is_param: params.len() == 1 && scope.parameters[params[0]] == text.trim(),
-                text: text.clone(),
-                params,
-                variant: effect.loop_variant,
-            }
-        });
+        carried.artifact = effect
+            .artifact
+            .as_ref()
+            .map(|text| Artifact::new(text.clone(), scope, effect.loop_variant));
     }
     Some(carried)
-}
-
-fn parameter_positions(text: &str, parameters: &[String]) -> Vec<usize> {
-    let identifiers = crate::util::identifiers(text);
-    parameters
-        .iter()
-        .enumerate()
-        .filter(|(_, parameter)| identifiers.contains(parameter))
-        .map(|(position, _)| position)
-        .collect()
 }
 
 /// Each function's own effects plus its callees' current summaries: one
@@ -386,20 +230,11 @@ fn through(callee: &str, effect: &Carried, site: &Site, caller: &Scope) -> Optio
         lineage: None,
     };
     if is_artifact(effect.kind) {
-        carried.lineage = Some(match effect.lineage.as_ref()? {
-            Value::Local(token) => Value::Local(token.clone()),
-            Value::Param(position) => caller.value(&site.subject(*position)?),
-        });
-        carried.artifact = effect.artifact.as_ref().map(|artifact| {
-            let (text, inputs, variant) = bind_artifact(artifact, site);
-            let params = parameter_positions(&inputs.join(", "), caller.parameters);
-            Artifact {
-                is_param: params.len() == 1 && caller.parameters[params[0]] == text.trim(),
-                text,
-                params,
-                variant,
-            }
-        });
+        carried.lineage = Some(effect.lineage.as_ref()?.through(site, caller)?);
+        carried.artifact = effect
+            .artifact
+            .as_ref()
+            .map(|artifact| artifact.through(site, caller));
     }
     Some(carried)
 }
@@ -435,22 +270,6 @@ fn add(summary: &mut Vec<Carried>, carried: Carried) {
 
 fn is_artifact(kind: EffectKind) -> bool {
     matches!(kind, EffectKind::ArtifactRead | EffectKind::ArtifactWrite)
-}
-
-/// A keyword or named argument (`value=raw`, `value: raw`).
-fn is_named(argument: &str) -> bool {
-    let bytes = argument.as_bytes();
-    argument
-        .char_indices()
-        .any(|(index, character)| match character {
-            '=' => {
-                bytes.get(index + 1) != Some(&b'=')
-                    && index > 0
-                    && !matches!(bytes[index - 1], b'=' | b'!' | b'<' | b'>')
-            }
-            ':' => bytes.get(index + 1) != Some(&b':') && (index == 0 || bytes[index - 1] != b':'),
-            _ => false,
-        })
 }
 
 fn describe(structure: &StructureIndex, (file_index, symbol_index): SymbolRef) -> String {
