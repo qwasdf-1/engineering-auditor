@@ -331,6 +331,10 @@ fn effect_finding(
     through_calls(finding, effect.via.as_deref())
 }
 
+/// Lines a file must have grown by to be a hotspot, whatever its rank: in
+/// an active window the top growth quartile can sit at a few lines.
+const MIN_HOTSPOT_GROWTH: usize = 50;
+
 /// Find files that are both high-churn and non-trivially complex.
 pub(crate) fn churn_complexity_hotspot_findings(
     files: &[AuditedFile],
@@ -364,7 +368,7 @@ pub(crate) fn churn_complexity_hotspot_findings(
     growth.sort_unstable();
     let cutoff = |values: &[usize]| values[(values.len() * 3).div_ceil(4).saturating_sub(1)];
     let complexity_cutoff = cutoff(&complexities);
-    let growth_cutoff = cutoff(&growth);
+    let growth_cutoff = cutoff(&growth).max(MIN_HOTSPOT_GROWTH);
     candidates
         .into_iter()
         .filter(|(_, ccx, delta, _)| *ccx >= complexity_cutoff && *delta >= growth_cutoff)

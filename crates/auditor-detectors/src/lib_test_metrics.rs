@@ -210,7 +210,10 @@ pub fn hotspot_fn(data: &[u8]) {
     git(&["commit", "-m", "initial"]);
 
     for i in 0..12 {
-        let extra = format!("// touch {i}\n");
+        // Five lines per commit: growth above the hotspot floor.
+        let extra = (0..(i + 1) * 5)
+            .map(|line| format!("// touch {line}\n"))
+            .collect::<String>();
         write(&root, "src/lib.rs", &format!(
             "{extra}pub fn hotspot_fn(data: &[u8]) {{\n    if data.is_empty() {{ return; }}\n    if data.len() > 100 {{ return; }}\n    if data[0] == 0 {{ return; }}\n    if data[1] == 1 {{ return; }}\n    if data[2] == 2 {{ return; }}\n    if data[3] == 3 {{ return; }}\n    if data[4] == 4 {{ return; }}\n    if data[5] == 5 {{ return; }}\n    if data[6] == 6 {{ return; }}\n    if data[7] == 7 {{ return; }}\n    if data[8] == 8 {{ return; }}\n    if data[9] == 9 {{ return; }}\n    if data[10] == 10 {{ return; }}\n    if data[11] == 11 {{ return; }}\n    for a in data {{\n        if *a > 0 {{\n            for b in 0..*a {{\n                if b > 10 {{\n                    for c in 0..b {{\n                        if c > 5 {{\n                            let _ = c;\n                        }}\n                    }}\n                }}\n            }}\n        }}\n    }}\n}}\n"
         ));

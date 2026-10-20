@@ -196,11 +196,12 @@ fn add_churn(repository: &TempRepo) {
         .to_string_lossy()
         .into_owned();
     for index in 0..12 {
+        // Five lines per revision: growth above the hotspot floor.
         let source = fs::read_to_string(&capability_path).expect("read churn source");
-        repository.write(
-            &capability_relative,
-            format!("// revision {index}\n{source}"),
-        );
+        let header = (0..5)
+            .map(|line| format!("// revision {index}.{line}\n"))
+            .collect::<String>();
+        repository.write(&capability_relative, format!("{header}{source}"));
         if index == 0 {
             for filler in 0..8 {
                 repository.write(

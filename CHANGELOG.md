@@ -63,6 +63,12 @@ are unchanged.
   iterable that calls a batching function (`chunks`, `chunked`, `batched`,
   `partition`, `windows`, `paginate`, ..). This removes 5 findings from the
   46-repository corpus, all one request per batch or per page.
+- `churn_complexity_hotspot` requires at least 50 lines of growth as well as
+  the upper growth quartile. In a window where most candidates barely grew,
+  the quartile cutoff fell to a few lines or zero, so files with +0 to +20
+  lines ranked as hotspots. On this repository's own history the floor
+  removes two such findings (+16 and +18 lines) and keeps the one at +63;
+  on the private fork's history all nine hotspots (+59 to +188) remain.
 - `hot_path_linear_membership` reads a Python set or dict display or
   comprehension by its outer braces, so
   `{(e["path"], e["kind"]) for e in rows.get("allow", [])}` is a set even

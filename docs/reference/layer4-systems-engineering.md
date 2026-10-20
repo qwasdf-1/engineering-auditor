@@ -85,7 +85,10 @@ do not satisfy the contract.
 
 Combines Git positive line growth with shared AST complexity facts. Eligible
 repositories require at least eight files; candidates must be in the upper
-quartile for both dimensions and have at least two commits. Churn covers the
+quartile for both dimensions, have grown by at least 50 lines, and have at
+least two commits. The floor keeps an active window, where the growth
+quartile can sit at a few lines or none, from ranking small edits as
+hotspots. Churn covers the
 commits reachable from `HEAD` within 14 days of `HEAD`'s commit time, so one
 commit scans identically on any day and in any clone. Growth is net of moves:
 in each commit, the lines a file gains are offset by lines that commit removed
