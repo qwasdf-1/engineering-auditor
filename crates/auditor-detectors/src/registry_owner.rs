@@ -197,12 +197,21 @@ impl DetectorOwner {
         local
     }
 
+    /// Owners that follow calls through the shared call graph.
+    pub(crate) const fn uses_call_graph(self) -> bool {
+        self.uses_algorithmic_index()
+            || self.uses_systems_index()
+            || self.uses_optimization_index()
+            || matches!(self, Self::RandomForSecurity)
+    }
+
     pub(crate) const fn uses_structure_index(self) -> bool {
         self.uses_algorithmic_index()
             || self.uses_systems_index()
             || matches!(
                 self,
-                Self::TooManyParameters
+                Self::RandomForSecurity
+                    | Self::TooManyParameters
                     | Self::SiblingCallRedundancy
                     | Self::StringlyTypedParameter
                     | Self::FunctionLocalImport

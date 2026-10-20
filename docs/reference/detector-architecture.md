@@ -130,6 +130,10 @@ Representative module boundaries:
 - `auditor-ast/src/semantic.rs`, `semantic_controls.rs`, and
   `semantic_fields.rs`: lazy span-only semantic facts plus control and
   grammar-field normalization over the same source allocation
+- `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`, and
+  `dataflow_values.rs`: findings-free def-use flow within one function
+  (reaching bindings, value origins, value destinations); detector-side
+  request sources and security sinks live in `dataflow_sources.rs`
 - `algorithmic.rs` and `optimization.rs`: one literal constructor call per
   Layer 3 or Layer 5 detector owner
 - `repository_graph.rs`: typed external graph/provider contract and six

@@ -2,11 +2,15 @@
 //! `Math.random()`/`random.randint` calls pick test data, jitter a retry,
 //! bust a cache, or draw a multipart boundary, where predictability is
 //! harmless. The value matters when it becomes a token, nonce, password,
-//! salt, one-time code, PKCE verifier, or cipher input, which the names it
-//! is bound to say: the variables, properties, and arguments it flows into
-//! up to its enclosing named function, and that function's name.
+//! salt, one-time code, PKCE verifier, or cipher input. The data-flow layer
+//! follows the value to where it goes: a name or key that says so, a cookie,
+//! HMAC, or cipher call, or an `Authorization` header; or the enclosing
+//! function's name says so. A value a named function returns is judged by
+//! its callers (`security_random_helpers`).
 
-use auditor_ast::AstNode;
+use auditor_ast::{call_arguments, AstNode, CallFlow, Destination, FunctionFlow};
+
+use crate::dataflow_sources::callee_name;
 
 /// Name parts that mark a security value wherever they appear in a word
 /// (`generatedCnonce`, `crypthead`, `userPassword`).
@@ -31,77 +35,116 @@ const PAIRS: &[(&str, &str)] = &[
     ("reset", "code"),
 ];
 
-/// Bindings whose name is a value's purpose: declarations, assignments,
-/// object keys, keyword arguments.
-const BINDING_KINDS: &[&str] = &[
-    "variable_declarator",
-    "init_declarator",
-    "let_declaration",
-    "short_var_declaration",
-    "var_spec",
-    "property_declaration",
-    "field_declaration",
-    "assignment",
-    "assignment_expression",
-    "augmented_assignment",
-    "augmented_assignment_expression",
-    "compound_assignment_expr",
-    "pair",
-    "keyword_argument",
-    "public_field_definition",
+/// Calls that make a value a secret: cookies, HMACs, signatures, ciphers,
+/// and key derivation (lowercased callee names).
+const SECURITY_SINKS: &[&str] = &[
+    "cookie",
+    "setcookie",
+    "set_cookie",
+    "createhmac",
+    "hmac",
+    "sign",
+    "encrypt",
+    "createcipheriv",
+    "pbkdf2",
+    "pbkdf2sync",
+    "scrypt",
+    "hashpw",
 ];
 
-/// Named functions, where the walk stops after reading the name. Anonymous functions are passed through to the binding that
-/// names them (`const generateCodeVerifier = () => ..`).
-const FUNCTION_KINDS: &[&str] = &[
-    "function_declaration",
-    "function_definition",
-    "function_item",
-    "method_declaration",
-    "method_definition",
-    "constructor_declaration",
-    "local_function_statement",
-];
+/// Header names whose values are credentials.
+const SECRET_HEADERS: &[&str] = &["authorization", "x-api-key", "x-csrf", "cookie"];
 
-/// Whether a name bound to `site`'s value, or its enclosing function's
-/// name, marks a security purpose.
-pub(crate) fn in_security_context(site: AstNode<'_>) -> bool {
-    let mut ancestor = site.parent();
-    while let Some(node) = ancestor {
-        if FUNCTION_KINDS.contains(&node.kind()) {
-            return function_name(node).is_some_and(names_security_value);
-        }
-        if BINDING_KINDS.contains(&node.kind())
-            && binding_target(node, site).is_some_and(names_security_value)
-        {
-            return true;
-        }
-        ancestor = node.parent();
-    }
-    false
+/// What a predictable random value is used for.
+pub(crate) enum RandomUse<'a> {
+    /// A security value.
+    Security,
+    /// Returned from this named function, whose callers decide.
+    ReturnedFrom(AstNode<'a>),
+    Other,
 }
 
-/// A function's name: its `name` field, or a C declarator's text before
-/// the parameters (`crypthead` in `crypthead(const char *passwd, ..)`).
-/// Parameter types are not purposes (`store(key: CryptoKey)`).
-fn function_name<'a>(function: AstNode<'a>) -> Option<&'a str> {
-    function
-        .child_by_field_name("name")
-        .map(|name| name.text())
-        .or_else(|| {
-            let declarator = function.child_by_field_name("declarator")?.text();
-            declarator.split('(').next()
+/// What the random value `site` (a call or expression) is used for.
+pub(crate) fn random_use(site: AstNode<'_>) -> RandomUse<'_> {
+    let flow = FunctionFlow::enclosing(site);
+    if enclosing_function_names(site, &flow).any(names_security_value) {
+        return RandomUse::Security;
+    }
+    let destinations = flow.destinations(site, &random_policy);
+    if destinations.iter().any(is_security_destination) {
+        return RandomUse::Security;
+    }
+    let returned = destinations.iter().any(|destination| {
+        matches!(destination, Destination::Returned { function } if *function == flow.scope())
+    });
+    match flow.function_name() {
+        Some(_) if returned => RandomUse::ReturnedFrom(flow.scope()),
+        _ => RandomUse::Other,
+    }
+}
+
+/// A random value flows through every call except one that makes it a
+/// secret, where the walk stops to report it.
+fn random_policy(call: AstNode<'_>) -> CallFlow {
+    if is_security_sink(call) {
+        CallFlow::Opaque
+    } else {
+        CallFlow::All
+    }
+}
+
+fn is_security_destination(destination: &Destination<'_>) -> bool {
+    match destination {
+        Destination::Bound(binding) => names_security_value(binding.name),
+        Destination::Property { key } => names_security_value(key.text()),
+        Destination::Argument { call, .. } | Destination::Receiver(call) => is_security_sink(*call),
+        Destination::Returned { .. } => false,
+    }
+}
+
+fn is_security_sink(call: AstNode<'_>) -> bool {
+    let name = callee_name(call).to_ascii_lowercase();
+    if SECURITY_SINKS.contains(&name.as_str()) {
+        return true;
+    }
+    let header = matches!(
+        name.as_str(),
+        "setheader" | "set_header" | "header" | "set" | "append" | "add"
+    );
+    header
+        && call_arguments(call).first().is_some_and(|key| {
+            let key = key.text().to_ascii_lowercase();
+            SECRET_HEADERS.iter().any(|secret| key.contains(secret))
         })
 }
 
-/// The name a binding gives `site`'s value: its text before the value, up
-/// to the `=` or `:` that opens the value or a type (`val token: Int = ..`,
-/// `nonce=..`, `clientId: ..`). None when `site` is not inside it.
-fn binding_target<'a>(binding: AstNode<'a>, site: AstNode<'a>) -> Option<&'a str> {
-    let prefix = binding
-        .text()
-        .get(..site.start_byte().checked_sub(binding.start_byte())?)?;
-    prefix.split(['=', ':']).next()
+/// The names of the functions around `site`: the named scope's, and each
+/// anonymous function's binding (`const generateCodeVerifier = () => ..`,
+/// `getValue: () => ..`).
+fn enclosing_function_names<'a>(
+    site: AstNode<'a>,
+    flow: &FunctionFlow<'a>,
+) -> impl Iterator<Item = &'a str> {
+    let scope = flow.scope();
+    std::iter::successors(site.parent(), AstNode::parent)
+        .take_while(move |ancestor| *ancestor != scope)
+        .filter_map(anonymous_function_name)
+        .chain(flow.function_name())
+}
+
+fn anonymous_function_name(node: AstNode<'_>) -> Option<&str> {
+    if !matches!(
+        node.kind(),
+        "arrow_function" | "function_expression" | "function" | "lambda" | "lambda_expression"
+    ) {
+        return None;
+    }
+    let holder = node.parent()?;
+    ["name", "key", "left"]
+        .iter()
+        .find_map(|field| holder.child_by_field_name(field))
+        .filter(|name| *name != node)
+        .map(|name| name.text())
 }
 
 /// Whether the identifiers in `text` name a security value.
@@ -173,7 +216,12 @@ const delay = 60000 + Math.random() * 120000
         let contexts = crate::ast_scan::nodes_of_kind(tree.root_node(), &["call_expression"])
             .into_iter()
             .filter(|call| crate::ast_scan::callee(*call) == "Math.random")
-            .map(|call| (call.start_position().0 + 1, in_security_context(call)))
+            .map(|call| {
+                (
+                    call.start_position().0 + 1,
+                    matches!(random_use(call), RandomUse::Security),
+                )
+            })
             .collect::<std::collections::BTreeMap<_, _>>();
         assert_eq!(
             contexts.into_iter().collect::<Vec<_>>(),

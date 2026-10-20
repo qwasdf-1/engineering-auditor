@@ -89,6 +89,13 @@ impl ScanRun<'_> {
         if owner.uses_structure_index() {
             self.ensure_structure_index();
         }
+        if owner.uses_call_graph() {
+            let context = &mut self.context;
+            let structure = context.structure.as_ref().expect("structure index");
+            context
+                .call_graph
+                .get_or_insert_with(|| call_graph::CallGraph::build(structure));
+        }
         self.ensure_call_following_indexes(owner);
         if owner.uses_optimization_index() && self.context.optimization.is_none() {
             let context = &mut self.context;

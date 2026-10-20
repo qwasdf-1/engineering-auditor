@@ -3,6 +3,7 @@ use std::sync::{Arc, OnceLock};
 use tree_sitter::{Node, Parser, Tree};
 
 mod complexity;
+mod dataflow;
 mod extract;
 mod languages;
 mod macro_blanking;
@@ -13,6 +14,10 @@ mod semantic;
 pub use complexity::{
     branch_count, cognitive_complexity, function_complexity, halstead, npath_complexity,
     CognitiveBreakdown, FunctionComplexity, HalsteadMetrics,
+};
+pub use dataflow::{
+    call_arguments, call_receiver, Binding, BindingKind, CallFlow, Destination, FunctionFlow,
+    Origin,
 };
 pub use extract::{
     can_parse, extract_comments, extract_functions, function_fingerprint, structural_fingerprint,
@@ -177,6 +182,34 @@ pub struct AstNode<'a> {
     node: Node<'a>,
     source: &'a str,
     language: AstLang,
+}
+
+/// Nodes are equal when they are the same node of the same tree.
+impl PartialEq for AstNode<'_> {
+    fn eq(&self, other: &Self) -> bool {
+        self.node == other.node
+    }
+}
+
+impl Eq for AstNode<'_> {}
+
+impl std::fmt::Debug for AstNode<'_> {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            formatter,
+            "{}@{}..{} {:?}",
+            self.kind(),
+            self.start_byte(),
+            self.end_byte(),
+            self.text()
+        )
+    }
+}
+
+impl std::hash::Hash for AstNode<'_> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.node.hash(state);
+    }
 }
 
 impl<'a> AstNode<'a> {

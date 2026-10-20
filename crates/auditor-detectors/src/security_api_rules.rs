@@ -11,6 +11,7 @@ use crate::c_api_rules::{
     c_bind_all_interfaces, c_deprecated_tls_versions, c_disabled_certificate_checks,
     c_predictable_random, c_ssh_insecure_host_keys, c_world_writable_modes, c_xxe_parsers,
 };
+use crate::call_graph::CallGraph;
 use crate::csharp_api_rules::{
     csharp_bind_all_interfaces, csharp_deprecated_tls_versions, csharp_disabled_certificate_checks,
     csharp_predictable_random, csharp_ssh_insecure_host_keys, csharp_unsafe_deserialization,
@@ -39,8 +40,10 @@ use crate::rust_api_rules::{
     rust_bind_all_interfaces, rust_deprecated_tls_versions, rust_disabled_certificate_checks,
     rust_predictable_random, rust_ssh_insecure_host_keys, rust_world_writable_modes,
 };
-use crate::security_random_context::in_security_context;
+use crate::security_random_context::{random_use, RandomUse};
+use crate::security_random_helpers::{caller_findings, RandomHelpers};
 use crate::security_rules::{rule_finding, Rule};
+use crate::structure_index::StructureIndex;
 use crate::{util, AuditorConfig, Language};
 use auditor_core::Finding;
 
@@ -205,27 +208,52 @@ fn dangerous_chmod_mode(line: &str) -> bool {
     parsed.is_some_and(|mode| mode & 0o033 != 0)
 }
 
+/// The predictable random sources, per language; Python's are `random.*`
+/// calls except seeding.
+const RANDOM_SITES: &[(Language, ApiSites)] = &[
+    (Language::Rust, rust_predictable_random),
+    (Language::Go, go_math_rand_calls),
+    (Language::Java, java_predictable_random),
+    (Language::JavaScript, js_predictable_random),
+    (Language::TypeScript, js_predictable_random),
+    (Language::Kotlin, kotlin_predictable_random),
+    (Language::CSharp, csharp_predictable_random),
+    (Language::C, c_predictable_random),
+    (Language::Cpp, c_predictable_random),
+];
+
+/// Random values used for a security purpose where they are made, and
+/// random helpers whose callers use the result as one.
 pub(crate) fn random_for_security_findings(
-    scan: AstScan<'_, '_>,
+    mut scan: AstScan<'_, '_>,
     _config: &AuditorConfig,
+    indexes: (&StructureIndex, &CallGraph),
 ) -> Vec<Finding> {
-    call_findings_where(
-        scan,
+    let mut helpers = RandomHelpers::default();
+    let mut findings = call_findings_where(
+        scan.reborrow(),
         RANDOM_FOR_SECURITY,
         |callee, _| callee.starts_with("random.") && callee != "random.seed",
-        &[
-            (Language::Rust, rust_predictable_random),
-            (Language::Go, go_math_rand_calls),
-            (Language::Java, java_predictable_random),
-            (Language::JavaScript, js_predictable_random),
-            (Language::TypeScript, js_predictable_random),
-            (Language::Kotlin, kotlin_predictable_random),
-            (Language::CSharp, csharp_predictable_random),
-            (Language::C, c_predictable_random),
-            (Language::Cpp, c_predictable_random),
-        ],
-        in_security_context,
-    )
+        RANDOM_SITES,
+        |rel, site| match random_use(site) {
+            RandomUse::Security => true,
+            RandomUse::ReturnedFrom(function) => {
+                helpers.add(rel, function);
+                false
+            }
+            RandomUse::Other => false,
+        },
+    );
+    findings.extend(caller_findings(
+        scan,
+        indexes,
+        |language| {
+            *language == Language::Python || RANDOM_SITES.iter().any(|(owner, _)| owner == language)
+        },
+        helpers,
+        |rel, line, pattern| rule_finding(RANDOM_FOR_SECURITY, rel, line, pattern),
+    ));
+    findings
 }
 
 pub(crate) fn request_no_cert_verify_findings(
@@ -298,16 +326,16 @@ fn call_findings(
     matches: impl Fn(&str, &str) -> bool,
     sites: &[(Language, ApiSites)],
 ) -> Vec<Finding> {
-    call_findings_where(scan, rule, matches, sites, |_| true)
+    call_findings_where(scan, rule, matches, sites, |_, _| true)
 }
 
-/// [`call_findings`] reporting only the sites `keep` accepts.
+/// [`call_findings`] reporting only the sites `keep` accepts in a file.
 fn call_findings_where(
     scan: AstScan<'_, '_>,
     rule: Rule,
     matches: impl Fn(&str, &str) -> bool,
     sites: &[(Language, ApiSites)],
-    keep: impl Fn(AstNode<'_>) -> bool,
+    mut keep: impl FnMut(&str, AstNode<'_>) -> bool,
 ) -> Vec<Finding> {
     let mut findings = Vec::new();
     ast_scan::visit_ast_files(
@@ -320,7 +348,7 @@ fn call_findings_where(
             if let Some((_, finder)) = sites.iter().find(|(owner, _)| *owner == file.language) {
                 for site in finder(tree.root_node())
                     .into_iter()
-                    .filter(|site| keep(*site))
+                    .filter(|site| keep(&rel, *site))
                 {
                     findings.push(rule_finding(
                         rule,
@@ -335,7 +363,7 @@ fn call_findings_where(
                 let Some(callee) = call.child_by_field_name("function") else {
                     continue;
                 };
-                if matches(callee.text(), call.text()) && keep(call) {
+                if matches(callee.text(), call.text()) && keep(&rel, call) {
                     findings.push(rule_finding(
                         rule,
                         &rel,

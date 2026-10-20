@@ -1,14 +1,16 @@
-//! Whether a built SQL query's dynamic parts are only names. A value spliced
-//! where SQL expects a table, schema, or column name (`"FROM " + table`,
-//! `"\"%s\".tgt_%s".formatted(schema, name)`) cannot be a bound parameter,
-//! and it is configuration, not request input, in the code that does it; a
-//! local bound to a string literal (`final String filters = """..."""`) is a
-//! constant. Only a slot in value position (after `=`, inside `'..'`, in a
-//! list) keeps a query an injection site.
+//! Whether a built SQL query's dynamic parts are only configured names. A
+//! value spliced where SQL expects a table, schema, or column name
+//! (`"FROM " + table`, `"\"%s\".tgt_%s".formatted(schema, name)`) cannot be a
+//! bound parameter; unless it comes from request input, it is configuration.
+//! A local whose every reaching value is a literal (`final String filters =
+//! """..."""`) is a constant. A slot in value position (after `=`, inside
+//! `'..'`, in a list), or a name taken from the request, keeps a query an
+//! injection site.
 
-use auditor_ast::AstNode;
+use auditor_ast::{call_arguments, AstNode, CallFlow, FunctionFlow, Origin};
 
 use crate::ast_scan;
+use crate::dataflow_sources::from_request;
 
 /// Stands for one runtime value in the query's text.
 const SLOT: char = '\u{1}';
@@ -48,16 +50,6 @@ const STRING_KINDS: &[&str] = &[
     "verbatim_string_literal",
 ];
 
-/// Functions and methods, the scope a local's bindings are read in.
-const FUNCTION_KINDS: &[&str] = &[
-    "method_declaration",
-    "constructor_declaration",
-    "function_declaration",
-    "function_definition",
-    "method_definition",
-    "local_function_statement",
-];
-
 /// How a string's text marks the values a format call substitutes.
 #[derive(Clone, Copy, PartialEq)]
 enum Format {
@@ -68,79 +60,115 @@ enum Format {
     Brace,
 }
 
-/// Whether every runtime value in `query` sits in a name position, or none
-/// remains once literal-bound locals are read as constants.
-pub(crate) fn names_only(query: AstNode<'_>) -> bool {
-    let mut skeleton = String::new();
-    build(query, Format::Plain, &mut skeleton);
-    skeleton
-        .match_indices(SLOT)
-        .all(|(at, _)| is_name_position(&skeleton, at))
+/// The query's text with a [`SLOT`] per runtime value, and the
+/// expressions each slot may hold: the value itself, or a format call's
+/// arguments for its placeholders.
+#[derive(Default)]
+struct Skeleton<'a> {
+    text: String,
+    slots: Vec<Vec<AstNode<'a>>>,
 }
 
-/// Appends `node`'s query text to `out`, with a [`SLOT`] per runtime value.
-fn build(node: AstNode<'_>, format: Format, out: &mut String) {
+impl<'a> Skeleton<'a> {
+    fn slot(&mut self, values: Vec<AstNode<'a>>) {
+        self.text.push(SLOT);
+        self.slots.push(values);
+    }
+}
+
+/// Whether every runtime value in `query` is a configured name: in a name
+/// position and not from request input. True too when none remains once
+/// literal-bound locals are read as constants.
+pub(crate) fn names_only(query: AstNode<'_>) -> bool {
+    let mut skeleton = Skeleton::default();
+    build(query, Format::Plain, &[], &mut skeleton);
+    skeleton
+        .text
+        .match_indices(SLOT)
+        .zip(&skeleton.slots)
+        .all(|((at, _), values)| {
+            is_name_position(&skeleton.text, at) && !values.iter().any(|value| from_request(*value))
+        })
+}
+
+/// Appends `node`'s query text to `out`. `arguments` are the values a
+/// format template's placeholders take.
+fn build<'a>(node: AstNode<'a>, format: Format, arguments: &[AstNode<'a>], out: &mut Skeleton<'a>) {
     if STRING_KINDS.contains(&node.kind()) {
-        string_text(node, format, out);
-    } else if let Some((template, format)) = format_template(node) {
-        build(template, format, out);
+        string_text(node, format, arguments, out);
+    } else if let Some((template, format, arguments)) = format_template(node) {
+        build(template, format, &arguments, out);
     } else if let Some((left, right)) = concatenation(node) {
-        build(left, format, out);
-        build(right, format, out);
-    } else if let Some(template) = percent_template(node) {
-        build(template, Format::Percent, out);
+        build(left, format, arguments, out);
+        build(right, format, arguments, out);
+    } else if let Some((template, values)) = percent_template(node) {
+        build(template, Format::Percent, &values, out);
     } else if let Some(value) = node
         .named_children()
         .last()
         .filter(|_| matches!(node.kind(), "argument" | "value_argument"))
     {
-        build(value, format, out);
+        build(value, format, arguments, out);
     } else if matches!(
         node.kind(),
         "parenthesized_expression" | "concatenated_string"
     ) {
         node.named_children()
-            .for_each(|child| build(child, format, out));
-    } else if !is_runtime_value(node) || is_literal_local(node) {
-        out.push('c');
+            .for_each(|child| build(child, format, arguments, out));
+    } else if !is_runtime_value(node) || is_constant(node) {
+        out.text.push('c');
     } else {
-        out.push(SLOT);
+        out.slot(vec![node]);
     }
 }
 
-fn string_text(node: AstNode<'_>, format: Format, out: &mut String) {
+fn string_text<'a>(
+    node: AstNode<'a>,
+    format: Format,
+    arguments: &[AstNode<'a>],
+    out: &mut Skeleton<'a>,
+) {
     for child in node.named_children() {
         if INTERPOLATION_KINDS.contains(&child.kind()) {
-            out.push(SLOT);
+            let value = child
+                .named_children()
+                .find(|part| !part.kind().contains("brace") && !part.kind().contains("format"))
+                .unwrap_or(child);
+            out.slot(vec![value]);
         } else if child.kind() == "escape_sequence" {
-            out.extend(child.text().chars().nth(1));
+            out.text.extend(child.text().chars().nth(1));
         } else if CONTENT_KINDS.contains(&child.kind()) {
-            push_text(child.text(), format, out);
+            push_text(child.text(), format, arguments, out);
         }
     }
 }
 
-/// Copies `text`, replacing each format placeholder with a [`SLOT`].
-fn push_text(text: &str, format: Format, out: &mut String) {
+/// Copies `text`, replacing each format placeholder with a [`SLOT`] that
+/// may hold any of `arguments`.
+fn push_text<'a>(text: &str, format: Format, arguments: &[AstNode<'a>], out: &mut Skeleton<'a>) {
     let (open, escaped) = match format {
-        Format::Plain => return out.push_str(text),
+        Format::Plain => return out.text.push_str(text),
         Format::Percent => ('%', "%%"),
         Format::Brace => ('{', "{{"),
     };
     let mut rest = text;
     while let Some(at) = rest.find(open) {
-        out.push_str(&rest[..at]);
+        out.text.push_str(&rest[..at]);
         rest = &rest[at..];
         if rest.starts_with(escaped) {
-            out.push(open);
+            out.text.push(open);
             rest = &rest[2..];
             continue;
         }
         let length = placeholder_length(rest, format);
-        out.push(if length > 0 { SLOT } else { open });
+        if length > 0 {
+            out.slot(arguments.to_vec());
+        } else {
+            out.text.push(open);
+        }
         rest = &rest[length.max(1)..];
     }
-    out.push_str(rest);
+    out.text.push_str(rest);
 }
 
 /// The byte length of the placeholder opening `text`, or 0 for none.
@@ -165,10 +193,11 @@ fn placeholder_length(text: &str, format: Format) -> usize {
     }
 }
 
-/// A format call's template and its placeholder style: Java
-/// `"..".formatted(..)` and `String.format("..", ..)`, Python and Kotlin
-/// `"..".format(..)`, C# `string.Format("..", ..)`, Go `fmt.Sprintf("..", ..)`.
-fn format_template(node: AstNode<'_>) -> Option<(AstNode<'_>, Format)> {
+/// A format call's template, its placeholder style, and the values it
+/// substitutes: Java `"..".formatted(..)` and `String.format("..", ..)`,
+/// Python and Kotlin `"..".format(..)`, C# `string.Format("..", ..)`, Go
+/// `fmt.Sprintf("..", ..)`.
+fn format_template(node: AstNode<'_>) -> Option<(AstNode<'_>, Format, Vec<AstNode<'_>>)> {
     let (path, receiver) = match node.kind() {
         "method_invocation" => {
             let receiver = node.child_by_field_name("object");
@@ -189,19 +218,21 @@ fn format_template(node: AstNode<'_>) -> Option<(AstNode<'_>, Format)> {
     };
     let template = receiver.filter(|receiver| STRING_KINDS.contains(&receiver.kind()));
     let brace = node.language() == auditor_ast::AstLang::Python;
+    let arguments = call_arguments(node);
+    let after_template = || arguments.get(1..).unwrap_or_default().to_vec();
     match (path.rsplit('.').next().unwrap_or_default(), template) {
-        ("formatted", Some(template)) => Some((template, Format::Percent)),
-        ("format", Some(template)) if brace => Some((template, Format::Brace)),
-        ("format", Some(template)) => Some((template, Format::Percent)),
+        ("formatted", Some(template)) => Some((template, Format::Percent, arguments.clone())),
+        ("format", Some(template)) if brace => Some((template, Format::Brace, arguments.clone())),
+        ("format", Some(template)) => Some((template, Format::Percent, arguments.clone())),
         _ if matches!(
             path.as_str(),
             "String.format" | "java.lang.String.format" | "fmt.Sprintf"
         ) =>
         {
-            Some((first_argument(node)?, Format::Percent))
+            Some((first_argument(node)?, Format::Percent, after_template()))
         }
         _ if matches!(path.as_str(), "string.Format" | "String.Format") => {
-            Some((first_argument(node)?, Format::Brace))
+            Some((first_argument(node)?, Format::Brace, after_template()))
         }
         _ => None,
     }
@@ -219,10 +250,18 @@ fn concatenation(node: AstNode<'_>) -> Option<(AstNode<'_>, AstNode<'_>)> {
     Some((node.named_child(0)?, node.named_child(1)?))
 }
 
-/// Python's `template % values`.
-fn percent_template(node: AstNode<'_>) -> Option<AstNode<'_>> {
-    (node.kind() == "binary_operator" && operator(node) == Some("%"))
-        .then(|| node.named_child(0))?
+/// Python's `template % values`, with the values substituted.
+fn percent_template(node: AstNode<'_>) -> Option<(AstNode<'_>, Vec<AstNode<'_>>)> {
+    if node.kind() != "binary_operator" || operator(node) != Some("%") {
+        return None;
+    }
+    let values = node.named_child(1)?;
+    let values = if values.kind() == "tuple" {
+        values.named_children().collect()
+    } else {
+        vec![values]
+    };
+    Some((node.named_child(0)?, values))
 }
 
 fn operator<'a>(node: AstNode<'a>) -> Option<&'a str> {
@@ -246,67 +285,17 @@ fn first_argument(call: AstNode<'_>) -> Option<AstNode<'_>> {
     }
 }
 
-/// An identifier whose every binding in its function is a string literal
-/// without interpolation.
-fn is_literal_local(node: AstNode<'_>) -> bool {
+/// A name whose every reaching value is a literal (`final String filters =
+/// """..."""`, `clause = escape ? " ESCAPE '\\'" : ""`).
+fn is_constant(node: AstNode<'_>) -> bool {
     if !matches!(node.kind(), "identifier" | "simple_identifier") {
         return false;
     }
-    let Some(scope) = std::iter::successors(node.parent(), AstNode::parent)
-        .find(|ancestor| FUNCTION_KINDS.contains(&ancestor.kind()))
-    else {
-        return false;
-    };
-    let bindings = ast_scan::nodes_of_kind(
-        scope,
-        &[
-            "variable_declarator",
-            "assignment",
-            "assignment_expression",
-            "augmented_assignment",
-        ],
-    )
-    .into_iter()
-    .filter(|binding| binding_name(*binding).is_some_and(|name| name.text() == node.text()))
-    .collect::<Vec<_>>();
-    !bindings.is_empty()
-        && bindings.iter().all(|binding| {
-            binding.kind() != "augmented_assignment"
-                && binding_value(*binding).is_some_and(is_literal_text)
-        })
-}
-
-/// A string literal without interpolation, or a choice between such
-/// literals (`escape ? " ESCAPE '\\'" : ""`).
-fn is_literal_text(value: AstNode<'_>) -> bool {
-    if matches!(
-        value.kind(),
-        "ternary_expression" | "conditional_expression"
-    ) {
-        let branches = ["consequence", "alternative"]
+    let origins = FunctionFlow::enclosing(node).origins(node, &|_| CallFlow::Opaque);
+    !origins.is_empty()
+        && origins
             .iter()
-            .filter_map(|field| value.child_by_field_name(field))
-            .collect::<Vec<_>>();
-        return branches.len() == 2 && branches.into_iter().all(is_literal_text);
-    }
-    STRING_KINDS.contains(&value.kind())
-        && !value
-            .named_children()
-            .any(|part| INTERPOLATION_KINDS.contains(&part.kind()))
-}
-
-fn binding_name(binding: AstNode<'_>) -> Option<AstNode<'_>> {
-    binding
-        .child_by_field_name("name")
-        .or_else(|| binding.child_by_field_name("left"))
-        .or_else(|| binding.named_child(0))
-}
-
-fn binding_value(binding: AstNode<'_>) -> Option<AstNode<'_>> {
-    binding
-        .child_by_field_name("value")
-        .or_else(|| binding.child_by_field_name("right"))
-        .or_else(|| binding.named_children().last())
+            .all(|origin| matches!(origin, Origin::Literal(_)))
 }
 
 /// Whether the slot at byte `at` of `skeleton` names a table, schema, or

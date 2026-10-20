@@ -139,3 +139,40 @@ fn name_slots_are_read_in_each_language() {
         "\"SELECT * FROM t WHERE id = $id\""
     ));
 }
+
+#[test]
+fn names_taken_from_request_input_are_not_configured_names() {
+    let express = "app.get('/t', (req, res) => {\n  const { table } = req.query;\n  db.query('SELECT * FROM ' + table);\n  db.query('SELECT * FROM ' + config.table);\n});\n";
+    assert!(!names_only_in(
+        AstLang::JavaScript,
+        express,
+        "'SELECT * FROM ' + table"
+    ));
+    assert!(names_only_in(
+        AstLang::JavaScript,
+        express,
+        "'SELECT * FROM ' + config.table"
+    ));
+
+    let flask =
+        "@app.route('/t')\ndef show():\n    cur.execute('SELECT * FROM %s' % request.args['t'])\n";
+    assert!(!names_only_in(
+        AstLang::Python,
+        flask,
+        "'SELECT * FROM %s' % request.args['t']"
+    ));
+
+    let spring = "class C { List f(@RequestParam String table) {\n  return jdbc.query(\"SELECT * FROM \\\"%s\\\"\".formatted(table));\n} }\n";
+    assert!(!names_only_in(
+        AstLang::Java,
+        spring,
+        "\"SELECT * FROM \\\"%s\\\"\".formatted(table)"
+    ));
+
+    let gin = "package p\nfunc h(c *gin.Context) {\n  t := c.Query(\"t\")\n  db.Query(fmt.Sprintf(\"SELECT * FROM %s\", t))\n}\n";
+    assert!(!names_only_in(
+        AstLang::Go,
+        gin,
+        "fmt.Sprintf(\"SELECT * FROM %s\", t)"
+    ));
+}

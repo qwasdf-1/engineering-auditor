@@ -4,6 +4,23 @@
 
 ### Added
 
+- A def-use data-flow layer within functions (`auditor_ast::FunctionFlow`):
+  reaching bindings, value origins, and value destinations, the same for
+  every language, with calls passed through by policy. `sql_injection` and
+  `random_for_security` are its first users.
+- `sql_injection` reports a table or column name spliced into a query again
+  when it comes from request input in the same function: an Express, Koa,
+  hono, Flask, Django, Starlette, ASP.NET, or net/http request member, a
+  gin, echo, chi, mux, or servlet request accessor, or a parameter bound by
+  `@RequestParam`, `@PathVariable`, JAX-RS, `[FromQuery]`, or a FastAPI
+  marker. Names from configuration stay unreported.
+- `random_for_security` follows a weak random value to where it goes in its
+  function (names and keys, cookie, HMAC, signing, cipher, and key-derivation
+  calls, credential headers), and a helper that returns one to its callers
+  through up to four resolved calls: `const sessionToken = randomString(32)`
+  is reported at the call, with the helper in `via` evidence. The
+  46-repository corpus is unchanged: its random helpers make IDs, test
+  names, and retry delays.
 - The ecosystem runner records per-language syntax coverage (files
   recovered from syntax errors, and files still unparsed) in each scan
   summary. `run.py syntax-check` fails when a scan leaves more files of any

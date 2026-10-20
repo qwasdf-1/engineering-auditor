@@ -89,6 +89,18 @@ time, in catalog order. `EA_TRACE_OWNERS=1` prints each owner's time.
 Analysis is syntax-based: there is no type checker, whole-program dataflow, or
 alias analysis. Detectors that would need them stay silent rather than guess.
 
+Within one function, `auditor_ast::FunctionFlow` answers def-use questions
+the same way for every language: which bindings (parameters, declarations,
+assignments, loop variables) reach a read, where a value comes from, and
+where it goes (names, call arguments, properties, the return). It reads the
+tree on demand, follows anonymous functions inside their enclosing function,
+and takes a `CallFlow` policy for how calls pass values through. It has no
+flow through fields or aliases. Between functions, owners carry what a
+function returns through the call graph's certain targets.
+`dataflow_sources.rs` names request input (framework request members and
+accessors, request-bound parameters) and security sinks for the owners that
+use the layer (`sql_injection`, `random_for_security`).
+
 Graph-dependent detectors (the `graph-analysis` feature) read optional
 repository-graph and co-edit inputs through a `GraphProvider`; without them
 they report `missing_input` and emit nothing.

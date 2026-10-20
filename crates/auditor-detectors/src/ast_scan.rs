@@ -51,6 +51,18 @@ impl<'files, 'ast> AstScan<'files, 'ast> {
         scan
     }
 
+    /// A scan of the same files sharing this scan's parse cache, for an
+    /// owner that walks its files more than once.
+    pub(crate) fn reborrow(&mut self) -> AstScan<'files, '_> {
+        AstScan {
+            files: self.files,
+            method: self.method,
+            cache: self.cache,
+            repo_ast: &mut *self.repo_ast,
+            scope: self.scope,
+        }
+    }
+
     pub(crate) fn test_scope(
         files: &'files [AuditedFile],
         method: AnalysisMethod,

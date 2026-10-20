@@ -146,6 +146,14 @@ mod tests {
             config,
         ));
         findings.extend(flask_debug_true_findings(files, cache, config));
+        let structure =
+            crate::structure_index::StructureIndex::build(crate::ast_scan::AstScan::context(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ));
+        let graph = crate::call_graph::CallGraph::build(&structure);
         findings.extend(random_for_security_findings(
             crate::ast_scan::AstScan::new(
                 files,
@@ -154,6 +162,7 @@ mod tests {
                 &mut repo_ast,
             ),
             config,
+            (&structure, &graph),
         ));
         findings.extend(request_no_cert_verify_findings(
             crate::ast_scan::AstScan::new(
@@ -814,6 +823,39 @@ mod tests {
                 .iter()
                 .any(|f| f.detector == "ssh_no_host_key_verification"),
             "expected ssh_no_host_key_verification finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn random_helpers_are_reported_where_callers_make_secrets() {
+        let root = temp_root("random_helpers");
+        let file = make_file(
+            &root,
+            "src/ids.js",
+            "function randomString(n) {\n  let s = '';\n  for (let i = 0; i < n; i++) { s += chars[Math.floor(Math.random() * chars.length)]; }\n  return s;\n}\nfunction wrap(n) { return randomString(n); }\nexport function login() {\n  const sessionToken = wrap(32);\n  const label = randomString(4);\n  return sessionToken + label;\n}\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default())
+            .into_iter()
+            .filter(|finding| finding.detector == "random_for_security")
+            .collect::<Vec<_>>();
+        let reported = findings
+            .iter()
+            .map(|finding| {
+                let via = match finding.evidence.get("via") {
+                    Some(auditor_core::EvidenceValue::String(via)) => via.clone(),
+                    _ => String::new(),
+                };
+                (finding.locations[0].line, via)
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(
+            reported,
+            [(
+                Some(8),
+                "wrap (src/ids.js:6) -> randomString (src/ids.js:1)".to_string()
+            )]
         );
         fs::remove_dir_all(&root).unwrap();
     }

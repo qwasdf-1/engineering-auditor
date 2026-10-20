@@ -488,6 +488,10 @@ fn run_correctness_owner(
                 &mut context.repo_ast,
             ),
             context.config,
+            (
+                context.structure.as_ref().expect("structure index"),
+                context.call_graph.as_ref().expect("call graph"),
+            ),
         ),
         DetectorOwner::RequestNoCertVerify => security_rules::request_no_cert_verify_findings(
             ast_scan::AstScan::new(
