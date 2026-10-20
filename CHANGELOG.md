@@ -4,6 +4,13 @@
 
 ### Added
 
+- `per_item_external_io` and `blocking_io_in_async_context` follow calls into
+  repository functions: a call inherits the external-I/O and blocking-I/O
+  effects of the function it invokes, through up to four calls. Findings
+  through a helper name it in `via` evidence and have Medium confidence.
+  Calls resolve only to certain targets (`call_graph.rs`). On the recall
+  benchmark, helper and cross-file detection rises from 0 to 9 of 29 each;
+  on the 46-repository corpus the two detectors gain 15 findings.
 - A seeded recall benchmark (`tooling/recall/`, `eval/recall/`) for the
   algorithmic, systems, and optimization detectors: 116 cases in Rust,
   Python, TypeScript, Go, and Java, each putting a known problem directly in

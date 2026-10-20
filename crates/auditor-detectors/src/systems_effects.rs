@@ -75,9 +75,49 @@ fn effects_for_call(
                 in_async: function.is_async || in_async_callback,
                 in_hot_path: is_hot_path(&function.name),
                 in_request_path: is_request_path(&function.name),
+                owner: Some(owner),
+                via: None,
             }
         })
         .collect()
+}
+
+/// An effect a call inherits from the repository function it invokes:
+/// the caller's loop, async, and path context, with the callee's effect kind
+/// and operation. Artifact, subject, and lineage facts stay unset, so only
+/// owners that need none of them consume inherited effects.
+pub(super) fn inherited_effect(
+    file: &StructureFile,
+    call: &StructureCall,
+    kind: EffectKind,
+    operation: &str,
+    via: String,
+) -> Option<SystemEffect> {
+    let owner = call.owner?;
+    let function = file.symbols.get(owner as usize)?;
+    let in_async_callback = file
+        .async_spans
+        .iter()
+        .any(|span| span.start_byte <= call.span.start_byte && call.span.end_byte <= span.end_byte);
+    Some(SystemEffect {
+        path: file.path.clone(),
+        language: file.language.clone(),
+        function: function.name.clone(),
+        line: call.line,
+        loop_line: enclosing_loop(file, call.control_region, call.span)
+            .map(|loop_fact| loop_fact.span.start_line),
+        kind,
+        subject: None,
+        artifact: None,
+        value_lineage: None,
+        loop_variant: false,
+        operation: operation.to_string(),
+        in_async: function.is_async || in_async_callback,
+        in_hot_path: is_hot_path(&function.name),
+        in_request_path: is_request_path(&function.name),
+        owner: Some(owner),
+        via: Some(via),
+    })
 }
 
 /// Go grows a slice with `cache = append(cache, entry)`, reads its latest
@@ -145,6 +185,8 @@ fn go_cache_effects(file: &StructureFile) -> Vec<SystemEffect> {
                 in_async: false,
                 in_hot_path: is_hot_path(&function.name),
                 in_request_path: is_request_path(&function.name),
+                owner,
+                via: None,
             })
         })
         .collect()

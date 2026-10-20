@@ -31,9 +31,11 @@ detections, so the baseline only moves up; rewrite it with
 
 Six detectors in Rust, Python, TypeScript, Go, and Java (116 cases; Go has no
 `async`, so `blocking_io_in_async_context` covers four languages). Every
-`direct` case is detected and every `negative` stays silent, but no `helper`
-or `cross_file` case is: 0 of 29 each. Following cost through function calls
-is the gap these cases measure.
+`direct` case is detected and every `negative` stays silent.
+`per_item_external_io` and `blocking_io_in_async_context` follow calls into
+repository functions, so their `helper` and `cross_file` cases are detected
+too: 9 of 29 in each shape. The other four detectors still miss every
+`helper` and `cross_file` case.
 
 Helpers use neutral names (`details`, `refresh`, `matcher`) so a hit means
 the detector followed the call, not that the helper's name looked like I/O.

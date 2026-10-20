@@ -70,8 +70,10 @@ per-detector record.
 Recall is measured separately on seeded cases
 ([`eval/recall/`](../eval/recall/README.md)). For six algorithmic and systems
 detectors in five languages, every case with the problem directly in a loop
-is caught (29 of 29), and none with it in a helper or an imported helper
-(0 of 29 each).
+is caught (29 of 29). External-I/O and blocking-I/O effects are followed
+through calls into repository functions, which catches 9 of 29 cases each
+with the problem in a helper or an imported helper; the sort, query, regex,
+and artifact-rewrite detectors do not follow calls yet.
 
 ## AI Review (Experimental)
 

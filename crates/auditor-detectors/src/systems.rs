@@ -301,13 +301,29 @@ fn effect_finding(
     behavior: &str,
     recommendation: &str,
 ) -> Finding {
-    auditor_core::finding!(
+    // An inherited effect is one resolved call or more away from the call
+    // site, so the finding names the called function and is less certain.
+    let (message, confidence) = match effect.via.as_deref() {
+        Some(via) => (
+            format!(
+                "Function `{}` {behavior}, through `{}`.",
+                effect.function,
+                via.split(" (").next().unwrap_or(via)
+            ),
+            Confidence::Medium,
+        ),
+        None => (
+            format!("Function `{}` {behavior}.", effect.function),
+            Confidence::High,
+        ),
+    };
+    let finding = auditor_core::finding!(
         detector,
         "systems_economics",
         title,
-        format!("Function `{}` {behavior}.", effect.function),
+        message,
         Severity::Low,
-        Confidence::High,
+        confidence,
         effect.path.clone(),
         Some(effect.loop_line.unwrap_or(effect.line)),
     )
@@ -322,7 +338,11 @@ fn effect_finding(
     .with_evidence("inside_loop", effect.loop_line.is_some())
     .with_evidence("async_context", effect.in_async)
     .with_evidence("hot_path", effect.in_hot_path)
-    .with_evidence("request_path", effect.in_request_path)
+    .with_evidence("request_path", effect.in_request_path);
+    match &effect.via {
+        Some(via) => finding.with_evidence("via", via.clone()),
+        None => finding,
+    }
 }
 
 /// Find files that are both high-churn and non-trivially complex.

@@ -6,7 +6,9 @@ use crate::structure_index::StructureIndex;
 use crate::Language;
 
 use super::systems_effects::extract_effects;
+use super::systems_inherited::inherited_effects;
 use super::systems_topology::build_topology;
+use crate::call_graph::CallGraph;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 #[repr(usize)]
@@ -63,6 +65,11 @@ pub(crate) struct SystemEffect {
     pub(crate) in_async: bool,
     pub(crate) in_hot_path: bool,
     pub(crate) in_request_path: bool,
+    /// The function (symbol index in its file) the effect occurs in.
+    pub(crate) owner: Option<u32>,
+    /// For an effect inherited through calls, the called repository
+    /// functions from the call site to the one performing it.
+    pub(crate) via: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -112,11 +119,15 @@ pub(crate) struct SystemsIndex {
 impl SystemsIndex {
     pub(crate) fn build(structure: &StructureIndex) -> Self {
         let topology = build_topology(structure);
+        let direct: Vec<Vec<SystemEffect>> =
+            structure.files().iter().map(extract_effects).collect();
+        let inherited = inherited_effects(structure, &CallGraph::build(structure), &direct);
         let effects = structure
             .files()
             .iter()
-            .filter(|file| file.emittable)
-            .flat_map(extract_effects)
+            .zip(direct.into_iter().zip(inherited))
+            .filter(|(file, _)| file.emittable)
+            .flat_map(|(_, (direct, inherited))| direct.into_iter().chain(inherited))
             .collect();
         Self {
             effects,

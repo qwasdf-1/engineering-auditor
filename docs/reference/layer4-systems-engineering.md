@@ -96,6 +96,19 @@ new commit, a file can enter or leave the hotspot set without being edited.
 
 ## Full-Only Owners
 
+## Effects Through Calls
+
+`per_item_external_io` and `blocking_io_in_async_context` also follow calls
+into repository functions. A call inherits the external-I/O and blocking-I/O
+effects of the function it invokes, through up to four resolved calls, so a
+loop calling a helper that makes a network request is reported at the call
+site, with `via` evidence naming the helper chain and Medium confidence.
+Calls resolve only when the target is certain without types
+(`call_graph.rs`): same-file functions, imported functions, Go functions in
+the same package, `self`/`this` and implicit-`this` methods, and
+`Type.method` or `module.function` calls. A call on any other value stays
+unresolved. The other systems owners still consume direct effects only.
+
 ### `blocking_io_in_async_context`
 
 Reports a proven blocking file or process I/O effect directly inside an async
