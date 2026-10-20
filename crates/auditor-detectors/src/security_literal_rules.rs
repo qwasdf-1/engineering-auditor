@@ -176,12 +176,56 @@ fn credential_literal(target: String, value: String) -> Option<(String, String)>
     Some((target, value))
 }
 
+/// Last words of a target that names something about a credential, not the
+/// credential: where it lives, what kind it is, who owns it.
+const NAMING_WORDS: &[&str] = &[
+    "env",
+    "var",
+    "name",
+    "header",
+    "field",
+    "param",
+    "dir",
+    "directory",
+    "path",
+    "file",
+    "kind",
+    "type",
+    "owner",
+    "version",
+    "route",
+    "prefix",
+    "label",
+];
+
+/// Words before a final `key` that make it a lookup key (`SECRET_CONFIG_KEY`)
+/// rather than a key (`SECRET_KEY`).
+const LOOKUP_KEY_WORDS: &[&str] = &[
+    "config", "setting", "settings", "storage", "store", "cache", "lookup", "map", "property",
+    "metadata", "option",
+];
+
 /// A target or literal that names where a credential lives rather than
 /// holding one: `API_KEY_ENV = "SERVICE_API_KEY"`, `TOKEN_HEADER = ".."`,
-/// a property key (`SOCKS_PASSWORD = "java.net.socks.password"`), or a
-/// character set with no letter or digit (`PASSWORD_ENCODE_SET = " \"':;"`).
+/// `SECRET_STORE_DIR = "secrets"`, `SECRET_BACKEND_CONFIG_KEY = ".."`, a
+/// literal that is the target's own name (`api_key: "api_key"`), a property
+/// key (`SOCKS_PASSWORD = "java.net.socks.password"`), or a character set
+/// with no letter or digit (`PASSWORD_ENCODE_SET = " \"':;"`).
 fn names_a_credential(target: &str, value: &str) -> bool {
-    let target = target.to_ascii_lowercase();
+    naming_target(target) || value.eq_ignore_ascii_case(target) || names_by_shape(value)
+}
+
+/// A target whose last word names something about a credential.
+fn naming_target(target: &str) -> bool {
+    match util::split_identifier(target).as_slice() {
+        [.., before, last] if last == "key" => LOOKUP_KEY_WORDS.contains(&before.as_str()),
+        [.., last] => NAMING_WORDS.contains(&last.as_str()),
+        [] => false,
+    }
+}
+
+/// An environment variable name, a property key, or symbols only.
+fn names_by_shape(value: &str) -> bool {
     let environment_name = value.contains('_')
         && value.chars().all(|character| {
             character.is_ascii_uppercase() || character.is_ascii_digit() || character == '_'
@@ -193,13 +237,7 @@ fn names_a_credential(target: &str, value: &str) -> bool {
                 || character.is_ascii_digit()
                 || ".-_".contains(character)
         });
-    let symbols_only = !value.chars().any(|character| character.is_alphanumeric());
-    environment_name
-        || property_key
-        || symbols_only
-        || ["_env", "_var", "_name", "_header", "_field", "_param"]
-            .iter()
-            .any(|suffix| target.ends_with(suffix))
+    environment_name || property_key || !value.chars().any(char::is_alphanumeric)
 }
 
 /// A plain or high-entropy credential finding for `target = value`.

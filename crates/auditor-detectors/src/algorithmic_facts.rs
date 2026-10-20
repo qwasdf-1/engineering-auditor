@@ -651,6 +651,8 @@ fn collect_queries_in_loops(
     }
 }
 
+#[path = "algorithmic_facts_collections.rs"]
+mod collections;
 #[path = "algorithmic_facts_cost_collectors.rs"]
 mod cost_collectors;
 #[path = "algorithmic_facts_effects.rs"]
@@ -662,6 +664,7 @@ mod semantics;
 #[path = "algorithmic_facts_structure.rs"]
 mod structure;
 
+use collections::*;
 use cost_collectors::*;
 use effects::*;
 use front_removal::collect_front_removals;

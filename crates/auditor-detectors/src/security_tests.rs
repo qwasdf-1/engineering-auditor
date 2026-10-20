@@ -228,6 +228,35 @@ mod tests {
         fs::remove_dir_all(&root).unwrap();
     }
 
+    fn credential_targets(rel: &str, text: &str) -> Vec<String> {
+        let root = temp_root("credential_names");
+        let file = make_file(&root, rel, text);
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        fs::remove_dir_all(&root).unwrap();
+        findings
+            .iter()
+            .filter(|f| f.detector == "hardcoded_credential")
+            .filter_map(|f| f.identity.get("target").cloned())
+            .collect()
+    }
+
+    #[test]
+    fn credential_named_layout_constants_are_not_credentials() {
+        let rust = "const CREDENTIAL_STORE_DIR: &str = \"credentials\";\n\
+            const SECRET_BACKEND_CONFIG_KEY: &str = \"secret_backend_kind\";\n\
+            pub const CREDENTIAL_MATERIAL_KIND: &str = \"credential_material\";\n\
+            pub const CREDENTIAL_SCHEMA_VERSION: &str = \"1.0.0\";\n\
+            const CREDENTIAL_ACCESS_OWNER: &str = \"vault-credential-access\";\n\
+            const SECRET_KEY: &str = \"k3J9vQ2mX8pL5nR7\";\n";
+        assert_eq!(credential_targets("src/layout.rs", rust), ["SECRET_KEY"]);
+        let script = "const routes = {\n  api_key: \"api_key\",\n  oauth: \"browser_login\",\n};\n\
+            const secretsPath = \"secrets\";\nconst dbPassword = \"hunter2hunter\";\n";
+        assert_eq!(credential_targets("src/routes.ts", script), ["dbPassword"]);
+        let python = "password = \"password1\"\nsecret_store_dir = \"secrets\"\n";
+        assert_eq!(credential_targets("src/settings.py", python), ["password"]);
+    }
+
     #[test]
     fn security_detects_unsafe_pickle() {
         let root = temp_root("pickle");

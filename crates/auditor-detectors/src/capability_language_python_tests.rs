@@ -86,7 +86,7 @@ pub(super) fn python_fact_capability_files(
         ),
         "hot_path_linear_membership" => (
             "def select(ids: list[str], wanted: list[str]):\n    for item_id in ids:\n        if item_id in wanted:\n            consume(item_id)\n",
-            "def select(ids: list[str], wanted: set[str], text: str):\n    for item_id in ids:\n        if item_id in wanted or item_id in text:\n            consume(item_id)\n",
+            "def select(ids: list[str], wanted: set[str], text: str):\n    for item_id in ids:\n        if item_id in wanted or item_id in text:\n            consume(item_id)\n\ndef allowed(rows, registry):\n    allow = {\n        (entry[\"path\"], entry[\"kind\"]) for entry in registry.get(\"allow\", [])\n    }\n    index = {entry[\"path\"]: entry for entry in registry.get(\"rows\", [])}\n    for row in rows:\n        if (row.path, row.kind) in allow or row.path in index:\n            consume(row)\n",
         ),
         "invariant_collection_copy_in_loop" => (
             "def inspect(requests: list[int], items: list[int]):\n    for request in requests:\n        consume(request, len(items.copy()))\n",

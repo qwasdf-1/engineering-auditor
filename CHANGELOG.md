@@ -32,6 +32,21 @@ first-parent history, and two detectors specific to one downstream project
 are removed from the experimental `graph-analysis` feature. Stable surfaces
 are unchanged.
 
+### Fixed
+
+- `hardcoded_credential` no longer reports credential-named constants that
+  name something about a credential: a target whose last word is a
+  location, kind, owner, version, route, prefix or label
+  (`SECRET_STORE_DIR = "secrets"`, `CREDENTIAL_KIND = "credential_material"`),
+  a lookup key (`SECRET_BACKEND_CONFIG_KEY`, but not `SECRET_KEY`), or a
+  literal equal to the target's name (`api_key: "api_key"`). Target words
+  are split on case too, so the existing suffixes (`_env`, `_header`, ..)
+  now match camelCase targets.
+- `hot_path_linear_membership` reads a Python set or dict display or
+  comprehension by its outer braces, so
+  `{(e["path"], e["kind"]) for e in rows.get("allow", [])}` is a set even
+  though it contains `[]`.
+
 ### Performance
 
 - Complexity metrics look up each function's syntax node in a per-file index
