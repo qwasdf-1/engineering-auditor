@@ -570,6 +570,10 @@ return silently.
 | eight gating detectors | Round eight: tooling scripts (`tools/`, `scripts/`, docs scripts) reported by `excessive_nesting_depth`, `empty_catch_block`, `exit_in_production`, `shell_execution`, `hardcoded_credential`, `identifier_tersity`, `resource_not_closed`, and `nested_quadratic_iteration` | They emit in production files only, as the verdict standard scopes them |
 | all detectors | A repository-root `build/` (hono release scripts) and `integration/` (fastify integration tests) classified as production | Root-level only: tooling and test roles; nested `build` or `integration` packages stay production |
 | all detectors | A repository-root `support/` (fmt's release script, generator, vendored docopt, docs plugin) classified as production | Root-level only: tooling role; a nested `Support` directory (LLVM `lib/Support`) stays code |
+| all detectors | A repository-root `extra/` (uptime-kuma release and maintenance scripts) or `hack/` classified as production; `console_output_in_production` reading its own tooling paths instead of the role | Root-level only: tooling role; console output skips every tooling-role file |
+| `sql_injection` | SQL formatted from identifiers it cannot parameterize (dependency-track's v4 migrator schema and table names, Dapper.Rainbow `TableName`) and a literal FreeMarker macro prefix | Name-position values and literal-bound locals are not injection: all 17 corpus findings |
+| `unsafe_deserialization` | `yaml.load(.., Loader=yaml.SafeLoader)` (apprise) | Safe loaders exempt (Bandit B506) |
+| `random_for_security` | Test-data generators (hoppscotch predefined variables, zod and eslint tooling), retry jitter, cache busting, multipart boundaries, request IDs | Reported only when a bound name or the enclosing function's name marks a security purpose: 81 → 9 corpus findings |
 | `go_errcheck` | Writes to a `bytes.Buffer` or `strings.Builder` (errcheck's default exclusions); a method the file declares without results (chi `LogEntry.Write`) | A receiver declared with those types, and result-less methods, are skipped |
 | `out_parameter` | `@Override` methods whose supertype fixes an output buffer (`Reader.read(char[] cbuf, ..)`) | Overrides exempt |
 | `hardcoded_credential` | Property-key names (`"java.net.socks.password"`) and character sets with no letter or digit (okhttp `PASSWORD_ENCODE_SET`) | Not credential values |
@@ -639,15 +643,10 @@ These are not fixed. They drove the Task 8 profile decisions (see
   (vendored docopt's help exit), `unused_assignment` in C++ (yaml-cpp's
   `util/` and `contrib/`), and `stringly_typed_parameter` in Python and
   TypeScript (`mode` mirroring `open()`, a media-type value).
-- **Found by the Semgrep comparison (2026-10-20).** `sql_injection` reports
-  SQL formatted from identifiers it cannot parameterize: a configured schema
-  name and constant table names (all 17 corpus findings, mostly
-  dependency-track's v4 migrator), and a constant template macro.
-  `unsafe_deserialization` reports `yaml.load(.., Loader=yaml.SafeLoader)`.
-  `random_for_security` reports test-data generators, multipart boundaries,
-  and cache-busting values (2 of 20 sampled are true positives).
-  `shell_execution` reports uptime-kuma's `extra/` release scripts, which
-  the source-role rules classify as production.
+- **Found by the Semgrep comparison (2026-10-20).** `random_for_security`
+  reports a cache-busting React state named `nonce` (trpc's og-image page).
+  The study's other false positives are fixed (see the `sql_injection`,
+  `unsafe_deserialization`, `random_for_security`, and `extra/` rows above).
 
 ## Comparison with Semgrep
 
@@ -680,6 +679,12 @@ counted.
 | `shell_execution` | 1 / 6 (release scripts) | 3 / 10 (fmt's `std::system(format(..))`, two server execs; release scripts) | 0 / 8 (literal commands, an Action's own inputs) |
 | `sql_injection` | none | 0 / 17 (identifiers) | 0 / 8, 1 unclear (Dapper internals, a configured-query monitor) |
 | `random_for_security` | none | 2 / 17, 1 unclear, of 81 sampled 20 (zlib's PKWARE header, a digest-auth nonce) | none in production |
+
+The table records the scan the labels were made on. Since then, the
+`sql_injection` false positives, the `SafeLoader` call, the release-script
+`shell_execution` findings, and all but 9 `random_for_security` findings are
+no longer reported (see Fixed Noise Mechanisms); the labelled true positives
+are all still reported.
 
 On the overlap, neither tool is precise: excluding `random_for_security`,
 Engineering Auditor's labelled findings are 16 true positives of 50, and

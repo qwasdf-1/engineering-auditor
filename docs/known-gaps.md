@@ -14,6 +14,13 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
   through at most four calls. Calls on values whose type is unknown, such as
   methods of an injected service (`this.userService.find(..)`), are never
   followed, so the work such a call does stays hidden.
+- Security detectors judge purpose from names, not data flow.
+  `sql_injection` does not report a query whose only runtime values are
+  table, schema, or column names, so a table name taken from request input
+  is missed. `random_for_security` reports a weak random source only when
+  the name it is bound to, or its enclosing function's name, says token,
+  nonce, password, key, or similar; a secret held in a generically named
+  variable is missed.
 - A file with syntax errors is analyzed after recovery. For C, C++, and C#,
   one configuration of the preprocessor conditionals is chosen (the first
   live branch of each `#if` group), and in C and C++ a macro in a

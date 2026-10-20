@@ -39,6 +39,7 @@ use crate::rust_api_rules::{
     rust_bind_all_interfaces, rust_deprecated_tls_versions, rust_disabled_certificate_checks,
     rust_predictable_random, rust_ssh_insecure_host_keys, rust_world_writable_modes,
 };
+use crate::security_random_context::in_security_context;
 use crate::security_rules::{rule_finding, Rule};
 use crate::{util, AuditorConfig, Language};
 use auditor_core::Finding;
@@ -115,7 +116,11 @@ pub(crate) fn unsafe_deserialization_findings(
     call_findings(
         scan,
         UNSAFE_DESERIALIZATION,
-        |callee, _| matches!(callee, "pickle.loads" | "pickle.load" | "yaml.load"),
+        |callee, call| match callee {
+            "pickle.loads" | "pickle.load" => true,
+            "yaml.load" => !has_safe_yaml_loader(call),
+            _ => false,
+        },
         &[
             (Language::Java, java_unsafe_deserialization),
             (Language::JavaScript, js_unsafe_deserialization),
@@ -124,6 +129,14 @@ pub(crate) fn unsafe_deserialization_findings(
             (Language::CSharp, csharp_unsafe_deserialization),
         ],
     )
+}
+
+/// `yaml.load(.., Loader=yaml.SafeLoader)` and the C and base loaders
+/// construct only plain values (Bandit B506 exempts them).
+fn has_safe_yaml_loader(call: &str) -> bool {
+    ["SafeLoader", "CSafeLoader", "BaseLoader"]
+        .iter()
+        .any(|loader| util::count_word(call, loader) > 0)
 }
 
 pub(crate) fn bind_all_interfaces_findings(
@@ -196,7 +209,7 @@ pub(crate) fn random_for_security_findings(
     scan: AstScan<'_, '_>,
     _config: &AuditorConfig,
 ) -> Vec<Finding> {
-    call_findings(
+    call_findings_where(
         scan,
         RANDOM_FOR_SECURITY,
         |callee, _| callee.starts_with("random.") && callee != "random.seed",
@@ -211,6 +224,7 @@ pub(crate) fn random_for_security_findings(
             (Language::C, c_predictable_random),
             (Language::Cpp, c_predictable_random),
         ],
+        in_security_context,
     )
 }
 
@@ -284,6 +298,17 @@ fn call_findings(
     matches: impl Fn(&str, &str) -> bool,
     sites: &[(Language, ApiSites)],
 ) -> Vec<Finding> {
+    call_findings_where(scan, rule, matches, sites, |_| true)
+}
+
+/// [`call_findings`] reporting only the sites `keep` accepts.
+fn call_findings_where(
+    scan: AstScan<'_, '_>,
+    rule: Rule,
+    matches: impl Fn(&str, &str) -> bool,
+    sites: &[(Language, ApiSites)],
+    keep: impl Fn(AstNode<'_>) -> bool,
+) -> Vec<Finding> {
     let mut findings = Vec::new();
     ast_scan::visit_ast_files(
         scan,
@@ -293,7 +318,10 @@ fn call_findings(
         |file, tree, _| {
             let rel = util::path_slash(&file.relative);
             if let Some((_, finder)) = sites.iter().find(|(owner, _)| *owner == file.language) {
-                for site in finder(tree.root_node()) {
+                for site in finder(tree.root_node())
+                    .into_iter()
+                    .filter(|site| keep(*site))
+                {
                     findings.push(rule_finding(
                         rule,
                         &rel,
@@ -307,7 +335,7 @@ fn call_findings(
                 let Some(callee) = call.child_by_field_name("function") else {
                     continue;
                 };
-                if matches(callee.text(), call.text()) {
+                if matches(callee.text(), call.text()) && keep(call) {
                     findings.push(rule_finding(
                         rule,
                         &rel,

@@ -42,8 +42,8 @@ pub(super) fn js_capability_files(
         ),
         "random_for_security" => (
             "import { randomInt } from 'crypto';",
-            "return Math.random();",
-            "return randomInt(10);",
+            "const token = Math.random();",
+            "const token = randomInt(10);",
         ),
         "request_no_cert_verify" => (
             "import https from 'https';",

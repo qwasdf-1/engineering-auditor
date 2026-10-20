@@ -1,6 +1,7 @@
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::ast_scan::{self, AstScan};
+use crate::security_sql_names::{is_runtime_value, names_only};
 use crate::{util, Language};
 
 pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
@@ -37,6 +38,7 @@ pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
                         is_sql_sink(ast_scan::callee(*node))
                             && has_sql_keyword(node.text())
                             && has_dynamic_query(*node)
+                            && !first_argument(*node).is_some_and(names_only)
                     })
                     .collect(),
             };
@@ -111,7 +113,7 @@ fn python_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<
                 }
             };
             sink && first_argument(*call)
-                .is_some_and(|query| has_sql_keyword(query.text()) && has_dynamic_query(query))
+                .is_some_and(|query| built_from_values(query, has_dynamic_query))
         })
         .map(|(_, call)| call)
         .collect::<Vec<_>>();
@@ -145,7 +147,7 @@ fn rust_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_
                 )
             ) && !ast_scan::is_inside_rust_test(*call)
                 && first_argument(*call)
-                    .is_some_and(|query| has_sql_keyword(query.text()) && has_dynamic_query(query))
+                    .is_some_and(|query| built_from_values(query, has_dynamic_query))
         })
         .collect()
 }
@@ -208,9 +210,18 @@ fn built_query_sites<'a>(
             };
             name.is_some_and(|name| sinks.contains(&name))
                 && first_argument(*call)
-                    .is_some_and(|query| has_sql_keyword(query.text()) && builds_from_values(query))
+                    .is_some_and(|query| built_from_values(query, builds_from_values))
         })
         .collect()
+}
+
+/// A query with SQL keywords built from runtime values (by `builds`) that
+/// are not all table, schema, or column names.
+pub(crate) fn built_from_values(
+    query: auditor_ast::AstNode<'_>,
+    builds: impl Fn(auditor_ast::AstNode<'_>) -> bool,
+) -> bool {
+    has_sql_keyword(query.text()) && builds(query) && !names_only(query)
 }
 
 /// A query expression built from runtime values.
@@ -228,25 +239,6 @@ fn builds_from_values(node: auditor_ast::AstNode<'_>) -> bool {
         "parenthesized_expression" => node.named_children().any(builds_from_values),
         _ => false,
     }
-}
-
-/// An operand that is not a literal, a constant (`TABLE`, `Columns.ID`), or
-/// a nested concatenation.
-pub(crate) fn is_runtime_value(operand: auditor_ast::AstNode<'_>) -> bool {
-    if operand.kind().contains("string")
-        || operand.kind().ends_with("literal")
-        || matches!(
-            operand.kind(),
-            "binary_expression" | "parenthesized_expression" | "number"
-        )
-    {
-        return false;
-    }
-    let last = operand.text().rsplit('.').next().unwrap_or_default();
-    !(last.chars().any(char::is_alphabetic)
-        && last.chars().all(|character| {
-            character.is_ascii_uppercase() || character.is_ascii_digit() || character == '_'
-        }))
 }
 
 fn first_argument(call: auditor_ast::AstNode<'_>) -> Option<auditor_ast::AstNode<'_>> {

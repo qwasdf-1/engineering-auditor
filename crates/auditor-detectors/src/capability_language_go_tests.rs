@@ -32,8 +32,8 @@ pub(super) fn go_capability_files(detector: &str, positive: bool) -> Option<Vec<
         ),
         "random_for_security" => (
             "random \"math/rand\"",
-            "_ = random.Intn(10)",
-            "_ = len(command)",
+            "token := random.Intn(10)",
+            "token := len(command)",
         ),
         "request_no_cert_verify" => (
             "\"crypto/tls\"",

@@ -393,7 +393,10 @@ pub(crate) fn console_output_in_production_findings(scan: AstScan<'_, '_>) -> Ve
     ast_scan::visit_ast_files(scan, Language::is_tiered, |file, tree, _| {
         let relative = util::path_slash(&file.relative);
         let root = tree.root_node();
-        if is_console_tooling_path(&relative) || is_program_entry(file, root) {
+        if file.role == crate::SourceRole::Tooling
+            || is_console_tooling_path(&relative)
+            || is_program_entry(file, root)
+        {
             return;
         }
         let outputs = if file.language == Language::Go {

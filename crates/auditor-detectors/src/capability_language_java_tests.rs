@@ -56,8 +56,8 @@ pub(super) fn java_capability_files(
         ),
         "random_for_security" => (
             "import java.util.Random;\nimport java.security.SecureRandom;",
-            "new Random().nextInt(10);",
-            "new SecureRandom().nextInt(10);",
+            "int token = new Random().nextInt(10);",
+            "int token = new SecureRandom().nextInt(10);",
         ),
         "request_no_cert_verify" => (
             "import javax.net.ssl.HttpsURLConnection;",

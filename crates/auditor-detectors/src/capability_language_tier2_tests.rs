@@ -218,8 +218,8 @@ fn csharp_source(detector: &str, positive: bool) -> Option<String> {
         ),
         "random_for_security" => (
             "using System.Security.Cryptography;",
-            "var random = new Random();",
-            "var bytes = RandomNumberGenerator.GetBytes(16);",
+            "var token = new Random().Next();",
+            "var token = RandomNumberGenerator.GetBytes(16);",
         ),
         "request_no_cert_verify" => (
             "",

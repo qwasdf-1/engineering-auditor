@@ -510,11 +510,14 @@ fn is_test_file(components: &[String], original: &[&str], stem: &str) -> bool {
 }
 
 /// Build files, and a repository-root `build/` or `support/` (fmt's release
-/// and generator scripts). Nested directories of those names are code.
+/// and generator scripts), `extra/` (uptime-kuma's release and maintenance
+/// scripts), or `hack/` (Kubernetes-style development scripts). Nested
+/// directories of those names are code.
 fn is_build_path(components: &[String], name: &str) -> bool {
     is_build_file(name)
-        || top_level_directory(components, "build")
-        || top_level_directory(components, "support")
+        || ["build", "support", "extra", "hack"]
+            .iter()
+            .any(|directory| top_level_directory(components, directory))
 }
 
 fn ordered_source_roles<'a>(

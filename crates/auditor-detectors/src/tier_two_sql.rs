@@ -9,7 +9,8 @@ use auditor_ast::AstNode;
 use crate::ast_scan;
 use crate::csharp_api_identity::csharp_arguments;
 use crate::kotlin_api_identity::kotlin_arguments;
-use crate::security_sql::{has_sql_keyword, is_runtime_value};
+use crate::security_sql::built_from_values;
+use crate::security_sql_names::is_runtime_value;
 
 /// JDBC, JPA, and Spring `JdbcTemplate` methods that run their SQL argument.
 const JVM_SINKS: &[&str] = &[
@@ -40,9 +41,9 @@ pub(crate) fn kotlin_sql_sites(root: AstNode<'_>) -> Vec<AstNode<'_>> {
                 .filter(|callee| callee.kind() == "navigation_expression")
                 .map(|callee| callee.text().rsplit('.').next().unwrap_or_default());
             method.is_some_and(|method| JVM_SINKS.contains(&method))
-                && kotlin_arguments(*call).first().is_some_and(|(_, query)| {
-                    has_sql_keyword(query.text()) && kotlin_builds(*query)
-                })
+                && kotlin_arguments(*call)
+                    .first()
+                    .is_some_and(|(_, query)| built_from_values(*query, kotlin_builds))
         })
         .collect()
 }
@@ -99,7 +100,7 @@ pub(crate) fn csharp_sql_sites(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         "ExecuteReader",
         "ExecuteReaderAsync",
     ];
-    let unsafe_query = |query: AstNode<'_>| has_sql_keyword(query.text()) && csharp_builds(query);
+    let unsafe_query = |query: AstNode<'_>| built_from_values(query, csharp_builds);
     let mut sites = ast_scan::nodes_of_kind(
         root,
         &["invocation_expression", "object_creation_expression"],

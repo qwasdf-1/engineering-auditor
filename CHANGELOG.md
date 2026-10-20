@@ -52,6 +52,34 @@
   a loop, in a same-file helper, or in an imported helper, with a fixed
   negative. CI fails if a detected case is missed or a negative fires.
 
+### Fixed
+
+- `sql_injection` no longer reports queries whose only runtime values are
+  table, schema, or column names: a value quoted as an identifier
+  (`"\"%s\".tgt_%s".formatted(..)`), joined to a name (`schema.` + table),
+  or after `FROM`, `JOIN`, `INTO`, `UPDATE`, `TABLE`, `TRUNCATE`, or
+  `EXISTS`. Such a value cannot be a bound parameter. A local bound only to
+  string literals (a FreeMarker macro prefix, a literal `ESCAPE` clause) is
+  a constant. A value after `=`, inside `'..'`, in a list, or after
+  `ORDER BY` is still reported. All 17 corpus findings, labelled false
+  positives in the Semgrep comparison, are gone.
+- `unsafe_deserialization` exempts `yaml.load` with `SafeLoader`,
+  `CSafeLoader`, or `BaseLoader` (Bandit B506).
+- `random_for_security` reports a predictable random value only when the
+  name it is bound to, or its enclosing function's name, marks a security
+  purpose: a token, nonce, secret, password, salt, one-time code, PKCE
+  verifier, or cipher input. Test-data generators, retry jitter, cache
+  busting, and multipart boundaries are no longer reported; corpus findings
+  fall from 81 to 9 (digest-auth cnonces, an OTP, a PKCE verifier, zlib's
+  PKWARE header, a generated password, an API signature nonce, and one
+  cache-busting `nonce`).
+- A repository-root `extra/` (uptime-kuma's release and maintenance
+  scripts) or `hack/` takes the tooling role, and
+  `console_output_in_production` skips every tooling-role file, not only
+  its own list of tooling paths. On the corpus this removes 16
+  `shell_execution`, 64 `exit_in_production`, and 223 console findings in
+  release scripts and command-line tools.
+
 ## 1.1.0 - First Public Release
 
 The first release from the public repository. Scans are faster and use all

@@ -420,6 +420,24 @@ mod tests {
     }
 
     #[test]
+    fn yaml_load_with_a_safe_loader_is_not_unsafe_deserialization() {
+        let root = temp_root("yaml_safe");
+        let file = make_file(
+            &root,
+            "src/main.py",
+            "a = yaml.load(content, Loader=yaml.SafeLoader)\nb = yaml.load(content, yaml.CSafeLoader)\nc = yaml.load(content, Loader=yaml.UnsafeLoader)\n",
+        );
+        let cache = test_cache(&file);
+        let lines = security_findings(&[file], &cache, &AuditorConfig::default())
+            .into_iter()
+            .filter(|finding| finding.detector == "unsafe_deserialization")
+            .filter_map(|finding| finding.locations.first().and_then(|location| location.line))
+            .collect::<Vec<_>>();
+        assert_eq!(lines, [3]);
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn sql_injection_detects_f_string_concat() {
         let root = temp_root("sqli");
         let file = make_file(&root, "src/db.go", "selectQuery, err := db.Query(fmt.Sprintf(\"SELECT * FROM users WHERE id = %s\", user_id))\n");
