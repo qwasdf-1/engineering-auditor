@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 - First Public Release
+
+The first release from the public repository. Scans are faster and use all
+cores, release archives carry third-party license notices, churn follows the
+first-parent history, and two detectors specific to one downstream project
+are removed from the experimental `graph-analysis` feature. Stable surfaces
+are unchanged.
 
 ### Performance
 

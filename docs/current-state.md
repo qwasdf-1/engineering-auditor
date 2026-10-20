@@ -1,7 +1,7 @@
 # Current State
 
-What Engineering Auditor does today, by area, as of 1.0.0 and the unreleased
-changes after it. Limitations are in [`known-gaps.md`](known-gaps.md).
+What Engineering Auditor does today, by area, as of 1.1.0. Limitations are
+in [`known-gaps.md`](known-gaps.md).
 
 ## Release
 
@@ -10,7 +10,9 @@ changes after it. Limitations are in [`known-gaps.md`](known-gaps.md).
 v5, finding-ID v3, baseline v2, gate result 2, SARIF 2.1.0, and the stable
 `auditor.toml` keys. Pushing a version tag builds Linux x86_64 and macOS
 archives with checksums, the license, and third-party license notices
-([`distribution.md`](distribution.md)).
+([`distribution.md`](distribution.md)). 1.1.0 is the first release from the
+public repository; it adds parallel parsing and the license notices and keeps
+every stable surface unchanged.
 
 ## Scanning
 
