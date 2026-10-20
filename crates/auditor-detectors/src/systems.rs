@@ -27,16 +27,27 @@ pub(crate) fn loop_artifact_rewrite_findings(index: &SystemsIndex) -> Vec<Findin
         .into_iter()
         .filter_map(|((path, function, loop_line), effects)| {
             let (read, write) = artifact_rewrite_pair(&effects)?;
-            Some(
-                grouped_finding(
+            // Effects inherited through calls name the called function and
+            // are less certain, as in `effect_finding`.
+            let via = write.via.as_deref().or(read.via.as_deref());
+            let through = via.map_or(String::new(), |via| {
+                format!(", through `{}`", via.split(" (").next().unwrap_or(via))
+            });
+            let mut finding = grouped_finding(
                 "loop_artifact_rewrite",
                 "Loop rewrites whole artifact",
                 format!(
-                    "Function `{function}` performs whole-artifact read and write effects inside one loop."
+                    "Function `{function}` performs whole-artifact read and write effects inside one loop{through}."
                 ),
                 "Use incremental updates or move whole-artifact I/O outside the loop.",
                 (path, Some(loop_line)),
-            )
+            );
+            if let Some(via) = via {
+                finding.confidence = Confidence::Medium;
+                finding = finding.with_evidence("via", via.to_string());
+            }
+            Some(
+                finding
             .with_evidence("function", function)
             .with_evidence("loop_line", loop_line)
             .with_identity("read_artifact", read.artifact.clone().unwrap_or_default())

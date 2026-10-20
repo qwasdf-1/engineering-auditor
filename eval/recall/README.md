@@ -32,10 +32,10 @@ detections, so the baseline only moves up; rewrite it with
 Six detectors in Rust, Python, TypeScript, Go, and Java (116 cases; Go has no
 `async`, so `blocking_io_in_async_context` covers four languages). Every
 `direct` case is detected and every `negative` stays silent.
-`per_item_external_io` and `blocking_io_in_async_context` follow calls into
-repository functions, so their `helper` and `cross_file` cases are detected
-too: 9 of 29 in each shape. The other four detectors still miss every
-`helper` and `cross_file` case.
+`per_item_external_io`, `blocking_io_in_async_context`, and
+`loop_artifact_rewrite` follow calls into repository functions, so their
+`helper` and `cross_file` cases are detected too: 14 of 29 in each shape.
+The other three detectors still miss every `helper` and `cross_file` case.
 
 Helpers use neutral names (`details`, `refresh`, `matcher`) so a hit means
 the detector followed the call, not that the helper's name looked like I/O.

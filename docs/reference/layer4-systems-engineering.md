@@ -107,7 +107,17 @@ Calls resolve only when the target is certain without types
 (`call_graph.rs`): same-file functions, imported functions, Go functions in
 the same package, `self`/`this` and implicit-`this` methods, and
 `Type.method` or `module.function` calls. A call on any other value stays
-unresolved. The other systems owners still consume direct effects only.
+unresolved.
+
+`loop_artifact_rewrite` follows calls the same way. A helper's artifact read
+or write carries its artifact and value relative to the helper's parameters,
+and each call binds them to its arguments by position. A loop that reads an
+artifact and passes the value to a helper writing a fixed artifact is
+reported, and so is a loop calling a helper that reads and rewrites one
+artifact itself. A write whose path depends on an argument that varies with
+the loop is per-item output, not a rewrite. A named argument leaves the
+binding unknown, so no finding follows from it. The other systems owners
+still consume direct effects only.
 
 ### `blocking_io_in_async_context`
 

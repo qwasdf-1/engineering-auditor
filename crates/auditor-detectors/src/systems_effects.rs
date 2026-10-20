@@ -82,15 +82,26 @@ fn effects_for_call(
         .collect()
 }
 
+/// The artifact facts an inherited effect carries, already bound to the
+/// call site's arguments.
+#[derive(Default)]
+pub(super) struct BoundFacts {
+    pub(super) artifact: Option<String>,
+    pub(super) value_lineage: Option<String>,
+    /// Call-site expressions the artifact depends on.
+    pub(super) artifact_inputs: Vec<String>,
+    /// The artifact varies inside the called function itself.
+    pub(super) variant: bool,
+}
+
 /// An effect a call inherits from the repository function it invokes:
 /// the caller's loop, async, and path context, with the callee's effect kind
-/// and operation. Artifact, subject, and lineage facts stay unset, so only
-/// owners that need none of them consume inherited effects.
+/// and operation, and the callee's artifact facts bound to the call site.
 pub(super) fn inherited_effect(
     file: &StructureFile,
     call: &StructureCall,
-    kind: EffectKind,
-    operation: &str,
+    (kind, operation): (EffectKind, &str),
+    facts: BoundFacts,
     via: String,
 ) -> Option<SystemEffect> {
     let owner = call.owner?;
@@ -99,18 +110,25 @@ pub(super) fn inherited_effect(
         .async_spans
         .iter()
         .any(|span| span.start_byte <= call.span.start_byte && call.span.end_byte <= span.end_byte);
+    let enclosing_loop = enclosing_loop(file, call.control_region, call.span);
+    let loop_variant = facts.variant
+        || enclosing_loop.is_some_and(|loop_fact| {
+            facts
+                .artifact_inputs
+                .iter()
+                .any(|input| expression_depends_on_loop(file, call, loop_fact, input))
+        });
     Some(SystemEffect {
         path: file.path.clone(),
         language: file.language.clone(),
         function: function.name.clone(),
         line: call.line,
-        loop_line: enclosing_loop(file, call.control_region, call.span)
-            .map(|loop_fact| loop_fact.span.start_line),
+        loop_line: enclosing_loop.map(|loop_fact| loop_fact.span.start_line),
         kind,
         subject: None,
-        artifact: None,
-        value_lineage: None,
-        loop_variant: false,
+        artifact: facts.artifact,
+        value_lineage: facts.value_lineage,
+        loop_variant,
         operation: operation.to_string(),
         in_async: function.is_async || in_async_callback,
         in_hot_path: is_hot_path(&function.name),
@@ -251,7 +269,7 @@ fn effect_value_lineage(
     }
 }
 
-fn call_arguments(call: &StructureCall) -> Vec<&str> {
+pub(super) fn call_arguments(call: &StructureCall) -> Vec<&str> {
     call.arguments
         .as_deref()
         .map(strip_call_delimiters)
@@ -342,7 +360,7 @@ fn effect_subject(
     }
 }
 
-fn assignment_aliases(file: &StructureFile) -> BTreeMap<String, String> {
+pub(super) fn assignment_aliases(file: &StructureFile) -> BTreeMap<String, String> {
     file.assignments
         .iter()
         .filter_map(|assignment| {
@@ -357,7 +375,7 @@ fn assignment_aliases(file: &StructureFile) -> BTreeMap<String, String> {
         .collect()
 }
 
-fn normalize_subject(value: &str, aliases: &BTreeMap<String, String>) -> String {
+pub(super) fn normalize_subject(value: &str, aliases: &BTreeMap<String, String>) -> String {
     let mut subject = simple_subject(value).unwrap_or_else(|| value.trim().to_string());
     for _ in 0..8 {
         let Some(next) = aliases.get(&subject) else {
@@ -368,7 +386,7 @@ fn normalize_subject(value: &str, aliases: &BTreeMap<String, String>) -> String 
     subject
 }
 
-fn simple_subject(value: &str) -> Option<String> {
+pub(super) fn simple_subject(value: &str) -> Option<String> {
     crate::util::identifiers(value)
         .into_iter()
         .find(|identifier| {

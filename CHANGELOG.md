@@ -11,6 +11,13 @@
   Calls resolve only to certain targets (`call_graph.rs`). On the recall
   benchmark, helper and cross-file detection rises from 0 to 9 of 29 each;
   on the 46-repository corpus the two detectors gain 15 findings.
+- `loop_artifact_rewrite` follows calls into repository functions too. A
+  helper's artifact and written value bind to the call's arguments by
+  position, so a loop that reads an artifact and passes it to a helper
+  writing a fixed artifact is reported, as is a loop calling a helper that
+  rewrites one artifact itself. Helper and cross-file recall rises to 14 of
+  29 each. No corpus finding changes: the detector reports nothing there,
+  directly or through calls.
 - A seeded recall benchmark (`tooling/recall/`, `eval/recall/`) for the
   algorithmic, systems, and optimization detectors: 116 cases in Rust,
   Python, TypeScript, Go, and Java, each putting a known problem directly in
