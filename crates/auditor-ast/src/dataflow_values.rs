@@ -159,10 +159,7 @@ impl<'f, 'a> Tracer<'f, 'a> {
             self.origins.push(Origin::Literal(node));
         } else if STRING_KINDS.contains(&kind) {
             self.string(node);
-        } else if matches!(
-            kind,
-            "identifier" | "simple_identifier" | "shorthand_property_identifier"
-        ) {
+        } else if is_name(node) {
             self.identifier(node);
         } else if CALL_KINDS.contains(&kind) {
             self.call(node);
@@ -235,6 +232,14 @@ impl<'f, 'a> Tracer<'f, 'a> {
             }
         }
     }
+}
+
+/// A bare name read as a value.
+pub(super) fn is_name(node: AstNode<'_>) -> bool {
+    matches!(
+        node.kind(),
+        "identifier" | "simple_identifier" | "shorthand_property_identifier"
+    )
 }
 
 /// The interpolated expressions of a string, in order.

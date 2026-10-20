@@ -33,6 +33,12 @@ mod tests {
             crate::Language::JavaScript
         } else if rel.ends_with(".go") {
             crate::Language::Go
+        } else if rel.ends_with(".java") {
+            crate::Language::Java
+        } else if rel.ends_with(".kt") {
+            crate::Language::Kotlin
+        } else if rel.ends_with(".cs") {
+            crate::Language::CSharp
         } else {
             crate::Language::Python
         };
@@ -482,6 +488,81 @@ mod tests {
         assert!(
             !findings.iter().any(|f| f.detector == "sql_injection"),
             "expected no sql_injection finding for parametrized query"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn sql_injection_follows_queries_built_in_locals() {
+        let root = temp_root("sqli_locals");
+        let python = "def find(cur, user_id):\n    q = \"SELECT * FROM users WHERE id = \" + user_id\n    cur.execute(q)\n\ndef safe(cur, user_id):\n    q = \"SELECT * FROM users WHERE id = %s\"\n    cur.execute(q, (user_id,))\n\ndef appended(cur, name):\n    q = \"SELECT * FROM users WHERE 1=1\"\n    if name:\n        q += \" AND name = '\" + name + \"'\"\n    cur.execute(q)\n\ndef table(cur, table):\n    q = \"SELECT * FROM \" + table\n    cur.execute(q)\n\ndef replaced(cur, user_id):\n    q = \"SELECT * FROM users WHERE id = \" + user_id\n    q = \"SELECT 1\"\n    cur.execute(q)\n";
+        let files = [
+            make_file(&root, "src/a.py", python),
+            make_file(
+                &root,
+                "src/b.js",
+                "async function f(db, id) {\n  const sql = `SELECT * FROM t WHERE id = ${id}`;\n  return db.query(sql);\n}\n",
+            ),
+            make_file(
+                &root,
+                "src/c.go",
+                "package c\nfunc f(db *sql.DB, id string) {\n\tq := \"SELECT * FROM t WHERE id = \" + id\n\tdb.Query(q)\n}\n",
+            ),
+            make_file(
+                &root,
+                "src/D.java",
+                "class D { void f(Statement st, String id) throws Exception {\n  String q = \"SELECT * FROM t WHERE id = \" + id;\n  st.executeQuery(q);\n} }\n",
+            ),
+            make_file(
+                &root,
+                "src/E.cs",
+                "class E { void F(SqlConnection c, string id) {\n  var sql = $\"DELETE FROM t WHERE id = {id}\";\n  var cmd = new SqlCommand(sql, c);\n} }\n",
+            ),
+            make_file(
+                &root,
+                "src/F.kt",
+                "fun f(st: Statement, id: String) {\n    val q = \"SELECT * FROM t WHERE id = $id\"\n    st.executeQuery(q)\n}\n",
+            ),
+            make_file(
+                &root,
+                "src/g.rs",
+                "fn f(conn: &Connection, id: &str) {\n    let q = format!(\"SELECT * FROM t WHERE id = {}\", id);\n    conn.execute(&q, []);\n}\n",
+            ),
+        ];
+        let cache = util::FileCache::new(&files);
+        let mut found = sql_injection_findings(
+            &files,
+            crate::AnalysisMethod::Ast,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        )
+        .into_iter()
+        .map(|finding| {
+            let location = finding.locations.first().unwrap();
+            (
+                location.path.clone(),
+                location.line,
+                match finding.evidence.get("query_built_at") {
+                    Some(auditor_core::EvidenceValue::String(line)) => Some(line.clone()),
+                    _ => None,
+                },
+            )
+        })
+        .collect::<Vec<_>>();
+        found.sort();
+        let built = |line: &str| Some(line.to_string());
+        assert_eq!(
+            found,
+            [
+                ("src/D.java".to_string(), Some(3), built("line 2")),
+                ("src/E.cs".to_string(), Some(3), built("line 2")),
+                ("src/F.kt".to_string(), Some(3), built("line 2")),
+                ("src/a.py".to_string(), Some(3), built("line 2")),
+                ("src/a.py".to_string(), Some(13), built("line 12")),
+                ("src/b.js".to_string(), Some(3), built("line 2")),
+                ("src/c.go".to_string(), Some(4), built("line 3")),
+                ("src/g.rs".to_string(), Some(3), built("line 2")),
+            ]
         );
         fs::remove_dir_all(&root).unwrap();
     }

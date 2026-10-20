@@ -191,6 +191,26 @@ pub enum Destination<'a> {
     Returned { function: AstNode<'a> },
 }
 
+/// One of the expressions a name's value may be made of.
+#[derive(Clone, Copy, Debug)]
+pub enum Assigned<'a> {
+    /// The whole value: `v` in `x = v`.
+    Whole(AstNode<'a>),
+    /// A part added to the old value: `v` in `x += v`.
+    Appended(AstNode<'a>),
+    /// A value from outside the function's bindings: the read of a
+    /// parameter, a loop variable, or a name bound elsewhere.
+    Outside(AstNode<'a>),
+}
+
+impl<'a> Assigned<'a> {
+    pub fn node(&self) -> AstNode<'a> {
+        match self {
+            Self::Whole(node) | Self::Appended(node) | Self::Outside(node) => *node,
+        }
+    }
+}
+
 /// The bindings and reads of one named function, or of a file's top level.
 pub struct FunctionFlow<'a> {
     scope: AstNode<'a>,
@@ -255,6 +275,58 @@ impl<'a> FunctionFlow<'a> {
             .into_iter()
             .filter(|read| self.reaching(*read).contains(binding))
             .collect()
+    }
+
+    /// The expressions `expression`'s value may be made of: itself, or for a
+    /// bare name, the values bound to it that reach it, following names bound
+    /// to names and `x += v` to the values `x` held before. In source order.
+    pub fn assigned(&self, expression: AstNode<'a>) -> Vec<Assigned<'a>> {
+        let mut assigned = Vec::new();
+        let mut seen = std::collections::HashSet::new();
+        let mut pending = vec![(expression, false)];
+        while let Some((node, appended)) = pending.pop() {
+            if !seen.insert((node, appended)) {
+                continue;
+            }
+            if values::is_name(node) {
+                pending.extend(self.bound_values(node, appended, &mut assigned));
+            } else if appended {
+                assigned.push(Assigned::Appended(node));
+            } else {
+                assigned.push(Assigned::Whole(node));
+            }
+        }
+        assigned.sort_by_key(|part| part.node().start_byte());
+        assigned.dedup_by_key(|part| part.node());
+        assigned
+    }
+
+    /// The values bound to the name `read` that reach it, each marked as
+    /// appended or not; a name bound outside the function goes to `assigned`.
+    fn bound_values(
+        &self,
+        read: AstNode<'a>,
+        appended: bool,
+        assigned: &mut Vec<Assigned<'a>>,
+    ) -> Vec<(AstNode<'a>, bool)> {
+        let reaching = self.reaching(read);
+        if reaching.is_empty() {
+            assigned.push(Assigned::Outside(read));
+        }
+        let mut values = Vec::new();
+        for binding in reaching {
+            match (binding.kind, binding.value) {
+                (BindingKind::Augmented, value) => {
+                    values.push((binding.target, appended));
+                    values.extend(value.map(|value| (value, true)));
+                }
+                (BindingKind::Declaration | BindingKind::Assignment, Some(value)) => {
+                    values.push((value, appended));
+                }
+                _ => assigned.push(Assigned::Outside(read)),
+            }
+        }
+        values
     }
 
     /// Where `expression`'s value may come from, seeing through calls as

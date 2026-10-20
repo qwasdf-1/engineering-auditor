@@ -92,7 +92,9 @@ alias analysis. Detectors that would need them stay silent rather than guess.
 Within one function, `auditor_ast::FunctionFlow` answers def-use questions
 the same way for every language: which bindings (parameters, declarations,
 assignments, loop variables) reach a read, where a value comes from, and
-where it goes (names, call arguments, properties, the return). It reads the
+where it goes (names, call arguments, properties, the return), and which
+expressions a name's value is made of (whole values and parts appended
+with `+=`). It reads the
 tree on demand, follows anonymous functions inside their enclosing function,
 and takes a `CallFlow` policy for how calls pass values through. It has no
 flow through fields or aliases. Between functions, owners carry what a

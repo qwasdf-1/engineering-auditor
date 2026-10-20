@@ -85,6 +85,7 @@ mod security_random_helpers;
 mod security_rules;
 mod security_sql;
 mod security_sql_names;
+mod security_sql_templates;
 mod source_cache;
 mod source_discovery;
 mod statement_shapes;

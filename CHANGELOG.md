@@ -14,6 +14,16 @@
   gin, echo, chi, mux, or servlet request accessor, or a parameter bound by
   `@RequestParam`, `@PathVariable`, JAX-RS, `[FromQuery]`, or a FastAPI
   marker. Names from configuration stay unreported.
+- `sql_injection` follows a query passed by name to the values bound to it
+  in the same function (`q = "SELECT .. " + id; cursor.execute(q)`, and
+  parts appended with `q += ..`), in every language it covers, with
+  `query_built_at` evidence. Values spliced where SQL expects structure
+  rather than a value (a clause after `WHERE`/`AND`, a subquery, a column
+  or placeholder list) are fragments a query builder composed and are not
+  reported unless they come from request input; numbers converted to text
+  and quoted identifiers (`strconv.Itoa`, `pq.QuoteIdentifier`) are safe.
+  The 46-repository corpus is unchanged: its eight queries built in locals
+  are all builder fragments.
 - `random_for_security` follows a weak random value to where it goes in its
   function (names and keys, cookie, HMAC, signing, cipher, and key-derivation
   calls, credential headers), and a helper that returns one to its callers

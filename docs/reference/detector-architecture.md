@@ -69,7 +69,10 @@ Representative module boundaries:
   text plus each language's API-identity site finder); `security_rules.rs`
   keeps the literal and lexical owners and the shared rule metadata
 - `security_sql.rs`, `security_crypto.rs`, `security_process.rs`: semantic Go,
-  Java, and Python owners with no detector-private parser or file-read fallback
+  Java, and Python owners with no detector-private parser or file-read fallback.
+  `security_sql_names.rs` decides whether a query's runtime values only shape
+  its structure; `security_sql_templates.rs` reads the format templates and
+  concatenations a query is built with (both findings-free)
 - `go_api_rules.rs`, `java_api_rules.rs`, `js_api_rules.rs`, `python_api_rules.rs`,
   `rust_api_rules.rs`:
   findings-free L1 site finders over resolved API identity; owners construct

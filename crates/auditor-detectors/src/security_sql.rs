@@ -1,7 +1,9 @@
 use auditor_core::{Confidence, Finding, Severity};
 
+use auditor_ast::{call_arguments, Assigned, FunctionFlow};
+
 use crate::ast_scan::{self, AstScan};
-use crate::security_sql_names::{is_runtime_value, names_only};
+use crate::security_sql_names::{assigned_structure_only, is_runtime_value, structure_only};
 use crate::{util, Language};
 
 pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
@@ -36,29 +38,36 @@ pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
                     .into_iter()
                     .filter(|node| {
                         is_sql_sink(ast_scan::callee(*node))
-                            && has_sql_keyword(node.text())
-                            && has_dynamic_query(*node)
-                            && !first_argument(*node).is_some_and(names_only)
+                            && (has_sql_keyword(node.text())
+                                && has_dynamic_query(*node)
+                                && !first_argument(*node).is_some_and(structure_only)
+                                || first_argument(*node).is_some_and(|query| {
+                                    query.kind() == "identifier"
+                                        && built_from_values(query, has_dynamic_query)
+                                }))
                     })
                     .collect(),
             };
             for node in sites {
                 let line = node.start_position().0 + 1;
-                findings.push(
-                    auditor_core::finding!(
-                        "sql_injection",
-                        "correctness",
-                        "Potential SQL injection via string building (AST-detected)",
-                        format!("SQL query with string construction at line {line}"),
-                        Severity::High,
-                        Confidence::Medium,
-                        &relative,
-                        Some(line),
-                    )
-                    .with_recommendation("Use parameterized queries instead of string building.")
-                    .with_evidence("pattern", &node.text()[..node.text().len().min(80)])
-                    .with_evidence("analysis", "ast"),
-                );
+                let finding = auditor_core::finding!(
+                    "sql_injection",
+                    "correctness",
+                    "Potential SQL injection via string building (AST-detected)",
+                    format!("SQL query with string construction at line {line}"),
+                    Severity::High,
+                    Confidence::Medium,
+                    &relative,
+                    Some(line),
+                )
+                .with_recommendation("Use parameterized queries instead of string building.")
+                .with_evidence("pattern", &node.text()[..node.text().len().min(80)])
+                .with_evidence("analysis", "ast");
+                let finding = match built_at(node) {
+                    Some(built) => finding.with_evidence("query_built_at", format!("line {built}")),
+                    None => finding,
+                };
+                findings.push(finding);
             }
         },
     );
@@ -147,6 +156,7 @@ fn rust_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_
                 )
             ) && !ast_scan::is_inside_rust_test(*call)
                 && first_argument(*call)
+                    .map(unreferenced)
                     .is_some_and(|query| built_from_values(query, has_dynamic_query))
         })
         .collect()
@@ -216,12 +226,47 @@ fn built_query_sites<'a>(
 }
 
 /// A query with SQL keywords built from runtime values (by `builds`) that
-/// are not all table, schema, or column names.
+/// are not all table, schema, or column names. A query held in a local is
+/// read from the values bound to it: `q = "SELECT .. " + id; run(q)`, or a
+/// value appended with `q += " AND id = " + id`.
 pub(crate) fn built_from_values(
     query: auditor_ast::AstNode<'_>,
     builds: impl Fn(auditor_ast::AstNode<'_>) -> bool,
 ) -> bool {
-    has_sql_keyword(query.text()) && builds(query) && !names_only(query)
+    let parts = FunctionFlow::enclosing(query).assigned(query);
+    parts.iter().any(|part| has_sql_keyword(part.node().text()))
+        && parts.iter().any(|part| built_part(*part, &builds))
+        && !assigned_structure_only(&parts)
+}
+
+fn built_part(part: Assigned<'_>, builds: impl Fn(auditor_ast::AstNode<'_>) -> bool) -> bool {
+    match part {
+        Assigned::Whole(value) => builds(value),
+        Assigned::Appended(value) => builds(value) || is_runtime_value(value),
+        Assigned::Outside(_) => false,
+    }
+}
+
+/// The line where a query passed by name was built, when it was not built
+/// in the call: the first runtime part bound to the name.
+fn built_at(site: auditor_ast::AstNode<'_>) -> Option<usize> {
+    let query = match site.kind() {
+        "assignment_expression" => site.child_by_field_name("right")?,
+        _ => unreferenced(*call_arguments(site).first()?),
+    };
+    if query.named_child_count() > 0 || !query.kind().contains("identifier") {
+        return None;
+    }
+    FunctionFlow::enclosing(query)
+        .assigned(query)
+        .into_iter()
+        .find(|part| !matches!(part, Assigned::Outside(_)) && is_runtime_part(*part))
+        .map(|part| part.node().start_position().0 + 1)
+}
+
+fn is_runtime_part(part: Assigned<'_>) -> bool {
+    let value = part.node();
+    matches!(part, Assigned::Appended(_)) && is_runtime_value(value) || has_dynamic_query(value)
 }
 
 /// A query expression built from runtime values.
@@ -241,6 +286,14 @@ fn builds_from_values(node: auditor_ast::AstNode<'_>) -> bool {
     }
 }
 
+/// A Rust query passed by reference (`&q`) is the query itself.
+fn unreferenced(query: auditor_ast::AstNode<'_>) -> auditor_ast::AstNode<'_> {
+    match query.kind() {
+        "reference_expression" => query.child_by_field_name("value").unwrap_or(query),
+        _ => query,
+    }
+}
+
 fn first_argument(call: auditor_ast::AstNode<'_>) -> Option<auditor_ast::AstNode<'_>> {
     call.child_by_field_name("arguments")?
         .named_children()
@@ -250,7 +303,13 @@ fn first_argument(call: auditor_ast::AstNode<'_>) -> Option<auditor_ast::AstNode
 fn has_dynamic_query(node: auditor_ast::AstNode<'_>) -> bool {
     if matches!(
         node.kind(),
-        "binary_expression" | "interpolation" | "formatted_string" | "template_string"
+        "binary_expression"
+            | "interpolation"
+            | "formatted_string"
+            | "template_string"
+            | "interpolated_identifier"
+            | "interpolated_expression"
+            | "additive_expression"
     ) {
         return true;
     }

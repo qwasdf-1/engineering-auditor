@@ -166,3 +166,29 @@ fn destinations_follow_values_into_bindings_and_returns() {
     );
     assert_eq!(describe(2), ["returned from arrow_function", "bound id"]);
 }
+
+#[test]
+fn a_name_is_made_of_the_values_bound_and_appended_to_it() {
+    let source = "def f(cur, name, base):\n    alias = \"SELECT 1\"\n    q = alias\n    if name:\n        q += \" AND name = \" + name\n    other = base\n    cur.execute(q, other)\n";
+    let tree = tree(AstLang::Python, source);
+    let read = nth(tree.root_node(), "identifier", "q", 2);
+    let flow = FunctionFlow::enclosing(read);
+    let parts = flow
+        .assigned(read)
+        .iter()
+        .map(|part| match part {
+            Assigned::Whole(node) => format!("whole {}", node.text()),
+            Assigned::Appended(node) => format!("appended {}", node.text()),
+            Assigned::Outside(node) => format!("outside {}", node.text()),
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(
+        parts,
+        ["whole \"SELECT 1\"", "appended \" AND name = \" + name"]
+    );
+    let other = nth(tree.root_node(), "identifier", "other", 1);
+    assert!(matches!(
+        flow.assigned(other).as_slice(),
+        [Assigned::Outside(node)] if node.text() == "base"
+    ));
+}

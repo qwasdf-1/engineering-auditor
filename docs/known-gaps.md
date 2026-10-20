@@ -15,11 +15,12 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
   methods of an injected service (`this.userService.find(..)`), are never
   followed, so the work such a call does stays hidden.
 - Data flow is followed within a function and through certain calls only.
-  `sql_injection` reports a table or column name spliced into a query when
-  it comes from request input in the same function (a framework request
-  member or accessor, or an annotated request parameter); a name that
-  reaches the query through a field, a helper, or a caller is treated as
-  configuration. `random_for_security` follows a weak random value to where
+  `sql_injection` reads a query held in a local through the values bound to
+  it, and reports a name or a clause fragment spliced into a query when it
+  comes from request input in the same function (a framework request member
+  or accessor, or an annotated request parameter); a fragment that reaches
+  the query through a field, a helper, or a caller is treated as
+  configuration, and a query a helper returns is not followed. `random_for_security` follows a weak random value to where
   it goes (names, keys, cookie, HMAC, cipher, and credential-header calls)
   and from a helper that returns it to its callers, through up to four
   resolved calls; a secret neither named nor used as one, or reached through

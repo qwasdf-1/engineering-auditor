@@ -16,8 +16,8 @@ pub use complexity::{
     CognitiveBreakdown, FunctionComplexity, HalsteadMetrics,
 };
 pub use dataflow::{
-    call_arguments, call_receiver, Binding, BindingKind, CallFlow, Destination, FunctionFlow,
-    Origin,
+    call_arguments, call_receiver, Assigned, Binding, BindingKind, CallFlow, Destination,
+    FunctionFlow, Origin,
 };
 pub use extract::{
     can_parse, extract_comments, extract_functions, function_fingerprint, structural_fingerprint,
