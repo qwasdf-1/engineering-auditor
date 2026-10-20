@@ -1,4 +1,5 @@
 use super::*;
+use crate::scan_indexes::release_index;
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
