@@ -1,0 +1,787 @@
+{
+  "schema_version": 1,
+  "detector": "collection_parameter_mutation",
+  "labels": [
+    {
+      "id": "EA-85f6329b3d35c650",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java",
+      "message": "Function `removeCommonFrames` mutates collection parameter `causeFrames`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 919,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`causeFrames.remove(causeFrameIndex)` at line 930 genuinely mutates the `List<String>` parameter, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-30ba3559e4ea2ed9",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/AppliedType.kt",
+      "message": "Function `superclasses` mutates collection parameter `result`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`result.add(this)` at line 42 really mutates the `LinkedHashSet` parameter, so the finding's claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e2b4f3298a37ec4",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Function `bracket_split_build_line` mutates collection parameter `leaves`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1446,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "bracket_split_build_line calls leaves.insert(i + 1, new_comma) on the caller-provided list at line 1473, mutating the argument in place though it is documented only as returning a Line."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The cited mutation at line 1473 lies beyond the excerpt (which ends at 1461), so whether `leaves` itself is mutated cannot be determined."
+        }
+      ]
+    },
+    {
+      "id": "EA-42b34a024fd65804",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Function `_safe_add_trailing_comma` mutates collection parameter `line`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1527,
+      "verdict": "false_positive",
+      "reason": "`line` is a Line object, not a collection; the mutation goes through its own API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`line.append(new_comma)` at line 1535 mutates the passed `Line` collection parameter, matching the reported claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-5783da264da59f2c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/lines.py",
+      "message": "Function `append_leaves` mutates collection parameter `new_line`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1340,
+      "verdict": "false_positive",
+      "reason": "`new_line` is a Line object, not a collection; the mutation goes through its own API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`append_leaves` is documented to \"Append leaves ... to @new_line\", so the collection parameter `new_line` is genuinely mutated in place."
+        }
+      ]
+    },
+    {
+      "id": "EA-efd19643f97b48d2",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/parsing.py",
+      "message": "Function `_stringify_ast_with_new_parent` mutates collection parameter `parent_stack`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 209,
+      "verdict": "false_positive",
+      "reason": "A parent stack threaded through the recursive AST walk and popped after the call.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`parent_stack.append(new_parent)` and later `parent_stack.pop()` mutate the passed-in list, confirming the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-38247924d2182533",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `maybe_append_string_operators` mutates collection parameter `new_line`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1570,
+      "verdict": "false_positive",
+      "reason": "`new_line` is a Line object, not a collection; the mutation goes through its own API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`new_line.append(prefix_leaf)` mutates the collection parameter `new_line` as the docstring's \"Side Effects\" states."
+        }
+      ]
+    },
+    {
+      "id": "EA-3bfe4e029c88d8a2",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pytree.py",
+      "message": "Function `match` mutates collection parameter `results`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 654,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The docstring states `results` \"will be updated with the nodes matching named subpatterns\", confirming in-place mutation of the dict parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-dde7fb7cb562938c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pytree.py",
+      "message": "Function `_submatch` mutates collection parameter `results`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 789,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_submatch`'s docstring says `results` \"will be updated with the nodes matching named subpatterns\", confirming the mutation claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-aa96181933c7435b",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pytree.py",
+      "message": "Function `match_seq` mutates collection parameter `results`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 909,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`results.update(r)` at the reported line mutates the `results` dict parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-222dd4267f48dfd6",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/app.py",
+      "message": "Function `update_template_context` mutates collection parameter `context`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 506,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The docstring explicitly says `context` is \"a dictionary that is updated in place\", confirming the mutation."
+        }
+      ]
+    },
+    {
+      "id": "EA-630f80403cda5529",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Function `parse_long` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 301,
+      "verdict": "false_positive",
+      "reason": "Vendored docopt parser under support/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`support/docopt.py` is auxiliary/third-party support tooling, outside the detector's scope, and this file is a vendored CLI parser."
+        }
+      ]
+    },
+    {
+      "id": "EA-25da3bbd02305e3e",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Function `parse_shorts` mutates collection parameter `options`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 334,
+      "verdict": "false_positive",
+      "reason": "Vendored docopt parser under support/, outside the production scope.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "parse_shorts executes options.append(o) at line 348, mutating the options list parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-4ec2ccc6d8b8e0d2",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `_send_handling_auth` mutates collection parameter `history`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 930,
+      "verdict": "true_positive",
+      "reason": "`history.append(response)` mutates the caller's list as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The auth retry loop appends the response onto the history list passed into _send_handling_auth, matching the detector's evidence at mutation_line 956."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops before the mutation site at line 956, so the claimed in-place mutation of `history` is not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-59383d26a380e86e",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `_send_handling_auth` mutates collection parameter `history`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1645,
+      "verdict": "true_positive",
+      "reason": "`history.append(response)` mutates the caller's list as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The async auth loop appends the response onto the history parameter passed into _send_handling_auth, matching the detector's evidence at mutation_line 1671."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The reported mutation at line 1671 lies outside the excerpt (which ends at 1660); the visible code only passes history to _send_handling_redirects(history=history) and shows no mutation, so the claim cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-3a61f674ef4132af",
+      "repository": "nlohmann-json",
+      "language": "python",
+      "path": "tools/amalgamate/amalgamate.py",
+      "message": "Function `_search_content` mutates collection parameter `contexts`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 136,
+      "verdict": "false_positive",
+      "reason": "Build tool under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "contexts.append(match) does mutate the parameter, but tools/amalgamate/amalgamate.py is build/tooling code, outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-399128dd375c57b3",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/align.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 143,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "options is only read; options.update(height=None) at line 152 returns a new ConsoleOptions (a frozen dataclass), so the parameter is never mutated in place."
+        }
+      ]
+    },
+    {
+      "id": "EA-9caf8202d12d1967",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/align.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 265,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "options is only read; the inline options.update(height=None) at line 270 returns a new frozen ConsoleOptions, and no in-place mutation of options occurs."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8e6ea04764b80f4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/layout.py",
+      "message": "Function `recurse` mutates collection parameter `tree`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 248,
+      "verdict": "true_positive",
+      "reason": "`tree.add(...)` mutates the passed tree (intentional accumulator, but the claim is accurate).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "recurse calls tree.add(summary(child), ...) at line 251, and Tree.add appends the new node to the receiver's children, so the tree passed in is mutated in place."
+        }
+      ]
+    },
+    {
+      "id": "EA-38966bd8c0dcfa3f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 204,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "options.update(width=options.max_width - 4) at line 207 returns a new ConsoleOptions assigned to render_options; the options parameter itself is untouched."
+        }
+      ]
+    },
+    {
+      "id": "EA-594c920f8b890730",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `render_bullet` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 384,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "options.update(width=options.max_width - 3) at line 385 returns a new frozen ConsoleOptions assigned to render_options; options is never mutated."
+        }
+      ]
+    },
+    {
+      "id": "EA-1c9e529815ac522f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `render_number` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 397,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "options.update(width=options.max_width - number_width) at line 401 returns a new ConsoleOptions; the options parameter is only read and never mutated."
+        }
+      ]
+    },
+    {
+      "id": "EA-e4d89d994f046131",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 579,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "options = options.update(height=None) at line 584 merely rebinds the local name to a new frozen ConsoleOptions instance, so the parameter object is not mutated in place."
+        }
+      ]
+    },
+    {
+      "id": "EA-ceb259dec6e71f69",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/panel.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 141,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpted body only reads `options` (`options.max_width` at lines 151-153); `options` is never assigned to or mutated in place, so the mutation claim is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-3a3204ad4adb6e99",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/screen.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 45 is `render_options = options.update(width=..., height=...)`, a copy-and-update idiom that returns a new object, and `options` is otherwise only read (`options.size`), so nothing is mutated in place."
+        }
+      ]
+    },
+    {
+      "id": "EA-3c1dba6f9fc922a9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/style.py",
+      "message": "Function `on` mutates collection parameter `meta`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 258,
+      "verdict": "true_positive",
+      "reason": "`meta.update(...)` mutates a caller-supplied dict when one is passed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "meta.update(...) at line 272 mutates the caller-supplied meta dict, so the in-place mutation claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 272 executes `meta.update({f\"@{key}\": value for ...})`, mutating in place the very dict the caller passed in (only the None default is replaced by a fresh dict at line 271)."
+        }
+      ]
+    },
+    {
+      "id": "EA-e748d53dc6ea75a0",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Function `_get_syntax` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 652,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The shown code only reads `options` (`options.max_width` at lines 665-667); there is no assignment to or in-place mutation of the parameter, so the claim fails."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca22b5f967f43779",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 475,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 489 passes `options.update_width(max_width - extra_width)`, which returns a new ConsoleOptions rather than mutating `options` \u2014 the update idiom misread as a mutation."
+        }
+      ]
+    },
+    {
+      "id": "EA-b37d3a8611aba696",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_render` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 755,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt shows `options` used only by passing it into `self.box.substitute(options, ...)` (line 769), a read; no in-place mutation of the parameter occurs."
+        }
+      ]
+    },
+    {
+      "id": "EA-3166dcb0ad12c11f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `on` mutates collection parameter `meta`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 523,
+      "verdict": "true_positive",
+      "reason": "`meta.update(...)` mutates a caller-supplied dict when one is passed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Text.on uses the same 'meta = {} if meta is None else meta' then meta.update idiom as Style.on, mutating a supplied dict."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 538 rebinds only the None default (`meta = {} if meta is None else meta`), so a caller-supplied dict reaches the `meta.update(...)` at evidence line 539 and is mutated in place."
+        }
+      ]
+    },
+    {
+      "id": "EA-842cfc7b14c3ed49",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/tree.py",
+      "message": "Function `__rich_console__` mutates collection parameter `options`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 86,
+      "verdict": "false_positive",
+      "reason": "`ConsoleOptions.update()` returns a modified copy; the parameter is not mutated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The shown body never mutates `options` \u2014 it builds guide segments from `get_style`/`Segment` and only consumes the options record, so the collection-mutation claim is incorrect."
+        }
+      ]
+    },
+    {
+      "id": "EA-3b3741509ce0a95e",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/ssg/utils.ts",
+      "message": "Function `` mutates collection parameter `resultPaths`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "A module-private helper (not exported); its callers in the module own the collection.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8dbbf61290df5bcc",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/ssg/utils.ts",
+      "message": "Function `` mutates collection parameter `resultPaths`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 35,
+      "verdict": "false_positive",
+      "reason": "A module-private helper (not exported); its callers in the module own the collection.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-05a9f9c6e4b96b36",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "Function `` mutates collection parameter `childrenToRemove`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 295,
+      "verdict": "false_positive",
+      "reason": "A module-private helper (not exported); its callers in the module own the collection.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c14dab1e073692da",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/utils.ts",
+      "message": "Function `` mutates collection parameter `cache`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "false_positive",
+      "reason": "A module-private helper (not exported); its callers in the module own the collection.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1ed1c58dd764ea55",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/trie-router/node.ts",
+      "message": "Function `pushHandlerSets` mutates collection parameter `handlerSets`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "false_positive",
+      "reason": "A #private method; callers inside the class own the collection.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-7b4c22cd1bccb952",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/core/finalize.ts",
+      "message": "Function `handleValue` mutates collection parameter `handledSet`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 272,
+      "verdict": "true_positive",
+      "reason": "A public function mutates a collection parameter in place; the caller sees the change without a returned value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "handleValue adds draftable values into the handledSet parameter (line 296), matching the 'already handled' logic visible at line 286."
+        }
+      ]
+    },
+    {
+      "id": "EA-090c9f5495f90c11",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/plugins/patches.ts",
+      "message": "Function `generateArrayPatches` mutates collection parameter `inversePatches`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 171,
+      "verdict": "false_positive",
+      "reason": "A nested helper of the patch generator; its caller owns the patch list.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-9eabee89c970b38b",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/plugins/patches.ts",
+      "message": "Function `generateArrayPatches` mutates collection parameter `patches`.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 171,
+      "verdict": "false_positive",
+      "reason": "A nested helper of the patch generator; its caller owns the patch list.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-677e0b18a17d58bc",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/loaders/stars.ts",
+      "message": "Function `fetchStars` mutates collection parameter `resources`.",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 36,
+      "verdict": "true_positive",
+      "reason": "Exported fetchStars sorts the caller's resources array in place (resources.sort) and returns nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "fetchStars selects entries lacking stars (line 42) and writes fetched star counts back into the resources entries (line 78), mutating the collection parameter."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`fetchStars` takes the caller's `resources` array and writes the fetched star counts back into it (reported mutation at line 78), so the in-place mutation claim holds in ordinary package code, not an excluded test/fixture site."
+        }
+      ]
+    }
+  ]
+}

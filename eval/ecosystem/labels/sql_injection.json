@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "sql_injection",
+  "labels": [
+    {
+      "id": "EA-47ea69542a22e1e5",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.Async.cs",
+      "message": "SQL query with string construction at line 59",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 59,
+      "verdict": "false_positive",
+      "reason": "The table name comes from type metadata, not input; the id is a bound parameter.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The dynamic value `id` is bound as a parameter (`@id` via `new { id }`); only the type-derived `TableName` identifier is concatenated, so no user input reaches the SQL and the injection rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-7ceb93cbdc9fed1c",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.cs",
+      "message": "SQL query with string construction at line 99",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 99,
+      "verdict": "false_positive",
+      "reason": "The table name comes from type metadata, not input; the id is a bound parameter.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Only the internally set `TableName` identifier is concatenated while `id` is passed as a parameter, so no untrusted value reaches the SQL (a standard ORM table-name idiom)."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3359 @@
+{
+  "schema_version": 1,
+  "detector": "console_output_in_production",
+  "labels": [
+    {
+      "id": "EA-93330c92493c8e2a",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 41",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "libjq allocator prints to stderr before abort(); library code writing to the console, though as a last-resort diagnostic.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` is a fatal diagnostic emitted right before `abort()` in a memory-exhaustion path, an idiomatic last-resort error report where logging is unavailable, not stray debug output."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 41 in src/jv_alloc.c is exactly `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` inside `memory_exhausted`, i.e. console output in production code before `abort()`."
+        }
+      ]
+    },
+    {
+      "id": "EA-831877b2d9477791",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 72",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "libjq thread-key setup prints to stderr before abort(); library console output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot create thread specific key\")` accompanies `abort()` on a fatal pthread_key_create failure, an idiomatic fatal-error report rather than removable debug console output."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 72 is `fprintf(stderr, \"jq: error: cannot create thread specific key\")` in production `tsd_init`, matching the reported console output."
+        }
+      ]
+    },
+    {
+      "id": "EA-a713ca32d26b1f12",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 76",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "libjq atexit registration failure prints to stderr; library console output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot set an exit handler\")` accompanies `abort()` on a fatal atexit failure, an idiomatic fatal-error report the rule should recognise."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 76 is `fprintf(stderr, \"jq: error: cannot set an exit handler\")` in production `tsd_init`, matching the reported console output."
+        }
+      ]
+    },
+    {
+      "id": "EA-80712249a6c655d4",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 86",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "libjq thread-specific data failure prints to stderr; library console output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot set thread specific data\")` on a pthread_setspecific failure is an idiomatic fatal-error diagnostic immediately followed by `abort()`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 86 is `fprintf(stderr, \"jq: error: cannot set thread specific data\")` in production `tsd_init_nomem_handler`, matching the reported console output."
+        }
+      ]
+    },
+    {
+      "id": "EA-8bffd6b65c6637b3",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 101",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 101,
+      "verdict": "true_positive",
+      "reason": "libjq nomem handler prints to stderr before abort(); library console output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` before `abort()` is an idiomatic last-resort fatal-error report when no nomem handler is set, not removable console output."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 101 is `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` in production `jv_nomem_handler`, matching the reported console output."
+        }
+      ]
+    },
+    {
+      "id": "EA-6f643e68c4fe8734",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 118",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 118,
+      "verdict": "true_positive",
+      "reason": "libjq memory_exhausted prints to stderr; library console output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` just before `abort()` in `memory_exhausted()` is the standard fatal-error idiom, not stray debug output."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 118 is `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` in production `memory_exhausted`, matching the reported console output."
+        }
+      ]
+    },
+    {
+      "id": "EA-6f6e7068c50730af",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_alloc.c",
+      "message": "Console output in production code at line 133",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "libjq memory_exhausted (no-TLS variant) prints to stderr; library console output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"jq: error: cannot allocate memory\\n\")` immediately preceding `abort()` in `memory_exhausted()` is an idiomatic fatal-error message the rule should exclude."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/jv_alloc.c writes a fatal allocation error to stderr in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-49a78909bca953e8",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/error.c",
+      "message": "Console output in production code at line 52",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "libuv uv_fatal_error writes the error to stderr from library code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `fprintf(stderr, \"%s: (%d) %s\", ...)` reports an error before `DebugBreak(); abort();`, an idiomatic fatal-error diagnostic, not production debug console output to remove."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The error path explicitly calls fprintf(stderr, ...) in src/win/error.c."
+        }
+      ]
+    },
+    {
+      "id": "EA-1581ace741742dfe",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/error.c",
+      "message": "Console output in production code at line 54",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "libuv uv_fatal_error writes the error to stderr from library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 54 emits fprintf(stderr, ...) as console output in libuv production source, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The else branch also directly calls fprintf(stderr, ...)."
+        }
+      ]
+    },
+    {
+      "id": "EA-c5168f4366bf8bfe",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Behavior.cs",
+      "message": "Console output in production code at line 28",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 28,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-0b41a1a1c1044583",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Fault.cs",
+      "message": "Console output in production code at line 50",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 50,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-33368e1b60b134b7",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Latency.cs",
+      "message": "Console output in production code at line 51",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1c0cce65075f0636",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Outcome.cs",
+      "message": "Console output in production code at line 37",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-3ff2202e60accad5",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Outcome.cs",
+      "message": "Console output in production code at line 146",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 146,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c832f0014fa667f1",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Outcome.cs",
+      "message": "Console output in production code at line 150",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 150,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-aaa6d4569153d329",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Outcome.cs",
+      "message": "Console output in production code at line 181",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 181,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-08feaa9394997fdc",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Chaos.Outcome.cs",
+      "message": "Console output in production code at line 203",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 203,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-08fcddd5cdb46357",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/CircuitBreaker.cs",
+      "message": "Console output in production code at line 106",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-67c7b7a80c28bb8e",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/CircuitBreaker.cs",
+      "message": "Console output in production code at line 110",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 110,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a0fceaa8fde0cefd",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Hedging.cs",
+      "message": "Console output in production code at line 31",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b04e0d3cfb6ff8cf",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Hedging.cs",
+      "message": "Console output in production code at line 44",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ea8225d0ece0bf4e",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Hedging.cs",
+      "message": "Console output in production code at line 92",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-7ef7435e19eafecc",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/RateLimiter.cs",
+      "message": "Console output in production code at line 111",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 111,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-7a740c32dbcd497a",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/RateLimiter.cs",
+      "message": "Console output in production code at line 133",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 133,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-261b2bec43c2b7a6",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/RateLimiter.cs",
+      "message": "Console output in production code at line 160",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e9be3ee12d9c1e09",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/ResilienceContextUsage.cs",
+      "message": "Console output in production code at line 38",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ab175574c3a19acb",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/ResiliencePipelines.cs",
+      "message": "Console output in production code at line 60",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-85707aea1147dacc",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/ResiliencePipelines.cs",
+      "message": "Console output in production code at line 136",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 136,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8e1d787a9843176b",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/ResiliencePipelines.cs",
+      "message": "Console output in production code at line 160",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-726ed0b9c79199c3",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/ResiliencePipelines.cs",
+      "message": "Console output in production code at line 164",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 164,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-addde4d78b4fb397",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Retry.cs",
+      "message": "Console output in production code at line 82",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 82,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b0a2fe6d9e722083",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Telemetry.cs",
+      "message": "Console output in production code at line 89",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d80773ecad38b208",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Timeout.cs",
+      "message": "Console output in production code at line 39",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a53665860f3c6d94",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Timeout.cs",
+      "message": "Console output in production code at line 80",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d1707a7080d26942",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Snippets/Docs/Timeout.cs",
+      "message": "Console output in production code at line 99",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 99,
+      "verdict": "false_positive",
+      "reason": "Documentation snippet compiled for the docs, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-45515e36736c585a",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/yaml_docs.go",
+      "message": "Console output in production code at line 139",
+      "status": "final",
+      "sampled_from": "t16-go-api",
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "Library doc generator prints the marshal error to stdout before exiting instead of returning it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "doc/yaml_docs.go is documentation-generation tooling (fmt.Println + os.Exit for a doc generator), outside the detector's production scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "doc/yaml_docs.go is documentation-generation tooling rather than in-scope production runtime code."
+        }
+      ]
+    },
+    {
+      "id": "EA-d6fc8e6ceb4f144a",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/Regex.java",
+      "message": "Console output in production code at line 89",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "Library writes a warning to System.err in shipped code instead of a logger.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 89 emits System.err.println inside jsoup production core code, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The re2j wiring warning is printed via System.err.println in jsoup's main library source."
+        }
+      ]
+    },
+    {
+      "id": "EA-b71314842f283239",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/Evaluator.java",
+      "message": "Console output in production code at line 1059",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 1059,
+      "verdict": "true_positive",
+      "reason": "Library writes a warning to System.err in shipped code instead of a logger.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1059 emits System.err.println in production Evaluator code, and the note that intentional code still counts applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "MatchText intentionally emits a deprecation warning with System.err.println in main library source."
+        }
+      ]
+    },
+    {
+      "id": "EA-345b95b5074747ae",
+      "repository": "okhttp",
+      "language": "java",
+      "path": "maven-tests/src/main/java/com/squareup/okhttp3/maventest/SampleHttpClient.java",
+      "message": "Console output in production code at line 36",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "Maven integration-test module, not shipped code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-daf279d1617d0fd0",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "gulpfile.js",
+      "message": "Console output in production code at line 9",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 9,
+      "verdict": "false_positive",
+      "reason": "Build/tooling script, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "gulpfile.js is build/tooling code, so the console.log at line 9 is outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-ec7c742e8a6ec584",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/deprecatedMethod.js",
+      "message": "Console output in production code at line 17",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "Library emits deprecation warnings via console.warn in shipped code (intentional, but the claim holds).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "deprecatedMethod is a dedicated helper whose entire purpose is to emit the warning, so the rule should recognise this idiom."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 17 in lib/helpers/deprecatedMethod.js is production code and does call console.warn; the intentional deprecation message does not negate that."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 17"
+        }
+      ]
+    },
+    {
+      "id": "EA-23a005261f55531b",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/deprecatedMethod.js",
+      "message": "Console output in production code at line 26",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "Library emits deprecation guidance via console.warn in shipped code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 26 is the same deprecation-warning helper intentionally emitting console.warn, an idiom the rule should not flag."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 26 in lib/helpers/deprecatedMethod.js also executes console.warn for docs info in production library code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 26"
+        }
+      ]
+    },
+    {
+      "id": "EA-e7a5fada0dc7c08a",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/validator.js",
+      "message": "Console output in production code at line 51",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 51,
+      "verdict": "true_positive",
+      "reason": "Shipped validator writes console.warn (eslint no-console suppressed by the author).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 51 is explicitly preceded by '// eslint-disable-next-line no-console', signalling a sanctioned intentional deprecation warning."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `console.warn` deprecation notice is guarded by `deprecatedWarnings[opt]` and explicitly allowlisted with `// eslint-disable-next-line no-console`, an intentional idiom the rule should recognize."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 51"
+        }
+      ]
+    },
+    {
+      "id": "EA-f357f3f1d5c68e62",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/validator.js",
+      "message": "Console output in production code at line 66",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "Shipped validator writes console.warn (eslint no-console suppressed by the author).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 66 is likewise guarded by an explicit no-console suppression comment for an intentional spelling warning."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "This `console.warn` misspelling notice is likewise intentional and explicitly suppressed via `// eslint-disable-next-line no-console`, so the rule should not fire there."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 66"
+        }
+      ]
+    },
+    {
+      "id": "EA-79cae942cbc5efdd",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/client.js",
+      "message": "Console output in production code at line 10",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "Developer sandbox, not shipped production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "sandbox/client.js is sandbox/example code, so console.log at line 10 is outside the production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-e713fe5772dd4172",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/client.js",
+      "message": "Console output in production code at line 13",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "Developer sandbox, not shipped production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The second console.log in sandbox/client.js is likewise in sandbox/example code rather than production."
+        }
+      ]
+    },
+    {
+      "id": "EA-dc479cca70562b89",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/server.js",
+      "message": "Console output in production code at line 52",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 52,
+      "verdict": "false_positive",
+      "reason": "Developer sandbox, not shipped production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "sandbox/server.js is sandbox/example code, so the console.error at line 52 is outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-55fe327ae6cce22b",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/server.js",
+      "message": "Console output in production code at line 81",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 81,
+      "verdict": "false_positive",
+      "reason": "Developer sandbox, not shipped production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "sandbox/server.js is a local dev sandbox server, so the 'production code' premise fails; console.log of the request line there is intentional access logging in tooling code."
+        }
+      ]
+    },
+    {
+      "id": "EA-50df2c74e3550a98",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/server.js",
+      "message": "Console output in production code at line 117",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 117,
+      "verdict": "false_positive",
+      "reason": "Developer sandbox, not shipped production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `Listening on localhost:${PORT}...` message is a startup banner in the sandbox dev server, which is outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f0b4ca074cdcaddf",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/server.js",
+      "message": "Console output in production code at line 127",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 127,
+      "verdict": "false_positive",
+      "reason": "Developer sandbox, not shipped production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The EADDRINUSE message is intended console output from the sandbox server's error handler, not finding-worthy production console output."
+        }
+      ]
+    },
+    {
+      "id": "EA-4afe92fe135be0d1",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "scripts/axios-build-instance.js",
+      "message": "Console output in production code at line 6",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "Build/tooling script, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "scripts/axios-build-instance.js is build/tooling code and the `[GITHUB_TOKEN OK]` diagnostic is expected console usage there, so the site is out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a185162aebab048",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "scripts/axios-build-instance.js",
+      "message": "Console output in production code at line 8",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "Build/tooling script, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `[GITHUB_TOKEN is not defined]` warning is a deliberate diagnostic in a tooling script, not console output in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-58c71954ae0b34db",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "scripts/axios-build-instance.js",
+      "message": "Console output in production code at line 17",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "Build/tooling script, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The request-logging console.log inside the transformRequest of the build/dev axios instance script is intentional tooling output, outside production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-166ae85c784788cf",
+      "repository": "axum",
+      "language": "javascript",
+      "path": "axum-extra/test_files/script.js",
+      "message": "Console output in production code at line 1",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1,
+      "verdict": "false_positive",
+      "reason": "Test fixture file.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The path axum-extra/test_files/script.js is a test fixture, so the site is outside the detector's stated production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-796498ddd50b3592",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 856",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 856,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-f223b14efa26da91",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 861",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 861,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8dd6e48cc323cbeb",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 870",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 870,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8dccb28cc31b2270",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 882",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 882,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8dd0188cc31e0599",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 889",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 889,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8de1168cc32c7566",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 900",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 900,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8de47c8cc32f588f",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 907",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 907,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8dda4a8cc326af14",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 915",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 915,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-685887b315cc630e",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 924",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 924,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e3ab1732da7263cb",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 985",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 985,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-21df7e8577917efe",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 1020",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1020,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-caa21d89c5e01018",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 1031",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1031,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-9894064eeeb80a2d",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Console output in production code at line 1130",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1130,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e57ae43fd40cd770",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/timing.js",
+      "message": "Console output in production code at line 128",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.log(table.join(...)) is present at line 128 in library code, and intent to debug does not remove it from production source."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 128"
+        }
+      ]
+    },
+    {
+      "id": "EA-897c12e7ccd90b0e",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/shared/logging.js",
+      "message": "Console output in production code at line 18",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 18,
+      "verdict": "false_positive",
+      "reason": "The project's logging module itself; the rationale (use a logger) does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This console.log implements the logging abstraction's own info() wrapper, so the 'replace with structured logging' rationale does not apply."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 18"
+        }
+      ]
+    },
+    {
+      "id": "EA-cb7d910520515ed5",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/shared/logging.js",
+      "message": "Console output in production code at line 27",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "The project's logging module itself; the rationale (use a logger) does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "console.warn here is the implementation of the logging module's warn() wrapper, not stray console output."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 27"
+        }
+      ]
+    },
+    {
+      "id": "EA-5a5613d81130987d",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/shared/logging.js",
+      "message": "Console output in production code at line 36",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "The project's logging module itself; the rationale (use a logger) does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "console.error here is the implementation of the logging module's error() wrapper, which is the intended abstraction layer."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 36"
+        }
+      ]
+    },
+    {
+      "id": "EA-9f66f94e07464bf2",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/application.js",
+      "message": "Console output in production code at line 617",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 617,
+      "verdict": "true_positive",
+      "reason": "Default error handler logs with console.error in shipped framework code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.error(err) runs whenever env is not 'test', so it is genuine production console output in the application."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "lib/application.js is production library code and console.error(err) executes whenever `this.get('env') !== 'test'`, so the claim holds despite the istanbul pragma."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 617"
+        }
+      ]
+    },
+    {
+      "id": "EA-34cbbb4120f942a4",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "build/build-error-serializer.js",
+      "message": "Console output in production code at line 29",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-372dff797d579318",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "build/build-validation.js",
+      "message": "Console output in production code at line 21",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-cea0316e814f51cb",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "__performance_tests__/add-data.mjs",
+      "message": "Console output in production code at line 11",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 11,
+      "verdict": "false_positive",
+      "reason": "Performance benchmark script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-9f27ef49df3c7716",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "__performance_tests__/incremental.mjs",
+      "message": "Console output in production code at line 7",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "Performance benchmark script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-88ee8507223a1c21",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "__performance_tests__/large-obj.mjs",
+      "message": "Console output in production code at line 4",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "Performance benchmark script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-881c8104430175dc",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "__performance_tests__/measure.mjs",
+      "message": "Console output in production code at line 19",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 19,
+      "verdict": "false_positive",
+      "reason": "Performance benchmark script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-641165056706697b",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "__performance_tests__/todo.mjs",
+      "message": "Console output in production code at line 47",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "Performance benchmark script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d1cdfa6ae8157046",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/client/bin/intent.js",
+      "message": "Console output in production code at line 10",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 10 is the user-facing error message in a bin CLI entry point (line 5 declares the \"bin\" mapping) whose catch block prints install guidance and process.exit(1)s, so console.error to stderr is the intended idiom a console-output rule should recognize, not stray debug output."
+        }
+      ]
+    },
+    {
+      "id": "EA-136cb455e6c68b2f",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/client/bin/intent.js",
+      "message": "Console output in production code at line 14",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 14,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 14 is an empty console.error('') used as spacing inside the same bin entry's deliberate multi-line install-instruction message before process.exit(1), i.e., intentional CLI output rather than production debug noise."
+        }
+      ]
+    },
+    {
+      "id": "EA-40dfe89b1c848a5a",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/next/bin/intent.js",
+      "message": "Console output in production code at line 13",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 13 prints the 'npm add -D @tanstack/intent' instruction in a package bin script's fatal dependency-missing path, which is exactly the user-facing output a CLI entry point is supposed to emit."
+        }
+      ]
+    },
+    {
+      "id": "EA-e46d9b8c5c60aea8",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/next/bin/intent.js",
+      "message": "Console output in production code at line 16",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 16 prints the 'npx @tanstack/intent@latest list' fallback command within the bin entry's error-reporting block that ends in process.exit(1); printing guidance to stderr is the intended behavior of this CLI shim."
+        }
+      ]
+    },
+    {
+      "id": "EA-b6d30d06a39d516f",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/openapi/bin/intent.js",
+      "message": "Console output in production code at line 10",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Identical to the client-bin case: a \"bin\"-declared CLI entry point (comment on line 5) whose catch block reports a missing module to stderr and exits with code 1, making the console.error an intended idiom, not leftover production logging."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f66abb97617fb41",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/openapi/bin/intent.js",
+      "message": "Console output in production code at line 13",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 13 emits the 'npm add -D' install instruction as part of the bin script's deliberate advisory output for a missing optional dependency, which the rationale of catching stray console output does not cover."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ae31858994496b5",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/server/bin/intent.js",
+      "message": "Console output in production code at line 15",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 15,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 15 is the 'Or run directly:' header of an intentional usage message inside a bin CLI's ERR_MODULE_NOT_FOUND handler; user-facing CLI instructions are an idiom the rule should exempt."
+        }
+      ]
+    },
+    {
+      "id": "EA-84bbac7d51a02e96",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/server/bin/intent.js",
+      "message": "Console output in production code at line 16",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 16 prints the suggested npx command within the same bin entry's fatal-error, process.exit(1) path, so the console.error call is the script's intended interface rather than production debug output."
+        }
+      ]
+    },
+    {
+      "id": "EA-a841b5111be312a6",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/tanstack-react-query/bin/intent.js",
+      "message": "Console output in production code at line 11",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 11,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`console.error('')` is a blank spacer line in the CLI bin's user-facing install-guidance message, and console is the correct output channel for a CLI entry point, so the rule's rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-78f20ae52f46d7f6",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/tanstack-react-query/bin/intent.js",
+      "message": "Console output in production code at line 12",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 12,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 12 is part of the deliberate user-facing error text printed by the `bin/intent.js` CLI when the dependency is missing; console.error is the intended interface for a CLI, not stray logging."
+        }
+      ]
+    },
+    {
+      "id": "EA-4ff75c7e29fbc07d",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "packages/tanstack-react-query/bin/intent.js",
+      "message": "Console output in production code at line 16",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "CLI bin script; console output is the program's interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "This console.error prints a usage hint to the user from the `bin/intent.js` CLI entry point, an idiomatic use of stderr output that the rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-575fd78f7b168b11",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "www/docusaurus.typedoc.js",
+      "message": "Console output in production code at line 54",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "Documentation-site build configuration, not shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`www/docusaurus.typedoc.js` is a Docusaurus build/tooling configuration script, so its console.log debug of entrypoints falls outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f7ce3a29452a1dfd",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "www/og-image/utils/env.js",
+      "message": "Console output in production code at line 21",
+      "status": "corroborated",
+      "sampled_from": "t7-fixes2",
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "Documentation-site OG-image build utility, not shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The console.error only fires on invalid env vars and is immediately followed by `throw new Error('Invalid env vars')`, making it idiomatic fatal-error reporting to stderr rather than stray production logging."
+        }
+      ]
+    },
+    {
+      "id": "EA-c981b0acdca52469",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "www/src/utils/env.js",
+      "message": "Console output in production code at line 30",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "Documentation-site build configuration, not shipped code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`console.log('Skipping typedoc')` is a leftover informational log in production application source with no error path, exactly what the detector targets."
+        }
+      ]
+    },
+    {
+      "id": "EA-620565ff27b524bf",
+      "repository": "zod",
+      "language": "javascript",
+      "path": "mm.mjs",
+      "message": "Console output in production code at line 7",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "Build/tooling script, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`mm.mjs` is a bundle-size measurement/benchmark script (esbuild + gzip), so printing the measurements via console.log is benchmark-tooling output outside the rule's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-cf991c7d210dbefa",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/plugins/koin-gradle-plugin/src/main/java/org/koin/gradle/KoinPlugin.kt",
+      "message": "Console output in production code at line 56",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "Gradle plugin reports a registration failure with System.err.println instead of the Gradle logger.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The Koin Gradle plugin is build/tooling code, which is outside the detector's production-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "This Gradle plugin source is build/tooling code, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-c761a6e4eaada833",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "android-test-app/src/main/kotlin/okhttp/android/testapp/MainActivity.kt",
+      "message": "Console output in production code at line 36",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "Android test application, not shipped library code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e1e5274a712fd1d4",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "android-test-app/src/main/kotlin/okhttp/android/testapp/MainActivity.kt",
+      "message": "Console output in production code at line 39",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "Android test application, not shipped library code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-5d4b8cc93e49db03",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "android-test-app/src/main/kotlin/okhttp/android/testapp/MainActivity.kt",
+      "message": "Console output in production code at line 47",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "Android test application, not shipped library code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-50b0bad7693aa643",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "android-test-app/src/main/kotlin/okhttp/android/testapp/MainActivity.kt",
+      "message": "Console output in production code at line 54",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "Android test application, not shipped library code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ec2bcda9f43b35d6",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/internal/-MainCommon.kt",
+      "message": "Console output in production code at line 80",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "okcurl is a command-line client; console output is the program interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "okcurl is a CLI tool where printing the status line to stdout is its intended output, an idiom the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-9481e48d08439d80",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/internal/-MainCommon.kt",
+      "message": "Console output in production code at line 83",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "okcurl is a command-line client; console output is the program interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Printing headers to stdout is the deliberate output of the okcurl command-line tool, not stray console logging."
+        }
+      ]
+    },
+    {
+      "id": "EA-19c8040d26830d9b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/internal/-MainCommon.kt",
+      "message": "Console output in production code at line 85",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 85,
+      "verdict": "false_positive",
+      "reason": "okcurl is a command-line client; console output is the program interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The bare println() at line 85 just emits the blank separator between headers and body as part of okcurl's stdout HTTP-response dump, i.e. the CLI tool's intended output, so the structured-logging rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-f05204ccf2a6ce0d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/logging/LoggingUtil.kt",
+      "message": "Console output in production code at line 46",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 46,
+      "verdict": "false_positive",
+      "reason": "okcurl is a command-line client; console output is the program interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This System.err.println is guarded by the sslDebug flag and prints SSL debug records as part of okcurl's intentional --sslDebug diagnostic output, a legitimate CLI-output idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb0cdd743a339643",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/androidMain/kotlin/okhttp3/internal/platform/android/AndroidLog.kt",
+      "message": "Console output in production code at line 113",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "This System.err.println sits in okhttp's shipped androidMain AndroidLog.kt and writes a raw diagnostic to stderr even though the surrounding code already configures java.util.logging, so the finding holds in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-221727cdffbed711",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/androidMain/kotlin/okhttp3/internal/platform/android/AndroidLog.kt",
+      "message": "Console output in production code at line 117",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Like line 113, this System.err.println in production okhttp library code bypasses the logging framework it configures, so the console-output claim is correct at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-8876a85688fc2154",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 36",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "action/main.py is the GitHub Action's build/tooling script, and print(..., file=sys.stderr) with the ::error:: workflow-command prefix is the required mechanism for reporting errors, not a production console-output smell."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 36"
+        }
+      ]
+    },
+    {
+      "id": "EA-e7fda51e9d9392d5",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 53",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 53,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Same as the other action/main.py sites: this ::error:: print to stderr is the GitHub Actions annotation interface inside build/tooling code, outside the detector's production scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 53"
+        }
+      ]
+    },
+    {
+      "id": "EA-cba4411428407b7f",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 66",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 66,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This print(..., file=sys.stderr) with the ::error:: prefix is the intended GitHub Actions error-reporting idiom in the action's tooling script, so the rationale does not apply."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 66"
+        }
+      ]
+    },
+    {
+      "id": "EA-cb9a0f142837d204",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 88",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 88,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The ::error:: stderr print is again the GitHub Actions workflow-command mechanism in the action's build/tooling code, not production console output."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 88"
+        }
+      ]
+    },
+    {
+      "id": "EA-cb9d7514283ab52d",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 107",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 107,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `print(..., file=sys.stderr)` emits a GitHub Actions `::error::` annotation, the intended error-reporting idiom for an action entrypoint, so replacing it with structured logging would defeat the interface."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 107"
+        }
+      ]
+    },
+    {
+      "id": "EA-3d582b97f16d2d43",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 128",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 128,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `::error::` stderr message is the GitHub Actions annotation mechanism used to fail the action, an idiom the rule should recognize rather than console debug output."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 128"
+        }
+      ]
+    },
+    {
+      "id": "EA-25c6fd2811a8350d",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 184",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 184,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`print(pip_proc.stdout)` surfaces pip's diagnostic output on install failure, which is the action's intended user-facing output, not removable debug logging."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 184"
+        }
+      ]
+    },
+    {
+      "id": "EA-94b3e8025d1df385",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 185",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 185,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `::error::Failed to install Black.` stderr print is the GitHub Actions error-annotation idiom for the action."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 185"
+        }
+      ]
+    },
+    {
+      "id": "EA-0a7d5551852f83cd",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 212",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 212,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`print(f\"Black output written to {OUTPUT_FILE}\")` is a deliberate user status message in the action script, part of its output interface rather than stray console output."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 212"
+        }
+      ]
+    },
+    {
+      "id": "EA-f89c7b60394f5a24",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 214",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 214,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This is another GitHub Actions `::error::` stderr annotation reporting a write failure, the intended idiom for the action."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 214"
+        }
+      ]
+    },
+    {
+      "id": "EA-824a03ee90a522e8",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Console output in production code at line 217",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 217,
+      "verdict": "false_positive",
+      "reason": "GitHub Action entry script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`print(proc.stdout)` emits the formatted Black output, which is the action's core product, so removing it would break functionality."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 217"
+        }
+      ]
+    },
+    {
+      "id": "EA-f0bfbf653b9051f9",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Console output in production code at line 786",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 786,
+      "verdict": "false_positive",
+      "reason": "Black CLI echoing stdin to stdout is program output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`sys.stdout.write(sys.stdin.read())` implements Black's documented stdin-to-stdout pass-through in the CLI, an intentional output contract the rule should recognize."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "refuted",
+          "detail": "ruff reports no T201/T203 at line 786"
+        }
+      ]
+    },
+    {
+      "id": "EA-a7526446d2081d33",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Console output in production code at line 67",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 67,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 67 is a genuine `print(f\"Can't open {filename}: {err}\")` call in shipped library source, so the console-output claim holds."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 67"
+        }
+      ]
+    },
+    {
+      "id": "EA-24c01a074b735486",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Console output in production code at line 76",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 76 is a real `print(f\"{filename}({lineno}): can't parse ...\")` call, matching the reported pattern."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 76"
+        }
+      ]
+    },
+    {
+      "id": "EA-902f0398de72184c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Console output in production code at line 118",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 118,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 118 is a real `print(f\"Can't open {filename}: {err}\")` call, matching the reported pattern."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 118"
+        }
+      ]
+    },
+    {
+      "id": "EA-cd481dd141cd14ec",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 157",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 157,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 157 is a real `print(\"s2n\")` in the report method; intentional debug output still counts as console output."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 157"
+        }
+      ]
+    },
+    {
+      "id": "EA-162343ae147f5387",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 158",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 158 is a real `pprint(self.symbol2number)` call, which writes to stdout by default."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T203 at line 158"
+        }
+      ]
+    },
+    {
+      "id": "EA-3fbeb5b493d52488",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 159",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 159,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 159 is a real `print(\"n2s\")` call, matching the reported pattern."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 159"
+        }
+      ]
+    },
+    {
+      "id": "EA-7e11b2c37239b54b",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 160",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 160 is a real `pprint(self.number2symbol)` call, which writes to stdout by default."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T203 at line 160"
+        }
+      ]
+    },
+    {
+      "id": "EA-b1b844de6a49cc67",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 161",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 161,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 161 is a real `print(\"states\")` call, matching the reported pattern."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 161"
+        }
+      ]
+    },
+    {
+      "id": "EA-0006aa746c632fce",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 162",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 162,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "pprint(self.states) writes the grammar table to stdout inside a shipped library method, so the console-output claim holds in production source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T203 at line 162"
+        }
+      ]
+    },
+    {
+      "id": "EA-bf1016941241c3ff",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 163",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 163,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "print(\"dfas\") emits console output directly in production library code, matching the detector's claim."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 163"
+        }
+      ]
+    },
+    {
+      "id": "EA-948bad3ebc4504e0",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 165",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 165,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "print(\"labels\") emits console output in production library code, so the finding is factually correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 165"
+        }
+      ]
+    },
+    {
+      "id": "EA-99c0eabc0cfa153d",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/grammar.py",
+      "message": "Console output in production code at line 166",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 166,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "pprint(self.labels) writes to stdout in production library code, consistent with the reported console output."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T203 at line 166"
+        }
+      ]
+    },
+    {
+      "id": "EA-8a9eaabcb59d696c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/literals.py",
+      "message": "Console output in production code at line 61",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The print is a diagnostic inside the test() self-check invoked only under __main__, i.e. test code outside the detector's production scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 61"
+        }
+      ]
+    },
+    {
+      "id": "EA-888b2354de0e256b",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/tokenize.py",
+      "message": "Console output in production code at line 267",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 267,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "printtoken is explicitly a testing-only helper (comment \"# for testing\") driven from the __main__ test loop, so it is out of scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 267"
+        }
+      ]
+    },
+    {
+      "id": "EA-d800eea36b18f2c7",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Console output in production code at line 478",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 478,
+      "verdict": "false_positive",
+      "reason": "docopt prints the help or version text on request; console output is the library's documented CLI behaviour.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "print(doc.strip(\"\\n\")) is docopt's intended --help output, a recognized CLI idiom the rule should not flag as stray production logging."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 478"
+        }
+      ]
+    },
+    {
+      "id": "EA-144aadc3e9d0b726",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Console output in production code at line 481",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 481,
+      "verdict": "false_positive",
+      "reason": "docopt prints the help or version text on request; console output is the library's documented CLI behaviour.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "print(version) is docopt's intended --version output, an intentional CLI idiom rather than removable production console output."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 481"
+        }
+      ]
+    },
+    {
+      "id": "EA-36c481774db8e7f4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_timer.py",
+      "message": "Console output in production code at line 19",
+      "status": "corroborated",
+      "sampled_from": "t23-py-l1",
+      "line": 19,
+      "verdict": "true_positive",
+      "reason": "Library debugging helper rich._timer.timer prints elapsed time to stdout; library code should not write to the console.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 19 contains a literal print(...) call in library code; the claim of console output is factually correct and intentional debugging output still counts."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The debugging timer still prints to stdout via print(), so console output is present in shipped library code."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff T201 at line 19"
+        }
+      ]
+    },
+    {
+      "id": "EA-81c0fd45eacddcdc",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/style.py",
+      "message": "Console output in production code at line 730",
+      "status": "final",
+      "sampled_from": "t23-py-l1",
+      "line": 730,
+      "verdict": "true_positive",
+      "reason": "Style.test() writes to sys.stdout from a library class; its docstring says it exists for testing only, which is stray console output in shipped code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 730 performs sys.stdout.write(f\"{self.render(text)}\\n\"), an actual console write in production code as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "rich/style.py:730 unconditionally writes to the console (sys.stdout.write(f\"{self.render(text)}\\n\")) in this production library file, so the claim holds even though the write is intentional."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "refuted",
+          "detail": "ruff reports no T201/T203 at line 730"
+        }
+      ]
+    },
+    {
+      "id": "EA-8d3acf12b45281cb",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/lib.rs",
+      "message": "Console output in production code at line 750",
+      "status": "final",
+      "sampled_from": "t24-rs-l1",
+      "line": 750,
+      "verdict": "false_positive",
+      "reason": "eprintln! in a proc-macro crate is an opt-in compile-time debug dump gated by the AXUM_MACROS_DEBUG environment variable; it is the intended developer interface, not stray output.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 750 is an eprintln!(\"{tokens}\") console write in the macro crate; the env-var guard does not make the claim false."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The eprintln! at line 750 is gated behind std::env::var_os(\"AXUM_MACROS_DEBUG\"), i.e. intentional debug-only output in build-time proc-macro code, which the rationale ignores."
+        }
+      ]
+    },
+    {
+      "id": "EA-edcc197fa844a4ff",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "adapters/aws-lambda/src/handler.ts",
+      "message": "Console output in production code at line 190",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 190 calls console.error('Error processing request:', error), matching the reported pattern in production adapter code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 190"
+        }
+      ]
+    },
+    {
+      "id": "EA-1c25fbe05704aa0d",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "adapters/aws-lambda/src/handler.ts",
+      "message": "Console output in production code at line 264",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 264,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 264 calls console.error('Error processing request:', error), correctly identified as console output."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 264"
+        }
+      ]
+    },
+    {
+      "id": "EA-49314f242e42803b",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "adapters/deno/src/serve-static.ts",
+      "message": "Console output in production code at line 22",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 22 executes console.warn(`${e}`), an actual console output in the static-serve adapter code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 22"
+        }
+      ]
+    },
+    {
+      "id": "EA-95a9be3009bc35a5",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Console output in production code at line 17",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b15445898f81e78b",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Console output in production code at line 29",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-2a07b16072a86bb9",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Console output in production code at line 64",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-893bd0b50915e228",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Console output in production code at line 67",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-72aedda2c07a27d8",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Console output in production code at line 68",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 68,
+      "verdict": "false_positive",
+      "reason": "Build script; console output is its interface.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-464ebca564d2bbaa",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/adapter/aws-lambda/handler.ts",
+      "message": "Console output in production code at line 211",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 211,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 211 calls console.error('Error processing request:', error), matching the claim in production handler code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 211"
+        }
+      ]
+    },
+    {
+      "id": "EA-fee27e3c4cdc80b4",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/adapter/aws-lambda/handler.ts",
+      "message": "Console output in production code at line 286",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 286,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 286 calls console.error('Error processing request:', error), correctly reported as console output."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 286"
+        }
+      ]
+    },
+    {
+      "id": "EA-d69ae6743788455e",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/adapter/deno/serve-static.ts",
+      "message": "Console output in production code at line 25",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.warn(`${e}`) at line 25 logs unexpected errors in the Deno serve-static production adapter."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 25"
+        }
+      ]
+    },
+    {
+      "id": "EA-3b868747fb6d7147",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/css/common.ts",
+      "message": "Console output in production code at line 76",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.warn(`Invalid slug: ${slug}`) is real console output in the production css helper's default handler."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 76"
+        }
+      ]
+    },
+    {
+      "id": "EA-02aa324a1c8e4ce4",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/dev/index.ts",
+      "message": "Console output in production code at line 64",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The file src/helper/dev/index.ts is a dev/tooling route-display helper where console.log of routes is the intended purpose, outside the rule's production-code scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 64"
+        }
+      ]
+    },
+    {
+      "id": "EA-51684caba7b2907d",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/dev/index.ts",
+      "message": "Console output in production code at line 71",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 71,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This console.log in src/helper/dev/index.ts is part of the same dev tooling helper and logging routes is its deliberate function."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 71"
+        }
+      ]
+    },
+    {
+      "id": "EA-c27e3cf1fbda894a",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/streaming/sse.ts",
+      "message": "Console output in production code at line 64",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.error(e) at line 64 is console output in the production SSE streaming helper."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 64"
+        }
+      ]
+    },
+    {
+      "id": "EA-84777859b083e415",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/streaming/stream.ts",
+      "message": "Console output in production code at line 37",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.error(e) at line 37 is console output in the production stream helper."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 37"
+        }
+      ]
+    },
+    {
+      "id": "EA-07110162fe9654ae",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/hono-base.ts",
+      "message": "Console output in production code at line 40",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.error(err) at line 40 logs in the default error handler of core hono-base.ts."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 40"
+        }
+      ]
+    },
+    {
+      "id": "EA-ac867fcfda202952",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/context.ts",
+      "message": "Console output in production code at line 76",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "console.warn(...) at line 76 is console output inside production jsx/context.ts."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 76"
+        }
+      ]
+    },
+    {
+      "id": "EA-122b21c8af73a8e0",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/client.ts",
+      "message": "Console output in production code at line 34",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 34 calls console.warn in shipped src/jsx/dom/client.ts production code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 34"
+        }
+      ]
+    },
+    {
+      "id": "EA-a27be59e5c907ee9",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/server.ts",
+      "message": "Console output in production code at line 27",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 calls console.warn in src/jsx/dom/server.ts renderToString, production code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 27"
+        }
+      ]
+    },
+    {
+      "id": "EA-bad3d755db45ec4f",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/server.ts",
+      "message": "Console output in production code at line 60",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 60 calls console.warn in src/jsx/dom/server.ts production code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 60"
+        }
+      ]
+    },
+    {
+      "id": "EA-b15adedacff4de64",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/streaming.ts",
+      "message": "Console output in production code at line 186",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 186,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 186 calls console.log(err) in src/jsx/streaming.ts production code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 186"
+        }
+      ]
+    },
+    {
+      "id": "EA-f8bc832b0e84c37b",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/cache/index.ts",
+      "message": "Console output in production code at line 91",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 91,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 91 calls console.log(reason) in src/middleware/cache/index.ts production code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 91"
+        }
+      ]
+    },
+    {
+      "id": "EA-a36f6a09d71ad93c",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/language/language.ts",
+      "message": "Console output in production code at line 235",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 235 calls console.error in src/middleware/language/language.ts production code, even guarded by debug."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 235"
+        }
+      ]
+    },
+    {
+      "id": "EA-f257b14c537841d9",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/language/language.ts",
+      "message": "Console output in production code at line 253",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 253,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 253 calls console.log in src/middleware/language/language.ts production code, guarded only by debug option."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 253"
+        }
+      ]
+    },
+    {
+      "id": "EA-8802a2153dad6388",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/language/language.ts",
+      "message": "Console output in production code at line 259",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 259,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 259 calls console.error in src/middleware/language/language.ts production code, guarded only by debug option."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 259"
+        }
+      ]
+    },
+    {
+      "id": "EA-0550f64e12b981ad",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/timing/timing.ts",
+      "message": "Console output in production code at line 158",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 158 in production middleware source genuinely calls console.warn, so the console-output claim holds."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 158"
+        }
+      ]
+    },
+    {
+      "id": "EA-b594f151962cd9d7",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/timing/timing.ts",
+      "message": "Console output in production code at line 190",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 190 in production middleware source genuinely calls console.warn, matching the detector's claim."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 190"
+        }
+      ]
+    },
+    {
+      "id": "EA-b58abf519624305c",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/timing/timing.ts",
+      "message": "Console output in production code at line 211",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 211,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 211 in production middleware source genuinely calls console.warn, matching the detector's claim."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 211"
+        }
+      ]
+    },
+    {
+      "id": "EA-5ab9c23ef5eb6c7f",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/timing/timing.ts",
+      "message": "Console output in production code at line 216",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 216,
+      "verdict": "true_positive",
+      "reason": "Shipped library code writes to the console instead of a logger or caller-provided sink (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 216 calls console.warn with a template literal in production source, matching the detector's claim."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-console at line 216"
+        }
+      ]
+    }
+  ]
+}

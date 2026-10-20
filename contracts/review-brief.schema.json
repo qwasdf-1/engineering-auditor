@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/review-brief.schema.json",
+  "title": "Engineering Auditor Review Brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "goals", "risk_posture"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "goals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "priority"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "text": { "type": "string", "minLength": 1 },
+          "priority": { "enum": ["critical", "high", "normal", "low"] }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "kind"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "text": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["must", "prefer"] }
+        }
+      }
+    },
+    "risk_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_tolerance", "operational_criticality", "security_sensitivity"],
+      "properties": {
+        "change_tolerance": { "$ref": "#/$defs/risk" },
+        "operational_criticality": { "$ref": "#/$defs/risk" },
+        "security_sensitivity": { "$ref": "#/$defs/risk" }
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "intent"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "intent": { "enum": ["requirement", "architecture", "decision", "operations"] }
+        }
+      }
+    },
+    "excluded_domains": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_context_bytes": { "type": ["integer", "null"], "minimum": 1 },
+        "max_document_bytes": { "type": ["integer", "null"], "minimum": 1 },
+        "max_document_total_bytes": { "type": ["integer", "null"], "minimum": 1 },
+        "max_lookup_requests": { "type": ["integer", "null"], "minimum": 1 },
+        "max_lookup_hops": { "type": ["integer", "null"], "minimum": 1, "maximum": 2 }
+      }
+    }
+  },
+  "$defs": {
+    "risk": { "enum": ["low", "moderate", "high", "critical"] }
+  }
+}

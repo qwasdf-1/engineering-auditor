@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "detector": "loop_invariant_regex_compilation",
+  "labels": [
+    {
+      "id": "EA-c9decfaf8fd0912d",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/prefer-regex-literals.js",
+      "message": "Function `Program` calls `RegExpParser` with a loop-invariant pattern.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 535,
+      "verdict": "true_positive",
+      "reason": "The parser is rebuilt with identical options on every iteration; it could be created once.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The pattern handed to RegExpParser is `regexContent`, the content of the individual regex literal being processed, so it is not a loop-invariant operand that can be cached."
+        }
+      ]
+    },
+    {
+      "id": "EA-7249cdf5bf04b504",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Function `_parse` calls `RegExp` with a loop-invariant pattern.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 816,
+      "verdict": "false_positive",
+      "reason": "The RegExp is already lazily cached behind `if (!emojiRegex)`; nothing is recompiled per iteration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`new RegExp(_emojiRegex, \"u\")` is already guarded by `if (!emojiRegex)`, i.e. a lazy first-use cache, so it is not recompiled on each call."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `if (!emojiRegex)` guard already caches the regex, so `new RegExp(...)` at line 816 runs at most once and the 'compiled repeatedly' claim fails; this is the lazy-init idiom the rule should recognize."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[package]
+name = "auditor-review"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+
+[dependencies]
+auditor-core = { path = "../auditor-core" }
+auditor-report = { path = "../auditor-report" }
+reqwest = { version = "=0.12.28", default-features = false, features = ["blocking", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+auditor-detectors = { path = "../auditor-detectors" }
+auditor-scan = { path = "../auditor-scan" }

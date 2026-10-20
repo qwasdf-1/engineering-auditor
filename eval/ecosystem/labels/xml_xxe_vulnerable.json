@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "detector": "xml_xxe_vulnerable",
+  "labels": [
+    {
+      "id": "EA-209818350d4af039",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 219",
+      "status": "corroborated",
+      "sampled_from": "t15-l1full",
+      "line": 219,
+      "verdict": "false_positive",
+      "reason": "ElementTree parses locally generated Doxygen XML; Python's expat does not resolve external entities by default, so no XXE path exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The parsed file comes from `os.path.join(self._doxyxml_dir, filename)`, a locally generated doxygen artifact in documentation tooling, so no untrusted XML reaches the parser and the XXE rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-7a3cd3dfe7e10699",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 232",
+      "status": "corroborated",
+      "sampled_from": "t15-l1full",
+      "line": 232,
+      "verdict": "false_positive",
+      "reason": "ElementTree parses locally generated Doxygen XML; Python's expat does not resolve external entities by default, so no XXE path exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "A local doxygen XML file built from the project's own headers is parsed in doc tooling, so the XXE rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-73a297fdef6478c3",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 277",
+      "status": "corroborated",
+      "sampled_from": "t15-l1full",
+      "line": 277,
+      "verdict": "false_positive",
+      "reason": "ElementTree parses locally generated Doxygen XML; Python's expat does not resolve external entities by default, so no XXE path exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The file is opened from `self._doxyxml_dir` (generated doxygen output) in documentation support tooling, so the XXE rationale does not apply."
+        }
+      ]
+    }
+  ]
+}

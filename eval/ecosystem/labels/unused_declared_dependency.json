@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "detector": "unused_declared_dependency",
+  "labels": [
+    {
+      "id": "EA-353e8ca6190a5f87",
+      "repository": "fd",
+      "language": "structured",
+      "path": "Cargo.toml",
+      "message": "`libc` is a production dependency in Cargo.toml, but no source file under the repository imports it",
+      "status": "corroborated",
+      "sampled_from": "t21-b",
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "libc is a [target.'cfg(all(unix, not(target_os = \"redox\")))'.dependencies] entry, yet no Rust file in the repository references libc (no libc:: path, use, or extern crate); the dependency only adds a build input.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "A grep of all .rs files in the fd repo finds no `libc` reference, and fd uses `nix` for unix calls, so the `libc = \"0.2\"` dependency is declared but never imported."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/review-dispositions.schema.json",
+  "title": "Engineering Auditor Review Disposition Ledger V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "review_id", "dispositions"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "review_id": { "type": "string", "pattern": "^engineering-review:[0-9a-f]{64}$" },
+    "dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "recommendation_id",
+          "status",
+          "timestamp_unix_seconds",
+          "operator_identifier",
+          "rationale",
+          "counterevidence"
+        ],
+        "properties": {
+          "recommendation_id": {
+            "type": "string",
+            "pattern": "^contextual-recommendation:[0-9a-f]{64}$"
+          },
+          "status": { "enum": ["accepted", "deferred", "rejected"] },
+          "timestamp_unix_seconds": { "type": "integer", "minimum": 1 },
+          "operator_identifier": { "type": "string", "minLength": 1 },
+          "rationale": { "type": ["string", "null"] },
+          "counterevidence": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

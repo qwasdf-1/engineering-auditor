@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "detector": "unused_assignment",
+  "labels": [
+    {
+      "id": "EA-59e4846aaf7edbc1",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/process.c",
+      "message": "Value assigned to `path` at line 690 is overwritten before it is read.",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 690,
+      "verdict": "true_positive",
+      "reason": "`path = NULL` is overwritten on every path before it is read (each branch assigns path before use); a dead initial store.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In libuv process.c the early `path = NULL;` is overwritten by `path = uv__spawn_find_path_in_env(env)` with no read in between, so the initial assignment is dead (defensive init)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Whether `path = NULL` at line 690 is overwritten before any read depends on the remainder of uv_spawn, which the excerpt (ending at line 706) does not show."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only `path = NULL;` at line 690 with no later read or reassignment of `path` in view, so whether the value is overwritten before it is read cannot be determined from the shown part of the function."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c20ac58f9184ad3",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "include/yaml-cpp/contrib/graphbuilder.h",
+      "message": "Value assigned to `pNode` at line 81 is overwritten before it is read.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 81,
+      "verdict": "false_positive",
+      "reason": "Vendored or utility code outside the library (contrib/, util/).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pNode = pMap` at line 81 is overwritten by `pNode = pSeq` on line 82 with no intervening read, so the ineffectual-assignment claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-5c319947244b9698",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "util/api.cpp",
+      "message": "Value assigned to `root` at line 38 is overwritten before it is read.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "Vendored or utility code outside the library (contrib/, util/).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The line is inside a runnable API demonstration whose comments record expected results (e.g. `// [0, ~, two]`), i.e. example/documentation code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2b8073d343602102",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "util/api.cpp",
+      "message": "Value assigned to `subnode` at line 79 is overwritten before it is read.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 79,
+      "verdict": "false_positive",
+      "reason": "Vendored or utility code outside the library (contrib/, util/).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Same demo block that comments the semantics of each assignment (`subnode` is not instantiated), so this example code is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-833c07c6d4eaba91",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/BinaryTSFactory.java",
+      "message": "Value assigned to `inputToClose` at line 80 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b3d5b09e28beabeb",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/BinaryTSFactory.java",
+      "message": "Value assigned to `inputToClose` at line 103 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 103,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-085aedac8c43cd5c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/BinaryTSFactory.java",
+      "message": "Value assigned to `outputToClose` at line 231 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 231,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a72dd915111a638a",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/BinaryTSFactory.java",
+      "message": "Value assigned to `outputToClose` at line 255 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 255,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-0c9c2a271d62af8b",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Value assigned to `inputToClose` at line 103 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 103,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-762e7a91f9b82819",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Value assigned to `inputToClose` at line 126 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 126,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-fd54641e9814bfba",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Value assigned to `outputToClose` at line 323 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 323,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b7b24a2617e05084",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Value assigned to `outputToClose` at line 325 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 325,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b7bc7c2617e8f9ff",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Value assigned to `outputToClose` at line 356 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 356,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b7b9162617e616d6",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Value assigned to `outputToClose` at line 358 is overwritten before it is read.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 358,
+      "verdict": "false_positive",
+      "reason": "The catch handler reads the variable to close what was opened if the next call throws.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-6a77071ddfda5378",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Value assigned to `responseStream` at line 1173 is overwritten before it is read.",
+      "status": "final",
+      "sampled_from": "t27-l1-fill",
+      "line": 1173,
+      "verdict": "true_positive",
+      "reason": "let responseStream = res is never read: every path reassigns responseStream after the decompression block before using it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`let responseStream = res;` is followed by a conditional `if (decompress !== false ...)` block, so it is only conditionally reassigned and the value is used when decompression is skipped, refuting the overwritten-before-read claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`let responseStream = res;` is a fallback default: lines 1176-1186 leave it untouched and any overwrite happens inside the conditional `if (decompress !== false && res.headers['content-encoding'])` block, so on the branch where the condition is false the `res` value is never overwritten before its later use."
+        }
+      ]
+    },
+    {
+      "id": "EA-74ad5027b7cd3733",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Value assigned to `invalid_keys` at line 197 is overwritten before it is read.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 197,
+      "verdict": "true_positive",
+      "reason": "The assigned value is overwritten before any read; the first assignment is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The empty list assigned to `invalid_keys` at line 197 is immediately rebuilt by the comprehension at line 199 before any read."
+        }
+      ]
+    },
+    {
+      "id": "EA-57eae1849a07e960",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/client/client.ts",
+      "message": "Value assigned to `methodUpperCase` at line 99 is overwritten before it is read.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 99,
+      "verdict": "true_positive",
+      "reason": "The assigned value is overwritten before any read; the first assignment is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In hono client.ts `let methodUpperCase = this.method.toUpperCase()` at line 99 is reassigned at the later `methodUpperCase = this.method.toUpperCase()` with no read between, so the first assignment is ineffectual."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends before any read or reassignment of `methodUpperCase`, so the overwrite-before-read claim cannot be verified."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/reviewer-case-review-v1.schema.json",
+  "title": "Reviewer Case Review v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "review_id",
+    "reviewer_run_id",
+    "case_id",
+    "template_version",
+    "finding_ids",
+    "packet_digest",
+    "route_target",
+    "case_conclusion",
+    "case_position",
+    "model_resolved_probes",
+    "claims",
+    "recommendations",
+    "preferred_recommendation_id",
+    "unresolved_gaps",
+    "proposed_closure"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "review_id": { "type": "string", "pattern": "^reviewer-case-review:[0-9a-f]{64}$" },
+    "reviewer_run_id": { "type": "string", "pattern": "^reviewer-run:[0-9a-f]{64}$" },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "template_version": { "type": "integer", "minimum": 1 },
+    "finding_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "packet_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "route_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "model"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 }
+      }
+    },
+    "case_conclusion": {
+      "enum": [
+        "lifecycle_mismatch_substantiated",
+        "repetition_justified",
+        "impact_immaterial",
+        "wider_ownership_infeasible",
+        "insufficient_evidence",
+        "shared_root_cause",
+        "partial_overlap",
+        "independent_findings",
+        "correlation_only",
+        "consolidated_action",
+        "sequenced_actions",
+        "preserved_independent_actions",
+        "narrowed_action",
+        "deferred_action",
+        "no_repository_specific_action"
+      ]
+    },
+    "case_position": {
+      "enum": ["substantiated", "not_substantiated", "evidence_blocked", "contested", "not_applicable"]
+    },
+    "model_resolved_probes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "probe-result-v1.schema.json" }
+    },
+    "claims": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "engineering-claim-v1.schema.json" }
+    },
+    "recommendations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "contextual-recommendation-v1.schema.json" }
+    },
+    "preferred_recommendation_id": {
+      "anyOf": [
+        { "type": "string", "pattern": "^contextual-recommendation:[0-9a-f]{64}$" },
+        { "type": "null" }
+      ]
+    },
+    "unresolved_gaps": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "proposed_closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "closure_id",
+        "case_id",
+        "final_state",
+        "reason",
+        "failure",
+        "detail_codes"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "closure_id": { "type": "string", "pattern": "^case-closure:[0-9a-f]{64}$" },
+        "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+        "final_state": {
+          "enum": [
+            "resolved",
+            "resolved_with_uncertainty",
+            "not_substantiated",
+            "blocked_by_missing_evidence",
+            "contested",
+            "not_applicable"
+          ]
+        },
+        "reason": {
+          "enum": [
+            "resolved",
+            "resolved_with_uncertainty",
+            "not_substantiated",
+            "blocked_by_missing_evidence",
+            "contested",
+            "not_applicable"
+          ]
+        },
+        "failure": { "type": "null" },
+        "detail_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "repeated_format_allocation",
+  "labels": [
+    {
+      "id": "EA-479158131fc29184",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ClassUtils.java",
+      "message": "Function `getCanonicalName` formats loop-invariant data inside a loop.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 514,
+      "verdict": "false_positive",
+      "reason": "String.format runs only on the error path that throws.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The String.format at line 514 sits inside a guard that immediately throws IllegalArgumentException, so it is evaluated at most once, not 'allocated repeatedly' in the loop."
+        }
+      ]
+    },
+    {
+      "id": "EA-5968d5088db770c4",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/UTF32Reader.java",
+      "message": "Function `read` formats loop-invariant data inside a loop.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 172,
+      "verdict": "false_positive",
+      "reason": "String.format runs only on the error path that reports invalid input.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The String.format at line 172 is the argument to reportInvalid in the invalid-input branch, an error path that terminates the read, so the formatted string is not allocated on every loop iteration."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "schema_version": 2,
+  "corpus_id": "engineering-auditor-lifecycle-review-eval-v2",
+  "bindings": {
+    "case_templates": {
+      "path": "config/auditor/review-case-templates-v1.json",
+      "digest": "sha256:5612c23435b0e7ebeac1a2536cef30a4cdc5bb23beef8ccdc44b5bf8d83ed7d6"
+    },
+    "prompt_bundle": {
+      "path": "config/auditor/review-prompt-bundle-v2.json",
+      "digest": "sha256:681f3528758e17c2abecfa34c7498b780de1553e5dd0a23a2e1352f414321c3b"
+    },
+    "routes": {
+      "path": "tooling/live_provider/opencode_anon_routes_v2.json",
+      "digest": "sha256:0e9a969b6830d76b9f5e4960f115c53629a1d0bd26d2819d4d27d12407f1e233"
+    },
+    "keyed_free_routes": {
+      "mistral_free": {
+        "path": "tooling/live_provider/mistral_free_routes_v2.json",
+        "digest": "sha256:4edef24c4cb5cd07033712b478add6e5a747041f259dbb6b15a56b76eda84287"
+      },
+      "openrouter_free": {
+        "path": "tooling/live_provider/openrouter_free_routes_v2.json",
+        "digest": "sha256:a32030e255972312a3cbe571d8fe06783d9cc1ca7e8dff87bf62e62a6a06613f"
+      }
+    }
+  },
+  "release_run_plan": {
+    "default_runs": 1,
+    "sentinel_runs": 3,
+    "sentinel_case_ids": [
+      "lifecycle-immutable-equivalent-input",
+      "lifecycle-intervening-mutation",
+      "lifecycle-missing-evidence",
+      "lifecycle-unsupported-numeric-benefit"
+    ]
+  },
+  "cases": [
+    {
+      "id": "lifecycle-immutable-equivalent-input",
+      "fixture_kind": "immutable_equivalent_input",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:ad0b9d4b0a95f76bc67279371144ecd34db96c418e284cc03ca83830dc2cae62",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["yes"],
+          "intervening_mutation": ["no", "not_applicable"],
+          "consumer_distinction": ["no", "not_applicable"],
+          "retention_risk": ["no", "unknown"]
+        },
+        "allowed_closures": ["resolved", "resolved_with_uncertainty"],
+        "allowed_case_conclusions": ["lifecycle_mismatch_substantiated"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": ["lifecycle_reownership"],
+        "forbidden_recommendation_families": [],
+        "evidence_gaps": ["material cost lacks a bound runtime measurement"],
+        "requires_abstention": false,
+        "requires_useful_novel_action": true,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-07-25",
+        "rationale_digest": "sha256:b9a0ec94035014b99978418d868643c5272cf1f2d27a524614087f655dd8dace"
+      }
+    },
+    {
+      "id": "lifecycle-intervening-mutation",
+      "fixture_kind": "intervening_mutation",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:c533bd1bed9bfcc0a7456ebe836e90e21a936847d8cb81d54ffd605d338da857",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["no"],
+          "intervening_mutation": ["yes"],
+          "consumer_distinction": ["yes"]
+        },
+        "allowed_closures": ["not_substantiated"],
+        "allowed_case_conclusions": ["repetition_justified"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": ["explicit_retention_avoidance"],
+        "forbidden_recommendation_families": ["lifecycle_reownership"],
+        "evidence_gaps": [],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-07-25",
+        "rationale_digest": "sha256:4f0ab7b42e504caa6ba5521e0e22e826386ecdc5a6398175611725920aa17236"
+      }
+    },
+    {
+      "id": "lifecycle-distinct-configurations",
+      "fixture_kind": "distinct_configurations",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:2ee313e2befdf26180c4902a989397adbd6abd7d619f97e1387fff56f0fd32ff",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["no"],
+          "intervening_mutation": ["yes"],
+          "consumer_distinction": ["yes"]
+        },
+        "allowed_closures": ["not_substantiated"],
+        "allowed_case_conclusions": ["repetition_justified"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": ["explicit_retention_avoidance"],
+        "forbidden_recommendation_families": ["lifecycle_reownership"],
+        "evidence_gaps": [],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-08-10",
+        "rationale_digest": "sha256:27d6f1ea894cf7f8f8ba83fc0dc3d9895ae382b268ba1b78eda2f731a9ffac74"
+      }
+    },
+    {
+      "id": "lifecycle-test-setup-only",
+      "fixture_kind": "test_setup_only",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:47e36395e517d829ebece9b672bbe7b362679f7537edb869a4e856d5b8986672",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["no", "not_applicable"],
+          "consumer_distinction": ["not_applicable", "no"]
+        },
+        "allowed_closures": ["not_substantiated"],
+        "allowed_case_conclusions": ["impact_immaterial"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": [],
+        "forbidden_recommendation_families": ["lifecycle_reownership"],
+        "evidence_gaps": [],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-07-25",
+        "rationale_digest": "sha256:c3db46710a2add72fd695c8f3d0070d6cb3e686a2501837bab23f42c2d82a9a3"
+      }
+    },
+    {
+      "id": "lifecycle-freshness-constraint",
+      "fixture_kind": "freshness_constraint",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:e5f1a3ed07044e65155065dcc1c633919707adeffef548a270a3f9209e22e86b",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["no", "unknown"],
+          "consumer_distinction": ["yes"],
+          "retention_risk": ["yes"]
+        },
+        "allowed_closures": ["not_substantiated"],
+        "allowed_case_conclusions": ["repetition_justified"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": ["explicit_retention_avoidance"],
+        "forbidden_recommendation_families": ["lifecycle_reownership"],
+        "evidence_gaps": [],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-08-09",
+        "rationale_digest": "sha256:a78d1b39fef9ef6e4bd2a290709df4a1823203039026167f4b3ff3be105ab0a1"
+      }
+    },
+    {
+      "id": "lifecycle-retention-risk",
+      "fixture_kind": "retention_risk",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:cc93f8daba4e67d0c97538069747392523f31f74da51122b5a98f385371ada7d",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["yes"],
+          "intervening_mutation": ["yes"],
+          "consumer_distinction": ["yes"],
+          "retention_risk": ["yes"],
+          "wider_owner": ["no", "unknown"]
+        },
+        "allowed_closures": ["not_substantiated"],
+        "allowed_case_conclusions": ["repetition_justified"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": ["explicit_retention_avoidance"],
+        "forbidden_recommendation_families": ["lifecycle_reownership"],
+        "evidence_gaps": [],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-08-09",
+        "rationale_digest": "sha256:8aa46162df3505be6445e866e925c69a41eed2e55434a694c6d15fa28d18bdca"
+      }
+    },
+    {
+      "id": "lifecycle-missing-evidence",
+      "fixture_kind": "missing_evidence",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:c5b929c15aeebf33f290695e032688c3be1e4ff72192758dbd1d14d6dfcd9bae",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["unknown"],
+          "intervening_mutation": ["unknown"],
+          "material_cost": ["unknown"]
+        },
+        "allowed_closures": ["blocked_by_missing_evidence"],
+        "allowed_case_conclusions": ["insufficient_evidence"],
+        "forbidden_claim_slots": ["lifecycle_conclusion"],
+        "required_recommendation_families": ["measurement_before_change"],
+        "forbidden_recommendation_families": ["lifecycle_reownership"],
+        "evidence_gaps": ["runtime values and mutation behavior are opaque"],
+        "requires_abstention": true,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-08-09",
+        "rationale_digest": "sha256:653a9fc97ac21b78c3ed3e20d35af87a59efc4067f80f6b797b0f3da69cc7751"
+      }
+    },
+    {
+      "id": "lifecycle-unsupported-numeric-benefit",
+      "fixture_kind": "unsupported_numeric_benefit",
+      "generator": "tooling/review_eval/generate_lifecycle_repo.py",
+      "generator_digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713",
+      "source_digest": "sha256:215f609a405bd6f096f47e27104983f6b1d9a5d3913cf329f8919513aa0e4a48",
+      "source_commit": "generated-clean-room-lifecycle-v2",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": ["yes"],
+          "input_equivalence": ["yes"],
+          "material_cost": ["unknown"]
+        },
+        "allowed_closures": ["resolved_with_uncertainty", "contested"],
+        "allowed_case_conclusions": ["lifecycle_mismatch_substantiated"],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": ["lifecycle_reownership"],
+        "forbidden_recommendation_families": [],
+        "evidence_gaps": ["the numeric benefit has no bound measurement"],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": true
+      },
+      "human_review": {
+        "reviewer_role": "engineering-auditor-maintainer",
+        "reviewed_at": "2026-07-25",
+        "rationale_digest": "sha256:fbb03bdf92cbd588f85d54d4f62e8397cb1640dbecdc1db5403ea2eaacc29258"
+      }
+    }
+  ]
+}

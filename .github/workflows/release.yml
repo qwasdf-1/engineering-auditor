@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches the workspace version
+        id: version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          workspace="$(sed -n 's/^version = "\(.*\)"$/\1/p' Cargo.toml | head -1)"
+          if [ "$tag" != "$workspace" ]; then
+            echo "tag v$tag does not match workspace version $workspace" >&2
+            exit 1
+          fi
+          echo "version=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Check the CHANGELOG has release notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: python3 tooling/release/changelog_section.py "$VERSION" > /dev/null
+
+  build:
+    needs: verify
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: |
+          rustup default stable
+          rustup target add ${{ matrix.target }}
+
+      - name: Build
+        run: cargo build --release --locked -p auditor-cli --bin auditor --target ${{ matrix.target }}
+
+      - name: Package
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          name="auditor-$VERSION-$TARGET"
+          mkdir -p "$name/review"
+          cp "target/$TARGET/release/auditor" LICENSE README.md "$name/"
+          python3 tooling/release/third_party_licenses.py --target "$TARGET" \
+            --output "$name/THIRD-PARTY-LICENSES.txt"
+          cp config/auditor/review-case-templates-v1.json config/auditor/review-prompt-bundle-v2.json \
+            config/auditor/review-brief-general-v1.json "$name/review/"
+          cp config/auditor/review-routes-example-mistral-v2.json "$name/review/routes-example.json"
+          tar -czf "$name.tar.gz" "$name"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: auditor-*.tar.gz
+          if-no-files-found: error
+
+  publish:
+    needs: [verify, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum auditor-*.tar.gz > SHA256SUMS
+
+      - name: Release notes
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: python3 tooling/release/changelog_section.py "$VERSION" > notes.md
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/auditor-*.tar.gz dist/SHA256SUMS \
+            --title "Engineering Auditor $VERSION" \
+            --notes-file notes.md \
+            --verify-tag

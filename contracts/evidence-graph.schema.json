@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/evidence-graph.schema.json",
+  "title": "Engineering Auditor Evidence Graph V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "completeness", "nodes", "edges"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "completeness": { "$ref": "#/$defs/completeness" },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete",
+        "files",
+        "findings",
+        "supported_findings",
+        "produced_findings",
+        "exact_fact_spans",
+        "external_inputs"
+      ],
+      "properties": {
+        "complete": { "type": "boolean" },
+        "files": { "type": "integer", "minimum": 0 },
+        "findings": { "type": "integer", "minimum": 0 },
+        "supported_findings": { "type": "integer", "minimum": 0 },
+        "produced_findings": { "type": "integer", "minimum": 0 },
+        "exact_fact_spans": { "type": "integer", "minimum": 0 },
+        "external_inputs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label", "properties"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "file",
+            "symbol",
+            "fact",
+            "measurement",
+            "finding",
+            "detector",
+            "external_input"
+          ]
+        },
+        "label": { "type": "string" },
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "kind", "properties"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "contains",
+            "references",
+            "derived_from",
+            "supports",
+            "produced_by"
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+[package]
+name = "auditor-detectors"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+
+[dependencies]
+auditor-core = { path = "../auditor-core" }
+auditor-ast = { path = "../auditor-ast" }
+ignore = "0.4.24"
+regex = "1"
+serde_json = "1"
+
+[features]
+donor-oracle = []
+graph-analysis = []

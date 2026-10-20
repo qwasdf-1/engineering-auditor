@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "detector": "shell_execution",
+  "labels": [
+    {
+      "id": "EA-b4a85a1c6f2f2c43",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Shell execution at line 1048",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1048,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`Makefile.js` is build/tooling code, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f25fbcbd5f8df2cc",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/check-emfile-handling.js",
+      "message": "Shell execution at line 38",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`tools/check-emfile-handling.js` is tooling code, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2d8147c6cfb2ea4f",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/check-emfile-handling.js",
+      "message": "Shell execution at line 105",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 105,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`tools/check-emfile-handling.js` is tooling code, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-929b110ffc8974f8",
+      "repository": "rich",
+      "language": "python",
+      "path": "tools/make_width_tables.py",
+      "message": "Shell execution at line 22",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "`subprocess.run(f\"black {path}\", shell=True)` uses the shell with an interpolated string.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The site is tools/make_width_tables.py, a build/tooling code-generation script, which is outside this rule's production-code scope regardless of the shell=True call used to run black on the generated file."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S602 at line 22"
+        }
+      ]
+    },
+    {
+      "id": "EA-c59d4a41974f0636",
+      "repository": "rich",
+      "language": "python",
+      "path": "tools/make_width_tables.py",
+      "message": "Shell execution at line 53",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "`subprocess.run(f\"black {path}\", shell=True)` uses the shell with an interpolated string.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged line sits in tools/make_width_tables.py, a dev tooling script that shells out to `black`, so the \"production code\" shell-execution scope does not apply."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S602 at line 53"
+        }
+      ]
+    },
+    {
+      "id": "EA-f6643c1294035ecc",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Shell execution at line 22",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 22,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`build/release-adapter.ts` is build/tooling code, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-76d43a2c9054f917",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Shell execution at line 24",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`build/release-adapter.ts` is build/tooling code, outside the detector's production-code scope."
+        }
+      ]
+    }
+  ]
+}

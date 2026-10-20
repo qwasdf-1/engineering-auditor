@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "detector": "csharp_linq_enumeration",
+  "labels": [
+    {
+      "id": "EA-34cba93cd855ebc3",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.GridReader.cs",
+      "message": "Dapper/SqlMapper.GridReader.cs has 8 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 205,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`return buffered ? result.ToList() : result;` already materializes when buffered, so the reported line is the fix rather than multiple enumeration of a deferred query."
+        }
+      ]
+    },
+    {
+      "id": "EA-3ab3a4acf0bc901f",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Dapper/SqlMapper.cs has 13 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 850,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`return command.Buffered ? data.ToList() : data;` already calls `ToList()` to materialize the buffered result, so the multiple-enumeration rationale does not apply here."
+        }
+      ]
+    },
+    {
+      "id": "EA-c807ca16fc0d6b94",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonValidatingReader.cs",
+      "message": "Src/Newtonsoft.Json/JsonValidatingReader.cs has 3 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 518,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`CurrentMemberSchemas.Where(ValidateObject).ToList()` materializes the query once, so there is no repeated enumeration at the reported site."
+        }
+      ]
+    },
+    {
+      "id": "EA-4c34ca48534dd7e6",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
+      "message": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs has 4 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 255,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`.Where(FilterMembers).ToList()` already materializes the sequence into a list, contradicting the multiple-enumeration claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-e4edc4918a7374ab",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DictionaryWrapper.cs",
+      "message": "Src/Newtonsoft.Json/Utilities/DictionaryWrapper.cs has 8 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 128,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_dictionary.Keys.Cast<TKey>().ToList()` materializes into a list once, so the enumeration claim does not hold."
+        }
+      ]
+    },
+    {
+      "id": "EA-7bd38a532cd2a373",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/LinqBridge.cs",
+      "message": "Src/Newtonsoft.Json/Utilities/LinqBridge.cs has 3 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 843,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`return source.ToList().ToArray();` is LinqBridge's own operator implementation and materializes `source` once, so the rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-ec7abae2e9e8a531",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs",
+      "message": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs has 16 LINQ enumeration calls; consider materializing once",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 684,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "groupedMember is an IGrouping enumerated by Count() at line 684 and then again by First()/foreach at lines 688 and 693, so a genuine multiple enumeration occurs."
+        }
+      ]
+    },
+    {
+      "id": "EA-c148fbc3c280e694",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/TypeExtensions.cs",
+      "message": "Src/Newtonsoft.Json/Utilities/TypeExtensions.cs has 4 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 340,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 340 is a single .Where(...).ToArray() chain that materializes once, so the multiple-enumeration rationale does not apply at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-b1bb6ca9d3284426",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Settings/KeyValuePairs/KeyValuePairSettings.cs",
+      "message": "src/Serilog/Settings/KeyValuePairs/KeyValuePairSettings.cs has 6 LINQ enumeration calls; consider materializing once",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 140,
+      "verdict": "false_positive",
+      "reason": "A per-file LINQ call count; the flagged site materializes once and no repeated enumeration is shown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 140 already ends in .ToList(), materializing callableDirectives; the reported site is the materialization rather than a repeated enumeration."
+        }
+      ]
+    }
+  ]
+}

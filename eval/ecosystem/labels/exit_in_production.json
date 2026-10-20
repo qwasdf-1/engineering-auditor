@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "detector": "exit_in_production",
+  "labels": [
+    {
+      "id": "EA-f47bd124c61394a3",
+      "repository": "cobra",
+      "language": "go",
+      "path": "cobra.go",
+      "message": "Exit call at line 238",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 238,
+      "verdict": "true_positive",
+      "reason": "Library helper CheckErr exits the process (revive deep-exit); intentional, but the claim holds outside main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "os.Exit(1) is genuinely present at line 238 in the production CheckErr helper."
+        }
+      ]
+    },
+    {
+      "id": "EA-35504beb56247612",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command_win.go",
+      "message": "Exit call at line 39",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "Mousetrap hook in the library exits the process on Windows Explorer launch; os.Exit outside main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "os.Exit(1) is genuinely present at line 39 in production command_win.go."
+        }
+      ]
+    },
+    {
+      "id": "EA-ee0019764a0a8ebf",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/yaml_docs.go",
+      "message": "Exit call at line 140",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 140,
+      "verdict": "true_positive",
+      "reason": "GenYaml exits on a marshal error although the function already returns error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "os.Exit(1) is genuinely present at line 140 in the shipped doc/yaml_docs.go code, even though a return err path exists nearby."
+        }
+      ]
+    },
+    {
+      "id": "EA-4c20e23028e89af1",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/fetch-docs-links.js",
+      "message": "Exit call at line 98",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 98,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/fetch-docs-links.js is a build/tooling script, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-ffc040069981a6da",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/test-ecosystem/data.mjs",
+      "message": "Exit call at line 70",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 70,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/test-ecosystem/data.mjs is test tooling, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-992cc1a0228ebd29",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Exit call at line 479",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 479,
+      "verdict": "false_positive",
+      "reason": "docopt exits after printing --help or --version, its documented CLI contract.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "A `sys.exit()` call in a production module (`support/docopt.py`) exists at line 479 as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b1169c33fdba4e3",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Exit call at line 482",
+      "status": "final",
+      "sampled_from": "t15-t2l1b",
+      "line": 482,
+      "verdict": "false_positive",
+      "reason": "docopt exits after printing --help or --version, its documented CLI contract.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "A second `sys.exit()` call in production code is present at line 482 as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-688f38d878053d99",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Exit call at line 2042",
+      "status": "corroborated",
+      "sampled_from": "t23-py-l1",
+      "line": 2042,
+      "verdict": "true_positive",
+      "reason": "Library method Console.on_broken_pipe raises SystemExit(1), terminating the host process; documented and overridable, but still a process exit from library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`raise SystemExit(1)` is a process-terminating exit call in the production library `rich/console.py` at the reported line."
+        }
+      ]
+    },
+    {
+      "id": "EA-58f19edba814b3f6",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Exit call at line 18",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 18,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The site is in `build/release-adapter.ts`, release tooling/build code, which is outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-31c98971c120a650",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "build/release-adapter.ts",
+      "message": "Exit call at line 30",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "Build or repository script (build/, tools/, Makefile.js), outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This exit is also in the build/release tooling file, outside the production-code scope the rule targets."
+        }
+      ]
+    }
+  ]
+}

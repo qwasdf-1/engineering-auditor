@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/challenge-record-v1.schema.json",
+  "title": "Challenge Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "challenge_id",
+    "challenger_run_id",
+    "case_id",
+    "reviewer_review_id",
+    "packet_digest",
+    "route_target",
+    "status",
+    "objections",
+    "common_mode_concerns"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "challenge_id": { "type": "string", "pattern": "^challenge-record:[0-9a-f]{64}$" },
+    "challenger_run_id": { "type": "string", "pattern": "^[a-z0-9-]+:[0-9a-f]{64}$" },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "reviewer_review_id": {
+      "type": "string",
+      "pattern": "^reviewer-case-review:[0-9a-f]{64}$"
+    },
+    "packet_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "route_target": { "$ref": "#/$defs/route_target" },
+    "status": { "enum": ["cleared", "objections_raised", "blocked"] },
+    "objections": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/objection" }
+    },
+    "common_mode_concerns": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "route_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "model"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 }
+      }
+    },
+    "objection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objection_id",
+        "target_type",
+        "target_id",
+        "reason",
+        "evidence_ids",
+        "materiality",
+        "required_resolution"
+      ],
+      "properties": {
+        "objection_id": {
+          "type": "string",
+          "pattern": "^challenge-objection:[0-9a-f]{64}$"
+        },
+        "target_type": { "enum": ["claim", "recommendation"] },
+        "target_id": {
+          "type": "string",
+          "pattern": "^(engineering-claim|contextual-recommendation):[0-9a-f]{64}$"
+        },
+        "reason": {
+          "enum": [
+            "unsupported_assumption",
+            "ignored_counterevidence",
+            "overclaimed_benefit",
+            "unsafe_lifecycle_change",
+            "omitted_alternative",
+            "material_objection"
+          ]
+        },
+        "evidence_ids": {
+          "description": "Closed-packet evidence item IDs or case-probe IDs cited by the admitted reviewer result.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "materiality": { "enum": ["low", "medium", "high"] },
+        "required_resolution": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

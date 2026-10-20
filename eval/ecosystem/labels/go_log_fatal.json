@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "go_log_fatal",
+  "labels": [
+    {
+      "id": "EA-9c092a4acd03d2e6",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/graceful/main.go",
+      "message": "Go source calls log.Fatal at line 28",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "log.Fatal inside the server goroutine exits without running deferred shutdown; the detector's contract covers package main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The site is in _examples/graceful/main.go, which is example code outside the production-code scope of the log.Fatal rule, where fatal-on-server-error is idiomatic."
+        }
+      ]
+    },
+    {
+      "id": "EA-683838ae0556ad40",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/graceful/main.go",
+      "message": "Go source calls log.Fatal at line 41",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "log.Fatal in main skips deferred cleanup (defer cancel()); matches the detector's documented package-main positive.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "As with line 28, this log.Fatal in main() of an _examples/ program is example code outside the detector's production scope."
+        }
+      ]
+    }
+  ]
+}

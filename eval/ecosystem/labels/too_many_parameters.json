@@ -1,0 +1,2317 @@
+{
+  "schema_version": 1,
+  "detector": "too_many_parameters",
+  "labels": [
+    {
+      "id": "EA-f3590c0c9684a603",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/stream.c",
+      "message": "Function `uv_write2` takes 6 parameters (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; a manual count confirms EA (the reference tool misreads the signature).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The signature of `uv_write2` clearly lists six parameters (req, handle, bufs, nbufs, send_handle, cb), exceeding the budget of 5."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "refuted",
+          "detail": "lizard params 5 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7300666d5d52bd77",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/table_cache.cc",
+      "message": "Function `Get` takes 6 parameters (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 100,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; a manual count confirms EA (the reference tool misreads the signature).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`TableCache::Get` visibly declares six parameters (options, file_number, file_size, k, arg, handle_result), matching the claim."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "refuted",
+          "detail": "lizard params 5 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0228d4021fccbf2c",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.Async.cs",
+      "message": "Function `QueryAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line 128 signature lists exactly 7 parameters (sql, map, param, transaction, buffered, splitOn, commandTimeout), exceeding the threshold of 5."
+        }
+      ]
+    },
+    {
+      "id": "EA-30079f15158d2ada",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.Async.cs",
+      "message": "Function `QueryAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line 147 signature lists exactly 7 parameters, matching the reported count and exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-93d872acec55c3fa",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.cs",
+      "message": "Function `Query` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 393,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line 393 signature lists exactly 7 parameters (sql, map, param, transaction, buffered, splitOn, commandTimeout), exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-93b20201207cd344",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.cs",
+      "message": "Function `Query` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 412,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `Query` takes 7 parameters (> 5) is plausible for the real function `Database.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-93bc340120857cbf",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.cs",
+      "message": "Function `Query` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 432,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line 432 signature lists exactly 7 parameters, matching the reported count and exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-93b8ce0120829996",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.Rainbow/Database.cs",
+      "message": "Function `Query` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 453,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `Query` takes 7 parameters (> 5) is plausible for the real function `Database.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-573fb46d46f9db70",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Function `QueryAsync` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 770,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The QueryAsync declaration at line 771 has 8 value parameters excluding the `this` receiver, exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-5750b26d47084b3d",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Function `QueryAsync` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 905,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The QueryAsync declaration at line 906 has 8 value parameters excluding `this`, exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-574d4c6d47056814",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Function `QueryAsync` takes 9 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 968,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The QueryAsync declaration at line 969 has 9 value parameters excluding `this`, matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f5df1c6b09a2e0b",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/EnumUtils.cs",
+      "message": "Function `MatchName` takes 6 parameters (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 383,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; a manual count confirms EA (the reference tool misreads the signature).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line 383 MatchName signature lists exactly 6 parameters (value, enumNames, resolvedNames, valueIndex, valueSubstringLength, comparison), exceeding the threshold."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "refuted",
+          "detail": "lizard params 0 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-afc51396651a7381",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptString` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "WriteEscapedJavaScriptString lists 8 parameters (writer, s, delimiter, appendDelimiters, charEscapeFlags, stringEscapeHandling, bufferPool, writeBuffer), matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-10f13cdb0f1a1df7",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptStringAsync` takes 9 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 366,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "WriteEscapedJavaScriptStringAsync has 9 parameters including the optional cancellationToken, matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-f6368da5a8b72cc9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptStringWithDelimitersAsync` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 386,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `WriteEscapedJavaScriptStringWithDelimitersAsync` takes 8 parameters (> 5) is plausible for the real function `JavaScriptUtils.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-251296e3fdeb6903",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptStringWithDelimitersAsync` takes 9 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 408,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "WriteEscapedJavaScriptStringWithDelimitersAsync declares 9 parameters (task, writer, s, delimiter, charEscapeFlags, stringEscapeHandling, client, writeBuffer, cancellationToken)."
+        }
+      ]
+    },
+    {
+      "id": "EA-9f03c919fa341737",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptStringWithoutDelimitersAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 427,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `WriteEscapedJavaScriptStringWithoutDelimitersAsync` takes 7 parameters (> 5) is plausible for the real function `JavaScriptUtils.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-22078404b45fabfa",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/AsyncCacheTResultSyntax.cs",
+      "message": "Function `CacheAsync` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 350,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `CacheAsync` takes 8 parameters (> 5) is plausible for the real function `AsyncCacheTResultSyntax.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-2200b804b459e5a8",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/AsyncCacheTResultSyntax.cs",
+      "message": "Function `CacheAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 629,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "CacheAsync declares 7 parameters (cacheProvider, ttl, onCacheGet, onCacheMiss, onCachePut, onCacheGetError, onCachePutError), matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-21f9ec04b4541f56",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/AsyncCacheTResultSyntax.cs",
+      "message": "Function `CacheAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 705,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "This CacheAsync overload declares 7 parameters (cacheProvider, ttlStrategy, onCacheGet, onCacheMiss, onCachePut, onCacheGetError, onCachePutError)."
+        }
+      ]
+    },
+    {
+      "id": "EA-5de97cfe973bd911",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/AsyncCacheTResultSyntax.cs",
+      "message": "Function `CacheAsync` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 969,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "CacheAsync declares 8 parameters including cacheKeyStrategy, matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ab0ef329887325a",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/CacheTResultSyntax.cs",
+      "message": "Function `Cache` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 257,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Cache declares 8 parameters (cacheProvider, ttl, cacheKeyStrategy, plus five callbacks), matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-8abb2132988fdbd5",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/CacheTResultSyntax.cs",
+      "message": "Function `Cache` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 386,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `Cache` takes 8 parameters (> 5) is plausible for the real function `CacheTResultSyntax.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-29d271f9295d27f3",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Caching/CacheTResultSyntax.cs",
+      "message": "Function `Cache` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 763,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Cache declares 8 parameters (cacheProvider, ttlStrategy, cacheKeyStrategy, plus five callbacks), matching the reported count."
+        }
+      ]
+    },
+    {
+      "id": "EA-955552dc740fc404",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/CircuitBreaker/AdvancedCircuitBreakerTResultSyntax.cs",
+      "message": "Function `AdvancedCircuitBreaker` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 176,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `AdvancedCircuitBreaker` takes 7 parameters (> 5) is plausible for the real function `AdvancedCircuitBreakerTResultSyntax.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-d5f8f042bbb33d89",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/CircuitBreaker/AsyncAdvancedCircuitBreakerTResultSyntax.cs",
+      "message": "Function `AdvancedCircuitBreakerAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`AdvancedCircuitBreakerAsync` declares 7 parameters excluding the `this` builder (failureThreshold, samplingDuration, minimumThroughput, durationOfBreak, onBreak, onReset, onHalfOpen), exceeding the threshold of 5."
+        }
+      ]
+    },
+    {
+      "id": "EA-f359a32b8bc2e721",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/CircuitBreaker/AsyncCircuitBreakerEngine.cs",
+      "message": "Function `ImplementationAsync` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 5,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ImplementationAsync` declares 7 parameters (action, context, continueOnCapturedContext, shouldHandleExceptionPredicates, shouldHandleResultPredicates, breakerController, cancellationToken), exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-61ce61aac14c2218",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Fallback/FallbackEngine.cs",
+      "message": "Function `Implementation` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 6,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `Implementation` takes 7 parameters (> 5) is plausible for the real function `FallbackEngine.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-52a1bed691d0ea24",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Retry/AsyncRetryEngine.cs",
+      "message": "Function `ImplementationAsync` takes 10 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 6,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the signature lists that many parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `ImplementationAsync` takes 10 parameters (> 5) is plausible for the real function `AsyncRetryEngine.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-325ee491dfd3c231",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Wrap/AsyncPolicyWrapEngine.cs",
+      "message": "Function `ImplementationAsync` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `ImplementationAsync` takes 6 parameters (> 5) is plausible for the real function `AsyncPolicyWrapEngine.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-7439bf5d4e58bd94",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Core/Pipeline/SilentLogger.cs",
+      "message": "Function `Write` takes 6 parameters (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 65,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; a manual count confirms EA (the reference tool misreads the signature).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Write<T0,T1,T2>` declares 6 parameters (level, exception, messageTemplate, propertyValue0, propertyValue1, propertyValue2), exceeding the threshold."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "refuted",
+          "detail": "lizard params 4 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0d0b2bf96cd36e79",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Log.cs",
+      "message": "Function `Write` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 241,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Write<T0,T1,T2>` declares 6 parameters, exceeding the threshold of 5."
+        }
+      ]
+    },
+    {
+      "id": "EA-b2e568b427c2e6a3",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Function `createBoundField` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 181,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`createBoundField` declares 7 parameters (context, field, accessor, serializedName, fieldType, serialize, blockInaccessible), exceeding the threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Seven parameters are fully visible (context, field, accessor, serializedName, fieldType, serialize, blockInaccessible), exceeding the 5 budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-bd80389bb8a5625b",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/TextualTSFactory.java",
+      "message": "Function `_createParser` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 252,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_createParser` declares 6 parameters (readCtxt, ctxt, data, offset, len, recyclable), exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-ea657afe3eca3729",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Function `appendEscaped` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 231,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`appendEscaped` declares 6 parameters (codePoint, accum, options, escapeMode, coreCharset, fallback), exceeding the threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "appendEscaped lists six parameters (codePoint, accum, options, escapeMode, coreCharset, fallback), over the threshold of 5."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2786a4638a13f66b",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/NodeInternals.java",
+      "message": "Function `attributeRange` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`attributeRange` lists attributes, key, lineMap, nameStart, nameEnd, valueStart, valueEnd = 7 parameters, exceeding 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "attributeRange declares seven parameters (attributes, key, lineMap, nameStart, nameEnd, valueStart, valueEnd), exceeding 5."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-95398be69536ba5e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Range.java",
+      "message": "Function `attributeRange` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 474,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`attributeRange(int index, LineMap lineMap, int nameStart, int nameEnd, int valueStart, int valueEnd)` has exactly 6 parameters."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "attributeRange declares exactly 6 parameters (index, lineMap, nameStart, nameEnd, valueStart, valueEnd) in main source, exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5af7c220726bdef3",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `setProxy` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 258,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `setProxy` takes 6 parameters (> 5) is plausible for the real function `http.js` at this site."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-aaaca805aa624a18",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/core/AxiosError.js",
+      "message": "Function `from` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 99,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`static from(error, code, config, request, response, customProps)` has 6 parameters."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "AxiosError.from declares 6 parameters (error, code, config, request, response, customProps), matching the reported count in library source."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8221de596dabece8",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/cookies.js",
+      "message": "Function `write` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 7,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`write(name, value, expires, path, domain, secure, sameSite)` has exactly 7 parameters."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "write declares 7 parameters (name, value, expires, path, domain, secure, sameSite), matching the reported count in the cookie adapter."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-e8e8b96b6ba5c45e",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/toURLEncodedForm.js",
+      "message": "Function `toURLEncodedForm` takes 6 parameters (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "Signature has 2 parameters; the nested visitor callback's 4 were attributed to the outer function.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d9af2ed17791a430",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint-helpers.js",
+      "message": "Function `lintFile` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1216,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`lintFile` lists filePath, configs, eslintOptions, linter, lintResultCache, readFileCounter, retrier, controller = 8 parameters."
+        }
+      ]
+    },
+    {
+      "id": "EA-f55a8d8cd7550e62",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/ext/android/ViewModelLazy.kt",
+      "message": "Function `viewModelForClass` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`viewModelForClass` has clazz, qualifier, owner, state, key, parameters = 6 parameters."
+        }
+      ]
+    },
+    {
+      "id": "EA-7bfc475ec91421ac",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/ext/android/ViewModelLazy.kt",
+      "message": "Function `viewModelForClass` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `Fragment.viewModelForClass` overload likewise declares 6 parameters (clazz, qualifier, owner, state, key, parameters)."
+        }
+      ]
+    },
+    {
+      "id": "EA-cdac7d525c71f210",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-androidx-compose-navigation/src/main/java/org/koin/androidx/compose/navigation/NavViewModel.kt",
+      "message": "Function `koinNavViewModel` takes 6 parameters (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "koinNavViewModel in NavViewModel.kt has 6 parameters but all are defaulted (qualifier, viewModelStoreOwner, key, extras, scope, parameters) in a deprecated Compose API wrapper, an idiom where named/default params are expected."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off mid-parameter-list (after `extras`), so the full count of `koinNavViewModel` cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-d8e030a5d036763d",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel-navigation/src/commonMain/kotlin/org/koin/compose/viewmodel/NavViewModel.kt",
+      "message": "Function `koinNavViewModel` takes 6 parameters (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "koinNavViewModel in NavViewModel.kt has 6 parameters but all are defaulted (qualifier, viewModelStoreOwner, key, extras, scope, parameters) in a deprecated Compose API wrapper, an idiom where named/default params are expected."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off after the `extras` parameter, so the claimed count of 6 for `koinNavViewModel` cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ae135126b09f9f1",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/InstanceRegistry.kt",
+      "message": "Function `scopeDeclaredInstance` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`scopeDeclaredInstance` visibly declares 7 parameters (instance, scopeQualifier, scopeID, qualifier, secondaryTypes, allowOverride, holdInstance), matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa09ee249d6cd36f",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/nativeMain/kotlin/org/koin/core/module/ModuleExt.kt",
+      "message": "Function `createDefinition` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`createDefinition` visibly declares 6 parameters (kind, kClass, qualifier, definition, secondaryTypes, scopeQualifier), matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-aa3fa20de6f8f212",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http2/Http2Reader.kt",
+      "message": "Function `alternateService` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 577,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`alternateService` visibly declares 6 parameters (streamId, origin, protocol, host, port, maxAge), matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2425fd532bb14b1",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/url/-Url.kt",
+      "message": "Function `writeCanonicalized` takes 9 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`writeCanonicalized` visibly declares 9 parameters (input, pos, limit, encodeSet, alreadyEncoded, strict, plusIsSpace, unicodeAllowed, charset), matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc5ba131dd540682",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/url/-Url.kt",
+      "message": "Function `canonicalizeWithCharset` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 122,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `canonicalizeWithCharset` takes 8 parameters (> 5) is plausible for the real function `-Url.kt` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-c00d5112251d328a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/url/-Url.kt",
+      "message": "Function `canonicalize` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `canonicalize` takes 7 parameters (> 5) is plausible for the real function `-Url.kt` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-c7c191d6f7de5d26",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/src/wasmWasiMain/kotlin/okio/internal/preview1/Preview1.kt",
+      "message": "Function `path_open` takes 9 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 94,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: A Kotlin external WASI binding: its parameters mirror a fixed foreign ABI (now skipped).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`path_open` is an `external`/`@WasmImport` WASI ABI declaration whose 9 parameters are fixed by the platform signature and cannot be collapsed into a struct, so the refactor rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-9bd508d3b48df2ae",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/src/wasmWasiMain/kotlin/okio/internal/preview1/Preview1.kt",
+      "message": "Function `path_readlink` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 113,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: A Kotlin external WASI binding: its parameters mirror a fixed foreign ABI (now skipped).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`path_readlink` is an `external`/`@WasmImport` WASI binding; its 6 parameters mirror the fixed FFI ABI and cannot be regrouped."
+        }
+      ]
+    },
+    {
+      "id": "EA-f1a434d83308e86c",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/src/wasmWasiMain/kotlin/okio/internal/preview1/Preview1.kt",
+      "message": "Function `path_rename` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 143,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: A Kotlin external WASI binding: its parameters mirror a fixed foreign ABI (now skipped).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`path_rename` is an `external`/`@WasmImport` WASI binding whose 6-parameter signature is dictated by the external ABI, so grouping is not applicable."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef6fb7f5e31ed678",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Options.kt",
+      "message": "Function `buildTrieRecursive` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`buildTrieRecursive` is an ordinary private Kotlin function with 7 parameters (nodeOffset, node, byteStringOffset, byteStrings, fromIndex, toIndex, indexes), correctly counted and refactorable."
+        }
+      ]
+    },
+    {
+      "id": "EA-4364ac53132b1a8d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/internal/-ZlibJvm.kt",
+      "message": "Function `datePartsToEpochMillis` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The actual `datePartsToEpochMillis` genuinely takes 6 `Int` parameters, a countable data clump that could be grouped."
+        }
+      ]
+    },
+    {
+      "id": "EA-680e4f1420a6d8fe",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/internal/-Zlib.kt",
+      "message": "Function `datePartsToEpochMillis` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The expect `datePartsToEpochMillis` truly declares 6 parameters, matching the count and being a groupable set."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef3b766ae5b317fe",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_api.py",
+      "message": "Function `get` takes 10 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 174,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`get` accepts 10 parameters (url plus 9 keyword args) as shown, so the count is correct and a config object could reduce it."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "get declares exactly 10 parameters (url plus 9 keyword-only args params...trust_env), matching the reported count in library source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (10) at line 174"
+        }
+      ]
+    },
+    {
+      "id": "EA-f9b6d12b0e4ffc30",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_api.py",
+      "message": "Function `options` takes 10 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 210,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`options` likewise takes 10 parameters (url plus 9 keyword args), an accurate count with an applicable grouping suggestion."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "options declares exactly 10 parameters (url plus 9 keyword-only args params...trust_env), matching the reported count."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (10) at line 210"
+        }
+      ]
+    },
+    {
+      "id": "EA-979f7fa4e188fb70",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_api.py",
+      "message": "Function `post` takes 14 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 282,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`post` lists url plus 13 keyword-only params (content, data, files, json, params, headers, cookies, auth, proxy, follow_redirects, verify, timeout, trust_env) = 14, matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "post declares exactly 14 parameters (url plus content, data, files, json, params, headers, cookies, auth, proxy, follow_redirects, verify, timeout, trust_env), matching the reported count."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (14) at line 282"
+        }
+      ]
+    },
+    {
+      "id": "EA-d5378810c3401221",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_api.py",
+      "message": "Function `put` takes 14 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 323,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`put` lists url plus 13 keyword-only params = 14, matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "put shows all 14 parameters in the excerpt (url plus content, data, files, json, params, headers, cookies, auth, proxy, follow_redirects, verify, timeout, trust_env), matching the reported count."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (14) at line 323"
+        }
+      ]
+    },
+    {
+      "id": "EA-e24cb41900079798",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `_init_proxy_transport` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 740,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_init_proxy_transport` has proxy, verify, cert, trust_env, http1, http2, limits = 7 (self excluded), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `_init_proxy_transport` definition lists `proxy`, `verify`, `cert`, `trust_env`, `http1`, `http2`, and `limits` after `self`, totaling 7 non-self parameters."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (7) at line 740"
+        }
+      ]
+    },
+    {
+      "id": "EA-9c28ff7f1dc8c5c5",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `request` takes 13 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 771,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`request` has method, url plus 11 keyword-only params = 13 (self excluded), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `request` definition shows `method`, `url`, and 11 keyword-only parameters, totaling 13 non-self parameters."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (13) at line 771"
+        }
+      ]
+    },
+    {
+      "id": "EA-0fe730b256edd596",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `stream` takes 13 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 828,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`stream` has method, url plus 11 keyword-only params = 13 (self excluded), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `stream` definition shows the same 13 non-self parameters as `request`."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (13) at line 828"
+        }
+      ]
+    },
+    {
+      "id": "EA-a02ec99f5a7016f2",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `get` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1036,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`get` has url plus params, headers, cookies, auth, follow_redirects, timeout, extensions = 8 (self excluded), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `get` definition lists `url` plus 7 keyword-only parameters, totaling 8 non-self parameters."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (8) at line 1036"
+        }
+      ]
+    },
+    {
+      "id": "EA-c7fe1f82b698f80c",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `options` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1065,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`options` has url plus params, headers, cookies, auth, follow_redirects, timeout, extensions = 8 (self excluded), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `options` definition lists `url` plus 7 keyword-only parameters, totaling 8 non-self parameters."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (8) at line 1065"
+        }
+      ]
+    },
+    {
+      "id": "EA-b8eb208dcbeaa3ff",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `_init_transport` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1432,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_init_transport` has verify, cert, trust_env, http1, http2, limits, transport = 7 (self excluded), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `_init_transport` definition lists 7 non-self parameters: `verify`, `cert`, `trust_env`, `http1`, `http2`, `limits`, and `transport`."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (7) at line 1432"
+        }
+      ]
+    },
+    {
+      "id": "EA-a74b2dfe4badcbbe",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `_init_proxy_transport` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1454,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_init_proxy_transport` has self+proxy,verify,cert,trust_env,http1,http2,limits = 7 non-self parameters, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The async `_init_proxy_transport` definition lists 7 non-self parameters: `proxy`, `verify`, `cert`, `trust_env`, `http1`, `http2`, and `limits`."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (7) at line 1454"
+        }
+      ]
+    },
+    {
+      "id": "EA-ab664b307877bded",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `delete` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1949,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`delete` lists url,params,headers,cookies,auth,follow_redirects,timeout,extensions = 8 non-self parameters, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The async `delete` definition lists `url` plus 7 keyword-only parameters, totaling 8 non-self parameters."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (8) at line 1949"
+        }
+      ]
+    },
+    {
+      "id": "EA-0418a9792466d7fd",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "Function `__init__` takes 11 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 383,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Request.__init__` has method,url,params,headers,cookies,content,data,files,json,stream,extensions = 11 non-self parameters, matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Request.__init__ declares 11 parameters (method, url, params, headers, cookies, content, data, files, json, stream, extensions), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (11) at line 383"
+        }
+      ]
+    },
+    {
+      "id": "EA-445e7d6656d24d53",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "Function `__init__` takes 11 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 516,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Response.__init__` has status_code,headers,content,text,html,json,stream,request,extensions,history,default_encoding = 11 non-self parameters, matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Response.__init__ declares 11 parameters (status_code, headers, content, text, html, json, stream, request, extensions, history, default_encoding), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (11) at line 516"
+        }
+      ]
+    },
+    {
+      "id": "EA-638fec258267981f",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Function `__init__` takes 11 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 280,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`AsyncHTTPTransport.__init__` has verify,cert,trust_env,http1,http2,limits,proxy,uds,local_address,retries,socket_options = 11 non-self parameters, matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "AsyncHTTPTransport.__init__ declares 11 parameters (verify, cert, trust_env, http1, http2, limits, proxy, uds, local_address, retries, socket_options), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (11) at line 280"
+        }
+      ]
+    },
+    {
+      "id": "EA-f393e56259e3cc9d",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_log_render.py",
+      "message": "Function `__call__` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`__call__` has console,renderables,log_time,time_format,level,path,line_no,link_path = 8 non-self parameters, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "LogRender.__call__ declares 8 parameters (console, renderables, log_time, time_format, level, path, line_no, link_path), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (8) at line 32"
+        }
+      ]
+    },
+    {
+      "id": "EA-195f9f2ba1b85ca9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/align.py",
+      "message": "Function `__init__` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Align.__init__` has renderable,align,style,vertical,pad,width,height = 7 non-self parameters, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Align.__init__ declares 7 parameters (renderable, align, style, vertical, pad, width, height), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (7) at line 47"
+        }
+      ]
+    },
+    {
+      "id": "EA-921eaeb8d51e0f15",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/columns.py",
+      "message": "Function `__init__` takes 9 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Columns.__init__` has renderables,padding,width,expand,equal,column_first,right_to_left,align,title = 9 non-self parameters, matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Columns.__init__ declares 9 parameters (renderables, padding, width, expand, equal, column_first, right_to_left, align, title), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (9) at line 31"
+        }
+      ]
+    },
+    {
+      "id": "EA-7acd046170c25f3d",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `print_json` takes 10 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1758,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "print_json lists self plus json, data, indent, highlight, skip_keys, ensure_ascii, check_circular, allow_nan, default, sort_keys = 10 params, exceeding 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Console.print_json declares 10 parameters (json, data, indent, highlight, skip_keys, ensure_ascii, check_circular, allow_nan, default, sort_keys), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (10) at line 1758"
+        }
+      ]
+    },
+    {
+      "id": "EA-c34c8b575ad2585f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Function `__init__` takes 10 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Live.__init__ lists self plus renderable, console, screen, auto_refresh, refresh_per_second, transient, redirect_stdout, redirect_stderr, vertical_overflow, get_renderable = 10 params."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Live.__init__ declares 10 parameters (renderable, console, screen, auto_refresh, refresh_per_second, transient, redirect_stdout, redirect_stderr, vertical_overflow, get_renderable), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (10) at line 57"
+        }
+      ]
+    },
+    {
+      "id": "EA-b3adeb97c444fc9b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `__init__` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 549,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Markdown __init__ lists markup, code_theme, justify, style, hyperlinks, inline_code_lexer, inline_code_theme = 7 params, exceeding 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The full signature is visible (549-558) and has exactly 7 parameters besides self (markup, code_theme, justify, style, hyperlinks, inline_code_lexer, inline_code_theme), matching the claimed count and exceeding the threshold."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (7) at line 549"
+        }
+      ]
+    },
+    {
+      "id": "EA-7e0f667bef39f16c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Function `pprint` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 918,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "pprint lists _object, console, indent_guides, max_length, max_string, max_depth, expand_all = 7 params, exceeding 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete def at 918-927 shows exactly 7 parameters (_object plus six keyword-only options), so the claimed count of 7 is correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (6) at line 918"
+        }
+      ]
+    },
+    {
+      "id": "EA-f27d59aa3afb250c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "Function `open` takes 18 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 421,
+      "verdict": "true_positive",
+      "reason": "The implementation of `open` (not an @overload stub) takes 18 parameters.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "progress.open lists 18 parameters (file through disable), exceeding the 5-param budget."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts the signature off after `style` at line 436 showing only 14 parameters, so the claimed 18 cannot be verified without the rest of the parameter list."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (18) at line 421"
+        }
+      ]
+    },
+    {
+      "id": "EA-ed7f71527908a7cb",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "Function `__init__` takes 10 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1077,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `__init__` takes 10 parameters (> 5) is plausible for the real function `progress.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (10) at line 1077"
+        }
+      ]
+    },
+    {
+      "id": "EA-37d8400c1f4e9893",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/status.py",
+      "message": "Function `__init__` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Status.__init__ lists status, console, spinner, spinner_style, speed, refresh_per_second = 6 params, exceeding 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete signature at 23-32 has exactly 6 parameters besides self (status, console, spinner, spinner_style, speed, refresh_per_second), matching the claim."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (6) at line 23"
+        }
+      ]
+    },
+    {
+      "id": "EA-59703129976a497f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Function `__init__` takes 14 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 279,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Syntax.__init__ lists 14 parameters (code through padding), exceeding the 5-param budget."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The signature is truncated at line 294 (`indent_guides: bool = False,`) with 13 non-self parameters visible, so the claimed 14 cannot be confirmed from the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (14) at line 279"
+        }
+      ]
+    },
+    {
+      "id": "EA-71d96114a57c4b1d",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Function `from_path` takes 15 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 320,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`from_path` shows 14 named params after `cls` and the signature continues, so >5 (detector's 15) holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The signature is truncated at line 335 with 14 non-cls parameters visible, so the claimed count of 15 cannot be verified from the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (15) at line 320"
+        }
+      ]
+    },
+    {
+      "id": "EA-464b42dee2c111af",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `add_column` takes 14 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 364,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`add_column` lists many keyword params (header_style\u2026ratio) well over 5, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The signature is truncated at line 379 (`ratio`) with 13 non-self parameters visible, so the claimed 14 cannot be confirmed without the remaining parameters."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (14) at line 364"
+        }
+      ]
+    },
+    {
+      "id": "EA-c979dd4861549dbf",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `__init__` takes 8 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 144,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`__init__` has 8 non-self params (text, style, justify, overflow, no_wrap, end, tab_size, spans), matching the report."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The __init__ signature declares self, text, style, justify, overflow, no_wrap, end, tab_size, and spans; excluding self leaves exactly 8 parameters, matching the reported count."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (8) at line 144"
+        }
+      ]
+    },
+    {
+      "id": "EA-e019427165818eb4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `from_markup` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 260,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`from_markup` has `text` plus 6 keyword params (style, emoji, emoji_variant, justify, overflow, end) = 7, over budget."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The from_markup classmethod declares cls, text, style, emoji, emoji_variant, justify, overflow, and end; excluding cls leaves exactly 7 parameters, matching the reported count."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0913 (7) at line 260"
+        }
+      ]
+    },
+    {
+      "id": "EA-6ad4eeb7dafeb9d6",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `impl_struct_by_extracting_all_at_once` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 706,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`impl_struct_by_extracting_all_at_once` visibly takes 7 params (ident, fields, via_path, rejection, generic_ident, state, tr), matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The impl_struct_by_extracting_all_at_once signature lists ident, fields, via_path, rejection, generic_ident, state, and tr, which is exactly 7 parameters."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc6ee362363d8c1e",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `impl_enum_by_extracting_all_at_once` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 877,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`impl_enum_by_extracting_all_at_once` takes 6 params (ident, variants, path, rejection, state, tr), matching the report."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The impl_enum_by_extracting_all_at_once signature lists ident, variants, path, rejection, state, and tr, which is exactly 6 parameters."
+        }
+      ]
+    },
+    {
+      "id": "EA-6c3703e1b0a07277",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/method_routing.rs",
+      "message": "Function `set_endpoint` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 826,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`set_endpoint` has 7 params (method_name, out, endpoint, endpoint_filter, filter, allow_header, methods), matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The set_endpoint signature lists method_name, out, endpoint, endpoint_filter, filter, allow_header, and methods, which is exactly 7 parameters."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8ff881b3862176df",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/util.rs",
+      "message": "Function `find_iter_at_in_context` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 473,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Miscount: Match from the where-clause bound FnMut(Match) was counted as a parameter (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The complete signature shows only 5 params (searcher, matcher, bytes, range, matched); the reported count of 6 is a miscount."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The find_iter_at_in_context signature has only 5 function parameters (searcher, matcher, bytes, range, matched); the detector appears to have counted the generic type parameters <M, F>, and 5 does not exceed the threshold of 5."
+        }
+      ]
+    },
+    {
+      "id": "EA-c21de02dee29cfea",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/util.rs",
+      "message": "Function `replace_with_captures_in_context` takes 7 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 557,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The signature of `replace_with_captures_in_context` lists 7 parameters (matcher, bytes, line_terminator, range, caps, dst, append), exceeding the threshold of 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The replace_with_captures_in_context signature lists matcher, bytes, line_terminator, range, caps, dst, and append, which is exactly 7 parameters."
+        },
+        {
+          "source": "oracle:lizard@1.24.1",
+          "claim": "confirmed",
+          "detail": "lizard params 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-dca4c2ae9f402e0f",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/adapters/fastify/fastifyTRPCPlugin.ts",
+      "message": "Function `fastifyTRPCPlugin` takes 9 parameters (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "Signature has 3 parameters; nested callback and function-type parameters were counted.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1dbf291c06778c1a",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `emitOwnKeys` takes 6 parameters (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2057,
+      "verdict": "true_positive",
+      "reason": "Parameter count matches the signature (keyword-only parameters counted, as in pylint/ruff).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`emitOwnKeys` takes 6 parameters (doc, ctx, accessor, kVar, body, onSymbol), exceeding the threshold of 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The emitOwnKeys signature declares doc, ctx, accessor, kVar, body, and onSymbol, which is exactly 6 parameters."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/audit-gate.schema.json",
+  "title": "Engineering Auditor Gate Result",
+  "type": "object",
+  "required": ["schema_version", "gate", "passed", "reason", "baseline_status", "new_count", "resolved_count", "persisting_count", "total_count", "new_findings", "carried_count", "carried_findings"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "gate": { "const": "bloat_slop_findings" },
+    "passed": { "type": "boolean" },
+    "reason": { "enum": ["clean", "new_findings_introduced", "finding_budget_exceeded", "baseline_required"] },
+    "baseline_status": { "enum": ["comparable", "missing", "incomparable", "not_applicable"] },
+    "new_count": { "type": "integer", "minimum": 0 },
+    "resolved_count": { "type": "integer", "minimum": 0 },
+    "persisting_count": { "type": "integer", "minimum": 0 },
+    "total_count": { "type": "integer", "minimum": 0 },
+    "carried_count": { "type": "integer", "minimum": 0 },
+    "carried_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["baseline_id", "current_id", "pass"],
+        "properties": {
+          "baseline_id": { "type": "string" },
+          "current_id": { "type": "string" },
+          "pass": { "enum": ["ordinal", "renamed", "moved"] }
+        }
+      }
+    },
+    "new_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "detector", "severity", "priority", "path", "line", "message", "recommendation"],
+        "properties": {
+          "id": { "type": "string" },
+          "detector": { "type": "string" },
+          "severity": { "type": "string" },
+          "priority": { "enum": ["P0", "P1", "P2"] },
+          "path": { "type": "string" },
+          "line": { "type": ["integer", "null"] },
+          "message": { "type": "string" },
+          "recommendation": { "type": "string" }
+        }
+      }
+    }
+  }
+}

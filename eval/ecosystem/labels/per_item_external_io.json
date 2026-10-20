@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "detector": "per_item_external_io",
+  "labels": [
+    {
+      "id": "EA-c97b97addd3999ab",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "Function `handle_socket` performs an external network operation for each loop item.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1213,
+      "verdict": "false_positive",
+      "reason": "Websocket echo loop in a test; sending each received message is the behaviour, not an N+1.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The loop lives in the test helper `echo_app`/`handle_socket`, and echoing each received frame via `socket.send(msg)` is the intended WebSocket idiom, not opportunistic per-item I/O."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged loop lives in echo_app, a test helper, and sending each received message back is the intended echo-server pattern, so the per-item-I/O rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-9b6459fe4ddc3ea5",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/ssg/ssg.ts",
+      "message": "Function `` performs an external network operation for each loop item.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 225,
+      "verdict": "false_positive",
+      "reason": "Static-site generation requests each route by design; the per-item fetch is the output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`app.fetch` is the in-process SSG fetch and is already governed by the bounded `createPool({ concurrency })`, so unbounded per-item external I/O does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-9029527608fb6d4c",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/internals/dataLoader.ts",
+      "message": "Function `dispatch` performs an external network operation for each loop item.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 91,
+      "verdict": "false_positive",
+      "reason": "Loop dispatches one fetch per batch group; this is the batching mechanism itself.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`dispatch` is the DataLoader batching routine itself; `batchLoader.fetch` is invoked once per already-grouped `items` batch, not once per item."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "batchLoader.fetch is the DataLoader batching call issued once per group, not per item, and the promises are not awaited in the loop, so this code is the batching machinery itself."
+        }
+      ]
+    },
+    {
+      "id": "EA-c3199fb3d484cc03",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/adapters/ws.ts",
+      "message": "Function `` performs an external network operation for each loop item.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 635,
+      "verdict": "false_positive",
+      "reason": "Broadcast to every connected client is inherently per-client.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This is a broadcast of one pre-encoded `data` over already-open WebSocket clients; there is no batch-send primitive, so the batching rationale doesn't apply."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "client.send(data) broadcasts one message to each client over independent sockets, which cannot be batched or hoisted out of the loop, and the detector's own evidence marks it off the hot/request path."
+        }
+      ]
+    },
+    {
+      "id": "EA-4780c9a672b9cd9b",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/loaders/stars.ts",
+      "message": "Function `query` performs an external network operation for each loop item.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "Retry-attempt loop, not a per-item loop; one fetch per attempt is intended.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The claim holds because fetch(API_URL) is awaited inside the retry for-loop at line 8."
+        }
+      ]
+    }
+  ]
+}

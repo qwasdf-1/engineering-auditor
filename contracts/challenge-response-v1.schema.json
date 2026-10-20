@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/challenge-response-v1.schema.json",
+  "title": "Challenge Response v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "response_id",
+    "reviewer_run_id",
+    "case_id",
+    "challenge_id",
+    "responses"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "response_id": { "type": "string", "pattern": "^challenge-response:[0-9a-f]{64}$" },
+    "reviewer_run_id": { "type": "string", "pattern": "^[a-z0-9-]+:[0-9a-f]{64}$" },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "challenge_id": { "type": "string", "pattern": "^challenge-record:[0-9a-f]{64}$" },
+    "responses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "objection_id",
+          "action",
+          "rationale",
+          "evidence_probe_ids",
+          "replacement_recommendation"
+        ],
+        "properties": {
+          "objection_id": {
+            "type": "string",
+            "pattern": "^challenge-objection:[0-9a-f]{64}$"
+          },
+          "action": {
+            "enum": ["concede", "narrow", "maintain_with_evidence", "withdraw", "mark_unresolved"]
+          },
+          "rationale": { "type": "string", "minLength": 1 },
+          "evidence_probe_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^[a-z0-9-]+:[0-9a-f]{64}$" }
+          },
+          "replacement_recommendation": {
+            "anyOf": [
+              { "$ref": "contextual-recommendation-v1.schema.json" },
+              { "type": "null" }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

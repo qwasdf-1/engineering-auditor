@@ -1,0 +1,4148 @@
+{
+  "schema_version": 1,
+  "detector": "halstead_information_density",
+  "labels": [
+    {
+      "id": "EA-7b332816a4998c5a",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_dtoa.c",
+      "message": "Function `d2b` has Halstead volume 2599 and difficulty 68.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 1184,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: vendored David M. Gay dtoa implementation (jv_dtoa.c), as for the file's other findings.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendored David Gay dtoa code"
+        }
+      ]
+    },
+    {
+      "id": "EA-90ff0a5097198250",
+      "repository": "libuv",
+      "language": "c",
+      "path": "include/uv/tree.h",
+      "message": "Function `elm` has Halstead volume 273 and difficulty 36.0.",
+      "status": "pre_label",
+      "sampled_from": "t16-m",
+      "line": 422,
+      "verdict": "false_positive",
+      "reason": "Wrong symbol: a function `elm` parsed out of the RB_GENERATE #define body; the macro template is not a function.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e0f605aeb61d3d2e",
+      "repository": "libuv",
+      "language": "c",
+      "path": "include/uv/tree.h",
+      "message": "Function `elm` has Halstead volume 273 and difficulty 36.0.",
+      "status": "pre_label",
+      "sampled_from": "t16-m",
+      "line": 444,
+      "verdict": "false_positive",
+      "reason": "Wrong symbol: a function `elm` parsed out of the RB_GENERATE #define body; the macro template is not a function.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-71c90f8066272a47",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/linux.c",
+      "message": "Function `uv__kernel_version` has Halstead volume 916 and difficulty 30.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 302,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function uv__kernel_version is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-e2f82371e8ac2dee",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs.c",
+      "message": "Function `fs__write_filemap` has Halstead volume 2575 and difficulty 39.5.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 897,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function fs__write_filemap is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-5f4a5e586c4e26b3",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4.c",
+      "message": "Function `LZ4_decompress_unsafe_generic` has Halstead volume 1492 and difficulty 39.4.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 1869,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function LZ4_decompress_unsafe_generic is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-a91b236603684a76",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4.c",
+      "message": "Function `read_variable_length` has Halstead volume 540 and difficulty 31.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 1978,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function read_variable_length is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-735c8a66ac445950",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/base.h",
+      "message": "Function `namespace` has Halstead volume 12613 and difficulty 70.9.",
+      "status": "pre_label",
+      "sampled_from": "t16-m",
+      "line": 930,
+      "verdict": "false_positive",
+      "reason": "Misparse: the standalone FMT_END_EXPORT macro makes the following `namespace detail` read as a function named namespace.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a3ffa2c0e8c069f2",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/json_pointer.hpp",
+      "message": "Function `array_index` has Halstead volume 974 and difficulty 30.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 214,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function array_index is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-299ce3b217f290d6",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/json_pointer.hpp",
+      "message": "Function `flatten` has Halstead volume 1127 and difficulty 31.3.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 735,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function flatten is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-aac46a8f72b911a5",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/serializer.hpp",
+      "message": "Function `namespace` has Halstead volume 1856 and difficulty 36.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Misparse: NLOHMANN_JSON_NAMESPACE_BEGIN made tree-sitter read the namespace as a function named namespace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 34 is the macro NLOHMANN_JSON_NAMESPACE_BEGIN, not a function named `namespace`, so the Halstead function metric is a misparse."
+        }
+      ]
+    },
+    {
+      "id": "EA-164632b838f91168",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/serializer.hpp",
+      "message": "Function `dump_escaped` has Halstead volume 3476 and difficulty 66.2.",
+      "status": "corroborated",
+      "sampled_from": "t16-n",
+      "line": 391,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function dump_escaped is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-01ed2b0f6fbb66c4",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/json.hpp",
+      "message": "Function `INCLUDE_NLOHMANN_JSON_HPP_` has Halstead volume 5226 and difficulty 27.6.",
+      "status": "pre_label",
+      "sampled_from": "t16-m",
+      "line": 97,
+      "verdict": "false_positive",
+      "reason": "Wrong symbol: a function named after the include guard INCLUDE_NLOHMANN_JSON_HPP_ spanning the basic_json class.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-91228aed1ad4b535",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/contrib/dragonbox.h",
+      "message": "Function `get_cache` has Halstead volume 1158 and difficulty 30.4.",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 2094,
+      "verdict": "false_positive",
+      "reason": "Vendored third-party code under contrib/ (dragonbox).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendored third-party dragonbox header"
+        }
+      ]
+    },
+    {
+      "id": "EA-4a5682b0370f539c",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/contrib/dragonbox.h",
+      "message": "Function `minimal_t` has Halstead volume 1793 and difficulty 35.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2889,
+      "verdict": "false_positive",
+      "reason": "Vendored third-party code under contrib/.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 2889 defines a struct `minimal_t` (with JKJ_INLINE_VARIABLE), not a function, so applying a function Halstead metric is a misparse."
+        }
+      ]
+    },
+    {
+      "id": "EA-34df25ad384dee67",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DynamicParameters.cs",
+      "message": "Function `AddParameters` has Halstead volume 2258 and difficulty 33.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 182,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "AddParameters is a genuine, long protected method, so the Halstead volume/difficulty claim over this function applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-1dddbcfbb6b297b9",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DynamicParameters.cs",
+      "message": "Function `Output` has Halstead volume 2158 and difficulty 31.5.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 348,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function Output is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-ae7310d7c730f1fe",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Function `ExecuteMultiImplAsync` has Halstead volume 1572 and difficulty 36.2.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 560,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ExecuteMultiImplAsync is a genuine complex async method with many operators/branches, so the Halstead density finding applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-f87f2080b997cda1",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `PackListParameters` has Halstead volume 2090 and difficulty 35.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2163,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Body ~600 tokens with large vocabulary (many identifiers, string literals, operators), nested lambdas/regex; volume far above 1500 and difficulty ~36 > 30 plausible."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 2178 with `PackListParameters` still open inside its `else` branch, so the whole-function Halstead volume of 2090 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-8b23577b979dc0d8",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `CreateParamInfoGenerator` has Halstead volume 10530 and difficulty 71.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2559,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~430-line body with thousands of tokens and hundreds of distinct operands/operators; volume far over 1500, difficulty high."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of `CreateParamInfoGenerator` (lines 2561-2574), far short of the body over which volume 10530 is counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-9af73736802a5769",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GenerateValueTupleDeserializer` has Halstead volume 1716 and difficulty 32.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 3412,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateValueTupleDeserializer mixes reflection loops, IL emission and Rest-field handling across ~100 lines, consistent with volume 1716."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`GenerateValueTupleDeserializer` is shown only through line 3427 (`foreach` opening), so the whole-function counts of volume 1716 and difficulty 32.1 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-1231a93697c1ccd4",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GenerateDeserializerFromMap` has Halstead volume 3843 and difficulty 39.5.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 3514,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~210-line body, ~900+ tokens with large distinct vocabulary (IL emit calls, locals, labels); volume well above 1500, difficulty ~40 > 30."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt covers only lines 3514-3529 of `GenerateDeserializerFromMap`, well before the function closes, so volume 3843 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-0a196bd9b09dec6f",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `LoadReaderValueOrBranchToDBNullLabel` has Halstead volume 2089 and difficulty 28.5.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 3774,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "LoadReaderValueOrBranchToDBNullLabel has deeply nested enum/type-handler branching with dense il.Emit and EmitCall expressions, plausible for volume 2089."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the head of `LoadReaderValueOrBranchToDBNullLabel` (3774-3789) is shown, so the reported volume 2089 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8a3867d6bba105f",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `FlexibleConvertBoxedFromHeadOfStack` has Halstead volume 1505 and difficulty 20.6.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 3919,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "FlexibleConvertBoxedFromHeadOfStack has a nested TypeCode switch of ~10 opcode cases plus several conversion branches and IL emits, consistent with volume 1505."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off mid-way through the `if/else if` chain at line 3932, so the whole-function Halstead volume 1505 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-84cfc2002e7bd1d9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonReader.cs",
+      "message": "Function `ReadType` has Halstead volume 1737 and difficulty 15.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 460,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "BsonReader.ReadType is a large switch over BsonType with nested DateTimeKind switch, Guid/Binary handling and numerous SetToken calls, consistent with volume 1737."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`ReadType` is shown only through the first `case` and `break` at line 475 with the switch clearly continuing, so volume 1737 is not verifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-16d48704894e6120",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "Function `SerializeNode` has Halstead volume 2290 and difficulty 41.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1295,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~160-line switch body, ~700 tokens with many distinct identifiers/string literals/XmlNodeType members; volume >1500 and difficulty ~40 > 30 plausible."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`SerializeNode`'s switch is shown only through line 1310, far short of the full method, so the reported volume 2290 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-b41df8b6eeba2075",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonSerializer.cs",
+      "message": "Function `ApplySerializerSettings` has Halstead volume 1670 and difficulty 15.2.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 653,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ApplySerializerSettings is a flat run of ~20 identical `if (settings._x != null) serializer.X = settings.X` copies; the volume comes from repetition, not cognitive difficulty (15.2)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of `ApplySerializerSettings`; its full body needed to verify Halstead volume 1670 is not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-0ba8397b2f6ffc95",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
+      "message": "Function `ReadStringIntoBufferAsync` has Halstead volume 1722 and difficulty 43.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 383,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function ReadStringIntoBufferAsync is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-678a60c30b6782df",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonWriter.Async.cs",
+      "message": "Function `WriteValueAsync` has Halstead volume 2607 and difficulty 29.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1694,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function WriteValueAsync is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-2db6b583963613d2",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonWriter.cs",
+      "message": "Function `WriteValue` has Halstead volume 2252 and difficulty 26.4.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1478,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~190-line switch with ~37 cases (~800 tokens, ~80 distinct enum/type names); volume ~5000 est (> 1500) and difficulty > 15; meets threshold."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`WriteValue` is a large switch over `PrimitiveTypeCode` whose full body is not in the excerpt, so the Halstead volume/difficulty cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-2f9db558616736c4",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
+      "message": "Function `ReadContentFrom` has Halstead volume 1715 and difficulty 31.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 796,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadContentFrom has a 14-case switch inside a do/while with repeated parent==this checks and new JArray/JObject/JValue construction, supporting volume 1715 at difficulty 31."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `ReadContentFrom` are shown; the full method needed to check Halstead volume 1715 is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-b5fb0518dced142c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
+      "message": "Function `MergeEnumerableContent` has Halstead volume 1023 and difficulty 32.3.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1184,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MergeEnumerableContent switches over four MergeArrayHandling modes with nested foreach/if and HashSet/Dictionary branches under #if, consistent with volume 1023."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of `MergeEnumerableContent` with conditional-compilation branches, so its Halstead counts cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-df586755f0efd5db",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JValue.cs",
+      "message": "Function `Operation` has Halstead volume 2314 and difficulty 51.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 421,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~145-line body with four near-duplicate branches of nested switches, long || chains of type tests (~900 tokens, large vocabulary); volume >1500, difficulty >30 plausible."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`Operation` is a long method behind `#if HAVE_EXPRESSIONS`; the excerpt contains only its opening, so volume 2314/difficulty 51.8 are unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-59b02210041bb5a1",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JsonPath/JPath.cs",
+      "message": "Function `ParsePath` has Halstead volume 1215 and difficulty 60.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 93,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ParsePath is a char-switch state machine with several flags (scan, followingIndexer, followingDot, ended) and duplicated member-extraction blocks; difficulty 60 fits."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `ParsePath` are shown, so the reported Halstead volume 1215 and difficulty 60.1 cannot be checked against the full function."
+        }
+      ]
+    },
+    {
+      "id": "EA-3b4c939d16892ee0",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
+      "message": "Function `SetPropertySettingsFromAttributes` has Halstead volume 2727 and difficulty 19.6.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1477,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~165-line body, ~800 tokens with ~150 distinct (property names, attribute types, operators); volume >1500 and difficulty ~20 >= 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of SetPropertySettingsFromAttributes, so the full-function Halstead volume and difficulty cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9fad329f5869ab88",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `ReadMetadataPropertiesToken` has Halstead volume 1504 and difficulty 15.6.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 611,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadMetadataPropertiesToken has many nested ifs, JToken lookups, error-message formatting and a while(true) loop with ref/out params; volume 1504 is plausible."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "ReadMetadataPropertiesToken is correctly identified on the following line, but the excerpt is too short to verify the full-function Halstead counts."
+        }
+      ]
+    },
+    {
+      "id": "EA-ff5bdafe2bf4f8be",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `Int64TryParse` has Halstead volume 746 and difficulty 30.6.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 788,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function Int64TryParse is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-f2dd6b00f4a98843",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DateTimeUtils.cs",
+      "message": "Function `TryParseDateTimeIso` has Halstead volume 936 and difficulty 30.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 214,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TryParseDateTimeIso has a 3-case zone switch with tick arithmetic, DateTime.MaxValue/MinValue clamping and nested ifs, matching volume 936 / difficulty 30."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only begins TryParseDateTimeIso, so its reported Halstead volume and difficulty cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f205aea8a3834f30",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DynamicReflectionDelegateFactory.cs",
+      "message": "Function `GenerateCreateMethodCallIL` has Halstead volume 2590 and difficulty 27.4.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "~170-line IL-emit body with ~900 tokens and ~120 distinct operands/operators; volume >1500, difficulty >=15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "GenerateCreateMethodCallIL is correctly named, but the excerpt covers only its start, so the full-function counts cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-17019efbe010ba54",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteDefinitelyEscapedJavaScriptStringWithoutDelimitersAsync` has Halstead volume 1672 and difficulty 46.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 437,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function WriteDefinitelyEscapedJavaScriptStringWithoutDelimitersAsync is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-068771c2cd5056c8",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Formatting/Display/MessageTemplateTextFormatter.cs",
+      "message": "Function `Format` has Halstead volume 1635 and difficulty 22.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Format is a long if/else-if chain over OutputProperties names with nested rendering branches and #if FEATURE_WRITE_STRINGBUILDER, supporting volume 1635."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of Format, so the reported full-function Halstead values cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-77e7ac7cb0fdadcd",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Formatting/Json/JsonValueFormatter.cs",
+      "message": "Function `WriteQuotedJsonString` has Halstead volume 585 and difficulty 32.5.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 559,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WriteQuotedJsonString combines a loop, a 7-arm escape switch and #if FEATURE_SPAN duplication; metrics are real though the function is short-ish (volume 585, difficulty 32.5), so only marginally over budget."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WriteQuotedJsonString is correctly identified, but the excerpt is truncated before the full function, so the counts cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-e3dc38f46bfd7102",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Parsing/MessageTemplateParser.cs",
+      "message": "Function `ParsePropertyToken` has Halstead volume 1512 and difficulty 26.3.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function ParsePropertyToken is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-99d48591c3422c01",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Parsing/MessageTemplateParser.cs",
+      "message": "Function `TrySplitTagContent` has Halstead volume 623 and difficulty 38.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 167,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 167 is indeed `TrySplitTagContent`, a nontrivial branching function, so the Halstead-density claim applies at the reported site in source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-0ddb258898469fbc",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Parsing/MessageTemplateParser.cs",
+      "message": "Function `ParseTextToken` has Halstead volume 770 and difficulty 43.6.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 262,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function ParseTextToken is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-90563f2fcdc4c22e",
+      "repository": "chi",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `patNextSegment` has Halstead volume 926 and difficulty 35.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 735,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 735 is `patNextSegment` in source (non-test) code and it is a large multi-branch function, so the metric claim applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`patNextSegment` is a branch-heavy pattern parser using string indexing and conditional returns, consistent with the claimed high volume/difficulty."
+        }
+      ]
+    },
+    {
+      "id": "EA-58b35c338392035e",
+      "repository": "cobra",
+      "language": "go",
+      "path": "cobra.go",
+      "message": "Function `ld` has Halstead volume 694 and difficulty 45.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 192,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 192 is `ld` in `cobra.go` source code, and the full Levenshtein implementation is non-trivial, matching the detected density."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ld` builds and indexes a Levenshtein distance matrix with nested loops and comparisons, so the reported complexity applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-9890671ad82cc541",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Function `checkIfFlagCompletion` has Halstead volume 955 and difficulty 32.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 654,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 654 is `checkIfFlagCompletion` in source code, a long flag-parsing routine, so the Halstead-density claim holds at that site."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`checkIfFlagCompletion` performs flag/argument parsing with branchy return paths and state handling, matching the claimed high complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-e574451b78447a27",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "Function `setByForm` has Halstead volume 1529 and difficulty 36.3.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 245,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 245 is `setByForm` in source code with a large reflection-based switch, consistent with the reported Halstead volume."
+        }
+      ]
+    },
+    {
+      "id": "EA-c7cea11229acd74e",
+      "repository": "gin",
+      "language": "go",
+      "path": "path.go",
+      "message": "Function `cleanPath` has Halstead volume 1213 and difficulty 75.2.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 23 is `cleanPath`, a long path-normalization function in source code, so the information-density claim applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-ddbd2fd348d808d3",
+      "repository": "gson",
+      "language": "java",
+      "path": "extras/src/main/java/com/google/gson/typeadapters/UtcDateTypeAdapter.java",
+      "message": "Function `parse` has Halstead volume 1927 and difficulty 32.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 140,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Halstead volume/difficulty is a whole-function metric, but the excerpt only shows the start of `parse`, so the counts cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of `parse`, not the whole function, so the reported whole-function Halstead metrics cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3985, difficulty 55.7 (EA 1927, 32.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-dd06903235168d8b",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` has Halstead volume 1960 and difficulty 34.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 346,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the head of the private `resolve` method, not enough to confirm its Halstead volume 1960."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops inside the `while (true)` block of `resolve`, leaving the full function needed to verify Halstead volume/difficulty unshown."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4005, difficulty 63.0 (EA 1960, 34.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-3cce22325e6b5b70",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/LinkedTreeMap.java",
+      "message": "Function `rebalance` has Halstead volume 1252 and difficulty 33.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 338,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `rebalance` are shown; the full function body is needed to verify the Halstead counts."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of the `for` loop in `rebalance`, not the complete function body needed to check Halstead metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2355, difficulty 62.0 (EA 1252, 33.8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f55d9e5a8bfc8c3c",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Function `getBoundFields` has Halstead volume 1772 and difficulty 21.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 317,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows just the opening of `getBoundFields`, so the reported volume/difficulty cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `getBoundFields` is shown; the full field-scanning logic required to compute the reported Halstead metrics is not present."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3677, difficulty 37.7 (EA 1772, 21.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a9230ab3f94db191",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java",
+      "message": "Function `parse` has Halstead volume 3178 and difficulty 44.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The large `parse` method extends well beyond the excerpt, so the Halstead volume 3178 is unverifiable from the shown lines."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt contains only the first lines of the ISO `parse` method, so the rest of the function body needed to verify the Halstead count is missing."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 6331, difficulty 67.0 (EA 3178, 44.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-26d66d457c0f9000",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `doPeek` has Halstead volume 2237 and difficulty 30.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 581,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `doPeek` is visible (reported line is even its annotation), so the whole-function Halstead metric cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt begins at the annotation above `doPeek` and shows only the start of the switch, not the whole method needed to verify the metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4501, difficulty 51.6 (EA 2237, 30.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6c45cc7a8f6c98f4",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `peekNumber` has Halstead volume 1698 and difficulty 39.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 782,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of `peekNumber`, insufficient to verify its Halstead volume 1698 and difficulty 39.5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the initialization and start of the `charactersOfNumber` loop in `peekNumber`, so the full function body is not available for verification."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2883, difficulty 65.9 (EA 1698, 39.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-91dd4cb84df447a9",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "message": "Function `execute` has Halstead volume 2691 and difficulty 22.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 915,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the opening of `execute`; the full function body is required to confirm the Halstead metrics."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the initial validation and setup portion of `execute` is shown; the complete method body needed to verify Halstead volume/difficulty is not in the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 6123, difficulty 41.0 (EA 2691, 22.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d05d857962291a37",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyStartTag` has Halstead volume 7079 and difficulty 48.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 288,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only ~16 lines of `inBodyStartTag` (line 288 onward), far short of the whole function, so the Halstead volume 7079 cannot be verified from the shown context."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows the large `switch(name)` dispatch and nested branches in `inBodyStartTag`, matching the consistent reported Halstead metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 16751, difficulty 72.3 (EA 7079, 48.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-851c6bb2bf0b046e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTag` has Halstead volume 2314 and difficulty 26.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 619,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening ~15 lines of `inBodyEndTag` (line 619) are shown, so the claimed volume 2314/difficulty 26.9 over the full switch body cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`inBodyEndTag` is in-scope parser logic and the excerpt shows multiple `case` branches with guards and returns, matching the reported metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 5636, difficulty 49.9 (EA 2314, 26.9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-fe948d43ae8bd0fe",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTagAdoption` has Halstead volume 2205 and difficulty 42.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 794,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates `inBodyEndTagAdoption` (line 794) right after the loop setup, so the full-function Halstead values cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`inBodyEndTagAdoption` is production parser logic implementing a spec-heavy `while (true)` loop with nested conditions, so the density finding applies."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4940, difficulty 68.0 (EA 2205, 42.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c3bcc29c880d64fd",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has Halstead volume 1589 and difficulty 29.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1411,
+      "verdict": "true_positive",
+      "reason": "Production function whose Halstead volume and difficulty exceed the budget; rust-code-analysis checks the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the switch header of `InSelect.process` (line 1411) is shown; the whole method spans well beyond the excerpt, so volume 1589/difficulty 29.9 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The reported volume/difficulty are whole-function counts, but the excerpt ends at line 1426 mid-switch with `InSelect.process` clearly continuing past it, so volume 1589 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3955, difficulty 51.4 (EA 1589, 29.9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-696a81ccae95652c",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has Halstead volume 1579 and difficulty 23.1.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1747,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`ForeignContent.process` has no `evidence` and the function continues beyond the excerpt, so the Halstead count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6974b3ccae9e0ea7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has Halstead volume 1579 and difficulty 23.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1747,
+      "verdict": "true_positive",
+      "reason": "Production function whose Halstead volume and difficulty exceed the budget; rust-code-analysis checks the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off `ForeignContent.process` (line 1747) mid-switch, so the reported whole-function metrics cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Halstead volume 1579/difficulty 23.1 are computed over the entire `ForeignContent.process` method, which continues beyond the excerpt (cut off at line 1762 mid-switch), so the counts can't be checked."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3746, difficulty 36.3 (EA 1579, 23.1)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6143264dc9ce1c5e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TagSet.java",
+      "message": "Function `initHtmlDefault` has Halstead volume 2240 and difficulty 2.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 236,
+      "verdict": "false_positive",
+      "reason": "Volume comes from a flat data/markup table with low difficulty; not dense logic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The volume is driven by static tag-name literals in `blockTags`/`inlineTags` while difficulty is only 2.5, so this data-initialization idiom does not warrant the complexity rationale."
+        }
+      ]
+    },
+    {
+      "id": "EA-e4f4d77326fa13f1",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/NodeTraversor.java",
+      "message": "Function `traverse` has Halstead volume 1024 and difficulty 36.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 30,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`traverse` (line 30) continues past the shown lines 38-45, so the full-function Halstead volume/difficulty cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`traverse` is in-scope traversal logic and the excerpt shows a state-machine loop with multiple branches, matching the consistent reported metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2060, difficulty 64.1 (EA 1024, 36.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-1710adc3f2a74f65",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/NodeTraversor.java",
+      "message": "Function `filter` has Halstead volume 754 and difficulty 31.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`filter` (line 115) is truncated at line 130 before its loop completes, so the claimed volume 754/difficulty 31.3 cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`filter` at NodeTraversor.java:115 is in-scope library source with correct symbol/line, but the excerpt cuts off at line 130 (`while (true) {`) mid-loop, so the whole-function volume 754 / difficulty 31.3 cannot be verified from the shown lines."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 1516, difficulty 59.4 (EA 754, 31.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6f6fce81936c794f",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `setProxy` has Halstead volume 2850 and difficulty 32.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 258,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the parameter list and first lines of `setProxy` (line 258) are shown; the rest of the function is omitted, so volume 2850/difficulty 32.1 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`setProxy` at lib/adapters/http.js:258 has the right symbol/line in production source, yet the excerpt stops at the URL proxy branch (line 273) well before the function ends, so volume 2850 / difficulty 32.1 is unverifiable from the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 5505, difficulty 38.3 (EA 2850, 32.1)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8382eba1fc38520d",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `dispatchHttpRequest` has Halstead volume 10516 and difficulty 41.4.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 568,
+      "verdict": "true_positive",
+      "reason": "Production function whose Halstead volume and difficulty exceed the budget; rust-code-analysis checks the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`dispatchHttpRequest` is declared at line 568 and, since `handleResponse` is nested at line 1139, the function spans hundreds of lines, consistent with a very large Halstead volume and high difficulty."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first ~15 lines of `dispatchHttpRequest` (through line 583), far short of the function whose aggregate volume 10516 is claimed, so the count is unverifiable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 33209, difficulty 64.1 (EA 10516, 41.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0c2bcae5516a8a0e",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `handleResponse` has Halstead volume 1571 and difficulty 17.8.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 1139,
+      "verdict": "true_positive",
+      "reason": "Production function whose Halstead volume and difficulty exceed the budget; rust-code-analysis checks the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `handleResponse` callback at line 1139 handles streams, download progress, and rate limits, matching the reported complexity."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The `handleResponse` callback's body extends well past the excerpt, which is cut off mid-expression at line 1154, so the claimed volume 1571/difficulty 17.8 over the full function can't be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 5771, difficulty 46.7 (EA 1571, 17.8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ffd3c301b48102d7",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `normalizeIPAddress` has Halstead volume 1199 and difficulty 37.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`normalizeIPAddress` at line 61 contains multiple branching normalization paths, consistent with the reported Halstead difficulty and volume."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`normalizeIPAddress` at shouldBypassProxy.js:61 matches the symbol/line and is production code, but the excerpt ends at line 76 (`const parts = h.split('.')`) mid-body, so the Halstead count 1199 / 37.0 cannot be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2249, difficulty 37.7 (EA 1199, 37.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-484efa28d8d7c970",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/AdapterGenerator.kt",
+      "message": "Function `generateFromJsonFun` has Halstead volume 5528 and difficulty 35.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 319,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`generateFromJsonFun` at line 319 builds a FunSpec with loops and KotlinPoet API chains, consistent with the high reported volume."
+        }
+      ]
+    },
+    {
+      "id": "EA-87c901a42fcdcb3d",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/metadata.kt",
+      "message": "Function `targetType` has Halstead volume 2019 and difficulty 23.3.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`targetType` is declared at line 118 (the annotation at line 116 belongs to it) with multiple validation branches, consistent with the reported metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-f406ebda78eeb79d",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/TargetTypes.kt",
+      "message": "Function `targetType` has Halstead volume 1834 and difficulty 22.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`targetType` at line 57 performs several checks and error branches, consistent with the reported Halstead metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-3c486431b2e2732b",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/KotlinJsonAdapter.kt",
+      "message": "Function `fromJson` has Halstead volume 1101 and difficulty 30.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`fromJson` at line 64 reads and dispatches bindings in a loop with several branches, consistent with the reported metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-46efdd904d3c3f49",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/KotlinJsonAdapter.kt",
+      "message": "Function `create` has Halstead volume 2678 and difficulty 33.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`create` at line 190 performs platform, enum, interface, and metadata checks plus adapter generation, consistent with the reported volume."
+        }
+      ]
+    },
+    {
+      "id": "EA-6c252e9fb924043d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver/src/main/kotlin/mockwebserver3/MockWebServer.kt",
+      "message": "Function `handle` has Halstead volume 1511 and difficulty 21.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 443,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The reported function `handle` (line 444) is production code in mockwebserver/src/main, and its large connection-handling body plausibly exceeds the Halstead budget the detector computed."
+        }
+      ]
+    },
+    {
+      "id": "EA-1c29e85d8051b73a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-logging-interceptor/src/main/kotlin/okhttp3/logging/HttpLoggingInterceptor.kt",
+      "message": "Function `intercept` has Halstead volume 3029 and difficulty 38.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 165,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`override fun intercept` at line 166 is main-source production code with many branches for logging levels, consistent with the high Halstead volume/difficulty reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-bd1684b4c6c58cf7",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Cookie.kt",
+      "message": "Function `parse` has Halstead volume 2338 and difficulty 38.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 450,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The reported `internal fun parse` at line 450 is the real, complex cookie-parsing implementation in main source, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-919fee50f09edb81",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-CacheControlCommon.kt",
+      "message": "Function `commonParse` has Halstead volume 2430 and difficulty 40.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`commonParse` at line 110 parses many cache directives with lots of operators/operands, so the reported high Halstead density applies at this in-scope production site."
+        }
+      ]
+    },
+    {
+      "id": "EA-28c9fa0ad1c37b9f",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-HostnamesCommon.kt",
+      "message": "Function `decodeIpv6` has Halstead volume 1174 and difficulty 36.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 83,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`internal fun decodeIpv6` at line 83 is a genuinely branch-heavy IPv6 parser in main source, consistent with the reported volume/difficulty."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e6d0102edf607f7",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/CallServerInterceptor.kt",
+      "message": "Function `intercept` has Halstead volume 2416 and difficulty 35.1.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`override fun intercept` at line 32 is the complex network-call interceptor in main source, so the Halstead finding holds within scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-3c46d8e9a1b66c66",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/idn/Punycode.kt",
+      "message": "Function `decodeLabel` has Halstead volume 1627 and difficulty 40.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`private fun decodeLabel` at line 180 is the Punycode decoding implementation in production code, matching the detector's stated function."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a118f5e0e8739a4",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/publicsuffix/PublicSuffixDatabase.kt",
+      "message": "Function `binarySearch` has Halstead volume 1394 and difficulty 40.9.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`private fun ByteString.binarySearch` at line 160 is a non-trivial binary-search routine in main source, so the reported complexity claim applies at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-e781555172b7e0e7",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-fakefilesystem/src/commonMain/kotlin/okio/fakefilesystem/FakeFileSystem.kt",
+      "message": "Function `lookupPath` has Halstead volume 1122 and difficulty 30.4.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 544,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `lookupPath` has Halstead volume 1122 and difficulty 30.4; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The reported Halstead volume/difficulty are counts over the whole `lookupPath` body, but the excerpt at line 544 shows only the signature and first statements, so the metric cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "lookupPath is a substantial recursive symlink-resolution routine in shipped module source (okio-fakefilesystem), so the advisory density finding applies within scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-fe226c5229a69990",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Base64.kt",
+      "message": "Function `decodeBase64ToArray` has Halstead volume 1387 and difficulty 50.0.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `decodeBase64ToArray` has Halstead volume 1387 and difficulty 50.0; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `decodeBase64ToArray` Halstead count spans the entire function (which runs well past the line-46 excerpt), and the shown lines are insufficient to confirm volume 1387/difficulty 50."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "decodeBase64ToArray in okio/src is a dense bit-manipulation loop (padding scan, shave/limit arithmetic, output sizing), so the Halstead claim about this shipped function applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-c7647a49dcac83ee",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Base64.kt",
+      "message": "Function `encodeBase64` has Halstead volume 1135 and difficulty 36.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "encodeBase64 is dense bit-twiddling (and/shl/shr/or on b0..b2 with map lookups) plus a when for padding, matching difficulty 36.7."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`encodeBase64` at line 116 is only partially shown through line 131, so the full-function Halstead volume 1135 and difficulty 36.7 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-b0bf27f50fd506d4",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Options.kt",
+      "message": "Function `buildTrieRecursive` has Halstead volume 1993 and difficulty 63.7.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `buildTrieRecursive` has Halstead volume 1993 and difficulty 63.7; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`buildTrieRecursive` is a long recursive function excerpted only through line 124, so the claimed volume 1993/difficulty 63.7 is a count over unseen code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "buildTrieRecursive in Options.kt is a dense recursive trie-construction routine with many parameters and index arithmetic in shipped source, matching the advisory complexity claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-402c82f1c9f083ea",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Function `processUtf8Bytes` has Halstead volume 955 and difficulty 47.1.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 132,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `processUtf8Bytes` has Halstead volume 955 and difficulty 47.1; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first several branches of `processUtf8Bytes` are shown (ending at line 146), so the full-function Halstead volume 955 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "processUtf8Bytes is a branch-heavy UTF-16\u2192UTF-8 transcoder in shipped source (Utf8.kt), so the advisory information-density finding applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-e6d59d3d2f756d00",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `selectPrefix` has Halstead volume 1340 and difficulty 45.7.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `selectPrefix` has Halstead volume 1340 and difficulty 45.7; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`selectPrefix` is a long trie-navigation loop excerpted only through line 160, so the reported volume 1340/difficulty 45.7 spans code not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Buffer.selectPrefix in okio/internal/Buffer.kt is a dense trie-navigating scanner over segments in shipped source, matching the advisory complexity finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-8657c5d229d99acf",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonCopyTo` has Halstead volume 590 and difficulty 33.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 237,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "commonCopyTo shadows offset/byteCount, walks segment lists with !! and manual prev/next linking; difficulty 33.8 / volume 590 is consistent though borderline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `commonCopyTo` excerpt ends mid-loop at line 252, so the full-function Halstead volume 590/difficulty 33.8 cannot be confirmed from the shown lines."
+        }
+      ]
+    },
+    {
+      "id": "EA-3370b3e38456f916",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonReadDecimalLong` has Halstead volume 1223 and difficulty 31.1.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 651,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonReadDecimalLong` has Halstead volume 1223 and difficulty 31.1; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`commonReadDecimalLong` is only shown through line 666 of a much longer parsing loop, so the reported volume 1223/difficulty 31.1 is a count over unseen code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production library code in okio; `commonReadDecimalLong` is a long multi-branch parser loop, so the reported Halstead volume/difficulty plausibly exceeds the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-10f03c3e13b42933",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonReadHexadecimalUnsignedLong` has Halstead volume 1086 and difficulty 31.8.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 714,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonReadHexadecimalUnsignedLong` has Halstead volume 1086 and difficulty 31.8; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 714 correctly defines `commonReadHexadecimalUnsignedLong`, a long parsing loop with many branches/operators, so the advisory complexity claim applies to this production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production library code in okio; `commonReadHexadecimalUnsignedLong` contains nested do/while parsing with many distinct operators, consistent with the reported metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-35d6e2add2251729",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWriteUtf8` has Halstead volume 2017 and difficulty 53.7.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 942,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonWriteUtf8` has Halstead volume 2017 and difficulty 53.7; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 942 correctly defines `commonWriteUtf8`, a large UTF-16-to-UTF-8 transcoding routine, matching the reported high-complexity function."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production library code in okio; `commonWriteUtf8` is a large transcoding function with a `when` and many operators, so the reported density is credible."
+        }
+      ]
+    },
+    {
+      "id": "EA-3bcdb7c38e936ad4",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWriteUtf8CodePoint` has Halstead volume 1043 and difficulty 31.7.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1033,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1033 correctly defines `commonWriteUtf8CodePoint`, whose multi-case bit-manipulation branches support the reported density."
+        }
+      ]
+    },
+    {
+      "id": "EA-8d20e76912c2041c",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWrite` has Halstead volume 801 and difficulty 36.8.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1152,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1152 correctly defines `commonWrite`, a long segment-transfer routine, so the finding's claim and rationale hold at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-b722bc4f1f0c3c1b",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonSeek` has Halstead volume 1381 and difficulty 44.3.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1553,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1553 correctly defines `commonSeek`, a large cursor-navigation function consistent with the reported volume/difficulty."
+        }
+      ]
+    },
+    {
+      "id": "EA-4e173b73da164fa5",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Path.kt",
+      "message": "Function `toPath` has Halstead volume 1318 and difficulty 38.6.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 304,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `toPath` has Halstead volume 1318 and difficulty 38.6; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 304 correctly defines `Buffer.toPath`, a sizable path-parsing function matching the reported function name and complexity claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production library code in okio; `Buffer.toPath` is a lengthy path-parsing routine, matching the high reported volume/difficulty."
+        }
+      ]
+    },
+    {
+      "id": "EA-60bce5e1a134baf9",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/SegmentedByteString.kt",
+      "message": "Function `commonSubstring` has Halstead volume 690 and difficulty 31.9.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 103,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonSubstring` has Halstead volume 690 and difficulty 31.9; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 103 correctly defines `SegmentedByteString.commonSubstring`, and its segment-slicing logic supports the advisory density finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production library code in okio; `commonSubstring` has several `require` checks, a `when`, and index arithmetic with many distinct operators, supporting the flagged metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ba342bed0f68877",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha1.kt",
+      "message": "Function `processChunk` has Halstead volume 1534 and difficulty 28.8.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `processChunk` has Halstead volume 1534 and difficulty 28.8; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 75 correctly defines `processChunk`, an operator-heavy SHA-1 compression routine consistent with the reported high volume, in non-generated production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production code in the hashFunctions source set; `processChunk` packs bytes with repeated `and`/`shl`/`or` expressions, giving the reported high volume/difficulty."
+        }
+      ]
+    },
+    {
+      "id": "EA-a3ae3f31dc9cb2a9",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha512.kt",
+      "message": "Function `digest` has Halstead volume 2189 and difficulty 36.7.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 148,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `digest` has Halstead volume 2189 and difficulty 36.7; a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows `digest()` is a long SHA-512 finalization routine full of bit-shift/assignment operators and distinct operands, consistent with the reported high Halstead volume and difficulty."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production code; `Sha512.digest` assigns every padded length byte with `(messageLengthBits ushr n).toByte()`, a high-density idiom consistent with the reported volume."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa694b4bcfd065cd",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "message": "Function `render_decl` has Halstead volume 743 and difficulty 35.0.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 127,
+      "verdict": "false_positive",
+      "reason": "Documentation and build support scripts, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The function lives in a `support/python/...mkdocstrings_handlers/...` path, i.e. documentation-support/tooling code that falls outside the detector's production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-24e6bd2ee7da14c2",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urlparse.py",
+      "message": "Function `urlparse` has Halstead volume 2557 and difficulty 26.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`urlparse()` is a large URL parser with numerous validations and branches, matching the reported volume of 2557."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`urlparse` at httpx/_urlparse.py:213 is genuine library code with correct symbol/line, but only its initial checks are shown before truncation at line 228, so the full-function volume 2557 / difficulty 26.6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3724, difficulty 33.4 (EA 2557, 26.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4792d8d7f96d451b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_inspect.py",
+      "message": "Function `_render` has Halstead volume 1663 and difficulty 18.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 125,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_render()` contains nested helpers and extensive attribute/key processing, consistent with the reported volume of 1663."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`_render` at rich/_inspect.py:125 is in-scope source with the right symbol/line, but the excerpt ends at line 140 (`keys = dir(obj)`) before the body completes, so volume 1663 / difficulty 18.3 is unverifiable from the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2728, difficulty 26.5 (EA 1663, 18.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5c11253313e0030f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/cells.py",
+      "message": "Function `split_graphemes` has Halstead volume 964 and difficulty 31.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 161,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`split_graphemes()` carries substantial unicode-handling logic with many distinct operators/operands, consistent with the reported metrics."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`split_graphemes` at rich/cells.py:161 has the correct symbol/line in production code, yet the excerpt stops inside its docstring at line 176 with none of the body shown, so volume 964 / difficulty 31.4 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 1310, difficulty 38.9 (EA 964, 31.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-3f097dcc552d651c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Function `downgrade` has Halstead volume 1607 and difficulty 30.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 513,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`downgrade()` has multiple color-system conversion branches and assertions, matching the reported volume of 1607."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`downgrade` at rich/color.py:513 is genuine source with matching symbol/line, but the excerpt ends mid-conversion at line 528 (`color_number = 231`) leaving the rest unseen, so volume 1607 / difficulty 30.6 is unverifiable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2008, difficulty 37.7 (EA 1607, 30.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2c5945cc516b98a7",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/columns.py",
+      "message": "Function `__rich_console__` has Halstead volume 1741 and difficulty 24.2.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`__rich_console__()` performs column-width layout with many operands and conditionals, consistent with the reported volume of 1741."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`__rich_console__` at rich/columns.py:62 is in-scope library code with correct symbol/line, but the excerpt cuts off at line 77 (`column_count = len(renderables)`) mid-body, so volume 1741 / difficulty 24.2 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3165, difficulty 39.5 (EA 1741, 24.2)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6105b0cb289c8139",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `__init__` has Halstead volume 2415 and difficulty 14.4.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 619,
+      "verdict": "unclear",
+      "reason": "Large constructor dominated by attribute assignments (difficulty 14.4); size rather than density.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Console.__init__ at line 619 declares a long keyword-only parameter list (color_system, force_terminal, force_jupyter, soft_wrap, theme, file, width, height, ...), and the method body performs large, branch-heavy state setup, matching volume 2415."
+        }
+      ]
+    },
+    {
+      "id": "EA-30538f4cf3d4202c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `_write_buffer` has Halstead volume 1319 and difficulty 30.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2059,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_write_buffer()` contains locking, recording, and platform/Jupyter branching, consistent with the reported volume of 1319."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "_write_buffer at line 2059 nests `with self._lock`, `if self.record`, and `if self._buffer_index == 0` with jupyter/Windows/buffer-record branches, consistent with difficulty 30.5."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 1698, difficulty 35.6 (EA 1319, 30.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8e173f978ca01e06",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `export_svg` has Halstead volume 3700 and difficulty 26.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2352,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at the docstring of `export_svg` (line 2362), so the full body needed to verify the Halstead volume/difficulty is not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "export_svg at line 2352 takes eight parameters (title, theme, clear, code_format, font_aspect_ratio, unique_id) and builds SVG output via many operands/operators, so volume 3700 is accurate."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 6973, difficulty 35.1 (EA 3700, 26.9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a7f1726d0420c67a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/containers.py",
+      "message": "Function `justify` has Halstead volume 1269 and difficulty 31.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `justify`'s signature and docstring (through line 126) are shown; the body used to compute Halstead volume 1269 is not in the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "justify at line 111 must handle multiple justify/overflow methods cited in its docstring (\"left\"/\"center\"/\"full\"/\"right\", \"crop\"/\"fold\"/\"ellipsis\"), a branch-heavy routine consistent with difficulty 31.0."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 1748, difficulty 33.6 (EA 1269, 31.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-fbc35a2022e561a1",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `__rich_console__` has Halstead volume 2346 and difficulty 36.7.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 579,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `__rich_console__` cut off at line 594, before the bulk of the markdown rendering logic, so the reported volume cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Markdown.__rich_console__ at line 579 builds a MarkdownContext and iterates parsed tokens, inline styles, and new-line flags to yield many block renderables, a long method matching volume 2346/difficulty 36.7."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3539, difficulty 35.9 (EA 2346, 36.7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5880768c18b10fcd",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markup.py",
+      "message": "Function `render` has Halstead volume 1746 and difficulty 24.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `render` function body after its docstring (line 106 onward) is not shown, so the Halstead metrics cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "markup.render at line 106 takes (markup, style, emoji, emoji_variant) and parses tags, styles, and emoji codes into Text, a branch-heavy transformation consistent with volume 1746/difficulty 24.3."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2679, difficulty 29.9 (EA 1746, 24.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-9ceaa7b926c09de1",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/panel.py",
+      "message": "Function `__rich_console__` has Halstead volume 1968 and difficulty 25.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 141,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first few statements of `__rich_console__` (lines 144-156) are shown, far short of the full function needed to confirm volume 1968."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Panel.__rich_console__ at line 141 uses Padding.unpack, a ternary for renderable, a conditional width expression, and a safe_box assignment plus further title/subtitle logic, matching difficulty 25.5."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3689, difficulty 40.7 (EA 1968, 25.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-189164c992b528dc",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Function `_traverse` has Halstead volume 4870 and difficulty 55.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 621,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The nested function `_traverse` is truncated at line 636, so the complexity driving volume 4870 is not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "_traverse at line 621 is a recursive object walker with `id(obj)` visited-set checks, `type(obj)`, max-depth logic, and a nested `iter_rich_args` closure, so volume 4870/difficulty 55.1 is correct."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 7349, difficulty 66.2 (EA 4870, 55.1)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7243f06501986970",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/segment.py",
+      "message": "Function `_split_cells` has Halstead volume 651 and difficulty 33.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`_split_cells` is shown only through its docstring (line 120); the cell-splitting body is omitted from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the decorators, docstring, and first three body lines of `_split_cells` (lines 121-123), while the claimed volume 651/difficulty 33.6 are whole-function counts over a body that continues past the excerpt, so they cannot be verified here."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 933, difficulty 37.7 (EA 651, 33.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-25e5317aea54e7a2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Function `_get_syntax` has Halstead volume 2825 and difficulty 23.2.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 652,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `_get_syntax` ends mid-expression at line 667, so the operator/operand variety behind volume 2825 cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`_get_syntax` is only visible through line 667 mid-expression, so the Halstead volume 2825/difficulty 23.2 depend on function body not shown in the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3842, difficulty 27.7 (EA 2825, 23.2)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7e6f2bed101d0af7",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_calculate_column_widths` has Halstead volume 1553 and difficulty 25.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 523,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the signature and first ~15 lines of `_calculate_column_widths`, so the reported volume 1553 over the full function cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at `if any(ratios):` (line 538) well before `_calculate_column_widths` ends, so the whole-function volume 1553/difficulty 25.6 cannot be checked against the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 1968, difficulty 30.9 (EA 1553, 25.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-57f0d39ee1020c44",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_render` has Halstead volume 3415 and difficulty 23.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 755,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `_render` signature and opening lines are shown; the full body counted for volume 3415 is not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`_render` is cut off mid-statement in the `_box = self.box.substitute(...)` expression (line 770), so the claimed volume 3415/difficulty 23.9 span code the excerpt does not show."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 5162, difficulty 35.8 (EA 3415, 23.9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5af20ef01b9a8408",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `extract` has Halstead volume 2688 and difficulty 23.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 433,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only `extract`'s parameters and docstring start, so the volume 2688 over the whole method can't be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops inside `extract`'s docstring (line 448) before any body appears, so volume 2688/difficulty 23.6 are counts over a function longer than the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4510, difficulty 35.7 (EA 2688, 23.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6cd88d65a2fe67e9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `_render_stack` has Halstead volume 1972 and difficulty 28.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 768,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`_render_stack` is truncated after its nested renderer, so the reported volume 1972 and difficulty 28.8 can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`_render_stack` is only shown through line 783 with its nested `render_locals` helper just beginning and the outer body continuing, so volume 1972/difficulty 28.8 cannot be verified from the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3351, difficulty 30.8 (EA 1972, 28.8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5d52f21c5b5737c9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/tree.py",
+      "message": "Function `__rich_console__` has Halstead volume 1959 and difficulty 27.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `__rich_console__` are shown; the count backing volume 1959 is not visible in the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends exactly where the nested `make_guide` def begins (line 101), long before `__rich_console__` completes, so the claimed volume 1959/difficulty 27.1 extend beyond the shown lines."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2901, difficulty 34.9 (EA 1959, 27.1)"
+        }
+      ]
+    },
+    {
+      "id": "EA-dd5b0ff6f824ee5a",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `expand` has Halstead volume 1984 and difficulty 16.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 93,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of `expand`, so volume 1984 across the full function body cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`expand` is cut off at line 108 mid-way through the struct-destructuring `let FromRequestContainerAttrs {`, so the Halstead volume 1984/difficulty 16.1 cover function body the excerpt does not include."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3330, difficulty 32.2 (EA 1984, 16.1)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d2d5bb4539de03f2",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `impl_struct_by_extracting_all_at_once` has Halstead volume 3037 and difficulty 30.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 706,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`impl_struct_by_extracting_all_at_once` continues well past the excerpt, so volume 3037 cannot be verified from the shown lines."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production macro-codegen function (`impl_struct_by_extracting_all_at_once`) with 7 parameters and a match over `syn::Fields`, so the complexity budget legitimately applies to this library code."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3828, difficulty 44.3 (EA 3037, 30.8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7e6bdd29a594a752",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `impl_enum_by_extracting_all_at_once` has Halstead volume 2469 and difficulty 30.2.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 877,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the signature and loop start of `impl_enum_by_extracting_all_at_once` are shown; the full-function volume 2469 is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production enum-codegen function in axum-macros whose early `return Err(syn::Error::new_spanned(...))` loop confirms the dense operator/operand mix behind volume 2469."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2577, difficulty 32.4 (EA 2469, 30.2)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0fc7105a5fbb80e6",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/typed_path.rs",
+      "message": "Function `expand_unnamed_fields` has Halstead volume 1566 and difficulty 20.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 164,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`expand_unnamed_fields` is cut off mid-body at line 179, so its whole-function Halstead volume/difficulty cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`expand_unnamed_fields` is production macro-expansion code in axum-macros (`#display_impl`/`#from_request_impl` token building), not test code, so the budget applies."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2373, difficulty 26.3 (EA 1566, 20.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-39330f2a3ac185b9",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/serve/mod.rs",
+      "message": "Function `if_it_compiles_it_works` has Halstead volume 1752 and difficulty 37.2.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 504,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`if_it_compiles_it_works` is a compile-only test helper (never asserts anything and carries `#[allow(dead_code, unused_must_use)]`), so the site is test code outside the rule's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-72e1b7aa2b8b7505",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Function `test_context` has Halstead volume 1789 and difficulty 29.2.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1039,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The function is explicitly annotated `#[cfg(test)] #[test]`, i.e. a unit test, which is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-8999b9b68e41da36",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Function `test_file` has Halstead volume 1735 and difficulty 29.7.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2037,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt shows `#[cfg(test)] #[test]` directly above `fn test_file`, so this is test code excluded by the rule's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2cd0365837f4a4fe",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/hiargs.rs",
+      "message": "Function `from_low_args` has Halstead volume 3916 and difficulty 23.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the signature and first statements of `from_low_args` are visible (to line 128), so the reported whole-body Halstead count is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`from_low_args` is a `pub(crate)` library conversion function whose large match over `low.mode` matches the reported volume 3916."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 5049, difficulty 41.9 (EA 3916, 23.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-253139e9935f0bb4",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/lib.rs",
+      "message": "Function `new` has Halstead volume 1667 and difficulty 20.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 461,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`GlobSet::new` continues past excerpt line 476, so the claimed Halstead volume/difficulty cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`GlobSet::new` is a public library constructor building many strategies (`LiteralStrategy`, `ExtensionStrategy`, prefix/suffix builders), so the high Halstead metrics are legitimate."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2545, difficulty 38.3 (EA 1667, 20.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-b02f46610271820f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Function `add_child_path_with_found_ignore_files` has Halstead volume 1984 and difficulty 21.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 340,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`add_child_path_with_found_ignore_files` extends beyond line 355, so the whole-function metric cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "In-scope production code: `add_child_path_with_found_ignore_files` is a plain `fn` at dir.rs:340 with no test/fixture wrapper, so the advisory density claim applies."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2924, difficulty 39.0 (EA 1984, 21.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6a3f0450cfb824b1",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Function `matched_ignore` has Halstead volume 1636 and difficulty 27.2.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 548,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`matched_ignore` is truncated at line 563 inside a loop, so its full-body Halstead count is not verifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`matched_ignore` at dir.rs:548 is a documented production matcher function, within the detector's scope."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2696, difficulty 57.9 (EA 1636, 27.2)"
+        }
+      ]
+    },
+    {
+      "id": "EA-dc15382ec08ef740",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/ast.rs",
+      "message": "Function `various` has Halstead volume 576 and difficulty 36.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 155,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is annotated `#[test]` (lines 153-154), making `various` unit-test code that is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-a5d838f99b6c2847",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/literal.rs",
+      "message": "Function `repetition` has Halstead volume 777 and difficulty 36.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 783,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`repetition` is preceded by `#[test]` (line 782), so it is test code rather than production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-5d7ece6eb95a3f0f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/strip.rs",
+      "message": "Function `strip_from_match_ascii` has Halstead volume 1727 and difficulty 19.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`strip_from_match_ascii` continues past line 70, so the reported volume/difficulty over the entire function cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`strip_from_match_ascii` is a doc-commented private production helper in strip.rs with no test attribute, so the density finding applies."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2362, difficulty 38.8 (EA 1727, 19.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4d100d60de9b233b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/lines.rs",
+      "message": "Function `preceding_lines_sherlock` has Halstead volume 887 and difficulty 31.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 346,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`preceding_lines_sherlock` is marked `#[test]` (line 345), so it is a test case outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-4de97fef870d6628",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/lines.rs",
+      "message": "Function `preceding_lines_short` has Halstead volume 1586 and difficulty 40.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 383,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`preceding_lines_short` is marked `#[test]` (line 382), a unit test not subject to the production metric."
+        }
+      ]
+    },
+    {
+      "id": "EA-07314c804286b5e1",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Function `configs` has Halstead volume 2451 and difficulty 43.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 516,
+      "verdict": "false_positive",
+      "reason": "Function is test-only code (#[test]/#[cfg(test)] in a src file) misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`configs` lives in `testutil.rs` and per its doc 'generates a set of all search configurations that should be tested', i.e. test-support code outside scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-69b1f417b94ca0b3",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/http/resolveResponse.ts",
+      "message": "Function `resolveResponse` has Halstead volume 3831 and difficulty 38.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`resolveResponse` extends far beyond excerpt line 227, so the whole-function Halstead metric cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "resolveResponse is production HTTP handling code and the shown HEAD/headers/URL setup begins a multi-branch resolver consistent with the reported high Halstead metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 18029, difficulty 61.8 (EA 3831, 38.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f4c05e5a8e8d4302",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/scripts/check-twoslash.ts",
+      "message": "Function `main` has Halstead volume 1718 and difficulty 18.4.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "main is in www/scripts/check-twoslash.ts, a docs build/tooling script outside the detector's source-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-c729a47b9559446c",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/src/components/ConceptsChart.tsx",
+      "message": "Function `ConceptsChart` has Halstead volume 3556 and difficulty 13.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3,
+      "verdict": "false_positive",
+      "reason": "Volume comes from JSX markup in a chart component; low difficulty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "ConceptsChart only returns a static JSX table, so the high operand variety is declarative markup/content rather than logic to simplify."
+        }
+      ]
+    },
+    {
+      "id": "EA-bd3de4597610c91d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/app/og.png/route.tsx",
+      "message": "Function `GET` has Halstead volume 1534 and difficulty 9.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 15,
+      "verdict": "false_positive",
+      "reason": "Volume comes from JSX markup in an image route; low difficulty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "GET is an idiomatic OG-image route handler whose bulk is an ImageResponse JSX/style layout, not algorithmic complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-50ce7a1c360a9195",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Function `generate` has Halstead volume 2379 and difficulty 25.2.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "generate lives in packages/tsc/generate.ts and writes generated schemas to a file, making it code-generation tooling outside scope."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4059, difficulty 41.9 (EA 2379, 25.2)"
+        }
+      ]
+    },
+    {
+      "id": "EA-bf1782845bdc0774",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Function `generateExtendChain` has Halstead volume 1970 and difficulty 18.9.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "generateExtendChain is another exporter in packages/tsc/generate.ts used to emit generated code, so its variety is inherent to the generator/tooling."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3036, difficulty 40.2 (EA 1970, 18.9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7bff7bf7f3cef5a6",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/locales/en.ts",
+      "message": "Function `errorMap` has Halstead volume 3116 and difficulty 22.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 4,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`errorMap` continues past line 19, so the claimed whole-function Halstead volume cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "errorMap is a production locale definition whose exhaustive switch over ZodIssueCode accounts for the high operator/operand variety."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4907, difficulty 33.2 (EA 3116, 22.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-39cd9133b5dfd845",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "message": "Function `convertBaseSchema` has Halstead volume 10892 and difficulty 64.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 390,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of `convertBaseSchema` (line 390) with body extending past line 405, so the reported Halstead volume/difficulty over the whole function cannot be verified from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "convertBaseSchema in Zod core is a branch-heavy JSON Schema converter and the visible unsupported-feature guards match the reported violation-level metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 23120, difficulty 58.3 (EA 10892, 64.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-aa31adafc53e2886",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "message": "Function `convertSchema` has Halstead volume 2463 and difficulty 31.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 808,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `convertSchema` (line 808) are shown, so the full body needed to confirm the Halstead volume 2463/difficulty 31.5 is not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows a large multi-branch conversion function (boolean handling, anyOf, intersection of base and union), consistent with the claimed high Halstead volume and difficulty."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4812, difficulty 40.2 (EA 2463, 31.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-00a4de942be625fd",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateChecks` has Halstead volume 2024 and difficulty 30.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 379,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows just the start of `generateChecks` (line 379) and its switch cases continue beyond line 394, so the reported Halstead metrics cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows a switch over many check kinds inside a loop plus a guard with a `when` lookup, matching the stated volume/difficulty."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3418, difficulty 42.5 (EA 2024, 30.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ff10fd8306642dc8",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateStringFormatCheck` has Halstead volume 3311 and difficulty 33.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 783,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the signature and first branches of `generateStringFormatCheck` (line 783) appear; the rest of the body underlying volume 3311/difficulty 33.6 is not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows a linear chain of many format-specific `if (fmt === ...)` branches, consistent with high operator/operand variety."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4751, difficulty 46.7 (EA 3311, 33.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-207bbbd97fce9e72",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateCheck` has Halstead volume 2840 and difficulty 25.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 958,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops a few lines into `generateCheck` (line 958), so the full function body needed to verify volume 2840/difficulty 25.8 is absent."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows a dispatcher with a coercion guard and multiple nested branches, matching the claimed Halstead complexity."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4933, difficulty 33.9 (EA 2840, 25.8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-358c480c529ccac5",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateObjectCheck` has Halstead volume 2906 and difficulty 30.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1190,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the beginning of `generateObjectCheck` (line 1190) is shown, so the complete body behind the Halstead volume 2906/difficulty 30.9 cannot be validated."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows an object-check generator with object-writing, array checks, shape/key handling, and further branching, consistent with the reported values."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 6419, difficulty 55.7 (EA 2906, 30.9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-80685ff1d756e8df",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateRecordCheck` has Halstead volume 2033 and difficulty 22.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1940,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first lines of `generateRecordCheck` (line 1940); the remaining body needed to confirm volume 2033/difficulty 22.3 is not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows a record-check generator with several generated statements, conditionals, and per-key logic, matching the claimed complexity."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4530, difficulty 46.2 (EA 2033, 22.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a0ce606b5f2537ba",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/json-schema-processors.ts",
+      "message": "Function `tupleProcessor` has Halstead volume 1554 and difficulty 29.3.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 517,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of the `tupleProcessor` arrow function (line 517) is shown, so the full body underlying volume 1554/difficulty 29.3 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows an arrow processor with nested ternaries, mapping, spread, and path construction, consistent with the reported Halstead metrics."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 3020, difficulty 34.6 (EA 1554, 29.3)"
+        }
+      ]
+    },
+    {
+      "id": "EA-9b876ff37f8a6952",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/memoizer.ts",
+      "message": "Function `isRecursive` has Halstead volume 1980 and difficulty 18.4.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Halstead volume/difficulty is a count over the whole `isRecursive` body, which continues past the truncated excerpt (line 65+), so the reported budget claim cannot be verified from the shown lines."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the top and first part of the recursive `isRecursive` function; the overall count would require the rest of the function body."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 4866, difficulty 31.5 (EA 1980, 18.4)"
+        }
+      ]
+    },
+    {
+      "id": "EA-76f0295ba54a16d0",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `generateFastpass` has Halstead volume 1590 and difficulty 20.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2253,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The metric spans the entire `generateFastpass` body, but the excerpt stops at line 2268 mid-function, so the stated volume/difficulty cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`generateFastpass` at schemas.ts:2253 is a real production closure that builds code via many template literals, optional chains and comparisons, so elevated operator/operand variety is genuine."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2105, difficulty 36.2 (EA 1590, 20.6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-894161b10d009d0e",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `mergeValues` has Halstead volume 999 and difficulty 31.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2826,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`mergeValues` extends well beyond line 2841, so the reported Halstead counts over the full function are unverifiable from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`mergeValues` at schemas.ts:2826 is an exported function with multiple equality branches, `Object.keys`/`filter`/`indexOf` chains and object merges, giving legitimately high Halstead volume."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2275, difficulty 39.5 (EA 999, 31.1)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a2ee0a3553520576",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `leafPattern` has Halstead volume 976 and difficulty 35.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 4702,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `leafPattern` body continues past the truncated line 4717, so the volume/difficulty over the full function cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`leafPattern` at schemas.ts:4702 loops over checks with several distinct `??`, optional-chaining and comparison operators on many identifiers, so high difficulty is consistent with the code."
+        }
+      ]
+    },
+    {
+      "id": "EA-7ff1d5cf3a252324",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/to-json-schema.ts",
+      "message": "Function `finalize` has Halstead volume 2450 and difficulty 38.8.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 568,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`finalize` is longer than the shown excerpt (and nests `flattenRef`), so whether the reported Halstead volume reflects it as claimed is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`finalize` at to-json-schema.ts:568 is a large exported function with nested closures and prop-folding logic; the high volume is a property of real code within scope."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 8579, difficulty 56.5 (EA 2450, 38.8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-78eee37f73603faa",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/to-json-schema.ts",
+      "message": "Function `flattenRef` has Halstead volume 1301 and difficulty 38.0.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 576,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`flattenRef` continues beyond line 591, so the numeric Halstead claim over the whole function cannot be confirmed from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`flattenRef` at to-json-schema.ts:576 is a distinct inner closure doing recursion plus many property accesses and null checks, so flagging it separately is valid, not a misparse."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 2621, difficulty 40.8 (EA 1301, 38.0)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c62fb0dcc2d92820",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/visit.ts",
+      "message": "Function `mapInner` has Halstead volume 3423 and difficulty 31.5.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 59,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`mapInner`'s switch body extends far past line 74, so the reported volume/difficulty over the full function is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`mapInner` at visit.ts:59 is a wide `switch` dispatcher over schema kinds with many distinct operands and property accesses, which is exactly what inflates Halstead volume."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca volume 5790, difficulty 39.0 (EA 3423, 31.5)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2f0c319e4bde0303",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/he.ts",
+      "message": "Function `error` has Halstead volume 2686 and difficulty 10.9.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 5,
+      "verdict": "false_positive",
+      "reason": "Locale message table; volume from strings, low difficulty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "locales/he.ts `error` is an i18n message catalog whose operand count is dominated by required localized string literals, so 'reduce operator/operand variety' does not apply (data, not a complexity hotspot)."
+        }
+      ]
+    },
+    {
+      "id": "EA-94c1a6588876b7b3",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/pt-BR.ts",
+      "message": "Function `error` has Halstead volume 1859 and difficulty 7.6.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "Locale message table; volume from strings, low difficulty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "pt-BR locale `error` is likewise a translation dictionary; high informational volume is inherent to the localized strings and the recommendation is inapplicable to fixed i18n data."
+        }
+      ]
+    },
+    {
+      "id": "EA-6ae0dd39095a2166",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/pt.ts",
+      "message": "Function `error` has Halstead volume 1859 and difficulty 7.6.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "Locale message table; volume from strings, low difficulty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The volume/difficulty counts span the entire `error` function, but the excerpt stops at line 21 mid-`FormatDictionary`, so the exact numbers cannot be verified from what is shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-0f11ce0851df4636",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Function `build` has Halstead volume 2503 and difficulty 37.8.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`build` lives in `scripts/compile-fuzz.ts`, which is fuzz-test/build tooling rather than production source, so the site is outside this detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f59f27715b25721c",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Function `same` has Halstead volume 2090 and difficulty 37.7.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 217,
+      "verdict": "true_positive",
+      "reason": "Halstead volume/difficulty above budget for a logic-heavy function.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`same` is in `scripts/compile-fuzz.ts`, a fuzzing tooling script, so the complexity finding there is out of scope for a source-quality rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ade11b18b4311b4",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/triage-signal.ts",
+      "message": "Function `buildReport` has Halstead volume 2886 and difficulty 14.1.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 475,
+      "verdict": "false_positive",
+      "reason": "Report template building; volume from string fragments, low difficulty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`buildReport` is in `scripts/triage-signal.ts`, a report-generating tooling script rather than library code, placing the site outside the detector's scope."
+        }
+      ]
+    }
+  ]
+}

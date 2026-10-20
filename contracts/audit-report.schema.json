@@ -1,0 +1,517 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/audit-report.schema.json",
+  "title": "Engineering Auditor Report V5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "semantic_contract_version",
+    "finding_id_version",
+    "source_role_version",
+    "analysis_contract_digest",
+    "scope",
+    "profile",
+    "repo_root",
+    "analysis_method",
+    "scanned_files",
+    "languages",
+    "source_roles",
+    "files",
+    "detectors",
+    "capability_executions",
+    "repository_map",
+    "engineering_review",
+    "finding_groups",
+    "analysis_coverage",
+    "external_inputs",
+    "baseline",
+    "findings",
+    "evidence_graph"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 5 },
+    "semantic_contract_version": { "type": "integer", "const": 1 },
+    "finding_id_version": { "type": "integer", "const": 3 },
+    "source_role_version": { "type": "integer", "const": 1 },
+    "analysis_contract_digest": { "type": "string", "minLength": 1 },
+    "scope": { "enum": ["full", "changed"] },
+    "profile": { "enum": ["gating", "full"] },
+    "repo_root": { "type": "string", "minLength": 1 },
+    "analysis_method": { "enum": ["auto", "ast", "token"] },
+    "scanned_files": { "type": "integer", "minimum": 0 },
+    "languages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/language_count" }
+    },
+    "source_roles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/role_count" }
+    },
+    "files": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/file" }
+    },
+    "detectors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/detector" }
+    },
+    "capability_executions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/capability_execution" }
+    },
+    "repository_map": { "$ref": "#/$defs/repository_map_reference" },
+    "engineering_review": { "$ref": "#/$defs/engineering_review_envelope" },
+    "finding_groups": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding_group" }
+    },
+    "analysis_coverage": { "$ref": "#/$defs/analysis_coverage" },
+    "external_inputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/external_input" }
+    },
+    "baseline": { "$ref": "#/$defs/baseline_diff" },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "evidence_graph": { "$ref": "evidence-graph.schema.json" }
+  },
+  "$defs": {
+    "severity": {
+      "enum": ["advisory", "low", "medium", "high", "critical"]
+    },
+    "source_role": {
+      "enum": [
+        "production",
+        "tooling",
+        "test",
+        "fixture",
+        "benchmark",
+        "example",
+        "reference",
+        "generated",
+        "documentation"
+      ]
+    },
+    "language_count": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "count"],
+      "properties": {
+        "language": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "role_count": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "count"],
+      "properties": {
+        "role": { "$ref": "#/$defs/source_role" },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "language",
+        "catalog_language",
+        "bytes",
+        "source_role",
+        "analysis_method",
+        "extractor_version"
+      ],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 1 },
+        "catalog_language": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "source_role": { "$ref": "#/$defs/source_role" },
+        "analysis_method": { "enum": ["auto", "ast", "token"] },
+        "extractor_version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "language_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "mode", "limitation"],
+      "properties": {
+        "language": { "type": "string", "minLength": 1 },
+        "mode": {
+          "enum": [
+            "semantic",
+            "exact_lexical",
+            "partial",
+            "unsupported",
+            "not_applicable"
+          ]
+        },
+        "limitation": { "type": ["string", "null"] }
+      }
+    },
+    "detector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "category",
+        "default_severity",
+        "profile",
+        "maturity",
+        "layer",
+        "emission_roles",
+        "context_roles",
+        "language_support",
+        "finding_count"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "default_severity": { "$ref": "#/$defs/severity" },
+        "profile": { "enum": ["gating", "full"] },
+        "maturity": { "type": "string", "minLength": 1 },
+        "layer": { "type": "string", "pattern": "^L[1-5]$" },
+        "emission_roles": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source_role" }
+        },
+        "context_roles": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source_role" }
+        },
+        "language_support": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/language_support" }
+        },
+        "finding_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "capability_execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detector_id",
+        "layer",
+        "status",
+        "eligible_files",
+        "analyzed_files",
+        "unsupported_files",
+        "not_applicable_files",
+        "required_inputs",
+        "missing_inputs",
+        "limitations",
+        "failure_reason"
+      ],
+      "properties": {
+        "detector_id": { "type": "string", "minLength": 1 },
+        "layer": { "enum": ["L1", "L2", "L3", "L4", "L5"] },
+        "status": {
+          "enum": [
+            "executed",
+            "not_applicable",
+            "unsupported",
+            "missing_input",
+            "unavailable"
+          ]
+        },
+        "eligible_files": { "type": "integer", "minimum": 0 },
+        "analyzed_files": { "type": "integer", "minimum": 0 },
+        "unsupported_files": { "type": "integer", "minimum": 0 },
+        "not_applicable_files": { "type": "integer", "minimum": 0 },
+        "required_inputs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "missing_inputs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "failure_reason": { "type": ["string", "null"] }
+      }
+    },
+    "repository_map_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "status",
+        "path",
+        "digest",
+        "source_snapshot_digest",
+        "completeness",
+        "file_count",
+        "symbol_count",
+        "edge_count"
+      ],
+      "properties": {
+        "schema_version": { "type": "integer", "const": 1 },
+        "status": { "enum": ["absent", "present"] },
+        "path": { "type": ["string", "null"] },
+        "digest": { "type": ["string", "null"] },
+        "source_snapshot_digest": { "type": ["string", "null"] },
+        "completeness": { "type": "string", "minLength": 1 },
+        "file_count": { "type": "integer", "minimum": 0 },
+        "symbol_count": { "type": "integer", "minimum": 0 },
+        "edge_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "engineering_review_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "status",
+        "review_id",
+        "input_report_digest",
+        "path",
+        "digest",
+        "completeness"
+      ],
+      "properties": {
+        "schema_version": { "type": "integer", "enum": [1, 2] },
+        "status": { "enum": ["absent", "unavailable", "partial", "complete"] },
+        "review_id": { "type": ["string", "null"] },
+        "input_report_digest": { "type": ["string", "null"] },
+        "path": { "type": ["string", "null"] },
+        "digest": { "type": ["string", "null"] },
+        "completeness": { "type": "string", "minLength": 1 },
+        "assessment_count": { "type": "integer", "minimum": 0 },
+        "material_recommendation_count": { "type": "integer", "minimum": 0 },
+        "contested_count": { "type": "integer", "minimum": 0 },
+        "revision_count": { "type": "integer", "minimum": 0 },
+        "case_count": { "type": "integer", "minimum": 0 },
+        "accepted_recommendation_count": { "type": "integer", "minimum": 0 },
+        "blocked_case_count": { "type": "integer", "minimum": 0 },
+        "contested_case_count": { "type": "integer", "minimum": 0 },
+        "challenge_response_count": { "type": "integer", "minimum": 0 }
+      },
+      "oneOf": [
+        {
+          "properties": { "schema_version": { "const": 1 } },
+          "required": [
+            "assessment_count",
+            "material_recommendation_count",
+            "contested_count",
+            "revision_count"
+          ]
+        },
+        {
+          "properties": { "schema_version": { "const": 2 } },
+          "required": [
+            "case_count",
+            "accepted_recommendation_count",
+            "blocked_case_count",
+            "contested_case_count",
+            "challenge_response_count"
+          ]
+        }
+      ]
+    },
+    "finding_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "count", "highest_severity"],
+      "properties": {
+        "category": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 0 },
+        "highest_severity": { "$ref": "#/$defs/severity" }
+      }
+    },
+    "capability_modes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic", "exact_lexical", "partial", "unsupported", "not_applicable"],
+      "properties": {
+        "semantic": { "type": "integer", "minimum": 0 },
+        "exact_lexical": { "type": "integer", "minimum": 0 },
+        "partial": { "type": "integer", "minimum": 0 },
+        "unsupported": { "type": "integer", "minimum": 0 },
+        "not_applicable": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "analysis_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested_method",
+        "files",
+        "source_files",
+        "detector_language_claims",
+        "capability_modes",
+        "findings",
+        "line_precise_findings",
+        "repository_findings",
+        "exact_fact_spans",
+        "external_inputs",
+        "graph_complete"
+      ],
+      "properties": {
+        "requested_method": { "enum": ["auto", "ast", "token"] },
+        "files": { "type": "integer", "minimum": 0 },
+        "source_files": { "type": "integer", "minimum": 0 },
+        "detector_language_claims": { "type": "integer", "minimum": 0 },
+        "capability_modes": { "$ref": "#/$defs/capability_modes" },
+        "findings": { "type": "integer", "minimum": 0 },
+        "line_precise_findings": { "type": "integer", "minimum": 0 },
+        "repository_findings": { "type": "integer", "minimum": 0 },
+        "exact_fact_spans": { "type": "integer", "minimum": 0 },
+        "external_inputs": { "type": "integer", "minimum": 0 },
+        "graph_complete": { "type": "boolean" }
+      }
+    },
+    "external_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "source",
+        "schema_version",
+        "digest",
+        "completeness",
+        "contract_relevant"
+      ],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "schema_version": { "type": "integer", "minimum": 0 },
+        "digest": { "type": "string", "minLength": 1 },
+        "completeness": { "type": "string", "minLength": 1 },
+        "contract_relevant": { "type": "boolean" }
+      }
+    },
+    "baseline_diff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "baseline_path",
+        "compared",
+        "new_findings",
+        "resolved_findings",
+        "unchanged_findings",
+        "carried_findings",
+        "carried"
+      ],
+      "properties": {
+        "schema_version": { "type": "integer", "const": 2 },
+        "baseline_path": { "type": ["string", "null"] },
+        "compared": { "type": "boolean" },
+        "new_findings": { "type": "integer", "minimum": 0 },
+        "resolved_findings": { "type": "integer", "minimum": 0 },
+        "unchanged_findings": { "type": "integer", "minimum": 0 },
+        "carried_findings": { "type": "integer", "minimum": 0 },
+        "carried": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/carried_finding" }
+        }
+      }
+    },
+    "carried_finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline_id", "current_id", "pass"],
+      "properties": {
+        "baseline_id": { "type": "string", "minLength": 1 },
+        "current_id": { "type": "string", "minLength": 1 },
+        "pass": { "enum": ["ordinal", "renamed", "moved"] }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "source_role",
+        "analysis_method",
+        "extractor_version",
+        "origin",
+        "span_precision"
+      ],
+      "properties": {
+        "language": { "type": "string", "minLength": 1 },
+        "source_role": { "type": "string", "minLength": 1 },
+        "analysis_method": { "enum": ["auto", "ast", "token"] },
+        "extractor_version": { "type": "integer", "minimum": 1 },
+        "origin": { "type": "string", "minLength": 1 },
+        "span_precision": { "enum": ["line", "repository"] }
+      }
+    },
+    "evidence_value": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "integer" },
+        { "type": "number" },
+        { "type": "boolean" },
+        { "type": "array", "items": { "type": "string" } },
+        { "type": "array", "items": { "type": "integer" } }
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "detector",
+        "category",
+        "title",
+        "message",
+        "recommendation",
+        "severity",
+        "confidence",
+        "locations",
+        "evidence",
+        "identity",
+        "evidence_keys",
+        "provenance"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "detector": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "recommendation": { "type": "string", "minLength": 1 },
+        "severity": { "$ref": "#/$defs/severity" },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "locations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/location" }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/evidence_value" }
+        },
+        "identity": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "evidence_keys": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    }
+  }
+}

@@ -1,0 +1,379 @@
+use super::semantics::{is_mutator, root_identifier, selection_kind, trim_arguments};
+use super::structure::{
+    call_shape, collection_identity, loop_bindings, nearest_loop, package_collection_call_shape,
+    region_within, CallShape,
+};
+use super::*;
+use crate::Language;
+
+#[derive(Clone)]
+pub(super) struct MutationScope<'a> {
+    pub(super) owner: u32,
+    pub(super) root: &'a str,
+    pub(super) aliases: &'a BTreeMap<String, String>,
+    pub(super) region: Option<u32>,
+    pub(super) except: Option<SourceSpan>,
+}
+
+pub(super) fn mutation_lines(file: &StructureFile, scope: MutationScope<'_>) -> Vec<usize> {
+    let mut lines = Vec::new();
+    for call in file
+        .calls
+        .iter()
+        .filter(|call| call.owner == Some(scope.owner))
+    {
+        let in_scope = scope.except != Some(call.span)
+            && scope
+                .region
+                .is_none_or(|region| region_within(file, call.control_region, region));
+        if in_scope && call_mutates(file, call, &scope) {
+            lines.push(call.line);
+        }
+    }
+    for assignment in file
+        .assignments
+        .iter()
+        .filter(|assignment| assignment.owner == Some(scope.owner))
+    {
+        if scope
+            .region
+            .is_some_and(|region| !region_within(file, assignment.control_region, region))
+        {
+            continue;
+        }
+        if collection_identity(&assignment.target, scope.aliases)
+            .is_some_and(|target| target == scope.root)
+        {
+            lines.push(assignment.line);
+        }
+    }
+    lines.sort_unstable();
+    lines.dedup();
+    lines
+}
+
+/// Calls in the scope that receive the collection itself as an argument and
+/// are not recognized mutations, such as a Rust helper given a `&mut`
+/// parameter by reborrow. Their effect on the collection is unresolved, so
+/// findings report them instead of implying the collection is unchanged.
+pub(super) fn calls_receiving_collection(
+    file: &StructureFile,
+    scope: &MutationScope<'_>,
+) -> Vec<String> {
+    file.calls
+        .iter()
+        .filter(|call| call.owner == Some(scope.owner) && scope.except != Some(call.span))
+        .filter(|call| {
+            scope
+                .region
+                .is_none_or(|region| region_within(file, call.control_region, region))
+        })
+        .filter(|call| {
+            call.arguments.as_deref().is_some_and(|arguments| {
+                trim_arguments(arguments)
+                    .split(',')
+                    .any(|argument| argument.trim() == scope.root)
+            })
+        })
+        .map(|call| call.expression.trim().to_string())
+        .collect()
+}
+
+/// Whether `call` may mutate the scope's collection: a mutator method on it,
+/// or (in languages that pass references) the collection as an argument.
+fn call_mutates(file: &StructureFile, call: &StructureCall, scope: &MutationScope<'_>) -> bool {
+    // A Go or Java collection API is judged by its table entry alone.
+    if let Some(shape) = package_collection_call_shape(call, scope.aliases) {
+        return shape.collection == scope.root && is_mutator(&shape.method);
+    }
+    call.arguments
+        .as_deref()
+        .is_some_and(|arguments| direct_argument_may_mutate(&file.language, arguments, scope.root))
+        || call_shape(call, scope.aliases)
+            .is_some_and(|shape| shape.collection == scope.root && is_mutator(&shape.method))
+}
+
+fn direct_argument_may_mutate(language: &Language, arguments: &str, target: &str) -> bool {
+    let compact_target = target
+        .chars()
+        .filter(|ch| !ch.is_whitespace())
+        .collect::<String>();
+    trim_arguments(arguments).split(',').any(|argument| {
+        let compact = argument
+            .chars()
+            .filter(|ch| !ch.is_whitespace())
+            .collect::<String>();
+        match language {
+            Language::Rust => compact.strip_prefix("&mut") == Some(compact_target.as_str()),
+            // A Go slice passed by value still shares its elements; a Java
+            // argument is a reference.
+            Language::JavaScript | Language::TypeScript | Language::Go | Language::Java => {
+                compact == compact_target
+            }
+            _ => false,
+        }
+    })
+}
+
+fn mutation_lines_between(
+    file: &StructureFile,
+    mut scope: MutationScope<'_>,
+    start: SourceSpan,
+    end: SourceSpan,
+) -> Vec<usize> {
+    scope.except = Some(start);
+    mutation_lines(file, scope)
+        .into_iter()
+        .filter(|line| start.start_line <= *line && *line <= end.end_line)
+        .collect()
+}
+
+pub(super) struct SortUseQuery<'a> {
+    pub(super) owner: u32,
+    pub(super) calls: &'a [&'a StructureCall],
+    pub(super) aliases: &'a BTreeMap<String, String>,
+    pub(super) sort: &'a CallShape,
+    pub(super) sort_call: &'a StructureCall,
+}
+
+pub(super) fn sort_selection_after(
+    file: &StructureFile,
+    query: SortUseQuery<'_>,
+) -> Option<(SourceSpan, SelectionKind)> {
+    for &use_call in query.calls {
+        if use_call.span.start_byte <= query.sort_call.span.end_byte {
+            continue;
+        }
+        let Some(use_shape) = call_shape(use_call, query.aliases) else {
+            continue;
+        };
+        if use_shape.root != query.sort.root {
+            continue;
+        }
+        if !mutation_lines_between(
+            file,
+            MutationScope {
+                owner: query.owner,
+                root: &query.sort.root,
+                aliases: query.aliases,
+                region: None,
+                except: None,
+            },
+            query.sort_call.span,
+            use_call.span,
+        )
+        .is_empty()
+        {
+            return None;
+        }
+        if let Some(selection) = selection_kind(&use_shape.method, &use_shape.arguments) {
+            return Some((use_call.span, selection));
+        }
+    }
+    subscript_selection_after(file, &query)
+}
+
+/// `xs[0]`, `xs[len(xs)-1]`, or `xs[:k]` read after the sort with no
+/// mutation in between (Go selects by indexing, not by method).
+fn subscript_selection_after(
+    file: &StructureFile,
+    query: &SortUseQuery<'_>,
+) -> Option<(SourceSpan, SelectionKind)> {
+    let root = &query.sort.root;
+    let subscript = file
+        .subscripts
+        .iter()
+        .filter(|subscript| {
+            subscript.owner == Some(query.owner)
+                && subscript.span.start_byte > query.sort_call.span.end_byte
+                && canonical(&subscript.operand, query.aliases) == *root
+        })
+        .min_by_key(|subscript| subscript.span.start_byte)?;
+    let between = mutation_lines_between(
+        file,
+        MutationScope {
+            owner: query.owner,
+            root,
+            aliases: query.aliases,
+            region: None,
+            except: None,
+        },
+        query.sort_call.span,
+        subscript.span,
+    );
+    if !between.is_empty() {
+        return None;
+    }
+    let last = format!("len({root})-1");
+    let selection = match (&subscript.index, &subscript.bounds) {
+        (Some(index), _) if index == "0" => SelectionKind::Extremum {
+            endpoint: "first".to_string(),
+        },
+        // Python counts from the end: `xs[-1]`.
+        (Some(index), _) if *index == last || index == "-1" => SelectionKind::Extremum {
+            endpoint: "last".to_string(),
+        },
+        (None, (start, end)) if matches!(start.as_str(), "" | "0") => {
+            let k = end.parse::<usize>().ok().filter(|k| *k > 1)?;
+            SelectionKind::TopK { k }
+        }
+        _ => return None,
+    };
+    Some((subscript.span, selection))
+}
+
+pub(super) fn dependent_loop_binding<'a>(
+    file: &'a StructureFile,
+    owner: u32,
+    call: &StructureCall,
+    arguments: &str,
+) -> Option<(&'a StructureLoop, String)> {
+    let loop_fact = nearest_loop(file, owner, call.control_region)?;
+    let binding = loop_bindings(loop_fact)
+        .into_iter()
+        .find(|binding| contains_identifier(arguments, binding))?;
+    Some((loop_fact, binding))
+}
+
+pub(super) fn assignment_root(assignment: &StructureAssignment) -> Option<String> {
+    root_identifier(&assignment.target)
+}
+
+pub(super) fn collection_shape(
+    file: &StructureFile,
+    owner: u32,
+    collection: &str,
+) -> (CollectionKind, Cardinality) {
+    if let Some(declaration) = file.symbols.iter().find_map(|symbol| {
+        (matches!(symbol.kind, SymbolKind::Parameter | SymbolKind::Variable)
+            && symbol.parent == Some(owner)
+            && symbol.name == collection)
+            .then_some(symbol.declaration.as_deref())
+            .flatten()
+    }) {
+        return (
+            collection_kind_from_text(declaration),
+            Cardinality::UnknownScalable,
+        );
+    }
+    if let Some(value) = file.assignments.iter().find_map(|assignment| {
+        (assignment.owner == Some(owner)
+            && assignment_root(assignment).as_deref() == Some(collection))
+        .then_some(assignment.value.as_deref())
+        .flatten()
+    }) {
+        let kind = collection_kind_from_text(value);
+        let cardinality = literal_cardinality(value)
+            .map(Cardinality::KnownBounded)
+            .unwrap_or(Cardinality::UnknownScalable);
+        return (kind, cardinality);
+    }
+    (CollectionKind::Unknown, Cardinality::UnknownScalable)
+}
+
+pub(super) fn collection_kind_from_text(text: &str) -> CollectionKind {
+    let lower = text.to_ascii_lowercase();
+    if ["hashset", "btreeset", "set<", "set[", "new set", "set("]
+        .iter()
+        .any(|marker| lower.contains(marker))
+    {
+        CollectionKind::Set
+    } else if ["hashmap", "btreemap", "map<", "map[", "new map", "dict"]
+        .iter()
+        .any(|marker| lower.contains(marker))
+    {
+        CollectionKind::Map
+    } else if [
+        "vec<", "vec::", "vec!", "list<", "list[", "array<", "[]", "slice", "sequence",
+    ]
+    .iter()
+    .any(|marker| lower.contains(marker))
+        || lower.trim_start().starts_with('[')
+    {
+        CollectionKind::LinearSequence
+    } else {
+        CollectionKind::Unknown
+    }
+}
+
+fn literal_cardinality(value: &str) -> Option<usize> {
+    let compact = value.trim();
+    let body = if let Some(body) = compact.strip_prefix('[').and_then(|v| v.split(']').next()) {
+        body
+    } else {
+        compact
+            .split_once("vec![")
+            .and_then(|(_, rest)| rest.split(']').next())?
+    };
+    if body.contains("...") || body.contains("..") {
+        return None;
+    }
+    Some(if body.trim().is_empty() {
+        0
+    } else {
+        body.split(',').count()
+    })
+}
+
+/// `FindByID` -> `find_by_id`, so Go and Java method names meet the table.
+fn snake_case(name: &str) -> String {
+    let characters = name.chars().collect::<Vec<_>>();
+    let mut snake = String::new();
+    for (index, character) in characters.iter().enumerate() {
+        let previous = index.checked_sub(1).map(|previous| characters[previous]);
+        let next = characters.get(index + 1);
+        let starts_word = character.is_uppercase()
+            && previous.is_some_and(|previous| {
+                previous.is_lowercase()
+                    || (previous.is_uppercase() && next.is_some_and(|next| next.is_lowercase()))
+            });
+        if starts_word {
+            snake.push('_');
+        }
+        snake.extend(character.to_lowercase());
+    }
+    snake
+}
+
+pub(super) fn query_receiver_is_proven(file: &StructureFile, owner: u32, receiver: &str) -> bool {
+    let type_signal = file.symbols.iter().any(|symbol| {
+        symbol.kind == SymbolKind::Parameter
+            && symbol.parent == Some(owner)
+            && symbol.name == receiver
+            && symbol.declaration.as_deref().is_some_and(|declaration| {
+                let lower = declaration.to_ascii_lowercase();
+                [
+                    "repository",
+                    "database",
+                    "connection",
+                    "session",
+                    "queryclient",
+                    "sql.db",
+                    "sql.tx",
+                    "sql.conn",
+                ]
+                .iter()
+                .any(|signal| lower.contains(signal))
+            })
+    });
+    let name = receiver.to_ascii_lowercase();
+    type_signal
+        || ["repo", "repository", "database", "connection", "session"]
+            .iter()
+            .any(|signal| name.contains(signal))
+}
+
+pub(super) fn is_read_query(method: &str) -> bool {
+    matches!(
+        snake_case(method).as_str(),
+        "query_one"
+            | "query_row"
+            | "fetch_one"
+            | "fetchrow"
+            | "find_by_id"
+            | "get_by_id"
+            | "load_by_id"
+            | "find_one"
+            | "query"
+    )
+}

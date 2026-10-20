@@ -1,0 +1,484 @@
+{
+  "schema_version": 1,
+  "bundle_version": 1,
+  "entries": [
+    {
+      "kind": "lifecycle_mismatch",
+      "version": 1,
+      "status": "production",
+      "template": {
+        "schema_version": 1,
+        "kind": "lifecycle_mismatch",
+        "version": 1,
+        "trigger": {
+          "decision_kind": "evaluate_lifecycle_ownership",
+          "selection_reasons_any": [
+            "repeated_work_lifecycle_intersection"
+          ]
+        },
+        "subject_policy": {
+          "minimum_subjects": 1,
+          "require_connected": true,
+          "allow_multiple_findings": true
+        },
+        "evidence_contract": {
+          "required": [
+            {
+              "id": "finding_records",
+              "evidence_class": "finding",
+              "description": "Immutable deterministic findings selected for the lifecycle decision."
+            },
+            {
+              "id": "subject_neighborhood",
+              "evidence_class": "evidence_graph",
+              "description": "The connected subject and support neighborhood for the selected findings."
+            },
+            {
+              "id": "source_role",
+              "evidence_class": "source_role",
+              "description": "Production, test, fixture, tooling, or documentation role for the repeated work."
+            }
+          ],
+          "optional": [
+            {
+              "id": "source_spans",
+              "evidence_class": "source_span",
+              "description": "Hash-validated source excerpts inside the case neighborhood."
+            },
+            {
+              "id": "runtime_measurement",
+              "evidence_class": "runtime_measurement",
+              "description": "Bound measurements of frequency, cost, allocation, or resource use."
+            },
+            {
+              "id": "operator_constraints",
+              "evidence_class": "operator_constraint",
+              "description": "Bound operator constraints relevant to ownership and retention."
+            }
+          ],
+          "blocking": [
+            {
+              "id": "relevant_mutation",
+              "evidence_class": "mutation",
+              "description": "Mutation that can invalidate equivalence across repeated executions."
+            },
+            {
+              "id": "distinct_consumer_requirements",
+              "evidence_class": "consumer_requirement",
+              "description": "Consumer-specific inputs, configuration, freshness, or result requirements."
+            },
+            {
+              "id": "retention_constraints",
+              "evidence_class": "retention_constraint",
+              "description": "Memory, privacy, freshness, or correctness risks introduced by retained state."
+            },
+            {
+              "id": "test_only_execution",
+              "evidence_class": "test",
+              "description": "Evidence that repetition exists only in tests or fixtures."
+            }
+          ]
+        },
+        "mandatory_probes": [
+          {
+            "slot": "repetition",
+            "kind": "cardinality",
+            "question": "Does the same work execute more than once in the relevant production lifecycle?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_role", "source_span"],
+            "positive_boundary": "The same work executes more than once in the relevant production lifecycle.",
+            "negative_boundary": "The work is single-shot or repetition is confined to tests or fixtures.",
+            "blocked_claim_slots": ["repetition", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "input_equivalence",
+            "kind": "semantic_equivalence",
+            "question": "Are logical inputs equivalent?",
+            "required_evidence_classes": ["finding", "source_span"],
+            "positive_boundary": "Inputs are equivalent for the result and side effects under review.",
+            "negative_boundary": "Source, an explicit behavioral contract, or runtime evidence establishes that configuration, argument values, environment, or hidden state actually differs across executions in a way that changes the result or side effects. Mutable access to, or invocation of, an opaque callable is not evidence that values actually differ.",
+            "blocked_claim_slots": ["input_equivalence", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "intervening_mutation",
+            "kind": "mutation",
+            "question": "Is there an intervening relevant mutation?",
+            "required_evidence_classes": ["evidence_graph", "mutation", "source_span"],
+            "positive_boundary": "Source, an explicit behavioral contract, graph evidence, or runtime evidence establishes a concrete mutation inside the proposed ownership lifetime that invalidates reused or retained results. Mutable access to, or invocation of, an opaque callable alone is not a concrete mutation.",
+            "negative_boundary": "Source, graph, or mutation evidence affirmatively shows that no relevant mutation occurs inside the proposed ownership lifetime. Failure to establish a concrete mutation is not evidence of no mutation. When an opaque callable with mutable access executes between operations and its body, behavioral contract, and runtime behavior are unavailable, answer unknown rather than no.",
+            "blocked_claim_slots": ["mutation_boundary", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "material_cost",
+            "kind": "cost",
+            "question": "Does direct or operator-bounded evidence establish decision-relevant runtime cost or resource use?",
+            "required_evidence_classes": ["finding", "runtime_measurement", "operator_constraint"],
+            "positive_boundary": "A direct runtime measurement or a bound tied to the actual workload and operator context shows decision-relevant cost or resource use; asymptotic structure alone does not establish materiality.",
+            "negative_boundary": "A bound runtime measurement or operator-context bound establishes that observed impact is immaterial. Absence of a measurement is unknown, not no.",
+            "blocked_claim_slots": ["material_impact", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "consumer_distinction",
+            "kind": "consumer_requirement",
+            "question": "Does at least one use of the reviewed result, including a loop iteration or downstream caller, require it to reflect different per-execution inputs or state?",
+            "required_evidence_classes": ["evidence_graph", "consumer_requirement", "source_span"],
+            "positive_boundary": "Consumer means any use-site that observes the reviewed result, including a current or later loop iteration, not only an external API caller. Source, an explicit behavioral contract, or runtime evidence establishes that at least one such use requires the result to reflect a different argument, configuration, mutation, freshness point, reconstructed value, or semantic state; one unchanged precomputed result cannot satisfy every execution. A later use after a destructive or reset mutation requires different reconstructed state even when the original constructor inputs repeat. This fact may also establish the intervening-mutation boundary; probes are not mutually exclusive. An opaque consumer or mutable argument alone is insufficient.",
+            "negative_boundary": "Every observing use-site, including every loop iteration and downstream caller, can use the same precomputed reviewed result unchanged, without omitting per-execution inputs, mutations, freshness, or semantics, and no intervening destructive or reset mutation makes that reuse incorrect.",
+            "blocked_claim_slots": ["consumer_requirement", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "wider_owner",
+            "kind": "lifecycle",
+            "question": "Is a concrete owner identifiable with a lifetime wider than the repeated operation?",
+            "required_evidence_classes": ["repository_map", "evidence_graph", "source_span"],
+            "positive_boundary": "A concrete enclosing function activation, caller, component, or other owner has an appropriate wider lifetime and responsibility and can own the work while satisfying every explicit retention, destruction, privacy, freshness, and correctness constraint. A merely lexical enclosing scope or an owner that could retain state only in principle is insufficient.",
+            "negative_boundary": "Source or an explicit contract establishes that every wider owner candidate would violate a retention, destruction, privacy, freshness, or correctness constraint, or no owner can coordinate the work without harmful coupling.",
+            "blocked_claim_slots": ["wider_owner", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "invalidation_feasibility",
+            "kind": "alternative_feasibility",
+            "question": "Is invalidation feasible?",
+            "required_evidence_classes": ["mutation", "consumer_requirement", "operator_constraint", "source_span"],
+            "positive_boundary": "Source or constraint evidence shows that moving the work is bounded and testable, and that restoring or recomputing at the original operation boundary is explicit.",
+            "negative_boundary": "Invalidation would be incomplete, unbounded, or more costly than recomputation.",
+            "blocked_claim_slots": ["invalidation_feasibility", "lifecycle_conclusion"]
+          },
+          {
+            "slot": "retention_risk",
+            "kind": "constraint",
+            "question": "Would retained state create memory, privacy, freshness, or correctness risk?",
+            "required_evidence_classes": ["retention_constraint", "operator_constraint", "source_span"],
+            "positive_boundary": "A concrete retention risk applies to the proposed lifetime. A possible mutation by an opaque callable does not by itself establish that risk.",
+            "negative_boundary": "Source or constraint evidence shows that the action retains no additional state, or that retention remains bounded and satisfies memory, privacy, freshness, and correctness constraints.",
+            "blocked_claim_slots": ["retention_risk", "lifecycle_conclusion"]
+          }
+        ],
+        "optional_probe_policy": {
+          "allowed_kinds": [
+            "counterexample",
+            "alternative_feasibility",
+            "verification_availability"
+          ],
+          "maximum_count": 3,
+          "require_named_decision": true,
+          "require_case_boundary": true
+        },
+        "claim_slots": [
+          "repetition",
+          "input_equivalence",
+          "mutation_boundary",
+          "material_impact",
+          "consumer_requirement",
+          "wider_owner",
+          "invalidation_feasibility",
+          "retention_risk",
+          "lifecycle_conclusion"
+        ],
+        "inference_guards": [
+          {
+            "kind": "relevant_mutation",
+            "probe_slots": ["intervening_mutation", "invalidation_feasibility"],
+            "blocked_claim_slots": ["mutation_boundary", "lifecycle_conclusion"],
+            "blocked_conclusions": ["lifecycle_mismatch_substantiated"]
+          },
+          {
+            "kind": "distinct_configuration",
+            "probe_slots": ["input_equivalence", "consumer_distinction"],
+            "blocked_claim_slots": ["input_equivalence", "consumer_requirement", "lifecycle_conclusion"],
+            "blocked_conclusions": ["lifecycle_mismatch_substantiated"]
+          },
+          {
+            "kind": "test_only_repetition",
+            "probe_slots": ["repetition"],
+            "blocked_claim_slots": ["repetition", "material_impact", "lifecycle_conclusion"],
+            "blocked_conclusions": ["lifecycle_mismatch_substantiated"]
+          },
+          {
+            "kind": "freshness_constraint",
+            "probe_slots": ["consumer_distinction", "retention_risk"],
+            "blocked_claim_slots": ["consumer_requirement", "retention_risk", "lifecycle_conclusion"],
+            "blocked_conclusions": ["lifecycle_mismatch_substantiated"]
+          },
+          {
+            "kind": "retention_risk",
+            "probe_slots": ["retention_risk", "invalidation_feasibility"],
+            "blocked_claim_slots": ["retention_risk", "invalidation_feasibility", "lifecycle_conclusion"],
+            "blocked_conclusions": ["lifecycle_mismatch_substantiated"]
+          },
+          {
+            "kind": "quantitative_benefit",
+            "probe_slots": ["material_cost"],
+            "blocked_claim_slots": ["material_impact"],
+            "blocked_conclusions": []
+          }
+        ],
+        "recommendation_families": [
+          "lifecycle_reownership",
+          "explicit_retention_avoidance",
+          "measurement_before_change"
+        ],
+        "route_policy": {
+          "deterministic_allowed": true,
+          "single_reviewer_allowed": true,
+          "ensemble_required_when": [
+            "resource_lifetime_change",
+            "component_ownership_change",
+            "critical_semantic_probe",
+            "three_layer_span",
+            "multiple_components",
+            "multiple_credible_actions",
+            "material_evidence_conflict",
+            "significant_benefit_claim"
+          ]
+        },
+        "challenge_policy": {
+          "mandatory_when": ["lifecycle_reownership"]
+        },
+        "closure_policy": {
+          "allowed_conclusions": [
+            "lifecycle_mismatch_substantiated",
+            "repetition_justified",
+            "impact_immaterial",
+            "wider_ownership_infeasible",
+            "insufficient_evidence"
+          ],
+          "insufficient_evidence_conclusion": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "kind": "shared_root_cause",
+      "version": 1,
+      "status": "shadow",
+      "template": {
+        "schema_version": 1,
+        "kind": "shared_root_cause",
+        "version": 1,
+        "trigger": {
+          "decision_kind": "evaluate_shared_root_cause",
+          "selection_reasons_any": ["same_subject_concentration", "cross_layer_intersection"]
+        },
+        "subject_policy": {
+          "minimum_subjects": 1,
+          "require_connected": true,
+          "allow_multiple_findings": true
+        },
+        "evidence_contract": {
+          "required": [
+            {"id": "finding_records", "evidence_class": "finding", "description": "Immutable findings selected for causal comparison."},
+            {"id": "subject_neighborhood", "evidence_class": "evidence_graph", "description": "Connected subjects, symbols, and support relationships across the findings."},
+            {"id": "source_roles", "evidence_class": "source_role", "description": "Production, test, fixture, tooling, or documentation roles for the affected code."}
+          ],
+          "optional": [
+            {"id": "source_spans", "evidence_class": "source_span", "description": "Hash-validated source excerpts inside the case boundary."},
+            {"id": "operator_constraints", "evidence_class": "operator_constraint", "description": "Bound operator constraints relevant to remediation scope and coupling."},
+            {"id": "tests", "evidence_class": "test", "description": "Tests that constrain independent failure or lifecycle semantics."}
+          ],
+          "blocking": [
+            {"id": "distinct_semantics", "evidence_class": "consumer_requirement", "description": "Distinct failure, ownership, lifecycle, or consumer semantics that prohibit one root-cause action."},
+            {"id": "coupling_constraints", "evidence_class": "operator_constraint", "description": "Constraints showing that a combined remediation would create harmful coupling."}
+          ]
+        },
+        "mandatory_probes": [
+          {
+            "slot": "same_responsibility", "kind": "identity",
+            "question": "Do the findings describe the same implementation responsibility?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_span"],
+            "positive_boundary": "The finding mechanisms are owned by the same concrete implementation responsibility, not merely the same file or symbol.",
+            "negative_boundary": "The findings concern distinct responsibilities with independently meaningful ownership boundaries.",
+            "blocked_claim_slots": ["responsibility", "remediation_boundary"]
+          },
+          {
+            "slot": "shared_change_impact", "kind": "counterexample",
+            "question": "Would one bounded change plausibly affect several findings?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_span"],
+            "positive_boundary": "A named bounded change to the shared responsibility would directly change the mechanism reported by at least two findings.",
+            "negative_boundary": "Each finding mechanism remains unchanged by changes that address the others.",
+            "blocked_claim_slots": ["causal_overlap", "remediation_boundary"]
+          },
+          {
+            "slot": "mere_correlation", "kind": "counterexample",
+            "question": "Are the findings merely correlated rather than causally overlapping?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_span"],
+            "positive_boundary": "The findings co-occur by location, naming, or measurement while their implementation causes remain distinct.",
+            "negative_boundary": "Evidence traces at least two findings to the same concrete causal mechanism.",
+            "blocked_claim_slots": ["causal_overlap"]
+          },
+          {
+            "slot": "recommendation_conflict", "kind": "counterexample",
+            "question": "Do the detector-local recommendations conflict?",
+            "required_evidence_classes": ["finding", "source_span"],
+            "positive_boundary": "Applying one detector-local action would prevent or materially weaken another selected action.",
+            "negative_boundary": "The detector-local actions can coexist without weakening one another.",
+            "blocked_claim_slots": ["remediation_boundary"]
+          },
+          {
+            "slot": "coupling_increase", "kind": "alternative_feasibility",
+            "question": "Would a shared remediation increase coupling?",
+            "required_evidence_classes": ["repository_map", "operator_constraint", "source_span"],
+            "positive_boundary": "The shared action would create a new dependency or ownership relationship across otherwise independent components.",
+            "negative_boundary": "The shared action stays within an existing owner and introduces no new cross-component dependency.",
+            "blocked_claim_slots": ["coupling_risk", "remediation_boundary"]
+          },
+          {
+            "slot": "distinct_semantics", "kind": "semantic_equivalence",
+            "question": "Do distinct failure, ownership, lifecycle, or consumer semantics exist?",
+            "required_evidence_classes": ["finding", "source_span", "consumer_requirement"],
+            "positive_boundary": "At least one finding has a distinct failure, ownership, lifecycle, or consumer contract that a shared action cannot preserve automatically.",
+            "negative_boundary": "The selected findings share the relevant failure, ownership, lifecycle, and consumer semantics.",
+            "blocked_claim_slots": ["responsibility", "remediation_boundary"]
+          },
+          {
+            "slot": "independent_actionability", "kind": "alternative_feasibility",
+            "question": "Is any finding independently actionable after the shared remediation?",
+            "required_evidence_classes": ["repository_map", "operator_constraint", "source_span"],
+            "positive_boundary": "At least one finding retains a bounded useful action not completed by the shared remediation.",
+            "negative_boundary": "The shared remediation fully addresses every selected finding mechanism.",
+            "blocked_claim_slots": ["independent_actionability", "remediation_boundary"]
+          }
+        ],
+        "optional_probe_policy": {
+          "allowed_kinds": ["counterexample", "alternative_feasibility", "verification_availability"],
+          "maximum_count": 3,
+          "require_named_decision": true,
+          "require_case_boundary": true
+        },
+        "claim_slots": ["responsibility", "causal_overlap", "independent_actionability", "coupling_risk", "remediation_boundary"],
+        "inference_guards": [
+          {"kind": "correlation_not_causation", "probe_slots": ["same_responsibility", "shared_change_impact", "mere_correlation"], "blocked_claim_slots": ["causal_overlap"], "blocked_conclusions": ["shared_root_cause"]},
+          {"kind": "coupling_increase", "probe_slots": ["coupling_increase"], "blocked_claim_slots": ["coupling_risk", "remediation_boundary"], "blocked_conclusions": ["shared_root_cause"]},
+          {"kind": "distinct_semantics", "probe_slots": ["distinct_semantics"], "blocked_claim_slots": ["responsibility", "remediation_boundary"], "blocked_conclusions": ["shared_root_cause"]},
+          {"kind": "independent_actionability", "probe_slots": ["independent_actionability", "recommendation_conflict"], "blocked_claim_slots": ["independent_actionability", "remediation_boundary"], "blocked_conclusions": []}
+        ],
+        "recommendation_families": ["shared_root_remediation", "preserve_independent_actions", "measurement_before_change"],
+        "route_policy": {
+          "deterministic_allowed": true,
+          "single_reviewer_allowed": true,
+          "ensemble_required_when": ["multiple_components", "multiple_credible_actions", "material_evidence_conflict", "three_layer_span"]
+        },
+        "challenge_policy": {"mandatory_when": ["shared_root_remediation"]},
+        "closure_policy": {
+          "allowed_conclusions": ["shared_root_cause", "partial_overlap", "independent_findings", "correlation_only", "insufficient_evidence"],
+          "insufficient_evidence_conclusion": "insufficient_evidence"
+        }
+      }
+    },
+    {
+      "kind": "recommendation_consolidation",
+      "version": 1,
+      "status": "shadow",
+      "template": {
+        "schema_version": 1,
+        "kind": "recommendation_consolidation",
+        "version": 1,
+        "trigger": {
+          "decision_kind": "reconcile_recommendations",
+          "selection_reasons_any": ["recommendation_overlap", "recommendation_conflict"]
+        },
+        "subject_policy": {
+          "minimum_subjects": 1,
+          "require_connected": true,
+          "allow_multiple_findings": true
+        },
+        "evidence_contract": {
+          "required": [
+            {"id": "finding_records", "evidence_class": "finding", "description": "Immutable findings and their detector-local recommendations."},
+            {"id": "subject_neighborhood", "evidence_class": "evidence_graph", "description": "Connected subject and support relationships for the affected actions."},
+            {"id": "source_roles", "evidence_class": "source_role", "description": "Production, test, fixture, tooling, or documentation roles for the affected code."}
+          ],
+          "optional": [
+            {"id": "source_spans", "evidence_class": "source_span", "description": "Hash-validated source excerpts inside the action boundary."},
+            {"id": "runtime_measurements", "evidence_class": "runtime_measurement", "description": "Bound measurements for properties the actions may improve or worsen."},
+            {"id": "operator_constraints", "evidence_class": "operator_constraint", "description": "Bound constraints relevant to proportionality, ordering, and deferral."}
+          ],
+          "blocking": [
+            {"id": "consumer_requirements", "evidence_class": "consumer_requirement", "description": "Consumer contracts that make simultaneous actions incompatible."},
+            {"id": "retention_constraints", "evidence_class": "retention_constraint", "description": "Constraints that make a combined action unsafe or disproportionate."}
+          ]
+        },
+        "mandatory_probes": [
+          {
+            "slot": "simultaneous_compatibility", "kind": "counterexample",
+            "question": "Can the recommendations be applied simultaneously?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_span"],
+            "positive_boundary": "All selected actions can coexist without invalidating another action's premise or verification target.",
+            "negative_boundary": "At least one action prevents, invalidates, or materially weakens another selected action.",
+            "blocked_claim_slots": ["compatibility"]
+          },
+          {
+            "slot": "abstraction_alignment", "kind": "identity",
+            "question": "Do the recommendations operate at the same abstraction level?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_span"],
+            "positive_boundary": "The selected actions modify the same concrete responsibility and ownership layer.",
+            "negative_boundary": "The actions address distinct architectural layers or responsibilities whose advice must remain separate.",
+            "blocked_claim_slots": ["abstraction_level"]
+          },
+          {
+            "slot": "supersession", "kind": "counterexample",
+            "question": "Does one action make another unnecessary?",
+            "required_evidence_classes": ["finding", "evidence_graph", "source_span"],
+            "positive_boundary": "Completing a named action removes the mechanism and verification need addressed by another action.",
+            "negative_boundary": "Each action retains an independent mechanism or verification target after the others complete.",
+            "blocked_claim_slots": ["supersession"]
+          },
+          {
+            "slot": "measured_property_regression", "kind": "cost",
+            "question": "Does one action worsen another measured property?",
+            "required_evidence_classes": ["finding", "runtime_measurement", "operator_constraint", "source_span"],
+            "positive_boundary": "Bound measurement or an explicit operator constraint shows that one action worsens a property protected by another action.",
+            "negative_boundary": "Bound measurement or an explicit constraint shows no material regression in the protected properties.",
+            "blocked_claim_slots": ["property_conflict", "compatibility"]
+          },
+          {
+            "slot": "required_ordering", "kind": "ordering",
+            "question": "Is ordering required?",
+            "required_evidence_classes": ["evidence_graph", "repository_map", "source_span"],
+            "positive_boundary": "A concrete dependency requires one admitted action to complete before another can safely begin.",
+            "negative_boundary": "The actions have no prerequisite relationship and may proceed in either order.",
+            "blocked_claim_slots": ["required_ordering"]
+          },
+          {
+            "slot": "proportionality", "kind": "cost",
+            "question": "Is the combined remediation proportionate?",
+            "required_evidence_classes": ["finding", "runtime_measurement", "operator_constraint", "source_span"],
+            "positive_boundary": "The combined change remains bounded to the selected mechanisms and its evidenced benefit or operator need justifies its scope.",
+            "negative_boundary": "The combined change expands beyond the selected mechanisms or violates an explicit effort, risk, or scope constraint.",
+            "blocked_claim_slots": ["proportionality"]
+          },
+          {
+            "slot": "deferral_appropriateness", "kind": "constraint",
+            "question": "Is deferral more appropriate than immediate change?",
+            "required_evidence_classes": ["operator_constraint", "source_span"],
+            "positive_boundary": "An explicit dependency, operator decision, or bounded evidence gap makes immediate change inappropriate.",
+            "negative_boundary": "No unresolved dependency, operator decision, or evidence gap blocks the bounded action.",
+            "blocked_claim_slots": ["deferral"]
+          }
+        ],
+        "optional_probe_policy": {
+          "allowed_kinds": ["counterexample", "alternative_feasibility", "verification_availability"],
+          "maximum_count": 3,
+          "require_named_decision": true,
+          "require_case_boundary": true
+        },
+        "claim_slots": ["compatibility", "abstraction_level", "supersession", "property_conflict", "required_ordering", "proportionality", "deferral"],
+        "inference_guards": [
+          {"kind": "action_compatibility", "probe_slots": ["simultaneous_compatibility"], "blocked_claim_slots": ["compatibility"], "blocked_conclusions": ["consolidated_action"]},
+          {"kind": "abstraction_mismatch", "probe_slots": ["abstraction_alignment"], "blocked_claim_slots": ["abstraction_level"], "blocked_conclusions": ["consolidated_action"]},
+          {"kind": "property_regression", "probe_slots": ["measured_property_regression"], "blocked_claim_slots": ["property_conflict", "compatibility"], "blocked_conclusions": ["consolidated_action"]},
+          {"kind": "disproportionate_change", "probe_slots": ["proportionality", "deferral_appropriateness"], "blocked_claim_slots": ["proportionality", "deferral"], "blocked_conclusions": ["consolidated_action"]}
+        ],
+        "recommendation_families": ["consolidated_remediation", "sequenced_remediation", "preserve_independent_actions", "narrowed_remediation", "deferred_remediation"],
+        "route_policy": {
+          "deterministic_allowed": true,
+          "single_reviewer_allowed": true,
+          "ensemble_required_when": ["multiple_credible_actions", "material_evidence_conflict", "multiple_components", "public_contract_change"]
+        },
+        "challenge_policy": {"mandatory_when": ["consolidated_remediation", "sequenced_remediation", "narrowed_remediation"]},
+        "closure_policy": {
+          "allowed_conclusions": ["consolidated_action", "sequenced_actions", "preserved_independent_actions", "narrowed_action", "deferred_action", "no_repository_specific_action"],
+          "insufficient_evidence_conclusion": "no_repository_specific_action"
+        }
+      }
+    }
+  ]
+}

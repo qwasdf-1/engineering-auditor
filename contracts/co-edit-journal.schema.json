@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/co-edit-journal.schema.json",
+  "title": "Engineering Auditor Co-edit Journal",
+  "type": "object",
+  "required": ["schema_version", "records"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["change_set_id"],
+        "properties": {
+          "change_set_id": { "type": "string", "minLength": 1 },
+          "files": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "edge_kind": { "type": "string" },
+          "from_address": { "type": "string" },
+          "to_address": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/review-eval-corpus-v2.schema.json",
+  "title": "Engineering Auditor Lifecycle Review Evaluation Corpus V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "corpus_id", "bindings", "release_run_plan", "cases"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "corpus_id": { "type": "string", "minLength": 1 },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_templates", "prompt_bundle", "routes"],
+      "properties": {
+        "case_templates": { "$ref": "#/$defs/file_binding" },
+        "prompt_bundle": { "$ref": "#/$defs/file_binding" },
+        "routes": { "$ref": "#/$defs/file_binding" },
+        "keyed_free_routes": {
+          "description": "Zero-cost routes that need an operator API key, selected with the evaluator's --route-set; the anonymous routes binding stays the default.",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/file_binding" }
+        }
+      }
+    },
+    "release_run_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_runs", "sentinel_runs", "sentinel_case_ids"],
+      "properties": {
+        "default_runs": { "const": 1 },
+        "sentinel_runs": { "type": "integer", "minimum": 3 },
+        "sentinel_case_ids": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "file_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "digest"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "human_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_role", "reviewed_at", "rationale_digest"],
+      "properties": {
+        "reviewer_role": { "type": "string", "minLength": 1 },
+        "reviewed_at": { "type": "string", "format": "date" },
+        "rationale_digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "expectations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_count",
+        "probe_answers",
+        "allowed_closures",
+        "allowed_case_conclusions",
+        "forbidden_claim_slots",
+        "required_recommendation_families",
+        "forbidden_recommendation_families",
+        "evidence_gaps",
+        "requires_abstention",
+        "requires_useful_novel_action",
+        "requires_unsupported_numeric_removal"
+      ],
+      "properties": {
+        "candidate_count": { "type": "integer", "minimum": 1 },
+        "probe_answers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": ["yes", "no", "unknown", "not_applicable", "conflicting_evidence"]
+            }
+          }
+        },
+        "allowed_closures": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "resolved",
+              "resolved_with_uncertainty",
+              "not_substantiated",
+              "blocked_by_missing_evidence",
+              "contested",
+              "not_applicable",
+              "execution_failed"
+            ]
+          }
+        },
+        "allowed_case_conclusions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "lifecycle_mismatch_substantiated",
+              "repetition_justified",
+              "impact_immaterial",
+              "wider_ownership_infeasible",
+              "insufficient_evidence"
+            ]
+          }
+        },
+        "forbidden_claim_slots": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "required_recommendation_families": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "lifecycle_reownership",
+              "explicit_retention_avoidance",
+              "measurement_before_change"
+            ]
+          }
+        },
+        "forbidden_recommendation_families": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "lifecycle_reownership",
+              "explicit_retention_avoidance",
+              "measurement_before_change"
+            ]
+          }
+        },
+        "evidence_gaps": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "requires_abstention": { "type": "boolean" },
+        "requires_useful_novel_action": { "type": "boolean" },
+        "requires_unsupported_numeric_removal": { "type": "boolean" }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "fixture_kind",
+        "generator",
+        "generator_digest",
+        "source_digest",
+        "source_commit",
+        "expectations",
+        "human_review"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "fixture_kind": { "type": "string", "minLength": 1 },
+        "generator": { "type": "string", "minLength": 1 },
+        "generator_digest": { "$ref": "#/$defs/digest" },
+        "source_digest": { "$ref": "#/$defs/digest" },
+        "source_commit": { "type": "string", "minLength": 1 },
+        "expectations": { "$ref": "#/$defs/expectations" },
+        "human_review": { "$ref": "#/$defs/human_review" }
+      }
+    }
+  }
+}

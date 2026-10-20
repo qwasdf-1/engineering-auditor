@@ -1,0 +1,2741 @@
+{
+  "schema_version": 1,
+  "detector": "too_many_statements",
+  "labels": [
+    {
+      "id": "EA-3fb761e6917264dc",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/idna.c",
+      "message": "Function `uv__idna_toascii_label` has 61 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 152,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv__idna_toascii_label` (line 152) is a sizeable punycode implementation whose reported 61 statements exceed the 50 threshold, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-0a62777614905f2f",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Function `uv__io_poll` has 87 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv__io_poll` in src/unix/aix.c:133 is a large event-loop routine and the reported 87 statements are consistent with the multi-branch body."
+        }
+      ]
+    },
+    {
+      "id": "EA-b166c1d798add6d6",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Function `uv_interface_addresses` has 64 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1116,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv_interface_addresses` at src/unix/aix.c:1116 is a lengthy multi-branch function whose reported 64 statements exceed the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-0a59fb561f117c71",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/loop.c",
+      "message": "Function `uv_loop_init` has 54 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 30,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv_loop_init` (src/unix/loop.c:30) contains many sequential initialization steps and its reported 54 statements are over the 50 threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-c853198572270120",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/posix-poll.c",
+      "message": "Function `uv__io_poll` has 70 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 134,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv__io_poll` in src/unix/posix-poll.c:134 is a complex polling loop and the reported 70 statements exceed the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-ad41730d76df38c9",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/sunos.c",
+      "message": "Function `uv__io_poll` has 78 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv__io_poll` in src/unix/sunos.c:147 is a large port-based polling loop whose reported 78 statements exceed the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-a750f84152cf24db",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/error.c",
+      "message": "Function `uv_translate_sys_error` has 102 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`uv_translate_sys_error` (src/win/error.c:66) is a very large error-code mapping whose reported 102 statements far exceed the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-92293ed57f1c31a1",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs-event.c",
+      "message": "Function `uv_fs_event_start` has 61 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 156,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read fs-event.c uv_fs_event_start; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the opening declarations of `uv_fs_event_start` (line 156 onward) before truncating, so the 61-statement total cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1b0742fe48f77c40",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs-event.c",
+      "message": "Function `uv__process_fs_event_req` has 53 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 418,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read fs-event.c uv__process_fs_event_req; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `uv__process_fs_event_req` are shown before line 433 truncates, so the 53-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-40898491dbffc816",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/process-stdio.c",
+      "message": "Function `uv__stdio_create` has 56 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 169,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 51 in uv__stdio_create: 3 decls, ~8 setup stmts, 2 for loops, switch with 5 cases each holding several asserts/memcpy/assignments/gotos/breaks; ~110 statements total."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt of `uv__stdio_create` ends at line 184, far short of the function's end, so its 56-statement count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc571be0c5dd51e8",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/minizip.c",
+      "message": "Function `main` has 66 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 240,
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`contrib/minizip/minizip.c` is a sample command-line program shipped under contrib (example code), outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-5fdcc1dab18ff438",
+      "repository": "lz4",
+      "language": "cpp",
+      "path": "contrib/gen_manual/gen_manual.cpp",
+      "message": "Function `main` has 67 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "Contributed tool under contrib/, outside the library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`contrib/gen_manual/gen_manual.cpp` is a manual-generating tool (build/tooling code), outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-c3dd48512e95ae1a",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/serializer.hpp",
+      "message": "Function `dump` has 96 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-n",
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "Production function over the statement budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `dump` has 96 statements (> 50) is plausible for the real function `serializer.hpp` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-12912033539336d0",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/serializer.hpp",
+      "message": "Function `dump_escaped` has 64 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-n",
+      "line": 391,
+      "verdict": "true_positive",
+      "reason": "Production function over the statement budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `dump_escaped` has 64 statements (> 50) is plausible for the real function `serializer.hpp` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-7624a2d71d8d11ff",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/scanscalar.cpp",
+      "message": "Function `ScanScalar` has 62 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read scanscalar.cpp ScanScalar; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `ScanScalar` excerpt stops at line 36 inside a while loop, so the full 62-statement count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-664ca241ce5513f1",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonReader.cs",
+      "message": "Function `ReadType` has 60 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 460,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read BsonReader.cs ReadType; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the beginning of the `ReadType` switch body is shown before truncation, so the 60-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-c94aee8124d16b5a",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JContainer.Async.cs",
+      "message": "Function `ReadContentFromAsync` has 51 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read JContainer.Async.cs ReadContentFromAsync; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `ReadContentFromAsync` excerpt is cut off inside its do-loop, so the 51-statement count (just over threshold) cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-696a318a8ba16f5c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JsonPath/JPath.cs",
+      "message": "Function `ParseArrayIndexer` has 55 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 231,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read JPath.cs ParseArrayIndexer; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 245, far before the end of ParseArrayIndexer, so the 55-statement count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-0f1b5a8574af9f43",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Schema/JsonSchemaBuilder.cs",
+      "message": "Function `ProcessSchemaProperties` has 58 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 249,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 60 statements in ProcessSchemaProperties: foreach + switch + 29 cases each with an assignment/call and a break (58); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first few switch cases of ProcessSchemaProperties are shown, so its 58-statement total is unverifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-3d4dadf7d22f7c08",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DynamicReflectionDelegateFactory.cs",
+      "message": "Function `GenerateCreateMethodCallIL` has 72 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read DynamicReflectionDelegateFactory.cs GenerateCreateMethodCallIL; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "GenerateCreateMethodCallIL continues well past the shown IL emits, so the stated 72 statements cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa4f871496268d6d",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptString` has 57 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 51 statements in WriteEscapedJavaScriptString: ~10 setup/if statements, 9 switch cases x2 (assign+break), default-branch ifs, continues, then ~30 more after the switch; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WriteEscapedJavaScriptString is only partially shown, so the 57-statement count lies beyond the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-ce9484246c42a1b8",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "cursed_renderer.go",
+      "message": "Function `flush` has 80 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 296,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted well over 100 statements in flush() (view, frameArea, content, many if/switch headers and WriteString calls, var blocks, for loop, bytes.Buffer logic); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The flush excerpt breaks off inside its resize logic, so the 80-statement count cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-a0b1b249e48fef58",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "Function `Run` has 57 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1018,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted ~75 statements in Run() (guard, channel/ctx setup, defers, if/else input handling, size, renderer setup, profile, model/init, event loop, killed handling, shutdown, return); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Program.Run is truncated just after its initial setup, so the 57-statement claim is unverifiable here."
+        }
+      ]
+    },
+    {
+      "id": "EA-3c2ac50674396066",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "Function `execute` has 55 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 905,
+      "verdict": "true_positive",
+      "reason": "Long command dispatcher; statement count above 50 is plausible from the body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted ~55 statements in execute() (nil check, deprecation, flag init, ParseFlags, help/version handling, hooks for-loops with nested ifs/breaks, Run/PostRun branches, final return); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The execute excerpt ends mid-function, so the 55 statements reported cannot be counted from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the first ~15 lines of `execute` (lines 905-920); the count of 55 statements depends on the unshown remainder of the function body."
+        }
+      ]
+    },
+    {
+      "id": "EA-d043864c5263499e",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Function `getCompletions` has 63 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 316,
+      "verdict": "true_positive",
+      "reason": "Long completion function; count above 50 is plausible.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted ~80 statements in getCompletions() excluding closure bodies (setup vars, Traverse/Find branching, flag checks, completion loops with nested ifs, completionFn logic, returns); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "getCompletions is cut off early in its traversal logic, so the 63-statement count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the top of `getCompletions` is visible (lines 316-331), so the claimed 63 statements cannot be verified without the rest of the function."
+        }
+      ]
+    },
+    {
+      "id": "EA-d098fac92384950a",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `getValue` has 84 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 418,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read tree.go getValue; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the opening of `getValue` (line 418 onward); the full body extending to 84 statements is not visible, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-a1cf1a536151c680",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `findCaseInsensitivePathRec` has 75 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 703,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read tree.go findCaseInsensitivePathRec; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `findCaseInsensitivePathRec` are shown, so the claimed 75-statement body is beyond the excerpt and cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-107858cc927a81f3",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+      "message": "Function `random` has 65 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 255,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 65+ statements in random(): argument guards, start/end if-else chain, ASCII range checks, ok/hasMatch loops with nested ifs, builder/gap/cache setup, while rejection loop with switch and nested ifs/throws; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops shortly after the `random` signature, so the 65-statement body is not shown to verify."
+        }
+      ]
+    },
+    {
+      "id": "EA-472bde9d68ceecfc",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "message": "Function `createNumber` has 59 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 355,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 60+ statements in createNumber(): null/blank guards, hex-prefix loop, hex branch with several returns, mant/dec/exp assignments in nested if/else, switch on lastChar with try/catch blocks, final float/double/BigDecimal handling; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of `createNumber`, so the claimed 59 statements are not visible to confirm."
+        }
+      ]
+    },
+    {
+      "id": "EA-1d5d7a5822386578",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrSubstitutor.java",
+      "message": "Function `substituteRecursive` has 67 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1169,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 60+ statements in substituteRecursive(): 11 initial declarations, outer while, nested while, escape handling, variable-name parsing with for loop, default-value handling, substitution and bookkeeping assignments; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `substituteRecursive` is shown; the full body counted at 67 statements lies past the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-1264732d20346cd5",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/DurationFormatUtils.java",
+      "message": "Function `lexx` has 59 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 636,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read DurationFormatUtils.java lexx; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off early in `lexx`, so the 59-statement count over the full method cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f56a8d42b1c633d",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java",
+      "message": "Function `parsePattern` has 79 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1367,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read FastDatePrinter.java parsePattern; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `parsePattern` is shown, so the claimed 79 statements extend well beyond the excerpt and cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-1b4860a117555969",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java",
+      "message": "Function `parse` has 66 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Long hand-written parser; count above 50 is plausible.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read ISO8601Utils.java parse; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first lines of `parse`, so the 66-statement count over the whole method is not verifiable from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`parse`'s body extends beyond line 162, and the 66-statement count covers code the excerpt does not show."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f0a8d3fc8a26758",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `doPeek` has 70 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 581,
+      "verdict": "true_positive",
+      "reason": "Long state machine; count above 50 is plausible.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read JsonReader.java doPeek; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the start of `doPeek` (line 582 onward through line 596), not its full body, so the stated count of 70 statements cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Line 581 is the `@SuppressWarnings(\"fallthrough\")` annotation rather than the `doPeek` signature at 582, and the excerpt cuts off far too early to confirm the claimed 70 statements."
+        }
+      ]
+    },
+    {
+      "id": "EA-401e70dd9beb2024",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/filter/FilteringParserDelegate.java",
+      "message": "Function `nextToken` has 96 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 264,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read FilteringParserDelegate.java nextToken; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 279 of `nextToken` well before its end, so the claimed 96 statements cannot be confirmed or refuted."
+        }
+      ]
+    },
+    {
+      "id": "EA-34f325bf455d9855",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/filter/FilteringParserDelegate.java",
+      "message": "Function `_nextTokenWithBuffering` has 74 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 704,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read FilteringParserDelegate.java _nextTokenWithBuffering; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `_nextTokenWithBuffering` (lines 704-719) is shown, so the 74-statement count is unverifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a42a4b38632dd6a",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/ReaderBasedJsonParser.java",
+      "message": "Function `nextToken` has 53 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 691,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read ReaderBasedJsonParser.java nextToken; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only displays the beginning of `nextToken` (lines 691-706), so the borderline count of 53 statements cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-87ba783b18688a56",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/ReaderBasedJsonParser.java",
+      "message": "Function `nextName` has 53 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 932,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read ReaderBasedJsonParser.java nextName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `nextName` (932-947) are shown, so its claimed 53 statements cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-b81b53f71bd1fc37",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/ReaderBasedJsonParser.java",
+      "message": "Function `_parseNumber2` has 60 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1565,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read ReaderBasedJsonParser.java _parseNumber2; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the head of `_parseNumber2` (1565-1580), so the reported 60 statements are unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-5d7969f9bbc22f22",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_parseAposName` has 56 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1766,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8DataInputJsonParser.java _parseAposName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `_parseAposName` (1766-1781) is visible, so the 56-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-aef8dfba603f98b6",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `addName` has 52 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1959,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8DataInputJsonParser.java addName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of `addName` (1959-1974), so the marginal count of 52 statements cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4db71f10d0743878",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_readBinary` has 57 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 566,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8StreamJsonParser.java _readBinary; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the first ~16 lines of `_readBinary`; the full body needed to verify the 57-statement count is not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-6c75df917521c576",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `nextToken` has 51 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 713,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8StreamJsonParser.java nextToken; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `nextToken` is visible, so the claimed 51 statements cannot be counted from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-857a7c1bf75dae52",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `nextName` has 57 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 914,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8StreamJsonParser.java nextName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `nextName` is shown; verifying the 57-statement total requires the full function body."
+        }
+      ]
+    },
+    {
+      "id": "EA-d37dfb51cd36dd9d",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `nextNameMatch` has 63 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1118,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8StreamJsonParser.java nextNameMatch; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates `nextNameMatch` after a few lines, so the 63-statement claim cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2acc1f3258680f1",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `parseEscapedName` has 52 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2455,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8StreamJsonParser.java parseEscapedName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `parseEscapedName` is visible, so the 52-statement count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7f6f459b85463b8",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_parseAposName` has 59 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2670,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read UTF8StreamJsonParser.java _parseAposName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops early in `_parseAposName`, so the 59-statement count cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-3599cf9c649159a5",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/WriterBasedJsonGenerator.java",
+      "message": "Function `_prependOrWriteCharacterEscape` has 54 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1902,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read WriterBasedJsonGenerator.java _prependOrWriteCharacterEscape; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `_prependOrWriteCharacterEscape` are shown; the 54-statement total needs the full body."
+        }
+      ]
+    },
+    {
+      "id": "EA-400e2841dc05d9d4",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingJsonParserBase.java",
+      "message": "Function `_addName` has 52 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 716,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read NonBlockingJsonParserBase.java _addName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates `_addName` early, so the claimed 52-statement count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4b009bc995f910d7",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_parseEscapedName` has 78 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2235,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read NonBlockingUtf8JsonParserBase.java _parseEscapedName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `_parseEscapedName` are shown, so its 78-statement count cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-12b4e5276902c85f",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_finishAposName` has 74 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2489,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read NonBlockingUtf8JsonParserBase.java _finishAposName; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off just after the start of `_finishAposName`, so the reported 74 statements cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-7efe71067d3a7529",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_finishPropertyWithEscape` has 52 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2639,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read NonBlockingUtf8JsonParserBase.java _finishPropertyWithEscape; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`_finishPropertyWithEscape` is shown only through its opening branch, leaving the 52-statement claim unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-cbdcb56d4f562b6f",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyStartTag` has 177 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 288,
+      "verdict": "true_positive",
+      "reason": "177-statement switch over tag names; accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read HtmlTreeBuilderState.java inBodyStartTag; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the header and first switch case of `inBodyStartTag` are visible, so the 177-statement count cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening switch of `inBodyStartTag`; the 177-statement count cannot be checked without the full 900+ line file context."
+        }
+      ]
+    },
+    {
+      "id": "EA-b5dc0275996b25b6",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTag` has 71 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 619,
+      "verdict": "true_positive",
+      "reason": "Long tree-builder state handler; accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read HtmlTreeBuilderState.java inBodyEndTag; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of `inBodyEndTag`'s switch, not enough to verify 71 statements."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `inBodyEndTag`'s switch is shown (lines 619-634), so the claimed count of 71 statements is unverifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-f6fc620c2fa87e46",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTagAdoption` has 66 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 794,
+      "verdict": "true_positive",
+      "reason": "Long adoption-agency implementation; accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read HtmlTreeBuilderState.java inBodyEndTagAdoption; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`inBodyEndTagAdoption` is shown only through its opening loop, so the 66-statement count is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends inside the `while (true)` loop of `inBodyEndTagAdoption`; the count of 66 statements depends on unseen code."
+        }
+      ]
+    },
+    {
+      "id": "EA-e9f0fd0c000774b5",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 55 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 973,
+      "verdict": "true_positive",
+      "reason": "Long tree-builder state handler; accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read HtmlTreeBuilderState.java process; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first branch of `process` is shown, so the reported 55 statements cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the first `else if` chain of `InTable.process` is visible (through line 987); the 55-statement count cannot be confirmed from the excerpt alone."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd59b669c3e5d694",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi/src/main/java/com/squareup/moshi/JsonUtf8Reader.java",
+      "message": "Function `doPeek` has 66 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 245,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read JsonUtf8Reader.java doPeek; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends partway through `doPeek`'s first switch, leaving the 66-statement claim unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-60a221e2be5d6ea1",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/fetch.js",
+      "message": "Function `<anonymous>` has 95 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 205,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the start of the async arrow function at line 205, so its 95-statement count cannot be verified from the visible body."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The site is the in-scope axios fetch adapter's returned `async (config) => {\u2026}` handler; the visible destructuring-plus-request body is consistent with a large 95-statement closure worth splitting."
+        }
+      ]
+    },
+    {
+      "id": "EA-061cd8a25cf3d3a5",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `dispatchHttpRequest` has 161 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 568,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of dispatchHttpRequest are shown (lines 568-583), so the claimed 161 statements lie in code beyond the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "dispatchHttpRequest is a correctly named production function (`wrapAsync(async function dispatchHttpRequest(resolve, reject, onDone))`) in an adapter, so the 161-statement breakdown is in-scope and on-target."
+        }
+      ]
+    },
+    {
+      "id": "EA-e0aafaba9fad17b7",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/cli.js",
+      "message": "Function `execute` has 94 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 199,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read cli.js execute; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of execute (lines 199-214), so the 94-statement count cannot be confirmed from the visible body."
+        }
+      ]
+    },
+    {
+      "id": "EA-9ccfb0ec80f50414",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "Function `testInvalidTemplate` has 57 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1437,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read rule-tester.js testInvalidTemplate; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "testInvalidTemplate is truncated at line 1452, so the claimed 57 statements extend past the excerpt and cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc36f1304791c776",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/no-unused-vars.js",
+      "message": "Function `handleFixes` has 61 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 976,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "handleFixes owns 8 top-level consts plus ~13 top-level if blocks whose bodies hold ~61 semicolon statements and ~52 if headers (nested function declarations excluded); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "handleFixes is shown only through line 991, so its 61-statement body is not fully visible to verify the count."
+        }
+      ]
+    },
+    {
+      "id": "EA-b332fb087f7b5e08",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/AdapterGenerator.kt",
+      "message": "Function `generateFromJsonFun` has 170 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 319,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read AdapterGenerator.kt generateFromJsonFun; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "generateFromJsonFun is cut off at line 334, so the reported 170 statements lie in code the excerpt does not show."
+        }
+      ]
+    },
+    {
+      "id": "EA-35f44c756130f2f1",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/KotlinJsonAdapter.kt",
+      "message": "Function `create` has 62 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 51 in create(): 5 early if/returns, try/catch, 5 requires, ~8 vals, for loop with ~25 statements (ifs, requires, continues, vals), etc.; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The create method is shown only through line 205, so the 62-statement count cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-c1b09160a3027b22",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-logging-interceptor/src/main/kotlin/okhttp3/logging/HttpLoggingInterceptor.kt",
+      "message": "Function `intercept` has 79 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 165,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read HttpLoggingInterceptor.kt intercept; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "intercept is truncated at line 180, so the claimed 79 statements are in code beyond the visible excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-67e92f0ef2aa32af",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Cookie.kt",
+      "message": "Function `parse` has 67 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 450,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read Cookie.kt parse; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the first ~10 lines of `parse`, so the claimed 67 statements cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ae3ae2d8969d6ba6",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/HttpUrl.kt",
+      "message": "Function `parse` has 70 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1332,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read HttpUrl.kt parse; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening lines of `HttpUrl.parse` are shown, so the 70-statement count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-339a13077f536b09",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-CacheControlCommon.kt",
+      "message": "Function `commonParse` has 64 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 59 statements in commonParse: 14 var declarations, 2 whens with 12 single-assignment arms, ~25 loop-body vals/assignments/ifs, final if+return; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off after the variable declarations of `commonParse`, so the 64-statement claim cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-0d9c094554156187",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-HostnamesCommon.kt",
+      "message": "Function `decodeIpv6` has 53 statements (> 50).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "decodeIpv6 has about 44 statements: 5 declarations, 2 while headers, the if/else-if headers, their single-statement bodies (returns/breaks), the assignments and increments, copyInto, fill, return. Even counting the else keywords it stays at 46 or below, so <= 50.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Counted 44 statements in decodeIpv6 (5 declarations, 2 whiles, ~12 ifs/else-ifs, 7 returns, assignments, copyInto/fill); <= 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `decodeIpv6` body is truncated after a few lines, so the 53-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-62b36ea7b45a611f",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/CallServerInterceptor.kt",
+      "message": "Function `intercept` has 71 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read CallServerInterceptor.kt intercept; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`intercept` is only partially shown (through the try block start), so the 71-statement claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-d88e8e8013827d9e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/idn/Punycode.kt",
+      "message": "Function `decodeLabel` has 53 statements (> 50).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Counted 48 statements in decodeLabel (vars, 2 whiles, for, ~8 ifs, returns, assignments); within 10% of 50 and ambiguous whether when-expression arms count."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`decodeLabel` is truncated after its opening lines, so the 53-statement count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7029d1f8b66e202c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/publicsuffix/PublicSuffixDatabase.kt",
+      "message": "Function `binarySearch` has 53 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 52 statements in binarySearch (3 vars, 4 whiles, for, ~10 ifs, ~25 assignments/vals, break/return); > 50, just over threshold."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the head of `binarySearch` is shown, so the 53-statement claim cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-1a4682c4d54b8d56",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/tls/OkHostnameVerifier.kt",
+      "message": "Function `verifyHostname` has 57 statements (> 50).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 108,
+      "verdict": "false_positive",
+      "reason": "The pattern overload of verifyHostname has 26 statements (2 var copies, 10 if headers plus 10 bodies, 1 reassignment, 2 vals, final return), and the certificate overload has 2. Both <= 50.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Counted 26 statements in verifyHostname (2 var copies, 11 ifs, 11 returns/assignments, 2 vals); <= 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`verifyHostname` is cut off mid-body, so the 57-statement count is unverifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-a7f4b1582e861484",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/ws/WebSocketExtensions.kt",
+      "message": "Function `parse` has 58 statements (> 50).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Counted exactly 50 statements in parse (6 vars, for, 2 whiles, 2 whens, ~14 if+assign pairs, return); at threshold, analyzer reports 58, rule ambiguity for when arms."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows `parse` through line 103 (loop start), so its 58-statement count cannot be verified from the visible body."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e727a5cc4f08a0c",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Options.kt",
+      "message": "Function `buildTrieRecursive` has 58 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `buildTrieRecursive` has 58 statements (> 50); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`buildTrieRecursive` is truncated at line 124 where it has only begun, so the claimed 58 statements are not countable from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "buildTrieRecursive is the exact named private fun in okio production code; its loop/recursive trie construction body matches the reported 58-statement length even though the length is performance-justified."
+        }
+      ]
+    },
+    {
+      "id": "EA-57111c910610b6c8",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `selectPrefix` has 66 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `selectPrefix` has 66 statements (> 50); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`selectPrefix` is shown only through line 160 (start of its main while loop), so the 66-statement claim lies beyond the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "selectPrefix is the named internal fun in okio production code driving the `navigateTrie@ while(true)` scan; the claim holds on the in-scope body per the stated threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-f25f27072ee9da41",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWriteUtf8` has 69 statements (> 50).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 942,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonWriteUtf8` has 69 statements (> 50); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Counted 47 statements in commonWriteUtf8 (3 requires, loop, when, ~35 assignments/vals/ifs across 4 branches, return); within 10% of 50 and would be 51 if when-branches were counted."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`commonWriteUtf8` is cut off at line 957 inside its transcode loop, so the 69-statement count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the start of `commonWriteUtf8` through line 957, so the remaining body needed to verify the claimed 69 statements is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-b386b5243b88b3a4",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWrite` has 75 statements (> 50).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 1152,
+      "verdict": "false_positive",
+      "reason": "The largest commonWrite overload (source: Buffer) has about 27 statements; the rest of its length is a long comment block. The other overloads have 2 to 9 statements. All <= 50.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Counted 25 statements in commonWrite (var, require, check, while, ifs, vals, assignments, return); <= 50; the rest is comments."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`commonWrite` is truncated at line 1167 in its leading comment, with the entire body unshown, so 75 statements cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening lines and comment block of `commonWrite`; the full body required to verify 75 statements is not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-9127ccf46a912138",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Function `main` has 61 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 562,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`main` is shown only through its parameter list (line 577), so its 61-statement body is entirely outside the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (108) at line 562"
+        }
+      ]
+    },
+    {
+      "id": "EA-b7decaef991863cf",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/nodes.py",
+      "message": "Function `whitespace` has 70 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`whitespace` is cut off at line 195 after only the initial checks, so the 70-statement claim cannot be counted from the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (102) at line 180"
+        }
+      ]
+    },
+    {
+      "id": "EA-4bc899584b54bf29",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `do_transform` has 72 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1536,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`do_transform` is shown only through line 1551 (its setup), so the 72-statement count lies beyond the visible body."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (95) at line 1536"
+        }
+      ]
+    },
+    {
+      "id": "EA-e14e1cb3572bfd91",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `do_transform` has 54 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2334,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 2349 mid-body of `do_transform`, so the claimed 54-statement count cannot be verified from the shown code."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (70) at line 2334"
+        }
+      ]
+    },
+    {
+      "id": "EA-e9949c9422355609",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Function `parse_graminit_c` has 76 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `parse_graminit_c` signature and docstring start are shown; the body extends well beyond the excerpt, so 76 statements cannot be counted."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (118) at line 86"
+        }
+      ]
+    },
+    {
+      "id": "EA-1b5512866e8eb5ee",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `export_svg` has 55 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 2352,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off inside the `export_svg` docstring before any body statements, so the 55-statement claim is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the signature and start of `export_svg`; the body needed to confirm 55 statements extends beyond the visible lines."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (94) at line 2352"
+        }
+      ]
+    },
+    {
+      "id": "EA-d2951fd84775da69",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `__rich_console__` has 62 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 579,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first few lines of `__rich_console__`, so the stated 62-statement count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first lines of markdown.py `__rich_console__`; the rest of the body required to verify 62 statements is not visible."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (87) at line 579"
+        }
+      ]
+    },
+    {
+      "id": "EA-dc2354d6a56127a9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/panel.py",
+      "message": "Function `__rich_console__` has 51 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 141,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `__rich_console__` body continues past line 156 in the excerpt, so the marginal 51-statement count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only about 16 lines of panel.py `__rich_console__`, far too few to contain 51 statements, so the full body is not shown."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (57) at line 141"
+        }
+      ]
+    },
+    {
+      "id": "EA-596b91c3467465e4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Function `_traverse` has 97 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 621,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `_traverse` (including a nested function) is shown; the 97-statement count depends on body content not in the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of `_traverse` including a nested function; the claimed 97 statements cannot be verified from the visible portion."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (162) at line 621"
+        }
+      ]
+    },
+    {
+      "id": "EA-4aaee864ee84a6fa",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Function `_get_syntax` has 57 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 652,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `_get_syntax` excerpt ends mid-body at line 667, so the 57-statement claim cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of `_get_syntax`; the body needed to count 57 statements is not shown."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (63) at line 652"
+        }
+      ]
+    },
+    {
+      "id": "EA-be621baf8fa14a6c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_render` has 70 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 755,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `_render` body is truncated after line 770, so the 70-statement count is unverifiable from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first lines of `_render`; the 70-statement count cannot be verified from the visible portion."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0915 (76) at line 755"
+        }
+      ]
+    },
+    {
+      "id": "EA-c46761fb3e9fb553",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/walk.rs",
+      "message": "Function `spawn_senders` has 76 statements (> 50).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 443,
+      "verdict": "true_positive",
+      "reason": "Closure statements count toward the enclosing function. walker.run plus its closure (8) and the nested Box::new move closure (about 50 if headers, returns, lets and assignments) give about 60 statements, which is > 50. Position B wrongly excluded closures.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "spawn_senders owns only 1 statement (walker.run(...)); the ~70 statements are inside nested closures, which are excluded; count 1 <= 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 458 mid-body of `spawn_senders`, so the claimed 76 statements cannot be verified from the shown lines."
+        }
+      ]
+    },
+    {
+      "id": "EA-4842105087bafabd",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `parse` has 109 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read role.rs parse; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the top declarations of `parse` are shown and its body extends far beyond the excerpt, so the 109-statement count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-4fa11d1c5618b544",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `encode_headers` has 137 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 662,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read role.rs encode_headers; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `encode_headers` body continues past the excerpt's rewind closure, so the 137-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-528b68c28c758b71",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `parse` has 68 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1037,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read role.rs parse; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `parse` loop body extends well beyond the shown lines, so the 68-statement count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7a4e16cf171dfa8",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "Function `<anonymous>` has 73 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 512,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read render.ts <anonymous>; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening lines of the `build` arrow function are shown, so the 73-statement count (and unresolved function name) cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9987119bea4a5a21",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/linear-router/router.ts",
+      "message": "Function `match` has 55 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 55 in match(): consts, labeled loop, nested ifs with push/continue, two inner for loops with ~15 statements each, throw; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`match` continues beyond the excerpt, so the 55-statement count cannot be confirmed from the visible portion."
+        }
+      ]
+    },
+    {
+      "id": "EA-76ac557b47d2d462",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/trie-router/node.ts",
+      "message": "Function `search` has 52 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 51 in search(): 8 setup statements, nested for loops with consts, ifs, pushes, continues and partOffsets loop; > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `search` body extends beyond the excerpt, so the borderline 52-statement count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-2e6ff48ebb8fc9e9",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `<anonymous>` has 64 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted ~100 statements in convertIPv6ToBinary (5 declarations, while loop with ~25 ifs/throws, ipv4 branch, 3 for loops, final checks); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `convertIPv6ToBinary` is shown, so the 64-statement count cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-b7ca5aecdff43d8b",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/http/resolveResponse.ts",
+      "message": "Function `resolveResponse` has 53 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 53 owned statements in resolveResponse (15 top-level declarations, try, 3 guard ifs+throws, rpcCalls, switch branches with ~25 consts/ifs/returns, then jsonl branch); > 50 excluding closure bodies."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening lines of `resolveResponse` (213-227), so the claimed 53-statement count for this whole function cannot be verified from the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates `resolveResponse` at line 228, mid-body, so the claimed count of 53 statements cannot be verified from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-7977ff4aa519a7ae",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/locales/en.ts",
+      "message": "Function `<anonymous>` has 53 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 4,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read en.ts <anonymous>; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of the `errorMap` arrow function's switch (lines 4-19) is shown, so its 53-statement count cannot be confirmed, and the empty symbol name leaves the counted scope ambiguous."
+        }
+      ]
+    },
+    {
+      "id": "EA-15d16dc2e1ab0cd0",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Function `_parse` has 94 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 732,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read types.ts _parse; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt covers only lines 732-746 of `ZodString._parse`, far short of the function's body, so the reported 94 statements cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `_parse` (lines 732-746) is shown; the function continues past the excerpt, so the 94-statement count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-b342d7c228b98ded",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "message": "Function `convertBaseSchema` has 143 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 390,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read from-json-schema.ts convertBaseSchema; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first ~15 lines of `convertBaseSchema` are shown, so the claimed 143 statements over this long function cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`convertBaseSchema` is cut off inside the `schema.if !== undefined` check at line 405, leaving the claimed 143 statements unverified."
+        }
+      ]
+    },
+    {
+      "id": "EA-aba74f79c746c700",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateStringFormatCheck` has 66 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 783,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read compile.ts generateStringFormatCheck; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of `generateStringFormatCheck` (783-798), so its 66-statement count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 798 with the format-check if-chain still open, so the 66-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d791f5f93978baa",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateCheck` has 84 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 958,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read compile.ts generateCheck; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening lines of `generateCheck` (958-973) are shown, so the reported 84 statements cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-2358b2da1de779bd",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateObjectCheck` has 56 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 1190,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >= 51 statements in generateObjectCheck excluding doc.indented closure bodies (9 consts, ifs, for loop with ~15 stmts, catchall ifs, writes); > 50."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt covers only lines 1190-1205 of `generateObjectCheck`, so the claimed 56 statements cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`generateObjectCheck` continues past line 1205 (`const keys = Object.keys(shape)`), so the 56-statement count cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-f454119b8b257908",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/visit.ts",
+      "message": "Function `mapInner` has 54 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 59,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read visit.ts mapInner; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of the nested `mapInner` function (59-74) is shown, so its 54-statement count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`mapInner`'s switch is cut off at `if (def.catchall) {` on line 74, leaving the 54-statement count unverifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca79548c94f7a059",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/he.ts",
+      "message": "Function `<anonymous>` has 55 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "The function has more statements than the metric threshold of 50.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Read he.ts <anonymous>; counted well over 50 owned statements (semicolon/statement lines plus compound headers, nested closures excluded), > 50; production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The reported function is the anonymous `(issue) => { ... }` translator whose switch body extends past the excerpt, so the 55-statement count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The reported arrow function at line 108 ends mid-switch (`case \"invalid_value\"`) at line 123, so the 55-statement count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-5955aba7bd1b687c",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/triage-signal.ts",
+      "message": "Function `buildReport` has 78 statements (> 50).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 475,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, release script, docs/fuzz/codegen scripts, Gradle build-logic), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The site is `scripts/triage-signal.ts`, a repo tooling script, which is outside the detector's production-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`scripts/triage-signal.ts` is repo tooling (it generates a triage report), which is outside the scope of a product-code statement-count rule regardless of the 78-statement count."
+        }
+      ]
+    }
+  ]
+}

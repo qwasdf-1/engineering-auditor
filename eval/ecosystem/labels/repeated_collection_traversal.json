@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "detector": "repeated_collection_traversal",
+  "labels": [
+    {
+      "id": "EA-b0660bab2e7de644",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/router.ts",
+      "message": "Function `mergeRouters` performs 4 pure terminal traversals of unchanged `routerList`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 509,
+      "verdict": "true_positive",
+      "reason": "`routerList` is traversed four times by pure map/reduce passes as claimed.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "mergeRouters runs a handful of passes over a small router list once at router-composition (startup) time, and the reduces carry distinct conflict-detection throws, so the O(p*n) concern is immaterial."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only `routerList.map` (514) and `routerList.reduce` (516); confirming the claimed 4 traversals needs the rest of the function spanning lines 509-564."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only routerList.map and routerList.reduce, while the claimed four terminal traversals span past the visible function body."
+        }
+      ]
+    }
+  ]
+}

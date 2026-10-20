@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/repository-graph.schema.json",
+  "title": "Engineering Auditor Repository Graph",
+  "type": "object",
+  "required": ["schema_version", "nodes", "edges"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "repo_graph_id": { "type": "string" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "node_kind"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "node_kind": { "type": "string", "minLength": 1 },
+          "language": { "type": "string" },
+          "line_count": { "type": "integer", "minimum": 0 },
+          "imports": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "file": { "type": "string" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "edge_kind"],
+        "properties": {
+          "from": { "type": "string", "minLength": 1 },
+          "to": { "type": "string", "minLength": 1 },
+          "edge_kind": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

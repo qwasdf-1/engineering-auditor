@@ -1,0 +1,1441 @@
+{
+  "schema_version": 1,
+  "detector": "excessive_nesting_depth",
+  "labels": [
+    {
+      "id": "EA-a424ce4f420b7bea",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs-event.c",
+      "message": "Function `uv__process_fs_event_req` reaches nesting depth 8 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 435,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__process_fs_event_req nests if (REQ_SUCCESS) > if > do-while > while-style loops with inner ifs through the function body (brace depth 9 incl. function), so depth 8 holds."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 450 while the claimed depth-8 site is at line 493, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-de38d7c92e0037e8",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/minizip.c",
+      "message": "Function `main` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 255,
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The site is contrib/minizip/minizip.c, contributed sample/tooling code outside the production-source scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-39fb6a7d9ac181b3",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Function `QueryMultipleAsync` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1039,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: the deepest path is catch > if > if > try/catch, 4 levels; the count of 6 came from catch clauses nesting inside their own try, now fixed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "QueryMultipleAsync's deepest path is catch > if(reader) > if(!IsClosed) > try, i.e. about 4 levels under the method (max brace depth 5 incl. method brace), not the reported 6."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The claimed depth-6 point at line 1059 lies beyond the ~1055 excerpt, so the nesting count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-023a6caf0ed21bbc",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs",
+      "message": "Function `WriteEscapedJavaScriptString` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 151,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WriteEscapedJavaScriptString has a for loop with nested switch/if blocks over 170 lines, max brace depth 8 including method, supporting 7."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only shallow if/else levels are visible and the claimed depth-7 line 231 is outside the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-4c304f0074723450",
+      "repository": "chi",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `findRoute` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 414,
+      "verdict": "true_positive",
+      "reason": "Route-matching loop reaches depth 6 as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "findRoute: for(1) > switch(2) > for(3) > if(4) > if isLeaf(5) > if h!=nil(6) / for endpoints(6) reaches depth 6 > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only a for and switch, while the claimed deepest line 479 is beyond the visible code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only covers lines 409-429 (nesting visible up to the switch at depth 2); the deepest reported line 479 is not shown, so the depth-6 claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-aa14a86b2c776487",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Function `getCompletions` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 327,
+      "verdict": "true_positive",
+      "reason": "Completion function nests 7 deep as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getCompletions spans ~260 lines with nested if/for/closures reaching brace depth 8, confirming 7."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Visible nesting is shallow and the claimed depth-7 point at line 546 is far past the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only lines 322-342 of `getCompletions` (an if/else at depth 1), while the deepest reported line 546 is far outside the window, so the depth-7 claim cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-58d5fcd34502728e",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `getValue` reaches nesting depth 8 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 422,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt itself shows for\u2192if\u2192if\u2192for\u2192if\u2192if, depth 6 at line 433, already exceeding the depth-5 budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-042c6e66264c0f13",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `findCaseInsensitivePathRec` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 707,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "for(1) > if len(path)==0(2) > if fixTrailingSlash(3) > for(4) > if c=='/'(5) > if(6); also later for>if>if>for>if chain at depth 6+; > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 722 while the reported deepest nesting is at line 873, so depth 7 cannot be verified from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-c4ab4c1d031de15f",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/MethodUtils.java",
+      "message": "Function `getAnnotation` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 279,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getAnnotation has for > try > catch > if nesting inside 'if (annotation == null && searchSupers)', brace depth 7 incl. method."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only lines 274-294 are shown and the deepest nesting is reported at line 320, so the depth-7 claim is unverifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-b7d8b5cc12823d2f",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrSubstitutor.java",
+      "message": "Function `substituteRecursive` reaches nesting depth 8 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1181,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "substituteRecursive has while > if > nested if/else for variable and default handling, brace depth 9 incl. method, confirming 8."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 1196 but the deepest nesting is reported at line 1231, so depth 8 cannot be confirmed here."
+        }
+      ]
+    },
+    {
+      "id": "EA-27993a70aaf2a748",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/DateUtils.java",
+      "message": "Function `modify` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1175,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DateUtils.modify has nested loops and ifs over fields/ranges (brace depth 7 incl. method), consistent with 6."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The shown region (1170-1190) only reaches shallow guards while the deepest line is 1227, so depth 6 is not verifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-8f9b0b6644232158",
+      "repository": "gson",
+      "language": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/CollectionsDeserializationBenchmark.java",
+      "message": "Function `timeCollectionsReflectionStreaming` reaches nesting depth 6 (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Benchmark loop nests 6 deep as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`CollectionsDeserializationBenchmark.java` is a benchmark class in the metrics module, which is outside the detector's scope, even though the for/while/for/if chain genuinely nests to 6 on line 123."
+        }
+      ]
+    },
+    {
+      "id": "EA-58171f41507cb80d",
+      "repository": "gson",
+      "language": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/ProtoTypeAdapter.java",
+      "message": "Function `deserialize` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 289,
+      "verdict": "true_positive",
+      "reason": "Deserializer nests 6 deep as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ProtoTypeAdapter.deserialize has for > if > switch/if nesting over fields (brace depth 7 incl. method)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 304 with only a `try` and one `if` visible, while the deepest nesting is reported at line 320."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 304 with only a `try` and an `if` visible, so the deepest reported line 320 and its depth-6 claim are unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-e37b80eba8c995a4",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/Version.java",
+      "message": "Function `compareTo` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The nested `if (diff == 0)` chain at lines 131-142 genuinely nests seven levels, with line 142 `if (other.isSnapshot())` at depth 7."
+        }
+      ]
+    },
+    {
+      "id": "EA-e811f34b16d34209",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `parseEscapedName` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1574,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parseEscapedName has while > if > while/if ladders over quad bytes (brace depth 7 incl. method)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only lines 1569-1589 are shown (max visible depth ~3) while the deepest nesting is reported at line 1621, so depth 6 is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-74684e6dd13717df",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_parseAposName` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1769,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_parseAposName copies parseEscapedName's nested while/if structure (brace depth 7 incl. method)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 1784 with shallow guards/loop visible, while the deepest nesting is reported far later at line 1828."
+        }
+      ]
+    },
+    {
+      "id": "EA-91fee8faa062e58b",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `parseEscapedName` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2463,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `while (true)` name-parsing loop nests quote, backslash, and surrogate `if` checks (2464-2477) and the function runs on to the reported deepest line 2516, so the depth-6 claim holds even though the code is intentionally hand-optimized."
+        }
+      ]
+    },
+    {
+      "id": "EA-f4bc834a7f4a0087",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_parseAposName` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2672,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_parseAposName` is a long manual parser (starting line 2670) whose body continues past the excerpt toward deepest line 2741, matching the reported nesting depth 6."
+        }
+      ]
+    },
+    {
+      "id": "EA-c719334450069933",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_finishAposName` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2495,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_finishAposName`'s `while (true)` loop with nested escape/quote checks (2504-2510) extends to deepest line 2573, consistent with depth 6."
+        }
+      ]
+    },
+    {
+      "id": "EA-a47d78068db4c1c9",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/util/TextBuffer.java",
+      "message": "Function `contentsAsString` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 507,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`contentsAsString` already nests four levels of `if` in the visible excerpt (507-520) with further branches toward line 542, so depth 6 is credible."
+        }
+      ]
+    },
+    {
+      "id": "EA-2a85afc1cbe37d09",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/core/Axios.js",
+      "message": "Function `request` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "try/catch/if chains reach depth 6 as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`request`'s try/catch plus nested `if`/`try` stack-cleanup logic (41-55) continues to line 70, supporting the reported depth 6."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Visible nesting reaches only the inner `if (typeof dummyStack === 'string')` at depth 4; the deepest reported line 70 lies beyond the excerpt, so depth 6 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-c632d691c1acbfe7",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/linter.js",
+      "message": "Function `ruleId` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1119,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `forEach(ruleId => ...)` callback nested inside the config loop (1114-1119) is genuinely nested control flow, matching the reported depth."
+        }
+      ]
+    },
+    {
+      "id": "EA-55c6359d75208493",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "Function `testInvalidTemplate` reaches nesting depth 7 (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1461,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The finding sits in ESLint's `lib/rule-tester/rule-tester.js`, a test-tooling module outside the detector's production-code scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 1672"
+        }
+      ]
+    },
+    {
+      "id": "EA-b7b57b5104c7c188",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "Function `` reaches nesting depth 9 (> 5).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1711,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "It is in the same `rule-tester` test utility and reports no function symbol, so it is out of the detector's scope/attribution."
+        }
+      ]
+    },
+    {
+      "id": "EA-8a963abe5644d28b",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent-legacy.js",
+      "message": "Function `checkIndentInArrayOrObjectBlock` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 829,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "checkIndentInArrayOrObjectBlock has nested ifs and forEach callbacks (brace depth 7 incl. function)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The function `checkIndentInArrayOrObjectBlock` starts at 827 but its deepest nesting is at line 915 while the excerpt only reaches line 844, so depth 6 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-52ac595febc72adc",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/no-unused-vars.js",
+      "message": "Function `collectUnusedVariables` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 766,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first few levels of `collectUnusedVariables` (if at 766, for at 767) are visible, but the reported depth 6 is at line 862, beyond the excerpt."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 862"
+        }
+      ]
+    },
+    {
+      "id": "EA-5434f63f17096bf1",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/prefer-const.js",
+      "message": "Function `checkGroup` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 407,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only two nesting levels of `checkGroup` (if at 407, if at 419) before cutting off, while deepest_line 444 is outside the shown code."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 444"
+        }
+      ]
+    },
+    {
+      "id": "EA-b1d22cfc6158399a",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/require-unicode-regexp.js",
+      "message": "Function `fix` reaches nesting depth 6 (> 5).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 202,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `fix` method's body shows just two nested ifs in the excerpt but the reported deepest line 227 and claimed depth 6 depend on enclosing structure not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-c88a0c70694955e6",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/eslint-fuzzer.js",
+      "message": "Function `predicate` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 214,
+      "verdict": "false_positive",
+      "reason": "Tooling code, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/eslint-fuzzer.js is fuzzing/tooling code outside the detector's source scope, even though the nested try/catch in `predicate` exists."
+        }
+      ]
+    },
+    {
+      "id": "EA-0e1c051136c069a4",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/fetch-docs-links.js",
+      "message": "Function `<anonymous>` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "Tooling code, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/fetch-docs-links.js is a tooling/maintenance script outside the detector's scope regardless of the nested loops in the async IIFE."
+        }
+      ]
+    },
+    {
+      "id": "EA-dbf12cc6f1b9ef7c",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/update-rule-type-headers.js",
+      "message": "Function `getTextPositionsMap` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 143,
+      "verdict": "false_positive",
+      "reason": "Tooling code, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/update-rule-type-headers.js is a codegen/tooling script outside the detector's scope, so the nesting in `getTextPositionsMap` is not in-scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 160"
+        }
+      ]
+    },
+    {
+      "id": "EA-4c1b08b9fd5003e2",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/route.js",
+      "message": "Function `addNewRoute` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 285,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt of `addNewRoute` ends at line 300 while the claimed depth-6 site is at line 310, so the nesting cannot be verified."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 310"
+        }
+      ]
+    },
+    {
+      "id": "EA-3b9ca6d16874c7f6",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/ws/WebSocketExtensions.kt",
+      "message": "Function `parse` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 101,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WebSocketExtensions.parse has a while loop with nested if/when/lambdas reaching brace depth 8 incl. function."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The alleged depth-6 point (line 134) lies beyond the excerpt (ends line 116), so `parse`'s nesting count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-58e9264ba50e66e2",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `selectPrefix` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "selectPrefix has while > else-if > while > if > if > brace-less if; the final 'if (!scanComplete) break' sits at logical depth 6."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The deepest line 187 lies outside the excerpt (ends line 161), so `selectPrefix`'s reported depth 6 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-aeca174e6acce2d7",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Function `get_features_used` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1591,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_features_used has for > elif/if chains with nested comprehension and match checks (indent 7 levels under def), confirming 6."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The claimed deepest line 1653 is not shown (excerpt ends line 1606), so `get_features_used`'s depth cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-e6ff28f5735f4c9c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/comments.py",
+      "message": "Function `stringify_node` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 517,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Miscount: the nested stringify_node's depth included the enclosing loops (fixed: depth is per function).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "At the claimed deepest line 520 the nested closure's own control flow is only about 3 levels deep (`if isinstance` > `if n.type` > `if (`), so the reported depth 6 appears to include the enclosing scope of `stringify_node`."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc700f4ca43a4886",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pytree.py",
+      "message": "Function `_iterative_matches` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 968,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_iterative_matches has while > for > if > for > for > if (visible in the body) i.e. 6 levels under def."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The claimed deepest line 986 is beyond the excerpt (ends line 983), so `_iterative_matches`' depth cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f7e364b0f84fb83b",
+      "repository": "nlohmann-json",
+      "language": "python",
+      "path": "docs/mkdocs/scripts/check_structure.py",
+      "message": "Function `check_structure` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "Documentation tooling, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "docs/mkdocs/scripts/check_structure.py is a documentation build/validation script, i.e. tooling code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-b8c57ef30a962c0e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_wrap.py",
+      "message": "Function `divide_line` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Word-wrapping loop reaches depth 6 as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "divide_line has while > for/if chains nested to indent level 7 under def (lines 44-80), confirming depth 6."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The claimed deepest line 61 is beyond the excerpt (ends line 59), so `divide_line`'s depth cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 59 inside the body of `if fold:`, and the deepest reported line 61 (which would open the sixth level) is just past the window, so the claim is unverified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b593abba28f57a1",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `_write_buffer` reaches nesting depth 8 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2063,
+      "verdict": "true_positive",
+      "reason": "Lock/branch/loop nesting reaches depth 8 as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_write_buffer has with > if > if > else > if WINDOWS > if legacy_windows > if fileno, indent 10 levels under def, confirming >5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows nesting to depth 5 and the claimed deepest line 2109 is not shown, so the depth-8 count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Nesting shown reaches `if fileno is not None:` at depth 5, but the deepest reported line 2109 lies far beyond the excerpt, so the claimed depth 8 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-1ce1d4cf546106c2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markup.py",
+      "message": "Function `render` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "Markup renderer nests 7 deep as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "render's main loop nests for > elif > if style_name > if open_tag.name.startswith('@') > if parameters > try/except, which reaches the reported depth 7."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The reported max-depth line (191) lies well beyond the shown excerpt (123-143), so the depth-7 count over `render` cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt contains only the `\"[\" not in markup` guard and local setup through line 143; the deepest reported line 191 is outside the window, so depth 7 is unverified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1507f7db3a725ccf",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Function `iter_attrs` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 735,
+      "verdict": "false_positive",
+      "reason": "Nested `iter_attrs` itself is only ~4 deep; its depth includes the enclosing function's blocks.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The fully visible body of the nested `iter_attrs` (for -> if -> try/except/else) nests only about 3 levels, so attributing depth 7 to this function is a miscount."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt shows the full `iter_attrs` closure, whose own nesting is only for -> if -> try/except/else (depth 3), so the claimed depth 7 must be counting enclosing scopes of the closure rather than the function's own control flow."
+        }
+      ]
+    },
+    {
+      "id": "EA-f637ff181da97cb0",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `_render_stack` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 785,
+      "verdict": "true_positive",
+      "reason": "Stack renderer nests 7 deep as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_render_stack nests for frame > if not suppressed > try/else > if last_instruction > for line1 > try, giving depth 7 as reported."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The deepest line 870 for `_render_stack` is outside the excerpt (779-800), so the depth-7 count cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The claimed depth-7 site (line 870) is far past the excerpt, which ends at line 800, so the count cannot be checked against the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-5b20e5524ba9bb5c",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/walk.rs",
+      "message": "Function `poll` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 199,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 212 sits inside match/for/match/match/if nesting well past the budget, so the excessive-nesting claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-a6f1ea9729dda185",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/dispatch.rs",
+      "message": "Function `poll_read` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 226,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "poll_read nests loop > else-if > if can_read_body > match poll_read_body > Ready(Some(Ok)) > if is_data > match try_send_data > Err arm > if, matching depth 7."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The deepest line 256 for `poll_read` is outside the excerpt (221-241), so the depth-7 count is not verifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-68338b1198738f38",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/dispatch.rs",
+      "message": "Function `poll_write` reaches nesting depth 8 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 357,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "poll_write nests loop > else > if let guard > if let Some(item) > if is_data > if eos > if remaining()==0, which supports depth 8."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The deepest line 415 for `poll_write` is not in the shown excerpt (352-372), so depth 8 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-6bcc65fa66c34876",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `encode_headers` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 707,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "for(1) > match(2) > match msg.body(3) > if let(4) > if let prev(5) > if prev!=len(6); depth 6 > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The deepest line 763 for `encode_headers` is outside the excerpt (702-722), so the depth-6 count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f9033eaac52b0ed",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `run` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 167,
+      "verdict": "true_positive",
+      "reason": "Searcher loop nests 6 deep as claimed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 180's `if` is nested inside if/if/if/match/arm blocks, matching the reported depth 6 over `run`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 167-180 nest `if begin` -> `if detect_binary` -> `if keepgoing` -> `Some(last_match)` arm -> `if self.sink_context`, six levels deep, exceeding the budget of 5 in this source file."
+        }
+      ]
+    },
+    {
+      "id": "EA-e8f93dff1d6ce019",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/client/client.ts",
+      "message": "Function `<anonymous>` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The enclosing chain if(args) > if(args.form) > for > if(Array.isArray(v)) > for(v2) > if(v2===undefined) at line 77 is exactly depth 6, matching the reported count."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 77"
+        }
+      ]
+    },
+    {
+      "id": "EA-525b84d3b9d84753",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/css/common.ts",
+      "message": "Function `<anonymous>` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 148,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 163 showing only depth 3, while the reported max depth 6 sits at deepest_line 188, which is not shown."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 188"
+        }
+      ]
+    },
+    {
+      "id": "EA-2e7ac8cdd00cc901",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/ssg/ssg.ts",
+      "message": "Function `` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 263,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "At the shown deepest_line 276 the enclosing generator body, for loop, Promise executor, try, if(afterResponseHook) and if(!maybeResponse) give depth 6."
+        }
+      ]
+    },
+    {
+      "id": "EA-ab1996e3a7272332",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "Function `<anonymous>` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The attribute-applying arrow function nests for > if > if eventSpec > ... and the else branch's try/if chains (e.g. value==='value' > nodeName checks > TEXTAREA) reach depth 7; name is anonymous only because it is a const arrow."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 185 (depth 6 at line 181), but the reported max depth 7 occurs at deepest_line 266, beyond the excerpt."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 181"
+        }
+      ]
+    },
+    {
+      "id": "EA-50e7b0a2d40bfacd",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "Function `<anonymous>` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 514,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 529 showing depth 2, while the reported depth 7 is at deepest_line 626, which is not shown."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 626"
+        }
+      ]
+    },
+    {
+      "id": "EA-4f2525baaf84cc94",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/linear-router/router.ts",
+      "message": "Function `match` reaches nesting depth 7 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 42 showing depth 4, while the claimed depth 7 occurs at deepest_line 58, outside the excerpt."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 57"
+        }
+      ]
+    },
+    {
+      "id": "EA-ac3875700efd54d6",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/reg-exp-router/node.ts",
+      "message": "Function `insert` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 77 showing depth 2 in insert, while the reported depth 6 is at deepest_line 98, not shown."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 98"
+        }
+      ]
+    },
+    {
+      "id": "EA-e037bb8e4c8ce944",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/trie-router/node.ts",
+      "message": "Function `search` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 99,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 113 showing depth 5 in search, while the reported depth 6 is at deepest_line 130, which is not shown."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 130"
+        }
+      ]
+    },
+    {
+      "id": "EA-5a81ca27ac34c50a",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/localLink.ts",
+      "message": "Function `` reaches nesting depth 6 (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 193,
+      "verdict": "unclear",
+      "reason": "Anonymous closure; unclear whether the reported depth includes the enclosing function's blocks.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The reported depth-6 point is deepest_line 222, beyond the excerpt ending at 208, and the enclosing function is not shown, so the count can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The reported deepest line 222 lies beyond the excerpt (ends at 208), so the depth-6 claim cannot be verified from the shown lines."
+        }
+      ]
+    },
+    {
+      "id": "EA-a914bf2a3a0b6c57",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/errors.ts",
+      "message": "Function `<anonymous>` reaches nesting depth 6 (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 354,
+      "verdict": "true_positive",
+      "reason": "Top-level arrow `processError` reaches depth 6 itself.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The deepest line 374 lies past the excerpt end at 369, so the claimed depth 6 inside the while loop cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Deepest line 374 is past the excerpt's end at 369, where the while loop body has only just begun, so the claimed depth 6 cannot be confirmed."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint max-depth (6) at line 374"
+        }
+      ]
+    },
+    {
+      "id": "EA-22cd8dc88bd34226",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Function `` reaches nesting depth 6 (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 379,
+      "verdict": "unclear",
+      "reason": "Anonymous closure in a script; unclear whether the depth includes enclosing blocks.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "scripts/compile-fuzz.ts is a fuzz/tooling script, outside the detector's production-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "scripts/compile-fuzz.ts is a fuzz-test harness (tooling code) outside the detector's scope, and the flagged `catch` at 383 sits only a couple of levels deep inside a `map` callback."
+        }
+      ]
+    }
+  ]
+}

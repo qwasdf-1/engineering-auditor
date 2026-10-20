@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/ensemble-comparison-v1.schema.json",
+  "title": "Ensemble Comparison v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "comparison_id",
+    "case_id",
+    "shared_packet_digest",
+    "independence",
+    "probes",
+    "claim_clusters",
+    "recommendation_families",
+    "outcome",
+    "material_disagreements",
+    "shared_unknown_probe_ids",
+    "challenge_targets",
+    "shadow_only"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "comparison_id": { "type": "string", "pattern": "^ensemble-comparison:[0-9a-f]{64}$" },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "shared_packet_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "independence": {
+      "enum": ["same_model_repeated", "cross_model_same_provider", "cross_provider", "cross_prompt_same_model", "mixed_independence"]
+    },
+    "probes": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/probe_comparison" } },
+    "claim_clusters": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/claim_cluster" } },
+    "recommendation_families": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/recommendation_family" } },
+    "outcome": {
+      "enum": ["converged", "converged_with_variants", "majority_with_material_objection", "contested", "shared_evidence_gap", "incommensurable_alternatives"]
+    },
+    "material_disagreements": { "type": "array", "items": { "$ref": "#/$defs/material_disagreement" } },
+    "shared_unknown_probe_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^case-probe:[0-9a-f]{64}$" }
+    },
+    "challenge_targets": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/challenge_target" } },
+    "shadow_only": { "const": true }
+  },
+  "$defs": {
+    "slot": { "enum": ["reviewer_a", "reviewer_b", "reviewer_c"] },
+    "slot_id_map": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/slot" },
+      "additionalProperties": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": { "type": "string", "pattern": "^[a-z0-9-]+:[0-9a-f]{64}$" }
+      }
+    },
+    "probe_comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "state", "answers", "evidence_ids"],
+      "properties": {
+        "probe_id": { "type": "string", "pattern": "^case-probe:[0-9a-f]{64}$" },
+        "state": { "enum": ["unanimous", "qualified_agreement", "split", "all_different", "shared_unknown", "evidence_conflict"] },
+        "answers": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/slot" },
+          "additionalProperties": { "enum": ["yes", "no", "unknown", "not_applicable", "conflicting_evidence"] }
+        },
+        "evidence_ids": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/slot" },
+          "additionalProperties": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    },
+    "claim_cluster": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot", "state", "members"],
+      "properties": {
+        "slot": { "type": "string", "minLength": 1 },
+        "state": { "enum": ["common", "compatible", "scope_variant", "mutually_exclusive", "minority_only", "unresolved"] },
+        "members": { "$ref": "#/$defs/slot_id_map" }
+      }
+    },
+    "recommendation_family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "state", "members", "scope_variants", "decision_dependencies"],
+      "properties": {
+        "family": { "type": "string", "minLength": 1 },
+        "state": { "enum": ["common", "compatible_variant", "contested", "minority_only"] },
+        "members": { "$ref": "#/$defs/slot_id_map" },
+        "scope_variants": { "type": "array", "uniqueItems": true, "items": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } } },
+        "decision_dependencies": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "material_disagreement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "reviewer_slots", "subject_ids"],
+      "properties": {
+        "dimension": { "enum": ["probe", "claim", "recommendation"] },
+        "reviewer_slots": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slot" } },
+        "subject_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "challenge_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_type", "target_id", "reason"],
+      "properties": {
+        "target_type": { "enum": ["claim", "recommendation"] },
+        "target_id": { "type": "string", "pattern": "^[a-z0-9-]+:[0-9a-f]{64}$" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

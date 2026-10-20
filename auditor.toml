@@ -1,0 +1,20 @@
+# Engineering Auditor configuration for this repository.
+# See docs/reference/stability.md for the supported keys.
+
+# Tooling scripts print progress and exit with status codes by design, and
+# use section dividers in generated reports.
+[exclusions.tooling-output]
+paths = tooling/
+detectors = console_output_in_production, exit_in_production, section_divider_comment
+
+# Detector source code quotes the patterns it detects (`eval(`, `shell=True`,
+# hardcoded-credential shapes) in rule tables and inline fixtures.
+[exclusions.detector-patterns]
+paths = crates/auditor-detectors/
+detectors = assert_in_production, todo_unimplemented_in_production, eval_in_production, hardcoded_credential, unsafe_deserialization, bind_all_interfaces, assignment_in_operand, resource_not_closed, console_output_in_production, debugger_in_production, empty_catch_block, exit_in_production, unhandled_termination_in_production, sql_injection, shell_execution, insecure_cryptography, go_log_fatal, go_errcheck, unused_assignment, java_inefficient_string_buffer, kt_non_null_assertion, kt_require_check_misuse, unsafe_type_cast, try_except_pass, world_writable_file, hardcoded_tmp_directory, flask_debug_true, random_for_security, request_no_cert_verify, xml_xxe_vulnerable, ssl_with_bad_defaults, ssh_no_host_key_verification, dead_code, no_await_in_loop, require_atomic_updates
+
+# Implementation plans are tracked design history. They cite files that later
+# passes renamed or removed, so stale-reference checks do not apply to them.
+[exclusions.historical-plans]
+paths = docs/v1/plans/
+detectors = stale_path_reference, stale_link_reference

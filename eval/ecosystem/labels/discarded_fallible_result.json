@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "detector": "discarded_fallible_result",
+  "labels": [
+    {
+      "id": "EA-8b83693aa04af60b",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/cancel/CancelToken.js",
+      "message": "`this.promise.then` at line 27 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "final",
+      "sampled_from": "t21-b",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "Arbiter ruling (Fable, upheld on review): the floating then() at line 27 returns a promise that rejects if any listener throws, and CancelToken.subscribe is public API, so a user listener's error becomes an unhandled rejection that also skips the remaining cancel listeners.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "true_positive",
+          "reason": "Line 27 calls the native `this.promise.then(cb)` (the override comes later, at line 39) and discards the derived promise with no catch; the source promise can never reject, but the derived one rejects if `token._listeners[i](cancel)` at line 33 throws, and because `subscribe()` is public API (index.d.ts:603) that listener can be user code, so the throw becomes an unhandled rejection and the loop stops before the remaining listeners run."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`this.promise.then((cancel) => {...})` at line 27 is a floating promise with no catch, so a throwing listener in the callback would produce an unhandled rejection."
+        }
+      ]
+    },
+    {
+      "id": "EA-0bc7f3ebe808f3c4",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "`context[2](context, node, (context) => {\u2026.then` at line 812 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "corroborated",
+      "sampled_from": "t21-b",
+      "line": 812,
+      "verdict": "true_positive",
+      "reason": "The update hook returns a promise that rejects when the synchronous re-render (updateSync) throws; with no rejection handler the error is unhandled and resolve(node) is never called, so the pending update never settles.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`context[2](...).then(() => resolve(node))` is neither awaited, returned nor given a rejection handler, so a rejection from the async update hook is unhandled."
+        }
+      ]
+    }
+  ]
+}

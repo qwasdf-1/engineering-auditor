@@ -1,0 +1,3598 @@
+{
+  "schema_version": 1,
+  "detector": "todo_unimplemented_in_production",
+  "labels": [
+    {
+      "id": "EA-aae1ebda8b6a5232",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/idna.c",
+      "message": "Non-test source contains TODO at line 273",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 273,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The comment at line 273 in `src/idna.c` literally begins with `/* TODO(bnoordhuis)`, a TODO in non-test source as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/idna.c:273 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-b1b8e550bfed61c3",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Non-test source contains TODO at line 514",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 514,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 514 of `src/unix/aix.c` contains the `/* TODO(bnoordhuis) Check uv__strscpy() ... */` comment, matching the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/aix.c:514 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-25b095e1890b7335",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Non-test source contains TODO at line 765",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 765,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 765 of `src/unix/aix.c` contains the `/* TODO(bnoordhuis) Check uv__strscpy() ... */` comment, matching the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/aix.c:765 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-65109414655807c5",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Non-test source contains TODO at line 803",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 803,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 803 of `src/unix/aix.c` contains the `/* TODO(bnoordhuis) Check uv__strscpy() ... */` comment, matching the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/aix.c:803 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-697c7c8ad7af3401",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Non-test source contains TODO at line 1082",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 1082,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1082 of `src/unix/aix.c` contains the `/* TODO(bnoordhuis) Check uv__strscpy() ... */` comment, matching the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/aix.c:1082 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-1f3e765f0cbef2b5",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/bsd-ifaddrs.c",
+      "message": "Non-test source contains TODO at line 68",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 68,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 is a `/* TODO(bnoordhuis) share with linux.c */` comment in production source src/unix/bsd-ifaddrs.c."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/bsd-ifaddrs.c:68 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-377e9b17ec37c55f",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/bsd-ifaddrs.c",
+      "message": "Non-test source contains TODO at line 160",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 160 contains `/* TODO(bnoordhuis) share with linux.c */` in non-test production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/bsd-ifaddrs.c:160 is production source and the marked line is a TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-6a0655fe1b8ba70f",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/netbsd.c",
+      "message": "Non-test source contains TODO at line 90",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 90 contains `/* TODO(bnoordhuis) Check uv__strscpy() return value. */` in non-test source netbsd.c."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 90 in src/unix/netbsd.c is the TODO comment `/* TODO(bnoordhuis) Check uv__strscpy() return value. */` and this is non-test production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-0ebe12ae2e1aafcc",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/dbformat.cc",
+      "message": "Non-test source contains TODO at line 108",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 108 contains `// TODO(sanjay): Suppress dups?` in production code db/dbformat.cc."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 108 in db/dbformat.cc contains `// TODO(sanjay): Suppress dups?` inside the key-extraction loop, and the file is production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-4736cc5bce28d29f",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/repair.cc",
+      "message": "Non-test source contains TODO at line 369",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 369,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 369 contains `// TODO(opt): separate out into multiple levels` in production code db/repair.cc."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 369 in db/repair.cc contains `// TODO(opt): separate out into multiple levels` within the tables loop in non-test production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-640daf51fe52eaa0",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/skiplist.h",
+      "message": "Non-test source contains TODO at line 338",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 338,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 338 contains `// TODO(opt): We can use a barrier-free variant of FindGreaterOrEqual()` in skiplist.h production code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 338 in db/skiplist.h begins the `// TODO(opt): We can use a barrier-free variant...` comment inside SkipList::Insert, which is production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-29ac482e684ce205",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/table.cc",
+      "message": "Non-test source contains TODO at line 87",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 87,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 87 contains `// TODO(sanjay): Skip this if footer.metaindex_handle()...` in table/table.cc production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 87 in table/table.cc contains the `// TODO(sanjay): Skip this if footer.metaindex_handle() size indicates` comment in non-test production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-518a1ad9af5f564e",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/table_builder.cc",
+      "message": "Non-test source contains TODO at line 152",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 152,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 152 contains `// TODO(postrelease): Support more compression options: zlib?` in table_builder.cc production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 152 in table/table_builder.cc contains `// TODO(postrelease): Support more compression options: zlib?`, and the file is production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-f3652974d1ab5f5e",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/table_builder.cc",
+      "message": "Non-test source contains TODO at line 224",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 224,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 224 in table/table_builder.cc is a production source file containing the TODO comment exactly as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 224 in table/table_builder.cc contains `// TODO(postrelease): Add stats and other meta blocks` in non-test production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-a1451da11f66f069",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/arena.h",
+      "message": "Non-test source contains TODO at line 50",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 50 in util/arena.h is a production header containing the reported TODO comment."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 50 in util/arena.h begins the `// TODO(costan): This member is accessed via atomics...` comment above `memory_usage_` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-0325bcb7d30625c0",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitter.cpp",
+      "message": "Non-test source contains TODO at line 317",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 317,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 317 in src/emitter.cpp is production source with the reported TODO present at that line."
+        }
+      ]
+    },
+    {
+      "id": "EA-b5ed084fd2d9c3b6",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitterstate.cpp",
+      "message": "Non-test source contains TODO at line 139",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 139 in src/emitterstate.cpp is production source containing the reported TODO."
+        }
+      ]
+    },
+    {
+      "id": "EA-d209b374e43ea36b",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitterutils.cpp",
+      "message": "Non-test source contains TODO at line 203",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 203,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 203 in src/emitterutils.cpp is production source containing the reported TODO."
+        }
+      ]
+    },
+    {
+      "id": "EA-e52e5f2dc3ff4730",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitterutils.cpp",
+      "message": "Non-test source contains TODO at line 216",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 216,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 216 in src/emitterutils.cpp is production source containing the reported TODO."
+        }
+      ]
+    },
+    {
+      "id": "EA-588d2d9e34de59a6",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/parser.cpp",
+      "message": "Non-test source contains TODO at line 94",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 94,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 94 in src/parser.cpp is production source containing the reported TODO."
+        }
+      ]
+    },
+    {
+      "id": "EA-ab635d2cbbb2f7f4",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/ptr_vector.h",
+      "message": "Non-test source contains TODO at line 17",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 17 in src/ptr_vector.h is production header source containing the reported TODO."
+        }
+      ]
+    },
+    {
+      "id": "EA-bd9c6d9baeae53fd",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/tag.cpp",
+      "message": "Non-test source contains TODO at line 43",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 43 is a bare `// TODO:` marker in production source (src/tag.cpp), so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-875aac0be3399465",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DataTableHandler.cs",
+      "message": "Non-test source contains TODO at line 9",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 9,
+      "verdict": "true_positive",
+      "reason": "An API member throws NotImplementedException: an unimplemented path in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "DataTableHandler.Parse's entire body is `throw new NotImplementedException();`, a genuinely unimplemented method in a sealed production class."
+        }
+      ]
+    },
+    {
+      "id": "EA-deaf3cc6f562d155",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/WrappedReader.cs",
+      "message": "Non-test source contains TODO at line 317",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 317,
+      "verdict": "true_positive",
+      "reason": "An API member throws NotImplementedException: an unimplemented path in shipped code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `: throw new NotImplementedException();` is a defensive else-branch guard of an implemented delegating method (cf. NotSupportedException at lines 321-322), not an unfinished TODO."
+        }
+      ]
+    },
+    {
+      "id": "EA-de6bcc2da28dd057",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/Extensions.cs",
+      "message": "Non-test source contains TODO at line 218",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 218 is a `//TODO` marker before commented-out production code, so the TODO claim is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 218 is a literal `//TODO` comment in non-test library source (Src/Newtonsoft.Json/...), so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-ee3957b5de07a3a5",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/Extensions.cs",
+      "message": "Non-test source contains TODO at line 301",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 301,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 301 is a `//TODO` marker before commented-out production code, so the TODO claim is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 301 is a literal `//TODO` comment in the same non-test Newtonsoft.Json source, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa069f5c6c10725d",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JToken.Async.cs",
+      "message": "Non-test source contains TODO at line 50",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 50,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: A virtual base method every subclass overrides; NotImplementedException stands in for abstract, not unfinished work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "JToken.WriteToAsync is a virtual base method intended to be overridden (JValue/JContainer override it); throwing here is the abstract-method idiom, not an unfinished TODO."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `throw new NotImplementedException()` is the body of a `public virtual` base-class method that subclasses override, the recognizable must-override idiom, not outstanding work to resolve."
+        }
+      ]
+    },
+    {
+      "id": "EA-bebc4fd523c20ef0",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JValue.Async.cs",
+      "message": "Non-test source contains TODO at line 58",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 58 is a genuine `// TODO: Call WriteJsonAsync when it exists.` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 58 contains a genuine `// TODO: Call WriteJsonAsync when it exists.` in non-test library source."
+        }
+      ]
+    },
+    {
+      "id": "EA-d6d194f06f9b5576",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tty_windows.go",
+      "message": "Non-test source contains TODO at line 55",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The TODO at line 55 is explicitly suppressed by the `//nolint:godox` directive on line 54, marking it as intentionally accepted rather than an unresolved marker."
+        }
+      ]
+    },
+    {
+      "id": "EA-e2b7f89370456007",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/compress.go",
+      "message": "Non-test source contains TODO at line 109",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "TODO comment listing encoders still to add (lzma, sdch, br).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 109 is a bare `// TODO:` marker in non-test production source (middleware/compress.go)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 109 is a real `// TODO:` listing potential encoders in shipped middleware code, so the claim applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-d4a795c3a0a941e3",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/compress.go",
+      "message": "Non-test source contains TODO at line 132",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 132,
+      "verdict": "true_positive",
+      "reason": "TODO comment for an unhandled old-MSIE exception.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 132 contains `// TODO: Exception for old MSIE...` in non-test production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 132 is a genuine `// TODO: Exception for old MSIE browsers...` in non-test middleware source."
+        }
+      ]
+    },
+    {
+      "id": "EA-9844a79829586218",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "Non-test source contains TODO at line 829",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 829,
+      "verdict": "true_positive",
+      "reason": "TODO comment admitting the flag parsing is not quite right.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 829 contains a `// TODO:` note in command.go, a non-test production file."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 829 carries an explicit `// TODO: this isn't quite right...` inside production flag-parsing code."
+        }
+      ]
+    },
+    {
+      "id": "EA-2863255ad5df5a8a",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/yaml_docs.go",
+      "message": "Non-test source contains TODO at line 153",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 153,
+      "verdict": "true_positive",
+      "reason": "Todo comment describing a deprecated-shorthand case the code cannot handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 153 contains a genuine `// Todo, ...` note in non-test library source (doc/yaml_docs.go)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 153 is a `// Todo, ...` note about a deprecation edge case in shipped doc-generation (library) code, within scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef3eef85bea94bec",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "message": "Non-test source contains TODO at line 1105",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 1105,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO(inder): Figure out whether it is indeed right to rethrow this as JsonSyntaxExcepti",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1105 contains a `// TODO(inder):` marker in production Gson.java source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1105 in src/main/java/com/google/gson/Gson.java clearly contains the reported TODO comment in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-8c297c09f75ef058",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "message": "Non-test source contains TODO at line 274",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 274,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: don't wrap if cause is unchecked?",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 274 contains `// TODO: don't wrap if cause is unchecked?` in non-test production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 274 in src/main/java/com/google/gson/internal/ConstructorConstructor.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-1881c175bbe8a2f3",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "message": "Non-test source contains TODO at line 275",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 275,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: JsonParseException ?",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 275 contains a `// TODO: JsonParseException ?` marker in non-test production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 275 in src/main/java/com/google/gson/internal/ConstructorConstructor.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-3a52ac4d88970353",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Non-test source contains TODO at line 185",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 185,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: save a .clone() call",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 185 contains `// TODO: save a .clone() call` in non-test production source GsonTypes.java."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 185 in src/main/java/com/google/gson/internal/GsonTypes.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd409bbc07695850",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Non-test source contains TODO at line 333",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 333,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: strip wildcards?",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// TODO: strip wildcards?` is present in main production source at GsonTypes.java:333."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 333 in src/main/java/com/google/gson/internal/GsonTypes.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-c0c4634ebf7075be",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java",
+      "message": "Non-test source contains TODO at line 85",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 85,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: Ideally should use Multi-Release JAR for this version specific code",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// TODO: Ideally should use Multi-Release JAR...` is present in main production source at ReflectionAccessFilterHelper.java:85."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 85 in src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-61c820ef46abd0ad",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java",
+      "message": "Non-test source contains TODO at line 90",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: The exception messages created by ConstructorConstructor are currently written in",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// TODO: The exception messages...` is present in main production source at JsonAdapterAnnotationTypeAdapterFactory.java:90."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 90 in src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-bc62abdf81849469",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java",
+      "message": "Non-test source contains TODO at line 93",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 93,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: Should probably not allow usage of Unsafe; instances might be in broken state and",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// TODO: Should probably not allow usage of Unsafe...` is present in main production source at JsonAdapterAnnotationTypeAdapterFactory.java:93."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 93 in src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java contains the reported TODO comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-c226606b3ad58ce9",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeWriter.java",
+      "message": "Non-test source contains TODO at line 62",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: private JsonElement product = JsonNull.INSTANCE; // TODO: is this really what we want?;",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The trailing comment `// TODO: is this really what we want?` is present in main production source at JsonTreeWriter.java:62."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 62 of JsonTreeWriter.java contains a TODO comment inside a production source file: `private JsonElement product = JsonNull.INSTANCE; // TODO: is this really what we want?;`."
+        }
+      ]
+    },
+    {
+      "id": "EA-87cc5cf7109bcd4c",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Non-test source contains TODO at line 660",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 660,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: JsonParseException ?",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// TODO: JsonParseException ?` is present in main production source at ReflectiveTypeAdapterFactory.java:660."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 660 of ReflectiveTypeAdapterFactory.java contains a TODO comment inside a production source file: `// TODO: JsonParseException ?`."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a5329f6606e892d",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "message": "Non-test source contains TODO at line 887",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 887,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: update this when we are on at least Android API Level 24.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// TODO: update this when we are on at least Android API Level 24.` is present in main production source at TypeAdapters.java:887."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 887 of TypeAdapters.java contains a TODO comment inside a production source file: `// TODO: update this when we are on at least Android API Level 24.`."
+        }
+      ]
+    },
+    {
+      "id": "EA-e23abfbd6fc109e5",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "message": "Non-test source contains TODO at line 1300",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 1300,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo - if content type already set, we could add charset",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The line `// todo - if content type already set, we could add charset` is present in main production source at HttpConnection.java:1300."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1300 of HttpConnection.java contains a TODO comment inside a production source file: `// todo - if content type already set, we could add charset`."
+        }
+      ]
+    },
+    {
+      "id": "EA-979827354df2486f",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/Regex.java",
+      "message": "Non-test source contains TODO at line 74",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 74,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo remove if re2j publishes as a module",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 74 in production src/main/java contains the literal TODO comment `// todo remove if re2j publishes as a module`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 74 of Regex.java contains a TODO comment inside a production source file: `// todo remove if re2j publishes as a module`."
+        }
+      ]
+    },
+    {
+      "id": "EA-53a5728b25653507",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "message": "Non-test source contains TODO at line 349",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 349,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: /*@Nullable*/ private final org.jsoup.nodes.Element contextElement; // todo - unsure why t",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 349 in production src/main/java contains the literal TODO comment `// todo - unsure why this can't be marked nullable?`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 349 of W3CDom.java contains a TODO comment inside a production source file: `/*@Nullable*/ private final org.jsoup.nodes.Element contextElement; // todo - unsure why this can't be marked nullable?`."
+        }
+      ]
+    },
+    {
+      "id": "EA-abdeaada564fc9db",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/ControllableInputStream.java",
+      "message": "Non-test source contains TODO at line 68",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 68,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo - bufferSize currently unused; consider implementing as a min size in the SoftPool",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 in production src/main/java contains the literal TODO comment `// todo - bufferSize currently unused...`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 of ControllableInputStream.java contains a TODO comment inside a production source file: `// todo - bufferSize currently unused; consider implementing as a min size in the SoftPool recycler; or just deprecate if always DefaultBufferSize`."
+        }
+      ]
+    },
+    {
+      "id": "EA-7aa9735c3378d80a",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/DocumentType.java",
+      "message": "Non-test source contains TODO at line 14",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo needs a bit of a chunky cleanup. this level of detail isn't needed",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 14 in production src/main/java contains the literal TODO comment `// todo needs a bit of a chunky cleanup...`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 14 of DocumentType.java contains a TODO comment inside a production source file: `// todo needs a bit of a chunky cleanup. this level of detail isn't needed`."
+        }
+      ]
+    },
+    {
+      "id": "EA-12d4a706142c5e7e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Non-test source contains TODO at line 344",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 344,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo add more charset tests if impacted by Android's bad perf in canEncode",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 344 in production src/main/java contains the literal TODO comment `// todo add more charset tests...`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 344 in src/main/java is a real TODO comment in production Entities.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-e11e8fd490816362",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "message": "Non-test source contains TODO at line 617",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 617,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo clean up all these and use the list, not the var array. just need to be careful wh",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 617 in production src/main/java contains the literal TODO comment `// todo clean up all these...`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 617 in src/main/java is a real TODO comment in production Node.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac2ecc02abeb397d",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilder.java",
+      "message": "Non-test source contains TODO at line 697",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 697,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo - should loop up (with some limit) and check for table or template hits",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 697 in production src/main/java contains the literal TODO comment `// todo - should loop up...`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 697 in src/main/java is a real TODO comment in production HtmlTreeBuilder.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-53537ffbb219fec5",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilder.java",
+      "message": "Non-test source contains TODO at line 1050",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 1050,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: namespaces",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1050 in production src/main/java contains the literal TODO comment `// todo: namespaces`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1050 in src/main/java is a real TODO comment in production HtmlTreeBuilder.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-3bb69a3a885775b6",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Non-test source contains TODO at line 32",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: parse error check on expected doctypes",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 32 is `// todo: parse error check on expected doctypes` in main-source HtmlTreeBuilderState.java."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 32 in src/main/java is a real TODO comment in production HtmlTreeBuilderState.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-2a457762cd60d01e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Non-test source contains TODO at line 39",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: quirk state check on more doctype ids, if deemed useful (most are ancient legacy",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 39 is `// todo: quirk state check on more doctype ids...` in non-test source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 39 in src/main/java is a real TODO comment in production HtmlTreeBuilderState.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfbcc7e5478a753d",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Non-test source contains TODO at line 44",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: check not iframe srcdoc",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 44 is `// todo: check not iframe srcdoc` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 44 in src/main/java is a real TODO comment in production HtmlTreeBuilderState.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-4f27a8e8630eef58",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Non-test source contains TODO at line 931",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 931,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo - impl https://html.spec.whatwg.org/multipage/parsing.html#appropriate-place-for-i",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 931 is `// todo - impl ...appropriate-place-for-inserting-a-node fostering` in main source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 931 in src/main/java is a real TODO comment in production HtmlTreeBuilderState.java."
+        }
+      ]
+    },
+    {
+      "id": "EA-a5b531c3ef1cd1c1",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Non-test source contains TODO at line 1042",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 1042,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: return true; // todo: check if should return processed http://www.whatwg.org/specs/web-app",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1042 contains `// todo: check if should return processed...` in production code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line in `HtmlTreeBuilderState.java` contains a literal `// todo:` marker in production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a8048c5bbb9a877",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Non-test source contains TODO at line 1063",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 1063,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: return true; // todo: as above todo",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1063 contains `// todo: as above todo` in production code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line in `HtmlTreeBuilderState.java` contains a literal `// todo:` marker in production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-cc7f7e248fd1daa0",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Tokeniser.java",
+      "message": "Non-test source contains TODO at line 102",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 102,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo move \"<\" to '<'...",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 102 is `// todo move \"<\" to '<'...` in main-source Tokeniser.java."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line in `Tokeniser.java` contains a literal `// todo` marker in production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb5c5a41461a5b49",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Tokeniser.java",
+      "message": "Non-test source contains TODO at line 176",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 176,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: implement number replacement table",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 176 is `// todo: implement number replacement table` in non-test source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line in `Tokeniser.java` contains a literal `// todo:` marker in production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-89918f14b7530bef",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Tokeniser.java",
+      "message": "Non-test source contains TODO at line 177",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 177,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: check for extra illegal unicode points as parse errors",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 177 in production source Tokeniser.java is literally `// todo: check for extra illegal unicode points as parse errors`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line in `Tokeniser.java` contains a literal `// todo:` marker in production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-147a43a1c79d8635",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TokeniserState.java",
+      "message": "Non-test source contains TODO at line 861",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 861,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // todo: handle bogus comment starting from eof. when does that trigger?",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 861 in production source TokeniserState.java is the TODO comment about handling bogus comments from eof."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line in `TokeniserState.java` contains a literal `// todo:` marker in production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-f41c54f03d4db97c",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "Non-test source contains TODO at line 624",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 624,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Makefile.js is build/tooling code, outside the detector's production-source scope, even though a TODO is present at line 624."
+        }
+      ]
+    },
+    {
+      "id": "EA-ddc643102e87a067",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint.js",
+      "message": "Non-test source contains TODO at line 1256",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1256,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1256 of production lib/eslint/eslint.js contains the TODO `// TODO: This is pretty dirty...would be nice to clean up at some point.`."
+        }
+      ]
+    },
+    {
+      "id": "EA-a00b6a7808961532",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/languages/js/source-code/token-store/cursor.js",
+      "message": "Non-test source contains TODO at line 74",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "A documented @abstract base method that subclasses override; the throw is the abstract-method idiom, not unfinished work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 74 is an abstract method's `throw new Error(\"Not implemented.\");`, not a TODO comment, so the claim of a TODO at that line is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-a26492c82049d69c",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/languages/js/source-code/token-store/cursor.js",
+      "message": "Non-test source contains TODO at line 74",
+      "status": "corroborated",
+      "sampled_from": "t16-t",
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "Line 74 is `throw new Error(\"Not implemented.\")` inside an @abstract base-class moveNext() that subclasses override; the file has no TODO/FIXME marker, and this is the abstract-method pattern, not an unimplemented stub.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 74 is throw new Error(\"Not implemented.\"), not a TODO/FIXME marker; no TODO in file."
+        }
+      ]
+    },
+    {
+      "id": "EA-3a12b926c8ee5c09",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/esquery.js",
+      "message": "Non-test source contains TODO at line 232",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 232,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 232 of production lib/linter/esquery.js contains the TODO `// TODO: abstract into JSLanguage somehow`."
+        }
+      ]
+    },
+    {
+      "id": "EA-f91d7e9110b3fcc6",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/capitalized-comments.js",
+      "message": "Non-test source contains TODO at line 20",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 20 of production lib/rules/capitalized-comments.js ends with the TODO `// TODO: Combine w/ max-len pattern?`."
+        }
+      ]
+    },
+    {
+      "id": "EA-1809a02d9477504a",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent-legacy.js",
+      "message": "Non-test source contains TODO at line 845",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 845,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 845 of production lib/rules/indent-legacy.js contains the TODO `// TODO - come up with a better strategy in future`."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b31fb36fcb43b77",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "build/build-validation.js",
+      "message": "Non-test source contains TODO at line 35",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-2f6b813f083b83d9",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "build/build-validation.js",
+      "message": "Non-test source contains TODO at line 43",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-2c66237b53d3732d",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "build/build-validation.js",
+      "message": "Non-test source contains TODO at line 47",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-4e9dca33d25da5aa",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/promise.js",
+      "message": "Non-test source contains TODO at line 15",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 15 contains a genuine TODO comment in a production module (lib/promise.js)."
+        }
+      ]
+    },
+    {
+      "id": "EA-0278b41d2518136d",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/reply.js",
+      "message": "Non-test source contains TODO at line 406",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 406,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 406 is a real TODO in production source lib/reply.js."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2b48cf6d861c636",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/request.js",
+      "message": "Non-test source contains TODO at line 333",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 333,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 333 is a real TODO in production source lib/request.js."
+        }
+      ]
+    },
+    {
+      "id": "EA-079fb8d0c0abd0c5",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "perf-testing/read-cpuprofile.js",
+      "message": "Non-test source contains TODO at line 215",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 215,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-359d75da94958a55",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "eslint.config.js",
+      "message": "Non-test source contains TODO at line 40",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "eslint.config.js is build/tooling configuration, outside the detector's production-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `// Todo:` comment is in `eslint.config.js`, which is build/tooling configuration rather than in-scope production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-27ed53294f1c65d8",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "eslint.config.js",
+      "message": "Non-test source contains TODO at line 125",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 125,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "eslint.config.js is build/tooling configuration, outside the detector's production-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `// Todo:` comment is in `eslint.config.js`, which is build/tooling configuration rather than in-scope production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-dd4db6e311a46e7a",
+      "repository": "trpc",
+      "language": "javascript",
+      "path": "eslint.config.js",
+      "message": "Non-test source contains TODO at line 137",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 137,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "eslint.config.js is build/tooling configuration, outside the detector's production-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "eslint.config.js is build/tooling configuration code, outside the detector's production-source scope, even though the TODO comment is correctly located at line 137."
+        }
+      ]
+    },
+    {
+      "id": "EA-8a1a377daeec16ac",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android-compat/src/main/java/org/koin/android/compat/ScopeCompat.kt",
+      "message": "Non-test source contains TODO at line 34",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 34 contains a real TODO in production Kotlin source ScopeCompat.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO Deprecate and add new` comment is present at line 34 of ScopeCompat.kt under src/main/java, which is production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-44f26663bc85fb0c",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android-compat/src/main/java/org/koin/android/compat/ViewModelCompat.kt",
+      "message": "Non-test source contains TODO at line 35",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 35 contains a real TODO in production Kotlin source ViewModelCompat.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO Deprecate and add new API against Activity/Fragment` comment is present at line 35 of ViewModelCompat.kt under src/main/java, which is production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-2f430aea3a9b63f4",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/android/scope/AndroidScopeComponent.kt",
+      "message": "Non-test source contains TODO at line 25",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking an open design question in shipped library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Real //TODO comment in production Kotlin interface."
+        }
+      ]
+    },
+    {
+      "id": "EA-82fa3f82b58149fe",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/android/scope/ScopeService.kt",
+      "message": "Non-test source contains TODO at line 36",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 36,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 36 contains a literal `//TODO replace with createServiceScope` in a main-source Kotlin file, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO replace with createServiceScope` comment is present at line 36 of ScopeService.kt under src/main/java, which is production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfd29fe9645ac766",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/android/scope/ScopeService.kt",
+      "message": "Non-test source contains TODO at line 43",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 43 contains `//TODO be sure to close scope` in production (src/main) code as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO be sure to close scope` comment is present at line 43 of ScopeService.kt under src/main/java, which is production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-c36d311a57d0a8d1",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/dsl/ScopeSetExt.kt",
+      "message": "Non-test source contains TODO at line 24",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 contains a `//TODO DEPRECATE ...` comment in a main-source file, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO DEPRECATE in favor of koin-viewmodel...` comment is present at line 24 of ScopeSetExt.kt under src/main/java, so the claim holds regardless of the function's own @Deprecated annotation."
+        }
+      ]
+    },
+    {
+      "id": "EA-fca6685009a2d5ad",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/dsl/ScopeViewModelOf.kt",
+      "message": "Non-test source contains TODO at line 27",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 has a `//TODO DEPRECATE ...` comment in src/main production code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO DEPRECATE in favor of koin-viewmodel...` comment is present at line 27 of ScopeViewModelOf.kt under src/main/java, which is production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-6171954f49cf47e1",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/dsl/ViewModelOf.kt",
+      "message": "Non-test source contains TODO at line 26",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 26 contains a `//TODO DEPRECATE ...` comment in a production source file."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `//TODO DEPRECATE in favor of koin-viewmodel...` comment is present at line 26 of ViewModelOf.kt under src/main/java, which is production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-6030bb60aca0009b",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/commonMain/kotlin/org/koin/compose/viewmodel/dsl/ModuleExt.kt",
+      "message": "Non-test source contains TODO at line 24",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 contains a `//TODO DEPRECATE ...` comment in commonMain production code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 of this commonMain production source contains the reported `//TODO DEPRECATE...` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-4372e1785b56135b",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/commonMain/kotlin/org/koin/compose/viewmodel/dsl/ScopeSetExt.kt",
+      "message": "Non-test source contains TODO at line 24",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 contains a `//TODO DEPRECATE ...` comment in the main source set."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 of this commonMain production source contains the reported `//TODO DEPRECATE...` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-7d86503f395d01fb",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/commonMain/kotlin/org/koin/compose/viewmodel/dsl/ScopeViewModelOf.kt",
+      "message": "Non-test source contains TODO at line 27",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 contains a `//TODO DEPRECATE ...` comment in production (commonMain) code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 of this commonMain production source contains the reported `//TODO DEPRECATE...` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-adb8ef0a578094e7",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/commonMain/kotlin/org/koin/compose/viewmodel/dsl/ViewModelOf.kt",
+      "message": "Non-test source contains TODO at line 27",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 in production commonMain source is a real `//TODO DEPRECATE...` comment matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 of this commonMain production source contains the reported `//TODO DEPRECATE...` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-818f6769858d1d2a",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core-viewmodel/src/commonMain/kotlin/org/koin/viewmodel/BundleExt.kt",
+      "message": "Non-test source contains TODO at line 54",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 54 is a genuine `//TODO Replace with CreationExtras API` in production koin-core-viewmodel source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 54 of this commonMain production source contains the reported `//TODO Replace with CreationExtras API` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-754b7b255af54e34",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core-viewmodel/src/commonMain/kotlin/org/koin/viewmodel/BundleExt.kt",
+      "message": "Non-test source contains TODO at line 57",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 57 is a genuine `//TODO Replace with CreationExtras API` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 57 of this commonMain production source contains the reported `//TODO Replace with CreationExtras API` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-65e0d84d455744af",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/dsl/KoinApplication.kt",
+      "message": "Non-test source contains TODO at line 21",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 21 is a real `//TODO Koin 4.1...` comment in production koin-core source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 21 of this commonMain production source contains the reported `//TODO Koin 4.1...` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-36bc066eedc70434",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-fu/src/jvmMain/kotlin/org/koin/dsl/fu/KoinFu.kt",
+      "message": "Non-test source contains TODO at line 49",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 49 is a genuine `//TODO check if we can cache params?` comment in production koin-fu source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 49 of this jvmMain production source contains the reported `//TODO check if we can cache params?` comment, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-733c599525f5ed4d",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi/src/main/java/com/squareup/moshi/-MoshiKotlinExtensions.kt",
+      "message": "Non-test source contains TODO at line 42",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking an unresolved decision in shipped library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Real TODO CR comment in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-55734bb179adbd6d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/build.gradle.kts",
+      "message": "Non-test source contains TODO at line 7",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The site is a Gradle build script (build/tooling code), which is outside the detector's stated production-source scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The TODO is in build.gradle.kts, which is build/tooling code rather than production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-58bee584719f30f2",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/build.gradle.kts",
+      "message": "Non-test source contains TODO at line 39",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The site is a Gradle build script (build/tooling code), outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The TODO is in the same build.gradle.kts build script, outside the detector's production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-901b4f1a37fe45b7",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/src/wasmWasiMain/kotlin/okio/WasiFileSystem.kt",
+      "message": "Non-test source contains TODO at line 222",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 222,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 222 is a genuine `// TODO: stop using exceptions for flow control.` comment in production wasmWasiMain source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "WasiFileSystem.kt is non-test production code and contains the reported TODO at line 222."
+        }
+      ]
+    },
+    {
+      "id": "EA-446a06275a6a758d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/CommonPlatform.kt",
+      "message": "Non-test source contains TODO at line 26",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 26 is a `// TODO make internal...` comment in non-test production source okio/CommonPlatform.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "CommonPlatform.kt is non-test production code and contains the reported TODO at line 26."
+        }
+      ]
+    },
+    {
+      "id": "EA-70dd86bc0ac040a8",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Non-test source contains TODO at line 130",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 130,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 130 contains `// TODO combine with Buffer.writeUtf8?` in production source okio/Utf8.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Utf8.kt is non-test production code and contains the reported TODO at line 130."
+        }
+      ]
+    },
+    {
+      "id": "EA-33e27d5fa5947f31",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Non-test source contains TODO at line 131",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 131,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 131 contains `// TODO combine with Buffer.writeUtf8CodePoint?` in production source okio/Utf8.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Utf8.kt is non-test production code and contains the reported TODO at line 131."
+        }
+      ]
+    },
+    {
+      "id": "EA-66fdc29f15ea6c27",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Non-test source contains TODO at line 206",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 206,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 206 contains `// TODO combine with Buffer.readUtf8CodePoint?` in production source okio/Utf8.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Utf8.kt is non-test production code and contains the reported TODO at line 206."
+        }
+      ]
+    },
+    {
+      "id": "EA-00e9ce31bcd81f30",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Non-test source contains TODO at line 254",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 254,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 254 contains `// TODO combine with Buffer.readUtf8?` in production source okio/Utf8.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Utf8.kt is non-test production code and contains the reported TODO at line 254."
+        }
+      ]
+    },
+    {
+      "id": "EA-ed66e8653da18832",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/-Utf8.kt",
+      "message": "Non-test source contains TODO at line 23",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 23 contains `// TODO For benchmarking...` in non-test production source okio/internal/-Utf8.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/commonMain/kotlin/okio/internal/-Utf8.kt:23 is non-test production source containing `// TODO ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-b088eb3be311b8de",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Non-test source contains TODO at line 18",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 18 contains `// TODO move to Buffer class...` in non-test production source okio/internal/Buffer.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt:18 is non-test production source containing `// TODO ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-077482610194c75d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Non-test source contains TODO at line 1702",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 1702,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1702 contains `// TODO(jwilson): use edit counts...` in non-test production source okio/internal/Buffer.kt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt:1702 is non-test production source containing `// TODO(jwilson): ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-b63b9fba7f9e4d19",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/ByteString.kt",
+      "message": "Non-test source contains TODO at line 37",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 37 is a genuine `// TODO` in non-test production source (okio commonMain), so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/commonMain/kotlin/okio/internal/ByteString.kt:37 is non-test production source containing `// TODO ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-48fe5c24a79e6d89",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/RealBufferedSource.kt",
+      "message": "Non-test source contains TODO at line 17",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 17 is a real `// TODO move to RealBufferedSource class` in non-test library source, matching the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/commonMain/kotlin/okio/internal/RealBufferedSource.kt:17 is non-test production source containing `// TODO ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-672adb10187973c1",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/ForwardingSource.kt",
+      "message": "Non-test source contains TODO at line 24",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 contains a genuine `// TODO 'Source by delegate'` comment in production jvmMain source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/jvmMain/kotlin/okio/ForwardingSource.kt:24 is non-test production source containing `// TODO ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-69e27021376865dd",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/internal/ResourceFileSystem.kt",
+      "message": "Non-test source contains TODO at line 59",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 59,
+      "verdict": "true_positive",
+      "reason": "A TODO marker in production source recording deferred work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 59 is an authentic `// TODO(jwilson)` in non-test ResourceFileSystem.kt, so the claim is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "okio/src/jvmMain/kotlin/okio/internal/ResourceFileSystem.kt:59 is non-test production source containing `// TODO(jwilson): ...`."
+        }
+      ]
+    },
+    {
+      "id": "EA-7310d3b30bbfface",
+      "repository": "black",
+      "language": "python",
+      "path": "action/main.py",
+      "message": "Non-test source contains TODO at line 191",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 191,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "action/main.py is the CI/GitHub-Action runner script (tooling code) that invokes black, outside the detector's non-test production-source scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-e25a638883040aae",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Non-test source contains TODO at line 665",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 665,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 665 is a real `# TODO: Uncomment Implementation...` in src/black/linegen.py production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-6511d272552b3b94",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/parsing.py",
+      "message": "Non-test source contains TODO at line 173",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 173,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 173 is a genuine `# TODO: support Python 4+` in src/black/parsing.py production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-349bbaed273e1da8",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pytree.py",
+      "message": "Non-test source contains TODO at line 786",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 786,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 786 carries an inline `# TODO: this is unbound when content is None` in non-test pytree.py source, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-cc1a7494cf2365e0",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_auth.py",
+      "message": "Non-test source contains TODO at line 267",
+      "status": "corroborated",
+      "sampled_from": "t23-py-l1",
+      "line": 267,
+      "verdict": "true_positive",
+      "reason": "TODO: implement auth-int in httpx digest auth production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 267 contains `# TODO: implement auth-int` in production source httpx/_auth.py."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_auth.py:267 is non-test production source containing `# TODO: implement auth-int`."
+        }
+      ]
+    },
+    {
+      "id": "EA-1f0cf21aa0a1c42e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Non-test source contains TODO at line 562",
+      "status": "corroborated",
+      "sampled_from": "t23-py-l1",
+      "line": 562,
+      "verdict": "true_positive",
+      "reason": "TODO comment about inefficiency in rich.text production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 562 contains the TODO comment `# TODO: This is a little inefficient...` in production source rich/text.py."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 562 of rich/text.py contains the TODO comment and the file is production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-701344e90977ab54",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Non-test source contains TODO at line 1020",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1020,
+      "verdict": "true_positive",
+      "reason": "Genuine TODO in non-test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1020 contains `// TODO(david): it's a little wasteful...` in production source axum-macros/src/from_request/mod.rs."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1020 in axum-macros/src/from_request/mod.rs contains a real `// TODO(david): ...` comment in non-test production source, so the claim and rationale apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa963388585ff482",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Non-test source contains TODO at line 1030",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1030,
+      "verdict": "true_positive",
+      "reason": "Genuine TODO in non-test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1030 contains the same `// TODO(david): ...` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1030 shows the same genuine `// TODO(david): ...` comment inside the Fields::Unnamed branch of this non-test source file."
+        }
+      ]
+    },
+    {
+      "id": "EA-9bb3a9d07f505d2e",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/output.rs",
+      "message": "Non-test source contains TODO at line 16",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 16,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 16 contains `// TODO: this function is performance critical...` in production source src/output.rs."
+        }
+      ]
+    },
+    {
+      "id": "EA-17696145fc74c188",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/output.rs",
+      "message": "Non-test source contains TODO at line 68",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 68,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 contains the `// TODO: this function is performance critical...` comment in production source src/output.rs."
+        }
+      ]
+    },
+    {
+      "id": "EA-e6c16308cb5744bf",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/output.rs",
+      "message": "Non-test source contains TODO at line 79",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 79,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 79 contains `// TODO: support writing raw bytes on unix?` in production source src/output.rs."
+        }
+      ]
+    },
+    {
+      "id": "EA-17739345fc7d6b03",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/output.rs",
+      "message": "Non-test source contains TODO at line 88",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 88 contains the `// TODO: this function is performance critical...` comment in production source src/output.rs."
+        }
+      ]
+    },
+    {
+      "id": "EA-17702d45fc7a87da",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/output.rs",
+      "message": "Non-test source contains TODO at line 141",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 141,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 141 contains the TODO comment in non-test production source src/output.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb7e3b8e1b188ad6",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/common/future.rs",
+      "message": "Non-test source contains TODO at line 7",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 7,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 7 contains the TODO comment in non-test production source src/common/future.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-aff977640e9243ef",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/common/io/rewind.rs",
+      "message": "Non-test source contains TODO at line 64",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 64 contains the TODO comment in non-test production source src/common/io/rewind.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-459a68b6133d06e3",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/common/task.rs",
+      "message": "Non-test source contains TODO at line 13",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 13,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 13 contains the TODO comment in non-test production source src/common/task.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-4e476975aace477b",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/common/task.rs",
+      "message": "Non-test source contains TODO at line 39",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 39 contains the TODO comment in non-test production source src/common/task.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-cdf5cc430cda307c",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/error.rs",
+      "message": "Non-test source contains TODO at line 49",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 49 contains the TODO comment in non-test production source src/ffi/error.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-6263e682d11c2f44",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/http_types.rs",
+      "message": "Non-test source contains TODO at line 458",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 458,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 458 contains the TODO comment in non-test production source src/ffi/http_types.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-afa370930b114d27",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/decode.rs",
+      "message": "Non-test source contains TODO at line 24",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 contains the TODO doc comment in non-test production source src/proto/h1/decode.rs, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2b75eb6b09176b7",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/decode.rs",
+      "message": "Non-test source contains TODO at line 641",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 641,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 641 in src/proto/h1/decode.rs contains the reported `// TODO: disallow Transfer-Encoding...` in non-test production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-c2640ebf0fb07a01",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/io.rs",
+      "message": "Non-test source contains TODO at line 295",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 295,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 295 in src/proto/h1/io.rs contains the reported `// TODO(eliza): we have to do this manually...` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-e9a8b7507bf71674",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/io.rs",
+      "message": "Non-test source contains TODO at line 351",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 351,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 351 in src/proto/h1/io.rs contains the reported `// TODO: This trait is old...` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-40e58253c6167886",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/mod.rs",
+      "message": "Non-test source contains TODO at line 12",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 12,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 12 in src/proto/h1/mod.rs contains the reported `//TODO: move out of h1::io` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-dfc60865dc3e2f94",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Non-test source contains TODO at line 228",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 228,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 228 in src/proto/h1/role.rs contains the reported `// TODO(lucab): switch to Uri::from_shared()` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-199df54d8a2f713a",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Non-test source contains TODO at line 912",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 912,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 912 in src/proto/h1/role.rs contains the reported `//TODO: this should perhaps instead combine them into` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-210cb664390fd69d",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Non-test source contains TODO at line 1231",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1231,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1231 in src/proto/h1/role.rs contains the reported `//TODO: add API to http::Uri to encode without std::fmt` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-d3bb70688c64e7f7",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Non-test source contains TODO at line 1260",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1260,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1260 in src/proto/h1/role.rs contains the reported `//TODO: remove when switching to drain()` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-01bace0b79b0d07a",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Non-test source contains TODO at line 1527",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1527,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1527 is a TODO in non-test production source src/proto/h1/role.rs as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-8409b45646e6b7bd",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Non-test source contains TODO at line 1650",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1650,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1650 is a TODO in non-test production source src/proto/h1/role.rs as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-a584cc96373591d6",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/rt/io.rs",
+      "message": "Non-test source contains TODO at line 544",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 544,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 544 is a TODO doc comment in production source src/rt/io.rs, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-c3f0eda3bed66036",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/server/conn/http2.rs",
+      "message": "Non-test source contains TODO at line 97",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 97,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 97 is a TODO in non-test production source src/server/conn/http2.rs as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-5d5040652dde8e07",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/lib.rs",
+      "message": "Non-test source contains TODO at line 970",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 970,
+      "verdict": "true_positive",
+      "reason": "Genuine TODO in non-test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 970 is a TODO in non-test production source crates/globset/src/lib.rs as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 970 in crates/globset/src/lib.rs contains a TODO comment in a struct definition in production library code."
+        }
+      ]
+    },
+    {
+      "id": "EA-211de3c04c778257",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/gitignore.rs",
+      "message": "Non-test source contains TODO at line 551",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 551,
+      "verdict": "true_positive",
+      "reason": "Genuine TODO in non-test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 551 is a TODO in non-test production source crates/ignore/src/gitignore.rs as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 551 in crates/ignore/src/gitignore.rs shows a TODO comment inside the case_insensitive builder method of non-test source."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e9afaf55a5ea9f6",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/overrides.rs",
+      "message": "Non-test source contains TODO at line 157",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 157,
+      "verdict": "true_positive",
+      "reason": "Genuine TODO in non-test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 157 is a TODO in non-test production source crates/ignore/src/overrides.rs as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 157 in crates/ignore/src/overrides.rs contains the stated TODO comment in a public non-test production function."
+        }
+      ]
+    },
+    {
+      "id": "EA-505b6e6e2c8dce74",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/sink.rs",
+      "message": "Non-test source contains TODO at line 607",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 607,
+      "verdict": "true_positive",
+      "reason": "Genuine TODO in non-test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 607 is a TODO in non-test production source crates/searcher/src/sink.rs as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 607 in crates/searcher/src/sink.rs contains the quoted TODO comment inside a match arm of production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-ed99ea3129bb403c",
+      "repository": "fastify",
+      "language": "typescript",
+      "path": "types/logger.d.ts",
+      "message": "Non-test source contains TODO at line 31",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 31 is a hand-written `.d.ts` production type file containing the exact `// TODO delete FastifyLoggerInstance...` comment."
+        }
+      ]
+    },
+    {
+      "id": "EA-cacb243a159d4837",
+      "repository": "fastify",
+      "language": "typescript",
+      "path": "types/logger.d.ts",
+      "message": "Non-test source contains TODO at line 41",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in non-test source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 41 contains the exact `// TODO: once node 18 is EOL...` comment in a production type file."
+        }
+      ]
+    },
+    {
+      "id": "EA-20db61c8e05b60ec",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/index.ts",
+      "message": "Non-test source contains TODO at line 1",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 1,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: Be explicit about what we export here",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1 of `packages/client/src/index.ts` is the exact `// TODO: Be explicit about what we export here` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1 of packages/client/src/index.ts contains the reported TODO comment in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-411c9f6da63040e9",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/app-dir/server.ts",
+      "message": "Non-test source contains TODO at line 119",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 119,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO allow this to take a `TRouter` in addition to a `AnyProcedure`",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 119 contains the exact `// TODO allow this to take a `TRouter`...` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 119 of packages/next/src/app-dir/server.ts contains the reported TODO comment in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-27c2ea9c966023f1",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/createTRPCNext.tsx",
+      "message": "Non-test source contains TODO at line 68",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 68,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: (",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 contains the exact `// TODO: maybe set TSSRContext to `never`...` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 of packages/next/src/createTRPCNext.tsx contains the reported TODO comment in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-ead71b8af43fd9ad",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/src/internals/getQueryKey.ts",
+      "message": "Non-test source contains TODO at line 119",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 119,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: look over if we can't use a single type",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 119 contains the exact `// TODO: look over if we can't use a single type` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 119 of packages/react-query/src/internals/getQueryKey.ts contains the reported TODO comment in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2e3202eb72b186e",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/adapters/next-app-dir/redirect.ts",
+      "message": "Non-test source contains TODO at line 11",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 11,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO(?): This should maybe a custom error code",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 11 contains the exact `// TODO(?): This should maybe a custom error code` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 11 of packages/server/src/adapters/next-app-dir/redirect.ts contains the reported \"TODO(?)\" comment in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-d23c153d48cc69dd",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/procedureBuilder.ts",
+      "message": "Non-test source contains TODO at line 531",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 531,
+      "verdict": "true_positive",
+      "reason": "TODO comment marking unfinished work in shipped code: // TODO: maybe have a fn here to warn about calls",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 531 contains the exact `// TODO: maybe have a fn here to warn about calls` comment in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 531 of packages/server/src/unstable-core-do-not-import/procedureBuilder.ts contains the reported TODO comment in production source."
+        }
+      ]
+    }
+  ]
+}

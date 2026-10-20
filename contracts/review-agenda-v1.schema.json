@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/review-agenda-v1.schema.json",
+  "title": "Engineering Auditor Review Agenda V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "agenda_id",
+    "input_binding",
+    "selector_manifest",
+    "candidates",
+    "suppression_records",
+    "case_planning_records",
+    "coverage",
+    "planner_version"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "agenda_id": {
+      "type": "string",
+      "pattern": "^review-agenda:[0-9a-f]{64}$"
+    },
+    "input_binding": { "$ref": "#/$defs/input_binding" },
+    "selector_manifest": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/selector_manifest_entry" }
+    },
+    "candidates": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/candidate" }
+    },
+    "suppression_records": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/suppression" }
+    },
+    "case_planning_records": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/case_plan" }
+    },
+    "coverage": { "$ref": "#/$defs/coverage" },
+    "planner_version": { "type": "integer", "const": 1 }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^review-candidate:[0-9a-f]{64}$"
+    },
+    "source_candidate_id": {
+      "type": "string",
+      "pattern": "^selector-candidate:[0-9a-f]{64}$"
+    },
+    "selector_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+    },
+    "case_kind": {
+      "enum": [
+        "lifecycle_mismatch",
+        "shared_root_cause",
+        "recommendation_consolidation"
+      ]
+    },
+    "decision_kind": {
+      "enum": [
+        "evaluate_lifecycle_ownership",
+        "evaluate_shared_root_cause",
+        "reconcile_recommendations",
+        "resolve_capability_evidence_gap"
+      ]
+    },
+    "selection_reason": {
+      "enum": [
+        "same_subject_concentration",
+        "repeated_work_lifecycle_intersection",
+        "recommendation_overlap",
+        "recommendation_conflict",
+        "cross_layer_intersection",
+        "material_capability_limitation"
+      ]
+    },
+    "string_set": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "nonempty_string_set": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "input_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "report_digest",
+        "evidence_graph_digest",
+        "repository_map_digest",
+        "source_snapshot_digest",
+        "case_template_bundle_digest",
+        "prompt_bundle_digest",
+        "route_configuration_digest",
+        "operator_brief_digest",
+        "evidence_attachment_digests"
+      ],
+      "properties": {
+        "schema_version": { "type": "integer", "const": 1 },
+        "report_digest": { "$ref": "#/$defs/sha256" },
+        "evidence_graph_digest": { "$ref": "#/$defs/sha256" },
+        "repository_map_digest": { "$ref": "#/$defs/sha256" },
+        "source_snapshot_digest": { "$ref": "#/$defs/sha256" },
+        "case_template_bundle_digest": { "$ref": "#/$defs/sha256" },
+        "prompt_bundle_digest": { "$ref": "#/$defs/sha256" },
+        "route_configuration_digest": { "$ref": "#/$defs/sha256" },
+        "operator_brief_digest": {
+          "oneOf": [
+            { "$ref": "#/$defs/sha256" },
+            { "type": "null" }
+          ]
+        },
+        "evidence_attachment_digests": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "selector_manifest_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "order"],
+      "properties": {
+        "id": { "$ref": "#/$defs/selector_id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "order": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "source_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "selector_id", "selector_version"],
+      "properties": {
+        "candidate_id": { "$ref": "#/$defs/source_candidate_id" },
+        "selector_id": { "$ref": "#/$defs/selector_id" },
+        "selector_version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "candidate_id",
+        "selector_id",
+        "selector_version",
+        "decision_kind",
+        "subject_ids",
+        "finding_ids",
+        "selection_evidence_refs",
+        "eligible_case_kinds",
+        "selection_reasons",
+        "source_candidates"
+      ],
+      "properties": {
+        "schema_version": { "type": "integer", "const": 1 },
+        "candidate_id": { "$ref": "#/$defs/candidate_id" },
+        "selector_id": { "$ref": "#/$defs/selector_id" },
+        "selector_version": { "type": "integer", "minimum": 1 },
+        "decision_kind": { "$ref": "#/$defs/decision_kind" },
+        "subject_ids": { "$ref": "#/$defs/nonempty_string_set" },
+        "finding_ids": { "$ref": "#/$defs/string_set" },
+        "selection_evidence_refs": { "$ref": "#/$defs/nonempty_string_set" },
+        "eligible_case_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/case_kind" }
+        },
+        "selection_reasons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/selection_reason" }
+        },
+        "source_candidates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/source_candidate" }
+        }
+      }
+    },
+    "suppression_reason": {
+      "enum": [
+        "unsupported_evidence_neighborhood",
+        "duplicate_of_case",
+        "outside_operator_scope",
+        "privacy_policy_excludes_required_context",
+        "deterministic_action_already_complete",
+        "no_additional_context_can_change_action",
+        "insufficient_materiality",
+        "review_budget_deferred"
+      ]
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "suppression_id",
+        "candidate_id",
+        "reason",
+        "supporting_evidence_refs",
+        "duplicate_of_candidate_id"
+      ],
+      "properties": {
+        "suppression_id": {
+          "type": "string",
+          "pattern": "^review-suppression:[0-9a-f]{64}$"
+        },
+        "candidate_id": {
+          "type": "string",
+          "pattern": "^(?:review|selector)-candidate:[0-9a-f]{64}$"
+        },
+        "reason": { "$ref": "#/$defs/suppression_reason" },
+        "supporting_evidence_refs": { "$ref": "#/$defs/string_set" },
+        "duplicate_of_candidate_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/candidate_id" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "case_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan_id",
+        "candidate_id",
+        "case_kind",
+        "status",
+        "suppression_id"
+      ],
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "pattern": "^case-plan:[0-9a-f]{64}$"
+        },
+        "candidate_id": { "$ref": "#/$defs/candidate_id" },
+        "case_kind": { "$ref": "#/$defs/case_kind" },
+        "status": { "enum": ["planned", "suppressed"] },
+        "suppression_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^review-suppression:[0-9a-f]{64}$"
+            },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "planned" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": { "suppression_id": { "type": "null" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "suppressed" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "suppression_id": {
+                "type": "string",
+                "pattern": "^review-suppression:[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_candidate_count",
+        "candidate_count",
+        "suppression_count",
+        "planned_case_count",
+        "referenced_finding_count",
+        "not_selected_finding_count"
+      ],
+      "properties": {
+        "source_candidate_count": { "type": "integer", "minimum": 0 },
+        "candidate_count": { "type": "integer", "minimum": 0 },
+        "suppression_count": { "type": "integer", "minimum": 0 },
+        "planned_case_count": { "type": "integer", "minimum": 0 },
+        "referenced_finding_count": { "type": "integer", "minimum": 0 },
+        "not_selected_finding_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

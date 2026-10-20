@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "detector": "bind_all_interfaces",
+  "labels": [
+    {
+      "id": "EA-99a8a215aeb9b618",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "integration/server.js",
+      "message": "Service binds to all network interfaces at line 7",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "Tooling, documentation, or integration-test script, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "integration/server.js is an integration test fixture server (require('../fastify')), outside the detector's production scope."
+        }
+      ]
+    }
+  ]
+}

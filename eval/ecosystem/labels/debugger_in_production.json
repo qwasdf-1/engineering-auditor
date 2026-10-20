@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "detector": "debugger_in_production",
+  "labels": [
+    {
+      "id": "EA-adab93fdc24976d5",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/error.c",
+      "message": "Debugger statement in production code at line 61",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 61,
+      "verdict": "false_positive",
+      "reason": "DebugBreak() in libuv's fatal-error path is a deliberate trap before abort(), not a leftover debugging statement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "DebugBreak() at line 61 is the deliberate fatal-error path in uv_fatal_error immediately followed by abort(), a C idiom rather than a stray debugger statement to remove."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "DebugBreak() at line 61 is the deliberate fatal-error sequence (after the LocalFree(buf) cleanup and immediately before abort()), not a leftover debugging statement to remove."
+        }
+      ]
+    }
+  ]
+}

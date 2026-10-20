@@ -1,0 +1,544 @@
+{
+  "analysis_contract_digest": "fnv1a64:d5100a352d700187",
+  "analysis_method": "auto",
+  "entries": [
+    {
+      "detector": "function_complexity",
+      "id": "EA-cca14ede71cfb821",
+      "identity": {
+        "anchor": "symbol:update_cognitive_metrics"
+      },
+      "message": "Function `update_cognitive_metrics` has 11 branch decision points.",
+      "path": "crates/auditor-ast/src/complexity.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "too_many_parameters",
+      "id": "EA-044a7cd07891a15d",
+      "identity": {
+        "anchor": "symbol:walk_combined"
+      },
+      "message": "Function `walk_combined` takes 7 parameters (> 5).",
+      "path": "crates/auditor-ast/src/complexity.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function parameter list exceeds budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-8858a535733ac752",
+      "identity": {
+        "anchor": "symbol:is_halstead_operand"
+      },
+      "message": "Function `is_halstead_operand` has 13 branch decision points.",
+      "path": "crates/auditor-ast/src/complexity/halstead/operands.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-ef24cef551582f18",
+      "identity": {
+        "anchor": "symbol:is_halstead_operator"
+      },
+      "message": "Function `is_halstead_operator` has 13 branch decision points.",
+      "path": "crates/auditor-ast/src/complexity/halstead/operators.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-c0df8a7f8f3e0276",
+      "identity": {},
+      "message": "crates/auditor-core/src/lib.rs is complex and growing (CCX=93, growth=+132 LOC).",
+      "path": "crates/auditor-core/src/lib.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-58cbbed2b850d96a",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/algorithmic_facts.rs is complex and growing (CCX=50, growth=+144 LOC).",
+      "path": "crates/auditor-detectors/src/algorithmic_facts.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-cbeaba0fac078003",
+      "identity": {
+        "anchor": "structural:clone:7be668c0cb9cebcd"
+      },
+      "message": "Clone class spans 62 normalized tokens across 3 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/async_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, finding! builder boilerplate: each detector constructs its own finding from distinct literals.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "too_many_parameters",
+      "id": "EA-ebbab354e6379d92",
+      "identity": {
+        "anchor": "symbol:source_duplicate_finding"
+      },
+      "message": "Function `source_duplicate_finding` takes 6 parameters (> 5).",
+      "path": "crates/auditor-detectors/src/bloat.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function parameter list exceeds budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-e06d8d383aa27c5d",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/config.rs is complex and growing (CCX=87, growth=+60 LOC).",
+      "path": "crates/auditor-detectors/src/config.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-e422eca036d594b8",
+      "identity": {
+        "anchor": "symbol:threshold_metric"
+      },
+      "message": "Function `threshold_metric` has 11 branch decision points.",
+      "path": "crates/auditor-detectors/src/config.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-efbd42205f5d6c11",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/control_flow.rs is complex and growing (CCX=54, growth=+70 LOC).",
+      "path": "crates/auditor-detectors/src/control_flow.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-0ec567a31a4d6c94",
+      "identity": {
+        "anchor": "structural:clone:46d2f84a21a8625a"
+      },
+      "message": "Clone class spans 54 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/correctness.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language dispatch chain: the same if/else-if skeleton calls a different per-language rule family.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-50b1a034051b5403",
+      "identity": {
+        "anchor": "structural:clone:f89aa3d3a370281e"
+      },
+      "message": "Clone class spans 94 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/correctness.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language dispatch chain: the same if/else-if skeleton calls a different per-language rule family.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-c8a6ecf9a79174cd",
+      "identity": {
+        "anchor": "structural:clone:344737cf1eb9e1c5"
+      },
+      "message": "Clone class spans 53 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/correctness.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-128ec0e2b824a2b0",
+      "identity": {
+        "anchor": "structural:clone:cbbe501ede7ec5a2"
+      },
+      "message": "Clone class spans 55 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/csharp_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-913432e438ab5278",
+      "identity": {
+        "anchor": "structural:clone:c34113cce387ac25"
+      },
+      "message": "Clone class spans 52 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/csharp_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-9a4370c3ac59e196",
+      "identity": {
+        "anchor": "structural:clone:c9421f85f39d0502"
+      },
+      "message": "Clone class spans 54 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/csharp_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-2e3c6086a47c12b8",
+      "identity": {
+        "anchor": "symbol:run_optimization_owner"
+      },
+      "message": "Function `run_optimization_owner` has 13 branch decision points.",
+      "path": "crates/auditor-detectors/src/dispatcher.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-3ba9d856758b95de",
+      "identity": {
+        "anchor": "symbol:run_structural_owner"
+      },
+      "message": "Function `run_structural_owner` has 20 branch decision points.",
+      "path": "crates/auditor-detectors/src/dispatcher.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-4f2f2464ee9cac58",
+      "identity": {
+        "anchor": "symbol:run_foundation_owner"
+      },
+      "message": "Function `run_foundation_owner` has 13 branch decision points.",
+      "path": "crates/auditor-detectors/src/dispatcher.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-6ac9c3311248de6f",
+      "identity": {
+        "anchor": "symbol:run_error_owner"
+      },
+      "message": "Function `run_error_owner` has 20 branch decision points.",
+      "path": "crates/auditor-detectors/src/dispatcher.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-8c658c3e26ffde41",
+      "identity": {
+        "anchor": "symbol:run_language_owner"
+      },
+      "message": "Function `run_language_owner` has 12 branch decision points.",
+      "path": "crates/auditor-detectors/src/dispatcher.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-a0d3c4f56723095a",
+      "identity": {
+        "anchor": "symbol:run_correctness_owner"
+      },
+      "message": "Function `run_correctness_owner` has 16 branch decision points.",
+      "path": "crates/auditor-detectors/src/dispatcher.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-9eb84950292f08eb",
+      "identity": {
+        "anchor": "structural:clone:bea72962e6b3afb1"
+      },
+      "message": "Clone class spans 75 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/errorprone.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language dispatch chain: the same if/else-if skeleton calls a different per-language rule family.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-1593475a6ceaacb6",
+      "identity": {
+        "anchor": "structural:clone:1591f853772f1008"
+      },
+      "message": "Clone class spans 51 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/errorprone_language_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, finding! builder boilerplate: each detector constructs its own finding from distinct literals.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-8122066059163397",
+      "identity": {
+        "anchor": "structural:clone:7872a0493bce5c45"
+      },
+      "message": "Clone class spans 70 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/go_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-0969aa862038141f",
+      "identity": {
+        "anchor": "structural:clone:f4edba7e40b8af83"
+      },
+      "message": "Clone class spans 63 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/java_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-453b7041b9fffbc0",
+      "identity": {
+        "anchor": "structural:clone:823a8d9fe95c858e"
+      },
+      "message": "Clone class spans 69 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/java_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-a8b1688f1493557f",
+      "identity": {
+        "anchor": "structural:clone:061994d4573d9da0"
+      },
+      "message": "Clone class spans 65 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/java_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-f63d333a1b89e386",
+      "identity": {
+        "anchor": "structural:clone:0fff3e3946c93eba"
+      },
+      "message": "Clone class spans 55 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/java_api_rules.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-26f7a3398ae7be80",
+      "identity": {
+        "anchor": "structural:clone:f557f04e70d00c76"
+      },
+      "message": "Clone class spans 63 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/lexical.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, finding! builder boilerplate: each detector constructs its own finding from distinct literals.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-d8d6bd3ed17ef9b6",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/markdown.rs is complex and growing (CCX=67, growth=+190 LOC).",
+      "path": "crates/auditor-detectors/src/markdown.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the hotspot surfaced when churn began netting moved code, which lowered the quartile cutoffs. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-bf163c43e3f6c65f",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/naming.rs is complex and growing (CCX=66, growth=+147 LOC).",
+      "path": "crates/auditor-detectors/src/naming.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the hotspot surfaced when churn began netting moved code, which lowered the quartile cutoffs. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-9fb4c1447291b422",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/optimization_fact_collectors.rs is complex and growing (CCX=61, growth=+58 LOC).",
+      "path": "crates/auditor-detectors/src/optimization_fact_collectors.rs",
+      "reason": "Reviewed 2026-10-19: growth is from the Go, Java, JS/TS, Python, and Rust optimization-fact passes; the file is owner-aligned and unchanged since, and it entered the 14-day window as release-hygiene commits shifted the relative growth/complexity quartiles. History-dependent hotspot accepted (operator approved) until it leaves the window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-1f4ec783a03e8fd4",
+      "identity": {
+        "anchor": "structural:clone:93ed00836c0d1f2c"
+      },
+      "message": "Clone class spans 50 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/optimization_fact_language_forms.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-69f7bf10946b0c3c",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/optimization_fact_operations.rs is complex and growing (CCX=43, growth=+59 LOC).",
+      "path": "crates/auditor-detectors/src/optimization_fact_operations.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-f9667f3e04a496f0",
+      "identity": {
+        "anchor": "symbol:OptimizationFactKind::rank"
+      },
+      "message": "Function `rank` has 12 branch decision points.",
+      "path": "crates/auditor-detectors/src/optimization_facts.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "too_many_parameters",
+      "id": "EA-dead0a0b92117bbf",
+      "identity": {
+        "anchor": "symbol:finding"
+      },
+      "message": "Function `finding` takes 6 parameters (> 5).",
+      "path": "crates/auditor-detectors/src/repository_graph.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function parameter list exceeds budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-658363a1b195b1b4",
+      "identity": {
+        "anchor": "symbol:Language::as_str"
+      },
+      "message": "Function `as_str` has 18 branch decision points.",
+      "path": "crates/auditor-detectors/src/source_discovery.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-eafa14d26223a232",
+      "identity": {
+        "anchor": "structural:clone:b35d2e9077d1db5c"
+      },
+      "message": "Clone class spans 55 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/structural.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, finding! builder boilerplate: each detector constructs its own finding from distinct literals.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "too_many_parameters",
+      "id": "EA-60d9f183e3ffd340",
+      "identity": {
+        "anchor": "symbol:halstead_information_density_finding"
+      },
+      "message": "Function `halstead_information_density_finding` takes 6 parameters (> 5).",
+      "path": "crates/auditor-detectors/src/structural.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function parameter list exceeds budget"
+    },
+    {
+      "detector": "too_many_parameters",
+      "id": "EA-bd948fcd3bb63d45",
+      "identity": {
+        "anchor": "symbol:function_complexity_finding"
+      },
+      "message": "Function `function_complexity_finding` takes 6 parameters (> 5).",
+      "path": "crates/auditor-detectors/src/structural.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function parameter list exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-7316ea9fde23ada9",
+      "identity": {
+        "anchor": "structural:clone:9ad9439311fc8432"
+      },
+      "message": "Clone class spans 68 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-detectors/src/structure_spans.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-522ac207adaa1de0",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=56, growth=+106 LOC).",
+      "path": "crates/auditor-detectors/src/systems_effects.rs",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-42509d3a2beead16",
+      "identity": {
+        "anchor": "symbol:signature_body_start"
+      },
+      "message": "Function `signature_body_start` has 11 branch decision points.",
+      "path": "crates/auditor-detectors/src/util.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "function_complexity",
+      "id": "EA-a4dd02f6a4dd58be",
+      "identity": {
+        "anchor": "symbol:map_language_to_ast"
+      },
+      "message": "Function `map_language_to_ast` has 14 branch decision points.",
+      "path": "crates/auditor-detectors/src/util.rs",
+      "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
+      "title": "Function exceeds branch complexity budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-3ac8b77aa07f466b",
+      "identity": {
+        "anchor": "structural:clone:aa6d2967dcc3401f"
+      },
+      "message": "Clone class spans 63 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-review/src/case_review/challenge/execute.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-aa7aaedb5d44d1b0",
+      "identity": {
+        "anchor": "structural:clone:7c99531d09e2a3f4"
+      },
+      "message": "Clone class spans 66 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-review/src/case_review/service/review_case/challenge_tasks.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "source_duplicate_detection",
+      "id": "EA-fa3cf0e698a634d8",
+      "identity": {
+        "anchor": "structural:clone:60f4023a7531f618"
+      },
+      "message": "Clone class spans 59 normalized tokens across 2 non-overlapping occurrence(s).",
+      "path": "crates/auditor-review/src/provider/native_tool_adapter.rs",
+      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
+      "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-6d2983a87ceb60ba",
+      "identity": {},
+      "message": "tooling/detector_gate_contract.py is complex and growing (CCX=47, growth=+68 LOC).",
+      "path": "tooling/detector_gate_contract.py",
+      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    }
+  ],
+  "evidence_graph_schema_version": 2,
+  "finding_id_version": 3,
+  "profile": "gating",
+  "report_schema_version": 5,
+  "schema_version": 2,
+  "scope": "full",
+  "semantic_contract_version": 1,
+  "source_role_version": 1
+}

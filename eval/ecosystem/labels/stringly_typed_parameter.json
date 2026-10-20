@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "detector": "stringly_typed_parameter",
+  "labels": [
+    {
+      "id": "EA-96fce61aa9bb1436",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/key-spacing.js",
+      "message": "Function `report` accepts sentinel-like string parameter `mode`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 494,
+      "verdict": "true_positive",
+      "reason": "A string mode flag selects behaviour; an enum or separate functions would type it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`mode` is branched on against the literal sentinel strings `\"strict\"` and `\"minimum\"`, so the stringly-typed-parameter claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-cd655ff584d5e805",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/app.py",
+      "message": "Function `open_resource` accepts sentinel-like string parameter `mode`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 331,
+      "verdict": "false_positive",
+      "reason": "mode mirrors open()'s standard mode string.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`open_resource`'s `mode: str = \"rb\"` is documented to accept only the sentinel strings \"r\", \"rt\", \"rb\", exactly the stringly-typed sentinel case."
+        }
+      ]
+    },
+    {
+      "id": "EA-47a0540d9fd6b156",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/blueprints.py",
+      "message": "Function `open_resource` accepts sentinel-like string parameter `mode`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 105,
+      "verdict": "false_positive",
+      "reason": "mode mirrors open()'s standard mode string.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Blueprint.open_resource`'s `mode: str = \"rb\"` likewise takes only the sentinel values \"r\", \"rt\", \"rb\", matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-252d108d60de0a1f",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/accepts/accepts.ts",
+      "message": "Function `` accepts sentinel-like string parameter `type`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "A media type value, not a sentinel string.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`type` in `getSpecificity` accepts arbitrary media types (e.g. `application/json`) and merely compares against wildcard strings; it is not a closed sentinel-valued parameter."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,645 @@
+{
+  "schema_version": 1,
+  "detector": "cpp_raw_ptr_ownership",
+  "labels": [
+    {
+      "id": "EA-470e361281fcd4c0",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/c.cc",
+      "message": "Raw pointer allocation with `new` at line 174; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 174,
+      "verdict": "false_positive",
+      "reason": "C API wrapper: ownership passes to the C caller, which needs a raw pointer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Ownership is clear in this C-ABI binding: `new leveldb_t` is returned to the C caller and released by `leveldb_close` (`delete db`), so the smart-pointer rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-78e0a29dfdf8a557",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/c.cc",
+      "message": "Raw pointer allocation with `new` at line 221; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 221,
+      "verdict": "false_positive",
+      "reason": "C API wrapper: ownership passes to the C caller, which needs a raw pointer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This is the C-binding handle-creation idiom where the `new leveldb_iterator_t` is returned to the caller for release, so the ownership-ambiguity rationale does not hold."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2d550ef703e1851",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/c.cc",
+      "message": "Raw pointer allocation with `new` at line 254; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 254,
+      "verdict": "false_positive",
+      "reason": "C API wrapper: ownership passes to the C caller, which needs a raw pointer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `Range` array is freed by `delete[] ranges` at line 260 in the same function, so its ownership is unambiguous and the rationale is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-68fde329f1c79fd2",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/c.cc",
+      "message": "Raw pointer allocation with `new` at line 438; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 438,
+      "verdict": "false_positive",
+      "reason": "C API wrapper: ownership passes to the C caller, which needs a raw pointer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `new leveldb_comparator_t` handle is returned and released by `leveldb_comparator_destroy` (`delete cmp`), the intended C-ABI idiom, so the ownership-ambiguity rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-7efd540799ad8895",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/c.cc",
+      "message": "Raw pointer allocation with `new` at line 456; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 456,
+      "verdict": "false_positive",
+      "reason": "C API wrapper: ownership passes to the C caller, which needs a raw pointer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The pointer is returned to the C caller and freed by leveldb_filterpolicy_destroy (line 466), so ownership is explicitly transferred, not ambiguous."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e485737bfac82c4",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/c.cc",
+      "message": "Raw pointer allocation with `new` at line 487; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 487,
+      "verdict": "false_positive",
+      "reason": "C API wrapper: ownership passes to the C caller, which needs a raw pointer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`wrapper` is returned at line 491 and freed through the matching leveldb_filterpolicy destroy path, so ownership is clearly transferred to the caller."
+        }
+      ]
+    },
+    {
+      "id": "EA-2cb7e0da4637c672",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/db_impl.cc",
+      "message": "Raw pointer allocation with `new` at line 749; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 749,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`compact` is a locally owned raw allocation freed manually via CleanupCompaction(compact) rather than any smart pointer, so the raw-ownership rationale applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-c95fbfdfe625ee3d",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/repair.cc",
+      "message": "Raw pointer allocation with `new` at line 180; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`mem` is immediately handed to MemTable's Ref()/Unref() refcounting, an established ownership idiom the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb4c70556c3d2f20",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/repair.cc",
+      "message": "Raw pointer allocation with `new` at line 305; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 305,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`builder` is a locally owned raw TableBuilder whose lifetime is managed manually with Finish/Abandon/delete, matching the raw-ownership rationale."
+        }
+      ]
+    },
+    {
+      "id": "EA-a4bdce9a0fc440ab",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/snapshot.h",
+      "message": "Raw pointer allocation with `new` at line 60; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`snapshot` is linked into the list and is owned/deleted by the SnapshotList, so ownership is clear, not ambiguous."
+        }
+      ]
+    },
+    {
+      "id": "EA-f259e17a6df537e9",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/table_cache.cc",
+      "message": "Raw pointer allocation with `new` at line 69; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`tf` ownership is transferred to the cache via Insert(key, tf, 1, &DeleteEntry), whose deleter frees it, so ownership is explicit."
+        }
+      ]
+    },
+    {
+      "id": "EA-cb5ff3259b22ed49",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/version_set.cc",
+      "message": "Raw pointer allocation with `new` at line 1229; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1229,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`list` is a local raw iterator array managed manually with delete[], so the raw-pointer ownership rationale applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-998a9c881b8f7e0e",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "helpers/memenv/memenv.cc",
+      "message": "Raw pointer allocation with `new` at line 272; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 272,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new WritableFileImpl(file)` transfers ownership to the caller through the out-parameter, the standard Env factory idiom, so ownership is not ambiguous."
+        }
+      ]
+    },
+    {
+      "id": "EA-cf105149179e0369",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "helpers/memenv/memenv.cc",
+      "message": "Raw pointer allocation with `new` at line 374; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 374,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new NoOpLogger` hands ownership to the caller via the out-parameter in NewLogger, a recognizable factory/ownership-transfer pattern."
+        }
+      ]
+    },
+    {
+      "id": "EA-aa91bffdd0b1aa13",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/format.cc",
+      "message": "Raw pointer allocation with `new` at line 73; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `buf` buffer is `delete[]`d on every error path and handed to `result` on success in ReadBlock, so its ownership is managed and clear."
+        }
+      ]
+    },
+    {
+      "id": "EA-a8380efe7bd3e7d8",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/format.cc",
+      "message": "Raw pointer allocation with `new` at line 121; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`ubuf` is explicitly transferred to `result->data` with `result->heap_allocated = true` and freed on the error path, so ownership is expressed."
+        }
+      ]
+    },
+    {
+      "id": "EA-0deb6567b8d6022a",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/iterator.cc",
+      "message": "Raw pointer allocation with `new` at line 70; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-h",
+      "line": 70,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "NewEmptyIterator returns a freshly allocated iterator to the caller, a factory idiom whose ownership transfer the rule should recognize."
+        }
+      ]
+    },
+    {
+      "id": "EA-a0f43025097ccea2",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/cache.cc",
+      "message": "Raw pointer allocation with `new` at line 128; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`new_list` is a local temporary hash array inside Resize that replaces `list_` and is owned/freed by the cache, not an ambiguous allocation."
+        }
+      ]
+    },
+    {
+      "id": "EA-5c9d78bd9c768280",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/cache.cc",
+      "message": "Raw pointer allocation with `new` at line 399; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 399,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "NewLRUCache returns an owned cache to the caller, the standard ownership-transfer factory idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-c4c88207aa56d7cb",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env.cc",
+      "message": "Raw pointer allocation with `new` at line 89; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The local scratch buffer `space` is `delete[]`d at line 101 within the same function, so its ownership is unambiguous."
+        }
+      ]
+    },
+    {
+      "id": "EA-601f21568f59cf7f",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_posix.cc",
+      "message": "Raw pointer allocation with `new` at line 508; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 508,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new PosixSequentialFile(...)` assigns through the `SequentialFile**` output parameter, the standard factory idiom that clearly transfers ownership to the caller, so the 'ownership unclear' claim does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-6550d23e2e3f697d",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_posix.cc",
+      "message": "Raw pointer allocation with `new` at line 531; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 531,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new PosixMmapReadableFile(...)` transfers ownership via the output parameter on success, the established factory idiom, so ownership is not unclear."
+        }
+      ]
+    },
+    {
+      "id": "EA-de1a54bf4c4fabc5",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_posix.cc",
+      "message": "Raw pointer allocation with `new` at line 554; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 554,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new PosixWritableFile(...)` hands the allocation to the caller through the `WritableFile**` output parameter, a recognised ownership-transfer idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-49fcf8540ef95aba",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_windows.cc",
+      "message": "Raw pointer allocation with `new` at line 404; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 404,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new WindowsRandomAccessFile(...)` assigns to the caller's output pointer, clearly transferring ownership rather than leaving it ambiguous."
+        }
+      ]
+    },
+    {
+      "id": "EA-a29946e43621e14e",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_windows.cc",
+      "message": "Raw pointer allocation with `new` at line 427; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 427,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new WindowsMmapReadableFile(...)` is the same output-parameter factory idiom, so the 'ownership unclear' rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-ace2458c88a5d6be",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_windows.cc",
+      "message": "Raw pointer allocation with `new` at line 450; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-h",
+      "line": 450,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new WindowsWritableFile(...)` passes ownership out through the result parameter, a recognised idiom, so the claim of unclear ownership is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-3014eba4aa84f033",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_windows.cc",
+      "message": "Raw pointer allocation with `new` at line 630; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 630,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`*result = new WindowsLogger(fp)` transfers ownership to the caller via the output pointer in the standard factory pattern."
+        }
+      ]
+    },
+    {
+      "id": "EA-d219d9953868ccfd",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/status.cc",
+      "message": "Raw pointer allocation with `new` at line 26; ownership is unclear",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "A naked `new` hands out a raw owning pointer (C++ Core Guidelines R.11); a smart pointer would state ownership.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`char* result = new char[size + 5]` is a raw owning allocation stored into the raw member `state_` and freed with `delete[]` rather than a smart pointer, so the raw-ownership rationale applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-81c2af251cf0aff6",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/ordered_map.hpp",
+      "message": "Raw pointer allocation with `new` at line 172; ownership is unclear",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 172,
+      "verdict": "false_positive",
+      "reason": "Placement new constructs in storage the container owns; nothing is allocated.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-6d61fa9c0b538250",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/ordered_map.hpp",
+      "message": "Raw pointer allocation with `new` at line 193; ownership is unclear",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 193,
+      "verdict": "false_positive",
+      "reason": "Placement new constructs in storage the container owns; nothing is allocated.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1835f8cb43800c07",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/ordered_map.hpp",
+      "message": "Raw pointer allocation with `new` at line 240; ownership is unclear",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 240,
+      "verdict": "false_positive",
+      "reason": "Placement new constructs in storage the container owns; nothing is allocated.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c791b719c61d112f",
+      "repository": "zlib",
+      "language": "cpp",
+      "path": "contrib/iostream2/zstream.h",
+      "message": "Raw pointer allocation with `new` at line 146; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 146,
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`char* x = new char[len.value()+1];` allocates a raw buffer whose ownership is only transferred by convention via the return value, so the ownership-ambiguity claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2dedbb5fab61478",
+      "repository": "zlib",
+      "language": "cpp",
+      "path": "contrib/iostream2/zstream.h",
+      "message": "Raw pointer allocation with `new` at line 242; ownership is unclear",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 242,
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ostrstream* oss = new ostrstream;` is a raw `new` allocation later stored into the raw member `m_os`, exactly the manual ownership the detector targets."
+        }
+      ]
+    }
+  ]
+}

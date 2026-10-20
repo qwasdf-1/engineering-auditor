@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/review-qualification-v2.schema.json",
+  "title": "Engineering Auditor Review Qualification V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "qualification_id",
+    "binding",
+    "transport_valid",
+    "native_protocol_valid",
+    "semantic_output_valid",
+    "semantic_cases_passed",
+    "failure_class",
+    "failure_detail",
+    "qualified_at_unix_seconds"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "qualification_id": {
+      "type": "string",
+      "pattern": "^review-qualification:[0-9a-f]{64}$"
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "role",
+        "case_kind",
+        "probe_kinds",
+        "prompt_bundle_id",
+        "tool_schema_digest",
+        "renderer_version",
+        "adapter_version"
+      ],
+      "properties": {
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider_id", "model"],
+          "properties": {
+            "provider_id": { "type": "string", "minLength": 1 },
+            "model": { "type": "string", "minLength": 1 }
+          }
+        },
+        "role": {
+          "enum": [
+            "single_reviewer",
+            "reviewer_a",
+            "reviewer_b",
+            "reviewer_c",
+            "challenger",
+            "alternative_comparator"
+          ]
+        },
+        "case_kind": { "type": "string", "minLength": 1 },
+        "probe_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "prompt_bundle_id": {
+          "type": "string",
+          "pattern": "^review-prompt-bundle:[0-9a-f]{64}$"
+        },
+        "tool_schema_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "renderer_version": { "type": "integer", "minimum": 1 },
+        "adapter_version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "transport_valid": { "type": "boolean" },
+    "native_protocol_valid": { "type": "boolean" },
+    "semantic_output_valid": { "type": "boolean" },
+    "semantic_cases_passed": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "positive",
+          "negative",
+          "unknown",
+          "conflicting_evidence",
+          "forbidden_redesign"
+        ]
+      }
+    },
+    "failure_class": {
+      "type": ["string", "null"]
+    },
+    "failure_detail": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "qualified_at_unix_seconds": { "type": "integer", "minimum": 0 }
+  }
+}

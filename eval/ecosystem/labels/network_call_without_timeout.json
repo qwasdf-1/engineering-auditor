@@ -1,0 +1,526 @@
+{
+  "schema_version": 1,
+  "detector": "network_call_without_timeout",
+  "labels": [
+    {
+      "id": "EA-38e8ac1bb0c9fe9b",
+      "repository": "uptime-kuma",
+      "language": "go",
+      "path": "extra/push-examples/go/index.go",
+      "message": "`net/http.Get` at line 14 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "pending",
+      "sampled_from": "a1-a",
+      "line": 14
+    },
+    {
+      "id": "EA-9ccf27c01c2c0dc3",
+      "repository": "uptime-kuma",
+      "language": "go",
+      "path": "extra/uptime-kuma-push/uptime-kuma-push.go",
+      "message": "`net/http.Get` at line 34 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "The push client loops forever calling http.Get with the default client, which has no timeout; one stalled request blocks the loop and stops all further pushes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "http.Get(pushURL) uses http.DefaultClient, which has no timeout, inside a long-running loop so a stalled server blocks the push loop forever."
+        }
+      ]
+    },
+    {
+      "id": "EA-08bdda4497055765",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "plugin/testing/src/main/java/org/dependencytrack/plugin/testing/ExtensionContextBuilder.java",
+      "message": "`HttpClient.newHttpClient` at line 74 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "ExtensionContextBuilder lives in the plugin/testing support module and supplies a default HttpClient for plugin tests; it is test scaffolding, not a production network path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The code is in plugin/testing (ExtensionContextBuilder), a test-support helper that only falls back to a default HttpClient when none is injected, so it is outside production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d959cb8d38357deb",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/release.py",
+      "message": "`urllib.request.urlopen` at line 168 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "t19-b",
+      "line": 168,
+      "verdict": "false_positive",
+      "reason": "The call is in fmt's release script (support/release.py, run by maintainers to publish a GitHub release): build/tooling code, outside the detector's production scope, though urlopen there has no timeout.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "support/release.py is a maintainer-run release/tooling script (creates a GitHub release, then calls mkdocs deploy), which is build/tooling code outside the detector's scope, even though urlopen at line 168 has no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-f976afe575ab4f79",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/release.py",
+      "message": "`urllib.request.urlopen` at line 182 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "t19-b",
+      "line": 182,
+      "verdict": "false_positive",
+      "reason": "The call is in fmt's release script (support/release.py, run by maintainers to publish a GitHub release): build/tooling code, outside the detector's production scope, though urlopen there has no timeout.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Same release-tooling script (uploads the package asset before running mkdocs deploy), so the missing timeout on urlopen at line 182 is in out-of-scope build/tooling code."
+        }
+      ]
+    },
+    {
+      "id": "EA-33164e9d2042b974",
+      "repository": "uptime-kuma",
+      "language": "python",
+      "path": "extra/push-examples/python/index.py",
+      "message": "`urllib.request.urlopen` at line 8 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "pending",
+      "sampled_from": "a1-a",
+      "line": 8
+    },
+    {
+      "id": "EA-7c35e73c204700ff",
+      "repository": "hoppscotch",
+      "language": "rust",
+      "path": "packages/hoppscotch-agent/src-tauri/src/webview/mod.rs",
+      "message": "`reqwest::Client::builder` at line 109 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "reqwest::Client::builder() builds a client with no timeout (reqwest's async client defaults to none) and downloads the WebView2 bootstrapper with it; a stalled server hangs the install step.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "reqwest::Client::builder() sets only user_agent and gzip, with no timeout or connect_timeout, before downloading the WebView2 bootstrapper."
+        }
+      ]
+    },
+    {
+      "id": "EA-8deb0825bc62cd2e",
+      "repository": "hoppscotch",
+      "language": "rust",
+      "path": "packages/hoppscotch-desktop/src-tauri/src/webview/mod.rs",
+      "message": "`reqwest::Client::builder` at line 109 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "Same WebView2 bootstrapper download in the desktop app: a reqwest client built without a timeout, so a stalled server hangs the step indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "reqwest::Client::builder() sets only user_agent and gzip, with no timeout or connect_timeout, before downloading the WebView2 bootstrapper."
+        }
+      ]
+    },
+    {
+      "id": "EA-70e82c40e1c6065e",
+      "repository": "lychee",
+      "language": "rust",
+      "path": "lychee-lib/src/ratelimit/pool.rs",
+      "message": "`reqwest::Client::default` at line 220 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 220,
+      "verdict": "true_positive",
+      "reason": "HostPool::default uses reqwest Client::default (no timeout) and backs Collector::new and UrlContentResolver::default, so library users fetching remote inputs through the defaults get unbounded requests.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Client::default() in the HostPool Default impl is a reqwest client with no timeout configured, in library code outside the cfg(test) module."
+        }
+      ]
+    },
+    {
+      "id": "EA-d4d31c104aa21d4f",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-cli/src/utils/auth/digest.ts",
+      "message": "`axios.request` at line 103 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 103,
+      "verdict": "true_positive",
+      "reason": "Node axios call in the Hoppscotch CLI with no timeout and no axios default; axios on Node never times out by default, so a stalled server hangs the CLI run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.request({url, method, validateStatus}) sets no timeout, and axios defaults to none."
+        }
+      ]
+    },
+    {
+      "id": "EA-47b938ff39b25030",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-cli/src/utils/getters.ts",
+      "message": "`axios.get` at line 203 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 203,
+      "verdict": "true_positive",
+      "reason": "Node axios call in the Hoppscotch CLI with no timeout and no axios default; axios on Node never times out by default, so a stalled server hangs the CLI run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get(url, {headers}) sets no timeout option, so the request can hang indefinitely."
+        }
+      ]
+    },
+    {
+      "id": "EA-83b98012c8e27a37",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-cli/src/utils/hopp-fetch.ts",
+      "message": "`axios.create` at line 15 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "pre_label",
+      "sampled_from": "a1-a",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "axios.create() with no timeout backs the CLI's scripting fetch; on Node axios never times out by default, so a stalled server hangs the script and the run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "axios.create() has no instance-level timeout, but the excerpt does not show whether per-request timeouts are passed in the returned hook."
+        }
+      ]
+    },
+    {
+      "id": "EA-4673aad42fcab113",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-cli/src/utils/request.ts",
+      "message": "`axios` at line 114 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "pending",
+      "sampled_from": "a1-a",
+      "line": 114
+    },
+    {
+      "id": "EA-66e3a7bbe65e8d47",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/helpers/gist.ts",
+      "message": "`axios.post` at line 11 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 11,
+      "verdict": "true_positive",
+      "reason": "Browser axios.post to the GitHub gists API with no timeout; XHR has no default timeout, so a stalled response leaves the export pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post to api.github.com/gists passes only headers and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-637b3a117683099d",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/platform/std/kernel-interceptors/agent/index.ts",
+      "message": "`axios.post` at line 170 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "axios call to the local Hoppscotch agent (localhost:9119) with no timeout; XHR has no default timeout, so a hung agent leaves this await pending indefinitely (correct, of lower practical impact on loopback).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post to the local agent /execute endpoint sets cancelToken but no timeout, so a stalled agent blocks the call."
+        }
+      ]
+    },
+    {
+      "id": "EA-1ec0d7eb38564de6",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/platform/std/kernel-interceptors/agent/store.ts",
+      "message": "`axios.get` at line 200 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 200,
+      "verdict": "true_positive",
+      "reason": "axios call to the local Hoppscotch agent (localhost:9119) with no timeout; XHR has no default timeout, so a hung agent leaves this await pending indefinitely (correct, of lower practical impact on loopback).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get handshake call has no timeout option."
+        }
+      ]
+    },
+    {
+      "id": "EA-8bb464895160e8fe",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/platform/std/kernel-interceptors/agent/store.ts",
+      "message": "`axios.post` at line 218 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "axios call to the local Hoppscotch agent (localhost:9119) with no timeout; XHR has no default timeout, so a hung agent leaves this await pending indefinitely (correct, of lower practical impact on loopback).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post to /receive-registration has no timeout option."
+        }
+      ]
+    },
+    {
+      "id": "EA-5949155f266d9be0",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/platform/std/kernel-interceptors/agent/store.ts",
+      "message": "`axios.post` at line 235 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "axios call to the local Hoppscotch agent (localhost:9119) with no timeout; XHR has no default timeout, so a hung agent leaves this await pending indefinitely (correct, of lower practical impact on loopback).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post to /verify-registration has no timeout option."
+        }
+      ]
+    },
+    {
+      "id": "EA-b7f64ae533fdb987",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/platform/std/kernel-interceptors/agent/store.ts",
+      "message": "`axios.get` at line 265 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 265,
+      "verdict": "true_positive",
+      "reason": "axios call to the local Hoppscotch agent (localhost:9119) with no timeout; XHR has no default timeout, so a hung agent leaves this await pending indefinitely (correct, of lower practical impact on loopback).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get to /registration passes headers and responseType but no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-02c2290589ff4a78",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/platform/std/kernel-interceptors/agent/store.ts",
+      "message": "`axios.post` at line 346 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 346,
+      "verdict": "true_positive",
+      "reason": "axios call to the local Hoppscotch agent (localhost:9119) with no timeout; XHR has no default timeout, so a hung agent leaves this await pending indefinitely (correct, of lower practical impact on loopback).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post to /cancel/{reqId} passes only an Authorization header and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-87c39f5e287f417c",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-kernel/src/relay/impl/web/v/1.ts",
+      "message": "`axios` at line 209 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "pending",
+      "sampled_from": "a1-a",
+      "line": 209
+    },
+    {
+      "id": "EA-c79bf99a494e9ed4",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/desktop/api.ts",
+      "message": "`axios.get` at line 19 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 19,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get of /auth/providers passes only withCredentials and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-76d60ce469607096",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/web/api.ts",
+      "message": "`axios.get` at line 19 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 19,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get of /auth/providers passes only withCredentials and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-9296a79d55ae356b",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/web/index.ts",
+      "message": "`axios.get` at line 23 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get of /auth/logout passes only withCredentials and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-422ad6b730e69224",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/web/index.ts",
+      "message": "`axios.get` at line 154 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 154,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get of /auth/refresh passes only withCredentials and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-4df74439fbba30be",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/web/index.ts",
+      "message": "`axios.post` at line 176 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 176,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post of /auth/signin passes only withCredentials and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-da070b3635b4a66d",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/web/index.ts",
+      "message": "`axios.post` at line 308 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 308,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.post of /auth/verify passes only withCredentials and no timeout."
+        }
+      ]
+    },
+    {
+      "id": "EA-cefa3daa18840200",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-selfhost-web/src/platform/auth/web/index.ts",
+      "message": "`axios.get` at line 385 has no timeout; a stalled peer blocks it indefinitely",
+      "status": "corroborated",
+      "sampled_from": "a1-a",
+      "line": 385,
+      "verdict": "true_positive",
+      "reason": "Browser axios call with no timeout in its config and no axios default timeout in the package; XHR has no default timeout, so a stalled backend leaves the awaited request and the UI flow pending indefinitely.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "axios.get of /auth/verify-token passes headers and withCredentials but no timeout."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "orphan_symbol",
+  "labels": [
+    {
+      "id": "EA-c90d8dc17b5982f2",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/main.rs",
+      "message": "Symbol `ALLOC` defined at line 40 has zero resolved source references beyond its definition",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "`#[global_allocator]` static is used by the attribute, not by name.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`#[global_allocator]` marks ALLOC as used via the attribute, an idiom the reference-counting rule should recognize."
+        }
+      ]
+    },
+    {
+      "id": "EA-98ff5d8968a2ad05",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "Symbol `Target` defined at line 256 has zero resolved source references beyond its definition",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 256,
+      "verdict": "false_positive",
+      "reason": "`type Target` is a trait-impl associated type (Deref), referenced through the trait.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`type Target` is the Deref impl's required associated type, referenced by the trait machinery rather than by name."
+        }
+      ]
+    }
+  ]
+}

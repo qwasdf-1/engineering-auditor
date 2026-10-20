@@ -1,0 +1,76 @@
+//! Catalog entries of the detector families added for v1.0: the
+//! test-quality family, which emits in test code, network timeouts, and
+//! the Layer 3 front-removal and regex-backtracking rules, and dependency
+//! and error hygiene.
+
+use auditor_core::Severity;
+
+use super::{DetectorOwner, DetectorSpec, RoleApplicability};
+use crate::ScanProfile;
+
+pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
+    spec!(
+        "test_without_assertion",
+        "test_quality",
+        Medium,
+        Full,
+        "L2",
+        TestWithoutAssertion
+    )
+    .with_roles(RoleApplicability::TestScope),
+    spec!(
+        "tautological_assertion",
+        "test_quality",
+        Medium,
+        Full,
+        "L2",
+        TautologicalAssertion
+    )
+    .with_roles(RoleApplicability::TestScope),
+    spec!(
+        "network_call_without_timeout",
+        "systems_economics",
+        High,
+        Full,
+        "L4",
+        NetworkCallWithoutTimeout
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
+        "quadratic_front_removal",
+        "algorithmic",
+        Low,
+        Full,
+        "L3",
+        QuadraticFrontRemoval
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
+        "catastrophic_backtracking_regex",
+        "algorithmic",
+        Medium,
+        Full,
+        "L3",
+        CatastrophicBacktrackingRegex
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
+        "unused_declared_dependency",
+        "systems_economics",
+        Low,
+        Full,
+        "L4",
+        UnusedDeclaredDependency
+    )
+    .with_roles(RoleApplicability::Production)
+    .with_context_roles(RoleApplicability::All),
+    spec!(
+        "discarded_fallible_result",
+        "correctness",
+        Medium,
+        Full,
+        "L1",
+        DiscardedFallibleResult
+    )
+    .with_roles(RoleApplicability::Production),
+];

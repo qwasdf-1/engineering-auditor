@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "detector": "no_await_in_loop",
+  "labels": [
+    {
+      "id": "EA-4212f96d418c3912",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Await expression inside a loop at line 591",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 591,
+      "verdict": "false_positive",
+      "reason": "Each iteration awaits the previous pipelined command before reusing it; the order is the algorithm.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `await recycled.Task` drains the `pending` queue to enforce the MAX_PENDING backpressure limit before reusing commands, so sequential awaiting is intentional and the concurrency recommendation does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-478e93b7f8cdfbf5",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Await expression inside a loop at line 641",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 641,
+      "verdict": "false_positive",
+      "reason": "Commands on one connection cannot run concurrently; sequential awaits are required.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The await runs inside a loop accumulating total (line 641), so the claim holds in Dapper library code."
+        }
+      ]
+    },
+    {
+      "id": "EA-0f1c13dae737e551",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Core/Registry/ResiliencePipelineRegistry.cs",
+      "message": "Await expression inside a loop at line 245",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 245,
+      "verdict": "true_positive",
+      "reason": "Independent iterations await one after another; they could run concurrently.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The await DisposeAsync executes inside the foreach over _genericRegistry at line 245 in Polly's library source."
+        }
+      ]
+    },
+    {
+      "id": "EA-95f001bcdac67f2f",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/trackStream.js",
+      "message": "Await expression inside a loop at line 34",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "Sequential stream reads (`reader.read()`) are inherently ordered; await-in-loop is required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `await reader.read()` at line 34 is a sequential stream-read idiom where `done` controls termination, so `Promise.all` would not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-b9d5b562875fc706",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint-helpers.js",
+      "message": "Await expression inside a loop at line 493",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 493,
+      "verdict": "false_positive",
+      "reason": "The awaited call throws on the first unmatched pattern; the loop ends there.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The await sits in the results loop (the line 500 comment names a 'second loop') inside ESLint's own lib source."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 493"
+        }
+      ]
+    },
+    {
+      "id": "EA-66e31c039513e37f",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/fetch-docs-links.js",
+      "message": "Await expression inside a loop at line 85",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 85,
+      "verdict": "false_positive",
+      "reason": "Repository maintenance script under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/fetch-docs-links.js is developer tooling code, outside the detector's stated build/tooling scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 85"
+        }
+      ]
+    },
+    {
+      "id": "EA-825205e73128afee",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/fetch-docs-links.js",
+      "message": "Await expression inside a loop at line 92",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "Repository maintenance script under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Same tooling script under tools/, outside the detector's stated scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 92"
+        }
+      ]
+    },
+    {
+      "id": "EA-f0add4c1fc6ad061",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/test-ecosystem/index.mjs",
+      "message": "Await expression inside a loop at line 159",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 159,
+      "verdict": "false_positive",
+      "reason": "Repository maintenance script under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/test-ecosystem/index.mjs is test/tooling code, outside the detector's stated scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 159"
+        }
+      ]
+    },
+    {
+      "id": "EA-f52d80f8ea59d2a0",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/test-ecosystem/index.mjs",
+      "message": "Await expression inside a loop at line 179",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 179,
+      "verdict": "false_positive",
+      "reason": "Repository maintenance script under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Test-harness tooling file under tools/, outside the detector's stated scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 179"
+        }
+      ]
+    },
+    {
+      "id": "EA-7c9ebd6b7a455c2b",
+      "repository": "zod",
+      "language": "javascript",
+      "path": "mm.mjs",
+      "message": "Await expression inside a loop at line 5",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 5,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Bundle-size measurement script at the repository root (tooling), outside the verdict standard's scope.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "mm.mjs is a bundle-size measurement/benchmark script, outside the detector's stated scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Each `await build(...)` iteration is independent (different entry points, result used only in-iteration), so the recommended Promise.all parallelization genuinely applies."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 5"
+        }
+      ]
+    },
+    {
+      "id": "EA-6d4c9d5f6530ac1f",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/cookie.ts",
+      "message": "Await expression inside a loop at line 166",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 166,
+      "verdict": "true_positive",
+      "reason": "Independent iterations await one after another; they could run concurrently.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `await verifySignature(...)` at line 166 sits inside the cookie-parsing loop (note the `continue` at line 163), so the await-in-loop claim is factually correct."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 166"
+        }
+      ]
+    },
+    {
+      "id": "EA-fe6ec1b739da68fd",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/upgrade/src/bin/index.ts",
+      "message": "Await expression inside a loop at line 81",
+      "status": "final",
+      "sampled_from": "t27-l1-fill",
+      "line": 81,
+      "verdict": "false_positive",
+      "reason": "The codemod runner imports one cached module and applies transforms in a fixed order to the same files; the order is the contract.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await import('jscodeshift/src/Runner.js')` at line 81 is inside `for (const transform of sortedTransforms)` at line 79, so the claim holds."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 81"
+        }
+      ]
+    },
+    {
+      "id": "EA-cba022ba5a688220",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/upgrade/src/bin/index.ts",
+      "message": "Await expression inside a loop at line 82",
+      "status": "final",
+      "sampled_from": "t27-l1-fill",
+      "line": 82,
+      "verdict": "false_positive",
+      "reason": "Transforms are applied in sequence to the same files; running them concurrently would race on the files.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await run(transform, committedFiles, {...})` at line 82 is inside the same `for...of` loop beginning at line 79, so the claim holds."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 82"
+        }
+      ]
+    },
+    {
+      "id": "EA-6756b4b538d6ef22",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Await expression inside a loop at line 238",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 238,
+      "verdict": "true_positive",
+      "reason": "Recursive directory walk awaits each subdirectory in turn; the walks are independent and could run with Promise.all.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await findMdxFilesRecursively(fullPath)` at line 238 is inside the recursive directory-iteration loop, so the await-in-loop claim is correct."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 238"
+        }
+      ]
+    },
+    {
+      "id": "EA-1c8df3d81195da9b",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Await expression inside a loop at line 244",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 244,
+      "verdict": "true_positive",
+      "reason": "Each Markdown file is read one after another; the reads are independent and could run concurrently.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await fs.promises.readFile(fullPath, 'utf8')` at line 244 is inside the same directory loop, so the claim is correct."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 244"
+        }
+      ]
+    },
+    {
+      "id": "EA-ba84935f1f0e7876",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Await expression inside a loop at line 333",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 333,
+      "verdict": "true_positive",
+      "reason": "Each docs version is collected one after another; the versions are independent.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await getAllMdxContent(versionSpec.docsPath)` at line 333 is inside a loop over version specs, so the await-in-loop claim holds."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 333"
+        }
+      ]
+    },
+    {
+      "id": "EA-b7c47c9babe7285d",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Await expression inside a loop at line 338",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 338,
+      "verdict": "true_positive",
+      "reason": "Each version output file is written one after another; the writes are independent.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await fs.promises.writeFile(...)` at line 338 is inside the same per-version loop, so the await-in-loop claim is correct."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 338"
+        }
+      ]
+    },
+    {
+      "id": "EA-851490ddd466556a",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/scripts/check-twoslash.ts",
+      "message": "Await expression inside a loop at line 216",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 216,
+      "verdict": "true_positive",
+      "reason": "Twoslash blocks of independent files are processed one at a time; they could be processed concurrently with results reported afterwards.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`await processor.process(content)` at line 216 is inside the file-iteration loop, so the await-in-loop claim is factually correct."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 216"
+        }
+      ]
+    },
+    {
+      "id": "EA-730729168afa4a2e",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/app/llms-full.txt/route.ts",
+      "message": "Await expression inside a loop at line 37",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "Page texts are fetched one after another; they could be fetched with Promise.all and joined in order.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 37 `txt += await getLLMText(page);` is an await inside the `for (const page of sortedPages)` loop, matching the no_await_in_loop claim."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-await-in-loop at line 37"
+        }
+      ]
+    }
+  ]
+}

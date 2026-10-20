@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "detector": "map_entry_opportunity",
+  "labels": [
+    {
+      "id": "EA-31bb464fe5dbcad2",
+      "repository": "nlohmann-json",
+      "language": "python",
+      "path": "docs/mkdocs/scripts/check_structure.py",
+      "message": "Function `check_structure` checks `documented_overloads` for `current_section` before inserting it.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "false_positive",
+      "reason": "Tooling, documentation, or integration-test script, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`docs/mkdocs/scripts/check_structure.py` is a documentation build/tooling script, so it falls outside the detector's stated scope."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "detector": "empty_conditional_branch",
+  "labels": [
+    {
+      "id": "EA-d811f6c51a56da85",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DefaultTypeMap.cs",
+      "message": "Empty if_statement body at line 87",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 87,
+      "verdict": "true_positive",
+      "reason": "A conditional branch with an empty body (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The if body at line 88 is literally empty `{ }`, so the empty conditional branch claim is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-928422b7b5d9314d",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DefaultTypeMap.cs",
+      "message": "Empty if_statement body at line 89",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "A conditional branch with an empty body (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The else-if body at line 90 is literally empty `{ }`, so the empty conditional branch claim is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-0596ba244505ddc7",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Empty if_statement body at line 1256",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1256,
+      "verdict": "true_positive",
+      "reason": "A conditional branch with an empty body (intentional or not, the claim holds).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The branch body is an explicit `pass` (a deliberate no-op, preceded by the comment about falling back to the previous split), so it is not an empty body."
+        }
+      ]
+    },
+    {
+      "id": "EA-c6bf691a40c3dd6d",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/release.py",
+      "message": "Empty elif_clause body at line 105",
+      "status": "corroborated",
+      "sampled_from": "t15-l1full",
+      "line": 105,
+      "verdict": "false_positive",
+      "reason": "The `elif ...: pass` stops later branches from running for lines before the first section; the empty body carries control flow.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`elif not is_first_section: pass` contains an explicit `pass` no-op that is intentionally needed to keep the later `elif`/`else` from matching, so the body is not empty."
+        }
+      ]
+    },
+    {
+      "id": "EA-dcbd75358d41965b",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urlparse.py",
+      "message": "Empty if_statement body at line 468",
+      "status": "final",
+      "sampled_from": "t23-py-l1",
+      "line": 468,
+      "verdict": "true_positive",
+      "reason": "if component == '.': pass is an empty branch in the RFC 3986 dot-segment loop; continue or an inverted condition would state the intent.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`if component == \".\": pass` deliberately skips `.` components per the cited RFC 3986 normalization; the `pass` body is an intentional no-op, not an empty branch."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac2731fe62af5cab",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/dispatch.rs",
+      "message": "Empty if_expression body at line 303",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 303,
+      "verdict": "true_positive",
+      "reason": "A conditional branch with an empty body (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `if let Ok(()) = ready!(...)` then-arm is a literally empty `{ }` block while the else-arm has logic, so the claim of an empty if body holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7c00e965ba839c5",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Empty if_statement body at line 2527",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 2527,
+      "verdict": "true_positive",
+      "reason": "Conditional branch with an empty body (ESLint no-empty); the condition could be inverted.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`} else if (unknownKeys === \"strip\") {` has an empty body sitting between populated else-if/else arms, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-5590b2e40e293ce3",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/to-json-schema.ts",
+      "message": "Empty if_statement body at line 728",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 728,
+      "verdict": "true_positive",
+      "reason": "Conditional branch with an empty body (ESLint no-empty); the condition could be inverted.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`if (ctx.external) {` is an empty then-block whose logic lives entirely in the else, so the claim holds."
+        }
+      ]
+    }
+  ]
+}

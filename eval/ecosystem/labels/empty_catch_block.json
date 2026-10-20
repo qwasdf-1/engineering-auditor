@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "detector": "empty_catch_block",
+  "labels": [
+    {
+      "id": "EA-2fcaf9639666e45e",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.ProviderTools/BulkCopy.cs",
+      "message": "Empty catch/except block at line 78",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 78,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The catch block at line 78 is literally `catch { }` with no body before `return null;`, matching the empty-catch claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-15226917c31e778b",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.ProviderTools/DbConnectionExtensions.cs",
+      "message": "Empty catch/except block at line 92",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 92,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The catch at line 92 is `catch { }`, an empty exception handler as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-96d09d3aacd43019",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.ProviderTools/DbConnectionExtensions.cs",
+      "message": "Empty catch/except block at line 106",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The catch at line 106 is `catch { }`, an empty exception handler as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-21d8e4ac99de414f",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper.ProviderTools/Internal/DynamicBulkCopy.cs",
+      "message": "Empty catch/except block at line 55",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 55 is `try { d.Dispose(); } catch { }`, an empty catch block, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-9d632c5dd5139a87",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberInput.java",
+      "message": "Empty catch/except block at line 280",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 280,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 280 is `catch (NumberFormatException e) { }` with an empty body followed by `return def;`, matching the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-6f053eade756797c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberInput.java",
+      "message": "Empty catch/except block at line 319",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 319,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 319 is `catch (NumberFormatException e) { }` with an empty body followed by `return def;`, matching the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-46263d0bc3c22495",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberInput.java",
+      "message": "Empty catch/except block at line 350",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 350,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The catch at line 350 is literally empty (`catch (NumberFormatException e) { }`) and silently falls through to `return def;`."
+        }
+      ]
+    },
+    {
+      "id": "EA-f0ec846ab091f8b4",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Empty catch/except block at line 831",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 831,
+      "verdict": "true_positive",
+      "reason": "Catch block is empty as claimed (author suppressed eslint no-empty, but the finding is factually correct).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The catch at line 831 is an empty `catch (e) {}` block swallowing the error, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 830 carries `/*eslint no-empty:0*/`, explicitly disabling no-empty for the catch, so the empty block is sanctioned and the recommendation is already satisfied."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 831"
+        }
+      ]
+    },
+    {
+      "id": "EA-b6b164196e608422",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Challenge.kt",
+      "message": "Empty catch/except block at line 54",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `catch (ignore: Exception) { }` at line 54 is empty and falls back to `ISO_8859_1`."
+        }
+      ]
+    },
+    {
+      "id": "EA-ebcdfc5d14a6978b",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-nodefilesystem/src/commonMain/kotlin/okio/NodeJsFileSystem.kt",
+      "message": "Empty catch/except block at line 208",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 208,
+      "verdict": "true_positive",
+      "reason": "catch (e: Throwable) {} silently swallows every unlink failure with no comment; the fallthrough to rmdir is intentional but undocumented.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `catch (e: Throwable) { }` at line 208 is empty, swallowing the unlink failure before the rmdir attempt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 208 is a genuinely empty catch (e: Throwable) {} in production okio code, so the claim holds even though it deliberately falls through to the rmdirSync attempt."
+        }
+      ]
+    },
+    {
+      "id": "EA-82a1633e4a66e9d9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Empty catch/except block at line 661",
+      "status": "corroborated",
+      "sampled_from": "t23-py-l1",
+      "line": 661,
+      "verdict": "true_positive",
+      "reason": "except Exception: pass with no comment silently swallows any failure of a user __rich_repr__ (ruff S110 default boundary).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `except Exception: pass` at lines 661-662 is an empty handler that ignores the exception."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "rich/pretty.py:661-662 is a real bare except Exception: pass in production pretty-printing code, so the empty-except claim is accurate."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S110 at line 661"
+        }
+      ]
+    },
+    {
+      "id": "EA-e4475a69de62db0a",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "adapters/bun/src/serve-static.ts",
+      "message": "Empty catch/except block at line 22",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `catch {}` at line 22 is empty, silently leaving `isDir` undefined on stat failure."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 22"
+        }
+      ]
+    },
+    {
+      "id": "EA-44ce503378619e2f",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "adapters/deno/src/serve-static.ts",
+      "message": "Empty catch/except block at line 32",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `catch {}` at line 32 is empty, silently leaving `isDir` undefined on lstat failure."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 32"
+        }
+      ]
+    },
+    {
+      "id": "EA-689e9df7002833d3",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/adapter/bun/serve-static.ts",
+      "message": "Empty catch/except block at line 25",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `catch {}` at line 25 is empty, silently leaving `isDir` undefined on stat failure."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 25"
+        }
+      ]
+    },
+    {
+      "id": "EA-38f0b464e7d1644e",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/adapter/deno/serve-static.ts",
+      "message": "Empty catch/except block at line 35",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`} catch {}` at line 35 is genuinely empty, matching the detector's `catch {}` pattern."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 35"
+        }
+      ]
+    },
+    {
+      "id": "EA-6a34219d4c0f41e3",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/context.ts",
+      "message": "Empty catch/except block at line 57",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`} catch {}` at line 57 is an empty catch block as claimed."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 57"
+        }
+      ]
+    },
+    {
+      "id": "EA-fe7686f9334c8324",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/timing/timing.ts",
+      "message": "Empty catch/except block at line 33",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "An empty catch swallows the exception silently (intentional or not, the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`} catch {}` at line 33 is an empty catch block as claimed."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 33"
+        }
+      ]
+    },
+    {
+      "id": "EA-69e5c9b3cb907541",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Empty catch/except block at line 242",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 242,
+      "verdict": "true_positive",
+      "reason": "Catch block with an empty body silently swallows the error (ESLint no-empty).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`} catch {}` at line 242 is an empty catch block as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The catch block at compile.ts:242 is literally empty (`recursive = isRecursiveSchema(schema as any); } catch {}`) in shipped library source, and the fact that the swallow is intentional (commented on line 238) does not change the empty-block claim."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 242"
+        }
+      ]
+    },
+    {
+      "id": "EA-c130d4cf64115aa4",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Empty catch/except block at line 371",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 371,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, fuzz build script), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The empty catch is inside scripts/compile-fuzz.ts, a fuzz-testing harness (test/tooling code) outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "scripts/compile-fuzz.ts is a fuzz-testing/tooling harness, not shipped library code, so the empty catch at line 371 sits outside the detector's production-code scope."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 371"
+        }
+      ]
+    },
+    {
+      "id": "EA-804b2dd8706e8a3b",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Empty catch/except block at line 392",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 392,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, fuzz build script), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The empty catch is inside scripts/compile-fuzz.ts, a fuzz-testing harness (test/tooling code) outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Same out-of-scope tooling file (scripts/compile-fuzz.ts, line 392) where the empty catch is a deliberate fallback while assembling fuzz-failure diagnostics."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-empty at line 392"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,619 @@
+{
+  "schema_version": 1,
+  "detector": "kt_non_null_assertion",
+  "labels": [
+    {
+      "id": "EA-bf1104c239a4a9d6",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/scope/ComponentActivityExt.kt",
+      "message": "Non-null assertion `!!` at line 96",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 96,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`return scopeViewModel.scope!!` uses a non-null assertion in production main source."
+        }
+      ]
+    },
+    {
+      "id": "EA-ce842de7b7864e0f",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose/src/commonMain/kotlin/org/koin/compose/application/CompositionKoinApplicationLoader.kt",
+      "message": "Non-null assertion `!!` at line 38",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`koin!!.logger.debug(...)` on line 38 is a non-null assertion in production main source."
+        }
+      ]
+    },
+    {
+      "id": "EA-40686d518e6b953c",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose/src/commonMain/kotlin/org/koin/compose/application/CompositionKoinApplicationLoader.kt",
+      "message": "Non-null assertion `!!` at line 44",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`koin!!.logger.debug(...)` on line 44 is a non-null assertion in production main source."
+        }
+      ]
+    },
+    {
+      "id": "EA-cf31a57296b41d07",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/AppliedType.kt",
+      "message": "Non-null assertion `!!` at line 63",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 63 uses `type.qualifiedName!!.asString()` with a literal `!!` in main production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-c7586eb9e0737714",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/JsonClassSymbolProcessorProvider.kt",
+      "message": "Non-null assertion `!!` at line 55",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 55 uses `JsonClass::class.qualifiedName!!` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d77042c0cc140f1",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/JsonClassSymbolProcessorProvider.kt",
+      "message": "Non-null assertion `!!` at line 91",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 91,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 91 uses `type.containingFile!!` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-30cab36b1fad00be",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/KspUtil.kt",
+      "message": "Non-null assertion `!!` at line 60",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 60 uses `argument.name!!.getShortName()` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-962007020551a717",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/KspUtil.kt",
+      "message": "Non-null assertion `!!` at line 62",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 62 uses `argument.value!!` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-07478cf990a185b8",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/KspUtil.kt",
+      "message": "Non-null assertion `!!` at line 75",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 75 uses `innerValue!!` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-1b235da2611d7ee2",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/TargetTypes.kt",
+      "message": "Non-null assertion `!!` at line 89",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 89 uses `type.qualifiedName!!.asString()` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-35b4d9c0edb41f1b",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/TargetTypes.kt",
+      "message": "Non-null assertion `!!` at line 178",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 178,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 178 uses `parameter.name!!.getShortName()` with a literal `!!` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-0cf539d32beb5139",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Non-null assertion `!!` at line 139",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 139 literally contains `it.declaration.qualifiedName!!.asString()` in a production src/main file, so the `!!` claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-86fa4f9e9efbb95c",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Non-null assertion `!!` at line 186",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 186,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 186 contains `this.declaration.qualifiedName!!.asString()` in production code, so the non-null assertion claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-b7519ce06deee043",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-tls/src/main/kotlin/okhttp3/tls/HeldCertificate.kt",
+      "message": "Non-null assertion `!!` at line 360",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 360,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 360 shows `signedBy!!.certificate...`, a genuine non-null assertion in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-a023a716d46a2907",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Cache.kt",
+      "message": "Non-null assertion `!!` at line 354",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 354,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 354 assigns `nextUrl!!`, a real `!!` in production code; intentionality does not negate the factual claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-875417a88009589c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/HttpUrl.kt",
+      "message": "Non-null assertion `!!` at line 1117",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1117,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1117 contains `encodedQueryNamesAndValues!!.add(`, so the reported assertion exists as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-88b16de83f496516",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/HttpUrl.kt",
+      "message": "Non-null assertion `!!` at line 1131",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1131,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1131 contains `encodedQueryNamesAndValues!!.add(`, a genuine non-null assertion in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-d3aa0c0366db36ce",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/MultipartReader.kt",
+      "message": "Non-null assertion `!!` at line 39",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "The `!!` is in a KDoc usage example, not code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ef90749c23dfd0e8",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealCall.kt",
+      "message": "Non-null assertion `!!` at line 433",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 433,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 433 contains `result!!` inside `eventListener.callFailed(this, result!!)`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-00004642ac415f28",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http2/Hpack.kt",
+      "message": "Non-null assertion `!!` at line 324",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 324,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 324 contains `dynamicTable[dynamicTableIndex(index)]!!.hpackSize`, so the `!!` is present as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-11dedb15ac075dea",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http2/Http2Stream.kt",
+      "message": "Non-null assertion `!!` at line 180",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 180 contains a real `!!` (`errorCode!!`) in production code, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-0db3fd249c4a8646",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/internal.kt",
+      "message": "Non-null assertion `!!` at line 111",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 111 uses `this.exchange!!` in production code, exactly the non-null assertion reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-ba8eb653a072020d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-nodefilesystem/src/commonMain/kotlin/okio/NodeJsFileSystem.kt",
+      "message": "Non-null assertion `!!` at line 225",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 225,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 225 contains `source.parent!!` in production code, a genuine non-null assertion as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-1eeccdb4aaa8b290",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/FileHandle.kt",
+      "message": "Non-null assertion `!!` at line 373",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 373,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 373 has `source.head!!` in production code, a real non-null assertion matching the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-c89bad8121ccb03a",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Segment.kt",
+      "message": "Non-null assertion `!!` at line 138",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 138,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 138 uses `prev!!.push(prefix)` in production code, a genuine non-null assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-0fe3b200c700e817",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Non-null assertion `!!` at line 116",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 116 contains `s = s.prev!!` in production code, exactly the reported non-null assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-09c7d4c2aec6b2d6",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Non-null assertion `!!` at line 1228",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1228,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1228 has `segmentToMove!!` in production code, a real non-null assertion as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-45fb456e5f890735",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Non-null assertion `!!` at line 1421",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1421,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1421 contains `this.head!!` in production code, a genuine non-null assertion matching the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-ecd73181b4c14927",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/Buffer.kt",
+      "message": "Non-null assertion `!!` at line 197",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 197,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 197 contains `s!!.limit`, a real non-null assertion in production Buffer.kt."
+        }
+      ]
+    },
+    {
+      "id": "EA-0cf2da0784c9b885",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/GzipSink.kt",
+      "message": "Non-null assertion `!!` at line 127",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 127,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 127 uses `buffer.head!!`, a non-null assertion in production GzipSink.kt."
+        }
+      ]
+    },
+    {
+      "id": "EA-1df08d9b391d0fb1",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/internal/ZipFiles.kt",
+      "message": "Non-null assertion `!!` at line 388",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 388,
+      "verdict": "true_positive",
+      "reason": "A `!!` non-null assertion in production code; it throws if the invariant breaks (detekt UnsafeCallOnNullableType).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 388 uses `!!` on the result of readOrSkipLocalHeader in production ZipFiles.kt, so the claim holds."
+        }
+      ]
+    }
+  ]
+}

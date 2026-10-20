@@ -1,0 +1,19 @@
+[package]
+name = "auditor-scan"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+
+[dependencies]
+auditor-core = { path = "../auditor-core" }
+auditor-detectors = { path = "../auditor-detectors" }
+auditor-report = { path = "../auditor-report" }
+
+[features]
+graph-analysis = ["auditor-detectors/graph-analysis"]

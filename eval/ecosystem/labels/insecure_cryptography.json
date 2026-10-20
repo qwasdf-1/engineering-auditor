@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "detector": "insecure_cryptography",
+  "labels": [
+    {
+      "id": "EA-af8b93df28f72d0f",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/sessions.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 281",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 281,
+      "verdict": "false_positive",
+      "reason": "SHA-1 as the HMAC digest for signing, where collision attacks do not apply.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 281 directly calls `hashlib.sha1(string)`, so the claim that the weak SHA-1 algorithm is used at that site is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-069091bdc589b807",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_auth.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 309",
+      "status": "final",
+      "sampled_from": "t23-py-l1",
+      "line": 309,
+      "verdict": "false_positive",
+      "reason": "hashlib.sha1 derives a digest-auth client nonce from random bytes; no collision resistance is relied on, so SHA-1 is not a security weakness here.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 309 calls `hashlib.sha1(s).hexdigest()`, a direct SHA-1 use, so the detector's weak-algorithm claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-af4bed6a4af21ac5",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "Weak crypto algorithm `SHA-1` at line 937",
+      "status": "corroborated",
+      "sampled_from": "t24-rs-l1",
+      "line": 937,
+      "verdict": "false_positive",
+      "reason": "SHA-1 computes the WebSocket Sec-WebSocket-Accept header, which RFC 6455 mandates; no security property depends on it and no stronger hash is allowed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The SHA-1 at line 937 is the RFC 6455 WebSocket handshake (`258EAFA5-E914-...` GUID) that the protocol mandates, an idiom the rule should recognise rather than flag."
+        }
+      ]
+    }
+  ]
+}

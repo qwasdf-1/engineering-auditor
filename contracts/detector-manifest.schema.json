@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/detector-manifest.schema.json",
+  "title": "Engineering Auditor Detector Manifest",
+  "type": "object",
+  "required": ["schema_version", "detectors"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "detectors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "layer", "default_severity", "profile", "maturity", "evidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "layer": { "type": "string" },
+          "default_severity": { "enum": ["advisory", "low", "medium", "high", "critical"] },
+          "profile": { "enum": ["gating", "full"] },
+          "maturity": { "type": "string" },
+          "donor_basis": { "type": "array", "items": { "type": "string" } },
+          "evidence": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

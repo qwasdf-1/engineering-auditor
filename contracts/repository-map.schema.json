@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/repository-map.schema.json",
+  "title": "Engineering Auditor Repository Map V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "extractor_version",
+    "profile",
+    "analysis_method",
+    "source_snapshot_digest",
+    "files",
+    "symbols",
+    "edges",
+    "completeness"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "extractor_version": { "type": "integer", "minimum": 1 },
+    "profile": { "const": "full" },
+    "analysis_method": { "enum": ["auto", "ast"] },
+    "source_snapshot_digest": { "$ref": "#/$defs/sha256" },
+    "files": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/file" }
+    },
+    "symbols": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/symbol" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "completeness": { "$ref": "#/$defs/completeness" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_role": {
+      "enum": [
+        "production",
+        "tooling",
+        "test",
+        "fixture",
+        "benchmark",
+        "example",
+        "reference",
+        "generated",
+        "documentation"
+      ]
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "language", "source_role", "bytes", "sha256"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^file:[0-9a-f]{64}$" },
+        "path": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 1 },
+        "source_role": { "$ref": "#/$defs/source_role" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_byte",
+        "end_byte",
+        "start_line",
+        "start_column",
+        "end_line",
+        "end_column"
+      ],
+      "properties": {
+        "start_byte": { "type": "integer", "minimum": 0 },
+        "end_byte": { "type": "integer", "minimum": 0 },
+        "start_line": { "type": "integer", "minimum": 1 },
+        "start_column": { "type": "integer", "minimum": 1 },
+        "end_line": { "type": "integer", "minimum": 1 },
+        "end_column": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locals", "returns", "statements"],
+      "properties": {
+        "locals": { "type": "integer", "minimum": 0 },
+        "returns": { "type": "integer", "minimum": 0 },
+        "statements": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "symbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "file_id",
+        "kind",
+        "name",
+        "span",
+        "parent_id",
+        "visibility",
+        "async",
+        "metrics"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^symbol:[0-9a-f]{64}$" },
+        "file_id": { "type": "string", "pattern": "^file:[0-9a-f]{64}$" },
+        "kind": {
+          "enum": [
+            "function",
+            "method",
+            "class",
+            "object",
+            "struct",
+            "union",
+            "interface",
+            "trait",
+            "enum",
+            "module",
+            "constant",
+            "static",
+            "type_alias",
+            "variable",
+            "parameter",
+            "field"
+          ]
+        },
+        "name": { "type": "string" },
+        "span": { "$ref": "#/$defs/span" },
+        "parent_id": {
+          "anyOf": [
+            { "type": "string", "pattern": "^symbol:[0-9a-f]{64}$" },
+            { "type": "null" }
+          ]
+        },
+        "visibility": { "enum": ["public", "non_public"] },
+        "async": { "type": "boolean" },
+        "metrics": {
+          "anyOf": [
+            { "$ref": "#/$defs/metrics" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "kind", "to"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["contains", "imports", "calls"] },
+        "to": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "complete",
+        "ambiguous_calls",
+        "dynamic_imports",
+        "truncated_call_edges",
+        "unresolved_imports"
+      ],
+      "properties": {
+        "complete": { "const": true },
+        "ambiguous_calls": { "type": "integer", "minimum": 0 },
+        "dynamic_imports": { "type": "integer", "minimum": 0 },
+        "truncated_call_edges": { "type": "integer", "minimum": 0 },
+        "unresolved_imports": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

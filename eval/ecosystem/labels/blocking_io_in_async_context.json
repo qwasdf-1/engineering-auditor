@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "detector": "blocking_io_in_async_context",
+  "labels": [
+    {
+      "id": "EA-c41c41111fb60a17",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/cli.ts",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 137,
+      "verdict": "true_positive",
+      "reason": "Async `main` calls fs.writeFileSync; blocking I/O in an async function as claimed.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "packages/openapi/src/cli.ts is one-shot CLI tooling where synchronous writeFileSync at startup is idiomatic and does not block a serving event loop."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Inside async `main`, line 137 calls `fs.writeFileSync`, real blocking I/O on the CLI's main path."
+        }
+      ]
+    },
+    {
+      "id": "EA-25784b735661b34d",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "scripts/entrypoints.ts",
+      "message": "Function `generateEntrypoints` executes blocking file I/O from an async function.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Async function performs fs.readFileSync; claim is accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "scripts/entrypoints.ts is a build tool that edits package.json entrypoints, so build/tooling code is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-cf61a25beb76285d",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Function `` executes blocking file I/O from an async function.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 317,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, fuzz build script), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "www/docusaurus.config.ts is documentation build tooling, and the reported line 317 is a for-loop header rather than the fs.writeFileSync call."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged line is in Docusaurus build/plugin code generating LLMS files from `versionsToProcessConfig`, not a runtime async request path."
+        }
+      ]
+    },
+    {
+      "id": "EA-0307e5cdf9e6a7a0",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/scripts/check-twoslash.ts",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 204,
+      "verdict": "true_positive",
+      "reason": "Async `main` reads files synchronously in a loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "www/scripts/check-twoslash.ts is a one-shot CLI validator whose comment states files are processed sequentially, so this test/tooling code is out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d87739562bc0fa6a",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/src/components/TwitterWall/script.ts",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 132,
+      "verdict": "false_positive",
+      "reason": "A one-shot code generator run at build time; blocking I/O there stalls nothing, though the path is not a tooling path.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "TwitterWall/script.ts is a codegen script that writes script.output.ts via main(), i.e. build/tooling code rather than request/runtime code."
+        }
+      ]
+    },
+    {
+      "id": "EA-ada1bf50efe45cd7",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/src/components/sponsors/script.pull.ts",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 302,
+      "verdict": "false_positive",
+      "reason": "A one-shot code generator run at build time; blocking I/O there stalls nothing, though the path is not a tooling path.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "sponsors/script.pull.ts is a codegen script writing script.output.ts through void main(), which is build/tooling code out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-b19c135879d3bbc7",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/triage-signal.ts",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 685,
+      "verdict": "true_positive",
+      "reason": "Async `main` calls fs.writeFileSync.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "scripts/triage-signal.ts is a CLI tooling script generating a report; blocking writes in a one-shot command are outside the detector's scope."
+        }
+      ]
+    }
+  ]
+}

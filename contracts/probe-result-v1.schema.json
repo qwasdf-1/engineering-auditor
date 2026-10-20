@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/probe-result-v1.schema.json",
+  "title": "Engineering Auditor Probe Result V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "result_id",
+    "probe_id",
+    "case_id",
+    "answer",
+    "resolver",
+    "evidence_ids",
+    "explanation",
+    "limitations",
+    "reviewer_run_id"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "result_id": { "type": "string", "pattern": "^probe-result:[0-9a-f]{64}$" },
+    "probe_id": { "type": "string", "pattern": "^case-probe:[0-9a-f]{64}$" },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "answer": { "$ref": "#/$defs/answer" },
+    "resolver": { "$ref": "#/$defs/resolver" },
+    "evidence_ids": { "$ref": "#/$defs/string_set" },
+    "explanation": { "type": "string", "minLength": 1 },
+    "limitations": { "$ref": "#/$defs/string_set" },
+    "reviewer_run_id": {
+      "type": ["string", "null"],
+      "pattern": "^reviewer-run:[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "answer": {
+      "enum": ["yes", "no", "unknown", "not_applicable", "conflicting_evidence"]
+    },
+    "resolver_kind": {
+      "enum": [
+        "existing_deterministic_fact",
+        "evidence_graph_query",
+        "repository_map_query",
+        "bound_runtime_measurement",
+        "operator_brief",
+        "model_interpretation",
+        "unknown_fallback"
+      ]
+    },
+    "resolver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/resolver_kind" },
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "string_set": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "detector": "test_without_assertion",
+  "labels": [
+    {
+      "id": "EA-c152a42089c20924",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea_test.go",
+      "message": "Test `TestTeaNoRun` at line 538 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 538,
+      "verdict": "true_positive",
+      "reason": "Constructs a Program and never runs or inspects it; nothing it does can fail the test.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TestTeaNoRun only constructs NewProgram(...) and checks nothing."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef0f558d9ff60c3e",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/test/java/org/apache/commons/lang3/ClassUtilsTest.java",
+      "message": "Test `test_getClass` at line 359 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 359,
+      "verdict": "true_positive",
+      "reason": "The body is a commented-out assertion: an empty test that always passes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "@Test test_getClass has an empty body with only a commented-out assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-cd9f6c393222b76c",
+      "repository": "okhttp",
+      "language": "java",
+      "path": "maven-tests/src/test/java/com/squareup/okhttp3/maventest/AppTest.java",
+      "message": "Test `testApp` at line 32 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "Makes the HTTP call and discards the result; it only checks that no exception escapes, and its name does not say so.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "testApp enqueues a response and calls makeCall but has no assertion on the result."
+        }
+      ]
+    },
+    {
+      "id": "EA-b28057141e2d19b1",
+      "repository": "okhttp",
+      "language": "java",
+      "path": "module-tests/src/test/java/okhttp3/modules/test/JavaModuleTest.java",
+      "message": "Test `testMockWebServer` at line 43 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Prints the response body without checking it; a module smoke run that passes whatever the server returns.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "testMockWebServer executes the call and prints the body but asserts nothing, as its 'just check we can run code' comment says."
+        }
+      ]
+    },
+    {
+      "id": "EA-d851ae65c1f3eab5",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tests/lib/services/warning-service.js",
+      "message": "Test `emitCircularFixesWarning` at line 120 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 120,
+      "verdict": "true_positive",
+      "reason": "Calls the warning emitter and checks neither the emitted warning nor any effect.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test only calls warningService.emitCircularFixesWarning(filename) with no assertion visible in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-47d41c8821427d5f",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tests/lib/services/warning-service.js",
+      "message": "Test `emitInactiveFlagWarning` at line 125 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 125,
+      "verdict": "true_positive",
+      "reason": "Calls the warning emitter and checks neither the emitted warning nor any effect.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test only calls warningService.emitInactiveFlagWarning(flag, message) with no assertion visible in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-8164daf47f2b4db8",
+      "repository": "rich",
+      "language": "python",
+      "path": "tests/test_align.py",
+      "message": "Test `test_repr` at line 29 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 29,
+      "verdict": "true_positive",
+      "reason": "Calls repr() three times and discards the strings; no result is checked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "test_repr calls repr(Align(...)) three times without asserting on the results."
+        }
+      ]
+    },
+    {
+      "id": "EA-92b50ebea9c7fde7",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/test/regression/issue-5357-input-always-required.test.tsx",
+      "message": "Test `with input` at line 42 runs code but checks no result",
+      "status": "final",
+      "sampled_from": "t18-c",
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "A compile-time regression test (issue 5357): the calls run inside ignoreErrors(), so the check is that useQuery() without input type-checks.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "false_positive",
+          "reason": "Adjudicated (arbiter): the hooks run inside ignoreErrors(), which swallows the exceptions they throw outside a React component, so the only check is that the input-less useQuery() type-checks; packages/react-query/tsconfig.json includes test and CI runs tsc --noEmit (typecheck-packages)."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test only calls client.post.list.useQuery() inside ignoreErrors with no expect or assert."
+        }
+      ]
+    },
+    {
+      "id": "EA-e007c3a15104a873",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/router.test.ts",
+      "message": "Test `because it creates async fns that returns proxy objects` at line 18 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "Awaits a caller-returning function and checks nothing about the result; it passes unless the call throws or hangs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test only awaits asyncFnThatReturnsCaller() with no assertion on the outcome."
+        }
+      ]
+    },
+    {
+      "id": "EA-51bf5e111393a0c3",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/tests/deepmasking.test.ts",
+      "message": "Test `test` at line 6 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 6,
+      "verdict": "true_positive",
+      "reason": "The body is the bare expression `z;` with the real test commented out: a placeholder that always passes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test body is just the expression statement `z;` with no assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-ec65ee32277ba2db",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/tests/language-server.test.ts",
+      "message": "Test `` at line 9 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 9,
+      "verdict": "true_positive",
+      "reason": "An empty placeholder test with the real suite commented out.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "test(\"\", () => {}) has an empty body and no assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-73673c9466de3985",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/tests/masking.test.ts",
+      "message": "Test `masking test` at line 4 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 4,
+      "verdict": "true_positive",
+      "reason": "An empty test body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "test(\"masking test\", () => {}) has an empty body and no assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef9afc242d502072",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/tests/mocker.test.ts",
+      "message": "Test `mocker` at line 6 runs code but checks no result",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 6,
+      "verdict": "true_positive",
+      "reason": "Reads generator properties and discards them; nothing is compared.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test only reads properties of the Mocker instance (mocker.string, etc.) with no assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-ed60caf8a01d5469",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/tests/error.test.ts",
+      "message": "Test `error creation` at line 42 runs code but checks no result",
+      "status": "pre_label",
+      "sampled_from": "t18-c",
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "Builds errors and reads their messages without checking any of them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off after line 57 and the test body continues beyond it, so later assertions may exist."
+        }
+      ]
+    }
+  ]
+}

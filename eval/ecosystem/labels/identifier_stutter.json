@@ -1,0 +1,1536 @@
+{
+  "schema_version": 1,
+  "detector": "identifier_stutter",
+  "labels": [
+    {
+      "id": "EA-4cd361b0ace0535d",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/binding.go",
+      "message": "`BindingBody` repeats its module name, so callers write `binding.BindingBody`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "The name repeats its module name at the call site.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BindingBody` is declared in package `binding`, so callers write `binding.BindingBody`, repeating the module name."
+        }
+      ]
+    },
+    {
+      "id": "EA-a56c42a36c05e2bd",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/binding.go",
+      "message": "`BindingUri` repeats its module name, so callers write `binding.BindingUri`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "The name repeats its module name at the call site.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BindingUri` is declared in package `binding`, so callers write `binding.BindingUri`, repeating the module name."
+        }
+      ]
+    },
+    {
+      "id": "EA-9c500cb9417bf5d7",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/binding_nomsgpack.go",
+      "message": "`BindingBody` repeats its module name, so callers write `binding.BindingBody`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "The name repeats its module name at the call site.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BindingBody` in binding_nomsgpack.go is still package `binding`, referenced as `binding.BindingBody`."
+        }
+      ]
+    },
+    {
+      "id": "EA-b8e4a3c3e0792417",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/binding_nomsgpack.go",
+      "message": "`BindingUri` repeats its module name, so callers write `binding.BindingUri`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "The name repeats its module name at the call site.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BindingUri` in binding_nomsgpack.go is package `binding`, referenced as `binding.BindingUri`."
+        }
+      ]
+    },
+    {
+      "id": "EA-079e97b84447536e",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_auth.py",
+      "message": "Identifier `header_value` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 316,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`header_value` repeats both \"header\" and \"value\" from the enclosing method `_get_header_value`, so the reported overlap_count of 2 is exactly correct in in-scope library code."
+        }
+      ]
+    },
+    {
+      "id": "EA-719166830df5568b",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Identifier `client_headers` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 307,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`client_headers` repeats \"headers\" from the enclosing `headers` setter and \"client\" from the `httpx._client` module/`Client` class, matching the reported overlap_count of 2."
+        }
+      ]
+    },
+    {
+      "id": "EA-bed9fc9498e6c42e",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Identifier `merge_url` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 396,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`merge_url` repeats both words of the enclosing method `_merge_url`, so the claim and overlap_count of 2 are factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-3ce0ab4b444d1f1a",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Identifier `HTTPCORE_EXC_MAP` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 99,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`HTTPCORE_EXC_MAP` is a module-scope global declared with `global HTTPCORE_EXC_MAP`, not a local identifier of `map_httpcore_exceptions`, so the local-identifier rationale does not apply at that site."
+        }
+      ]
+    },
+    {
+      "id": "EA-4fdec6019887e2b8",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_win32_console.py",
+      "message": "Identifier `console_mode` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 110,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Local `console_mode` (line 110) contains 'console' and 'mode', both present in the enclosing function `GetConsoleMode`, so overlap_count 2 is exact."
+        }
+      ]
+    },
+    {
+      "id": "EA-e18a2fcf8f8ea9d2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_win32_console.py",
+      "message": "Identifier `console_screen_buffer_info` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 239,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`console_screen_buffer_info = CONSOLE_SCREEN_BUFFER_INFO()` (line 239) repeats all four words of the enclosing `GetConsoleScreenBufferInfo`, matching overlap_count 4."
+        }
+      ]
+    },
+    {
+      "id": "EA-879b053207bd5de9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/cells.py",
+      "message": "Identifier `cell_size` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 317,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`cell_size = cell_len(text)` (line 317) repeats 'cell' and 'size' from the enclosing function `set_cell_size`."
+        }
+      ]
+    },
+    {
+      "id": "EA-daf5fe1949cbff3c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Identifier `_windows_console_features` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 572,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The module-scope cache `_windows_console_features` (line 572) repeats 'windows', 'console', and 'features' from `get_windows_console_features` defined in the same module; overlap_count 3 is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-aa4216807c6afcf0",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Identifier `color_system` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 810,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`color_system = _TERM_COLORS.get(colors, ColorSystem.STANDARD)` (line 810) repeats 'color' and 'system' from the enclosing `_detect_color_system`."
+        }
+      ]
+    },
+    {
+      "id": "EA-b74d3b9aa57ef31e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Identifier `is_dumb` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 987,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`is_dumb = _term.lower() in (\"dumb\", \"unknown\")` (line 987) contains 'is' and 'dumb', both present in the enclosing `is_dumb_terminal`."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e8af89464118eb5",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Identifier `screen_update` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1868,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`screen_update = ScreenUpdate(lines, x, y)` (line 1868) repeats 'screen' and 'update' from the enclosing `update_screen_lines`."
+        }
+      ]
+    },
+    {
+      "id": "EA-346887132f57ab48",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Identifier `frame_info` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1944,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`frame_info = stack()[offset]` (line 1944) repeats 'frame' and 'info' from the enclosing `_caller_frame_info`."
+        }
+      ]
+    },
+    {
+      "id": "EA-f463d371ea8c03ac",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/layout.py",
+      "message": "Identifier `append_layout_region` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 351,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`append_layout_region = layout_regions.append` is a bound-method alias in the same cluster as `push = stack.append` / `pop = stack.pop`, so the name composes the aliased operation rather than stuttering scope words; the 'remove redundant scope words' recommendation would leave `append`, losing meaning."
+        }
+      ]
+    },
+    {
+      "id": "EA-fb02d58495a6f76b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/logging.py",
+      "message": "Identifier `level_text` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 133,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Inside `get_level_text`, the local `level_text = Text.styled(...)` repeats both words of the enclosing function name, so the overlap count of 2 is accurate and the rationale applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-10c17e73b3138916",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Identifier `default_repr_file` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 109,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "In `_has_default_namedtuple_repr`, `default_repr_file = inspect.getfile(_dummy_namedtuple.__repr__)` repeats 'default' and 'repr' from the enclosing function name, matching the reported overlap of 2."
+        }
+      ]
+    },
+    {
+      "id": "EA-091ed2ca34ddef31",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/segment.py",
+      "message": "Identifier `line_length` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 372,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`line_length = sum(segment.cell_length for segment in line)` is a local in `adjust_line_length` and repeats the words 'line' and 'length' from the enclosing function name, as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-7a1f574f1daf3b47",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Identifier `get_style` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 200,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`get_style = self.style_map.get` is a cached bound-method alias whose name paraphrases the aliased `style_map.get`; the stutter rationale ('remove redundant scope words') misfires on this idiom since any removal yields the useless name `get`."
+        }
+      ]
+    },
+    {
+      "id": "EA-9ab5b4e2d3368519",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Identifier `column_width` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 594,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The local `column_width` inside the `_numbers_column_width` property repeats both words of the enclosing scope name, so the claim and overlap count of 2 are correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-cbae19edf002caf2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Identifier `row_style` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 315,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`row_style = self.rows[index].style` inside `get_row_style` literally repeats the enclosing method's name, a genuine stutter of the kind the rule targets."
+        }
+      ]
+    },
+    {
+      "id": "EA-2c89888104c4ffab",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Identifier `styled_text` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 352,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`styled_text = cls(text, ...)` inside the `styled` classmethod repeats the method name word 'styled' and the class-name word 'Text', so the stated overlap of 2 holds at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-a2e4fbe882314e43",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Identifier `get_style` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 565,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production code in rich/text.py; local `get_style` at line 565 genuinely repeats 'get' and 'style' from the enclosing `get_style_at_offset`, so overlap_count 2 is accurate."
+        }
+      ]
+    },
+    {
+      "id": "EA-3bad5655b2f6ea28",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Identifier `current_style` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 764,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Local `current_style` in `get_current_style` does repeat 'current' and 'style', so the reported overlap of 2 is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-0570e1c9c07675ec",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Identifier `append_text` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1041,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`append_text` repeats 'append' from the enclosing `append_tokens` and 'text' from the rich.text module, matching overlap_count 2."
+        }
+      ]
+    },
+    {
+      "id": "EA-67b8bc4810408755",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Identifier `syntax_error_text` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 741,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`syntax_error_text` repeats 'syntax' and 'error' from the enclosing `_render_syntax_error`, so overlap_count 2 is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d38785c8906f532",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-core/src/body.rs",
+      "message": "`BodyDataStream` repeats its module name, so callers write `body::BodyDataStream`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 141,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BodyDataStream` is declared in module `body`, so callers write `body::BodyDataStream`, repeating the module name."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`axum-core/src/body.rs` is module `body` and line 141 declares `pub struct BodyDataStream`, so the public name genuinely repeats the module word in `body::BodyDataStream`."
+        }
+      ]
+    },
+    {
+      "id": "EA-8afaeaead030994e",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-core/src/response/mod.rs",
+      "message": "`ErrorResponse` repeats its module name, so callers write `response::ErrorResponse`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct ErrorResponse` at response/mod.rs:121 contains the module word `Response`, so the public name stutters against module `response`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`axum-core/src/response/mod.rs` is module `response` and line 121 declares `pub struct ErrorResponse(Response)`, so the name does repeat the module word as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-ed37b2600b4243f6",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/extract/cookie/mod.rs",
+      "message": "`CookieJar` repeats its module name, so callers write `cookie::CookieJar`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct CookieJar` at cookie/mod.rs:89 repeats the module word `Cookie`, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`axum-extra/src/extract/cookie/mod.rs` is module `cookie` and line 89 declares `pub struct CookieJar`, so the claim that the name repeats the module word is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-63ca292ae279056a",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/extract/host.rs",
+      "message": "Identifier `x_forwarded_host_header` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 153 is inside the `#[crate::test]` function `x_forwarded_host_precedence_over_host_header`; test code is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-ba147a829056d9bf",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/extract/json_deserializer.rs",
+      "message": "Identifier `content_type` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 186,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production helper `json_content_type`; local `content_type` repeats 'content' and 'type' from the enclosing function name, so overlap_count 2 is accurate."
+        }
+      ]
+    },
+    {
+      "id": "EA-54a251c8df28cb51",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/extract/multipart.rs",
+      "message": "`MultipartError` repeats its module name, so callers write `multipart::MultipartError`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 239,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct MultipartError` at multipart.rs:239 repeats the module word `Multipart`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`axum-extra/src/extract/multipart.rs` is module `multipart` and line 239 declares `pub struct MultipartError`, so the identifier does repeat the module name as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-1845ba3c73ce105a",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/handler/mod.rs",
+      "message": "`HandlerCallWithExtractors` repeats its module name, so callers write `handler::HandlerCallWithExtractors`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub trait HandlerCallWithExtractors` at handler/mod.rs:24 starts with the module word `Handler`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 defines `pub trait HandlerCallWithExtractors<T, S>` in module `handler`, and the name embeds the module word `Handler`."
+        }
+      ]
+    },
+    {
+      "id": "EA-27338e0a794a1c28",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/handler/mod.rs",
+      "message": "`IntoHandler` repeats its module name, so callers write `handler::IntoHandler`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 161,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct IntoHandler` at handler/mod.rs:161 contains the module word `Handler`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 161 defines `pub struct IntoHandler<H, T, S>` in the `handler` module, so the name repeats `Handler`."
+        }
+      ]
+    },
+    {
+      "id": "EA-ed2a3b2b107d25dc",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/file_stream.rs",
+      "message": "Identifier `file_content` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 397,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 397 sits inside the test function `response_not_set_content_size`, which simulates a request and asserts on the response; test code is out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-27555404bd6527d0",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/file_stream.rs",
+      "message": "Identifier `file_content` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 439,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 439 sits inside the test function `response_with_content_size_and_filename`, which simulates a request and asserts on the response; test code is out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-3d715634a144d08b",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/typed_header.rs",
+      "message": "`TypedHeaderRejection` repeats its module name, so callers write `typed_header::TypedHeaderRejection`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct TypedHeaderRejection` at typed_header.rs:133 repeats both module words `Typed` and `Header`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 133 defines `pub struct TypedHeaderRejection` in module `typed_header`, repeating the module words `TypedHeader`."
+        }
+      ]
+    },
+    {
+      "id": "EA-b9ccc32fa857b02b",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/typed_header.rs",
+      "message": "`TypedHeaderRejectionReason` repeats its module name, so callers write `typed_header::TypedHeaderRejectionReason`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 164,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub enum TypedHeaderRejectionReason` at typed_header.rs:164 repeats both module words `Typed` and `Header`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 164 defines `pub enum TypedHeaderRejectionReason` in module `typed_header`, repeating `TypedHeader`."
+        }
+      ]
+    },
+    {
+      "id": "EA-ffec520d0299bd48",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Identifier `FromRequestFieldAttrs` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1032,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The destructured type `FromRequestFieldAttrs` repeats \"FromRequest\"/\"Field\"/\"Attrs\" from the enclosing `infer_state_type_from_field_attributes` scope and the `from_request` module, so two overlapping terms are real."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfd15f5011f5d950",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/typed_path.rs",
+      "message": "Identifier `typed_path_impl` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 105,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Local `typed_path_impl` literally repeats \"typed_path\" from the enclosing `typed_path` module/file plus the `_impl` suffix term."
+        }
+      ]
+    },
+    {
+      "id": "EA-d741811d734e66af",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/typed_path.rs",
+      "message": "Identifier `typed_path_impl` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 211,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Local `typed_path_impl` repeats \"typed_path\" from the enclosing module scope and \"impl\", matching the stated overlap of 2."
+        }
+      ]
+    },
+    {
+      "id": "EA-d7e0a90a900fa207",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/typed_path.rs",
+      "message": "Identifier `typed_path_impl` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 294,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Local `typed_path_impl` repeats \"typed_path\" and \"impl\" from the same module/expansion idiom as the other sites."
+        }
+      ]
+    },
+    {
+      "id": "EA-f49170f8d417321f",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/connect_info.rs",
+      "message": "`IntoMakeServiceWithConnectInfo` repeats its module name, so callers write `connect_info::IntoMakeServiceWithConnectInfo`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct IntoMakeServiceWithConnectInfo` at connect_info.rs:28 repeats both module words `Connect` and `Info`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 28 defines `pub struct IntoMakeServiceWithConnectInfo<S, C>` in module `connect_info`, repeating `ConnectInfo`; the `#[test]` below is not the reported line."
+        }
+      ]
+    },
+    {
+      "id": "EA-bee04031a9d739ff",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/connect_info.rs",
+      "message": "Identifier `connect_info` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 129,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Local `connect_info` repeats \"connect\" and \"info\" from the enclosing `connect_info` module and `IntoMakeServiceWithConnectInfo` service scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-5db0727ee746d441",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/connect_info.rs",
+      "message": "`MockConnectInfo` repeats its module name, so callers write `connect_info::MockConnectInfo`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 221,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`MockConnectInfo` sits in module `connect_info` and repeats both module words (`Connect`+`Info`), so the stuttered `connect_info::MockConnectInfo` path is real."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 221 defines `pub struct MockConnectInfo<T>(pub T)` in module `connect_info`, repeating `ConnectInfo` in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-d274f7ea112113b5",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/matched_path.rs",
+      "message": "Identifier `matched_path` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Naming the local after the enclosing extractor type in `from_request_parts` is an idiom the stutter rule should recognize, not a genuine redundant-scope defect."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8c8e06aa7a3e811",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/matched_path.rs",
+      "message": "Identifier `matched_path` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 302,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`extract_matched_path` is a nested helper inside a `#[crate::test]` async test, so this site is test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f9288644ee8d2c32",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/mod.rs",
+      "message": "Identifier `content_type` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The repeated `let content_type` bindings are idiomatic sequential shadowing from the same `to_str()` result chain, so the rationale should not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-7b12852b72fdc3cc",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/multipart.rs",
+      "message": "`MultipartError` repeats its module name, so callers write `multipart::MultipartError`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`MultipartError` in module `multipart` does repeat the module name, giving `multipart::MultipartError`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 235 defines `pub struct MultipartError` in module `multipart`, repeating the module word `Multipart`."
+        }
+      ]
+    },
+    {
+      "id": "EA-1a71d1c706110ae0",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/query.rs",
+      "message": "Identifier `TestQueryParams` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 201,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The site is test-only code (fn `test_try_from_uri_with_invalid_query` ending in `assert!(result.is_err())`), which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-df84775b2bd4b108",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "Identifier `on_failed_upgrade` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 355,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Production code: `let on_failed_upgrade = self.on_failed_upgrade;` at ws.rs:355 genuinely repeats `on` and `upgrade` from the enclosing fn `on_upgrade`."
+        }
+      ]
+    },
+    {
+      "id": "EA-d8666fbbff1805af",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/handler/mod.rs",
+      "message": "`HandlerWithoutStateExt` repeats its module name, so callers write `handler::HandlerWithoutStateExt`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 357,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`HandlerWithoutStateExt` in module `handler` repeats the module word `Handler` in its qualified name."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 357 defines `pub trait HandlerWithoutStateExt<T>` in the `handler` module, repeating the module word `Handler`."
+        }
+      ]
+    },
+    {
+      "id": "EA-425de4ec10474650",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/json.rs",
+      "message": "Identifier `content_type` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 139,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`content_type` at json.rs:139 genuinely repeats `content` and `type` from the enclosing fn `json_content_type` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-b3257a4c17330858",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Identifier `no_leading_space` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 648,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The line sits inside `#[test] fn leading_space_is_not_stripped`, i.e. test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-a8b7db90750778e8",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Identifier `json_raw_value_event` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 684,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The line sits inside `#[test] fn valid_json_raw_value_chars_handled`, i.e. test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-263097bc00757479",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Identifier `next_id` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 435,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`next_id` at path_router.rs:435 genuinely repeats `next` and `id` from the enclosing fn `next_route_id` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-eeff2d3b08aa742a",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/upgrade.rs",
+      "message": "`OnUpgrade` repeats its module name, so callers write `upgrade::OnUpgrade`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 74,
+      "verdict": "true_positive",
+      "reason": "The name repeats its module name at the call site.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`OnUpgrade` in module `upgrade` repeats the module name in `upgrade::OnUpgrade`."
+        }
+      ]
+    },
+    {
+      "id": "EA-69e91ab58d4e38f5",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/serde_impl.rs",
+      "message": "Identifier `GlobSet` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 124,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The line is in `#[test] fn glob_set_deserialize`, so the site is test code outside scope (and `GlobSet` is an external type, not a local identifier)."
+        }
+      ]
+    },
+    {
+      "id": "EA-e8b9fc327bc3b9e1",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Identifier `has_custom_ignore_files` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 472,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`has_custom_ignore_files` at dir.rs:472 genuinely repeats `has` and `ignore` from the enclosing fn `has_any_ignore_rules` in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-45fdb96ca28a64b0",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Identifier `git_dir_path` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1060,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "In production fn `resolve_git_commondir`, `git_dir_path` genuinely repeats scope terms (git, dir from `git_type`/`dir` params), matching the claimed overlap of 2."
+        }
+      ]
+    },
+    {
+      "id": "EA-ffd0576cb0866cd1",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Identifier `custom_ignore` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1252,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 1252 sits inside `#[test] fn custom_ignore_over_ignore`, which is test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-6649ea8b7d881ad7",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Identifier `custom_ignore1` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1268,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 1268 sits inside `#[test] fn custom_ignore_precedence`, test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f24dd77bf9cddf85",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Identifier `git_dir` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1567,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 1567 sits inside `#[test] fn git_info_exclude_in_linked_worktree`, test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-31c46431e61d7d38",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/gitignore.rs",
+      "message": "`GitignoreBuilder` repeats its module name, so callers write `gitignore::GitignoreBuilder`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 320,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`GitignoreBuilder` in module `gitignore` repeats the module name in `gitignore::GitignoreBuilder`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct GitignoreBuilder` at line 320 is in the `gitignore` module, so the public name really does stutter with the module path."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ec002a732f87271",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/types.rs",
+      "message": "`TypesBuilder` repeats its module name, so callers write `types::TypesBuilder`.",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 305,
+      "verdict": "true_positive",
+      "reason": "Public item in a public module repeats the module name, so qualified uses stutter (clippy module_name_repetitions).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`TypesBuilder` in module `types` repeats the module name in `types::TypesBuilder`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`pub struct TypesBuilder` at line 305 is in the `types` module, so the name repeats the module name as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-bd7a7e514de12982",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "Identifier `custom_ignore` repeats words already present in function or module scope.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2251,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 2251 sits inside `#[test] fn custom_ignore_exclusive_use`, test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-6f2cb39456b92eb4",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Identifier `line_number` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1682,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "In production `write_line_number`, the binding `line_number` repeats both words \"line\" and \"number\" of the enclosing function name, so the stutter claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-8125ee8f2967f234",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Identifier `column_number` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1696,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "In production `write_column_number`, the binding `column_number` repeats both words \"column\" and \"number\" of the enclosing function name, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-062d3924e001198e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Identifier `before_context_start` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 252,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "In production `before_context_by_line`, `before_context_start` repeats \"before\" and \"context\" from the function name, matching the overlap of 2."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2ca92a52b72fdd5",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Identifier `after_context_left` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 295,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The local `after_context_left` at core.rs:295 does repeat \"after_context\" from its enclosing function `after_context_by_line`, and this is in-scope library code."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ae820d6cee47f48",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Identifier `invert_match` repeats words already present in function or module scope.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 436,
+      "verdict": "false_positive",
+      "reason": "Local variable reusing a word from its function/module name is ordinary naming; stutter matters for qualified exported names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`let invert_match = ...` at core.rs:436 repeats both \"invert\" and \"match\" from the enclosing function `match_by_line_fast_invert` (overlap_count 2 is correct)."
+        }
+      ]
+    }
+  ]
+}

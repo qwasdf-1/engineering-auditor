@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "detector": "hot_path_linear_membership",
+  "labels": [
+    {
+      "id": "EA-0482fbd95899de43",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/services/suppressions-service.js",
+      "message": "Function `suppress` checks loop-derived `ruleId` against linear collection `rules`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 67,
+      "verdict": "true_positive",
+      "reason": "Array.includes inside the loop is a linear scan per item; a Set would make it constant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`rules.includes(ruleId)` is a linear membership check performed for every key in the `for (const ruleId in violationsByRule)` loop."
+        }
+      ]
+    }
+  ]
+}

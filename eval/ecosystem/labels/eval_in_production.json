@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "detector": "eval_in_production",
+  "labels": [
+    {
+      "id": "EA-b7861a45d1c14d25",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Non-test source calls dynamic execution at line 188",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 188,
+      "verdict": "true_positive",
+      "reason": "Dynamic eval/exec of text in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "conv.py:188 calls eval(mo.group(1)) in non-test parser source, so the dynamic-execution claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-1641f45fa03c200e",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Non-test source calls dynamic execution at line 214",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 214,
+      "verdict": "true_positive",
+      "reason": "Dynamic eval/exec of text in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "conv.py:214 calls y = eval(y) in non-test source, matching the detector's claim of dynamic execution."
+        }
+      ]
+    },
+    {
+      "id": "EA-c9b03832a8ab2e12",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/pgen.py",
+      "message": "Non-test source calls dynamic execution at line 100",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 100,
+      "verdict": "true_positive",
+      "reason": "Dynamic eval/exec of text in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "pgen.py:100 calls value = eval(label) in non-test parser source, so the reported claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-b884ce8a593241a9",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/cli.py",
+      "message": "Non-test source calls dynamic execution at line 1031",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1031,
+      "verdict": "true_positive",
+      "reason": "Dynamic eval/exec of text in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "flask/cli.py:1031 calls eval(compile(...)) to execute a startup script, which is genuine dynamic execution in non-test source regardless of intent."
+        }
+      ]
+    },
+    {
+      "id": "EA-669562963b3f366b",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/config.py",
+      "message": "Non-test source calls dynamic execution at line 209",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 209,
+      "verdict": "true_positive",
+      "reason": "Dynamic eval/exec of text in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 209 exec(compile(config_file.read(), ...)) is dynamic execution in non-test Flask source, exactly as claimed."
+        }
+      ]
+    }
+  ]
+}

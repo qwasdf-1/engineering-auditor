@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "providers": [
+    {
+      "id": "mistral_free",
+      "kind": "mistral_chat",
+      "endpoint_base": "https://api.mistral.ai",
+      "api_key_env": "MISTRAL_API_KEY",
+      "models": [
+        "magistral-medium-latest"
+      ],
+      "model_protocols": {},
+      "chat_completions_path": null,
+      "cost_class": "zero",
+      "estimated_cost_microusd_per_request": null,
+      "privacy_class": "hosted_commercial"
+    }
+  ],
+  "single_reviewer": {
+    "targets": [
+      {
+        "provider_id": "mistral_free",
+        "model": "magistral-medium-latest"
+      }
+    ]
+  },
+  "ensemble": null,
+  "challenger": {
+    "targets": [
+      {
+        "provider_id": "mistral_free",
+        "model": "magistral-medium-latest"
+      }
+    ]
+  },
+  "alternative_comparator": null,
+  "review_budget": {
+    "max_requests": 64,
+    "max_input_bytes": 8388608,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 0,
+    "allow_unknown_cost": false
+  },
+  "case_budgets": {
+    "defaults": {
+      "max_requests": 64,
+      "max_input_bytes": 8388608,
+      "max_output_tokens": 65536,
+      "timeout_ms": 360000,
+      "max_cost_microusd": 0,
+      "allow_unknown_cost": false
+    },
+    "per_template": {}
+  }
+}

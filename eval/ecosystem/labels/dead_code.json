@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "detector": "dead_code",
+  "labels": [
+    {
+      "id": "EA-d2e6f842e92ce40d",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Unreferenced function `test_field_doesnt_impl_from_request` defined at line 1069 has zero source references beyond its definition",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1069,
+      "verdict": "false_positive",
+      "reason": "Function is explicitly `#[allow(dead_code)]` as a doc anchor; the suppression should be honoured.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 1068 carries `#[allow(dead_code)]` on `fn test_field_doesnt_impl_from_request`, so the dead-code claim is explicitly suppressed and the detector's rationale cannot apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-f7e142ef2db2fad8",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/body/mod.rs",
+      "message": "Unreferenced function `_assert_send_sync` defined at line 91 has zero source references beyond its definition",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 91,
+      "verdict": "false_positive",
+      "reason": "An underscore-prefixed compile-time Send/Sync assertion; unused by design.",
+      "labeller": "model:claude-opus-5-5"
+    }
+  ]
+}

@@ -1,0 +1,1036 @@
+{
+  "schema_version": 1,
+  "detector": "function_local_import",
+  "labels": [
+    {
+      "id": "EA-7b5fdc2a23c8adda",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/__init__.py",
+      "message": "Function `main` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 19,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`main` does contain exactly one local import, `import sys`, at line 19 as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`import sys` at line 19 is a local import of a stable stdlib module inside main() with no documented lazy-loading need, so the claim and rationale hold."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 19"
+        }
+      ]
+    },
+    {
+      "id": "EA-25ec95f8925957ea",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_auth.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "Deferred import with a stated circular-import or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The netrc import is explicitly documented as deliberate lazy loading ('Lazily import netrc... unless NetRCAuth is being used'), which is the exception the detector's own rationale carves out."
+        }
+      ]
+    },
+    {
+      "id": "EA-12ce41403573de6e",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 678,
+      "verdict": "false_positive",
+      "reason": "Optional-dependency import guarded or deferred deliberately.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `import h2` at line 678 is wrapped in try/except ImportError inside `if http2:` because h2 is an optional extra, so lazy loading is required and hoisting is impossible."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2592f6d7efb35f4",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1392,
+      "verdict": "false_positive",
+      "reason": "Optional-dependency import guarded or deferred deliberately.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `import h2` at line 1392 is again an optional http2-extra dependency guarded by try/except ImportError with a helpful install message, so it cannot be hoisted to module scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-e71e7139a8e23026",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_config.py",
+      "message": "Function `create_ssl_context` contains 3 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`create_ssl_context` locally imports ssl, warnings, and certifi at lines 28, 29, and 31, matching the claimed count of 3."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 28, 29 and 31 confirm the three local imports (`ssl`, `warnings`, `certifi`); all are stable required/stdlib modules with nothing forcing lazy loading, so the rationale applies."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 28"
+        }
+      ]
+    },
+    {
+      "id": "EA-89bbae4c71efccaa",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Function `is_running_trio` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "Optional-dependency import guarded or deferred deliberately.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `import sniffio` at line 34 sits inside try/except ImportError because sniffio is only an optional transitive dependency of trio (per the comment), so hoisting is impossible."
+        }
+      ]
+    },
+    {
+      "id": "EA-cc85cc2e125b889a",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Function `create_event` contains 2 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`create_event` locally imports trio (line 46) and asyncio (line 50), matching the claimed count of 2."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 46 and 50 confirm both local imports in create_event; the count is correct and at least the stdlib `import asyncio` is a stable import that could be hoisted, so the rationale applies at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 46"
+        }
+      ]
+    },
+    {
+      "id": "EA-ccf7906f3b40cf01",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Function `_load_httpcore_exceptions` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_load_httpcore_exceptions` locally imports httpcore at line 75, as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 75 confirms `import httpcore` inside _load_httpcore_exceptions; httpcore is a required dependency and the excerpt shows nothing requiring lazy loading."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 75"
+        }
+      ]
+    },
+    {
+      "id": "EA-41499eed56240db0",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 150,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function __init__ is a real function at this site and the metric is plausible for its body"
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 150"
+        }
+      ]
+    },
+    {
+      "id": "EA-905d974b709ba8c2",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Function `handle_request` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`handle_request` locally imports httpcore at line 235, as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 235 confirms `import httpcore` inside handle_request; the claim is correct and httpcore, a required dependency, could be hoisted to module scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 235"
+        }
+      ]
+    },
+    {
+      "id": "EA-cabc708d0ca59dec",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 294,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function __init__ is a real function at this site and the metric is plausible for its body"
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 294"
+        }
+      ]
+    },
+    {
+      "id": "EA-8e72643b27a558cb",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Function `handle_async_request` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 379,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`handle_async_request` does contain a local `import httpcore` at line 379, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`handle_async_request` performs a function-local `import httpcore` at line 379 before building the httpcore request."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 379"
+        }
+      ]
+    },
+    {
+      "id": "EA-720f88ade600af38",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urls.py",
+      "message": "Function `join` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 364,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`join` contains a real local `from urllib.parse import urljoin` at line 364 (after the docstring closes at 363), so the count holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`join` contains the function-local import `from urllib.parse import urljoin` at line 364."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 364"
+        }
+      ]
+    },
+    {
+      "id": "EA-0910efe640da5c98",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urls.py",
+      "message": "Function `raw` contains 2 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 405,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`raw` contains the two local imports `collections` and `warnings` at lines 405-406, matching the reported count of 2."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `raw` property contains both reported local imports, `collections` and `warnings`, at lines 405 and 406."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 405"
+        }
+      ]
+    },
+    {
+      "id": "EA-546db37cc3fb757e",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_utils.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 163,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`__init__` contains the local `from ._urls import URL` at line 163, so the claim is factually correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`__init__` contains the function-local import `from ._urls import URL` at line 163."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 163"
+        }
+      ]
+    },
+    {
+      "id": "EA-5887a8157549bd4e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/__init__.py",
+      "message": "Function `get_console` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`get_console` contains a local `from .console import Console` at line 32, and intentional lazy imports still satisfy the finding's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`get_console` performs the function-local import `from .console import Console` at line 32."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 32"
+        }
+      ]
+    },
+    {
+      "id": "EA-7634d854e2829e4a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/__init__.py",
+      "message": "Function `reconfigure` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`reconfigure` contains a local `from rich.console import Console` at line 46, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "reconfigure genuinely contains `from rich.console import Console` at line 46; the count and symbol are correct and the site is in scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 46"
+        }
+      ]
+    },
+    {
+      "id": "EA-14077cf9c8a8af1a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_emoji_replace.py",
+      "message": "Function `_emoji_replace` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_emoji_replace` contains a local `from ._emoji_codes import EMOJI` at line 15, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`_emoji_replace` performs the function-local import `from ._emoji_codes import EMOJI` at line 15."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 15"
+        }
+      ]
+    },
+    {
+      "id": "EA-742a9e6f8c69f87f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_log_render.py",
+      "message": "Function `__call__` contains 2 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`__call__` contains the two local imports `Renderables` and `Table` at lines 43-44, matching the reported count of 2."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`__call__` contains both reported function-local imports, `Renderables` and `Table`, at lines 43 and 44."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 43"
+        }
+      ]
+    },
+    {
+      "id": "EA-de4b7c7a58f9e330",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `get_windows_console_features` contains 1 local import(s).",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 570,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 570 is a genuine in-function import of `get_windows_console_features` from `._windows`, and the function's cache/global-guarded lazy load does not change that the claim of 1 local import holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `from ._windows import ...` lazy import (with `# pragma: no cover`) is platform-gated; hoisting it to module scope would break non-Windows, so the rationale does not apply."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 570"
+        }
+      ]
+    },
+    {
+      "id": "EA-a8843f55faa1ddae",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `is_expandable` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1529,
+      "verdict": "false_positive",
+      "reason": "Deferred import with a stated circular-import or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The import at line 1529 is preceded by the comment `# Permit lazy loading`, which is exactly the documented lazy-loading exception the detector's own rationale carves out."
+        }
+      ]
+    },
+    {
+      "id": "EA-809e1fe9f185fee5",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `_collect_renderables` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 1575,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1575 `from .pretty import Pretty` is exactly one local import inside `_collect_renderables`, matching the reported count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1575 `from .pretty import Pretty` is indeed a function-local import inside `_collect_renderables`, exactly as claimed."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 1575"
+        }
+      ]
+    },
+    {
+      "id": "EA-897f273d276a7124",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `rule` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1605,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1605 `from .rule import Rule` is a single local import within `rule`, as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`rule` contains `from .rule import Rule` at line 1605 with no comment or idiom documenting why the import must be local, so the hoisting rationale applies."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 1605"
+        }
+      ]
+    },
+    {
+      "id": "EA-c4e8ef71314e4fec",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `print_json` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 1787,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1787 `from rich.json import JSON` is the one local import in `print_json`, matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`print_json` contains the local import `from rich.json import JSON` at line 1787, so the claim is factually correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 1787"
+        }
+      ]
+    },
+    {
+      "id": "EA-05b645ebdcdb2cae",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `_write_buffer` contains 3 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2069,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 2084, so the third reported import line (2085) in `_write_buffer` cannot be confirmed from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The claimed count of 3 includes line 2085, but the excerpt ends at line 2084, so the count spans content that is not shown."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 2069"
+        }
+      ]
+    },
+    {
+      "id": "EA-0c9be1123674bc7a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `export_html` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 2266,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 2266 `from html import escape` is a single local import in `export_html`, matching the reported count of 1."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`export_html` contains the local stdlib import `from html import escape` at line 2266, a stable import that could be hoisted."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 2266"
+        }
+      ]
+    },
+    {
+      "id": "EA-59ba8f825d662bc0",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `export_svg` contains 3 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2379,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Lines 2379 `import zlib`, 2380 `from html import escape`, and 2382 `from rich.cells import cell_len` are three local imports in `export_svg`, matching the count of 3."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "All three imports (`import zlib`, `from html import escape`, `from rich.cells import cell_len` at lines 2379, 2380, 2382) are visible and none is documented as requiring lazy loading."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 2379"
+        }
+      ]
+    },
+    {
+      "id": "EA-920feef90a372a04",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/emoji.py",
+      "message": "Function `__init__` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 40 `from ._emoji_codes import EMOJI` is one local import inside `Emoji.__init__`, as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`from ._emoji_codes import EMOJI` inside `Emoji.__init__` at line 40 is an undocumented local import of a stable data module, so the claim and rationale hold."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 40"
+        }
+      ]
+    },
+    {
+      "id": "EA-e83894ad87e2c115",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/jupyter.py",
+      "message": "Function `display` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "Optional-dependency import guarded or deferred deliberately.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The IPython import at line 89 sits inside try/except ModuleNotFoundError with a comment explaining IPython may not be installed \u2014 the standard optional-dependency idiom hoisting would wrongly change."
+        }
+      ]
+    },
+    {
+      "id": "EA-e13188720bab2a36",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Function `refresh` contains 1 local import(s).",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 258,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `import warnings` at line 258 is the fallback of the standard `try: from IPython.../ipywidgets... except ImportError:` optional-dependency idiom (pragma no-cover block), which the rule should recognize, and the excerpt shows 3 local imports in `refresh`, not 1."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 258 `import warnings` is a local import inside `refresh`; the stdlib module has no lazy-loading requirement and could be hoisted."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 258"
+        }
+      ]
+    },
+    {
+      "id": "EA-39a6d8ebb02011eb",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/logging.py",
+      "message": "Function `emit` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 150,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 150 `from .traceback import Traceback` is genuinely a local import inside `emit`, and with no documenting comment the detector's hoist recommendation applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`from .traceback import Traceback` in `emit` at line 150 is a local import with no documented lazy-loading justification in the excerpt, so the rationale applies."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 150"
+        }
+      ]
+    },
+    {
+      "id": "EA-9ee0f64aa6b1d503",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Function `_ipy_display_hook` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 125,
+      "verdict": "false_positive",
+      "reason": "Deferred import with a stated circular-import or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The import at line 125 carries the comment `needed here to prevent circular import`, which is the documented lazy-loading case the rationale exempts."
+        }
+      ]
+    },
+    {
+      "id": "EA-858215fd4cd34802",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/protocol.py",
+      "message": "Function `rich_cast` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 `from rich.console import RenderableType` is a local import inside `rich_cast`, so the stated claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 27 contains the local import `from rich.console import RenderableType` inside function `rich_cast`, so the count of 1 is correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 27"
+        }
+      ]
+    },
+    {
+      "id": "EA-c64370ee02ca8705",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/repr.py",
+      "message": "Function `auto_rich_repr` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 70,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 70 `import inspect` is a local import inside the nested `auto_rich_repr` function, a stdlib import with no lazy-loading requirement, so the finding is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 70 contains the local import `import inspect` inside function `auto_rich_repr`, so the count of 1 is correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 70"
+        }
+      ]
+    },
+    {
+      "id": "EA-f9491525d040bc9a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `markup` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 236,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 236 `from .markup import escape` is a local import inside `markup`, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`markup` contains the local import `from .markup import escape` at line 236, matching the finding."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 236"
+        }
+      ]
+    },
+    {
+      "id": "EA-686c60e95dad6af1",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `from_markup` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 285,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 285 `from .markup import render` is a local import inside `from_markup`, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 285 contains the local import `from .markup import render` inside function `from_markup`, so the count of 1 is correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 285"
+        }
+      ]
+    },
+    {
+      "id": "EA-8ce3e88dcedcbf19",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `from_ansi` contains 1 local import(s).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 316,
+      "verdict": "true_positive",
+      "reason": "PEP 8 places imports at the top of the file; this deferred import has no try/except ImportError guard, TYPE_CHECKING block, or comment stating a cycle or lazy-loading reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 316 `from .ansi import AnsiDecoder` is a local import inside `from_ansi`, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 316 contains the local import `from .ansi import AnsiDecoder` inside function `from_ansi`, so the count of 1 is correct."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLC0415 at line 316"
+        }
+      ]
+    }
+  ]
+}

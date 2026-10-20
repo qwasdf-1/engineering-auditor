@@ -1,0 +1,534 @@
+{
+  "schema_version": 1,
+  "detector": "escape_hatch_type_density",
+  "labels": [
+    {
+      "id": "EA-8a449d4f8e370172",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_types.py",
+      "message": "File has escape-hatch type density 0.36 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Type-alias module uses `Any` in 4 of 11 annotations; density claim is accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_types.py has 4 Any-based aliases (ResponseExtensions, RequestData, RequestExtensions Mapping[str, Any]) among 11 annotations; claim is accurate though these are open-ended bag types."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is given, so the 4/11 escape-hatch classification and 0.36 density cannot be verified from the finding alone."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 4 escape-hatch annotations out of 11 in httpx/_types.py cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-35036416e2470f43",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "adapters/netlify/src/handler.ts",
+      "message": "File has escape-hatch type density 0.83 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "handler.ts has 'app: Hono<any, any>' and 'context: any' with a file-wide eslint-disable for no-explicit-any; 5 of 6 annotations are any."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is given, so the 5/6 escape-hatch classification and 0.83 density in the handler cannot be verified from the finding alone."
+        }
+      ]
+    },
+    {
+      "id": "EA-793abadcf74e9fb8",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/adapter/netlify/handler.ts",
+      "message": "File has escape-hatch type density 0.83 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "src/adapter/netlify/handler.ts repeats the same Hono<any, any> and context: any signatures under an eslint-disable, so density 0.83 is accurate."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the file-level escape-hatch count and density cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-2596d4d8dd71f663",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/client/fetch-result-please.ts",
+      "message": "File has escape-hatch type density 0.43 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fetch-result-please.ts uses any for fetchRP's return, _data, _bodyInit, detail and code (8 any occurrences in 95 lines) which weakens type safety."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 10/23 escape-hatch density cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-3bc9cf23fe2d08a2",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/factory/index.ts",
+      "message": "File has escape-hatch type density 1.32 (> 0.30).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): `any` as a generic default, constraint, or placeholder type argument is the idiomatic way to type variadic generics, not an escape hatch.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "factory/index.ts's 60 'any' are overwhelmingly generic defaults and constraints (R extends HandlerResponse<any> = any) in overload type signatures, an accepted type-level idiom in this library."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided; a density above 1.0 hints at over-counting but the file contents are absent."
+        }
+      ]
+    },
+    {
+      "id": "EA-b2ccbc752c8046bf",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/components.ts",
+      "message": "File has escape-hatch type density 1.00 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "components.ts casts ErrorBoundary and Suspense to any ('}) as any', '(res as any)[DOM_ERROR_HANDLER]'), all 11 annotations being any under a file-wide eslint-disable."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so an all-escape-hatch density of 1.0 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-c4cdb62bbbf983ab",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/jsx-renderer/index.ts",
+      "message": "File has escape-hatch type density 0.33 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "jsx-renderer/index.ts uses (props: any), '(props as any)' and 'children as any' in runtime code, 9 any uses in 163 lines."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 10/30 escape-hatch density cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-2088d9130e1e45cb",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/types.ts",
+      "message": "File has escape-hatch type density 0.40 (> 0.30).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): `any` as a generic default, constraint, or placeholder type argument is the idiomatic way to type variadic generics, not an escape hatch.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hono types.ts is a 2782-line type-level file whose ~74 'any' are generic defaults (E extends Env = any, P extends string = any) used for inference, an idiom rather than loose typing."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided for this large file, so the 139/350 count cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-3d17b41fec7b5ca5",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/core/current.ts",
+      "message": "File has escape-hatch type density 0.62 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "current.ts's current(value: Draft<any>): any and 'let copy: any' use any for values handled at runtime."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 5/8 escape-hatch density cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4b16c128af1ef254",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/core/immerClass.ts",
+      "message": "File has escape-hatch type density 0.30 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "immerClass.ts uses any in produce's (base: any, recipe?: any, patchListener?: any) implementation and args: any[]; 12 occurrences with density just above 0.30."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the borderline 0.30 density cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd409c2f2c47a1fc",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/immer.ts",
+      "message": "File has escape-hatch type density 0.57 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "immer.ts defines castDraft/castImmutable as 'value as any', explicit type-erasure casts counted in a small file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 4/7 escape-hatch count and whether those types are idiomatic in src/immer.ts cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-416a5c2ad41bec23",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/plugins/mapset.ts",
+      "message": "File has escape-hatch type density 0.32 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "mapset.ts has 21 any plus 2 ts-ignore/expect-error markers (e.g. 'draft_: this as any', has(key: any)), clear escape-hatch use in runtime code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "With no excerpt from src/plugins/mapset.ts, the 33/102 counts and the claim that the escape hatches are avoidable cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-61537489d7e8ed83",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/types/types-internal.ts",
+      "message": "File has escape-hatch type density 0.47 (> 0.30).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): `any` as a generic default, constraint, or placeholder type argument is the idiomatic way to type variadic generics, not an escape hatch.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "types-internal.ts defines AnyObject/AnyArray/AnySet/AnyMap aliases (Map<any, boolean> etc.) as deliberate internal type aliases in a 55-line type file; this is the idiom for internal erased types."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is shown for src/types/types-internal.ts, so the 8/17 density and whether a types file legitimately needs broad types cannot be judged."
+        }
+      ]
+    },
+    {
+      "id": "EA-abccb380692f5013",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/utils/common.ts",
+      "message": "File has escape-hatch type density 0.37 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The share of `any`-typed annotations in the file is over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "utils/common.ts uses any in isDraft(value: any), isDraftable, isPlainObject and original(...): any, with a ts-ignore, ~32 hatches in 290 lines."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Without the source of src/utils/common.ts the 32/86 count and the applicability of the escape-hatch rationale cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8c232cea1fd404d",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/withTRPC.tsx",
+      "message": "File has escape-hatch type density 0.30 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "verdict": "true_positive",
+      "reason": "The file really uses any at this density; unknown or generic parameters would restore type checking where any opts out.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "withTRPC.tsx uses NextComponentType<any, any, any> and '(prepassProps as any).abortOnUnmount', 13 hatches among 43 annotations."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt from packages/next/src/withTRPC.tsx is given, so the 13/43 count and whether those types are intentional cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-18b0ab505b1e4a4f",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/src/internals/useQueries.ts",
+      "message": "File has escape-hatch type density 1.14 (> 0.30).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): `any` as a generic default, constraint, or placeholder type argument is the idiomatic way to type variadic generics, not an escape hatch.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "useQueries.ts has ~20 'any' used as type arguments (UseQueryOptionsForUseQueries<any, any, any, any>) in conditional/mapped types, a type-level inference idiom."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided and the reported density 1.14 with 32 escape hatches over 28 annotations is internally anomalous, so the metric cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c5701082b77e858",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/src/server/ssgProxy.ts",
+      "message": "File has escape-hatch type density 0.35 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "verdict": "true_positive",
+      "reason": "The file really uses any at this density; unknown or generic parameters would restore type checking where any opts out.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ssgProxy.ts casts args via 'as Maybe<any>' and uses serialize: (obj: unknown) => any in runtime proxy code, 15 hatches in 43 annotations."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Without the source of packages/react-query/src/server/ssgProxy.ts the 15/43 count and applicability of the rationale cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-8231c29d1f2ac80d",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/http/contentTypeParsers.ts",
+      "message": "File has escape-hatch type density 0.33 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "verdict": "true_positive",
+      "reason": "The file really uses any at this density; unknown or generic parameters would restore type checking where any opts out.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "contentTypeParsers.ts uses 'null as any as OctetInput' and 'null as any as ReadableStream' phantom-type casts; claim holds though only 2 hatches."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt from contentTypeParsers.ts is shown, so the 2/6 count and whether parsing code needs broad types cannot be judged."
+        }
+      ]
+    },
+    {
+      "id": "EA-0933b0eae618e124",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/tanstack-react-query/src/internals/infiniteQueryOptions.ts",
+      "message": "File has escape-hatch type density 0.51 (> 0.30).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): `any` as a generic default, constraint, or placeholder type argument is the idiomatic way to type variadic generics, not an escape hatch.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "infiniteQueryOptions.ts uses any as placeholder generic arguments (DefinedTRPCInfiniteQueryOptionsIn<any, any, any, any, TFeatureFlags>) in union types, a type-level idiom."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "File-level escape-hatch density (25/49) is a count over a whole file with no excerpt shown, so the claim cannot be verified or refuted."
+        }
+      ]
+    },
+    {
+      "id": "EA-d808811a4a45e145",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/app/llms.txt/route.ts",
+      "message": "File has escape-hatch type density 0.40 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "verdict": "true_positive",
+      "reason": "The file really uses any at this density; unknown or generic parameters would restore type checking where any opts out.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "route.ts has stringifyTitle(title: any) and '(item: any) => item.depth' filters in docs route code, 2 hatches in 5 annotations."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided to confirm the 2/5 escape-hatch count, and a docs-app route is not clearly outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-56ea775fd0b2468f",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/compile.ts",
+      "message": "File has escape-hatch type density 1.00 (> 0.30).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "verdict": "true_positive",
+      "reason": "The file really uses any at this density; unknown or generic parameters would restore type checking where any opts out.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "compile.ts types postProcessor (inst: any), shim (payload: any, ctx: any): any and '(shim as any).__originalRun', all 5 annotations being any."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The 5/5 density is a count over the entire file, which the empty excerpt does not let us verify."
+        }
+      ]
+    },
+    {
+      "id": "EA-ad69e82b7ac3a8e1",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/enable-compile.ts",
+      "message": "File has escape-hatch type density 0.70 (> 0.30).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "verdict": "true_positive",
+      "reason": "The file really uses any at this density; unknown or generic parameters would restore type checking where any opts out.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "scripts/enable-compile.ts is build/tooling code, which is outside the detector's stated scope."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/donor-manifest.schema.json",
+  "title": "Engineering Auditor Donor Manifest",
+  "type": "object",
+  "required": ["schema_version", "policy", "references_directory", "donors"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "policy": { "type": "string" },
+    "references_directory": { "type": "string" },
+    "donors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/donor" }
+    }
+  },
+  "$defs": {
+    "donor": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "source",
+        "snapshot",
+        "license",
+        "license_tier",
+        "use_mode",
+        "runtime_dependency"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "source": { "type": "string" },
+        "snapshot": { "type": "string" },
+        "license": { "type": "string" },
+        "license_tier": {
+          "enum": [
+            "permissive_compatible",
+            "weak_copyleft_reference_only",
+            "strong_copyleft_reference_only",
+            "unknown_reference_only",
+            "internal_reference"
+          ]
+        },
+        "use_mode": { "type": "string" },
+        "runtime_dependency": { "type": "boolean" },
+        "required": { "type": "boolean" },
+        "local_path": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

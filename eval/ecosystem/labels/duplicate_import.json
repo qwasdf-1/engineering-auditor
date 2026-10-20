@@ -1,0 +1,1069 @@
+{
+  "schema_version": 1,
+  "detector": "duplicate_import",
+  "labels": [
+    {
+      "id": "EA-3a6dce9a2aa5690c",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/netbsd.c",
+      "message": "Import `unistd.h` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "unistd.h is already included earlier in netbsd.c; the second include is redundant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "unistd.h is included both at line 30 (per the finding's evidence) and at the shown line 40 in the same file, so the duplicate claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "unistd.h is included at line 40 (shown) and again at line 30, and both instances are active when this NetBSD-only file compiles, so the duplication is real."
+        }
+      ]
+    },
+    {
+      "id": "EA-b4bdede881cbcb54",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/netbsd.c",
+      "message": "Import `time.h` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "time.h is already included earlier in netbsd.c; the second include is redundant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "time.h is included both at line 31 (per the evidence) and at the shown line 41, so the duplicate claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "time.h is included at line 41 (shown) and again at line 31, so this NetBSD-only file genuinely includes the header twice; the count is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-853bcfb4783961d1",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/process.c",
+      "message": "Import `sys/types.h` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "sys/types.h is included unconditionally above, so the include inside the __APPLE__ branch is redundant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "sys/types.h is included at line 32 (per the evidence) and again at the shown conditional line 42, so the duplicate claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "sys/types.h is included unconditionally at line 32 and again at line 42 inside the __APPLE__ branch, so on macOS the file really includes it twice; the count is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfc45712fc3f1d7d",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/prefer-regex-literals.js",
+      "message": "Import `./utils/ast-utils` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "The same module is required twice in one file.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The file requires ./utils/ast-utils at line 12 (per the evidence) and again at the shown line 23, so the duplicate claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-82ee35cb3535dc68",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/application.js",
+      "message": "Import `./utils` is repeated 4 times in the same file.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "CommonJS member requires bind one member per line by design; no lint convention asks to merge them (operator decision 2026-10-13).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The four `require('./utils')` calls at lines 20-23 each destructure a different member (methods, compileETag, compileQueryParser, compileTrust), which is idiomatic CommonJS, not redundant duplicate imports."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd2fd3f193bbba2e",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/response.js",
+      "message": "Import `node:path` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "CommonJS member requires bind one member per line by design; no lint convention asks to merge them (operator decision 2026-10-13).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 23 binds the whole `node:path` module while line 24 binds `node:path.isAbsolute` from a member-access require; the two bind different values and the member-access require is a recognized idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b07a6dcf8f4a382",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/response.js",
+      "message": "Import `./utils` is repeated 3 times in the same file.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 28,
+      "verdict": "false_positive",
+      "reason": "CommonJS member requires bind one member per line by design; no lint convention asks to merge them (operator decision 2026-10-13).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Lines 27-29 each require `./utils` to bind a distinct member (normalizeType, normalizeTypes, setCharset), an idiomatic destructuring pattern rather than true duplication."
+        }
+      ]
+    },
+    {
+      "id": "EA-4dc58bfe5b1a953f",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver/src/main/kotlin/mockwebserver3/MockResponse.kt",
+      "message": "Import `Unexpected status: $status` is repeated 3 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "Kotlin require(..) preconditions, not imports.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-2e843ab82d2f3d98",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/ansi.py",
+      "message": "Import `sys` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The reported `import sys` is indented inside the `if sys.platform != \"win32\" and __name__ == \"__main__\":` demo block, a scoped re-import idiom a duplicate-import rule should skip rather than merge with the top-level import."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged `import sys` at line 218 sits inside the `if __name__ == \"__main__\"` demo block marked `# pragma: no cover`, a self-contained example harness (grouping its io/os/pty imports) that a duplicate-import rule should not count."
+        }
+      ]
+    },
+    {
+      "id": "EA-583e7aa415a4ea03",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/emoji.py",
+      "message": "Import `sys` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`import sys` at line 77 sits inside the `if __name__ == \"__main__\":` demo block, an intentional scoped import, not a top-level duplicate equal to line 1."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged `import sys` at line 77 is inside the `if __name__ == \"__main__\"` demo harness (`# pragma: no cover`), so this scoped re-import in example code is not a true duplicate of the module-level import."
+        }
+      ]
+    },
+    {
+      "id": "EA-91a460743ce35bca",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/jupyter.py",
+      "message": "Import `rich.console::ConsoleRenderable` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 11,
+      "verdict": "true_positive",
+      "reason": "Both TYPE_CHECKING blocks import ConsoleRenderable; the second is redundant.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`from rich.console import ConsoleRenderable` is inside `if TYPE_CHECKING:`, a deliberate type-only import idiom distinct from any runtime import, so it is not a genuine same-scope duplicate."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ConsoleRenderable` is imported unconditionally (line 4) and again under TYPE_CHECKING at line 11, so the same symbol is genuinely imported twice in production library code and the recommendation to merge applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-1836496cfcc08a03",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Import `.console::Console` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 307,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`from .console import Console` at line 307 is inside the `if __name__ == \"__main__\":` demo block, a scoped re-import the rule should recognize and not treat as a duplicate."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 308 `from .live import Live as Live` shows the excerpt sits inside an `if __name__ == \"__main__\":` demo block, so re-importing Console there is outside the duplicate-import scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-6359c06151e6b56a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Import `sys` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 709,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`import sys` is indented within the `if __name__ == \"__main__\":` block, an intentional demo-scope import rather than a true duplication of the line 3 import."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`sys` is imported at module level (line 3, per evidence) and again at line 709 inside the `__main__` block, so the name is genuinely imported twice in rich/markdown.py."
+        }
+      ]
+    },
+    {
+      "id": "EA-e051980910152346",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/panel.py",
+      "message": "Import `.padding::Padding` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 306,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`from .padding import Padding` appears inside the `if __name__ == \"__main__\":` demo block, a scoped import the duplicate-import rule should skip."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported line 306 follows demo-style setup code (lines 301-305, `c = Console()` with no use of it), indicating a `__main__` example block rather than module-level duplication."
+        }
+      ]
+    },
+    {
+      "id": "EA-4d393434b1d7ea53",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/status.py",
+      "message": "Import `.console::Console` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 112,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`from .console import Console` at line 112 is inside the `if __name__ == \"__main__\":` block, an intentional scoped import, not a same-scope duplicate."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 112 is inside the `if __name__ == \"__main__\":` guard shown at line 109, so the re-import of Console is scoped to the demo block, not a duplicate module import."
+        }
+      ]
+    },
+    {
+      "id": "EA-b9045fdd409aeaac",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Import `sys` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 873,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`import sys` at line 873 is inside the `if __name__ == \"__main__\":` demo block, a scoped re-import idiom outside the rule's proper scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`sys` is imported inside the `__main__` block at line 873 and also at module level (line 5 per evidence), so the duplicate import in rich/syntax.py is real."
+        }
+      ]
+    },
+    {
+      "id": "EA-0bb45066e949b483",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Import `sys` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 900,
+      "verdict": "true_positive",
+      "reason": "Re-imported inside the __main__ block although the module already imports it at runtime top level (Pylint W0404 reimported).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The line-900 `import sys` is a deliberate local import inside the `if __name__ == \"__main__\":` demo block, a different scope from the top-level line-4 import, so merging is not warranted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`sys` is imported at line 900 within the `__main__` block and at module level (line 4 per evidence), confirming a duplicate of the same name in rich/traceback.py."
+        }
+      ]
+    },
+    {
+      "id": "EA-f075ec4233d3ffff",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/httpLink.ts",
+      "message": "Import `@trpc/server/unstable-core-do-not-import` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`@trpc/server/unstable-core-do-not-import` is genuinely imported in two statements\u2014a type-only import (lines 2-5) and a value import of `transformResult` (line 6)\u2014which can be merged into one declaration using inline `type` qualifiers."
+        }
+      ]
+    },
+    {
+      "id": "EA-363560a18e38dcf6",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/httpLink.ts",
+      "message": "Import `./internals/httpUtils` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 14,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`./internals/httpUtils` appears in two import statements (type-only at lines 9-13, value at lines 14-19), a factual duplication that merges cleanly with inline `type` qualifiers."
+        }
+      ]
+    },
+    {
+      "id": "EA-482431eeba7e414b",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/retryLink.ts",
+      "message": "Import `@trpc/server/observable` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`@trpc/server/observable` is imported twice (type `Unsubscribable` at line 3, value `observable` at line 4); the claim is correct and both can be combined into a single import."
+        }
+      ]
+    },
+    {
+      "id": "EA-5cab1c90395b607c",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/wsLink/wsClient/wsClient.ts",
+      "message": "Import `./options` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 22,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`./options` is imported twice (type `WebSocketClientOptions` at line 21, values at line 22), a verifiable duplicate that can be merged into one declaration with inline `type` qualifiers."
+        }
+      ]
+    },
+    {
+      "id": "EA-84d5f9adcbfea17f",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/wsLink/wsClient/wsClient.ts",
+      "message": "Import `./requestManager` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 23 is `import type { TCallbacks } from './requestManager'` and line 24 is `import { RequestManager } from './requestManager'` \u2014 a type-only import plus a value import is an intentional, standard idiom, not a duplicate."
+        }
+      ]
+    },
+    {
+      "id": "EA-0307557c6fa6c1e4",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/client/src/links/wsLink/wsLink.ts",
+      "message": "Import `../../unstable-internals` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 6 `import type { TransformerOptions } from '../../unstable-internals'` and line 7 `import { getTransformer } from '../../unstable-internals'` are a type/vvalue import pair, which the rule should recognize as distinct."
+        }
+      ]
+    },
+    {
+      "id": "EA-a2f7147fae9f88fa",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/app-dir/server.ts",
+      "message": "Import `./shared` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 35,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Lines 30-34 are `import type { ActionHandlerDef, CreateTRPCNextAppRouterOptions, inferActionDef } from './shared'` while line 35 imports values (`generateCacheTag, isFormData`) from './shared' \u2014 an intentional split, not a duplicate."
+        }
+      ]
+    },
+    {
+      "id": "EA-97894c75ba7fa2a5",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/createTRPCNext.tsx",
+      "message": "Import `@trpc/react-query/shared` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 9,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The earlier statement (lines ~3-8) is a type-only import and line 9 imports only runtime values (`createReactDecoration, createReactQueryUtils, createRootHooks`) from '@trpc/react-query/shared' \u2014 a legitimate idiom the rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-2eaf95efbaccde3c",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/ssrPrepass.ts",
+      "message": "Import `@tanstack/react-query` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 5 is `import type { DehydratedState } from '@tanstack/react-query'` and line 6 is `import { dehydrate } from '@tanstack/react-query'` \u2014 a type/value pair, not a redundant duplicate."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d0da970388882cc",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/src/createTRPCReact.tsx",
+      "message": "Import `./shared/hooks/createHooksInternal` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 39 is `import type { CreateReactQueryHooks } from './shared/hooks/createHooksInternal'` while line 40 imports only the value `createRootHooks` from the same module \u2014 intentional, not a duplicate."
+        }
+      ]
+    },
+    {
+      "id": "EA-5b0ec941cd609ef8",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/src/server/ssgProxy.ts",
+      "message": "Import `@trpc/client` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 7 is `import type { TRPCClient } from '@trpc/client'` and line 8 imports values (`getUntypedClient, TRPCUntypedClient`) from '@trpc/client' \u2014 a standard type/value import split."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfd4f245a4778219",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/react-query/src/shared/queryClient.ts",
+      "message": "Import `@tanstack/react-query` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 1 is `import type { QueryClientConfig } from '@tanstack/react-query'` and line 2 is `import { QueryClient } from '@tanstack/react-query'` \u2014 distinct type-only and value imports, not a duplicate."
+        }
+      ]
+    },
+    {
+      "id": "EA-9a86796469c23616",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/adapters/fetch/fetchRequestHandler.ts",
+      "message": "Import `../../@trpc/server/http` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 14,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 13 imports ResolveHTTPRequestOptionsContextFn (type-only) and line 14 imports resolveResponse, both from '../../@trpc/server/http'."
+        }
+      ]
+    },
+    {
+      "id": "EA-c9ee3cb43e669887",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/adapters/ws.ts",
+      "message": "Import `../@trpc/server/rpc` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 19,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 17 imports parseTRPCMessage and lines 19-25 import the TRPC* message types, both from '../@trpc/server/rpc'."
+        }
+      ]
+    },
+    {
+      "id": "EA-bdd99cc8b1685cf6",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/middleware.ts",
+      "message": "Import `./error/formatter` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 3 imports AnyProcedureErrorFormatter (type-only) and line 4 imports getDefaultErrorShape et al., both from './error/formatter'."
+        }
+      ]
+    },
+    {
+      "id": "EA-bf719d95d4c175b4",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/tanstack-react-query/src/internals/infiniteQueryOptions.ts",
+      "message": "Import `@tanstack/react-query` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The type import spanning lines 3-9 and the value import on line 10 both come from '@tanstack/react-query'."
+        }
+      ]
+    },
+    {
+      "id": "EA-d48cd91471d26d49",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/tanstack-react-query/src/internals/queryOptions.ts",
+      "message": "Import `@tanstack/react-query` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The type import spanning lines 3-9 and the value import on line 10 both come from '@tanstack/react-query'."
+        }
+      ]
+    },
+    {
+      "id": "EA-cc701e7eb0a49dc6",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/tanstack-react-query/src/internals/subscriptionOptions.ts",
+      "message": "Import `@tanstack/react-query` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 2,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1 type-imports SkipToken and line 2 imports hashKey/skipToken, both from '@tanstack/react-query'."
+        }
+      ]
+    },
+    {
+      "id": "EA-456676a83491ff12",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Import `remark-shiki-twoslash` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 562,
+      "verdict": "true_positive",
+      "reason": "`require('remark-shiki-twoslash')` is repeated within the config.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "require('remark-shiki-twoslash').default on line 562 duplicates the require of the same module on line 550 per the evidence."
+        }
+      ]
+    },
+    {
+      "id": "EA-3198731d532ce788",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Import `./shikiTwoslash.config` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t7-fixes2",
+      "line": 563,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Build script or tool configuration (eslint.config.js, build.gradle.kts, Makefile.js, docusaurus.config.ts), outside the verdict standard's scope; now classified as tooling.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Line 563 is a `require('./shikiTwoslash.config')` call used as a shiki-twoslash plugin option, not an ES import declaration, so the duplicate_import claim misparses the syntax."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "require('./shikiTwoslash.config') on line 563 duplicates the require of the same module on line 551 per the evidence."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e434e71c252a719",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Import `./mdxToJsx` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t7-fixes2",
+      "line": 565,
+      "verdict": "true_positive",
+      "reason": "`require('./mdxToJsx')` is repeated within the config.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged `require('./mdxToJsx')` is in a Docusaurus build config, so the duplicate-import finding is outside its source-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-46e37072bc3b1322",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/src/utils/cn.ts",
+      "message": "Import `clsx` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 1 is a type-only import of `ClassValue` and line 2 is the runtime `clsx` import, a recognized type/value import split."
+        }
+      ]
+    },
+    {
+      "id": "EA-bc39b93918c14dc7",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/resolution/src/index.ts",
+      "message": "Import `zod` is repeated 3 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 3,
+      "verdict": "false_positive",
+      "reason": "The resolution package deliberately imports zod in three distinct forms to test module resolution.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 2\u20134 all import from the `zod` module with different bindings, so the module is repeated three times as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2a150516a0b4489",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/resolution/src/index.ts",
+      "message": "Import `zod` is repeated 2 times in the same file.",
+      "status": "final",
+      "sampled_from": "t7-fixes2",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "The resolution package deliberately imports zod in distinct forms to test module resolution.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 3 and 4 both import from `zod` (default and named imports), so this is a real duplicate module import."
+        },
+        {
+          "source": "oracle:eslint@9.39.1",
+          "claim": "confirmed",
+          "detail": "eslint no-duplicate-imports at line 3"
+        }
+      ]
+    },
+    {
+      "id": "EA-9656e88286c8ed4a",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/errors.ts",
+      "message": "Import `../core/index.js` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 2,
+      "verdict": "false_positive",
+      "reason": "A namespace import cannot be merged with a named import in one statement; the two imports are required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 1 and 2 both import from `../core/index.js`, so the duplicate module import claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-0df54b57b1d13111",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "message": "Import `./schemas.js` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "A namespace import cannot be merged with a named import in one statement; the two imports are required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 7 is a type-only import while line 6 is a runtime namespace import, a standard TypeScript idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-a62b9d22a40e0e6d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Import `./core.js` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3,
+      "verdict": "false_positive",
+      "reason": "A namespace import cannot be merged with a named import in one statement; the two imports are required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 2 is `import type * as core` and line 3 is a value import, so this is a type/runtime import split rather than a duplicate runtime import."
+        }
+      ]
+    },
+    {
+      "id": "EA-440eb10f3cf50ecd",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Import `./schemas.js` is repeated 2 times in the same file.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The second `./schemas.js` import on line 21 is type-only, so it should not be counted as a duplicate runtime import."
+        }
+      ]
+    },
+    {
+      "id": "EA-a1641107cd78cfec",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/core.ts",
+      "message": "Import `./util.js` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 3 and 4 both import from './util.js' (one type-only, one value), and they could be consolidated with inline type modifiers, so the double import claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-de60a34d8313eb3a",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/json-schema-processors.ts",
+      "message": "Import `./schemas.js` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "A namespace import cannot be merged with a named import in one statement; the two imports are required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 5 and 6 both import from './schemas.js', so that module is genuinely imported twice in the file."
+        }
+      ]
+    },
+    {
+      "id": "EA-3489241479eaa2b4",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/util.ts",
+      "message": "Import `./core.js` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 3,
+      "verdict": "false_positive",
+      "reason": "A type-only import and a value import from the same module are deliberately separate (consistent-type-imports style); not a duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 2 imports './core.js' for a value and line 3 imports it again for a type, so './core.js' is repeated two times as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-b30dbb0e88cac1c9",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/pt-BR.ts",
+      "message": "Import `../core/errors.js` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 3,
+      "verdict": "false_positive",
+      "reason": "A namespace import cannot be merged with a named import in one statement; the two imports are required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 2 and 3 both take imports from '../core/errors.js' (line 3's named type is even redundant since the errors namespace is already imported)."
+        }
+      ]
+    },
+    {
+      "id": "EA-16010336b3e0550e",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/pt.ts",
+      "message": "Import `../core/errors.js` is repeated 2 times in the same file.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 3,
+      "verdict": "false_positive",
+      "reason": "A namespace import cannot be merged with a named import in one statement; the two imports are required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 2 and 3 both import types from '../core/errors.js', matching the reported duplication exactly."
+        }
+      ]
+    }
+  ]
+}

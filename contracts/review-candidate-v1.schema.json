@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/review-candidate-v1.schema.json",
+  "title": "Engineering Auditor Review Candidate V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "selector_id",
+    "selector_version",
+    "decision_kind",
+    "subject_ids",
+    "finding_ids",
+    "selection_evidence_refs",
+    "eligible_case_kinds",
+    "selection_reasons",
+    "source_candidates"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "candidate_id": { "$ref": "#/$defs/candidate_id" },
+    "selector_id": { "$ref": "#/$defs/selector_id" },
+    "selector_version": { "type": "integer", "minimum": 1 },
+    "decision_kind": { "$ref": "#/$defs/decision_kind" },
+    "subject_ids": { "$ref": "#/$defs/nonempty_string_set" },
+    "finding_ids": { "$ref": "#/$defs/string_set" },
+    "selection_evidence_refs": { "$ref": "#/$defs/nonempty_string_set" },
+    "eligible_case_kinds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/case_kind" }
+    },
+    "selection_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/selection_reason" }
+    },
+    "source_candidates": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/source_candidate" }
+    }
+  },
+  "$defs": {
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^review-candidate:[0-9a-f]{64}$"
+    },
+    "source_candidate_id": {
+      "type": "string",
+      "pattern": "^selector-candidate:[0-9a-f]{64}$"
+    },
+    "selector_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+    },
+    "decision_kind": {
+      "enum": [
+        "evaluate_lifecycle_ownership",
+        "evaluate_shared_root_cause",
+        "reconcile_recommendations",
+        "resolve_capability_evidence_gap"
+      ]
+    },
+    "case_kind": {
+      "enum": [
+        "lifecycle_mismatch",
+        "shared_root_cause",
+        "recommendation_consolidation"
+      ]
+    },
+    "selection_reason": {
+      "enum": [
+        "same_subject_concentration",
+        "repeated_work_lifecycle_intersection",
+        "recommendation_overlap",
+        "recommendation_conflict",
+        "cross_layer_intersection",
+        "material_capability_limitation"
+      ]
+    },
+    "string_set": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "nonempty_string_set": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "source_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "selector_id", "selector_version"],
+      "properties": {
+        "candidate_id": { "$ref": "#/$defs/source_candidate_id" },
+        "selector_id": { "$ref": "#/$defs/selector_id" },
+        "selector_version": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/review-routes-v2.schema.json",
+  "title": "Engineering Auditor Review Routes V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "providers",
+    "single_reviewer",
+    "ensemble",
+    "challenger",
+    "alternative_comparator",
+    "review_budget",
+    "case_budgets"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/provider" }
+    },
+    "single_reviewer": { "$ref": "#/$defs/chain" },
+    "ensemble": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/ensemble" }
+      ]
+    },
+    "challenger": { "$ref": "#/$defs/chain" },
+    "alternative_comparator": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/chain" }
+      ]
+    },
+    "review_budget": { "$ref": "#/$defs/budget" },
+    "case_budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["defaults", "per_template"],
+      "properties": {
+        "defaults": { "$ref": "#/$defs/budget" },
+        "per_template": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/budget" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "endpoint_base", "api_key_env", "models"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "open_ai_responses",
+            "anthropic_messages",
+            "mistral_chat",
+            "open_code_zen",
+            "open_code_anonymous",
+            "open_ai_compatible"
+          ]
+        },
+        "endpoint_base": { "type": "string", "minLength": 1 },
+        "api_key_env": { "type": ["string", "null"] },
+        "models": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "model_protocols": {
+          "type": "object",
+          "additionalProperties": { "enum": ["responses", "messages", "chat_completions"] }
+        },
+        "chat_completions_path": { "type": ["string", "null"] },
+        "cost_class": { "enum": ["zero", "known", "unknown"] },
+        "estimated_cost_microusd_per_request": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "privacy_class": {
+          "enum": ["hosted_commercial", "hosted_anonymous", "operator_configured"]
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "model"],
+      "properties": {
+        "provider_id": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 }
+      }
+    },
+    "chain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targets"],
+      "properties": {
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/target" }
+        }
+      }
+    },
+    "ensemble": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_a", "reviewer_b", "reviewer_c"],
+      "properties": {
+        "reviewer_a": { "$ref": "#/$defs/chain" },
+        "reviewer_b": { "$ref": "#/$defs/chain" },
+        "reviewer_c": { "$ref": "#/$defs/chain" }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_requests",
+        "max_input_bytes",
+        "max_output_tokens",
+        "timeout_ms",
+        "max_cost_microusd",
+        "allow_unknown_cost"
+      ],
+      "properties": {
+        "max_requests": { "type": "integer", "minimum": 1 },
+        "max_input_bytes": { "type": "integer", "minimum": 1 },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Per-request response ceiling. This allowance does not shrink after earlier calls."
+        },
+        "timeout_ms": { "type": "integer", "minimum": 1 },
+        "max_cost_microusd": { "type": "integer", "minimum": 0 },
+        "allow_unknown_cost": { "type": "boolean" }
+      }
+    }
+  }
+}

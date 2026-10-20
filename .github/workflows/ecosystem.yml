@@ -1,0 +1,45 @@
+name: Ecosystem
+
+# Opt-in precision and churn check: scans the pinned ecosystem corpus with two
+# Engineering Auditor revisions and uploads the per-detector diff.
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Revision to compare against
+        required: true
+        default: HEAD~1
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust (stable)
+        run: rustup default stable
+
+      - name: Cache corpus checkouts and builds
+        uses: actions/cache@v4
+        with:
+          path: |
+            target/ecosystem/repos
+            target/ecosystem/builds
+          key: ecosystem-${{ hashFiles('eval/ecosystem/manifest.json', 'Cargo.lock') }}
+
+      - name: Compare revisions on the corpus
+        run: >-
+          python3 tooling/ecosystem/run.py compare
+          --rev-a "${{ inputs.base }}" --rev-b HEAD
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-results
+          path: |
+            target/ecosystem/results/*/summary.*
+            target/ecosystem/results/diff-*/

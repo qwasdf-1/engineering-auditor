@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/engineering-case-v1.schema.json",
+  "title": "Engineering Auditor Engineering Case V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "case_kind",
+    "template_version",
+    "template_status",
+    "template_bundle_digest",
+    "input_binding_id",
+    "candidate_id",
+    "decision_kind",
+    "subject_ids",
+    "finding_ids",
+    "selection_provenance_refs",
+    "allowed_conclusions",
+    "mandatory_probes",
+    "evidence_contract",
+    "operator_constraints",
+    "claim_slots",
+    "inference_guards",
+    "recommendation_families",
+    "route_policy",
+    "challenge_policy",
+    "closure_policy"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "case_kind": { "enum": ["lifecycle_mismatch", "shared_root_cause", "recommendation_consolidation"] },
+    "template_version": { "type": "integer", "const": 1 },
+    "template_status": { "enum": ["production", "shadow", "not_enabled"] },
+    "template_bundle_digest": { "$ref": "#/$defs/digest" },
+    "input_binding_id": { "type": "string", "pattern": "^review-input:[0-9a-f]{64}$" },
+    "candidate_id": { "type": "string", "pattern": "^review-candidate:[0-9a-f]{64}$" },
+    "decision_kind": { "enum": ["evaluate_lifecycle_ownership", "evaluate_shared_root_cause", "reconcile_recommendations"] },
+    "subject_ids": { "$ref": "#/$defs/nonempty_string_set" },
+    "finding_ids": { "$ref": "#/$defs/nonempty_string_set" },
+    "selection_provenance_refs": { "$ref": "#/$defs/nonempty_string_set" },
+    "allowed_conclusions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/conclusion" }
+    },
+    "mandatory_probes": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/probe_ref" }
+    },
+    "evidence_contract": {
+      "$ref": "case-template-v1.schema.json#/$defs/evidence_contract"
+    },
+    "operator_constraints": { "$ref": "#/$defs/operator_constraints" },
+    "claim_slots": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "case-template-v1.schema.json#/$defs/claim_slot" }
+    },
+    "inference_guards": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "case-template-v1.schema.json#/$defs/inference_guard" }
+    },
+    "recommendation_families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "case-template-v1.schema.json#/$defs/recommendation_family" }
+    },
+    "route_policy": { "$ref": "case-template-v1.schema.json#/$defs/route_policy" },
+    "challenge_policy": { "$ref": "case-template-v1.schema.json#/$defs/challenge_policy" },
+    "closure_policy": { "$ref": "case-template-v1.schema.json#/$defs/closure_policy" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "nonempty_string_set": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "conclusion": {
+      "enum": [
+        "lifecycle_mismatch_substantiated",
+        "repetition_justified",
+        "impact_immaterial",
+        "wider_ownership_infeasible",
+        "insufficient_evidence",
+        "shared_root_cause",
+        "partial_overlap",
+        "independent_findings",
+        "correlation_only",
+        "consolidated_action",
+        "sequenced_actions",
+        "preserved_independent_actions",
+        "narrowed_action",
+        "deferred_action",
+        "no_repository_specific_action"
+      ]
+    },
+    "probe_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "slot", "kind"],
+      "properties": {
+        "probe_id": { "type": "string", "pattern": "^case-probe:[0-9a-f]{64}$" },
+        "slot": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" },
+        "kind": { "$ref": "case-template-v1.schema.json#/$defs/probe_kind" }
+      }
+    },
+    "risk_level": { "enum": ["low", "moderate", "high", "critical"] },
+    "risk_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_tolerance", "operational_criticality", "security_sensitivity"],
+      "properties": {
+        "change_tolerance": { "$ref": "#/$defs/risk_level" },
+        "operational_criticality": { "$ref": "#/$defs/risk_level" },
+        "security_sensitivity": { "$ref": "#/$defs/risk_level" }
+      }
+    },
+    "operator_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_ids", "risk_posture", "excluded_domains"],
+      "properties": {
+        "constraint_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "risk_posture": {
+          "oneOf": [
+            { "$ref": "#/$defs/risk_posture" },
+            { "type": "null" }
+          ]
+        },
+        "excluded_domains": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

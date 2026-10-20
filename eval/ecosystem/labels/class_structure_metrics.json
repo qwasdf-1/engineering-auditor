@@ -1,0 +1,3645 @@
+{
+  "schema_version": 1,
+  "detector": "class_structure_metrics",
+  "labels": [
+    {
+      "id": "EA-c6c0fb6a85d459f8",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/repair.cc",
+      "message": "Class `Repairer` exceeds a CK/WMC budget (WMC=106, CBO=10, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=106, CBO=6, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Repairer` is a large production class in db/repair.cc whose many methods plausibly yield WMC=106 over budget, so the class-structure claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-becb0dc85d7d1283",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "table/block.cc",
+      "message": "Class `Iter` exceeds a CK/WMC budget (WMC=48, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=48, CBO=0, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Block::Iter` is a substantial production iterator class in table/block.cc with WMC=48, so the budget-exceedance claim holds within scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-447a69470c5f7a4b",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/serializer.hpp",
+      "message": "Class `serializer` exceeds a CK/WMC budget (WMC=148, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-n",
+      "line": 51,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC budget; the measured methods are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`serializer` in nlohmann's detail header is hand-written library production code with WMC=148, so the finding is correct and in scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-7fe2721b44490f37",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DynamicParameters.cs",
+      "message": "Class `DynamicParameters` exceeds a CK/WMC budget (WMC=105, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "DynamicParameters is a production C# class and its reported WMC/CBO/DIT/NOC match the evidence, so the size-budget claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-fee19fcbf2a030ad",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "Class `SqlMapper` exceeds a CK/WMC budget (WMC=190, CBO=9, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`SqlMapper` is a genuinely huge static class whose WMC=190 reflects many unrelated query/mapping/parameter responsibilities."
+        }
+      ]
+    },
+    {
+      "id": "EA-5d9d8161ce0843ab",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.GridReader.Async.cs",
+      "message": "Class `GridReader` exceeds a CK/WMC budget (WMC=72, CBO=3, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 12,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`GridReader` is a real multi-result reader with substantial async/state logic across many members."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f02c3a776713521",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.GridReader.cs",
+      "message": "Class `GridReader` exceeds a CK/WMC budget (WMC=79, CBO=4, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`GridReader` is a production Dapper partial class with many Read/ReadAsync members giving WMC=79, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-b70dfc18d027c79a",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.ICustomQueryParameter.cs",
+      "message": "Class `SqlMapper` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=0, NOC=25).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 5,
+      "verdict": "false_positive",
+      "reason": "NOC=25 counts classes implementing nested SqlMapper.* interfaces; a static class has no subclasses.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-19163fabf69fe3e6",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.IMemberMap.cs",
+      "message": "Class `SqlMapper` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=0, NOC=25).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "NOC=25 counts classes implementing nested SqlMapper.* interfaces; a static class has no subclasses.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8712ebc9ef7b133d",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.TypeHandler.cs",
+      "message": "Class `SqlMapper` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=0, NOC=25).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "NOC=25 counts classes implementing nested SqlMapper.* interfaces; a static class has no subclasses.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-81efe9ec68d0a271",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/WrappedReader.cs",
+      "message": "Class `DisposedReader` exceeds a CK/WMC budget (WMC=41, CBO=0, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`DisposedReader` only overrides `DbDataReader` members with one-line throws, so its WMC=41 is a metric artifact of a null-object stub, not unrelated behavior."
+        }
+      ]
+    },
+    {
+      "id": "EA-bc9a431ef8a12fe3",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/WrappedReader.cs",
+      "message": "Class `WrappedBasicReader` exceeds a CK/WMC budget (WMC=47, CBO=1, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t16-h",
+      "line": 214,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`WrappedBasicReader` is a thin delegating adapter whose WMC=47 comes from one-line overrides, an idiom the rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-6c879170658df77c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonReader.cs",
+      "message": "Class `BsonReader` exceeds a CK/WMC budget (WMC=178, CBO=5, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BsonReader` is hand-written production code (a deprecation attribute is not an excluded scope category) with WMC=178, so the finding holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-b85743a45a13b26b",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/DataTableConverter.cs",
+      "message": "Class `DataTableConverter` exceeds a CK/WMC budget (WMC=49, CBO=4, DIT=1, NOC=2).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=49, CBO=4, DIT=0, NOC=2; a large, highly coupled class.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`DataTableConverter` is a real converter with substantial read/write logic, consistent with WMC=49 (the flagged line 41 is its class attribute)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Evidence DIT=0 contradicts the visible declaration `public class DataTableConverter : JsonConverter` at line 43, which gives DIT >= 1."
+        }
+      ]
+    },
+    {
+      "id": "EA-34bb1ecd9789c4cb",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextWriter.Async.cs",
+      "message": "Class `JsonTextWriter` exceeds a CK/WMC budget (WMC=188, CBO=8, DIT=0, NOC=3).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=188, CBO=8, DIT=0, NOC=3; a large, highly coupled class.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`JsonTextWriter` is a large stateful writer whose WMC=188 reflects many genuine methods."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "DIT=0 is contradicted by the visible `public override Task FlushAsync(...)` at line 55, which requires a base-class member, so the inheritance metric was miscounted."
+        }
+      ]
+    },
+    {
+      "id": "EA-6cdfefc76a2fd6d4",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JProperty.cs",
+      "message": "Class `JProperty` exceeds a CK/WMC budget (WMC=38, CBO=12, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`JProperty` is a real `JContainer` subclass with concrete behavior matching WMC=38/CBO=12."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2db8574041812be",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JToken.Async.cs",
+      "message": "Class `JToken` exceeds a CK/WMC budget (WMC=27, CBO=12, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`JToken` is a large abstract base class with many members, consistent with the reported budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb8e4b217950adc9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Schema/JsonSchemaWriter.cs",
+      "message": "Class `JsonSchemaWriter` exceeds a CK/WMC budget (WMC=56, CBO=9, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class JsonSchemaWriter: WMC=56 plausible from keyword/method scan (many methods plus decision points), CBO=9; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the class declaration and constructor of JsonSchemaWriter; the WMC/CBO counts over its full body cannot be verified from these lines."
+        }
+      ]
+    },
+    {
+      "id": "EA-93a10e88812ebb48",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonTypeReflector.cs",
+      "message": "Class `JsonTypeReflector` exceeds a CK/WMC budget (WMC=94, CBO=13, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=94, CBO=13, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the header of JsonTypeReflector is shown, so the reported WMC=94/CBO=13 over the whole class cannot be confirmed from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "JsonTypeRefactor.cs:48 shows the production static utility class in Serialization; no visible inconsistency with the reported metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-e0fc073e3e37985e",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/Base64Encoder.cs",
+      "message": "Class `Base64Encoder` exceeds a CK/WMC budget (WMC=45, CBO=1, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=45, CBO=1, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at Base64Encoder's fields and constructor, so the WMC=45 total across its methods is not visible to verify."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Base64Encoder.cs:35 is production code, the class matches the symbol, and CBO=1/DIT=0/NOC=0 are consistent with the visible definition."
+        }
+      ]
+    },
+    {
+      "id": "EA-0170cc679ea5419e",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/CollectionUtils.cs",
+      "message": "Class `CollectionUtils` exceeds a CK/WMC budget (WMC=77, CBO=3, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class CollectionUtils: WMC=77 plausible from keyword/method scan (many methods plus decision points), CBO=3; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "CollectionUtils' body is truncated after the first method, so the reported WMC=77 CBO=3 cannot be checked from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-d755cbfeb644225e",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DynamicReflectionDelegateFactory.cs",
+      "message": "Class `DynamicReflectionDelegateFactory` exceeds a CK/WMC budget (WMC=61, CBO=3, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=61, CBO=3, DIT=1, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the class declaration and one method of DynamicReflectionDelegateFactory are shown, so the WMC=61 count over the rest of the class is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The symbol at DynamicReflectionDelegateFactory.cs:40 matches and DIT=1 is consistent with the visible `: ReflectionDelegateFactory` inheritance."
+        }
+      ]
+    },
+    {
+      "id": "EA-ec1dacb3195b928c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/EnumUtils.cs",
+      "message": "Class `EnumUtils` exceeds a CK/WMC budget (WMC=86, CBO=5, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=86, CBO=5, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only EnumUtils' constants and the start of one method, not enough to confirm WMC=86/CBO=5 over the full class."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "EnumUtils.cs:44 is a production static utility class with matching symbol; the reported metrics contain no contradiction visible in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-057b347ee211124b",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/LinqBridge.cs",
+      "message": "Class `Enumerable` exceeds a CK/WMC budget (WMC=80, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 1830,
+      "verdict": "false_positive",
+      "reason": "Vendored LINQBridge backport.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Enumerable lives in LinqBridge.cs, a bundled third-party copy of Atif Aziz/Joseph Albahari's LINQBridge (BSD header, #if !HAVE_LINQ polyfill), so it is vendored code outside scope."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt captures only the start of the `Enumerable` partial class, so WMC=80 and CBO=0 across its (possibly partial) body cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2c787db3a9f08de",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MathUtils.cs",
+      "message": "Class `MathUtils` exceeds a CK/WMC budget (WMC=61, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class MathUtils: WMC=61 plausible from keyword/method scan (many methods plus decision points), CBO=0; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only MathUtils' declaration and the beginning of IntLength are shown, so the reported WMC=61 over the entire class body is not verifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-8d6280151fd129d4",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MethodBinder.cs",
+      "message": "Class `ParametersMatchComparer` exceeds a CK/WMC budget (WMC=42, CBO=1, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 186,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt confirms a real nested ParametersMatchComparer with non-trivial comparison/overload-resolution logic, consistent with the reported high WMC=42."
+        }
+      ]
+    },
+    {
+      "id": "EA-8a1656fda4c3e8ad",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Core/Registry/RegistryPipelineComponentBuilder.cs",
+      "message": "Class `RegistryPipelineComponentBuilder` exceeds a CK/WMC budget (WMC=4, CBO=9, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t16-k",
+      "line": 9,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This tiny sealed builder has only WMC=4 and its CBO=9 stems from generic type parameters and DI delegate types, so the 'class owns unrelated behavior' rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-c756d4fa644ab265",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Extensions/DependencyInjection/PollyServiceCollectionExtensions.cs",
+      "message": "Class `PollyServiceCollectionExtensions` exceeds a CK/WMC budget (WMC=12, CBO=10, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 16,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "PollyServiceCollectionExtensions is an in-scope static DI extension class whose real registration methods reference the many service types behind the reported WMC=12/CBO=10."
+        }
+      ]
+    },
+    {
+      "id": "EA-10ec8323a4a9171a",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/NoOp/NoOpSyntax.cs",
+      "message": "Class `Policy` exceeds a CK/WMC budget (WMC=1, CBO=2, DIT=0, NOC=24).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "NOC alone on Policy, an abstract base built for extension; this partial declares one member.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The cited fragment contains only one trivial NoOp factory (WMC=1, CBO=2, DIT=0); the only over-budget metric is a whole-type NOC=24 that is neither visible at nor caused by this code, so the complexity rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-853ac492f637d72d",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Policy.HandleSyntax.cs",
+      "message": "Class `Policy` exceeds a CK/WMC budget (WMC=6, CBO=1, DIT=0, NOC=24).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "NOC alone on Policy, an abstract base built for extension; this partial declares few members.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The reported symbol `Policy` does not match the declaration on line 67, which is the distinct generic type `Policy<TResult>`, so the metrics are attached to the wrong type."
+        }
+      ]
+    },
+    {
+      "id": "EA-2d07e3089c5c2546",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/RateLimit/AsyncRateLimitSyntax.cs",
+      "message": "Class `Policy` exceeds a CK/WMC budget (WMC=10, CBO=2, DIT=0, NOC=24).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 4,
+      "verdict": "false_positive",
+      "reason": "NOC alone on Policy, an abstract base built for extension.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The shown RateLimit partial fragment has low WMC=10 and CBO=2 and the alert rests on a whole-type NOC=24 rather than any complexity in the excerpted code."
+        }
+      ]
+    },
+    {
+      "id": "EA-97b1063cfad04497",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Timeout/TimeoutTResultSyntax.cs",
+      "message": "Class `Policy` exceeds a CK/WMC budget (WMC=46, CBO=4, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 3,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The Timeout partial fragment genuinely carries high method complexity (WMC=46), so the class-structure budget claim holds at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-51519bbd9cb52248",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Core/Pipeline/SilentLogger.cs",
+      "message": "Class `SilentLogger` exceeds a CK/WMC budget (WMC=79, CBO=3, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "A null-object ILogger: every member is empty or returns this, so the WMC is the interface's surface, not class complexity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "SilentLogger is a null-object implementation whose many one-line `=> this` and empty members inflate WMC=79 without real complexity, an idiom the metric rule should recognise."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "SilentLogger is a null-object ILogger implementation whose visible members are five trivial expression-bodied ForContexts plus an empty Write; ILogger exposes only a handful of methods, so WMC=79 is impossible and the metrics were miscounted."
+        }
+      ]
+    },
+    {
+      "id": "EA-f6369736a14a65a0",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Formatting/Display/MessageTemplateTextFormatter.cs",
+      "message": "Class `MessageTemplateTextFormatter` exceeds a CK/WMC budget (WMC=37, CBO=14, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=37, CBO=14, DIT=1, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "MessageTemplateTextFormatter is a real formatter with substantial logic and cross-type coupling, so the reported WMC=37/CBO=14 finding holds in scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "MessageTemplateTextFormatter is production code whose parser/formatter body (template parsing plus output template rendering) plausibly reaches WMC=37 with CBO=14, and the reduce-responsibility rationale applies at this in-scope site."
+        }
+      ]
+    },
+    {
+      "id": "EA-1bf8be3c0e367296",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Formatting/Json/JsonFormatter.cs",
+      "message": "Class `JsonFormatter` exceeds a CK/WMC budget (WMC=22, CBO=9, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=22, CBO=9, DIT=1, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt confirms `public sealed class JsonFormatter` at line 23 in production source, matching the reported symbol, and the large member/coupling counts are consistent with the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "JsonFormatter is production code with real formatting responsibility (multiple state fields and a parameterized constructor shown), consistent with a modest WMC=22, CBO=9 breach of a deglob class."
+        }
+      ]
+    },
+    {
+      "id": "EA-7ff924e3907531d8",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Formatting/Json/JsonValueFormatter.cs",
+      "message": "Class `JsonValueFormatter` exceeds a CK/WMC budget (WMC=147, CBO=7, DIT=1, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=147, CBO=7, DIT=1, NOC=1; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 20 declares `public class JsonValueFormatter : LogEventPropertyValueVisitor<TextWriter, bool>` in main source, so the symbol and scope match the reported high WMC."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the class header, a field, and the start of the constructor, so the class-wide WMC=147 and the NOC=1 child-class claim cannot be verified without the full visitor body."
+        }
+      ]
+    },
+    {
+      "id": "EA-dff44f50646e404f",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Log.cs",
+      "message": "Class `Log` exceeds a CK/WMC budget (WMC=84, CBO=3, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "Static logging facade with 81 public overloads forwarding to the logger; WMC=84 measured correctly, wide by API design.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 34 declares `public static class Log` in production source, consistent with a large multi-overload facade and the reported metrics."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The static Log facade is production code genuinely spanning dozens of convenience level/Write overloads, so a large WMC such as 84 is consistent with the class's real breadth and the rationale applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-8b865f6251e095e8",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Parsing/MessageTemplateParser.cs",
+      "message": "Class `MessageTemplateParser` exceeds a CK/WMC budget (WMC=94, CBO=5, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 21 declares `public class MessageTemplateParser : IMessageTemplateParser` in main source, matching the reported class and its metrics."
+        }
+      ]
+    },
+    {
+      "id": "EA-b8ef6e3886ddf9bc",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Rendering/MessageTemplateRenderer.cs",
+      "message": "Class `MessageTemplateRenderer` exceeds a CK/WMC budget (WMC=28, CBO=9, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=28, CBO=9, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 17 declares `static class MessageTemplateRenderer` in production source, matching the reported symbol and coupling/complexity values."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "MessageTemplateRenderer is production code whose shown Render method already carries a nested loop with format-flag branching, making a class-wide WMC of 28 plausible for its helper members beyond the window."
+        }
+      ]
+    },
+    {
+      "id": "EA-a516675e33551e54",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "message": "Class `Gson` exceeds a CK/WMC budget (WMC=114, CBO=17, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "Class Gson exceeds the CK budget as reported (WMC=114, CBO=17).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 135 declares `public final class Gson` in `src/main/java`, matching the reported class and its high coupling/WMC."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "gson/src/main/java/com/google/gson/Gson.java:135 declares `public final class Gson {` (no superclass, final, so DIT=0/NOC=0 fit), a main-source facade class with dozens of overloaded toJson/fromJson/getAdapter paths, so the reported WMC=114/CBO=17 budget breach is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-bf250d669ba07c84",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonPrimitive.java",
+      "message": "Class `JsonPrimitive` exceeds a CK/WMC budget (WMC=57, CBO=2, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "Class JsonPrimitive exceeds the CK budget as reported (WMC=57).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 35 declares `public final class JsonPrimitive extends JsonElement` in main source, consistent with DIT=1 and the reported WMC."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "JsonPrimitive.java:35 shows `public final class JsonPrimitive extends JsonElement {`, matching the evidence (DIT=1, final so NOC=0) in a non-test path, and the claim cannot be refuted by the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d29956636a6e340",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Excluder.java",
+      "message": "Class `Excluder` exceeds a CK/WMC budget (WMC=52, CBO=5, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "Class Excluder exceeds the CK budget as reported (WMC=52).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 49 declares `public final class Excluder implements TypeAdapterFactory, Cloneable` in production source, matching the reported symbol and metrics."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Excluder.java:49 declares `public final class Excluder implements TypeAdapterFactory, Cloneable {`, which matches DIT=0 and NOC=0, and this main-source factory genuinely carries the many branchy exclusion checks behind the claimed complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ff13de659294b92",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Class `GsonTypes` exceeds a CK/WMC budget (WMC=157, CBO=3, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Class GsonTypes exceeds the CK budget as reported (WMC=157).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=157 (weighted methods per class) counts methods across the whole class body, but the excerpt shows only the declaration and one method, so the count can't be verified; DIT=0/NOC=0 are consistent with a final, no-superclass class."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "GsonTypes.java:43 is `public final class GsonTypes {` \u2014 a final, non-extensible utility in main source \u2014 and the excerpt's heavy static type-resolution helpers are consistent with the reported complexity budget breach."
+        }
+      ]
+    },
+    {
+      "id": "EA-a10e7dae46ab811c",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/LinkedTreeMap.java",
+      "message": "Class `LinkedTreeMap` exceeds a CK/WMC budget (WMC=100, CBO=4, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Class LinkedTreeMap exceeds the CK budget as reported (WMC=100).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=100 and CBO=4 cannot be checked from the excerpt; DIT=0 is consistent since the only superclass shown, AbstractMap, is a JDK (non-project) class."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The class shown at line 44, `public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Serializable {`, is the reported symbol in main source, and this TreeMap-style implementation plausibly exhibits the claimed complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-1c90b082e933736c",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Streams.java",
+      "message": "Class `Streams` exceeds a CK/WMC budget (WMC=10, CBO=10, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "Class Streams exceeds the CK budget as reported (CBO=10).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=10 and CBO=10 are counts over the full class body, but the excerpt only shows the declaration and the start of one method, so neither can be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Streams.java:37 declares `public final class Streams {` in main source; the excerpt's parse/write helpers over JsonReader/JsonWriter/JsonElementTypeAdapter support the coupling-driven budget breach, and nothing is out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-485bc277eab5d29a",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonElementTypeAdapter.java",
+      "message": "Class `JsonElementTypeAdapter` exceeds a CK/WMC budget (WMC=45, CBO=10, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "Class JsonElementTypeAdapter exceeds the CK budget as reported (WMC=45, CBO=10).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows DIT=1 correctly matching `extends TypeAdapter<JsonElement>`, but WMC=45 and CBO=10 require the full class body, which is not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "JsonElementTypeAdapter.java:35 shows `public class JsonElementTypeAdapter extends TypeAdapter<JsonElement> {`, matching DIT=1 in a non-test path, and the read/write logic with nested switch branches over JsonElement subclasses backs the reported complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-d1b382a8c1dedf3a",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeReader.java",
+      "message": "Class `JsonTreeReader` exceeds a CK/WMC budget (WMC=110, CBO=7, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "Class JsonTreeReader exceeds the CK budget as reported (WMC=110).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "DIT=1 matches `extends JsonReader` (a project class), but WMC=110 and CBO=7 are counts over the whole class and cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "JsonTreeReader.java:39 declares `public final class JsonTreeReader extends JsonReader {`, confirming DIT=1 in main source, and the full reimplementation of JsonReader plausibly accounts for the reported WMC=110."
+        }
+      ]
+    },
+    {
+      "id": "EA-34a282b8051eea3a",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeWriter.java",
+      "message": "Class `JsonTreeWriter` exceeds a CK/WMC budget (WMC=60, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "Class JsonTreeWriter exceeds the CK budget as reported (WMC=60).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "DIT=1 matches `extends JsonWriter`, but WMC=60 and CBO=6 span methods not shown in the excerpt, so they cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`JsonTreeWriter` is declared as a main-source public class at the reported line and the cited WMC=60 exceeds the stated budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-c4653557ce5143fb",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java",
+      "message": "Class `ISO8601Utils` exceeds a CK/WMC budget (WMC=65, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "Class ISO8601Utils exceeds the CK budget as reported (WMC=65).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "DIT=0/NOC=0 are consistent with a class having no superclass, but WMC=65 and CBO=0 cover the full body, which the excerpt does not show."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ISO8601Utils` is a production source class at the reported declaration, not generated or test code, and WMC=65 exceeds the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2f56ccb3714ebd6",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/reflect/TypeToken.java",
+      "message": "Class `TypeToken` exceeds a CK/WMC budget (WMC=102, CBO=2, DIT=0, NOC=2).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "Class TypeToken exceeds the CK budget as reported (WMC=102).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "DIT=0 is consistent with the shown declaration, but WMC=102 and NOC=2 require the full class and its subclasses, which the excerpt does not provide."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line matches the `public class TypeToken<T>` declaration and the cited WMC=102 exceeds the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-7ce6fce0df2a4681",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Class `JsonReader` exceeds a CK/WMC budget (WMC=421, CBO=4, DIT=0, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 211,
+      "verdict": "true_positive",
+      "reason": "Class JsonReader exceeds the CK budget as reported (WMC=421).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`JsonReader` is a large main-source state-machine parser, so a WMC of 421 is consistent with the class declaration and the rule's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`JsonReader` is a main-source class declared at the reported line with WMC=421, well above the stated budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-e9de1889819483d9",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonWriter.java",
+      "message": "Class `JsonWriter` exceeds a CK/WMC budget (WMC=118, CBO=1, DIT=0, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 162,
+      "verdict": "true_positive",
+      "reason": "Class JsonWriter exceeds the CK budget as reported (WMC=118).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`JsonWriter implements Closeable, Flushable` is a sizable production class in main source, so the reported high WMC is credible and in scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported line matches `public class JsonWriter` and the cited WMC=118 exceeds the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc93a0a8202ce18a",
+      "repository": "gson",
+      "language": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/LegacyProtoTypeAdapterFactory.java",
+      "message": "Class `Adapter` exceeds a CK/WMC budget (WMC=89, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "Class Adapter exceeds the CK budget as reported (WMC=89).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The nested `Adapter extends TypeAdapter<T>` holds substantial serialization logic, so the reported metric exceedance is plausible production-code behavior."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The reported nested `Adapter` class declaration is the named symbol and WMC=89 exceeds the stated budget in production source."
+        }
+      ]
+    },
+    {
+      "id": "EA-ebef27a435056883",
+      "repository": "gson",
+      "language": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/ProtoTypeAdapter.java",
+      "message": "Class `ProtoTypeAdapter` exceeds a CK/WMC budget (WMC=56, CBO=7, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "Class ProtoTypeAdapter exceeds the CK budget as reported (WMC=56).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ProtoTypeAdapter implements JsonSerializer<Message>, JsonDeserializer<Message>` is production code whose high coupling and WMC fit its dual role."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ProtoTypeAdapter` is a production class declared at the reported line and the cited WMC=56/CBO=7 exceed the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca4ad31df98913dc",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/DataUtil.java",
+      "message": "Class `DataUtil` exceeds a CK/WMC budget (WMC=93, CBO=14, DIT=0, NOC=0).",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "Class DataUtil exceeds the CK budget as reported (WMC=93, CBO=14).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`DataUtil` is a final class with a private constructor aggregating static helpers, a recognized utility-class idiom the rule should exempt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`DataUtil` is production source at the reported declaration and WMC=93/CBO=14 exceed the stated budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-62cdaff847e866b4",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "message": "Class `W3CDom` exceeds a CK/WMC budget (WMC=44, CBO=11, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "Class W3CDom exceeds the CK budget as reported (WMC=44, CBO=11).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`W3CDom` is a main-source helper with its own state and constructor, so the reported structure metrics plausibly apply within scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only W3CDom's declaration (line 54), fields, and the start of its constructor, so the whole-class WMC=44/CBO=11 counts span code that is not shown and cannot be confirmed or refuted from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-a5c0cee6613c4651",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/SimpleBufferedInput.java",
+      "message": "Class `SimpleBufferedInput` exceeds a CK/WMC budget (WMC=63, CBO=1, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "Class SimpleBufferedInput exceeds the CK budget as reported (WMC=63).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`SimpleBufferedInput extends FilterInputStream` implements nontrivial buffering logic, so the reported WMC is in scope and credible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Symbol and line match (`class SimpleBufferedInput extends FilterInputStream` at line 17), but the excerpt stops mid-class at line 31, so WMC=63 is a count over an unshown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-4831f276be9f0de9",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attributes.java",
+      "message": "Class `Attributes` exceeds a CK/WMC budget (WMC=154, CBO=13, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "Class Attributes exceeds the CK budget as reported (WMC=154, CBO=13).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Attributes implements Iterable<Attribute>, Cloneable` is a full production collection class, so its high WMC and coupling are consistent with the declaration."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt confirms Attributes.java:45 declares the right class but ends at line 60 with the class still open, so WMC=154/CBO=13 cannot be verified from the shown lines."
+        }
+      ]
+    },
+    {
+      "id": "EA-095c6952e86eafd7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Element.java",
+      "message": "Class `Element` exceeds a CK/WMC budget (WMC=338, CBO=44, DIT=1, NOC=3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "Class Element exceeds the CK budget as reported (WMC=338, CBO=44).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Element` is a large public class extending Node with heavy API surface, consistent with the reported WMC=338/CBO=44 exceeding a structure budget."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Element.java:48 is the correct class declaration, but the excerpt only covers lines 43-63, far too little to verify the class-wide WMC=338/CBO=44 counts."
+        }
+      ]
+    },
+    {
+      "id": "EA-64af73e5baf7667d",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/LeafNode.java",
+      "message": "Class `LeafNode` exceeds a CK/WMC budget (WMC=51, CBO=9, DIT=1, NOC=5).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 12,
+      "verdict": "true_positive",
+      "reason": "Class LeafNode exceeds the CK budget as reported (WMC=51, CBO=9).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`LeafNode` is an abstract base carrying substantial shared behavior (WMC=51, NOC=5), matching the metric claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The declaration at line 12 is correctly identified, but only ~15 lines of LeafNode are shown, so WMC=51 spans the rest of the class, which is not in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-5c53f331fe2d7c25",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "message": "Class `Node` exceeds a CK/WMC budget (WMC=201, CBO=14, DIT=0, NOC=2).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "Class Node exceeds the CK budget as reported (WMC=201, CBO=14).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Node` is the abstract base of the hierarchy with many methods (WMC=201, NOC=4), so the budget claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Node.java:26 matches the reported abstract class declaration, but WMC=201/CBO=14 are counts over the full class body, which the excerpt (ending at line 41) does not include."
+        }
+      ]
+    },
+    {
+      "id": "EA-ae7fc1ed40ea3234",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Range.java",
+      "message": "Class `Spans` exceeds a CK/WMC budget (WMC=44, CBO=3, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 385,
+      "verdict": "true_positive",
+      "reason": "Class Spans exceeds the CK budget as reported (WMC=44).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The nested `Spans` class holds many range fields/methods (WMC=44), consistent with the reported structure metric."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Line 385 is indeed `static final class Spans {`, but the excerpt ends at line 400 mid-class, so WMC=44 cannot be checked against the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-2bf15afbb437e2f7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Parser.java",
+      "message": "Class `Parser` exceeds a CK/WMC budget (WMC=36, CBO=11, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "Class Parser exceeds the CK budget as reported (CBO=11).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Parser` shows multiple fields and responsibilities with CBO=11/WMC=36, matching the reported coupling/complexity exceedance."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Parser.java:21 is the correct declaration, but the excerpt covers only lines 16-35, so the WMC=36 claim spans the rest of the class, which is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-4b4758bce387c4d7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/StreamParser.java",
+      "message": "Class `ElementIterator` exceeds a CK/WMC budget (WMC=46, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 325,
+      "verdict": "true_positive",
+      "reason": "Class ElementIterator exceeds the CK budget as reported (WMC=46).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The inner `ElementIterator` implements both Iterator and NodeVisitor with many members (WMC=46), consistent with the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 325 is the real declaration of the nested `ElementIterator` in production StreamParser.java, and its visible queue/deferral state (emitQueue, deferredEls, reset(), deferOpenElements()) is the kind of branch-heavy iterator logic that legitimately accumulates WMC."
+        }
+      ]
+    },
+    {
+      "id": "EA-25be92ad3eccca27",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/XmlTreeBuilder.java",
+      "message": "Class `XmlTreeBuilder` exceeds a CK/WMC budget (WMC=69, CBO=29, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "Class XmlTreeBuilder exceeds the CK budget as reported (WMC=69, CBO=29).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`XmlTreeBuilder` extends TreeBuilder and shows high coupling (CBO=29, WMC=69), supporting the budget-exceedance claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 37 matches `public class XmlTreeBuilder extends TreeBuilder` (consistent with the cited DIT=1), a core production parser class whose insert/pop push branching supports the high WMC/CBO claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-20e293161ca7a5dc",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/safety/Cleaner.java",
+      "message": "Class `Cleaner` exceeds a CK/WMC budget (WMC=22, CBO=13, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Class Cleaner exceeds the CK budget as reported (CBO=13).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Cleaner` depends on many node/safelist types (CBO=13) beyond its small method count, so the coupling budget claim applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 43 correctly cites `public class Cleaner` in main safety code; a sanitizer whose recursive node-copying/safelist checks live just below the excerpt is genuinely branch-heavy, so the budget exceedance applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-246c7bcc14ce290a",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/safety/Safelist.java",
+      "message": "Class `Safelist` exceeds a CK/WMC budget (WMC=74, CBO=9, DIT=0, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "Class Safelist exceeds the CK budget as reported (WMC=74, CBO=9).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the class declaration at line 73; the methods contributing to WMC=74 are not visible, so the count can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 73 correctly cites `public class Safelist`, a main-source configuration class with many add/isSafe methods; large accumulated WMC here is a legitimate complexity signal, not a scope or idiom problem."
+        }
+      ]
+    },
+    {
+      "id": "EA-3789790e48dd9f0c",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/Elements.java",
+      "message": "Class `Elements` exceeds a CK/WMC budget (WMC=112, CBO=12, DIT=2, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 29,
+      "verdict": "true_positive",
+      "reason": "Class Elements exceeds the CK budget as reported (WMC=112, CBO=12).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the declaration `public class Elements extends Nodes<Element>` at line 29 is shown; WMC=112 depends on the unseen class body."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 29 correctly cites `public class Elements extends Nodes<Element>` in production select code, and a list class of that size is exactly where a WMC=112 budget exceedance is plausible."
+        }
+      ]
+    },
+    {
+      "id": "EA-d5d39dd0091c23f6",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/NodeTraversor.java",
+      "message": "Class `NodeTraversor` exceeds a CK/WMC budget (WMC=55, CBO=4, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "Class NodeTraversor exceeds the CK budget as reported (WMC=55).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The declaration at line 18 is shown but the methods summing to WMC=55 are outside the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 18 correctly cites `public class NodeTraversor`, and the excerpt shows a cursor-state machine (VisitHead/AfterHead/VisitTail constants driving traversal), genuine control-flow complexity matching a high WMC."
+        }
+      ]
+    },
+    {
+      "id": "EA-b721be874e0c2c35",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/core/Axios.js",
+      "message": "Class `Axios` exceeds a CK/WMC budget (WMC=52, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Class Axios exceeds the CK budget as reported (WMC=52).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops shortly after `class Axios {` at line 23; the WMC=52 count over the full method set is not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 23 correctly cites `class Axios` in axios's core library (not test/fixture code), and its documented request-dispatch/interceptor behavior supports a high WMC."
+        }
+      ]
+    },
+    {
+      "id": "EA-a491e193eb67caa5",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/core/AxiosHeaders.js",
+      "message": "Class `AxiosHeaders` exceeds a CK/WMC budget (WMC=52, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "Class AxiosHeaders exceeds the CK budget as reported (WMC=52).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `class AxiosHeaders {` at line 198 and part of `set` are shown; WMC=52 cannot be confirmed from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 198 correctly cites `class AxiosHeaders` in core library code; the visible set()/setHeader normalization logic with loops and conditionals continues across a large methods class, consistent with WMC=52."
+        }
+      ]
+    },
+    {
+      "id": "EA-af2dfbdaf993f1a1",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/config/config-loader.js",
+      "message": "Class `ConfigLoader` exceeds a CK/WMC budget (WMC=50, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 286,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class ConfigLoader: WMC=50 plausible from keyword/method scan (many methods plus decision points), CBO=2; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The class body of `ConfigLoader` beyond line 286 is not shown, so WMC=50 can't be verified (and it sits at a plausible threshold)."
+        }
+      ]
+    },
+    {
+      "id": "EA-0c29c9ad16e23778",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/config/config.js",
+      "message": "Class `Config` exceeds a CK/WMC budget (WMC=67, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 452,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class Config: WMC=67 plausible from keyword/method scan (many methods plus decision points), CBO=0; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the fields after `class Config {` at line 452 appear; the methods making up WMC=67 are not in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-b495254c495e65e7",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint.js",
+      "message": "Class `ESLint` exceeds a CK/WMC budget (WMC=103, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 693,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class ESLint: WMC=103 plausible from keyword/method scan (many methods plus decision points), CBO=2; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only fields of `class ESLint` at line 693; the methods behind WMC=103 are outside the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-be02ea073d573d7a",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/languages/js/source-code/source-code.js",
+      "message": "Class `SourceCode` exceeds a CK/WMC budget (WMC=91, CBO=2, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 304,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class SourceCode: WMC=91 plausible from keyword/method scan (many methods plus decision points), CBO=2; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the `class SourceCode extends TokenStore` declaration and its doc comment; the WMC=91 count spans the full class body, which is not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-252703754a597ba1",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/code-path-analysis/code-path-state.js",
+      "message": "Class `CodePathState` exceeds a CK/WMC budget (WMC=190, CBO=12, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 857,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class CodePathState: WMC=190 plausible from keyword/method scan (many methods plus decision points), CBO=12; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `class CodePathState {` header and constructor start appear; WMC=190 and CBO=12 are aggregate counts over the unseen remainder of the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-a1a7ef3eb6dc25e8",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/linter.js",
+      "message": "Class `Linter` exceeds a CK/WMC budget (WMC=84, CBO=7, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 772,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class Linter: WMC=84 plausible from keyword/method scan (many methods plus decision points), CBO=7; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at `class Linter {` and the constructor signature, so the WMC=84/CBO=7 counts cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3282ead6a5767411",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/services/suppressions-service.js",
+      "message": "Class `SuppressionsService` exceeds a CK/WMC budget (WMC=46, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class SuppressionsService: WMC=46 plausible from keyword/method scan (many methods plus decision points), CBO=0; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `class SuppressionsService {` and its constructor are visible; the WMC=46 count covers methods not shown in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-613aa437ac42470d",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/Koin.kt",
+      "message": "Class `Koin` exceeds a CK/WMC budget (WMC=28, CBO=9, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 51,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=28, CBO=9, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows `@OptIn(KoinInternalApi::class)` and `class Koin {` with a few properties; WMC=28/CBO=9 span the unshown class body."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Koin is the production DI container root wiring several registries (logger, CoreResolver, ScopeRegistry, InstanceRegistry are visible), so WMC=28 with CBO=9 is a plausible class-level breach in scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-1521679db895e03b",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/InstanceRegistry.kt",
+      "message": "Class `InstanceRegistry` exceeds a CK/WMC budget (WMC=30, CBO=13, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=30, CBO=13, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the annotations, `class InstanceRegistry(val _koin: Koin)` header, and some fields are shown; WMC=30/CBO=13 are unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "InstanceRegistry is production code owning module loading (loadModules with per-module loops) and eager-instance handling, consistent with WMC=30 and CBO=13 within the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d6a5409821e404c6",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/scope/Scope.kt",
+      "message": "Class `Scope` exceeds a CK/WMC budget (WMC=55, CBO=12, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 43,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=55, CBO=12, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at the `class Scope(...)` header and first method; WMC=55/CBO=12 cover code not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt shows `class Scope(...) : Lockable()` (line 53), so the class has a superclass and any CK DIT convention yields >= 1; the reported DIT=0 is a miscount."
+        }
+      ]
+    },
+    {
+      "id": "EA-8b462e73b70e5e83",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/AdapterGenerator.kt",
+      "message": "Class `AdapterGenerator` exceeds a CK/WMC budget (WMC=112, CBO=11, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class AdapterGenerator: WMC=112 plausible from keyword/method scan (many methods plus decision points), CBO=11; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `@InternalMoshiCodegenApi` and the `class AdapterGenerator(` declaration are visible; WMC=112/CBO=11 cannot be confirmed from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-cbffa2f50f063c84",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver/src/main/kotlin/mockwebserver3/MockWebServer.kt",
+      "message": "Class `Http2SocketHandler` exceeds a CK/WMC budget (WMC=52, CBO=13, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1037,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1037 declares the real inner class Http2SocketHandler in mockwebserver's main source, matching the named class, so the WMC/CBO budget claim applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-e19b4c3a59190cd4",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/Main.kt",
+      "message": "Class `Main` exceeds a CK/WMC budget (WMC=19, CBO=10, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "okcurl is a sample/demo CLI tool (example code), outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-b3fe60cebbf21cec",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-tls/src/main/kotlin/okhttp3/tls/HeldCertificate.kt",
+      "message": "Class `Builder` exceeds a CK/WMC budget (WMC=40, CBO=11, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 190 declares the nested class Builder in okhttp-tls main source, matching the named class."
+        }
+      ]
+    },
+    {
+      "id": "EA-2af256a1225e3b77",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-tls/src/main/kotlin/okhttp3/tls/internal/der/DerReader.kt",
+      "message": "Class `DerReader` exceeds a CK/WMC budget (WMC=80, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 40 declares internal class DerReader in okhttp-tls main source, matching the named class."
+        }
+      ]
+    },
+    {
+      "id": "EA-046d7c20a81cf5ff",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Dispatcher.kt",
+      "message": "Class `Dispatcher` exceeds a CK/WMC budget (WMC=50, CBO=4, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 44 declares class Dispatcher in okhttp main source, matching the named class."
+        }
+      ]
+    },
+    {
+      "id": "EA-d22c7436c9eb0c8b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/EventListener.kt",
+      "message": "Class `EventListener` exceeds a CK/WMC budget (WMC=42, CBO=9, DIT=0, NOC=8).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 63 declares abstract class EventListener in okhttp main source, matching the named class."
+        }
+      ]
+    },
+    {
+      "id": "EA-265a8d33de11c273",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+      "message": "Class `OkHttpClient` exceeds a CK/WMC budget (WMC=36, CBO=21, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 135 declares open class OkHttpClient in okhttp main source, matching the named class."
+        }
+      ]
+    },
+    {
+      "id": "EA-42da6dfd50b47b25",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/LookupDnsCall.kt",
+      "message": "Class `LookupDnsCall` exceeds a CK/WMC budget (WMC=9, CBO=9, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Class LookupDnsCall is declared at line 37 (line 36 is its @OkHttpInternalApi annotation) in okhttp main source, so the claim applies."
+        }
+      ]
+    },
+    {
+      "id": "EA-d92fdf28c33334aa",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RealInterceptorChain.kt",
+      "message": "Class `RealInterceptorChain` exceeds a CK/WMC budget (WMC=37, CBO=16, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class RealInterceptorChain: WMC=37 plausible from keyword/method scan (many methods plus decision points), CBO=16; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the `RealInterceptorChain` declaration and its constructor parameters, not the method bodies needed to verify WMC=37, so the budget claim cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-9b1da6021d476071",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/idn/Punycode.kt",
+      "message": "Class `Punycode` exceeds a CK/WMC budget (WMC=100, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class Punycode: WMC=100 plausible from keyword/method scan (many methods plus decision points), CBO=0; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `object Punycode` header and constants are shown; the methods whose cyclomatic complexity sums to WMC=100 are outside the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-ea681499dacda500",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/ws/WebSocketReader.kt",
+      "message": "Class `WebSocketReader` exceeds a CK/WMC budget (WMC=84, CBO=2, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class WebSocketReader: WMC=84 plausible from keyword/method scan (many methods plus decision points), CBO=2; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt exposes only `WebSocketReader`'s declaration and fields, not the methods that would substantiate WMC=84."
+        }
+      ]
+    },
+    {
+      "id": "EA-dfe024382688037b",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-fakefilesystem/src/commonMain/kotlin/okio/fakefilesystem/FakeFileSystem.kt",
+      "message": "Class `FakeFileSystem` exceeds a CK/WMC budget (WMC=103, CBO=17, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 68,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=103, CBO=17, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `FakeFileSystem`'s declaration and constructors are visible; the large method set behind WMC=103 and CBO=17 is not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "FakeFileSystem is declared `: FileSystem()` (line 70) and FileSystem is an abstract class, so DIT=0 is a miscount; the claimed metric tuple does not hold."
+        }
+      ]
+    },
+    {
+      "id": "EA-416ecaafc3d18af9",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-nodefilesystem/src/commonMain/kotlin/okio/NodeJsFileSystem.kt",
+      "message": "Class `NodeJsFileSystem` exceeds a CK/WMC budget (WMC=69, CBO=10, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class NodeJsFileSystem: WMC=69 plausible from keyword/method scan (many methods plus decision points), CBO=10; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only `object NodeJsFileSystem : FileSystem()` and its constants, so WMC=69, CBO=10, and DIT=2 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-254d9d5309585ca0",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-wasifilesystem/src/wasmWasiMain/kotlin/okio/WasiFileSystem.kt",
+      "message": "Class `WasiFileSystem` exceeds a CK/WMC budget (WMC=92, CBO=13, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=92, CBO=13, DIT=2, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `object WasiFileSystem`'s header and preopen initialization are shown; the WMC=92 and CBO=13 counts span code outside the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 64 is the production `object WasiFileSystem : FileSystem()` in wasmWasiMain (in scope); DIT=2 is consistent with its supertype chain (FileSystem's own DIT=1) and nothing in the excerpt contradicts the WMC/CBO budget claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-391a58e32bf09293",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/FileHandle.kt",
+      "message": "Class `FileHandle` exceeds a CK/WMC budget (WMC=50, CBO=10, DIT=1, NOC=8).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=50, CBO=10, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the `abstract class FileHandle` declaration and first field, not the methods summing to WMC=50 and CBO=10."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "FileHandle is declared `: Closeable` (line 42) yet claims DIT=0, contradicting the corpus's own convention where the identically supertyped FileSystem gets DIT=1; the metric is miscounted."
+        }
+      ]
+    },
+    {
+      "id": "EA-85e6eda3525b4b43",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/AsyncTimeout.kt",
+      "message": "Class `AsyncTimeout` exceeds a CK/WMC budget (WMC=47, CBO=4, DIT=1, NOC=2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class AsyncTimeout: WMC=47 plausible from keyword/method scan (many methods plus decision points), CBO=4; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `open class AsyncTimeout : Timeout()` header and fields are shown; neither WMC=47 nor NOC=2 can be checked from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-f65aa5f0da902143",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/Buffer.kt",
+      "message": "Class `Buffer` exceeds a CK/WMC budget (WMC=139, CBO=12, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=139, CBO=12, DIT=3, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `actual class Buffer` on line 76 implements four interfaces and is the core buffer implementation; the reported WMC=139 confirms it genuinely exceeds a class-complexity budget in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 76 is the real production `actual class Buffer : BufferedSource, BufferedSink, Cloneable, ByteChannel`; DIT=3 matches its interface supertype chain (BufferedSource -> Source -> Closeable) and nothing contradicts the WMC=139 budget claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-688ac1fb3a78eedf",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/FileSystem.kt",
+      "message": "Class `FileSystem` exceeds a CK/WMC budget (WMC=31, CBO=9, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 30,
+      "verdict": "true_positive",
+      "reason": "CBO=9 measured correctly for the abstract FileSystem API; marginally over the coupling budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `actual abstract class FileSystem` on line 30 declares/defines a large API surface (canonicalize, metadata, exists, list, etc.) and the reported WMC=31 credibly exceeds budget in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 30 is exactly `actual abstract class FileSystem : Closeable`; DIT=1 (from Closeable) and NOC=4 (FakeFileSystem, WasiFileSystem, JvmSystemFileSystem plus one more subclass) fit its supertypes, and it is in-scope production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-baf616a64263c0a9",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/JvmSystemFileSystem.kt",
+      "message": "Class `JvmSystemFileSystem` exceeds a CK/WMC budget (WMC=57, CBO=8, DIT=1, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=57, CBO=8, DIT=2, NOC=1; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`internal open class JvmSystemFileSystem : FileSystem()` on line 28 overrides many file operations and the reported WMC=57 correctly reflects a large, coupling-heavy class."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 28 is the production `internal open class JvmSystemFileSystem : FileSystem()`; DIT=2 (FileSystem=1 + 1) and NOC=1 (NioSystemFileSystem) match its position in the hierarchy, with nothing contradicting the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-f3ffcddc50a973df",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/NioFileSystemWrappingFileSystem.kt",
+      "message": "Class `NioFileSystemWrappingFileSystem` exceeds a CK/WMC budget (WMC=50, CBO=8, DIT=3, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`internal class NioFileSystemWrappingFileSystem : NioSystemFileSystem()` on line 39 overrides the full file-system API with DIT=4/WMC=50, so the budget claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-a72aea60749ad3df",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/RealBufferedSource.kt",
+      "message": "Class `RealBufferedSource` exceeds a CK/WMC budget (WMC=55, CBO=7, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=55, CBO=7, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`internal actual class RealBufferedSource : BufferedSource` on line 54 defines a large delegating API surface and the reported WMC=55 exceeds the class-complexity budget."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "RealBufferedSource is declared `: BufferedSource` (line 56), so DIT=0 is a miscount \u2014 the same supertype carries depth elsewhere (Buffer reports DIT=3); the claim as stated is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-f09671d0a979a90f",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/internal/ResourceFileSystem.kt",
+      "message": "Class `ResourceFileSystem` exceeds a CK/WMC budget (WMC=47, CBO=9, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "Class metrics measured correctly: WMC=47, CBO=9, DIT=0, NOC=0; a large, highly coupled class.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`internal class ResourceFileSystem : FileSystem()` on line 45 implements the full file-system API and the reported WMC=47/CBO=9 reflects a genuinely large class."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "WMC=47 is a whole-class count, but the excerpt only shows the declaration through line 60, too short to verify the class total or the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef912e01d89c55cc",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/nonJvmMain/kotlin/okio/Buffer.kt",
+      "message": "Class `Buffer` exceeds a CK/WMC budget (WMC=91, CBO=16, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 71,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`actual class Buffer : BufferedSource, BufferedSink` on line 71 is a large core implementation and the reported WMC=91 exceeds the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-20d402e74c7adf50",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/nonJvmMain/kotlin/okio/RealBufferedSource.kt",
+      "message": "Class `RealBufferedSource` exceeds a CK/WMC budget (WMC=45, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "WMC=45 measured correctly; mostly one-line forwarders to common* implementations, just over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`internal actual class RealBufferedSource : BufferedSource` on line 49 exposes a large API and the reported WMC=45 exceeds the class-complexity budget."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "WMC=45 requires summing roughly 45 methods, yet the excerpt (lines 49-64) shows only ~10 delegating `actual override` methods, insufficient to verify the count."
+        }
+      ]
+    },
+    {
+      "id": "EA-c900639ee8db427f",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/GzipSource.kt",
+      "message": "Class `GzipSource` exceeds a CK/WMC budget (WMC=45, CBO=4, DIT=2, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 29,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class GzipSource: WMC=45 plausible from keyword/method scan (many methods plus decision points), CBO=4; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 44 before any of GzipSource's methods are shown, so the WMC=45 count over the full class body cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6175fc2caf1a95c3",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/ZipFileSystem.kt",
+      "message": "Class `ZipFileSystem` exceeds a CK/WMC budget (WMC=29, CBO=10, DIT=1, NOC=0).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 30,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "WMC 29 is modest (~17 methods, ~10 decision points); only CBO=10 (about a dozen referenced types) could exceed a budget and the budget value is not stated."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the constructor signature and two methods of ZipFileSystem are visible, so the WMC=29/CBO=10 values over the rest of the class cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-f09f76027479c6cd",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/brackets.py",
+      "message": "Class `BracketTracker` exceeds a CK/WMC budget (WMC=41, CBO=2, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class BracketTracker: WMC=41 plausible from keyword/method scan (many methods plus decision points), CBO=2; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the dataclass fields are shown and its methods are cut off after line 75, so the WMC=41 count is not verifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-eca3211a10c79ad4",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/lines.py",
+      "message": "Class `EmptyLineTracker` exceeds a CK/WMC budget (WMC=226, CBO=6, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 590,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class EmptyLineTracker: WMC=226 plausible from keyword/method scan (many methods plus decision points), CBO=6; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only EmptyLineTracker's fields through line 604; the methods producing WMC=226 are not included."
+        }
+      ]
+    },
+    {
+      "id": "EA-a9f9d05dc0cf1f46",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Class `StringParenWrapper` exceeds a CK/WMC budget (WMC=115, CBO=4, DIT=3, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1964,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class StringParenWrapper: WMC=115 plausible from keyword/method scan (many methods plus decision points), CBO=4; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the class declaration and docstring of StringParenWrapper are shown, so WMC=115 and DIT=3 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-28f77ef7700f2bab",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/driver.py",
+      "message": "Class `Driver` exceeds a CK/WMC budget (WMC=41, CBO=4, DIT=0, NOC=0).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "false_positive",
+      "reason": "Out of scope: src/blib2to3/pgen2/driver.py is black's vendored copy of CPython lib2to3 (same tree as the conv.py already ruled vendored), so the WMC value does not matter.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "blib2to3 is a vendored copy of lib2to3 inside black; also WMC lower bound (~27 decision keywords + methods) is near the 41 claimed."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only Driver.__init__ and the start of parse_tokens are shown, so the WMC=41 total is not verifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-62768a3ea5c4df7f",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/pgen.py",
+      "message": "Class `ParserGenerator` exceeds a CK/WMC budget (WMC=105, CBO=4, DIT=0, NOC=0).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 18,
+      "verdict": "false_positive",
+      "reason": "Out of scope: src/blib2to3/pgen2/pgen.py is the vendored lib2to3 parser generator bundled in black, not first-party code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "blib2to3/pgen2/pgen.py is the vendored lib2to3 parser generator copy bundled in black, not first-party production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only ParserGenerator's field declarations and the beginning of __init__ are shown, so WMC=105 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-5daffd3f8dafefe0",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/app.py",
+      "message": "Class `Flask` exceeds a CK/WMC budget (WMC=215, CBO=10, DIT=2, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Flask` is a genuinely large, multi-responsibility production class (WMC=215) in src/flask/app.py, so the budget finding holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-045b538b747b63b9",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/json/tag.py",
+      "message": "Class `JSONTag` exceeds a CK/WMC budget (WMC=5, CBO=1, DIT=0, NOC=12).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "false_positive",
+      "reason": "NOC alone on JSONTag, a base class built for extension by tag subclasses.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "JSONTag has WMC=5, CBO=1, DIT=0 \u2014 all minimal \u2014 and the only elevated metric is NOC=12 from the intentional one-subclass-per-tag-type design, which the responsibility/depth/coupling rationale does not address."
+        }
+      ]
+    },
+    {
+      "id": "EA-0063600535ba0f68",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/sansio/app.py",
+      "message": "Class `App` exceeds a CK/WMC budget (WMC=90, CBO=6, DIT=1, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 59,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Flask's central `App` class is documented as the app's central registry and carries a very large method set (WMC=90), so the responsibility budget claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-320cd5e4d8226623",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/sansio/blueprints.py",
+      "message": "Class `Blueprint` exceeds a CK/WMC budget (WMC=61, CBO=2, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 119,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Blueprint` is a substantial production class in src/flask/sansio/blueprints.py with WMC=61, so the finding holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-72c284c25a6a82cc",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Class `BaseClient` exceeds a CK/WMC budget (WMC=78, CBO=18, DIT=0, NOC=2).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 188,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BaseClient` has both high WMC=78 and high coupling CBO=18, so the responsibility/coupling rationale applies at this site."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "WMC=78 requires summing every method's complexity, but the excerpt shows only the class header and __init__, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-8d459a03f75b4c97",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Class `Client` exceeds a CK/WMC budget (WMC=73, CBO=14, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 594,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Client` has WMC=73 and CBO=14, confirming the oversized, heavily coupled subclass the budget flags."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "WMC=73 cannot be confirmed because the excerpt shows only the class declaration and docstring, not the method bodies needed to sum complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb581f22702a8113",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Class `AsyncClient` exceeds a CK/WMC budget (WMC=73, CBO=14, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1307,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`AsyncClient` mirrors the sync client with WMC=73 and CBO=14, so the same oversized-class claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "AsyncClient is the library's full high-level API surface (request/get/post/send/stream/redirects/auth/cookies plus BaseClient plumbing), so WMC=73 with CBO=14 is a genuine budget excess."
+        }
+      ]
+    },
+    {
+      "id": "EA-585381315628fc02",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `ConnectTimeout` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 140,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "ConnectTimeout is a docstring-only exception marker with WMC=0, CBO=0, NOC=0; only the intentional TimeoutException hierarchy depth triggers the budget, so there is no responsibility or coupling to reduce."
+        }
+      ]
+    },
+    {
+      "id": "EA-238c9fc3dc14ca82",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `ReadTimeout` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 146,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "ReadTimeout is an empty exception subclass (WMC=0, CBO=0, NOC=0) whose only 'violation' is idiomatic exception-hierarchy depth, not class structure complexity."
+        }
+      ]
+    },
+    {
+      "id": "EA-6a1dbde1e158d190",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `PoolTimeout` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 158,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "PoolTimeout contains only a docstring and has WMC=0, CBO=0, NOC=0, so the finding merely counts intentional inheritance depth in a standard exception taxonomy."
+        }
+      ]
+    },
+    {
+      "id": "EA-44112bd42bf28189",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `ReadError` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 175,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "ReadError is a marker subclass of NetworkError with no methods or coupling (WMC=0, CBO=0, NOC=0); flagging it for structure is spurious."
+        }
+      ]
+    },
+    {
+      "id": "EA-77aad0f4190cecc4",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `WriteError` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 181,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "WriteError is a docstring-only exception marker with WMC=0, CBO=0, NOC=0, so the CK/WMC 'budget' claim does not describe any real complexity or coupling at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-51a93f862238d709",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `ConnectError` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 187,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "ConnectError is an empty NetworkError subclass (WMC=0, CBO=0, NOC=0); the trigger is only the expected exception hierarchy depth, an idiom the rule should recognize."
+        }
+      ]
+    },
+    {
+      "id": "EA-51ab6fae3b99f1eb",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `CloseError` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 193,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "CloseError is a docstring-only exception marker with WMC=0, CBO=0, NOC=0, so nothing in the class structure exceeds a reasonable budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-d152fe21aa4743b8",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `LocalProtocolError` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 222,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`LocalProtocolError` is only a docstring-only `ProtocolError` subclass with WMC=0 and CBO=0, so the finding is driven solely by inherited Python exception-chain depth."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e3f00f964b61a23",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_exceptions.py",
+      "message": "Class `RemoteProtocolError` exceeds a CK/WMC budget (WMC=0, CBO=0, DIT=5, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 232,
+      "verdict": "false_positive",
+      "reason": "Empty leaf exception class; DIT 5 reflects a deliberate exception taxonomy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`RemoteProtocolError` is likewise only a docstring-only `ProtocolError` subclass with WMC=0 and CBO=0, so the high DIT is just built-in exception inheritance."
+        }
+      ]
+    },
+    {
+      "id": "EA-50ee70f002cdbb19",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "Class `Headers` exceeds a CK/WMC budget (WMC=62, CBO=0, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t7-fixes2",
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "Class WMC 62 well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Headers` has WMC=62 from its numerous dict/lookup methods, exceeding the complexity budget as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Headers` is a substantial `MutableMapping` implementation with reported WMC=62 above the detector's complexity budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-d9fbeaa2e0997c40",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "Class `Response` exceeds a CK/WMC budget (WMC=156, CBO=20, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 515,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Response` has an extremely high WMC=156 and CBO=20, so the budget/rationale clearly applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Response` has reported WMC=156 and CBO=20, matching the large response class with many constructor dependencies and state."
+        }
+      ]
+    },
+    {
+      "id": "EA-5ee8a587bf63e5ae",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "Class `Cookies` exceeds a CK/WMC budget (WMC=45, CBO=5, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1079,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=45 is a count over the whole Cookies class, but the excerpt at httpx/_models.py:1079 shows only the class header and the start of __init__, so the metric cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Cookies` is a production mapping wrapper around `CookieJar` with reported WMC=45 and CBO=5 above the budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-359d56ceb7e1dbb0",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urls.py",
+      "message": "Class `URL` exceeds a CK/WMC budget (WMC=48, CBO=1, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=48 counts methods across the full URL class, yet the excerpt at httpx/_urls.py:15 shows only the class declaration and its docstring."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`URL` is a real library class with reported WMC=48 and owns broad URL-component behavior."
+        }
+      ]
+    },
+    {
+      "id": "EA-5feae40b1cd6f446",
+      "repository": "nlohmann-json",
+      "language": "python",
+      "path": "tools/serve_header/serve_header.py",
+      "message": "Class `WorkTrees` exceeds a CK/WMC budget (WMC=41, CBO=2, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 147,
+      "verdict": "false_positive",
+      "reason": "Developer tool under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "tools/serve_header/serve_header.py is developer tooling code, which is outside the detector's source scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-449d76eb2efaafab",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_inspect.py",
+      "message": "Class `Inspect` exceeds a CK/WMC budget (WMC=60, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=60 is computed over the entire Inspect class, but the excerpt at rich/_inspect.py:21 shows only the declaration and docstring."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Inspect` has reported WMC=60 and CBO=6 above the detector's budget for a real renderable inspection class."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac25b5c6a0b1e2d2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Class `Color` exceeds a CK/WMC budget (WMC=56, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 303,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=56 aggregates methods over the full Color class, but rich/color.py:303 excerpt shows only fields and the start of __rich__."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Color` has reported WMC=56 and CBO=6, and it contains substantive color parsing and conversion behavior rather than being merely generated data."
+        }
+      ]
+    },
+    {
+      "id": "EA-7161454502b0e4fe",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Class `Console` exceeds a CK/WMC budget (WMC=347, CBO=36, DIT=0, NOC=1).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 581,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=347/CBO=36 span the entire Console class, yet rich/console.py:581 shows only the declaration and docstring."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Console` is a well-known god-class in rich/console.py with hundreds of methods, so WMC=347/CBO=36 are plausible and the recommendation applies to production source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-79aaed15b075176d",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/jupyter.py",
+      "message": "Class `JupyterMixin` exceeds a CK/WMC budget (WMC=5, CBO=0, DIT=0, NOC=20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "Mixin intentionally inherited by 20 renderables; NOC is the design, not a defect.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "WMC=5 and CBO=0 are trivial; the only elevated metric is NOC=20, and a mixin like `JupyterMixin` legitimately has many subclasses, so the 'unrelated behavior' rationale does not apply to this idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-448e8f2943dbd5b0",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/layout.py",
+      "message": "Class `Layout` exceeds a CK/WMC budget (WMC=36, CBO=11, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 142,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=36 and CBO=11 cover the whole Layout class, but rich/layout.py:142 shows only the declaration, docstring and start of __init__."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Layout` in rich/layout.py is a genuine core class with many methods and splitter coupling, making WMC=36/CBO=11 a legitimate budget exceedance."
+        }
+      ]
+    },
+    {
+      "id": "EA-191ab08875912320",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Class `Live` exceeds a CK/WMC budget (WMC=75, CBO=8, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "WMC=75 counts methods over the full Live class, but rich/live.py:41 shows only the class declaration and docstring."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Live` is a substantial rendering class in rich/live.py, and WMC=75/CBO=8 are consistent with a large production class that owns unrelated behavior."
+        }
+      ]
+    },
+    {
+      "id": "EA-b19a25a16912b794",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Class `Markdown` exceeds a CK/WMC budget (WMC=42, CBO=7, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 513,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The WMC/CBO/DIT/NOC figures aggregate over the entire `Markdown` class body, but the excerpt stops at the docstring, so the reported counts cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Markdown` is a large renderable class in rich/markdown.py with many methods, so WMC=42 is a plausible true budget violation."
+        }
+      ]
+    },
+    {
+      "id": "EA-634e0c9942c3d9f2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "Class `ProgressColumn` exceeds a CK/WMC budget (WMC=10, CBO=1, DIT=1, NOC=11).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 507,
+      "verdict": "false_positive",
+      "reason": "Abstract plugin base with 11 column implementations; NOC is the design.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`ProgressColumn(ABC)` is a small extension point with CBO=1; NOC=11 reflects intended column subclasses, not excess responsibility."
+        }
+      ]
+    },
+    {
+      "id": "EA-622085a0baa0f37c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "Class `Progress` exceeds a CK/WMC budget (WMC=108, CBO=14, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1061,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `Progress` metrics (WMC=108, CBO=14) span the full class beyond the excerpted declaration and docstring, so the counts cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Progress` is one of the largest classes in rich/progress.py with extensive refresh/update logic, so WMC=108/CBO=14 represents a real responsibility overload."
+        }
+      ]
+    },
+    {
+      "id": "EA-53e277edeba941b2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/segment.py",
+      "message": "Class `Segment` exceeds a CK/WMC budget (WMC=142, CBO=1, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`Segment(NamedTuple)` is a plain data record of three fields; WMC=142 is not credible for it, so the count is wrong (or inflated) and the rationale about unrelated behavior does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-2e9055030e130ff6",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/style.py",
+      "message": "Class `Style` exceeds a CK/WMC budget (WMC=163, CBO=5, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`Style`'s reported WMC=163 is a sum over all its methods, none of which appear in the excerpt, so correctness cannot be judged."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 40 is exactly `class Style:` with no bases, matching DIT=0, and it is core library code, so the intentional giant class still counts against the metric budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-89f396bd74750830",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Class `Syntax` exceeds a CK/WMC budget (WMC=114, CBO=14, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 243,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `Syntax` class body (WMC=114, CBO=14) is not shown past line 258, so the metric claim cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`class Syntax(JupyterMixin):` at rich/syntax.py:243 matches the symbol and DIT=1 in production syntax-highlighting code with no scope exemption, so the budget exceedance stands."
+        }
+      ]
+    },
+    {
+      "id": "EA-a03fee8885c4c35c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Class `Table` exceeds a CK/WMC budget (WMC=133, CBO=10, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 153,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`Table`'s WMC=133 and CBO=10 are class-wide aggregates not derivable from the truncated declaration, so the finding cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`class Table(JupyterMixin):` at rich/table.py:153 matches the claimed symbol and DIT=1 in production rendering code, so the class genuinely exceeds the stated budget."
+        }
+      ]
+    },
+    {
+      "id": "EA-6358e020ebb1af58",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Class `Text` exceeds a CK/WMC budget (WMC=254, CBO=6, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 118,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`Text`'s WMC=254 covers a large method set not visible in the excerpt, so the reported count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`class Text(JupyterMixin):` at rich/text.py:118 matches symbol and DIT=1, and its `__slots__`-heavy method surface is a large intentional class, which still counts when the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-c05a74e7e6d36d04",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Class `Traceback` exceeds a CK/WMC budget (WMC=84, CBO=13, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 262,
+      "verdict": "true_positive",
+      "reason": "Class WMC/CBO well above budget as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`Traceback`'s metrics (WMC=84, CBO=13) are computed over the full class, which the excerpt truncates, so they cannot be independently verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`class Traceback:` at rich/traceback.py:262 matches the symbol and DIT=0 in production rendering code, so there is no miscount signal or out-of-scope defense."
+        }
+      ]
+    },
+    {
+      "id": "EA-578a78b3222c9bc8",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/base.ts",
+      "message": "Class `JSXNode` exceeds a CK/WMC budget (WMC=45, CBO=0, DIT=0, NOC=2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 202,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Class JSXNode: WMC=45 plausible from keyword/method scan (many methods plus decision points), CBO=0; production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`JSXNode`'s WMC=45/NOC=2 reflect members beyond the shown constructor, so the reported counts lie outside the excerpt and cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ca198e81c18dd57",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/linear-router/router.ts",
+      "message": "Class `LinearRouter` exceeds a CK/WMC budget (WMC=59, CBO=1, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 11,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "LinearRouter is production code whose add/match routing logic yields a high WMC (59), so the budget claim and recommendation apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-1b2325eaa7c857c7",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/trie-router/node.ts",
+      "message": "Class `Node` exceeds a CK/WMC budget (WMC=49, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Node is a real trie-router class with a large body of insertion/matching logic (WMC=49), matching the detector's budget rationale."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b88cb88abd94000",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/core/immerClass.ts",
+      "message": "Class `Immer` exceeds a CK/WMC budget (WMC=55, CBO=0, DIT=0, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "Production class over the WMC or coupling budget; the measured methods and dependencies are in the class body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Immer is a large production class implementing many producer methods (WMC=55), and the metric-budget claim holds at that site."
+        }
+      ]
+    },
+    {
+      "id": "EA-be68eca31f5850d3",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Class `ZodString` exceeds a CK/WMC budget (WMC=205, CBO=1, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 731,
+      "verdict": "true_positive",
+      "reason": "Class ZodString exceeds the CK budget as reported (WMC=205).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ZodString is a very large real class (WMC=205, DIT=1 as shown by `extends ZodType`), so the budget finding is valid."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ZodString` in v3/types.ts is production library code whose many check-builder methods (min, max, email, url, uuid, ...) genuinely drive WMC far over budget, so the claim and its rationale apply at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-a19c19d29c3751eb",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Class `ZodNumber` exceeds a CK/WMC budget (WMC=73, CBO=1, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 1369,
+      "verdict": "true_positive",
+      "reason": "Class ZodNumber exceeds the CK budget as reported (WMC=73).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ZodNumber extends ZodType (DIT=1) and carries many checks (WMC=73), consistent with the reported budget violation."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ZodNumber` at v3/types.ts:1369 is library code whose numerous numeric check methods (gt, gte, multipleOf, int, ...) produce the reported WMC=73, a real budget overrun rather than a miscount."
+        }
+      ]
+    },
+    {
+      "id": "EA-79333955489a43c5",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Class `ZodBigInt` exceeds a CK/WMC budget (WMC=48, CBO=1, DIT=1, NOC=0).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 1635,
+      "verdict": "true_positive",
+      "reason": "Class ZodBigInt exceeds the CK budget as reported (WMC=48).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ZodBigInt extends ZodType and has substantial parsing/check logic (WMC=48), matching the detector's budget claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ZodBigInt` is a production zod type class whose parsing plus its battery of check builders make WMC=48 a genuine exceedance, and the site is ordinary source, not test/example code."
+        }
+      ]
+    },
+    {
+      "id": "EA-b8283e28693e519d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Class `ZodObject` exceeds a CK/WMC budget (WMC=63, CBO=5, DIT=1, NOC=0).",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 2452,
+      "verdict": "true_positive",
+      "reason": "Class ZodObject exceeds the CK budget as reported (WMC=63).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt shows `class ZodObject<...> extends ZodType<...>`, so the reported DIT=0 is a misparse of the multi-line generic header (inheritance depth is at least 1), making the reported structure metric wrong."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ZodObject` is a large, highly coupled library class (evidence WMC=63, CBO=5), so it truly exceeds the metric budget; the DIT=0 detail is a reporting quirk that does not change the substantive claim."
+        }
+      ]
+    }
+  ]
+}

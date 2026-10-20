@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "detector": "tautological_assertion",
+  "labels": [
+    {
+      "id": "EA-917624b38a5a2325",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "__tests__/draft.ts",
+      "message": "Test `draft.ts` compares `true` with itself at line 295",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 295,
+      "verdict": "true_positive",
+      "reason": "expect(true).toBe(true) cannot fail; the file's type checks happen at compile time and this assertion only silences Jest.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Line 295 is literally expect(true).toBe(true), a self-comparison that cannot fail, even if used as a placeholder after type-level checks."
+        }
+      ]
+    },
+    {
+      "id": "EA-8a8ae9e3ad3fb02f",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "__tests__/empty.ts",
+      "message": "Test `empty stub test` compares `true` with itself at line 15",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "An empty stub test whose only assertion is expect(true).toBe(true).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The 'empty stub test' body is only expect(true).toBe(true)."
+        }
+      ]
+    },
+    {
+      "id": "EA-1fa86f8456497438",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "__tests__/immutable.ts",
+      "message": "Test `types are ok` compares `true` with itself at line 95",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "expect(true).toBe(true) cannot fail; it only keeps a type-check file from being an empty suite.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expect(true).toBe(true) at line 95 is a tautology; the preceding assert() calls are type-level only."
+        }
+      ]
+    },
+    {
+      "id": "EA-c264e676de471aa6",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "__tests__/spec_ts.ts",
+      "message": "Test `empty test to silence jest` asserts the literal `true` at line 56",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "expect(true).toBeTruthy() cannot fail; the test is named as a Jest silencer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The test body is only expect(true).toBeTruthy(), asserting a literal true."
+        }
+      ]
+    },
+    {
+      "id": "EA-7f0648a59f9ac900",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/tests/coalesce.test.ts",
+      "message": "Test `coalesce` compares `true` with itself at line 4",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 4,
+      "verdict": "true_positive",
+      "reason": "expect(true).toBe(true) cannot fail.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The only live assertion in the 'coalesce' test is expect(true).toBe(true); the rest is commented out."
+        }
+      ]
+    },
+    {
+      "id": "EA-8f07f3dc8a360a67",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/tests/json.test.ts",
+      "message": "Test `placeholder test` compares `2` with itself at line 4",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 4,
+      "verdict": "true_positive",
+      "reason": "A placeholder test asserting expect(2).toBe(2).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expect(2).toBe(2) compares a literal with itself in a placeholder test."
+        }
+      ]
+    },
+    {
+      "id": "EA-18b7ace67a16af6b",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/tests/tuple.test.ts",
+      "message": "Test `successful validation` compares `val` with itself at line 9",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 9,
+      "verdict": "true_positive",
+      "reason": "expect(val).toEqual(val) compares the parse result with itself, so the parse output is never checked against the input tuple.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expect(val).toEqual(val) compares the parsed value with itself, so it cannot fail."
+        }
+      ]
+    },
+    {
+      "id": "EA-5049b44d1f756cf9",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/tests/tuple.test.ts",
+      "message": "Test `async validation` compares `val` with itself at line 62",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "expect(val).toEqual(val) compares the async parse result with itself; the output is never checked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expect(val).toEqual(val) compares the awaited parse result with itself, so it cannot fail."
+        }
+      ]
+    },
+    {
+      "id": "EA-4ebd008811d6f4a6",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/tests/index.test.ts",
+      "message": "Test `test` compares `true` with itself at line 5",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 5,
+      "verdict": "true_positive",
+      "reason": "expect(true).toBe(true) cannot fail.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Test 'test' contains only expect(true).toBe(true)."
+        }
+      ]
+    },
+    {
+      "id": "EA-bac791ae82197adc",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/tests/index.test.ts",
+      "message": "Test `async validation` compares `val` with itself at line 29",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 29,
+      "verdict": "true_positive",
+      "reason": "expect(val).toEqual(val) compares the parse result with itself; the output is never checked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expect(val).toEqual(val) at line 29 is a self-comparison of the parseAsync result."
+        }
+      ]
+    },
+    {
+      "id": "EA-d34eff413b201084",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/mini/tests/functions.test.ts",
+      "message": "Test `z.function` compares `true` with itself at line 5",
+      "status": "corroborated",
+      "sampled_from": "t18-c",
+      "line": 5,
+      "verdict": "true_positive",
+      "reason": "expect(true).toEqual(true) cannot fail.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Test 'z.function' contains only expect(true).toEqual(true)."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,786 @@
+{
+  "schema_version": 1,
+  "detector": "go_repeated_string_literal",
+  "labels": [
+    {
+      "id": "EA-012bcdd509965e3e",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "String literal `%w: %w` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1056,
+      "verdict": "true_positive",
+      "reason": "The same string literal repeats three or more times; a constant would name it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the occurrence at line 1056 is shown; the other claimed sites (1183, 1190) lie outside the excerpt, so the count of 3 cannot be verified."
+        },
+        {
+          "source": "oracle:goconst@v1.8.2",
+          "claim": "confirmed",
+          "detail": "goconst reports `%w: %w` repeated in this file (line 1056)"
+        }
+      ]
+    },
+    {
+      "id": "EA-df78a79b9b60b897",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/rest/main.go",
+      "message": "String literal `article` appears 4 times.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 142,
+      "verdict": "true_positive",
+      "reason": "Context key \"article\" is repeated four times; a typed key constant is the fix.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The finding is in _examples/rest/main.go, an examples file ignored by the Go toolchain, so it is outside the detector's stated production-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-c8cca2b03ff8a9c2",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/rest/main.go",
+      "message": "String literal `article not found.` appears 4 times.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 481,
+      "verdict": "true_positive",
+      "reason": "Error text repeated four times; a sentinel error would do.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The repeated errors.New(\"article not found.\") occurrences are all in _examples/rest/main.go, which is example/sample code outside the rule's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-a8ca30193591fce2",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/versions/data/article.go",
+      "message": "String literal `title` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "The three \"literals\" are values inside one struct tag, not Go string literals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The three `title` occurrences are struct-tag values (db:\"title\" json:\"title\" xml:\"title\") on a single line; struct tags must be literals, so the literal-to-constant rule does not apply (and the file is also in _examples)."
+        }
+      ]
+    },
+    {
+      "id": "EA-4559d77b9ffee486",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/versions/main.go",
+      "message": "String literal `/articles` appears 3 times.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "Route \"/articles\" is repeated three times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The three \"/articles\" mount points are in _examples/versions/main.go example code, outside the rule's production scope, and are intentionally separate versioned routes."
+        }
+      ]
+    },
+    {
+      "id": "EA-42d7995f8e9dd9de",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/versions/main.go",
+      "message": "String literal `api.version` appears 3 times.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "Context key \"api.version\" is repeated three times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The path `_examples/versions/main.go` marks it as example code, which the standard places outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d488beb46a15847f",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/logger.go",
+      "message": "String literal `%03d` appears 5 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 143,
+      "verdict": "true_positive",
+      "reason": "Format string \"%03d\" repeated five times in one switch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "All five claimed occurrences (lines 143, 145, 147, 149, 151) are visible and each passes the identical literal `%03d`, confirming the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 143, 145, 147, 149, and 151 each contain the Go string literal `\"%03d\"`, so the claimed 5 occurrences are correct in production middleware code."
+        },
+        {
+          "source": "oracle:goconst@v1.8.2",
+          "claim": "confirmed",
+          "detail": "goconst reports `%03d` repeated in this file (line 143)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ca98f9a01969b08a",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `${out}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 112,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`${out}` is a Bash parameter expansion inside embedded shell template text, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-501eccf2d30a0fa5",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `builtin` appears 7 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 125,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `builtin` matches are inside Bash `type -t compopt = \"builtin\"` comparisons, not Go string-literal sites."
+        }
+      ]
+    },
+    {
+      "id": "EA-28a84e916fadcd81",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `$comp` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 164,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`$comp` is a Bash variable reference in a completion loop, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-17ccad36960a13f2",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `$cur` appears 5 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 165,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`$cur` is a Bash variable reference passed to `compgen`, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-60d42118896511ee",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `${must_have_one_flag[@]}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 180,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`${must_have_one_flag[@]}` is a Bash array expansion, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-358e3e5b5f08d83b",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `${FUNCNAME[0]}: c is $c words[c] is ${words[c]}` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 292,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported text is a Bash debug message using `FUNCNAME`, `$c`, and `words` expansions, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-7544489f10d6aa08",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `${BASH_VERSION:-}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 315,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`${BASH_VERSION:-}` is a bash variable expansion inside the embedded completion-script template, not a Go string literal, so it cannot be extracted to a constant."
+        }
+      ]
+    },
+    {
+      "id": "EA-c9e64fa610209538",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `${BASH_VERSINFO[0]:-}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 315,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`${BASH_VERSINFO[0]:-}` is a bash array expansion within the `[[ -z ... -gt 3 ]]` script, not a repeated Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-b902da010eed7b52",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `${words[c]}` appears 7 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 326,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`${words[c]}` is a bash array reference used idiomatically across the completion logic, not a string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-a71c74fb450706a2",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `    flags_with_completion+=(%q)` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 463,
+      "verdict": "true_positive",
+      "reason": "Format string repeated three times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows the literal at lines 463 and 473 but not the claimed third occurrence at 482, so the count of 3 cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The literal `    flags_with_completion+=(%q)` really is repeated at lines 463, 473, and 482 inside `fmt.Sprintf` calls in `writeFlagHandler`."
+        }
+      ]
+    },
+    {
+      "id": "EA-eeea9dc9b6973c81",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "String literal `    flags_completion+=(%q)` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 471,
+      "verdict": "true_positive",
+      "reason": "Format string repeated three times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`fmt.Sprintf(\"    flags_completion+=(%q)\\n\", ...)` is used verbatim in the BashCompFilenameExt (471) and BashCompCustom (477) branches and again below, so the reported repeated literal is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The literal `    flags_completion+=(%q)` genuinely appears at lines 471, 477, and 490 in production Go `fmt.Sprintf` calls."
+        }
+      ]
+    },
+    {
+      "id": "EA-f75abf219f4cd8fa",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completionsV2.go",
+      "message": "String literal `$cur` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 176,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`$cur` is a bash variable reference passed to `__%[1]s_handle_special_char`, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-96dac4c8b57afc03",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completionsV2.go",
+      "message": "String literal `${activeHelp[@]}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 189,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`${activeHelp[@]}` is a bash array expansion inside a printf in the completion script, not a string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-81e739756c295719",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completionsV2.go",
+      "message": "String literal `$comp` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 261,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`$comp` is a bash variable reference in `activeHelp+=(\"$comp\")`, not a repeated string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-27581bd645aa5875",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completionsV2.go",
+      "message": "String literal `${completions[*]}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 289,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 289 is bash script text embedded inside a Go raw-string constant in bash_completionsV2.go, and `${completions[*]}` is shell parameter-expansion syntax, not a Go string literal, so the detector misparsed the template body."
+        }
+      ]
+    },
+    {
+      "id": "EA-7df2131ec5d44428",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "String literal `help` appears 5 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "Three of the five \"help\" occurrences are inside the raw usage template; only the two constant definitions are Go literals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported line is itself a named constant declaration (`helpFlagName = \"help\"`), which is the very idiom the rule demands, so the rationale does not apply at that site."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca11fe2fab8eb22f",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "String literal `version` appears 5 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 940,
+      "verdict": "true_positive",
+      "reason": "Flag name \"version\" repeated five times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`c.Flags().GetBool(\"version\")` at line 940 uses the same `\"version\"` string literal repeated in the version-flag initialization block, matching the reported occurrences."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`c.Flags().GetBool(\"version\")` at line 940 is a raw string literal in production code with no existing version-name constant, and the evidence lists five in-file occurrences to extract."
+        },
+        {
+          "source": "oracle:goconst@v1.8.2",
+          "claim": "confirmed",
+          "detail": "goconst reports `version` repeated in this file (line 940)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4d8f3b2af22d7b65",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "String literal `true` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1192,
+      "verdict": "true_positive",
+      "reason": "Annotation value \"true\" repeated three times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The comparison `requiredAnnotation[0] == \"true\"` at line 1192 is a genuine string literal `\"true\"`, and the same annotation value appears in the help/version flag setup lines cited."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`requiredAnnotation[0] == \"true\"` is a bare string literal in production logic and the evidence lists three in-file occurrences with no constant defined for the annotation value."
+        }
+      ]
+    },
+    {
+      "id": "EA-d46bfd73e013f73f",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "String literal `  %s %s` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1997,
+      "verdict": "true_positive",
+      "reason": "Format string repeated four times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`fmt.Fprintf(w, \"\\n  %s %s\", rpad(...), subcmd.Short)` appears identically at 1997 and 2005 with further copies in the command-listing branches, so the fragment repeats."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The format string `\"\\n  %s %s\"` is duplicated verbatim in the parallel command-printing Fprintf calls (lines 1997, 2005, 2013, 2031) and could be a shared constant."
+        }
+      ]
+    },
+    {
+      "id": "EA-5e2266a30758f4d1",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/rest_docs.go",
+      "message": "String literal `~~~~~~~~` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "t7-fixes2",
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "reST underline literal repeated three times; a constant would do.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`buf.WriteString(\"~~~~~~~~\\n\\n\")` is repeated as the reST heading underline for Synopsis (81) and Examples (90) and a later section, matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`buf.WriteString(\"~~~~~~~~\\n\\n\")` appears three times (lines 81, 90, 99, all visible) in the RST doc generator and the claim holds even though the repetition is intentional."
+        }
+      ]
+    },
+    {
+      "id": "EA-85af625d5f6e4d5a",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/yaml_docs.go",
+      "message": "String literal `,omitempty` appears 7 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "The repeats are inside struct tags, not Go string literals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `yaml:\",omitempty\"` matches are Go struct tags, which must remain string literals at the field and cannot be extracted to a named constant."
+        }
+      ]
+    },
+    {
+      "id": "EA-d4d1483c826bafda",
+      "repository": "cobra",
+      "language": "go",
+      "path": "fish_completions.go",
+      "message": "String literal `$__%[1]s_perform_completion_once_result` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 96,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged text `$__%[1]s_perform_completion_once_result` lives inside the embedded fish shell script (a Go raw string), where it is a quoted variable reference rather than a Go string literal, so the detector misparsed template content."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac75939c939d94b0",
+      "repository": "cobra",
+      "language": "go",
+      "path": "powershell_completions.go",
+      "message": "String literal `FullLanguage` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 247,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 247 is inside an embedded PowerShell completion template using `%[1]s`, so `FullLanguage` is shell script text, not a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-e756173dd136d847",
+      "repository": "cobra",
+      "language": "go",
+      "path": "powershell_completions.go",
+      "message": "String literal `$($comp.Description)` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 248,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 248 is inside an embedded PowerShell template, and `$($comp.Description)` is a shell subexpression rather than a Go literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-3bc4c9ce00e24dc3",
+      "repository": "cobra",
+      "language": "go",
+      "path": "zsh_completions.go",
+      "message": "String literal ` ${flagPrefix}` appears 3 times.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 248,
+      "verdict": "false_positive",
+      "reason": "Literal is inside a Go raw-string shell/script template, not a Go string literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 248 is zsh completion script text embedded in Go, so `${flagPrefix}` interpolation was misparsed as a Go string literal."
+        }
+      ]
+    },
+    {
+      "id": "EA-b0ddae93ea233de5",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "String literal `collection_format` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 169,
+      "verdict": "true_positive",
+      "reason": "The same string literal repeats three or more times; a constant would name it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`field.Tag.Get(\"collection_format\")` at line 169 uses the repeated struct-tag key literal in the other collection-format branches cited."
+        },
+        {
+          "source": "oracle:goconst@v1.8.2",
+          "claim": "confirmed",
+          "detail": "goconst reports `collection_format` repeated in this file (line 169)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c17a7e54b90a9d24",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "String literal `multi` appears 4 times.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "The same string literal repeats three or more times; a constant would name it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The literal `\"multi\"` in `cfTag == \"multi\"` at line 170 is a genuine repeated collection-format value rather than a substring of another word."
+        },
+        {
+          "source": "oracle:goconst@v1.8.2",
+          "claim": "confirmed",
+          "detail": "goconst reports `multi` repeated in this file (line 170)"
+        }
+      ]
+    },
+    {
+      "id": "EA-754ef39eb05a2185",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "String literal `[WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.` appears 6 times.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 544,
+      "verdict": "true_positive",
+      "reason": "The same string literal repeats three or more times; a constant would name it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The long `[WARNING] You trusted all proxies...` debugPrint message is duplicated across the Run/RunTLS/RunUnix/RunFd/RunListener/RunQUIC variants, matching the six reported sites."
+        }
+      ]
+    },
+    {
+      "id": "EA-2c96a310665f073c",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "String literal `Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.` appears 6 times.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 545,
+      "verdict": "true_positive",
+      "reason": "The same string literal repeats three or more times; a constant would name it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 545 contains the exact duplicated debugPrint warning literal, and gin.go repeats this same warning block across the Run* helpers, so the repeated-literal claim applies."
+        }
+      ]
+    }
+  ]
+}

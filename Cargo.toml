@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "crates/auditor-ast",
+    "crates/auditor-cli",
+    "crates/auditor-core",
+    "crates/auditor-detectors",
+    "crates/auditor-donors",
+    "crates/auditor-mcp",
+    "crates/auditor-report",
+    "crates/auditor-review",
+    "crates/auditor-scan",
+]
+resolver = "2"
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+license = "Apache-2.0"
+rust-version = "1.86"
+description = "Deterministic-first software engineering quality audit tool"
+repository = "https://github.com/anomalyco/engineering-auditor"
+homepage = "https://engineering-auditor.dev"
+authors = ["Engineering Auditor Contributors"]
+keywords = ["audit", "quality", "lint", "engineering", "analysis"]

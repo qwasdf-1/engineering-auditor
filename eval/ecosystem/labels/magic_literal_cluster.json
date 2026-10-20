@@ -1,0 +1,3139 @@
+{
+  "schema_version": 1,
+  "detector": "magic_literal_cluster",
+  "labels": [
+    {
+      "id": "EA-6d87c8618990d252",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/BoxedPrimitives.cs",
+      "message": "Function `Get` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "A box cache keyed by the value itself: each literal is the integer being boxed, not an unexplained constant.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b61ec175e67daa9c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/BoxedPrimitives.cs",
+      "message": "Function `Get` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "A box cache keyed by the value itself: each literal is the integer being boxed.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-11c3ba13746979a4",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `PackDouble` contains 23 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 962,
+      "verdict": "false_positive",
+      "reason": "IEEE-754 bit layout ported from coreclr: masks, exponent bias, and shift widths are specification constants.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d3c66c72a938a795",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `ParseResult` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 1309,
+      "verdict": "false_positive",
+      "reason": "The large literals are already named local consts (decimalMaxValueHi28 etc.); the rest are decimal digit-count limits of the spec.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1ecd224a82e6c5cf",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `TryHexTextToInt` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 1574,
+      "verdict": "true_positive",
+      "reason": "Character codes 48/57/65/70/97/102 stand in for '0','9','A','F','a','f'; char literals would read clearly.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-7fc1d3e00c2b7dd2",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DateTimeParser.cs",
+      "message": "Function `ParseTime` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 123,
+      "verdict": "false_positive",
+      "reason": "Hour <= 24 and minute/second < 60 are universally understood time bounds.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c5c6f60507d42a87",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DateTimeUtils.cs",
+      "message": "Function `TryParseDateTime` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 380,
+      "verdict": "true_positive",
+      "reason": "Length bounds 19 and 40 and index 10 encode the ISO-8601 layout without a name or comment.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-812a53fc985e0a9c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DateTimeUtils.cs",
+      "message": "Function `TryParseDateTimeOffset` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 417,
+      "verdict": "true_positive",
+      "reason": "Length bounds 19 and 40 and index 10 encode the ISO-8601 layout without a name or comment.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-6c5cab372249614a",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DateTimeUtils.cs",
+      "message": "Function `TryParseDateTimeOffset` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 453,
+      "verdict": "true_positive",
+      "reason": "Length bounds 19 and 40 and index 10 encode the ISO-8601 layout without a name or comment.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-06d8a62c51300c5d",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DateTimeUtils.cs",
+      "message": "Function `WriteDefaultIsoDate` contains 13 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 686,
+      "verdict": "false_positive",
+      "reason": "Character offsets of a fixed ISO-8601 writer; each position follows the format string line by line.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-6f9e7bc4ea18ba17",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MathUtils.cs",
+      "message": "Function `IntToHex` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 120,
+      "verdict": "true_positive",
+      "reason": "48 and 97 stand in for '0' and 'a'; char literals would explain the hex digit mapping.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-f5e076ca299a5d32",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/StringUtils.cs",
+      "message": "Function `ToCharAsUnicode` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 121,
+      "verdict": "false_positive",
+      "reason": "Nibble shifts and buffer positions of a \\uXXXX escape; layout constants that names would not clarify.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-bd2156cf1e7f6497",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "Function `setWithProperType` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 323,
+      "verdict": "false_positive",
+      "reason": "Integer bit sizes 8/16/32/64 passed to strconv; self-describing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The literals 8/16/32/64 are the bitSize arguments paired one-to-one with reflect.Int8..Uint64 kinds in a switch; they are self-describing type widths, not magic numbers."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (lines 323-338) shows none of the cited literals 16/32/64/8, so the count over this longer function cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4da0afe447cc3ac5",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/CharUtils.java",
+      "message": "Function `unicodeEscaped` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 591,
+      "verdict": "false_positive",
+      "reason": "Nibble shifts and mask of a \\uXXXX escape; layout constants a name would not clarify.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "12/15/4/8 are the shift and mask constants of the standard 'ch >> 12 & 15' hex-digit extraction idiom, which the magic-literal rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-214db6648a523cc9",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `hexDigitMsb0ToInt` contains 13 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 617,
+      "verdict": "false_positive",
+      "reason": "A switch mapping each hex digit to its value: lookup-table entries, not magic numbers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The 0x0-0xF values are a hex-digit conversion lookup (switch returning the mapped values), a recognized idiom rather than magic numbers."
+        }
+      ]
+    },
+    {
+      "id": "EA-17855e07021e7db7",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `intToHexDigitMsb0` contains 13 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1008,
+      "verdict": "false_positive",
+      "reason": "A switch mapping each nibble to its hex digit: lookup-table entries, not magic numbers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The 0x0-0xF values are switch case labels mapping nibbles to hex characters, an enumeration/lookup idiom the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-e12ffdd630f1698e",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "message": "Function `getJaroWinklerDistance` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2294,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "All cited literals (0.1, 0.7, 100.0, 3) are visible in the Jaro-Winkler formula, and 0.7/100.0/3 are genuine unnamed domain constants, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-07dafe5dcc682d1f",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "message": "Function `getLevenshteinDistance` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 2441,
+      "verdict": "false_positive",
+      "reason": "The digits are in a multi-line block comment's worked example, not code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1fca02fda88134fa",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/translate/UnicodeEscaper.java",
+      "message": "Function `translate` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 124,
+      "verdict": "false_positive",
+      "reason": "Nibble shifts and mask of a \\uXXXX escape; layout constants a name would not clarify.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The visible code extracts hex digits via shifts 12/8/4 and mask 15 (plus the 0xffff BMP bound), a bit-manipulation idiom the rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-d4582b7373097d3d",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/DateUtils.java",
+      "message": "Function `modify` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1174,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "modify() has 7 distinct unnamed literals (280000000 year guard, 500/30 rounding thresholds, 12, 15, 6, 7 half-day/half-month cutoffs) > 3; domain constants in production code."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only one cited literal (280000000) is visible in this long function, so the 7-literal cluster cannot be confirmed from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-298d1c3a025bbfc7",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java",
+      "message": "Function `appendTo` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "appendTo uses 60 * 60 * 1000, 60 * 1000, 60 and length checks 5/6 inline for ms-per-hour/minute and ISO offset format lengths, which could be named constants."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 60 and 1000 of the four cited literals appear in the excerpt; the rest of this longer function is not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-336c13238d4f43c8",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java",
+      "message": "Function `appendFullDigits` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 954,
+      "verdict": "false_positive",
+      "reason": "Powers of ten as digit-count thresholds; self-describing.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "appendFullDigits uses distinct literals 10000/1000/100/10 and digit counts (4, and a 3 'case'/'nDigits' later), so the >3 cluster claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-e0100d34cc184442",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java",
+      "message": "Function `parse` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Date-field offsets, lengths, and limits are inline; named constants would document the ISO 8601 layout.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function parse is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-06b9a35750d2cad7",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/Base64Variant.java",
+      "message": "Function `encodeBase64Chunk` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 494,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The shown function uses exactly the 4 claimed distinct literals (>>18, >>12, >>6 and mask 0x3F), matching the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-9d174f921d043fd9",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputFullBillion` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 429,
+      "verdict": "false_positive",
+      "reason": "Digit-group arithmetic (thousands, triplet encoding); self-describing.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "All four claimed literals (0x7F, 1000, 16, 8) appear in the excerpted body of _outputFullBillion."
+        }
+      ]
+    },
+    {
+      "id": "EA-9d04b018d42f79c1",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_leading3` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 558,
+      "verdict": "false_positive",
+      "reason": "Digit-group arithmetic (triplet encoding); self-describing.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The complete _leading3 function uses exactly the 4 claimed distinct literals (16, 8, 9, 99), so the claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-16b7f5b0e42fb9d3",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/UTF32Reader.java",
+      "message": "Function `read` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "Re-labelled after the naming/counting fix: the finding now names the right symbol with a correct count over budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function read is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-bb5951b304bf02e1",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/schubfach/FloatToDecimal.java",
+      "message": "Function `toDecimal` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 306,
+      "verdict": "false_positive",
+      "reason": "Schubfach algorithm constants from the cited paper; specification, like hash mixing.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function toDecimal is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-171092eefb342c1f",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_parseAposName` contains 17 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1766,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: the literals are UTF-8/UTF-16 structure (0xD800-0xDFFF, 0xc0/0xe0/0xf0 lead bytes, 0x3f/0x80 masks), which the magic-literal policy treats as specification.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "_parseAposName's literals are UTF-8/UTF-16 structural constants (0xD800-0xDFFF, 0xc0/0xe0/0xf0, 0x3f, 0x80, 0x800, 0x10000) in a standard encoder; a well-known encoding idiom."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The claimed 17 literals are all in the body of a ~100-line function while the excerpt shows only its first lines, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3113479d5a2d5626",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8JsonGenerator.java",
+      "message": "Function `_writeStringSegmentASCII2` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1661,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The literals (0x7F, 0x7FF, 0x80, 0xc0, 0x3f, 6) are UTF-8 boundary values and encoding masks inherent to the codec, an idiom the magic-literal rule should recognise rather than flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-07aa51efa96dce04",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8JsonGenerator.java",
+      "message": "Function `_outputSurrogates` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 2256,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "0x80, 0x3f, 0xf0, and the shift amounts 6/12/18 are the fixed UTF-8 4-byte encoding masks, not domain configuration magic numbers."
+        }
+      ]
+    },
+    {
+      "id": "EA-d13a0f761d06b02f",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8JsonGenerator.java",
+      "message": "Function `_writeGenericEscape` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2330,
+      "verdict": "false_positive",
+      "reason": "Nibble shifts and masks of a \\uXXXX escape; layout constants a name would not clarify.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "0xFF, 0xF, and the nibble shifts in `_writeGenericEscape` are standard byte/nibble extraction for \\uXXXX hex escaping, an idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-1a9a90a540fe96ad",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_decodeUtf8_3` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 4139,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "0xC0, 0x080, 0x3F, 0xD800/0xDFFF, and the shift 6 are UTF-8 continuation masks and surrogate-range bounds inherent to UTF-8 decoding."
+        }
+      ]
+    },
+    {
+      "id": "EA-7969937fcadf1dc7",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/WriterBasedJsonGenerator.java",
+      "message": "Function `_writeBinary` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1782,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "0xFF, 16, 3, 6, 8 are Base64 six-bit grouping and byte-width constants intrinsic to base64 encoding, a recognised codec idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-e0a2b54ed2ec157c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_decodeUTF8_3` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-h",
+      "line": 3282,
+      "verdict": "true_positive",
+      "reason": "The measured or matched construct is present in production code over the budget or as described.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The 8 literals are the fixed UTF-8 continuation masks (0xC0, 0x080, 0x3F) and surrogate bounds (0xD800/0xDFFF), not magic configuration values."
+        }
+      ]
+    },
+    {
+      "id": "EA-e09f4f4ed2e93253",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_decodeUTF8_4` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 3302,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "0x07, 0x080, 0x3F, 0xC0, 0xFF, 6, and 0x10000 are the fixed masks and offset of UTF-8 4-byte decoding, an idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-cdece181787dde53",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/sym/ByteQuadsCanonicalizer.java",
+      "message": "Function `calcHash` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1221,
+      "verdict": "false_positive",
+      "reason": "Hash-mixing constants of the symbol-table hash; the algorithm, not magic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The shift amounts and small offsets in `calcHash` are deliberate hash-mixing constants (MULT is already named), an idiom for hash functions rather than movable domain configuration."
+        }
+      ]
+    },
+    {
+      "id": "EA-41ea7d6fbb772661",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/DataUtil.java",
+      "message": "Function `detectCharsetFromBom` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 406,
+      "verdict": "true_positive",
+      "reason": "Byte-order-mark bytes are inline hex; named BOM constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "detectCharsetFromBom at DataUtil.java:406 shows all eight claimed distinct literals (0x00/0xBB/0xBF/0xEF/0xFE/0xFF plus the lengths 3 and 4), so the cluster claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`detectCharsetFromBom` at line 406 checks BOM signatures with 8 distinct literals (0xEF, 0xBB, 0xBF, 0xFE, 0xFF, 0x00, 3, 4) exactly as the evidence reports."
+        }
+      ]
+    },
+    {
+      "id": "EA-5c71327169e3895c",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "message": "Function `redirectMethod` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 888,
+      "verdict": "true_positive",
+      "reason": "HTTP redirect status codes inline; named constants (or a set) would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "redirectMethod at HttpConnection.java:888 switches over exactly the five claimed status codes (301, 302, 303, 307, 308), matching the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete function shows exactly the five case labels 301, 302, 303, 307, 308, so the claimed count of 5 distinct non-trivial literals is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-bf8092fbbda522d1",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "message": "Function `looksLikeUtf8` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 1251,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: the BOM bytes 0xEF/0xBB/0xBF and the UTF-8 lead/continuation masks are encoding-specification constants, not magic numbers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "looksLikeUtf8 uses the UTF-8 BOM bytes 0xEF/0xBB/0xBF and lead/continuation masks 0xE0/0xC0/0xF0/0x80; these are fixed encoding-spec constants in a byte validator."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "looksLikeUtf8 at HttpConnection.java:1251 extends past the excerpt, so most of the ten claimed literals (e.g. 0xC0, 0xE0, 0xF0, 0xF8) are not shown and the count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates looksLikeUtf8 mid-loop at line 1266, so four of the ten claimed literals (0xC0, 0xE0, 0xF0, 0xF8) cannot be verified from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-84f92f3ccf636686",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Function `appendEscaped` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 231,
+      "verdict": "true_positive",
+      "reason": "Character codes for tab, newline, CR, space, and nbsp inline; named constants would read better.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "appendEscaped switches on raw 0xA0, 0x9, 0xA, 0xD and compares c < 0x20 with only a comment to explain them; five distinct unnamed character codes."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "appendEscaped at Entities.java:231 continues past the shown line 246, so the claimed literals 0x9/0xA/0xD/0x20 are not visible to confirm the count of 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off inside the switch at `case 0xA0:`, showing only one of the five claimed literals, so the count of 5 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-0d2998c92996721a",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Function `isValidXmlChar` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 362,
+      "verdict": "true_positive",
+      "reason": "XML Char production ranges inline as hex; named range constants document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "isValidXmlChar at Entities.java:362 contains exactly the nine claimed distinct literals (0x9, 0xA, 0xD, 0x20, 0xD7FF, 0xE000, 0xFFFD, 0x10000, 0x10FFFF)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete function shows exactly the nine claimed hex boundaries 0x9, 0xA, 0xD, 0x20, 0xD7FF, 0xE000, 0xFFFD, 0x10000, 0x10FFFF."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca4846f722d22f94",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi-adapters/src/main/java/com/squareup/moshi/adapters/Iso8601Utils.java",
+      "message": "Function `parse` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function parse is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-53669ec84ce957ad",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi/src/main/java/com/squareup/moshi/LinkedHashTreeMap.java",
+      "message": "Function `secondaryHash` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 231,
+      "verdict": "false_positive",
+      "reason": "Hash-mixing shifts (secondaryHash); the algorithm, not magic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "secondaryHash at LinkedHashTreeMap.java:231 uses the fixed shift amounts (20, 12, 7, 4) of Doug Lea's published hash mix, a recognized bit-manipulation idiom the rule should exclude."
+        }
+      ]
+    },
+    {
+      "id": "EA-1158aa26490c816c",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/core/AxiosHeaders.js",
+      "message": "Function `parseParameters` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 92,
+      "verdict": "true_positive",
+      "reason": "Character codes for quote, comma, semicolon, and backslash inline; naming documents the parser.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parseParameters compares charCodeAt results against bare 0x5c, 0x22, 0x2c, 0x3b with no names or comments, while char literals would be clearer."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "parseParameters at AxiosHeaders.js:92 is truncated before the char-code literals (0x22, 0x2c, 0x3b, 0x5c) appear, so the claimed count of 4 cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends mid-function inside the nested parseParameter helper, and none of the four claimed char codes (0x22, 0x2c, 0x3b, 0x5c) appear in the visible code."
+        }
+      ]
+    },
+    {
+      "id": "EA-3337a31be0357099",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/estimateDataURLDecodedBytes.js",
+      "message": "Function `isHexDigit` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 8,
+      "verdict": "true_positive",
+      "reason": "Character codes for 0-9, A-F, a-f inline; char constants would be clearer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "isHexDigit's body compares charCode against exactly 48, 57, 65, 70, 97, 102 \u2014 six distinct non-trivial literals, matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete arrow function contains exactly the six distinct literals 48, 57, 65, 70, 97, 102 as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-09c0c31a7cfc1753",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/estimateDataURLDecodedBytes.js",
+      "message": "Function `hexValue` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 16,
+      "verdict": "true_positive",
+      "reason": "Character codes and a case mask inline; naming documents the hex decoding.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "hexValue's single expression uses 57, 48, 0xdf, and 55 \u2014 four distinct non-trivial literals as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The one-line arrow function contains exactly the four claimed literals 57, 48, 0xdf, 55."
+        }
+      ]
+    },
+    {
+      "id": "EA-09b6911a7cf36dd8",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/estimateDataURLDecodedBytes.js",
+      "message": "Function `isBase64Char` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "Base64 alphabet character codes inline; named constants would be clearer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "isBase64Char compares against 65, 90, 97, 122, 48, 57, 43, 47, 45, 95 \u2014 ten distinct literals, matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete function shows all ten claimed char codes (43-95, 65-122 ranges), matching the count of 10 distinct non-trivial literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-09b9f71a7cf65101",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/estimateDataURLDecodedBytes.js",
+      "message": "Function `isBase64Whitespace` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "Whitespace character codes inline; named constants would be clearer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "isBase64Whitespace compares against 9, 10, 12, 13, and 32 \u2014 five distinct literals as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 28 is the complete arrow function and compares charCode to 9, 10, 12, 13 and 32, five distinct in-scope numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-09caf51a7d04c0ce",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/estimateDataURLDecodedBytes.js",
+      "message": "Function `estimatePercentDecodedBase64Bytes` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "Percent and padding character codes and the hex radix inline.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "estimatePercentDecodedBase64Bytes uses bare 37, 61, 16 and 4 (percent sign, equals, hex radix, base64 group size); only two have inline comments."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 68 while estimatePercentDecodedBase64Bytes continues to line 96, so the claimed 4 and 61 literals cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends inside estimatePercentDecodedBase64Bytes; only 37 and 16 are visible, while the claimed 4 and 61 are not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-09ce5b1a7d07a3f7",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/estimateDataURLDecodedBytes.js",
+      "message": "Function `estimateDataURLBytes` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 98,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: the surrogate bounds 0xd800-0xdfff and the 0x80/0x800 thresholds are the UTF-8/UTF-16 length rules themselves, which the policy treats as specification.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "estimateDataURLBytes computes UTF-8 length with UTF-16 surrogate bounds (0xd800/0xdbff/0xdc00/0xdfff) and 0x80/0x800 thresholds, a standard encoding calculation where the constants are the spec."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "estimateDataURLBytes extends past the visible excerpt (the UTF-8 surrogate/encoding branches are not shown), so the ten-literal count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of estimateDataURLBytes is shown, so the claimed surrogate/UTF-8 literals cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-1a5804cb037e3678",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `isIPv6Loopback` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "Unnamed protocol constants and bit widths inline; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function isIPv6Loopback is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-cb2805840cc76d64",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `isInSubnet` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-probe2",
+      "line": 416,
+      "verdict": "true_positive",
+      "reason": "Mask and bit-width literals inline in subnet math.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-cb2b6b840cca508d",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `isInSubnet` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 416,
+      "verdict": "true_positive",
+      "reason": "Address masks, widths, and loopback words inline in IP parsing; named constants document the layout.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The function uses `prefix >> 3`, `prefix & 7`, and `0xff << (8 - remainingBits)`, giving exactly the four distinct literals 3, 7, 8 and 0xff reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Lines 417, 425 and 428 use 3, 7, 8 and 0xff for subnet masking, four distinct in-scope numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-cb2ed1840ccd33b6",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `isInSubnet` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 416,
+      "verdict": "true_positive",
+      "reason": "Unnamed protocol constants and bit widths inline; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function isInSubnet is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-1b8c5966d76c9ad3",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/languages/js/index.js",
+      "message": "Function `normalizeEcmaVersionForLanguageOptions` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`case 3`, `case 5`, `>= 2015`, and `+ 2009` are four distinct literals, matching the reported cluster."
+        }
+      ]
+    },
+    {
+      "id": "EA-0c209f4508c670ff",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/vfile.js",
+      "message": "Function `hasUnicodeBOM` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The comparisons to 0xfeff, 0xef, 0xbb and 0xbf are exactly the four distinct literals reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-2921c72c6a3c0a09",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/vfile.js",
+      "message": "Function `stripUnicodeBOM` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-dfcc29023eb18ce2",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/response.js",
+      "message": "Function `send` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 126,
+      "verdict": "true_positive",
+      "reason": "HTTP status codes and a size threshold inline.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "send mixes 1000 (small-chunk cutoff), 204, 205 and 304 inline; the 1000 threshold in particular is an unexplained tunable beside status codes."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (lines 126-141 of `send`) shows none of the reported 1000/204/205/304, so the count over the full function cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only opens res.send; its claimed 204, 205, 304 and 1000 literals are not in the shown range."
+        }
+      ]
+    },
+    {
+      "id": "EA-701718223f0f8d63",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/config-validator.js",
+      "message": "Function `validate10` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "Generated validator code (\"autogenerated by build/build-validation.js, do not edit\").",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-60407125deb58cc5",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/reply.js",
+      "message": "Function `onSendEnd` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 599,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "onSendEnd's 100, 200, 204 and 304 are HTTP status codes/class bounds, each annotated with RFC comments; status codes are a recognised idiom."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpted part of `onSendEnd` (599-614) contains none of 100/200/204/304 and the function continues past the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-353da5598bf29ff0",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "scripts/validate-ecosystem-links.js",
+      "message": "Function `checkGitHubRepo` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 48,
+      "verdict": "false_positive",
+      "reason": "Repository maintenance script under scripts/, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`scripts/validate-ecosystem-links.js` is repository tooling, outside the detector's product-code scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-a397466b235f94f5",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "perf-testing/immutability-benchmarks.mjs",
+      "message": "Function `printSummaryTable` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 902,
+      "verdict": "false_positive",
+      "reason": "Benchmark report script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-16a27a59b103cc14",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "perf-testing/immutability-benchmarks.mjs",
+      "message": "Function `printImmer10PerfComparison` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1144,
+      "verdict": "false_positive",
+      "reason": "Benchmark report script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a4ea1ab548c4d7dd",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "perf-testing/immutability-benchmarks.mjs",
+      "message": "Function `printOverallVersionRankings` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1224,
+      "verdict": "false_positive",
+      "reason": "Benchmark report script, outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-cef820d87ab83377",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Base64.kt",
+      "message": "Function `decodeBase64ToArray` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "Base64 alphabet ranges and 6/8-bit group widths from RFC 4648.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-711de5bfcecaf03e",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Function `processUtf16Chars` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 255,
+      "verdict": "false_positive",
+      "reason": "UTF-16 surrogate masks and shifts; encoding specification constants.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c267cfb48471f8c8",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Function `process3Utf8Bytes` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 435,
+      "verdict": "false_positive",
+      "reason": "UTF-8 three-byte sequence layout; encoding specification constants documented inline.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-cd5d1e48e41fcf92",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Util.kt",
+      "message": "Function `reverseBytes` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 31,
+      "verdict": "false_positive",
+      "reason": "Byte-swap masks and shifts; the function name states their meaning.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c12b53e6ee119d44",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Util.kt",
+      "message": "Function `toHexString` contains 26 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 133,
+      "verdict": "false_positive",
+      "reason": "Nibble shifts of a 64-bit hex formatter laid out as a table; layout constants.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-2d0284ae327d47a0",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonReadUtf8CodePoint` contains 18 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 867,
+      "verdict": "false_positive",
+      "reason": "UTF-8 decoding masks and code-point bounds from the encoding specification, commented per branch.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1377decd95d8172f",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWriteUtf8CodePoint` contains 14 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 1033,
+      "verdict": "false_positive",
+      "reason": "UTF-8 encoding masks and code-point bounds from the specification, commented per branch.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a6b1e104ae862364",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonWriteInt` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 1122,
+      "verdict": "false_positive",
+      "reason": "Big-endian byte layout of a 32-bit write; shift widths are the layout.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-916443c2a98e2588",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/RealBufferedSource.kt",
+      "message": "Function `commonReadUtf8CodePoint` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 219,
+      "verdict": "false_positive",
+      "reason": "UTF-8 lead-byte masks selecting the sequence length; encoding constants.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-6a931d75fedf6b8c",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha1.kt",
+      "message": "Function `digest` contains 16 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 136,
+      "verdict": "false_positive",
+      "reason": "SHA-1 padding: block size 64, length offset 56, and the length byte layout come from FIPS 180-4.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-9bce4ed45e80d240",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha256.kt",
+      "message": "Function `digest` contains 16 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "SHA-256 padding: block size 64, length offset 56, and the length byte layout come from FIPS 180-4.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8ba94ba929fdbab0",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/internal/ZipFiles.kt",
+      "message": "Function `dosDateTimeToEpochMillis` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-final",
+      "line": 480,
+      "verdict": "false_positive",
+      "reason": "MS-DOS date/time bit fields (year base 1980, field masks), documented in the KDoc.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-84ab4a0c10dd1061",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Function `main` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 562,
+      "verdict": "false_positive",
+      "reason": "Python version tuples (3, 10), (3, 12, 5) name themselves.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "main's 3, 5, 10, 12 come from sys.version_info checks ((3, 10), (3, 12, 5)); version tuples are not magic numbers."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `main`'s parameter list is shown; the reported literals 10/12/3/5 lie in the unseen body of the function."
+        }
+      ]
+    },
+    {
+      "id": "EA-519a6e86b812a58e",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blackd/__init__.py",
+      "message": "Function `handle` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 154,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "handle's 204, 400, 500, 501 are all HTTP status codes passed to web.Response(status=...); self-explanatory protocol values."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only `status=501`; 204/400/500 lie beyond the excerpted portion of `handle`."
+        }
+      ]
+    },
+    {
+      "id": "EA-12e150aee961b8cc",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blackd/client.py",
+      "message": "Function `format_code` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Status codes 204, 200, 400 and 500 are all numeric literals in format_code (lines 74-84), so 4 distinct non-trivial literals exceed the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-4d8216233274365c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/conv.py",
+      "message": "Function `parse_graminit_c` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 86,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): blib2to3 is a fork of CPython's lib2to3 vendored into black (its README and LICENSE say so), so it is out of scope as vendored third-party code. The literals are also not domain magic numbers: 3/4/5 are regex group indexes in mo.group(1, 3, 4, 5) and 8 is bits per byte.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "parse_graminit_c's 3/4/5 are regex group indexes (mo.group(1,3,4,5)) and 8 is bits-per-byte in range(8); not domain magic numbers."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Excerpt shows only the def and docstring, none of the reported literals 3/4/5/8, and parse_graminit_c extends well beyond the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-f3a5f7265cab3440",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/printable.py",
+      "message": "Function `compress_normal` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "Table generator script under support/, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "support/printable.py is a developer support/tooling script, which is outside the detector's product-source scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-1c86728ae27409f9",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_status_codes.py",
+      "message": "Function `is_error` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`is_error` contains only `400 <= value <= 599` (2 literals); the extra '4' and '5' come from the docstring words '4xx' and '5xx', so the count of 4 is a miscount."
+        }
+      ]
+    },
+    {
+      "id": "EA-0bdd80c9faf04123",
+      "repository": "jq",
+      "language": "python",
+      "path": "scripts/gen_utf8_tables.py",
+      "message": "Function `utf8info` contains 16 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "Table generator script under scripts/, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "scripts/gen_utf8_tables.py is a code-generation/build script, so it falls in the detector's out-of-scope generated/tooling category."
+        }
+      ]
+    },
+    {
+      "id": "EA-fc578a3d7de0ad15",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/__main__.py",
+      "message": "Function `__rich_console__` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 19,
+      "verdict": "false_positive",
+      "reason": "Demo renderable in __main__; literals are visual demo parameters.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The full method is visible (it ends before `__rich_measure__` at line 33) and every claimed literal is present: 0.1 and 0.7 in `l = 0.1 + ((y / 5) * 0.7)`, 10 in `l + 0.7 / 10`, 255 in `Color.from_rgb(r1 * 255, ...)`, and 5 in `range(0, 5)` / `y / 5`, so 5 distinct literals > 3 holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a79e8043f1957dd",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/ansi.py",
+      "message": "Function `decode_line` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 138,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "decode_line hard-codes SGR codes 38, 48, 5 and the clamp 255 in an if/elif ladder, with only comments for foreground/background."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The literals 255/38/48/5 are not visible in the excerpted portion of decode_line, which continues past line 153."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The window truncates the function at line 153 mid-`for` loop and none of the claimed literals (255, 38, 48, 5) appear in the visible lines, so the count of 4 cannot be verified without the rest of the body."
+        }
+      ]
+    },
+    {
+      "id": "EA-b1d6c4f04b69f02d",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Function `parse` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 433,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Color.parse mixes 16 (standard/eight-bit boundary), 255, and hex-length checks 3/4/6 inline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the literal 16 is visible; the rest of parse (and literals 255/3/4/6) lies outside the excerpt, so the count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only literal 16 (`color_number < 16`) is visible and the window ends at line 448 while the function clearly continues past the ANSI_COLOR_NAMES branch, so claimed literals 255, 3, 4, 6 are unseen and the count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-f4846625f86cd361",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Function `get_ansi_codes` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 485,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Literals 30, 40, 8, 82 and 92 are all present in get_ansi_codes (lines 494-500), giving 5 distinct non-trivial literals."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "All five claimed literals are visible in the shown branches: `(30, 40) if number < 8 else (82, 92)` appears at both line 494 and line 500, giving exactly 8, 30, 40, 82, 92 (> 3) plus only quoted strings like '39'/'49' elsewhere."
+        }
+      ]
+    },
+    {
+      "id": "EA-245f118dc95767d9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Function `downgrade` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 513,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Visible literals 0.15, 25.0, 16, 231 and 25 in downgrade already exceed the threshold of 3 distinct non-trivial literals."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only five of the nine claimed literals (0.15, 25.0, 16, 25, 231) appear before the window cuts off at line 528 mid-function; 36, 40, 6 and 95 are unseen, so the count of 9 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-4b64285268837149",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `export_svg` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2352,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Reported function export_svg is a real function at this site and the metric is plausible for its body"
+        }
+      ]
+    },
+    {
+      "id": "EA-e1df54e2e1ca2e58",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/filesize.py",
+      "message": "Function `decimal` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The window shows only the `decimal` signature and docstring; the body that would contain 1000, 30000 and 6 is cut off (1000 and 256 occur only in docstring prose), so the claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e179b6ed98335a7",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/logging.py",
+      "message": "Function `__init__` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 71,
+      "verdict": "false_positive",
+      "reason": "Literals are keyword-parameter defaults, which name themselves.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c45b75c642336a35",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/palette.py",
+      "message": "Function `get_color_distance` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The fully shown `get_color_distance` body contains `512`, `8`, `4`, and `767` (4 distinct > 3)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete function is shown, and its literals 512, 767, 4, and the >> 8 shifts on lines 66-68 exactly match the claimed 4 distinct non-trivial numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-12dd1fe307388cd2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/style.py",
+      "message": "Function `__init__` contains 11 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 131,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Style.__init__ builds flags with doubled literals 2,4,8,...,4096 written twice in two sum() blocks, an unnamed bit-flag table."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Excerpt shows only the `Style.__init__` signature; the 11 literals come from the unshown body."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the __init__ signature plus preceding dict lines; all 11 claimed power-of-two literals would live in the unshown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-6eda1b1bd0b782d1",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/style.py",
+      "message": "Function `__str__` contains 13 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 294,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Style.__str__ uses binary masks 0b0000000001111, 0b0000111110000, 0b1111000000000 and bit indices 3-12 inline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`Style.__str__` extends well past the excerpt and several listed literals (e.g. `0b1111000000000`, `10`-`12`) are not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "__str__ continues past line 309, and only 3 of the 13 claimed literals (mask 0b0000000001111, mask 0b0000111110000, and 3) are visible, so the count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-6ebb8969e2f11b82",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/style.py",
+      "message": "Function `_make_ansi_codes` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 344,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_make_ansi_codes repeats masks 0b0000111110000/0b1111000000000 and range bounds 4,9,13 inline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `_make_ansi_codes` signature/docstring prefix is shown; the literal-bearing body is not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the docstring and first assignments of _make_ansi_codes; none of the 7 claimed literals are visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-6c79de6c2a7d2855",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `install` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "Literals are keyword-parameter defaults, which name themselves.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "install is truncated mid-signature at line 99; only 100, 88, and 3 are visible, and the claimed extra literals 10 and 80 are not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-94e83e7b571f40b4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `__init__` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 295,
+      "verdict": "false_positive",
+      "reason": "Literals are keyword-parameter defaults, which name themselves.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The message claims 4 distinct literals but the list has five (10, 100, 3, 80, 88), and visible body line 350 contains literal 4 inside __init__ that the evidence omits."
+        }
+      ]
+    },
+    {
+      "id": "EA-bf3aecf6ca959828",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `from_exception` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 353,
+      "verdict": "false_positive",
+      "reason": "Literals are keyword-parameter defaults, which name themselves.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "from_exception is truncated mid-signature; only 100, 88, and 3 are visible, and the claimed 10 and 80 would be in the unshown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-0e8ce37d52d139b9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `extract` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 433,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "extract's shown signature contains no numeric literals, so the claimed literals 3, 10, 11, and 80 can only lie in the unshown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-288bb2bcb60c8dc0",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/multiple.rs",
+      "message": "Function `handle` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 238,
+      "verdict": "false_positive",
+      "reason": "Test handler in a cfg(test) module.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`handle` is a helper nested inside a `#[tokio::test]` function, so the site is in test scope; the counted hex values are an inline byte-array data idiom the rule should recognize."
+        }
+      ]
+    },
+    {
+      "id": "EA-e655ef8cd083f193",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/fmt/mod.rs",
+      "message": "Function `token_from_pattern_id` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 201,
+      "verdict": "false_positive",
+      "reason": "A match mapping regex pattern ids to tokens: lookup-table entries.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The fully shown function matches on `3`, `4`, `5`, `6` (`2` being trivial), matching the evidence's 4 distinct literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-7519e16df8ddcc7a",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `decoder` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1280,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "decoder's 100,101,102..199,200..299,204,304 are HTTP status codes in a match, documented by the RFC 7230 comment; a recognised protocol idiom."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `decoder` and the `101` arm are visible, so the 8-literal claim spans an unshown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-2bdc21f4b6b0b257",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Function `doc_long` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 832,
+      "verdict": "false_positive",
+      "reason": "Numbers are part of documentation text returned by doc_long, not code literals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only raw doc-string text for `doc_long`, with no numeric literals visible, so the 4-literal count cannot be verified from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-e00a64a77f2a748a",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "Function `max_filesize` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2406,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function `max_filesize` is marked `#[test]`, so the site is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-07b6b6317f3471cb",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/jsont.rs",
+      "message": "Function `base64_standard` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 231,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The literals in `base64_standard` are shifts/masks (18/12/6/0, `0b111_111`, chunk size 3) dictated by the base64 algorithm, an idiom the rule should recognize rather than flag as nameable constants."
+        }
+      ]
+    },
+    {
+      "id": "EA-48759b909b6bcb90",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `reports_stats_multiple` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1857,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function `reports_stats_multiple` is a `#[test]` function, so the site is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-3ed2d378b1b8246f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `byte_offset_multi_line` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 2443,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function `byte_offset_multi_line` is a `#[test]` function, so the site is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-b896147b2602cdb3",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `only_matching_multi_line2` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3056,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function `only_matching_multi_line2` is a `#[test]` function, so the site is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-5a48291a7c431ee7",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `only_matching_max_columns` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3085,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function `only_matching_max_columns` is a `#[test]` function, so the site is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2751195673d5bf26",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `only_matching_max_columns_preview_multi_line1` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3173,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-826da4e246bf3018",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `only_matching_max_columns_multi_line2` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3207,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-274db35673d2dbfd",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `only_matching_max_columns_preview_multi_line2` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3237,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-2264573f235aeeb3",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `per_match_multi_line1` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3294,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-d1b9963733874dac",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `invert_context` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3778,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-1f4ddcce8e258963",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `invert_context_multi_line` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3807,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-c783816cbd60d330",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Function `invert_context_only_matching_multi_line` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 3868,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is a `#[test]` test function, out of scope for the magic-literal rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-000f6cc078799f3b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/config.rs",
+      "message": "Function `default` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "Several distinct domain numeric literals (codes, thresholds, masks) inline; naming them would help.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Config::default` shows `100`, `1000`, `20` (via `1 << 20`), and `250` in the size limits (4 distinct > 3)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Config::default` in production code contains 4 distinct non-trivial literals (100, 1000, 20, 250) exceeding the threshold of 3."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8a54cf3f611d74c",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/non_matching.rs",
+      "message": "Function `literal` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 141,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Site is a #[test] whose six literals are hex byte expected-values like sparse_except(&[0xE2, 0x98, 0x83]); outside scope and a recognized test idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-2118b17a2626dc93",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/lines.rs",
+      "message": "Function `preceding_lines_short` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 383,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "preceding_lines_short is a #[test] where the 0-6 values are small array indices/offsets into lines passed to prev(...), i.e. test code outside scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-68c24b33cc29df8b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/lines.rs",
+      "message": "Function `preceding_lines_empty1` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 428,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "preceding_lines_empty1 is a #[test] using only line indices (0-5) and t.len() assertions, so test code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-468441dda00f2c46",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `basic3` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 411,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The counted numbers (0, 65, 129, ..., 366) are digits inside the multi-line exp string literal, not Rust numeric literals, and it is a #[test]."
+        }
+      ]
+    },
+    {
+      "id": "EA-fb813e299f731898",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `invert1` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 447,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The 5 numbers (65, 193, 258, 321, 366) appear only inside the exp string literal, so they are not numeric literals; also a #[test]."
+        }
+      ]
+    },
+    {
+      "id": "EA-979114ad0222861b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `line_number_invert1` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 483,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "All counted numbers (2,4,5,6,65,193,258,321,366) live inside the exp and exp_line string literals, not in code, and it is a #[test]."
+        }
+      ]
+    },
+    {
+      "id": "EA-b2ed515acbe5d400",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `passthru_sherlock1` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 791,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The numbers (0, 65, 129, ..., 366) are inside the exp string literal text, not numeric code, so the claim is misparsed; also a #[test]."
+        }
+      ]
+    },
+    {
+      "id": "EA-a940ce315955a5bb",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `passthru_sherlock_invert1` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 809,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The six counted numbers are inside the exp string literal content rather than Rust numeric literals, and the function is a #[test]."
+        }
+      ]
+    },
+    {
+      "id": "EA-5814c0a9d9109dc3",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `context_sherlock1` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 828,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`context_sherlock1` is a `#[test]` function (glue.rs:827-828), so the site is outside the detector's scope, and the visible numbers (0, 65, 129, 193, 366) are content of the `exp` string literal, not code literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-f1edb5c0f2533aae",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `context_sherlock_invert1` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 877,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`context_sherlock_invert1` is a `#[test]` function (glue.rs:876-877), outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-581ef2a9d919473e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `context_sherlock4` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1097,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`context_sherlock4` is a `#[test]` function (glue.rs:1096-1097), outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d9ec6c11456813e1",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `context_code1` contains 19 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1270,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`context_code1` is a `#[test]` function (glue.rs:1269-1270), outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d9f33811456dda33",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Function `context_code3` contains 21 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1419,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`context_code3` is a `#[test]` function (glue.rs:1418-1419), outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-949a19adfccbcf0d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/mod.rs",
+      "message": "Function `uft8_bom_sniffing` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1073,
+      "verdict": "false_positive",
+      "reason": "Test function in a src file (expected positions/counts); test code misclassified as production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`uft8_bom_sniffing` is a `#[test]` function (mod.rs:1072-1073) whose 5 literals are the BOM byte array (0xef, 0xbb, 0xbf, 0x66, 0x6f), so the site is outside scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-0c61abf60749a025",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/utils.ts",
+      "message": "Function `isValidAttributeName` contains 10 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt shows isValidAttributeName comparing char codes against 0x61/0x7a/0x41/0x5a/0x30/0x39/0x2d (and more below the window), a genuine cluster of >3 non-trivial numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-1fe071ee8ea0468f",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/utils.ts",
+      "message": "Function `isValidStylePropertyName` contains 8 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "isValidStylePropertyName visibly tests 0x61\u20130x7a, 0x41\u20130x5a, 0x30\u20130x39, 0x2d, plus 0x5f just past the excerpt, so it does cluster more than three numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-1fd63fee8e979d14",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/utils.ts",
+      "message": "Function `hasUnsafeStyleValue` contains 15 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 122,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "hasUnsafeStyleValue already shows 0x5c, 0x0a, 0x0c, 0x0d and continues similarly, confirming a cluster of >3 numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-e47d7378a9b3f7de",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/logger/index.ts",
+      "message": "Function `colorStatus` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "colorStatus uses 100 in `(status / 100) | 0` plus case labels 5, 4, 3 (and 2), so the >3 threshold holds within the detector's trivial-number exclusion of small values."
+        }
+      ]
+    },
+    {
+      "id": "EA-b7f0d9b0bc23d91a",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/accept.ts",
+      "message": "Function `isWhitespace` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 7,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The complete isWhitespace arrow function checks exactly 32, 9, 10, and 13, four distinct non-trivial numeric literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-5bb07afdf81d23e4",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/accept.ts",
+      "message": "Function `getNextParam` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getNextParam compares charCodeAt to 61, 59, 44, 92, 34, each with an adjacent comment naming the character ('=', ';', ','); annotated ASCII codes are a char-switch idiom."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for getNextParam only reveals the literal 61 (`'='`); the other claimed codes (34, 44, 59, 92) sit past the shown window, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6a58dfaf0c76d3ed",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/html.ts",
+      "message": "Function `escapeToBuffer` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "escapeToBuffer is a charCode switch on 34, 39, 38, 60, 62 where each case is labelled with the character (\", ', &, <, >) and its entity."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "escapeToBuffer's excerpt stops at the first switch case (34); the remaining escape char codes (38, 39, 60, 62) are below the visible window, so the claim's count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-d0149e2c7f1de388",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `expandIPv6` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 13,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "expandIPv6's excerpt shows 16 (`toString(16)`), 8 (`<< 8`), 4 (`padStart(4`), and index 3 (`octets[3]`), confirming more than three non-trivial literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-90ff9c0d6c21fa46",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `parseIPv4ToBinary` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 84,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parseIPv4ToBinary uses bare 10 (radix), 255 (octet max), 4 (octet count) and 8 (shift) even though CHAR_CODE_ constants exist elsewhere in the file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only lines 84-99 of `parseIPv4ToBinary`; none of the claimed literals (10, 255, 4, 8) are visible, and the function extends well beyond the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-90fc360d6c1f171d",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `convertIPv6ToBinary` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "convertIPv6ToBinary uses 0xffff mask, 16-bit shifts, 4-digit limit and 8-section count inline (4 distinct > 3); bit mask/domain constants in production code, weakly justified by IPv6 format."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the start of `convertIPv6ToBinary` is shown (through line 173); the literals 0xffff, 16, and 4 are not visible, so the claimed count of 4 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-90f8d00d6c1c33f4",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `convertIPv4BinaryToString` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 301,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The full function is shown and contains exactly the four non-trivial literals 4, 8, 3, and 0xff listed in the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-90f56a0d6c1950cb",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `convertIPv6BinaryToString` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 328,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "convertIPv6BinaryToString repeats 8, 16, 7 and 0xffffn inline for group count/width/mask."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`convertIPv6BinaryToString` continues past the excerpt (cut at line 343), so the full literal count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-aca701a8766d4f09",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/url.ts",
+      "message": "Function `getPath` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "Inline character codes, status codes, encoding masks, or layout offsets without names; named constants would document them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getPath uses bare 35, 37, 63 (# % ?) and the +4 offset after the scheme colon; only some carry comments."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`getPath` continues past line 121; only 37 and 4 are visible, while the claimed literals 35 and 63 are not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-5d67f5996e6442a2",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/og-image/pages/api/_ref/param.tsx",
+      "message": "Function `handler` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-probe2",
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "Inline JSX style values of an image template are named by their keys; presentational, like CSS.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ce54cb35ed339422",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/src/components/sponsors/script.pull.ts",
+      "message": "Function `main` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 181,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling script (sponsor data pull, fuzz build, triage script), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`www/src/components/sponsors/script.pull.ts` is a standalone build/data-pull script (writes JSON via fs) and thus tooling code outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "script.pull.ts main is a one-off sponsor pull/generation script writing script.output.raw.json, i.e. build/tooling code rather than production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-5fee787de3cf014c",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/app/og.png/route.tsx",
+      "message": "Function `GET` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-probe2",
+      "line": 15,
+      "verdict": "false_positive",
+      "reason": "Inline JSX style values of an image template are named by their keys; presentational, like CSS.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e147bb3824d0ec7e",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/regexes.ts",
+      "message": "Function `uuid` contains 6 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-probe2",
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "The digits are regex quantifiers inside a regex literal, not code literals.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-79bf8783e9de8a3f",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `isLuhnAlgo` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-probe2",
+      "line": 1124,
+      "verdict": "false_positive",
+      "reason": "Most literals are a Luhn lookup table; outside it only the '0' char code and modulus remain.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-0bf077ad4db6c339",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `isIso7064Mod97` contains 7 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 1172,
+      "verdict": "true_positive",
+      "reason": "Character codes and the ISO 7064 modulus inline.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The full `isIso7064Mod97` function is shown and contains exactly 7 distinct non-trivial literals (10, 100, 4, 48, 55, 65, 97), matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function contains the listed non-trivial literals 4, 65, 100, 55, 10, 48, and 97."
+        }
+      ]
+    },
+    {
+      "id": "EA-3d0471f54379c8e0",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/be.ts",
+      "message": "Function `getBelarusianPlural` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 5,
+      "verdict": "false_positive",
+      "reason": "CLDR plural-rule formula (n % 10, n % 100, 11..19); the literals are the rule itself.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt includes `lastDigit >= 2 && lastDigit <= 4`, so literal 2 is omitted and the reported distinct count/list is incomplete."
+        }
+      ]
+    },
+    {
+      "id": "EA-7e8b48f7b9c512b6",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/lt.ts",
+      "message": "Function `getUnitTypeFromNumber` contains 4 distinct non-trivial numeric literals (> 3).",
+      "status": "pre_label",
+      "sampled_from": "t15-probe2",
+      "line": 12,
+      "verdict": "false_positive",
+      "reason": "CLDR plural-rule formula (n % 10, n % 100, 11..19); the literals are the rule itself.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function body contains exactly 10, 100, 11, and 19 as distinct non-trivial literals."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7a70cf7edd228db",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/ru.ts",
+      "message": "Function `getRussianPlural` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 5,
+      "verdict": "false_positive",
+      "reason": "CLDR plural-rule formula (n % 10, n % 100, 11..19); the literals are the rule itself.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt includes `lastDigit >= 2 && lastDigit <= 4`, so literal 2 is omitted and the reported distinct count/list is incomplete."
+        }
+      ]
+    },
+    {
+      "id": "EA-a7130a5dae27dbcd",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Function `build` contains 9 distinct non-trivial numeric literals (> 3).",
+      "status": "corroborated",
+      "sampled_from": "t15-probe2",
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling script (sponsor data pull, fuzz build, triage script), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`scripts/compile-fuzz.ts` is a fuzz/build tooling script, which is outside the detector's stated scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The finding is in scripts/compile-fuzz.ts, a fuzzing/build tool script rather than detector-target source code."
+        }
+      ]
+    },
+    {
+      "id": "EA-4de17fcc145004e8",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/triage-signal.ts",
+      "message": "Function `ago` contains 5 distinct non-trivial numeric literals (> 3).",
+      "status": "final",
+      "sampled_from": "t15-probe2",
+      "line": 427,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling script (sponsor data pull, fuzz build, triage script), outside the verdict standard's scope.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ago` uses distinct non-trivial literals 1000, 60, 24 (the 1000*60*60*24 day conversion) plus 45 and 365, which is 5 > 3 as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The finding is in scripts/triage-signal.ts tooling code; the excerpt also shows divisor literals 30.44 and 365.25 omitted from the evidence."
+        }
+      ]
+    }
+  ]
+}

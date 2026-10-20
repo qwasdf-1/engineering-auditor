@@ -1,0 +1,3489 @@
+{
+  "schema_version": 1,
+  "detector": "too_many_returns",
+  "labels": [
+    {
+      "id": "EA-4f97a1da07e249f6",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DefaultTypeMap.cs",
+      "message": "Function `MatchFirstOrDefault` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 189,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MatchFirstOrDefault in DefaultTypeMap.cs has 7 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 2 of the reported 7 returns in `MatchFirstOrDefault` are visible; the function body continues past the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-04222d216bf10e86",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonReader.cs",
+      "message": "Function `ReadCodeWScope` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 246,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadCodeWScope in BsonReader.cs has 6 returns (budget 5); the file shows multiple early/branch return statements (about 6 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 2 of the reported 6 returns in `ReadCodeWScope` are visible; the truncated switch means the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-c2d399c26b31dab9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonReader.cs",
+      "message": "Function `ReadNormal` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 346,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadNormal in BsonReader.cs has 8 returns (budget 5); the file shows multiple early/branch return statements (about 8 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 1 of the reported 8 returns in `ReadNormal` is visible; the truncated switch prevents verifying the count."
+        }
+      ]
+    },
+    {
+      "id": "EA-1ae4448c85cd5975",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JPropertyKeyedCollection.cs",
+      "message": "Function `Compare` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 228,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Compare in JPropertyKeyedCollection.cs has 9 returns (budget 5); the file shows multiple early/branch return statements (about 10 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 2 of the reported 9 returns in `Compare` are visible; the remainder of the method is cut off."
+        }
+      ]
+    },
+    {
+      "id": "EA-0f66417fbac09bae",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JToken.Async.cs",
+      "message": "Function `ReadFromAsync` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 122,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadFromAsync in JToken.Async.cs has 8 returns (budget 5); the file shows multiple early/branch return statements (about 8 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "None of the reported 8 returns in `ReadFromAsync` appear in the excerpt, so the count cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-6a3d4983b1b937f0",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JValue.Async.cs",
+      "message": "Function `WriteToAsync` has 22 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WriteToAsync in JValue.Async.cs has 22 returns (budget 5); the file shows multiple early/branch return statements (about 22 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 1 of the reported 22 returns in `WriteToAsync` is visible; the long method body is truncated."
+        }
+      ]
+    },
+    {
+      "id": "EA-cf678666009b98b7",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JsonPath/JPath.cs",
+      "message": "Function `TryParseValue` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 575,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "TryParseValue is a token-dispatch method that returns true for quoted strings, numbers, and each literal keyword, so the 8 exits are the genuine guard pattern the rule targets."
+        }
+      ]
+    },
+    {
+      "id": "EA-84c8f7c2b4111fa9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JsonPath/JPath.cs",
+      "message": "Function `ParseOperator` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 772,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ParseOperator returns a distinct QueryOperator for each matched operator token (===, ==, ...), so the reported 9 exits fit the in-scope code."
+        }
+      ]
+    },
+    {
+      "id": "EA-309387b4d8f0a4d9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/EnumUtils.cs",
+      "message": "Function `ToUInt64` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 226,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ToUInt64's switch over PrimitiveTypeCode returns once per case (SByte, Byte, Boolean, Int16, UInt16, ...), matching the flagged 10 exits."
+        }
+      ]
+    },
+    {
+      "id": "EA-8dcb5f366e3496f1",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MathUtils.cs",
+      "message": "Function `IntLength` has 20 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "IntLength is a range-lookup ladder already showing return 1, return 2, return 3 in the excerpt, so the 20 returns plainly exceed the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa38171f16495378",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MethodBinder.cs",
+      "message": "Function `FilterParameters` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 112,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "FilterParameters's early guards (return types.Count == 0, return false) plus its later exits total the reported 6."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f5c9423fa37a7b9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MethodBinder.cs",
+      "message": "Function `Compare` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 199,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The Comparer.Compare method has null/parameterless guards and parameter-array branches that produce the reported 8 exits."
+        }
+      ]
+    },
+    {
+      "id": "EA-409a43cd10686ca2",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/MiscellaneousUtils.cs",
+      "message": "Function `ValueEquals` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ValueEquals has the objA==objB true exit, the null exit, integer and float conversion exits, and the final Equals exit, totaling 6."
+        }
+      ]
+    },
+    {
+      "id": "EA-b3581b22a25c3368",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/TypeExtensions.cs",
+      "message": "Function `MemberType` has 6 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The returns are split between the #if !(DOTNET || PORTABLE || PORTABLE40) branch and its #else, so the analyzer counted both mutually exclusive branches and the active compilation has well under 6 returns."
+        }
+      ]
+    },
+    {
+      "id": "EA-9fc53e578da0a769",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Core/Hedging/Controller/HedgingExecutionContext.cs",
+      "message": "Function `TryWaitForCompletedExecutionAsync` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 96,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TryWaitForCompletedExecutionAsync in HedgingExecutionContext.cs has 7 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Excerpt cuts off after two visible returns (lines 101, 109), so the claimed 7 returns across the full function cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-0a7fd0e1de46c5e9",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Formatting/Json/JsonValueFormatter.cs",
+      "message": "Function `FormatLiteralValue` has 20 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 162,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20 return statements in FormatLiteralValue(): null, string, then one per numeric/date type (int, uint, long, ulong, decimal, byte, sbyte, short, ushort, double, float, bool, char, DateTime, DateTimeOffset, TimeSpan, DateOnly, TimeOnly); > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only one return (line 167) is visible before the excerpt ends, so the claimed 20 returns are unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-dfba15baf379df29",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Parsing/MessageTemplateParser.cs",
+      "message": "Function `ParsePropertyToken` has 11 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ParsePropertyToken in MessageTemplateParser.cs, read in full, has 11 returns (new TextToken(rawText) at many validation branches plus a final PropertyToken), exceeding 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only one return (line 86) is shown; the rest of ParsePropertyToken is truncated, so the count of 11 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f0abf02cbaef9fe",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Parsing/MessageTemplateParser.cs",
+      "message": "Function `TrySplitTagContent` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 167,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TrySplitTagContent in MessageTemplateParser.cs has 6 returns (budget 5); the file shows multiple early/branch return statements (about 6 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only one return (line 176) is visible and the function continues beyond the excerpt, so 6 returns cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e13055302ff401b",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Settings/KeyValuePairs/SettingValueConversions.cs",
+      "message": "Function `ConvertToType` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `ConvertToType` has 9 return statements (> 5) is plausible for the real function `SettingValueConversions.cs` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-4db4ec5fee78c740",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "cursed_renderer.go",
+      "message": "Function `viewEquals` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 886,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "viewEquals in cursed_renderer.go has 8 returns (budget 5); the file shows multiple early/branch return statements (about 8 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only two returns (lines 888, 892) are visible; the remaining body is truncated so 8 returns cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-dae73bf67b0ce7aa",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "input.go",
+      "message": "Function `translateInputEvent` has 23 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 8,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The visible type switch already contains seven returns (lines 11-23), by itself exceeding the threshold of 5."
+        }
+      ]
+    },
+    {
+      "id": "EA-f50af9c78f732096",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "Function `String` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 336,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The complete function has six returns (five cases plus default) at lines 339-349, exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-003ee869a5d70ddd",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "Function `Run` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1018,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 6 returns in Run(): nil-model guard, TTY open error, initTerminal error, terminal size error, initInputReader error, final return model, err (returns inside goroutine/defer closures excluded); 6 > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 1032 and shows only the initial `return nil, errors.New(...)` guard, so the claimed 6 returns across the long `Run` body cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-29c2d859777a51f9",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tty_windows.go",
+      "message": "Function `initInput` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 13,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "initInput in tty_windows.go has 7 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only two returns (lines 21 and 27) are visible before the excerpt ends, so the claimed 7 returns in `initInput` cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-6cdef2d0d5c838c1",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/throttle.go",
+      "message": "Function `ThrottleWithOpts` has 8 return statements (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates `ThrottleWithOpts` at line 59, so the claimed 8 returns cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1ae1b12f3238443d",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/wrap_writer.go",
+      "message": "Function `NewWrapResponseWriter` has 6 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The returns at lines 23/29 (and the remaining ones) each construct a distinct wrapper type chosen by interface assertions, so the recommendation to consolidate 'equivalent exits' does not apply to this factory idiom."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`NewWrapResponseWriter` continues past line 30, so the full return count is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-452a724f10a1e41b",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "Function `execute` has 16 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 905,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 return statements in execute() (nil cmd, FlagErrorFunc, GetBool err, ErrHelp x2, version, ValidateArgs, hook errors ...); > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the signature and a single return at line 907 of a large `execute` function, so the claimed 16 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The `execute` body continues past line 920, so the claimed 16 returns cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-9224ef8d8ab70fe9",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Function `getCompletions` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 316,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 10 returns in getCompletions() (7 early error/directive returns plus 3 later; closure bodies contain none); > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No return statements appear in the shown lines 316-331, so the claimed 10 returns in `getCompletions` cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`getCompletions` is only partially shown through line 331, so its return count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-06df001d35521e2d",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Function `InitDefaultCompletionCmd` has 9 return statements (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 745,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`InitDefaultCompletionCmd` continues past line 760, so the claimed 9 returns are not fully visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfb4201e5f8fa1bc",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/binding.go",
+      "message": "Function `Default` has 10 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The returns at lines 97-110 are per-content-type switch cases in a dispatch table where each exit yields a different binding, so exits are not equivalent and the rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-ba6ccea3329d5566",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/binding_nomsgpack.go",
+      "message": "Function `Default` has 9 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 91,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "As in the msgpack variant, the returns at lines 93-106 dispatch on content type, a lookup idiom whose distinct exits cannot be consolidated."
+        }
+      ]
+    },
+    {
+      "id": "EA-70226cf369718c38",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/default_validator.go",
+      "message": "Function `ValidateStruct` has 7 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The returns at lines 46-57 dispatch on `reflect.Kind` (nil/ptr/struct/slice/array), a type-dispatch idiom the return-count rule should recognise rather than flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-132454ccb2c34235",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "Function `mapping` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 84,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "mapping in form_mapping.go has 8 returns (budget 5); the file shows multiple early/branch return statements (about 9 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 99 inside the recursive `mapping` body, so the claimed 8 returns cannot be counted from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-dd54a40ba6e9e682",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "Function `setByForm` has 15 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 245,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setByForm in form_mapping.go has 15 returns (budget 5); the file shows multiple early/branch return statements (about 16 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 260 inside the switch of `setByForm`, far before the function ends, so the 15-return count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-2cbefd5617f1abd5",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "Function `setWithProperType` has 23 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 323,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setWithProperType in form_mapping.go has 23 returns (budget 5); the file shows multiple early/branch return statements (about 24 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first lines of `setWithProperType` are shown (cut off at line 338 in the kind switch), so the claimed 23 returns cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-62c706ca81a5e9ec",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "Function `setTimeField` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 434,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setTimeField in form_mapping.go has 6 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `setTimeField` excerpt stops at line 449 inside the format switch, so its stated 6 returns cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-dd8cb410fc16e413",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/multipart_form_mapping.go",
+      "message": "Function `setByMultipartFormFile` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setByMultipartFormFile in multipart_form_mapping.go has 6 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 50 inside the slice case of `setByMultipartFormFile`, so the reported 6 returns are not fully visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-1f10d556e0ff4d7b",
+      "repository": "gin",
+      "language": "go",
+      "path": "logger.go",
+      "message": "Function `LatencyColor` has 7 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 112,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`LatencyColor` is a complete switch mapping latency ranges to colors; the per-case exits are not consolidatable and this is a recognized dispatch idiom, so the rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-406fa193a9e866e8",
+      "repository": "gin",
+      "language": "go",
+      "path": "logger.go",
+      "message": "Function `MethodColor` has 8 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`MethodColor` is a plain switch over HTTP methods returning a color per case, an idiomatic dispatch where exits are not equivalent, so the rule's rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-ceed25e85a4d4913",
+      "repository": "gin",
+      "language": "go",
+      "path": "render/json.go",
+      "message": "Function `Render` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Render in json.go has 7 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `Render` excerpt stops at line 132 mid-function, so the claimed 7 returns cannot be counted from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-31266fc460eaded9",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `getValue` has 11 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 418,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 11 'return value' statements in getValue(), none in closures; > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Excerpt only shows the head of `getValue` (through line 433), so the full return count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-642a0851f3415fb7",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `findCaseInsensitivePathRec` has 19 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 703,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 19 returns in findCaseInsensitivePathRec(), none in closures; > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Excerpt ends at line 718 with only one visible `return ciPath`, so the claimed 19 returns cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac6c75cb446c8617",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonPrimitive.java",
+      "message": "Function `equals` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 281,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`equals` continues past line 296 with only four visible returns, so the claimed 7 cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The `equals` method continues past line 296, so the full return count is not shown."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-df1a203cb4a7e500",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "message": "Function `get` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 103,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`get` is shown only through line 118, so the claimed 9 returns cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The `get` method continues past line 118, so the claimed 9 returns cannot be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-369690fc9afcc04f",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "message": "Function `newDefaultConstructor` has 6 return statements (> 5).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 217,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`newDefaultConstructor` continues past line 232, so the full return count is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-d1810b40e469fd38",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "message": "Function `newMapConstructor` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 352,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`newMapConstructor` is truncated at line 367, so its full return count is unknown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Excerpt shows only 2 returns (lines 363, 365) and the function continues past line 367 after 'Then try SortedMap', so the claimed 6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f735daf5b3c4871a",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Excluder.java",
+      "message": "Function `excludeField` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`excludeField` extends beyond line 173, so the claimed 7 returns cannot be counted from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "excludeField starts at line 158 and continues past line 173 with only 3 of the claimed 7 returns visible, so the count is unverifiable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2dd8110c83275fd9",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `equals` has 11 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 171,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`GsonTypes.equals` continues past line 186 with only three visible returns, so the claimed 11 is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The equals body extends well past the excerpt (only 3 returns visible by line 182), so the claimed 11 returns cannot be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 11 vs budget 5 (EA 11)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2efb02d0d7772a9a",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `getGenericSupertype` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`getGenericSupertype` is cut off at line 250, so the claimed 6 returns cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Excerpt ends mid-function at line 250 with only 3 returns shown, so the claimed 6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f2904cc86d760200",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Primitives.java",
+      "message": "Function `wrap` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The full `wrap` body is shown with nine `if (...) return ...;` guards plus a final `return type;`, giving exactly 10 returns, which matches the claimed 10 > 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The fully shown wrap body (lines 65-74) contains exactly 10 return statements in production code, matching the claim."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 10 vs budget 5 (EA 10)"
+        }
+      ]
+    },
+    {
+      "id": "EA-88f9159ff725101d",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Primitives.java",
+      "message": "Function `unwrap` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 87,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The full `unwrap` body is shown with nine conditional returns plus the trailing `return type;`, totaling 10 returns, matching the claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The fully shown unwrap body (lines 89-98) contains exactly 10 return statements, matching the claimed count."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 10 vs budget 5 (EA 10)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f87cc386a1f6c1b3",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeReader.java",
+      "message": "Function `peek` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 125,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 140 mid-function (`return peek();`), so the full body and the claimed 10 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Excerpt ends mid-function at line 140 inside the nested else block with only 3 returns visible, so the claimed 10 is unverifiable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 10 vs budget 5 (EA 10)"
+        }
+      ]
+    },
+    {
+      "id": "EA-aa658d664d26d40c",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `peek` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 542,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `peek` excerpt ends at line 557 inside the switch, so the remaining cases and the claimed 10 returns are not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The switch statement extends beyond the excerpt's last visible case at line 557, so the claimed 10 returns cannot be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 10 vs budget 5 (EA 10)"
+        }
+      ]
+    },
+    {
+      "id": "EA-e52816592264413f",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `doPeek` has 16 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 581,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`doPeek` clearly continues past line 596, so the claimed 16 returns cannot be counted from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 596 mid-switch inside doPeek (which starts at line 582), so the claimed 16 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 16 vs budget 5 (EA 16)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c5d8bb98f0c32acf",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `peekNumber` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 782,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `peekNumber` excerpt stops at line 797 mid-loop, so the claimed 10 returns are not observable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the first ~15 lines of peekNumber are shown (declaration at line 782 through the loop head at line 797); the rest of the body needed to confirm 10 returns is absent."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 10 vs budget 5 (EA 10)"
+        }
+      ]
+    },
+    {
+      "id": "EA-82d39c614d920241",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Function `readEscapeCharacter` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1744,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`readEscapeCharacter` is truncated at line 1759 inside its loop, leaving the claimed 7 returns unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "readEscapeCharacter starts at line 1745 and the excerpt stops at line 1759 inside the 'u' case, so the claimed 7 returns across the switch cannot be counted."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ce4c44fd6a56ade9",
+      "repository": "gson",
+      "language": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/LegacyProtoTypeAdapterFactory.java",
+      "message": "Function `readSingleFieldValue` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 323,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `readSingleFieldValue` excerpt ends at line 337 (`case BOOL:`), so the claimed 8 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first three return points of the type-dispatch switch in readSingleFieldValue (lines 318-338); the full switch needed to confirm 8 returns is not shown."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 8 vs budget 5 (EA 8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-44ebec34196c4e73",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Element.java",
+      "message": "Function `hasClass` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1888,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off inside the for loop at line 1903, so the full set of returns in hasClass is not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "hasClass continues past line 1903 inside the scanning loop, so whether the total is 6 returns cannot be determined from the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-45b1a2f665a86921",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Range.java",
+      "message": "Function `equals` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 360,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The complete equals method (lines 361-369) contains exactly six return statements, matching the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete equals body is visible (lines 360-370) and contains exactly 6 returns (361, 362, 366, 367, 368, 369), so the claim of 6 > 5 holds in production main code."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-58060c2f8f053e30",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only two returns are visible before the excerpt ends at line 125, so the claimed count of 9 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The InHead.process body shown (lines 110-125) ends mid-switch, so the claimed 9 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8e0bcad5d2ed66de",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyStartTag` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 288,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is truncated at line 303 inside inBodyStartTag, so the 9 returns cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "inBodyStartTag starts at line 288 and the excerpt ends at line 303 partway through the name switch, leaving the claimed 9 returns uncountable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5683fa5de7cf6507",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTag` has 16 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 619,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 634 within the switch, so the claimed 16 returns in inBodyEndTag are not verifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 619 is the real `inBodyEndTag` method in main source, and its switch-with-guards structure (`return anyOtherEndTag(t, tb)` at 630, `return false` at 634) is the many-exit shape the 16-return count describes."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 16 vs budget 5 (EA 16)"
+        }
+      ]
+    },
+    {
+      "id": "EA-22a62c3ace912e8b",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTagAdoption` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 794,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 809 early in inBodyEndTagAdoption, so the 7 returns cannot be counted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 794 declares `inBodyEndTagAdoption` in production code, and the adoption-agency transliteration with spec-noted early exits (`return true` at 805) matches the claimed 7 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-58103e2f8f0de7ab",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 19 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 973,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 988 inside process, so the claimed 19 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 973 is `InTable.process` in main source; its chained `else if` token-dispatch branches each exit via `return tb.process(t)`, `return true`, or `return false`, consistent with 19 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 19 vs budget 5 (EA 19)"
+        }
+      ]
+    },
+    {
+      "id": "EA-580cd82f8f0b0482",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1150,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 1165 within nested switches, so the 9 returns are not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1150 is `InColumnGroup.process` in production code, and the shown dispatch pattern with an early exit (`return true` at 1153) plus further switch branches supports the claimed 9 returns over the threshold."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-58170a2f8f13adfd",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1220,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `process` method starts at line 1220 but the excerpt is cut at line 1234, so the 9-return count over the full function cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1220 begins `InTableBody.process` in main source, whose transition and delegation branches each return a boolean (e.g., `return tb.process(startTag)` at 1234), consistent with 9 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5813a42f8f10cad4",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 13 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1282,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `process` function beginning at line 1282 extends well beyond the excerpt ending at line 1297, so the 13-return claim is not verifiable here."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1282 begins `InRow.process` in production code, and its guard/delegation exits (`return false` at 1295 after `tb.error(this)`) across the method support the claimed 13 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 13 vs budget 5 (EA 13)"
+        }
+      ]
+    },
+    {
+      "id": "EA-581dd62f8f19744f",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1355,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `process` method at line 1355 continues past the excerpt's end at line 1370, so the 9-return count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1355 begins `InCell.process` in main source, and the shown table-scope guard with an early exit (`return false` at 1364) plus the subsequent branches supports the claimed 9 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-581a702f8f169126",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `process` has 12 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1411,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `process` switch method starting at line 1411 is truncated at line 1426, so the 12-return count lies outside the visible excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1411 begins `InSelect.process` in production code, whose token-type switch with early exits (e.g., `return false` at 1423) is consistent with the claimed 12 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 12 vs budget 5 (EA 12)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0ff89dbc637daaa7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/StreamParser.java",
+      "message": "Function `selectFirst` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 249,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`selectFirst` begins at line 249 but the excerpt stops mid-function at line 264, so the 6-return claim cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only 4 return statements (lines 255, 258, 263, 264) are visible and the method continues past the excerpt's end, so the claimed count of 6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-67fc20e45262757b",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/QueryParser.java",
+      "message": "Function `parseSubclass` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 169,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`parseSubclass` (lines 169-177) is fully shown and contains exactly six return statements, matching the detector's count with the stated threshold of 5."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The complete function body (lines 169-177) is shown and contains exactly 6 return statements (byId, byClass, byAttribute, parseNodeSelector, parsePseudoSelector, null), exceeding the threshold of 5."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-3780c883169de574",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/QueryParser.java",
+      "message": "Function `parsePseudoSelector` has 29 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`parsePseudoSelector` starts at line 198 and the excerpt is cut at line 212, so the reported 29 returns cannot be counted from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The switch body continues well beyond the excerpt (only ~6 of the claimed 29 returns are visible), so the count cannot be verified from the shown code."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 29 vs budget 5 (EA 29)"
+        }
+      ]
+    },
+    {
+      "id": "EA-42cc88fc8ef8bc20",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `dispatchHttpRequest` has 13 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 568,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `dispatchHttpRequest` function is defined at line 568 but the excerpt ends at line 583, so the 13-return count over the full function cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 583 inside `dispatchHttpRequest`'s body with zero returns visible, so the claimed 13 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 13 vs budget 5 (EA 13)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ea3402d8c220135b",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/defaults/index.js",
+      "message": "Function `transformRequest` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off mid-function at line 60, so the reported 8 returns in transformRequest cannot be verified from what is shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt truncates mid-function at line 60 (`if (`) with only one return (line 57) visible in `transformRequest`, so the claimed 8 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 8 vs budget 5 (EA 8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c10501f411dab24e",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `<anonymous>` has 11 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "normalizeIPAddress's body continues past line 76, so the claimed 11 returns cannot be confirmed from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 76 mid-body of `normalizeIPAddress` with only 2 returns visible (lines 63, 73), so the claimed 11 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 11 vs budget 5 (EA 11)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4d0aeb002361bca8",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `<anonymous>` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only three returns are visible before the excerpt ends at line 170, so the reported 6 for isIPv6Loopback is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 170 mid-body of `isIPv6Loopback` (inside the unclosed `if (v4MappedHex)` block) with only 3 returns visible, so the claimed 6 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4d151d00236a6623",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `<anonymous>` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 334,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "normalizeCidrBase is truncated at line 349, so the claimed 7 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 349 inside `normalizeCidrBase`'s still-open `if (startsBracket || endsBracket)` block with only 2 returns visible (lines 342, 348), so the claimed 7 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4d11b700236782fa",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `<anonymous>` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 379,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "parseCidrEntry's body is cut off at line 394, so the reported 6 returns are unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 394 mid-body of `parseCidrEntry` with only 3 returns visible (lines 381, 387, 394), so the claimed 6 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2737184701953f0d",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/shouldBypassProxy.js",
+      "message": "Function `<anonymous>` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 463,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The .some callback opening at line 463 is truncated at line 478, so its reported 7 returns cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The reported line is a return inside the enclosing function that opens an anonymous `.some()` callback whose body (with returns at lines 465, 469, 475) is cut off mid-expression at line 478, and the empty function name leaves the counted scope ambiguous, so the claimed 7 returns cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c5f0861e02be7f31",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/toFormData.js",
+      "message": "Function `convertValue` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "convertValue's body continues past line 136, so the claimed 6 returns cannot be verified from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`convertValue` is a guard-return dispatch chain \u2014 visible `return ''`, `return value.toISOString()`, `return value.toString()` within the first 15 lines plus the arraybuffer branch below \u2014 consistent with the claimed 6 exits in library code."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-22bec17839b6ae21",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/object-shorthand.js",
+      "message": "Function `exit` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-m",
+      "line": 513,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported; the Property:exit handler returns early on each excluded case.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `exit` has 10 return statements (> 5) is plausible for the real function `object-shorthand.js` at this site."
+        }
+      ]
+    },
+    {
+      "id": "EA-8876e16bb5a52fc0",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/metadata.kt",
+      "message": "Function `targetType` has 12 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "metadata.kt belongs to the moshi-kotlin-codegen annotation-processing module (build tooling), which is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f0153a4619faff6e",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/KotlinJsonAdapter.kt",
+      "message": "Function `create` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt already shows six returns (lines 192, 195, 196, 197, 198, 202) in `create`, which exceeds the threshold of 5."
+        }
+      ]
+    },
+    {
+      "id": "EA-7f16e7d1e0ef304e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Cache.kt",
+      "message": "Function `put` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 219,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "put in Cache.kt has 6 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only two of the reported six returns (lines 228, 234) appear in the excerpt and `put` clearly continues past it, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f5a4fe9a7f77621",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/CertificatePinner.kt",
+      "message": "Function `equals` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 325,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The complete `equals` body (lines 325-334) contains exactly six return statements, exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa6a53f94f025274",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/ConnectionSpec.kt",
+      "message": "Function `equals` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 185,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The complete `equals` body (lines 185-198) contains exactly seven return statements (186,187,189,192,193,194,197), exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-c1768e42b2751e9c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Cookie.kt",
+      "message": "Function `parse` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 450,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 6 return statements in parse(): three early 'return null' guards (cookie pair/name/value), two later 'return null' (domain/host mismatch), and final 'return Cookie(...)'; 6 > 5."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only three returns (lines 458, 461, 464) are visible and `parse` continues beyond the excerpt, so the reported count of 6 is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-9b680d627fd4ca80",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-HostnamesCommon.kt",
+      "message": "Function `decodeIpv6` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 83,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "decodeIpv6 in -HostnamesCommon.kt has 7 returns (budget 5); the file shows multiple early/branch return statements (about 8 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only one return (line 95) is visible and `decodeIpv6` continues well beyond the excerpt, so the reported count of 7 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-abb0973b2b965059",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-HostnamesCommon.kt",
+      "message": "Function `decodeIpv4Suffix` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "decodeIpv4Suffix in -HostnamesCommon.kt has 6 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only two returns (lines 166, 170) are visible and `decodeIpv4Suffix` continues beyond the excerpt, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-0d4752601e507226",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-HostnamesCommon.kt",
+      "message": "Function `toCanonicalHost` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 285,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "toCanonicalHost in -HostnamesCommon.kt has 8 returns (budget 5); the file shows multiple early/branch return statements (about 8 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only one return (line 298) is visible and `toCanonicalHost` continues beyond the excerpt, so the reported count of 8 is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-c97775213945f9e0",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/cache/CacheStrategy.kt",
+      "message": "Function `computeCandidate` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 143,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "computeCandidate in CacheStrategy.kt has 7 returns (budget 5); the file shows multiple early/branch return statements (about 8 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "computeCandidate begins at line 143 but the excerpt ends mid-body at line 158 with only 3 of the claimed 7 returns visible, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-024d85bb43960bd6",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/cache/DiskLruCache.kt",
+      "message": "Function `edit` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 476,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "edit in DiskLruCache.kt has 6 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "edit begins at line 479 (line 476 is only the @Synchronized annotation) and the excerpt shows a single return before truncating, so the 6-return count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-21d5b47a8c4c70a1",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnection.kt",
+      "message": "Function `isEligible` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 183,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "isEligible in RealConnection.kt has 9 returns (budget 5); the file shows multiple early/branch return statements (about 9 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "isEligible begins at line 183 and the excerpt cuts off mid-condition at line 197, so the claimed 9 returns cannot be confirmed from the shown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-19506dca5f7f6ec1",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealRoutePlanner.kt",
+      "message": "Function `hasNext` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 299,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "hasNext in RealRoutePlanner.kt has 6 returns (budget 5); the file shows multiple early/branch return statements (about 7 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "hasNext begins at line 299 and the excerpt ends at line 314 inside a branch, so the claimed 6 returns extend beyond the excerpt and cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-496782964ce89c48",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/HttpHeaders.kt",
+      "message": "Function `readChallengeHeader` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "readChallengeHeader in HttpHeaders.kt has 8 returns (budget 5); the file shows multiple early/branch return statements (about 9 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "readChallengeHeader is defined at line 74 (line 73 is only @Throws) and the excerpt stops inside its while loop, so the 8-return count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-4c1c02afda23c961",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RetryAndFollowUpInterceptor.kt",
+      "message": "Function `followUpRequest` has 15 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 205,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "followUpRequest in RetryAndFollowUpInterceptor.kt has 15 returns (budget 5); the file shows multiple early/branch return statements (about 15 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "followUpRequest starts at line 206 (line 205 is the @Throws annotation) and the excerpt ends inside the when block, so the 15 returns cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-23041fe7b8888feb",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/idn/Punycode.kt",
+      "message": "Function `decodeLabel` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "decodeLabel in Punycode.kt has 9 returns (budget 5); the file shows multiple early/branch return statements (about 10 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "decodeLabel begins at line 180 and the excerpt ends at line 195 before the Punycode loop, so the claimed 9 returns are not countable."
+        }
+      ]
+    },
+    {
+      "id": "EA-c14730e7e1da2461",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/tls/OkHostnameVerifier.kt",
+      "message": "Function `verifyHostname` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "verifyHostname in OkHostnameVerifier.kt has 9 returns (budget 5); the file shows multiple early/branch return statements (about 9 return keywords in the excerpt)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "verifyHostname begins at line 108 and the excerpt ends at line 122 mid-condition, so the claimed 9 returns cannot be confirmed from the shown body."
+        }
+      ]
+    },
+    {
+      "id": "EA-c478e674cbca8c82",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmMain/kotlin/okhttp3/internal/platform/Jdk8WithJettyBootPlatform.kt",
+      "message": "Function `invoke` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 96,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "invoke dispatches over method names with distinct exits (return true at 106, return null at 109, return protocols at 111, plus later protocol/selectProtocol branches), consistent with 7 returns."
+        }
+      ]
+    },
+    {
+      "id": "EA-051c16f70d8412cc",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmMain/kotlin/okhttp3/internal/platform/PlatformRegistry.kt",
+      "message": "Function `findPlatform` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "findPlatform returns each supported platform (conscrypt at 44, bc at 52, and further Jdk9/Android/Jdk8/fallback exits) for 6 returns."
+        }
+      ]
+    },
+    {
+      "id": "EA-579210253bc18047",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Utf8.kt",
+      "message": "Function `process4Utf8Bytes` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 495,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `process4Utf8Bytes` has 7 return statements (> 5); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "process4Utf8Bytes uses explicit numbered exits at 506 and 510 for malformed 2/3/4-byte sequences, consistent with 7 returns."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`process4Utf8Bytes` is a cascade of malformed/underflow guards (`return 1` at line 506, `return 2` at line 510) with the remaining branch exits continuing past the excerpt, matching the claimed 7 returns."
+        }
+      ]
+    },
+    {
+      "id": "EA-cb358e062d049565",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `selectPrefix` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `selectPrefix` has 6 return statements (> 5); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "selectPrefix has the early return at 146 plus multiple trie scan/selection exits, matching 6 returns."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`selectPrefix` opens with an early `head ?: return if (selectTruncated) -2 else -1` guard and continues through a labeled trie loop with further exits, consistent with 6 returns in this okio internal function."
+        }
+      ]
+    },
+    {
+      "id": "EA-e086916979bb7ced",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `commonEquals` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 1415,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonEquals` has 6 return statements (> 5); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "commonEquals has four guard returns at 1416-1419 plus the segment-comparison loop and final result, reaching 6 returns."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`commonEquals` stacks four guard exits (`return true`, `return false`, `return false`, `return true`) at lines 1416-1419 with additional exits inside the compare loop and at the end, matching the claimed 6."
+        }
+      ]
+    },
+    {
+      "id": "EA-ad17667130b18a82",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Path.kt",
+      "message": "Function `rootLength` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 78,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `rootLength` has 7 return statements (> 5); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rootLength's guards at 79, 80, 87 and 91 plus the remaining root/drive branches give the reported 7 returns."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`rootLength` shows a chain of guard exits (`return -1`, `return 1`, `return uncRootEnd`, `return 1`) with more branches below line 93, consistent with 7 returns."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2b112d39b6a94e5",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Path.kt",
+      "message": "Function `commonParent` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `commonParent` has 9 return statements (> 5); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "commonParent returns from each `when` branch (149, 155, 156, 159 and subsequent cases), consistent with 9 returns."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`commonParent` visibly stacks exits across the `when` (`return null` terminal, `return null` for \"C:\\\", `return Path(...)`, `return null` UNC) continuing past line 161, consistent with the claimed 9."
+        }
+      ]
+    },
+    {
+      "id": "EA-42adb1e676848942",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_content.py",
+      "message": "Function `encode_request` has 6 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "line": 186,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "encode_request has distinct exits for the data/content/data-or-files/json branches implied by its signature, consistent with 6 returns."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `return headers, ByteStream(body)` at line 183 closes the preceding `encode_json` helper, not `encode_request`; including it inflates the count to 6 when the dispatcher itself only has its four branch returns plus the final `return {}, ByteStream(b\"\")`."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0911 (6) at line 186"
+        }
+      ]
+    },
+    {
+      "id": "EA-7247668d521a8a14",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/cells.py",
+      "message": "Function `set_cell_size` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 299,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 314 partway through set_cell_size, so the claimed 6 returns cannot be counted from the shown body."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts set_cell_size off at line 314 with only two returns visible (lines 313-314), so the claimed total of six spans function body not shown."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0911 (6) at line 299"
+        }
+      ]
+    },
+    {
+      "id": "EA-95625bc853a18393",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Function `downgrade` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 513,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "downgrade continues past line 528 (still inside the nested if/elif), so the claimed 7 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "downgrade is truncated at line 528 after a single visible return (line 517); the claimed count of seven extends beyond the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0911 (7) at line 513"
+        }
+      ]
+    },
+    {
+      "id": "EA-1c2d2bab1a2f16a4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `_detect_color_system` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 789,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "_detect_color_system is cut off at the `else:` on line 804 with the remaining branches missing, so the 6-return claim is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "_detect_color_system is cut off at the `else:` on line 804 with four returns visible, so the claimed six cannot be counted from the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0911 (6) at line 789"
+        }
+      ]
+    },
+    {
+      "id": "EA-9e81b027e31dc51d",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `is_terminal` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 931,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "is_terminal is truncated after the Idle comment, with the platform/isatty branches beyond the excerpt, so 8 returns cannot be counted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "is_terminal is truncated mid-body after line 946 with only one return visible (line 940); the claimed eight returns lie past the excerpt."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0911 (8) at line 931"
+        }
+      ]
+    },
+    {
+      "id": "EA-c43071b8b14eff52",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `parse_single_generic_type_on_struct` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 231,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "parse_single_generic_type_on_struct is truncated mid-match at line 246, so the claimed 8 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the initial `return Err(...)` guard plus the start of a `match` on generics params is visible; the function extends past the excerpt, so 8 returns cannot be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-1881d4a318ad83fb",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "Function `from_request_parts` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 449,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "from_request_parts is cut off inside its body at line 463, so the claimed 6 returns cannot be counted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only 3 return statements (lines 452, 456, 460) are visible and the function continues past the `Some(...)` expression, so the claimed count of 6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-e97da0cf2f3c0974",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/walk.rs",
+      "message": "Function `spawn_senders` has 17 return statements (> 5).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 443,
+      "verdict": "false_positive",
+      "reason": "The returns are inside closures passed to walker.run; the function itself has none (rca: 0).",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-908af0c7dec7735f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/parse.rs",
+      "message": "Function `parse_low` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "parse_low extends far beyond the excerpt ending at line 79, so the claimed 6 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only 2 returns (lines 67, 73) are visible and the doc comment at lines 75-79 indicates further logic follows in the excerpt-cut function, so 6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-099be5218a649f43",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "Function `ext` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 353,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "ext is truncated mid-body at line 367, so the claimed 6 returns cannot be counted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The `match` on tokens is still open at the excerpt's end (line 368 closes only an inner `if`), so the function continues and the count of 6 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-70e3516aac1a6d0d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "Function `basename_tokens` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 510,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (lines 510-525) shows only three `return None` exits and no closing brace, so the claimed count of 7 for `basename_tokens` cannot be verified from the partial body."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only 3 explicit returns (lines 512, 520, 524) are visible before the excerpt ends, and the function clearly continues, so the claimed 7 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 8 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-32779cd6f4e8332d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Function `resolve_git_commondir` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1056,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only returns at lines 1063 and 1068 are visible before the excerpt ends mid-function at the `match file.lines()` arm, so `resolve_git_commondir`'s claimed 8 returns are unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt opens `fn resolve_git_commondir` but truncates the body before all exits are visible, so the claimed count of 8 cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-eb9c8b2b18306733",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "Function `next` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1136,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (lines 1136-1151) shows only the returns at 1142 and 1144 and cuts off inside the loop, so `next`'s claimed 8 returns cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of `fn next` and cuts off inside nested matches, so the claimed 8 returns are not verifiable from the shown source."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 9 vs budget 5 (EA 8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8704334805a40dcf",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "Function `run_one` has 9 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1703,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the return at line 1712 is visible before the body is truncated, so `run_one`'s claimed 9 returns cannot be counted from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt starts at `fn run_one` but only includes one visible `return` before truncating, so the claimed count of 9 needs the rest of the function."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 10 vs budget 5 (EA 9)"
+        }
+      ]
+    },
+    {
+      "id": "EA-122c1fad5768226e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "Function `generate_work` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1808,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows just the return at line 1818 and ends mid-body, so `generate_work`'s claimed 6 returns are not verifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt opens `fn generate_work` and cuts off after early match logic, leaving the claimed 6 returns unverified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-14108d471db8e1e6",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/literal.rs",
+      "message": "Function `choose` has 10 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 587,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (lines 587-602) shows four returns (595, 596, 600, 601) but the `choose` body continues past line 602, so the claimed 10 cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening decision block of `fn choose` with a few returns, not enough to confirm the claimed total of 10."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 11 vs budget 5 (EA 10)"
+        }
+      ]
+    },
+    {
+      "id": "EA-89a9dae853e0dcec",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/strip.rs",
+      "message": "Function `strip_from_match_ascii` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only returns at lines 57 and 65 appear before the match arms are truncated, so `strip_from_match_ascii`'s claimed 6 returns cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt begins `fn strip_from_match_ascii` and cuts inside the match, so the claimed 6 returns cannot be fully counted from the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-86cf313f951c4817",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Function `match_by_line_slow` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 330,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the return at line 344 and cuts off inside the `while` loop, so `match_by_line_slow`'s claimed 6 returns are unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt opens `fn match_by_line_slow` but truncates within the loop, so the claimed count of 6 is not verifiable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-753cb3d0c1db7362",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Function `match_by_line_fast` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 385,
+      "verdict": "true_positive",
+      "reason": "Return count above budget as reported (parity with ReturnCount-style rules).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 400 mid-function with only one `return Ok(SwitchToSlow)` visible, so the claimed 6 returns in `match_by_line_fast` cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt begins `fn match_by_line_fast` and cuts before the rest of the body, so the claimed 6 returns cannot be confirmed."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-9f3e0a1d88d1cbca",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "Function `convertPrimitiveOrLiteral` has 13 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 337,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only four of the claimed 13 returns (string/number/boolean/null) are visible before the excerpt cuts off, so the count can't be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "convertPrimitiveOrLiteral ends mid-function at line 352 with four returns visible, so the claimed thirteen cannot be verified."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 13 vs budget 5 (EA 13)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d2743e9d564894b9",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "Function `convertTypeToSchema` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 883,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only two returns (`handleCyclicRef` and `primitive`) before ending mid-function, so `convertTypeToSchema`'s claimed 7 returns can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "convertTypeToSchema continues past line 898 with only two returns visible; the claimed seven requires the unseen remainder."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f2d1a674064552b9",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "Function `walkType` has 7 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 1320,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `ctx.seen.has(type)` guard return is visible; `walkType` clearly continues past the excerpt, so 7 returns can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "walkType is truncated at line 1335 with one return visible (line 1323); the claimed seven cannot be counted from the excerpt."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 7 vs budget 5 (EA 7)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ea032eb872ae847a",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/http/resolveResponse.ts",
+      "message": "Function `resolveResponse` has 6 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the HEAD `return new Response(...)` is visible; `resolveResponse` continues beyond the excerpt, so 6 returns can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "resolveResponse continues after the HEAD branch, and only the return on line 224 is visible, so the claimed six is unverifiable."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 6 vs budget 5 (EA 6)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6e924797e55bec99",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Function `mergeValues` has 8 return statements (> 5).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 3241,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the `a === b` return is visible and `mergeValues` continues into a loop past the excerpt, so the claimed 8 returns can't be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "mergeValues is a recursive validator whose per-type guard exits (a===b, the {valid:false} shared-key guard shown, and matching {valid:true,data} returns for object/array/date) genuinely total 8 returns."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 8 vs budget 5 (EA 8)"
+        }
+      ]
+    },
+    {
+      "id": "EA-43f046886fd50906",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/hy.ts",
+      "message": "Function `<anonymous>` has 19 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "line": 112,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is the anonymous `(issue) => { switch ... }` locale message map \u2014 a per-case switch dispatch (the detector even reports an empty name), an idiom the too_many_returns rule should not flag."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The 19 returns are one-per-case in `switch (issue.code)` returning distinct localized messages \u2014 a lookup idiom where returns are not equivalent exits, so \"consolidate equivalent exits\" is misapplied."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 19 vs budget 5 (EA 19)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2d1afe31a4c3f338",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/id.ts",
+      "message": "Function `<anonymous>` has 19 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The reported function is the anonymous `(issue) => { switch ... }` locale message map \u2014 a per-case switch dispatch (name reported empty), an idiom the rule should recognise rather than count as excess exits."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Same `switch (issue.code)` message-map idiom in id.ts: each case returns a different string, so the returns are not equivalent exits and the too-many-returns rationale does not apply."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 19 vs budget 5 (EA 19)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5921bc1e8478d2ac",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/vi.ts",
+      "message": "Function `<anonymous>` has 19 return statements (> 5).",
+      "status": "final",
+      "sampled_from": "t28-l2",
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "The function has more return statements than the metric threshold of 5.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The arrow function returned at line 63 is a switch-based i18n message map where each `case` returns a distinct localized string, so the returns are inherent per-code dispatch and cannot be consolidated as the too_many_returns rationale assumes."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Same `switch (issue.code)` locale-message idiom in vi.ts: distinct per-case strings, not consolidatable equivalent exits, so the rule misapplies its rationale."
+        },
+        {
+          "source": "oracle:rca@0.0.25",
+          "claim": "confirmed",
+          "detail": "rca nexits 19 vs budget 5 (EA 19)"
+        }
+      ]
+    }
+  ]
+}

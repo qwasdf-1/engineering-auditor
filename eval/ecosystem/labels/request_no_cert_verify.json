@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "detector": "request_no_cert_verify",
+  "labels": [
+    {
+      "id": "EA-d8af27650ab930c7",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/Main.kt",
+      "message": "HTTPS request without certificate verification (Bandit B501) at line 160",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "A trust-all manager and hostname verifier behind okcurl --insecure; verification is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The empty checkServerTrusted (and checkClientTrusted) implementation accepts every server certificate, genuinely disabling certificate verification for the socket factory it builds."
+        }
+      ]
+    },
+    {
+      "id": "EA-bcaf3de5de68ea5b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okcurl/src/main/kotlin/okhttp3/curl/Main.kt",
+      "message": "HTTPS request without certificate verification (Bandit B501) at line 177",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 177,
+      "verdict": "true_positive",
+      "reason": "A trust-all manager and hostname verifier behind okcurl --insecure; verification is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "createInsecureHostnameVerifier returns HostnameVerifier { _, _ -> true }, which accepts all hostnames and actually disables verification."
+        }
+      ]
+    },
+    {
+      "id": "EA-c3267f3bd7783d5e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmMain/kotlin/okhttp3/internal/platform/ConscryptPlatform.kt",
+      "message": "HTTPS request without certificate verification (Bandit B501) at line 64",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 64,
+      "verdict": "false_positive",
+      "reason": "Conscrypt hostname check disabled because OkHttp verifies the hostname itself afterwards.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "DisabledHostnameVerifier is an internal Conscrypt hook whose verify returning true is deliberate because OkHttp performs hostname verification itself, so no verification is actually skipped."
+        }
+      ]
+    },
+    {
+      "id": "EA-a22d45552870114a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmMain/kotlin/okhttp3/internal/platform/ConscryptPlatform.kt",
+      "message": "HTTPS request without certificate verification (Bandit B501) at line 69",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 69,
+      "verdict": "false_positive",
+      "reason": "Conscrypt hostname check disabled because OkHttp verifies the hostname itself afterwards.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Same internal Conscrypt DisabledHostnameVerifier; the override returning true is the intentional delegation idiom and does not leave an HTTPS request unverified."
+        }
+      ]
+    }
+  ]
+}

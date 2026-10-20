@@ -1,0 +1,536 @@
+{
+  "schema_version": 1,
+  "detector": "random_for_security",
+  "labels": [
+    {
+      "id": "EA-83c94f2e07eb56b1",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/crypt.h",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 111",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 111,
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`rand() >> 7 & 0xff` fills the ZIP crypto header, a security-relevant value, so using weak `rand()` is a genuine CWE-330 issue."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef70f62eb7636581",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Core/Utils/RandomUtil.cs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 8",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "Randomness for jitter or shuffling, not a security purpose.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "RandomUtil backs Polly retry jitter, not any security purpose, and the file explicitly suppresses the insecure-randomness diagnostic for this use."
+        }
+      ]
+    },
+    {
+      "id": "EA-f18d8e40d14bb092",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Core/Utils/RandomUtil.cs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 9",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 9,
+      "verdict": "false_positive",
+      "reason": "Randomness for jitter or shuffling, not a security purpose.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`Random.Shared.Next` is non-security retry jitter code, with the insecure-randomness warning intentionally disabled at the file top."
+        }
+      ]
+    },
+    {
+      "id": "EA-ad377de7ec1cff27",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly.Core/Utils/RandomUtil.cs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 12",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 12,
+      "verdict": "false_positive",
+      "reason": "Randomness for jitter or shuffling, not a security purpose.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`new Random()` is the non-security fallback for retry jitter, guarded by `#pragma warning disable S2245`, so the security claim is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ac90ea492e23d16",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 5082",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 5082,
+      "verdict": "false_positive",
+      "reason": "Randomness for jitter or shuffling, not a security purpose.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The helper merely returns ThreadLocalRandom for the ArrayUtils shuffle methods, which is not a security-sensitive operation, so the rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-7d871bd0513a8c08",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/DataUtil.java",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 399",
+      "status": "corroborated",
+      "sampled_from": "t19-java-api",
+      "line": 399,
+      "verdict": "false_positive",
+      "reason": "java.util.Random builds a multipart MIME boundary, which is not a secret.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The Random instance only builds a unique MIME boundary delimiter string, not a secret or credential, so it is not a security-sensitive use."
+        }
+      ]
+    },
+    {
+      "id": "EA-a50a53f973daa826",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/utils.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 1053",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 1053,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): })(`axios@${Math.random()}`, [])",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Math.random feeds a postMessage feature-detection marker token in axios, not a security token, so the claim of security sensitivity is wrong."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ff05af2ae6b872e",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/config-rule.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 291",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 291,
+      "verdict": "false_positive",
+      "reason": "Repository tooling under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This line is in tools/config-rule.js, an eslint config-testing utility generating schema example values, which is build/tooling code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f58d0ff13a8f1934",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/config-rule.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 298",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 298,
+      "verdict": "false_positive",
+      "reason": "Repository tooling under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Also in tools/config-rule.js, this uses Math.random to produce a sample integer for a JSON schema, tooling code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-251d1b7107934d41",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/eslint-fuzzer.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 36",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "Repository tooling under tools/, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "sample() in tools/eslint-fuzzer.js is fuzzer tooling code, outside the detector's scope, and its array sampling is not a security use."
+        }
+      ]
+    },
+    {
+      "id": "EA-486540a71d9488a8",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 369",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 369,
+      "verdict": "true_positive",
+      "reason": "java.util.Random seeds WebSocket masking keys, which RFC 6455 requires to be unpredictable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Random() is passed into RealWebSocket to generate WebSocket client masking keys, which are specifically required by the protocol to be unpredictable, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-cceda0b077fb857a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 381",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 381,
+      "verdict": "false_positive",
+      "reason": "`random` drives demo output in a __main__ block; no security-sensitive use.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This random.randint drives a simulated exchange-rate animation in rich's live() demo, an example/visualization use rather than a security-sensitive purpose."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "random.randint(0, 10) only occasionally prints a demo log, so it is not used for security-sensitive randomness."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S311 at line 381"
+        }
+      ]
+    },
+    {
+      "id": "EA-dac381321a09f05b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 384",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 384,
+      "verdict": "false_positive",
+      "reason": "`random` generates fake demo exchange rates; no security-sensitive use.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "random.random() here fabricates a fake exchange rate for a demo table, not a security-sensitive value."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "random.random() only generates a demo exchange-rate value, not security-sensitive randomness."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S311 at line 384"
+        }
+      ]
+    },
+    {
+      "id": "EA-9824350305df4ad6",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 1715",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1715,
+      "verdict": "false_positive",
+      "reason": "`random` throttles demo logging in a __main__ block; no security-sensitive use.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "random.randint(0, 100) < 1 only decides whether to log a sample progress message, not a security purpose."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "random.randint(0, 100) only gates demo logging in the progress example, not a security-sensitive value."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S311 at line 1715"
+        }
+      ]
+    },
+    {
+      "id": "EA-1c6480684400ad71",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/multiple.rs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 218",
+      "status": "corroborated",
+      "sampled_from": "t24-rs-l1",
+      "line": 218,
+      "verdict": "false_positive",
+      "reason": "fastrand builds a multipart boundary, which only needs to be unlikely to occur in the body; it is not a secret.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "fastrand::u64 is used to build a multipart boundary string, an identifier that need not be cryptographically secret."
+        }
+      ]
+    },
+    {
+      "id": "EA-8d2b221ddb963893",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/multiple.rs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 219",
+      "status": "corroborated",
+      "sampled_from": "t24-rs-l1",
+      "line": 219,
+      "verdict": "false_positive",
+      "reason": "fastrand builds a multipart boundary, which only needs to be unlikely to occur in the body; it is not a secret.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "fastrand::u64 at line 219 contributes one segment of a multipart boundary, not security-sensitive randomness."
+        }
+      ]
+    },
+    {
+      "id": "EA-e6703b640d05adfa",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/multiple.rs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 220",
+      "status": "corroborated",
+      "sampled_from": "t24-rs-l1",
+      "line": 220,
+      "verdict": "false_positive",
+      "reason": "fastrand builds a multipart boundary, which only needs to be unlikely to occur in the body; it is not a secret.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "fastrand::u64 at line 220 is part of the boundary generation, which is not a security-sensitive use of randomness."
+        }
+      ]
+    },
+    {
+      "id": "EA-e05efab81b2f0cd1",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/response/multiple.rs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 221",
+      "status": "corroborated",
+      "sampled_from": "t24-rs-l1",
+      "line": 221,
+      "verdict": "false_positive",
+      "reason": "fastrand builds a multipart boundary, which only needs to be unlikely to occur in the body; it is not a secret.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "fastrand::u64 at line 221 formats another boundary segment, not a secret or security token."
+        }
+      ]
+    },
+    {
+      "id": "EA-7a7be65c362bc528",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 93",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 93,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): const randomIndex = Math.floor(Math.random() * generated.length);",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Math.random() picks a random reference index in a code generator's output, unrelated to security."
+        }
+      ]
+    },
+    {
+      "id": "EA-3e10fed923887bde",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 121",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 121,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): const omitKeys = keys.slice(0, keys.length - 1).filter(() => Math.random() > 0.5);",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Math.random() > 0.5 randomly filters keys when generating a schema, not a security-sensitive operation."
+        }
+      ]
+    },
+    {
+      "id": "EA-3c32e36b8d185524",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 134",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 134,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): const pickKeys = keys.slice(0, keys.length - 1).filter(() => Math.random() > 0.5);",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`Math.random() > 0.5` at line 134 only picks random keys while generating a sample schema, not a security-sensitive value."
+        }
+      ]
+    },
+    {
+      "id": "EA-5b521af44b0bac7d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 320",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 320,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): const randomIndex = Math.floor(Math.random() * charset.length);",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`randomStr` (line 316) uses `Math.floor(Math.random()*charset.length)` merely to build random variable names for generated code, not secrets."
+        }
+      ]
+    },
+    {
+      "id": "EA-4cf59703d81188b3",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 338",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 338,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): const randomTypeIndex = Math.floor(Math.random() * params.valueTypes.length);",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`Math.random()` at line 338 picks a random value-type index for generated schema data, a non-security purpose."
+        }
+      ]
+    },
+    {
+      "id": "EA-83a3121251888d25",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 339",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 339,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): const randomChainMethodIndex = Math.floor(Math.random() * methods.length);",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`Math.random()` at line 339 chooses a random chain-method index for generated data, not a security-sensitive use."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d5401619bed3363",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/util.ts",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 491",
+      "status": "corroborated",
+      "sampled_from": "t21-js-api",
+      "line": 491,
+      "verdict": "false_positive",
+      "reason": "Math.random() builds a non-secret value (test data, a name, or a message token): str += chars[Math.floor(Math.random() * chars.length)];",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`randomString` (line 487) is a generic lowercase-letter generator; nothing indicates a security-sensitive purpose for the `Math.random()` at line 491."
+        }
+      ]
+    }
+  ]
+}

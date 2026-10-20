@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/case-template-bundle-v1.schema.json",
+  "title": "Engineering Auditor Case Template Bundle V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bundle_version", "entries"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "bundle_version": { "type": "integer", "const": 1 },
+    "entries": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "case_kind": {
+      "enum": [
+        "lifecycle_mismatch",
+        "shared_root_cause",
+        "recommendation_consolidation"
+      ]
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version", "status", "template"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/case_kind" },
+        "version": { "type": "integer", "minimum": 1 },
+        "status": { "enum": ["production", "shadow", "not_enabled"] },
+        "template": {
+          "oneOf": [
+            { "$ref": "case-template-v1.schema.json" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "production" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "template": { "$ref": "case-template-v1.schema.json" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "shadow" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": { "template": { "$ref": "case-template-v1.schema.json" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "not_enabled" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": { "template": { "type": "null" } }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "detector": "stale_section_anchor",
+  "labels": [
+    {
+      "id": "EA-79d3fdb8f54f5109",
+      "repository": "axios",
+      "language": "markdown",
+      "path": "SECURITY.md",
+      "message": "Markdown link `THREATMODEL.md#37-incident-response-runbook` references anchor `#37-incident-response-runbook` which does not exist in `THREATMODEL.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "Heading \"3.7 Incident response runbook\" slugs to `37-incident-response-runbook` on GitHub; the anchor exists.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-472a97ab46361642",
+      "repository": "eslint",
+      "language": "markdown",
+      "path": "docs/src/use/migrating-to-5.0.0.md",
+      "message": "Markdown link `../integrate/nodejs-api#cliengineexecuteonfiles` references anchor `#cliengineexecuteonfiles` which does not exist in `docs/src/integrate/nodejs-api`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "nodejs-api.md has no CLIEngine or executeOnFiles heading (only \"## Linter\" etc.), so #cliengineexecuteonfiles is a dead anchor."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The target file `docs/src/integrate/nodejs-api` and its headings are not in the excerpt, so whether the `#cliengineexecuteonfiles` anchor exists cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4dbd428d7b4c85e5",
+      "repository": "eslint",
+      "language": "markdown",
+      "path": "docs/src/use/migrating-to-5.0.0.md",
+      "message": "Markdown link `../integrate/nodejs-api#linter-1` references anchor `#linter-1` which does not exist in `docs/src/integrate/nodejs-api`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 271,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "nodejs-api.md has \"## Linter\" but no \"linter-1\" duplicate-slug heading, so #linter-1 does not resolve."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt does not show `docs/src/integrate/nodejs-api`, so the existence of the `#linter-1` anchor (a duplicate-heading suffix) cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9a4f1fd010953572",
+      "repository": "eslint",
+      "language": "markdown",
+      "path": "docs/src/use/migrating-to-6.0.0.md",
+      "message": "Markdown link `../use/configure#configuration-based-on-glob-patterns` references anchor `#configuration-based-on-glob-patterns` which does not exist in `docs/src/use/configure`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 200,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "use/configure was split into a directory (configure/index.md etc.) and no heading about glob-pattern configuration remains, so #configuration-based-on-glob-patterns is dead."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The target `docs/src/use/configure` is not shown, so whether `#configuration-based-on-glob-patterns` exists cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca714c6a9625f19d",
+      "repository": "eslint",
+      "language": "markdown",
+      "path": "docs/src/use/migrating-to-6.0.0.md",
+      "message": "Markdown link `../integrate/nodejs-api#linterdefineparser` references anchor `#linterdefineparser` which does not exist in `docs/src/integrate/nodejs-api`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 333,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "nodejs-api.md has no \"Linter#defineParser\" section (only verify, verifyAndFix, version, ...), so #linterdefineparser is dead."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The target `docs/src/integrate/nodejs-api` is not shown, so whether the `#linterdefineparser` anchor exists cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-5793178b3e95cc46",
+      "repository": "eslint",
+      "language": "markdown",
+      "path": "docs/src/use/migrating-to-7.0.0.md",
+      "message": "Markdown link `../integrate/nodejs-api#cliengine` references anchor `#cliengine` which does not exist in `docs/src/integrate/nodejs-api`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 211,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "nodejs-api.md contains no CLIEngine heading, so the #cliengine anchor in the migrating-to-7 link is dead."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows the link to `../integrate/nodejs-api#cliengine` but not that file's headings, so the anchor's existence cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-3629544ba90fe9ab",
+      "repository": "fd",
+      "language": "markdown",
+      "path": "CONTRIBUTING.md",
+      "message": "Markdown link `CHANGELOG.md#upcoming-release` references anchor `#upcoming-release` which does not exist in `CHANGELOG.md`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt itself states the CHANGELOG's top contains an \"Upcoming release\" section (line 37), which would generate the link's `#upcoming-release` anchor, contradicting the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-a87297f73e90e47a",
+      "repository": "gson",
+      "language": "markdown",
+      "path": "README.md",
+      "message": "Markdown link `Troubleshooting.md#proguard-r8` references anchor `#proguard-r8` which does not exist in `Troubleshooting.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 20,
+      "verdict": "false_positive",
+      "reason": "Target defines `<a id=\"proguard-r8\"></a>` in its heading; the anchor exists.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-dfeffbd4a95bfdaf",
+      "repository": "gson",
+      "language": "markdown",
+      "path": "README.md",
+      "message": "Markdown link `Troubleshooting.md#proguard-r8` references anchor `#proguard-r8` which does not exist in `Troubleshooting.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "Target defines `<a id=\"proguard-r8\"></a>` in its heading; the anchor exists.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-2b8c87014159b80a",
+      "repository": "httpx",
+      "language": "markdown",
+      "path": "docs/compatibility.md",
+      "message": "Markdown link `advanced/clients.md#client-instances` references anchor `#client-instances` which does not exist in `docs/advanced/clients.md`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 200,
+      "verdict": "true_positive",
+      "reason": "No `client-instances` heading or id in docs/advanced/clients.md; the link is stale.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "docs/advanced/clients.md has no \"Client instances\" heading (sections are Why use a Client, Usage, ...), so #client-instances is not a valid anchor."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The target `docs/advanced/clients.md` and its headings are not in the excerpt, so whether `#client-instances` exists cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Confirming that #client-instances is missing requires the headings of docs/advanced/clients.md, which the excerpt does not include."
+        }
+      ]
+    },
+    {
+      "id": "EA-090ba76455740938",
+      "repository": "httpx",
+      "language": "markdown",
+      "path": "docs/environment_variables.md",
+      "message": "Markdown link `advanced/proxies.md#http-proxying` references anchor `#http-proxying` which does not exist in `docs/advanced/proxies.md`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "No `http-proxying` heading in docs/advanced/proxies.md (now \"HTTP Proxies\"); stale.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The link text \"HTTP Proxying\" and anchor `#http-proxying` both name the target section, which resolves to the `HTTP Proxying` heading in `advanced/proxies.md`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Confirming that #http-proxying is missing requires the headings of docs/advanced/proxies.md, which the excerpt does not include."
+        }
+      ]
+    },
+    {
+      "id": "EA-a6cc7a8847cbc5cd",
+      "repository": "httpx",
+      "language": "markdown",
+      "path": "docs/third_party_packages.md",
+      "message": "Markdown link `advanced/authentication.md#customizing-authentication` references anchor `#customizing-authentication` which does not exist in `docs/advanced/authentication.md`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "No `customizing-authentication` heading in authentication.md; stale.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The anchor `#customizing-authentication` corresponds to the `Customizing authentication` section in `advanced/authentication.md`, so the link resolves."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the referencing link in docs/third_party_packages.md; the headings of docs/advanced/authentication.md are not shown, so whether anchor #customizing-authentication exists cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-62ce1d70b6cb6333",
+      "repository": "immer",
+      "language": "markdown",
+      "path": "website/i18n/zh-CN/docusaurus-plugin-content-docs/current/api.md",
+      "message": "Markdown link `./installation.mdx#pick-your-immer-version` references anchor `#pick-your-immer-version` which does not exist in `website/i18n/zh-CN/docusaurus-plugin-content-docs/current/installation.mdx`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 19,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The target is a translated zh-CN `installation.mdx` whose heading is localized, so `.mdx#pick-your-immer-version` does not resolve."
+        }
+      ]
+    },
+    {
+      "id": "EA-8d7c21d3dcba13f2",
+      "repository": "immer",
+      "language": "markdown",
+      "path": "website/i18n/zh-CN/docusaurus-plugin-content-docs/current/api.md",
+      "message": "Markdown link `./installation#pick-your-immer-version` references anchor `#pick-your-immer-version` which does not exist in `website/i18n/zh-CN/docusaurus-plugin-content-docs/current/installation`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`./installation` resolves to the same translated `installation.mdx`, whose localized heading means `#pick-your-immer-version` does not resolve."
+        }
+      ]
+    },
+    {
+      "id": "EA-4eb0f51ec238a90f",
+      "repository": "immer",
+      "language": "markdown",
+      "path": "website/i18n/zh-CN/docusaurus-plugin-content-docs/current/faq.md",
+      "message": "Markdown link `./installation.mdx#immer-on-older-javascript-environments` references anchor `#immer-on-older-javascript-environments` which does not exist in `website/i18n/zh-CN/docusaurus-plugin-content-docs/current/installation.mdx`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The translated `installation.mdx` heading is localized, so `#immer-on-older-javascript-environments` does not resolve."
+        }
+      ]
+    },
+    {
+      "id": "EA-0045c6cdaaf58cd5",
+      "repository": "immer",
+      "language": "markdown",
+      "path": "website/i18n/zh-CN/docusaurus-plugin-content-docs/current/map-set.md",
+      "message": "Markdown link `./installation.mdx#pick-your-immer-version` references anchor `#pick-your-immer-version` which does not exist in `website/i18n/zh-CN/docusaurus-plugin-content-docs/current/installation.mdx`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 10,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The localized heading in the zh-CN `installation.mdx` means `#pick-your-immer-version` referenced from `map-set.md` does not resolve."
+        }
+      ]
+    },
+    {
+      "id": "EA-0e009909708fa778",
+      "repository": "immer",
+      "language": "markdown",
+      "path": "website/i18n/zh-CN/docusaurus-plugin-content-docs/current/pitfalls.md",
+      "message": "Markdown link `./performance.mdx#performance-tips` references anchor `#performance-tips` which does not exist in `website/i18n/zh-CN/docusaurus-plugin-content-docs/current/performance.mdx`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 12,
+      "verdict": "true_positive",
+      "reason": "The target page has no heading or anchor with this id (removed or translated section).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The performance doc's heading is translated (cf. the Chinese heading `### \u6027\u80fd\u63d0\u793a`), so `#performance-tips` does not resolve."
+        }
+      ]
+    },
+    {
+      "id": "EA-6cd0aae138f01415",
+      "repository": "ripgrep",
+      "language": "markdown",
+      "path": "CHANGELOG.md",
+      "message": "Markdown link `FAQ.md#colors` references anchor `#colors` which does not exist in `FAQ.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1137,
+      "verdict": "false_positive",
+      "reason": "FAQ.md defines the anchor with `<h3 name=\"colors\">`.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-4baa20f835ed285e",
+      "repository": "ripgrep",
+      "language": "markdown",
+      "path": "README.md",
+      "message": "Markdown link `FAQ.md#complete` references anchor `#complete` which does not exist in `FAQ.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "FAQ.md defines the anchor with `<h3 name=\"complete\">`.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-745fd9b6179576d3",
+      "repository": "ripgrep",
+      "language": "markdown",
+      "path": "README.md",
+      "message": "Markdown link `FAQ.md#posix4ever` references anchor `#posix4ever` which does not exist in `FAQ.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 120,
+      "verdict": "false_positive",
+      "reason": "FAQ.md defines the anchor with `<h3 name=\"posix4ever\">`.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-206ad01667470169",
+      "repository": "trpc",
+      "language": "markdown",
+      "path": "www/docs/client/links/httpBatchStreamLink.md",
+      "message": "Markdown link `./httpBatchLink.md#options` references anchor `#options` which does not exist in `www/docs/client/links/httpBatchLink.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 12,
+      "verdict": "false_positive",
+      "reason": "Target heading declares an explicit Docusaurus id `{#options}`.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-fb24cec68bf36e31",
+      "repository": "trpc",
+      "language": "markdown",
+      "path": "www/docs/client/links/retryLink.md",
+      "message": "Markdown link `../../server/subscriptions.md#tracked` references anchor `#tracked` which does not exist in `www/docs/server/subscriptions.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 100,
+      "verdict": "false_positive",
+      "reason": "Target heading declares an explicit Docusaurus id `{#tracked}`.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a87daf86926ffbdb",
+      "repository": "trpc",
+      "language": "markdown",
+      "path": "www/docs/client/react/useQuery.md",
+      "message": "Markdown link `../links/httpBatchStreamLink.md#generators` references anchor `#generators` which does not exist in `www/docs/client/links/httpBatchStreamLink.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 132,
+      "verdict": "false_positive",
+      "reason": "Target heading declares an explicit Docusaurus id `{#generators}`.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8218b33e3839dd48",
+      "repository": "trpc",
+      "language": "markdown",
+      "path": "www/docs/server/validators.md",
+      "message": "Markdown link `subscriptions.md#output-validation` references anchor `#output-validation` which does not exist in `www/docs/server/subscriptions.md`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 126,
+      "verdict": "false_positive",
+      "reason": "Target heading declares an explicit Docusaurus id `{#output-validation}`.",
+      "labeller": "model:claude-opus-5-5"
+    }
+  ]
+}

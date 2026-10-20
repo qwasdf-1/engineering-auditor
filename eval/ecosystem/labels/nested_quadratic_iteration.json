@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "detector": "nested_quadratic_iteration",
+  "labels": [
+    {
+      "id": "EA-8d87f0862b2e2934",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `findWildcard` independently traverses `byte` for `start` and `end`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 275,
+      "verdict": "false_positive",
+      "reason": "A scan from each wildcard start to its end; the inner loop is bounded by the segment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The inner loop iterates `[]byte(path[start+1:])`, a slice dependent on `start`, and the function returns on the first wildcard, so the claimed independent O(n^2) traversal is not present."
+        }
+      ]
+    },
+    {
+      "id": "EA-b0c1b1038088d53b",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java",
+      "message": "Function `normalizeUpperBounds` independently traverses `bounds` for `type1` and `type2`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1381,
+      "verdict": "false_positive",
+      "reason": "Pairwise subtype checks over small bound lists are the algorithm.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Both loops iterate the same `bounds` array with no early outer termination, so `normalizeUpperBounds` genuinely performs an all-pairs O(n^2) traversal."
+        }
+      ]
+    },
+    {
+      "id": "EA-40062e5af6f7b404",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/__main__.py",
+      "message": "Function `__rich_console__` independently traverses `range` for `y` and `x`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "`range(0, 5)` and `range(max_width)` are distinct ranges; collection identity took the callee name `range`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The outer loop is `for y in range(0, 5)` \u2014 a constant 5 iterations \u2014 so the double loop is O(max_width), linear, not the claimed quadratic iteration."
+        }
+      ]
+    },
+    {
+      "id": "EA-d24c45cd460d08ec",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/palette.py",
+      "message": "Function `__rich_console__` independently traverses `range` for `y` and `x`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "`range(0, height)` and `range(max_width)` are distinct ranges; collection identity took the callee name `range`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Both `for y in range(0, height)` (height = console.size.height - 3) and `for x in range(options.max_width)` scale with input dimensions, so the nested traversal is genuinely O(width \u00d7 height)."
+        }
+      ]
+    },
+    {
+      "id": "EA-c43d9f679a02dc7b",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Function `` independently traverses `versionsToProcessConfig` for `versionSpec` and `otherVersion`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 438,
+      "verdict": "false_positive",
+      "reason": "All-pairs link generation over a handful of doc versions; output is inherently pairwise and no index helps.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`www/docusaurus.config.ts` is build/tooling configuration (and the cross-version link generation is the intended pairwise output), placing it outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`www/docusaurus.config.ts` is Docusaurus build/tooling configuration rather than in-scope production source, so the nested-loop finding is outside the site scope."
+        }
+      ]
+    }
+  ]
+}

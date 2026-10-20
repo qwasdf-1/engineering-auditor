@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/probe-definition-v1.schema.json",
+  "title": "Engineering Auditor Probe Definition V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "probe_id",
+    "case_id",
+    "case_kind",
+    "template_version",
+    "template_bundle_digest",
+    "origin",
+    "slot",
+    "kind",
+    "question",
+    "allowed_results",
+    "resolver_precedence",
+    "required_evidence_classes",
+    "positive_boundary",
+    "negative_boundary",
+    "blocked_claim_slots",
+    "target_ids",
+    "decision_target",
+    "decision_relevance"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "probe_id": { "type": "string", "pattern": "^case-probe:[0-9a-f]{64}$" },
+    "case_id": { "type": "string", "pattern": "^engineering-case:[0-9a-f]{64}$" },
+    "case_kind": { "$ref": "#/$defs/case_kind" },
+    "template_version": { "type": "integer", "minimum": 1 },
+    "template_bundle_digest": { "$ref": "#/$defs/digest" },
+    "origin": { "enum": ["mandatory", "optional"] },
+    "slot": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" },
+    "kind": { "$ref": "case-template-v1.schema.json#/$defs/probe_kind" },
+    "question": { "type": "string", "minLength": 1 },
+    "allowed_results": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        { "const": "yes" },
+        { "const": "no" },
+        { "const": "unknown" },
+        { "const": "not_applicable" },
+        { "const": "conflicting_evidence" }
+      ]
+    },
+    "resolver_precedence": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        { "const": "existing_deterministic_fact" },
+        { "const": "evidence_graph_query" },
+        { "const": "repository_map_query" },
+        { "const": "bound_runtime_measurement" },
+        { "const": "operator_brief" },
+        { "const": "model_interpretation" },
+        { "const": "unknown_fallback" }
+      ]
+    },
+    "required_evidence_classes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "case-template-v1.schema.json#/$defs/evidence_class" }
+    },
+    "positive_boundary": { "type": "string", "minLength": 1 },
+    "negative_boundary": { "type": "string", "minLength": 1 },
+    "blocked_claim_slots": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "case-template-v1.schema.json#/$defs/claim_slot" }
+    },
+    "target_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "decision_target": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/decision_target" }
+      ]
+    },
+    "decision_relevance": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "case_kind": {
+      "enum": [
+        "lifecycle_mismatch",
+        "shared_root_cause",
+        "recommendation_consolidation"
+      ]
+    },
+    "decision_target": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "claim" },
+            "value": { "$ref": "case-template-v1.schema.json#/$defs/claim_slot" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "recommendation" },
+            "value": { "$ref": "case-template-v1.schema.json#/$defs/recommendation_family" }
+          }
+        }
+      ]
+    }
+  }
+}

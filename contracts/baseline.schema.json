@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/baseline.schema.json",
+  "title": "Engineering Auditor Standalone Baseline V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_schema_version",
+    "semantic_contract_version",
+    "evidence_graph_schema_version",
+    "finding_id_version",
+    "source_role_version",
+    "profile",
+    "scope",
+    "analysis_method",
+    "analysis_contract_digest",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "report_schema_version": { "type": "integer", "const": 5 },
+    "semantic_contract_version": { "type": "integer", "const": 1 },
+    "evidence_graph_schema_version": { "type": "integer", "const": 2 },
+    "finding_id_version": { "type": "integer", "const": 3 },
+    "source_role_version": { "type": "integer", "const": 1 },
+    "profile": { "enum": ["gating", "full"] },
+    "scope": { "enum": ["full", "changed"] },
+    "analysis_method": { "enum": ["auto", "ast", "token"] },
+    "analysis_contract_digest": { "type": "string", "minLength": 1 },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "detector", "title", "path", "message", "identity", "reason"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "detector": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "minLength": 1 },
+          "message": { "type": "string", "minLength": 1 },
+          "identity": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/ecosystem-labels.schema.json",
+  "title": "Engineering Auditor Ecosystem Precision Labels",
+  "description": "Adjudicated samples of one detector's findings on the ecosystem corpus, keyed by finding-ID v3. A final verdict requires a human labeller. A model verdict stays pre_label until an independent check (a reference-tool oracle or a second, different model) corroborates it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "detector",
+    "labels"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "detector": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "repository",
+          "language",
+          "path",
+          "message",
+          "status",
+          "sampled_from"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^EA-[0-9a-f]{16}$"
+          },
+          "repository": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "language": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string"
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "pre_label",
+              "corroborated",
+              "final"
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "true_positive",
+              "false_positive",
+              "unclear"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "labeller": {
+            "type": "string",
+            "pattern": "^(human|model):[A-Za-z0-9._@/-]+$"
+          },
+          "sampled_from": {
+            "type": "string",
+            "minLength": 1
+          },
+          "checks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source"
+              ],
+              "properties": {
+                "source": {
+                  "type": "string",
+                  "pattern": "^(oracle|model):[A-Za-z0-9._@/-]+$"
+                },
+                "claim": {
+                  "enum": [
+                    "confirmed",
+                    "refuted"
+                  ]
+                },
+                "detail": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "verdict": {
+                  "enum": [
+                    "true_positive",
+                    "false_positive",
+                    "unclear"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

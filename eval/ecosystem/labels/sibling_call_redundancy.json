@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "detector": "sibling_call_redundancy",
+  "labels": [
+    {
+      "id": "EA-e7efaefdd8cd4379",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Functions `format_file_in_place` and `format_stdin_to_stdout` share 3 non-trivial local callees.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1044,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Both functions run the same decode_bytes -> format_file_contents -> (diff/color_diff) -> _write_to_stdout pipeline, and the WriteBack YES/DIFF/COLOR_DIFF write-back block is nearly duplicated between them. The shared callee set is accurate and the code could be extracted into a shared helper.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "format_file_in_place and format_stdin_to_stdout both call decode_bytes, format_file_contents and _write_to_stdout in parallel read-format-write flows, a real near-duplicate pipeline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the signature and docstring of format_file_in_place, not the function bodies needed to verify the three shared callees."
+        }
+      ]
+    },
+    {
+      "id": "EA-e4fdc716239cce25",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/ranges.py",
+      "message": "Functions `_convert_node_to_standalone_comment` and `_convert_nodes_to_standalone_comment` share 4 non-trivial local callees.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 486,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): _convert_nodes_to_standalone_comment is the plural twin of _convert_node_to_standalone_comment. Both do the same is_recorded guard, take_prefix, _str_with_standalone_comments and record(Leaf(STANDALONE_COMMENT, ...)) sequence, so this is real sibling redundancy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_convert_node_to_standalone_comment and _convert_nodes_to_standalone_comment share the is_recorded/record/take_prefix/_str_with_standalone_comments sequence with near-identical bodies."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of _convert_node_to_standalone_comment is shown; the plural converter and most claimed call sites are outside the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-c7e770d440567e10",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/strings.py",
+      "message": "Functions `normalize_string_quotes` and `normalize_fstring_quotes` share 3 non-trivial local callees.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 193,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): normalize_fstring_quotes repeats normalize_string_quotes almost line for line: the three _cached_compile patterns, the three sub_twice passes, the _ends_with_unescaped_quote edge case and the escape-count comparison. That is extractable duplication, not separate compositions of the helpers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "normalize_string_quotes and normalize_fstring_quotes both use _cached_compile, sub_twice and _ends_with_unescaped_quote in closely parallel quote-rewriting logic."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of normalize_string_quotes and no body for normalize_fstring_quotes, so the three shared calls cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-549666abd0c00922",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Functions `do_match` and `_return_annotation_match` share 3 non-trivial local callees.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 923,
+      "verdict": "false_positive",
+      "reason": "Sharing three helper callees is not redundant work; each function composes them differently.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "do_match and _return_annotation_match are in different transformer classes and only share generic helpers (is_valid_index_factory, is_valid_index, parse), not redundant logic."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the beginning of do_match, not _return_annotation_match or the claimed is_valid_index and parse calls."
+        }
+      ]
+    },
+    {
+      "id": "EA-a02afa6c3e0c7e32",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Functions `__init__` and `__init__` share 4 non-trivial local callees.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 639,
+      "verdict": "false_positive",
+      "reason": "Sync/async client twins sharing helper callees is the deduplication, not redundancy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The two __init__ methods belong to the sync Client and AsyncClient, which deliberately mirror each other (sync/async twin idiom) while delegating to shared base helpers."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first __init__ signature is visible; the second __init__ and the call sites needed to verify the shared callees are not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only Client.__init__'s signature and super().__init__(...); confirming the shared-callee count of 4 needs AsyncClient.__init__ and the in-body _init_transport/_init_proxy_transport calls not shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-d5886171fce05c71",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Functions `append` and `append_text` share 3 non-trivial local callees.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 964,
+      "verdict": "false_positive",
+      "reason": "Sharing `append`/`copy`/`extend` callees is normal delegation, not redundant sibling logic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Text.append and Text.append_text share only generic list-method callees (append, copy, extend) in different overloads, which is not meaningful redundancy."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at append's docstring and does not show append_text or the claimed append, copy, and extend calls."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only append's signature/docstring is visible with no calls yet; verifying that it and append_text share [append, copy, extend] requires append_text's body, which the excerpt omits."
+        }
+      ]
+    }
+  ]
+}

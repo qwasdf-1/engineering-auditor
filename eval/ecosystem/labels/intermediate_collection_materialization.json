@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "detector": "intermediate_collection_materialization",
+  "labels": [
+    {
+      "id": "EA-0538b4b3a55903b1",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent-legacy.js",
+      "message": "Function `getNodeIndent` materializes a collection before `filter_then_existence`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 419,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Wrong claim: filter(..).length is used as a count, not an existence test (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`.filter(char => char === \" \").length` is the idiomatic JS way to count matches (the count is used as `spaces`), not an existence check, so the `filter_then_existence` rationale is misapplied."
+        }
+      ]
+    },
+    {
+      "id": "EA-eed76a88ede65a8b",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent-legacy.js",
+      "message": "Function `getNodeIndent` materializes a collection before `filter_then_existence`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 420,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Wrong claim: filter(..).length is used as a count, not an existence test (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`.filter(char => char === \"\t\").length` is a match-count idiom consumed as `tabs`, not an existence test, so the materialization-for-existence rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-38c5a14a23822111",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent.js",
+      "message": "Function `report` materializes a collection before `filter_then_existence`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 792,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Wrong claim: filter(..).length is used as a count, not an existence test (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`actualIndent.filter(char => char === \" \").length` counts spaces for the error message, so it is a counting idiom rather than the existence check the detector names."
+        }
+      ]
+    },
+    {
+      "id": "EA-6932a3c33587e66b",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent.js",
+      "message": "Function `report` materializes a collection before `filter_then_existence`.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 793,
+      "verdict": "true_positive",
+      "reason": "filter(..).length builds an array only to count it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`actualIndent.filter(char => char === \"\\t\").length` builds a filtered array only to read its length."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,748 @@
+mod tests {
+    use super::*;
+    use crate::security_literal_rules::shannon_entropy;
+    use crate::security_rules::{
+        bind_all_interfaces_findings, flask_debug_true_findings,
+        hardcoded_credential_findings, hardcoded_tmp_directory_findings,
+        random_for_security_findings, request_no_cert_verify_findings,
+        ssh_no_host_key_verification_findings, ssl_with_bad_defaults_findings,
+        try_except_pass_findings, unsafe_deserialization_findings,
+        world_writable_file_findings, xml_xxe_vulnerable_findings,
+    };
+    use std::fs;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn temp_root(name: &str) -> std::path::PathBuf {
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "engineering-auditor-security-{name}-{}-{nanos}",
+            std::process::id()
+        ))
+    }
+
+    fn make_file(root: &std::path::Path, rel: &str, text: &str) -> AuditedFile {
+        let path = root.join(rel);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, text).unwrap();
+        let language = if rel.ends_with(".rs") {
+            crate::Language::Rust
+        } else if rel.ends_with(".js") || rel.ends_with(".ts") {
+            crate::Language::JavaScript
+        } else if rel.ends_with(".go") {
+            crate::Language::Go
+        } else {
+            crate::Language::Python
+        };
+        AuditedFile {
+            absolute: path,
+            relative: std::path::PathBuf::from(rel),
+            language,
+            bytes: text.len() as u64,
+            role: crate::SourceRole::Production,
+        }
+    }
+
+    fn test_cache(file: &AuditedFile) -> util::FileCache {
+        util::FileCache::new(std::slice::from_ref(file))
+    }
+
+    fn sql_injection_findings(
+        files: &[AuditedFile],
+        method: crate::AnalysisMethod,
+        cache: &util::FileCache,
+        _repo_ast: &auditor_ast::RepoAst,
+    ) -> Vec<Finding> {
+        let mut repo_ast = auditor_ast::RepoAst::new();
+        super::sql_injection_findings(crate::ast_scan::AstScan::new(
+            files,
+            method,
+            cache,
+            &mut repo_ast,
+        ))
+    }
+
+    fn insecure_cryptography_findings(
+        files: &[AuditedFile],
+        method: crate::AnalysisMethod,
+        cache: &util::FileCache,
+        _repo_ast: &auditor_ast::RepoAst,
+    ) -> Vec<Finding> {
+        let mut repo_ast = auditor_ast::RepoAst::new();
+        super::insecure_cryptography_findings(crate::ast_scan::AstScan::new(
+            files,
+            method,
+            cache,
+            &mut repo_ast,
+        ))
+    }
+
+    fn shell_execution_findings(
+        files: &[AuditedFile],
+        cache: &util::FileCache,
+    ) -> Vec<Finding> {
+        let mut repo_ast = auditor_ast::RepoAst::new();
+        super::shell_execution_findings(crate::ast_scan::AstScan::new(
+            files,
+            crate::AnalysisMethod::Ast,
+            cache,
+            &mut repo_ast,
+        ))
+    }
+
+    fn security_findings(
+        files: &[AuditedFile],
+        cache: &util::FileCache,
+        config: &AuditorConfig,
+    ) -> Vec<Finding> {
+        let mut findings = Vec::new();
+        let mut repo_ast = auditor_ast::RepoAst::new();
+        findings.extend(hardcoded_credential_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(unsafe_deserialization_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(bind_all_interfaces_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(try_except_pass_findings(files, cache, config));
+        findings.extend(world_writable_file_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(hardcoded_tmp_directory_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(flask_debug_true_findings(files, cache, config));
+        findings.extend(random_for_security_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(request_no_cert_verify_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(xml_xxe_vulnerable_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(ssl_with_bad_defaults_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings.extend(ssh_no_host_key_verification_findings(
+            crate::ast_scan::AstScan::new(
+                files,
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ),
+            config,
+        ));
+        findings
+    }
+
+    #[test]
+    fn security_detects_hardcoded_password() {
+        let root = temp_root("pw");
+        let file = make_file(&root, "src/config.py", "password = \"supersecret\"\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "hardcoded_credential"),
+            "expected hardcoded_credential finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn security_skips_env_var() {
+        let root = temp_root("pw_env");
+        let file = make_file(
+            &root,
+            "src/config.py",
+            "password = os.getenv(\"DB_PASS\")\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            !findings
+                .iter()
+                .any(|f| f.detector == "hardcoded_credential"),
+            "expected no hardcoded_credential finding for env var"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn security_detects_unsafe_pickle() {
+        let root = temp_root("pickle");
+        let file = make_file(&root, "src/main.py", "data = pickle.loads(blob)\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "unsafe_deserialization"),
+            "expected unsafe_deserialization finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn entropy_detects_high_entropy_string_with_credential_keyword() {
+        let root = temp_root("entropy_pos");
+        let file = make_file(
+            &root,
+            "src/config.py",
+            "api_key = \"X7k9#mP2rL5@vN8*qW1!zC4&bJ6\"\n",
+        );
+        let cache = test_cache(&file);
+        // Verify the test string has high entropy
+        let e = shannon_entropy("X7k9#mP2rL5@vN8*qW1!zC4&bJ6");
+        assert!(e >= 4.5, "test string entropy {} should be >= 4.5", e);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "hardcoded_credential"),
+            "expected hardcoded_credential finding for high-entropy string with api_key"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn entropy_skips_low_entropy_string_with_credential_keyword() {
+        let root = temp_root("entropy_neg");
+        let file = make_file(&root, "src/config.py", "api_key = \"default_key_123\"\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            !findings
+                .iter()
+                .any(|f| f.detector == "hardcoded_credential" && f.title.contains("high-entropy")),
+            "expected no entropy-based finding for low-entropy string"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn entropy_skips_high_entropy_without_credential_keyword() {
+        let root = temp_root("entropy_noctx");
+        let file = make_file(
+            &root,
+            "src/utils.py",
+            "label = \"X7k9#mP2rL5@vN8*qW1!zC4&bJ6\"\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        let entropy_findings: Vec<_> = findings
+            .iter()
+            .filter(|f| f.detector == "hardcoded_credential" && f.title.contains("high-entropy"))
+            .collect();
+        assert!(
+            entropy_findings.is_empty(),
+            "expected no entropy-based finding without credential context"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn entropy_with_custom_threshold() {
+        let root = temp_root("entropy_cfg");
+        let file = make_file(
+            &root,
+            "src/config.py",
+            "secret = \"X7k9#mP2rL5@vN8*qW1!zC4&bJ6\"\n",
+        );
+        let cache = test_cache(&file);
+        let mut config = AuditorConfig::default();
+        config.detectors.insert(
+            "hardcoded_credential".to_string(),
+            crate::config::DetectorConfig {
+                enabled: None,
+                threshold: None,
+                severity: None,
+                entropy_threshold: Some(10.0),
+                min_length: None,
+                max_length: None,
+                ..Default::default()
+            },
+        );
+        let findings = security_findings(&[file], &cache, &config);
+        assert!(
+            !findings
+                .iter()
+                .any(|f| f.detector == "hardcoded_credential" && f.title.contains("high-entropy")),
+            "expected no entropy-based finding with threshold above string entropy"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn entropy_skips_short_strings() {
+        let root = temp_root("entropy_short");
+        let file = make_file(&root, "src/config.py", "token = \"abc123\"\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        let entropy_findings: Vec<_> = findings
+            .iter()
+            .filter(|f| f.detector == "hardcoded_credential" && f.title.contains("high-entropy"))
+            .collect();
+        assert!(
+            entropy_findings.is_empty(),
+            "expected no entropy-based finding for short strings (< 8 chars)"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn security_detects_unsafe_yaml() {
+        let root = temp_root("yaml");
+        let file = make_file(&root, "src/main.py", "data = yaml.load(content)\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "unsafe_deserialization"),
+            "expected unsafe_deserialization for yaml.load"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn sql_injection_detects_f_string_concat() {
+        let root = temp_root("sqli");
+        let file = make_file(&root, "src/db.go", "selectQuery, err := db.Query(fmt.Sprintf(\"SELECT * FROM users WHERE id = %s\", user_id))\n");
+        let cache = test_cache(&file);
+        let findings = sql_injection_findings(
+            &[file],
+            crate::AnalysisMethod::Ast,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        );
+        assert!(
+            findings.iter().any(|f| f.detector == "sql_injection"),
+            "expected sql_injection finding for f-string SQL"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn sql_injection_skips_parametrized_query() {
+        let root = temp_root("sqli_safe");
+        let file = make_file(
+            &root,
+            "src/db.go",
+            "package db\nfunc load(userID int) { db.Query(\"SELECT * FROM users WHERE id = ?\", userID) }\n",
+        );
+        let cache = test_cache(&file);
+        let findings = sql_injection_findings(
+            &[file],
+            crate::AnalysisMethod::Ast,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        );
+        assert!(
+            !findings.iter().any(|f| f.detector == "sql_injection"),
+            "expected no sql_injection finding for parametrized query"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn sql_injection_requires_sql_words_and_a_query_sink() {
+        let root = temp_root("sqli_selected_identifier");
+        let file = make_file(
+            &root,
+            "src/ui.ts",
+            "selectedSessionIndex: clamp(state.selectedSessionIndex + delta, 0, maxIndex)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = sql_injection_findings(
+            &[file],
+            crate::AnalysisMethod::Auto,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        );
+        assert!(findings.is_empty());
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn shell_execution_detects_shell_true() {
+        let root = temp_root("shell");
+        let file = make_file(&root, "src/run.py", "subprocess.call(cmd, shell=True)\n");
+        let cache = test_cache(&file);
+        let findings = shell_execution_findings(&[file], &cache);
+        assert!(
+            findings.iter().any(|f| f.detector == "shell_execution"),
+            "expected shell_execution finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn shell_execution_skips_safe_subprocess() {
+        let root = temp_root("shell_safe");
+        let file = make_file(
+            &root,
+            "src/run.py",
+            "result = subprocess.check_output(cmd)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = shell_execution_findings(&[file], &cache);
+        assert!(
+            !findings.iter().any(|f| f.detector == "shell_execution"),
+            "expected no shell_execution finding for safe subprocess"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn shell_execution_skips_argument_vector_commands() {
+        let root = temp_root("shell_rust_safe");
+        let file = make_file(
+            &root,
+            "src/run.rs",
+            "let output = std::process::Command::new(\"git\").arg(\"status\").output()?;\n",
+        );
+        let cache = test_cache(&file);
+        assert!(shell_execution_findings(&[file], &cache).is_empty());
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn insecure_cryptography_detects_md5() {
+        let root = temp_root("crypto");
+        let file = make_file(
+            &root,
+            "src/hash.go",
+            "package hash\nfunc digest(data []byte) { md5.Sum(data) }\n",
+        );
+        let cache = test_cache(&file);
+        let findings = insecure_cryptography_findings(
+            &[file],
+            crate::AnalysisMethod::Ast,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        );
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "insecure_cryptography"),
+            "expected insecure_cryptography finding for md5"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn insecure_cryptography_detects_des() {
+        let root = temp_root("crypto_des");
+        let file = make_file(
+            &root,
+            "src/cipher.go",
+            "package cipher\nfunc encrypt(key []byte) { des.NewCipher(key) }\n",
+        );
+        let cache = test_cache(&file);
+        let findings = insecure_cryptography_findings(
+            &[file],
+            crate::AnalysisMethod::Ast,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        );
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "insecure_cryptography"),
+            "expected insecure_cryptography finding for DES"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn insecure_cryptography_uses_call_name_boundaries() {
+        let root = temp_root("crypto_boundary");
+        let file = make_file(
+            &root,
+            "src/ui.ts",
+            "if (prefix.includes(' ')) return commandOverrides(state)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = insecure_cryptography_findings(
+            &[file],
+            crate::AnalysisMethod::Auto,
+            &cache,
+            &auditor_ast::RepoAst::new(),
+        );
+        assert!(findings.is_empty());
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn bind_all_interfaces_detects_0_0_0_0() {
+        let root = temp_root("bind");
+        let file = make_file(
+            &root,
+            "src/server.py",
+            "server.bind((\"0.0.0.0\", 8080))\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings.iter().any(|f| f.detector == "bind_all_interfaces"),
+            "expected bind_all_interfaces finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn try_except_pass_detected() {
+        let root = temp_root("trypass");
+        let file = make_file(&root, "src/main.py", "try:\n    risky()\nexcept: pass\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings.iter().any(|f| f.detector == "try_except_pass"),
+            "expected try_except_pass finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn world_writable_file_detected() {
+        let root = temp_root("chmod");
+        let file = make_file(&root, "src/config.py", "os.chmod('secret.txt', 0o777)\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings.iter().any(|f| f.detector == "world_writable_file"),
+            "expected world_writable_file finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn world_writable_file_skips_permission_removal_and_owner_write() {
+        let root = temp_root("chmod_safe");
+        let file = make_file(
+            &root,
+            "src/config.py",
+            "path.chmod(mode & ~stat.S_IWUSR & ~stat.S_IWGRP & ~stat.S_IWOTH)\nchild.chmod(child.stat().st_mode | stat.S_IWUSR)\nos.chmod(path, 0o600)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(!findings
+            .iter()
+            .any(|finding| finding.detector == "world_writable_file"));
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn hardcoded_tmp_directory_detected() {
+        let root = temp_root("tmpdir");
+        let file = make_file(&root, "src/main.py", "temporary_path = '/tmp/unsafe'\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "hardcoded_tmp_directory"),
+            "expected hardcoded_tmp_directory finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn hardcoded_tmp_directory_skips_non_python_mounts_and_secure_mktemp() {
+        let root = temp_root("tmpdir_safe");
+        let rust = make_file(
+            &root,
+            "src/main.rs",
+            "command.arg(\"--tmpfs\").arg(\"/tmp:rw,noexec,nosuid,size=64m\");\n",
+        );
+        let python = make_file(
+            &root,
+            "src/main.py",
+            "handle, temporary_path = tempfile.mkstemp()\n",
+        );
+        let files = [rust, python];
+        let cache = util::FileCache::new(&files);
+        let findings = security_findings(&files, &cache, &AuditorConfig::default());
+        assert!(!findings
+            .iter()
+            .any(|finding| finding.detector == "hardcoded_tmp_directory"));
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn hardcoded_credential_skips_api_key_prompt_copy() {
+        let root = temp_root("credential_prompt");
+        let file = make_file(
+            &root,
+            "src/composer.ts",
+            "const PLACEHOLDERS = { ApiKeyPaste: \"paste your API key\" };\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(!findings
+            .iter()
+            .any(|finding| finding.detector == "hardcoded_credential"));
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn flask_debug_true_detected() {
+        let root = temp_root("flask");
+        let file = make_file(&root, "src/app.py", "app.run(debug=True)\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings.iter().any(|f| f.detector == "flask_debug_true"),
+            "expected flask_debug_true finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn random_for_security_detected() {
+        let root = temp_root("random_sec");
+        let file = make_file(
+            &root,
+            "src/token.py",
+            "token = random.randint(0, 1000000)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings.iter().any(|f| f.detector == "random_for_security"),
+            "expected random_for_security finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn request_no_cert_verify_detected() {
+        let root = temp_root("noverify");
+        let file = make_file(
+            &root,
+            "src/client.py",
+            "requests.get('https://example.com', verify=False)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "request_no_cert_verify"),
+            "expected request_no_cert_verify finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn xml_xxe_vulnerable_detected() {
+        let root = temp_root("xxe");
+        let file = make_file(&root, "src/parse.py", "tree = etree.parse(source)\n");
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings.iter().any(|f| f.detector == "xml_xxe_vulnerable"),
+            "expected xml_xxe_vulnerable finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn ssl_with_bad_defaults_detected() {
+        let root = temp_root("sslbad");
+        let file = make_file(
+            &root,
+            "src/tls.py",
+            "ssl.wrap_socket(ssl_version=ssl.PROTOCOL_SSLv3)\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "ssl_with_bad_defaults"),
+            "expected ssl_with_bad_defaults finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn ssh_no_host_key_verification_detected() {
+        let root = temp_root("sshbad");
+        let file = make_file(
+            &root,
+            "src/ssh.py",
+            "client.set_missing_host_key_policy(paramiko.AutoAddPolicy())\n",
+        );
+        let cache = test_cache(&file);
+        let findings = security_findings(&[file], &cache, &AuditorConfig::default());
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.detector == "ssh_no_host_key_verification"),
+            "expected ssh_no_host_key_verification finding"
+        );
+        fs::remove_dir_all(&root).unwrap();
+    }
+}

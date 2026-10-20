@@ -1,0 +1,1154 @@
+{
+  "schema_version": 1,
+  "detector": "go_errcheck",
+  "labels": [
+    {
+      "id": "EA-662ebe1e0ab138b3",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "cursed_renderer.go",
+      "message": "Ignored error return from call at line 606",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 606,
+      "verdict": "false_positive",
+      "reason": "errcheck does not report this call (its default exclusions cover it).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 606 calls `buf.Write(...)` without capturing its `(int, error)` return, unlike the explicit `_, _ = buf.WriteString(...)` calls nearby, so the ignored-error claim is correct."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "refuted",
+          "detail": "errcheck reports no errcheck at line 606"
+        }
+      ]
+    },
+    {
+      "id": "EA-57b570f00b123f4d",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "Ignored error return from call at line 1328",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1328,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "defer f.Close() discards the error returned by Close; intentional suppression with //nolint:errcheck still leaves the claim factually correct."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 1328"
+        }
+      ]
+    },
+    {
+      "id": "EA-8e3a02eab3850d7f",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "Ignored error return from call at line 1353",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1353,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "defer f.Close() at line 1353 likewise drops the error returned by Close, so the claim holds."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 1353"
+        }
+      ]
+    },
+    {
+      "id": "EA-f68b9677a4d13da6",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tutorials/commands/main.go",
+      "message": "Ignored error return from call at line 25",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "false_positive",
+      "reason": "Tutorial example program, outside the production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-26c692bd580543ce",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/custom-handler/main.go",
+      "message": "Ignored error return from call at line 16",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 16,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The file path `_examples/custom-handler/main.go` is example code, which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-35ca18a8627ed63f",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/custom-handler/main.go",
+      "message": "Ignored error return from call at line 33",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The file path `_examples/custom-handler/main.go` is example code, which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-0c1dd4f203ab6275",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/custom-method/main.go",
+      "message": "Ignored error return from call at line 21",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The file path `_examples/custom-method/main.go` is example code, which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-d63c3aa28c57f268",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/fileserver/main.go",
+      "message": "Ignored error return from call at line 34",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The file path `_examples/fileserver/main.go` is example code, which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-26b09ce0c48e64bc",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/graceful/main.go",
+      "message": "Ignored error return from call at line 52",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Although `w.Write([]byte(\"sup\"))` at _examples/graceful/main.go:52 does ignore the returned error, the file lives under `_examples/` (example code), which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-0495c5051bbde2f5",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/graceful/main.go",
+      "message": "Ignored error return from call at line 65",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 65,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The unchecked `w.Write([]byte(fmt.Sprintf(\"all done.\\n\")))` at _examples/graceful/main.go:65 is real in isolation, but this is example code under `_examples/`, which the detector should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-087a07a9e4c21ee2",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/limits/main.go",
+      "message": "Ignored error return from call at line 29",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 29,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`w.Write([]byte(\"root.\"))` at _examples/limits/main.go:29 genuinely discards the error, but the site is example code under `_examples/` and thus out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-0548185e11eb094c",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/limits/main.go",
+      "message": "Ignored error return from call at line 77",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `w.Write([]byte(\"Processing too slow\\n\"))` at _examples/limits/main.go:77 ignores the error, but the file is `_examples/` sample code outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-26b4e1d97c9fa8f5",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/rest/main.go",
+      "message": "Ignored error return from call at line 71",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 71,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`w.Write([]byte(\"pong\"))` at _examples/rest/main.go:71 does drop the error return, yet the file is example code under `_examples/`, which is excluded from scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-23bdbd1dc23c2f9b",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/router-walk/main.go",
+      "message": "Ignored error return from call at line 14",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `w.Write([]byte(\"root.\"))` at _examples/router-walk/main.go:14 leaves the error unchecked, but this is example code under `_examples/` and outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-0c1ecb8f439e9067",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/router-walk/main.go",
+      "message": "Ignored error return from call at line 19",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 19,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`w.Write([]byte(\"left road\"))` at _examples/router-walk/main.go:19 ignores the error, but the `_examples/` location is sample code the rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-887e8d8bc45e9655",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/router-walk/main.go",
+      "message": "Ignored error return from call at line 22",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `w.Write([]byte(\"right road\"))` at _examples/router-walk/main.go:22 discards its error, but the file is `_examples/` demonstration code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-6e753d05bec6aa03",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/todos-resource/todos.go",
+      "message": "Ignored error return from call at line 44",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Path is under `_examples/`, so this site is example code outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2e55a3a29bea94d4",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/todos-resource/todos.go",
+      "message": "Ignored error return from call at line 52",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Path is under `_examples/`, so this site is example code outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-fcfcd8d9031538c3",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/todos-resource/users.go",
+      "message": "Ignored error return from call at line 39",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Path is under `_examples/`, so this site is example code outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-6aa858bc8ab9013e",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/compress.go",
+      "message": "Ignored error return from call at line 216",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 216,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "defer cw.Close() discards the error returned by the compressor writer's Close."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer cw.Close()` discards the error returned by `Close`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 216"
+        }
+      ]
+    },
+    {
+      "id": "EA-9a6d0a038512aa7e",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/heartbeat.go",
+      "message": "Ignored error return from call at line 18",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "http.ResponseWriter.Write returns an error that is discarded at this site."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`w.Write([]byte(\".\"))` ignores the error returned by `Write`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 18"
+        }
+      ]
+    },
+    {
+      "id": "EA-1c6233cf26eadc9e",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/logger.go",
+      "message": "Ignored error return from call at line 52",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 52,
+      "verdict": "false_positive",
+      "reason": "chi's `LogEntry.Write` returns nothing, so no error is ignored; the line heuristic matches the method name without type information.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "chi's LogEntry.Write has no return value, so there is no ignored error return to check."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "At line 52 the return value of `entry.Write(ww.Status(), ...)` is discarded with no error check, so the ignored-error claim holds."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "refuted",
+          "detail": "errcheck reports no errcheck at line 52"
+        }
+      ]
+    },
+    {
+      "id": "EA-f1006d224cbcf2b7",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/recoverer.go",
+      "message": "Ignored error return from call at line 66",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "recovererErrorWriter.Write returns an error that is discarded here."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`recovererErrorWriter.Write(out)` ignores the error returned by `Write`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 66"
+        }
+      ]
+    },
+    {
+      "id": "EA-4b93dfd1b91f8592",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/terminal.go",
+      "message": "Ignored error return from call at line 57",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "`w.Write(color)` discards the io.Writer error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "io.Writer.Write returns an error that is ignored at line 57."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "At line 57 `w.Write(color)` discards the error return without a check, exactly as errcheck reports."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 57"
+        }
+      ]
+    },
+    {
+      "id": "EA-f6efe265bec7f816",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/terminal.go",
+      "message": "Ignored error return from call at line 61",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "io.Writer.Write returns an error that is ignored at line 61."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`w.Write(reset)` ignores the error returned by `Write`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 61"
+        }
+      ]
+    },
+    {
+      "id": "EA-640b7dce28ffbfeb",
+      "repository": "chi",
+      "language": "go",
+      "path": "mux.go",
+      "message": "Ignored error return from call at line 530",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 530,
+      "verdict": "true_positive",
+      "reason": "`Write` error result is discarded, as errcheck reports.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`w.Write(nil)` returns an error that is silently discarded at line 530, and this is not a recognised idiom the errcheck rule should whitelist."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`w.Write(nil)` ignores the error returned by `Write`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 530"
+        }
+      ]
+    },
+    {
+      "id": "EA-119babc42e0ea9b7",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completions.go",
+      "message": "Ignored error return from call at line 706",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 706,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer outFile.Close()` is the conventional deferred-close idiom; the Close error is not checkable at the call site without restructuring, so the stated rationale does not apply."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer outFile.Close()` discards the error returned by `(*os.File).Close` in non-test library code, so the ignored-error claim holds."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 706"
+        }
+      ]
+    },
+    {
+      "id": "EA-d9970cf654e1d177",
+      "repository": "cobra",
+      "language": "go",
+      "path": "bash_completionsV2.go",
+      "message": "Ignored error return from call at line 475",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 475,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer outFile.Close()` is the standard deferred-close idiom, which an errcheck-style rule should recognise rather than flag."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer outFile.Close()` at line 475 discards Close's error in production code, so the claim is correct."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 475"
+        }
+      ]
+    },
+    {
+      "id": "EA-6df24b8b6e529a00",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Ignored error return from call at line 961",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 961,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` in the debug-file branch is the conventional deferred-close idiom, so the check-the-error rationale is not applicable at this site."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Even inside the `err == nil` branch, `defer f.Close()` ignores the error returned by `(*os.File).Close` in library code."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 961"
+        }
+      ]
+    },
+    {
+      "id": "EA-0da488a65426979c",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/man_docs.go",
+      "message": "Ignored error return from call at line 76",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` is the idiomatic deferred close that the rule should recognise, not an unhandled routine error."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer f.Close()` at doc/man_docs.go:76 discards the Close error after a checked `os.Create`, in shipped (not test/generated) code."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 76"
+        }
+      ]
+    },
+    {
+      "id": "EA-ad0deea8b40018f9",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/md_docs.go",
+      "message": "Ignored error return from call at line 149",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 149,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` is the standard deferred-close idiom and the rationale does not apply to it."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer f.Close()` at doc/md_docs.go:149 discards the Close error in library code, so the ignored-error claim holds."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 149"
+        }
+      ]
+    },
+    {
+      "id": "EA-88db470bfa3b1e55",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/rest_docs.go",
+      "message": "Ignored error return from call at line 161",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 161,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` is the conventional deferred-close idiom that an errcheck-style rule should not flag."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer f.Close()` at doc/rest_docs.go:161 discards the Close error in non-test code, so the claim is correct."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 161"
+        }
+      ]
+    },
+    {
+      "id": "EA-9b26129e869a654d",
+      "repository": "cobra",
+      "language": "go",
+      "path": "doc/yaml_docs.go",
+      "message": "Ignored error return from call at line 76",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` follows the usual deferred-close idiom, so the ignored-error rationale does not apply here."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer f.Close()` at doc/yaml_docs.go:76 discards the Close error in library code, so the ignored-error claim holds."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 76"
+        }
+      ]
+    },
+    {
+      "id": "EA-86ca4f6a88d6e007",
+      "repository": "cobra",
+      "language": "go",
+      "path": "fish_completions.go",
+      "message": "Ignored error return from call at line 289",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 289,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`outFile.Close()` returns an error that is dropped by the deferred call at line 289, so the ignored-error claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`defer outFile.Close()` at fish_completions.go:289 discards Close's error in production code, so the claim is correct."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 289"
+        }
+      ]
+    },
+    {
+      "id": "EA-e3814015c67255d7",
+      "repository": "cobra",
+      "language": "go",
+      "path": "powershell_completions.go",
+      "message": "Ignored error return from call at line 325",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 325,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The deferred `outFile.Close()` at line 325 discards the error from `Close()`, exactly as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 325 `defer outFile.Close()` discards the error returned by Close, and this is production code (not test/example), so the errcheck rationale applies."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 325"
+        }
+      ]
+    },
+    {
+      "id": "EA-afe259972f42eab9",
+      "repository": "cobra",
+      "language": "go",
+      "path": "zsh_completions.go",
+      "message": "Ignored error return from call at line 75",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "Deferred `Close()` on a written file/writer discards the error, which can lose a flush failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`defer outFile.Close()` at line 75 ignores the error returned by `Close()`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 75 `defer outFile.Close()` discards the error from Close in non-example production code, so the claim is correct."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 75"
+        }
+      ]
+    },
+    {
+      "id": "EA-3ffd34ca5fb5059b",
+      "repository": "gin",
+      "language": "go",
+      "path": "context.go",
+      "message": "Ignored error return from call at line 708",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 708,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The direct `f.Close()` at line 708 discards its error, and the returned `err` is only the already-nil error from `FormFile`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 708"
+        }
+      ]
+    },
+    {
+      "id": "EA-afdd2ca34846def5",
+      "repository": "gin",
+      "language": "go",
+      "path": "context.go",
+      "message": "Ignored error return from call at line 724",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 724,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`defer src.Close()` at line 724 ignores the error returned by the multipart file's `Close`."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 724"
+        }
+      ]
+    },
+    {
+      "id": "EA-6dd0f564266a64f5",
+      "repository": "gin",
+      "language": "go",
+      "path": "context.go",
+      "message": "Ignored error return from call at line 742",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 742,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`defer out.Close()` at line 742 drops the `Close` error even though `out` is a newly created output file."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 742"
+        }
+      ]
+    },
+    {
+      "id": "EA-745e0dfcc278745d",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "Ignored error return from call at line 594",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 594,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`net.Listener.Close()` returns an error that the deferred call at line 594 discards."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 594"
+        }
+      ]
+    },
+    {
+      "id": "EA-38a1852be5bc09dd",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "Ignored error return from call at line 595",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 595,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`os.Remove` returns an error that is ignored by the deferred call at line 595."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 595"
+        }
+      ]
+    },
+    {
+      "id": "EA-68d96fd8daa5e1f0",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "Ignored error return from call at line 617",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 617,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` is the canonical Go close idiom, and errcheck-class rules treat deferred Close errors as intentionally ignored, so the rationale does not apply."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 617"
+        }
+      ]
+    },
+    {
+      "id": "EA-472ad7a1464c7a21",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "Ignored error return from call at line 622",
+      "status": "final",
+      "sampled_from": "t16-h",
+      "line": 622,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer listener.Close()` is the same deferred-close idiom whose error is conventionally ignored, so the detector's rationale does not apply."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 622"
+        }
+      ]
+    },
+    {
+      "id": "EA-5e7935c35357cf6c",
+      "repository": "gin",
+      "language": "go",
+      "path": "recovery.go",
+      "message": "Ignored error return from call at line 155",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`defer f.Close()` on a file opened read-only via os.Open is the standard deferred-close idiom, so the ignored error is an accepted pattern."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 155"
+        }
+      ]
+    },
+    {
+      "id": "EA-e2e2bb6f24d29ed0",
+      "repository": "gin",
+      "language": "go",
+      "path": "render/json.go",
+      "message": "Ignored error return from call at line 168",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 168,
+      "verdict": "false_positive",
+      "reason": "errcheck does not report this call (its default exclusions cover it).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`buffer` is a bytes.Buffer whose Write never returns a non-nil error and is excluded by errcheck by default, so the rationale does not apply."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "refuted",
+          "detail": "errcheck reports no errcheck at line 168"
+        }
+      ]
+    },
+    {
+      "id": "EA-05a428c47a26bda7",
+      "repository": "gin",
+      "language": "go",
+      "path": "routergroup.go",
+      "message": "Ignored error return from call at line 235",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "The error result is discarded; errcheck reports the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`f.Close()` here is an ordinary non-deferred call whose error return is genuinely unchecked, so the finding holds at this site."
+        },
+        {
+          "source": "oracle:errcheck@v1.9.0",
+          "claim": "confirmed",
+          "detail": "errcheck errcheck at line 235"
+        }
+      ]
+    }
+  ]
+}

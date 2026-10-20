@@ -1,0 +1,2173 @@
+{
+  "schema_version": 1,
+  "detector": "out_parameter",
+  "labels": [
+    {
+      "id": "EA-668f6481806fabf6",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayFill.java",
+      "message": "Function `fill` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 249,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "ArrayFill.fill is documented to fill and return the given array (`@return The given array`), so writing `array[i] = generator.apply(i)` is the standard in-place fill idiom (cf. Arrays.fill) that this rule should recognise, not an accidental out-parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-06e7e6b4c55084ab",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 6798,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The void `reverse` method is documented ('@param array The array to reverse') to reverse in place; mutating the passed array is the intended idiom, so the out-parameter rationale and its 'return the value' recommendation do not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-b2d30a08fa2a6f55",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 6840,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `reverse(byte[])` is a void in-place reversal whose Javadoc states the array is reversed, making the mutating contract explicit and the out-parameter rule inapplicable."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b978308135dad12",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 6882,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `reverse(char[])` overload intentionally reverses the array in place (documented void API), an idiom the detector should recognise rather than flag as an out parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-7f2bfa7c7548fd93",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 6924,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `reverse` method is `void` and documented to 'Reverses the order of the given array', so the swap `array[j] = array[i]` is the canonical in-place reversal idiom (cf. Collections.reverse) whose mutation is the explicit contract."
+        }
+      ]
+    },
+    {
+      "id": "EA-f76263e0a84634a0",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 6966,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `reverse(float[])` overload is a documented void method that reverses the given array in place, so writing `array[j]` is the intended contract, not an out-parameter defect."
+        }
+      ]
+    },
+    {
+      "id": "EA-f02fe2fb6e03ebd9",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 7012,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `reverse(final long[] array)` is likewise a void method documented to reverse the given array, so `array[j] = array[i]` is intentional in-place mutation, the idiom the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-34f87ec27e878926",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 7058,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `reverse(long[])` overload intentionally mutates the array in place as its documented purpose, so the out-parameter rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-c094de601072c657",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 7107,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `reverse` variant here is documented to reverse the given array in place, making the swap `array[j] = array[i]` the expected in-place idiom rather than an out-parameter smell."
+        }
+      ]
+    },
+    {
+      "id": "EA-64430dbf2ae45e84",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `reverse` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 7153,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `reverse` method is void and documented to reverse the given array, so `array[j] = array[i]` is the standard in-place reversal idiom; the 'return the computed value' rationale does not apply to a mutation API."
+        }
+      ]
+    },
+    {
+      "id": "EA-adc5278008d7bfee",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `setAll` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 7196,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`setAll` assigns `array[i] = generator.get()` directly on the input parameter `array`, so the reported write-through occurs."
+        }
+      ]
+    },
+    {
+      "id": "EA-19d2a7ba014e5ada",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 8543,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `swap` loop writes `array[offset1] = array[offset2]` into the input boolean array parameter, matching the claimed write target."
+        }
+      ]
+    },
+    {
+      "id": "EA-2d8641b5d3431690",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 8610,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The void `swap` method is documented to swap array elements in place ('does nothing for a null or empty input array'), an intentional in-place idiom outside the rule's intent."
+        }
+      ]
+    },
+    {
+      "id": "EA-c697ee4189892cc7",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 8677,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `swap` loop assigns `array[offset1] = array[offset2]` on the input char array parameter as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-b04ea99d4159c796",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 8744,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `swap` loop assigns `array[offset1] = array[offset2]` on the input double array parameter as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef280160d9d89305",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 8811,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `swap(float[])` overload's documented purpose is in-place element swapping, so writing through `array` is intended and the out-parameter finding is a false positive."
+        }
+      ]
+    },
+    {
+      "id": "EA-51c99fdb51cebfbc",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 8879,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `swap(int[])` overload is a documented void method that swaps elements of the given array in place, an idiom the rule should recognise rather than flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-58ba2994e6467303",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 8946,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `swap` loop writes `array[offset1] = array[offset2]` into the input long array parameter, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-b8d3324cf1d3aec2",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 9013,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`array[offset1] = array[offset2]` (with the temp `aux`) is the canonical in-place swap idiom; the passed array is the method's own subject rather than a pure output buffer, so the 'return the value instead' rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-9e2345696870c841",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "Function `swap` writes through parameter `array`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 9083,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The short overload likewise performs the idiomatic temp-variable swap writing back into the array being operated on, so the out-parameter rationale does not apply to this intended mutation."
+        }
+      ]
+    },
+    {
+      "id": "EA-c81bc52a006dc237",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `byteToBinary` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 511,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`byteToBinary` assigns to `dst[dstPos + i]` at line 511 and returns `dst`, so it genuinely writes through the `dst` parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-6def3d6e3e983230",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `intToBinary` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 900,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`intToBinary` assigns to `dst[dstPos + i]` at line 900, writing through the `dst` parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-b835d08dd81ac4f0",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `intToByteArray` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 927,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 927 assigns into `dst[dstPos + i]`, so `intToByteArray` does write through its `dst` array parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-037ec8d9b54cae82",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `intToShortArray` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1069,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1069 assigns into `dst[dstPos + i]`, so `intToShortArray` does write through its `dst` array parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-fea60dfdfbf9c243",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `longToBinary` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1096,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`longToBinary` assigns to `dst[dstPos + i]` at line 1096, writing through the `dst` parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-955cf9eb527a0379",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `longToByteArray` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1123,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`longToByteArray` assigns `(byte)(0xff & src >> shift)` into `dst[dstPos + i]` at line 1123, writing through `dst`."
+        }
+      ]
+    },
+    {
+      "id": "EA-a67e98c8a3a3c602",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `longToIntArray` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1184,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`dst[dstPos + i] = ...` writes results into a distinct caller-supplied destination buffer (then returns `dst`), exactly the out-parameter write the detector claims."
+        }
+      ]
+    },
+    {
+      "id": "EA-bfad969ae1799c69",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `longToShortArray` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1211,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`dst[dstPos + i] = (short) ...` fills the separate destination array parameter and returns it, so the finding's write-through-`dst` claim is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-02225485549c62d1",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `shortToBinary` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1299,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-a10fa84b92564823",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Function `shortToByteArray` writes through parameter `dst`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1326,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`shortToByteArray` assigns into `dst[dstPos + i]` at line 1326, writing through the `dst` parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-eaf215d748c2d567",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java",
+      "message": "Function `parseToken` writes through parameter `indexRef`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1558,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-4316d8f2503fe36a",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "message": "Function `getDelegateAdapter` writes to parameter `skipPast`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 456,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`skipPast = jsonAdapterFactory` only rebinds the local parameter; the caller's reference is unchanged."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e776f6bb6854a96",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonArray.java",
+      "message": "Function `add` writes to parameter `element`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 127,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`element = JsonNull.INSTANCE` is local null coalescing before `elements.add`; the caller's argument is not mutated."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd99c6aee5eb742f",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `getGenericSupertype` writes to parameter `rawType`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 261,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`rawType = rawSupertype` is loop-local rebinding; no write is visible to the caller."
+        }
+      ]
+    },
+    {
+      "id": "EA-58b97606c388796d",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `getSupertype` writes to parameter `context`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 283,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`context = bounds[0]` rebinds the local parameter; the caller's reference is not affected."
+        }
+      ]
+    },
+    {
+      "id": "EA-7d616b56ba3e8c80",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 368,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`toResolve = ...` rebinds the local loop variable; results flow out via the return value, not the parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-780a4fdaf59b4eba",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 378,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Assigning to the parameter `toResolve` only rebinds a local Java variable (pass-by-value); it does not affect the caller, and the function already returns the result, so the out-parameter rationale does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-5947425db66abf0d",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 386,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Another branch of the same `resolve` method reassigns the local parameter `toResolve`; Java pass-by-value means this is not an out-parameter and the result is explicitly returned."
+        }
+      ]
+    },
+    {
+      "id": "EA-70e2a55c56260504",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 409,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The parameterized-type branch simply rebinds the local `toResolve` before the method returns it; in Java this is a scratch-variable idiom, not an output contract."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f365ba2a7ecb1df",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 425,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Wildcard lower-bound branch reassigns the local parameter `toResolve`; Java pass-by-value makes this local-only and the method already returns `toResolve`."
+        }
+      ]
+    },
+    {
+      "id": "EA-5be9234d1d77704e",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 432,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Upper-bound branch reassigns `toResolve` purely as a local variable; this is not an out parameter in Java and does not communicate anything back to the caller."
+        }
+      ]
+    },
+    {
+      "id": "EA-a3c7ee515adbe2f1",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` writes to parameter `toResolve`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 436,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The final `toResolve = original` is just a local reassignment before `return toResolve`; using a parameter as a mutable local is a recognized Java idiom, not an out-parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-4f1cfd1053b46e77",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Function `readIntoArray` writes through parameter `target`.",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 265,
+      "verdict": "true_positive",
+      "reason": "The function writes results into a caller-supplied array it does not own, an output argument.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`readIntoArray` assigns `target[index] = fieldValue` at line 265, writing through the `target` parameter as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 265 `target[index] = fieldValue;` writes through the input array parameter `target`, so the out-parameter claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-426a54f5aeab87ca",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Function `getBoundFields` writes to parameter `blockInaccessible`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 344,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-dd2935c54e3be2e2",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Function `getBoundFields` writes to parameter `type`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 422,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Inside the loop, `type` is reassigned locally and `raw` recomputed from it; Java pass-by-value means the caller never observes the change, so the out-parameter claim does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-9681cfda046514f0",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Function `getBoundFields` writes to parameter `raw`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 423,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 423 writes to `raw` (`raw = type.getRawType();`) inside `getBoundFields`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-bdb23a9c44ffa1d3",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapterRuntimeTypeWrapper.java",
+      "message": "Function `getRuntimeTypeIfMoreSpecific` writes to parameter `type`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 99,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 99 reassigns the parameter `type` (`type = value.getClass();`) before returning it, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-815df2df8979f14f",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/Base64Variant.java",
+      "message": "Function `encodeBase64Chunk` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 419,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-f3e5e705af43f407",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/Base64Variant.java",
+      "message": "Function `encodeBase64Partial` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 449,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-e2e76153a9c5affd",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/Base64Variant.java",
+      "message": "Function `encodeBase64Chunk` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 496,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`buffer` is the documented output buffer that the method fills in place and returns the updated `outPtr` for, the standard Java output-array idiom the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-d1817fbbed81dff5",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/Base64Variant.java",
+      "message": "Function `encodeBase64Partial` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 518,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`buffer` is only the caller-supplied output buffer the method appends into, with the new position returned as `outPtr`, so it is the accepted output-buffer idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-1133516a3f00a666",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/JsonGenerator.java",
+      "message": "Function `_writeTypePrefixUsingNative` writes through parameter `typeIdDef`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1449,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied object field it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "the method writes `typeIdDef.wrapperWritten = false` on the caller's object as a side channel the boolean return does not convey."
+        }
+      ]
+    },
+    {
+      "id": "EA-db895538d1793c86",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/JsonGenerator.java",
+      "message": "Function `_writeTypePrefixUsingWrapper` writes through parameter `typeIdDef`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1471,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied object field it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "the method reassigns the caller's `typeIdDef.include` field, a genuine write-through not reflected by the return value."
+        }
+      ]
+    },
+    {
+      "id": "EA-35eee63713d0b6a5",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/ContentReference.java",
+      "message": "Function `_truncateOffsets` writes through parameter `offsets`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 331,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_truncateOffsets` assigns `offsets[0] = start` at line 331 (and `offsets[1]`), writing into the `offsets` parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-61df7f20c5983f46",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/JsonStringEncoder.java",
+      "message": "Function `_appendNumeric` writes through parameter `qbuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 407,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`qbuf` is the private scratch output buffer the helper fills at fixed positions and returns the length for, the standard in-place buffer-fill idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-c27d83f1720c4ce0",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/JsonStringEncoder.java",
+      "message": "Function `_appendNamed` writes through parameter `qbuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 415,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "In `_appendNamed`, line 415 `qbuf[1] = (char) esc;` does write through the array parameter qbuf, exactly as the finding claims."
+        }
+      ]
+    },
+    {
+      "id": "EA-0d3a72efe7ca3e2c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `outputInt` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 81 `b[off++] = '-';` writes into the array parameter b inside `outputInt`, matching the reported write target."
+        }
+      ]
+    },
+    {
+      "id": "EA-9cf684bae8d9a8be",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `outputInt` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`outputInt` assigns `b[off++] = '-'` at line 145, writing into the `b` byte-array parameter as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-16df9775f60a128d",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `outputLong` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 207,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 207 `b[off++] = '-';` mutates the char[]/byte[] parameter b within `outputLong`, so the claim holds at that site."
+        }
+      ]
+    },
+    {
+      "id": "EA-0da6deaf3f6e0f7b",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `outputLong` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 254,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 254 `b[off++] = '-';` likewise writes through the buffer parameter b in the other `outputLong` overload, so the claim is correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-78c7e26a931bf8ff",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputUptoBillion` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 417,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 417 writes `b[off++] = (char)(enc >> 16)` through the `char[] b` parameter of `_outputUptoBillion`, exactly as claimed; the write is intentional but the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c236f43f26ee9c6",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputFullBillion` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 436,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "In `_outputFullBillion` the statement `b[off++] = (char) (enc >> 16);` writes into parameter b, consistent with the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ad07b649ca79569",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputUptoBillion` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 472,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_outputUptoBillion` fills the caller-supplied output buffer `b` and returns the advanced `off`, which is the standard buffer-writing idiom the rule should not flag."
+        }
+      ]
+    },
+    {
+      "id": "EA-900d9e31f18649ac",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputFullBillion` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 492,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_outputFullBillion` writes sequentially into the byte[] buffer `b` and returns the new `off`, an explicit output-buffer contract rather than a hidden out-parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-cc42db041c20a6dc",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputUptoMillion` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 514,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_outputUptoMillion(char[] b, ...)` appends characters into the caller's buffer and returns `off`, the intended in-place formatting idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-91dbe501f893caae",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputUptoMillion` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 532,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_outputUptoMillion(byte[] b, ...)` is the byte-buffer overload that fills `b` and returns the end offset, an idiomatic output sink."
+        }
+      ]
+    },
+    {
+      "id": "EA-1036ebe93589548c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_leading3` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 550,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_leading3` writes up to three chars into buffer `b` and returns the advanced `off`, making the output contract explicit."
+        }
+      ]
+    },
+    {
+      "id": "EA-89c8dfcc2c52869e",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_leading3` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 563,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 563 `b[off++] = (byte)(enc >> 16)` inside `_leading3` mutates the caller-supplied byte[] `b`, matching the reported write through parameter `b`."
+        }
+      ]
+    },
+    {
+      "id": "EA-e2e9112def04dd7f",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_full3` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 574,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 574 `b[off++] = (char)(enc >> 16)` inside the char[] overload of `_full3` writes through parameter `b`, exactly as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-2b40d683a869bde9",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_full3` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 583,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 583 `b[off++] = (byte)(enc >> 16)` inside the byte[] overload of `_full3` mutates parameter `b`, consistent with the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-601a553ca7f51071",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputSmallestL` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 602,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 602 `b[off++] = (byte) SMALLEST_LONG.charAt(i)` in `_outputSmallestL(byte[])` writes into the passed buffer `b` via the parameter."
+        }
+      ]
+    },
+    {
+      "id": "EA-5c453e6ee05beb8c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/NumberOutput.java",
+      "message": "Function `_outputSmallestI` writes through parameter `b`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 618,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 618 `b[off++] = (byte) SMALLEST_INT.charAt(i)` in `_outputSmallestI(byte[])` mutates the caller-provided byte[] `b` as reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-5875c7408e0fdfe8",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/UTF32Reader.java",
+      "message": "Function `read` writes through parameter `cbuf`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 130,
+      "verdict": "false_positive",
+      "reason": "Implements java.io.Reader.read, whose contract defines cbuf as the output buffer.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 130 `cbuf[outPtr++] = _surrogate` writes through the `cbuf` parameter of `read`, matching the detector's claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-fed1bd1707d3c9a4",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/schubfach/DoubleToDecimal.java",
+      "message": "Function `toBuffer` writes through parameter `buf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 617,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-63c6aeef1cffca30",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/schubfach/FloatToDecimal.java",
+      "message": "Function `toBuffer` writes through parameter `buf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 589,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-c939c58fc0b26e24",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/ReaderBasedJsonParser.java",
+      "message": "Function `_readBinary` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 601,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 601 `buffer[outputPtr++] = (byte) decodedData` writes through the `buffer` parameter of `_readBinary`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-13fdf879a84182f5",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/ReaderBasedJsonParser.java",
+      "message": "Function `_finishHexNumber` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1737,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-d37ffb6e88739f72",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_readBinary` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 503,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-afbec56b5bd5da63",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_finishHexNumber` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1185,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-a9481153eb3bd39d",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_parseFloat` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1258,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-faa0ed4077fcbe3b",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `parseEscapedName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1608,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-40344551bef7356a",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `findName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1945,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-cebff4f11b7c44b8",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `addName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1979,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1979 `quads[qlen-1] = (lastQuad << ...)` writes through the `quads` parameter of `addName`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-d6929193160faa22",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "Function `_finishString2` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 2151,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 2151 `outBuf[outPtr++] = (char) c` writes through the `outBuf` parameter of `_finishString2`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-80b11d869d410370",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_readBinary` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 627,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 627 `buffer[outputPtr++] = (byte) decodedData` writes through the `buffer` parameter of `_readBinary`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-68a591daaef6fb4c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_parseNumber2` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1962,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-eb1fd2df69efcab1",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_finishHexNumber` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 1992,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-e1e9a2d300a8f07f",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_parseFloat` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 2085,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-4d45e55407108ecd",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `parseEscapedName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 2503,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 2503 `quads[qlen++] = currQuad` writes through the `quads` parameter of `parseEscapedName`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-f9138b77589a4004",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `findName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 2864,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-feca93cc1bc85216",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `addName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 2898,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 2898 `quads[qlen-1] = (lastQuad << ...)` writes through the `quads` parameter of `addName`, matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-ad8d17253ee9f558",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "Function `_finishString2` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 3100,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-4b45b5ac550b8ba1",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/WriterBasedJsonGenerator.java",
+      "message": "Function `_prependOrWriteCharacterEscape` writes through parameter `buffer`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 2012,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`buffer[ptr] = '\\'` and `buffer[ptr+1]` write the escape into the caller-supplied char[] parameter and return the updated index, which is exactly the out-parameter pattern claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-fb0bdd7963821f94",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingJsonParserBase.java",
+      "message": "Function `_addName` writes through parameter `quads`.",
+      "status": "final",
+      "sampled_from": "t16-v",
+      "line": 737,
+      "verdict": "true_positive",
+      "reason": "Writes into a caller-supplied array it does not own: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator"
+    },
+    {
+      "id": "EA-66dee41bf7b65c8c",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_finishNumberIntegralPart` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1856,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`outBuf[outPtr++] = (char) ch` stores the parsed characters into the `outBuf` array parameter, so the write-through claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-df5a54b06d94bf91",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "Function `_startFloat` writes through parameter `outBuf`.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1874,
+      "verdict": "true_positive",
+      "reason": "Writes through a parameter: an output argument the call site does not show (Clean Code).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`outBuf[outPtr++] = '.'` writes the decimal point into the `outBuf` parameter array, matching the reported out-parameter write."
+        }
+      ]
+    },
+    {
+      "id": "EA-ef8b0e0368dfc1de",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "message": "Function `clean` writes to parameter `baseUri`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 348,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 348 reassigns the parameter `baseUri` (`baseUri = DummyUri;`) in `clean(String, String, Safelist)`."
+        }
+      ]
+    },
+    {
+      "id": "EA-27de68b4003caa77",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "message": "Function `addHeader` writes to parameter `value`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 489,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 489 reassigns the `@Nullable String value` parameter of `addHeader` (`value = value == null ? \"\" : value;`)."
+        }
+      ]
+    },
+    {
+      "id": "EA-1135dd2c6dfd4d2b",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/StringUtil.java",
+      "message": "Function `padding` writes to parameter `width`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 137,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 137 writes to the `width` parameter (`width = Math.min(width, maxPaddingWidth);`)."
+        }
+      ]
+    },
+    {
+      "id": "EA-4a2a513ca4c2258c",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/StringUtil.java",
+      "message": "Function `resolve` writes to parameter `relUrl`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 301,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 301 writes to the `relUrl` parameter (`relUrl = stripControlChars(relUrl);`)."
+        }
+      ]
+    },
+    {
+      "id": "EA-2e7e8458a04387ea",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/StringUtil.java",
+      "message": "Function `resolve` writes to parameter `relUrl`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 304,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 304 again writes to the `relUrl` parameter (`relUrl = base.getPath() + relUrl;`)."
+        }
+      ]
+    },
+    {
+      "id": "EA-784848aa3e4c62fe",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/StringUtil.java",
+      "message": "Function `resolve` writes to parameter `baseUrl`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 324,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 324 writes to the `baseUrl` parameter (`baseUrl = stripControlChars(baseUrl);`)."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ac1035b8e539b90",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attribute.java",
+      "message": "Function `setKey` writes to parameter `key`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 72 performs `key = key.trim();`, writing to parameter `key` as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-3d6eb239a82ea2a1",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attribute.java",
+      "message": "Function `getValidKey` writes to parameter `key`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 237,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 237 performs `key = htmlKeyReplace.matcher(key).replaceAll(\"_\");`, writing to parameter `key`."
+        }
+      ]
+    },
+    {
+      "id": "EA-68d92366952fd1a7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attributes.java",
+      "message": "Function `put` writes through parameter `attribute`.",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 323,
+      "verdict": "false_positive",
+      "reason": "`attribute.parent = this` is the owning Attributes collection adopting the attribute (a back-reference), not a result channel; the owner-type exemption misses it only because Attribute is declared in another file.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`attribute.parent = this` only sets a back-reference on the input object; `attribute` is not used to return a computed result, so the out-parameter rationale does not apply."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 323 `attribute.parent = this;` mutates a field of the input parameter `attribute`, confirming the write-through-parameter claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-faa3d8cf8860f934",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Function `codepointsForName` writes through parameter `codepoints`.",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "The function writes results into a caller-supplied array it does not own, an output argument.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`codepoints[0]`/`codepoints[1]` are the actual output values (only a count is returned), a textbook out-parameter."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`codepointsForName` does write through its input parameter via `codepoints[0] = val.codePointAt(0)` at line 135 (and again at 136/141), so the claim is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-e9eee47370e064e4",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "message": "Function `attr` writes to parameter `attributeKey`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 163,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 163 performs `attributeKey = settings.normalizeAttribute(attributeKey);`, writing to parameter `attributeKey`."
+        }
+      ]
+    },
+    {
+      "id": "EA-d12d406f686c7711",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "message": "Function `getDeepChild` writes to parameter `el`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 521,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 521 performs `el = child;`, writing to parameter `el`."
+        }
+      ]
+    },
+    {
+      "id": "EA-57c49f74512babd7",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Printer.java",
+      "message": "Function `addText` writes to parameter `textOptions`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 107 performs `textOptions |= Entities.Normalise;`, writing to parameter `textOptions`."
+        }
+      ]
+    },
+    {
+      "id": "EA-431e2b86f918b283",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Printer.java",
+      "message": "Function `textTrim` writes to parameter `options`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 126,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 126 performs `options |= Entities.TrimLeading;`, writing to parameter `options`."
+        }
+      ]
+    },
+    {
+      "id": "EA-155da2cf2c8c23ee",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/CharacterReader.java",
+      "message": "Function `cacheString` writes through parameter `stringCache`.",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 700,
+      "verdict": "true_positive",
+      "reason": "The function writes results into a caller-supplied array it does not own, an output argument.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`stringCache[index] = cached` populates the caller-provided array parameter, so the write-through claim is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`cacheString` writes through its input parameter with `stringCache[index] = cached` on the reported line 700, confirming the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-772c7c5c521be876",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/ParseSettings.java",
+      "message": "Function `normalizeTag` writes to parameter `name`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 62 performs `name = name.trim();`, writing to parameter `name`."
+        }
+      ]
+    },
+    {
+      "id": "EA-4326c587c0a2ac24",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/ParseSettings.java",
+      "message": "Function `normalizeAttribute` writes to parameter `name`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 74,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 74 performs `name = lowerCase(name);`, writing to parameter `name`."
+        }
+      ]
+    },
+    {
+      "id": "EA-55145059ceeb427f",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Token.java",
+      "message": "Function `appendTagName` writes to parameter `append`.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 315,
+      "verdict": "true_positive",
+      "reason": "Method reassigns an input parameter, matching the detector's stated definition (PMD AvoidReassigningParameters).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 315 does write the parameter (append = append.replace(...)) and the rewritten value is used at line 316, so the claim that appendTagName writes to parameter 'append' is factually correct."
+        }
+      ]
+    }
+  ]
+}

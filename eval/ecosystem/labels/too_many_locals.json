@@ -1,0 +1,3279 @@
+{
+  "schema_version": 1,
+  "detector": "too_many_locals",
+  "labels": [
+    {
+      "id": "EA-59871e361895972f",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "Function `uv__io_poll` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `uv__io_poll` has 18 local variables (> 15); the event-loop poll function declares 18-19 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at `int rc;` after only 15 declarations, so whether `uv__io_poll` reaches 16+ locals cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "uv__io_poll at src/unix/aix.c:133 declares more than 15 distinct locals, exceeding the analyzer's threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-e3cc73692c5d30c9",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/sunos.c",
+      "message": "Function `uv__io_poll` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `uv__io_poll` has 19 local variables (> 15); the event-loop poll function declares 18-19 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 19 locals in uv__io_poll(): events, pe, spec, q, w, pset, set, base, diff, nfds, i, saved_errno, have_signals, nevents, count, err, fd, user_timeout, reset_timeout; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 15 of the claimed 19 locals are visible before the excerpt cuts off, so the count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only 15 declarations (events through count, lines 148-162) are visible before the excerpt ends, so the claimed 19 locals cannot be verified without the rest of the function."
+        }
+      ]
+    },
+    {
+      "id": "EA-1372e77b79f209e8",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/minizip.c",
+      "message": "Function `main` has 30 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 240,
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`contrib/minizip/minizip.c` is the sample minizip CLI (`do_banner`/getopt), i.e. example code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-20f190631747b7d1",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/fptostring.cpp",
+      "message": "Function `FpToString` has 28 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 28 declarations (21 distinct names) in FpToString(): lowerExponentThreshold, upperExponentThreshold, ss x3, r, digits, digits_ct, diff, i x5, output_buffer, output_ptr, overflow_zeros, exponent, exp_digits, exp_digits_ct, digits_end, digits_iter, before_decimal_digits, zero_digits_ct, buffer_empty_space, after_decimal_zeros, ret_value; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only two `int const` locals are shown before the excerpt ends, so the claimed 28 locals for `FpToString` cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-a24e3eac829979ff",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/scanscalar.cpp",
+      "message": "Function `ScanScalar` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 17 declarations in ScanScalar(): foundNonEmptyLine, pastOpeningBreak, emptyLine, moreIndented, foldedNewlineCount, foldedNewlineStartedMoreIndented, lastEscapedChar, scalar, lastNonWhitespaceChar, escapedNewline, ch, n, nextEmptyLine, nextMoreIndented, pos x3 (15 distinct names, declarations 17); counted by declarations > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only eight locals are visible before the `while` loop, and `ScanScalar` continues beyond the excerpt, so 17 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-89845ee771cf5f26",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "util/api.cpp",
+      "message": "Function `main` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "Small utility programs beside the library, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`util/api.cpp` is explicitly a scratch file ('a sketch of what the new API might look like'), i.e. example code not subject to the rule."
+        }
+      ]
+    },
+    {
+      "id": "EA-63cb85e649ce0d51",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/DynamicParameters.cs",
+      "message": "Function `Output` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 348,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Output: lastMemberAccess, diving, names, chain, constant, dynamicParamName, lookup, cache, setter, dm, il, i, member, get, paramGetter, lastMember, set = 17 explicit locals (plus pattern vars member/info/property); lambda and local function excluded; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the local function and one `var` declaration are shown, so the claimed 19 locals in `Output` cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-120c6e30df68975c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JsonPath/JPath.cs",
+      "message": "Function `ParseArrayIndexer` has 20 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 231,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20 declarations in ParseArrayIndexer(): start, end, indexes, colonCount, startIndex, endIndex, step, currentCharacter, length x3, indexer x5, index x4 (11 distinct names); declarations > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only seven top-level declarations plus `currentCharacter` are visible, so the claimed 20 locals in `ParseArrayIndexer` cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-0e406e5b29583408",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/DynamicReflectionDelegateFactory.cs",
+      "message": "Function `GenerateCreateMethodCallIL` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 18 locals in GenerateCreateMethodCallIL(): args, argsOk, localConvertible, localObject, variableAddressOpCode, variableLoadOpCode, i, parameter, parameterType, localVariable x2, skipSettingDefault x2, finishedProcessingParameter x2, toParameterTypeMethod, skipConvertible, returnType; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 91 inside `GenerateCreateMethodCallIL`, so the full set of 18 locals cannot be counted from what is shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-410127ce069b19b8",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "cursed_renderer.go",
+      "message": "Function `flush` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 296,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "flush: view, frameArea, content, frameHeight, shouldUpdateAltScreen, kittyFlags, cc, lcc, lfg, lbg, c, col, ok, ccStyle, lcStyle, lcur, ccur, lv, lps, cur, x, y, err, hasUpdates, didShowCursor, showCursor, hideCursor, shouldUpdateCursorVis, buf = 29 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `flush` (lines 296-311) is shown, so the claimed 24 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-94002aca36b91758",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "Function `Run` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1018,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Run: 19 owned declarations (cmds, ttyIn, err x5 in separate scopes, width, height, w, h, resizeMsg, r, mapNl, cp, model, initCmd, ch, killed; closure vars and named results excluded) > 15; only 15 if repeated `err` names are merged, so it rests on counting declarations as the rule states."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `Run` function body extends far past line 1032, so its 16-local count is not verifiable from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-bcaa1d4d49178866",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "Function `execute` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 905,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "execute: 18 `:=` declarations (helpVal, versionVal, fn, argWoFlags, parents, three `p` loop vars, and ~10 scoped `err` from if-init statements) > 15 under the declaration-counting rule; only 7 distinct names, so this is a weak positive that depends on counting scoped redeclarations."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`execute` continues well beyond line 920, so the alleged 16 locals cannot be counted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the execute signature and its first ~15 lines; the function body extends beyond the excerpt, so the claimed count of 16 local variables cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-13ece3d34e3f019e",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "Function `getCompletions` has 22 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 316,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getCompletions: counted toComplete, trimmedArgs, finalCmd, finalArgs, err, rootCmd, flag, flagErr, flagCompletion, newArgCount, realArgCount, ok, validExts, present, subDir, completions, directive, doCompleteFlags, cmd, subCmd, validArg, argAlias, completionFn, comps (>=24 distinct); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `getCompletions` excerpt stops at line 331, leaving the claimed 22 locals unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 331 mid-function (inside the TraverseChildren if/else), so the claimed 22 locals in getCompletions cannot be verified from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-1cdd91c7f2b24d0a",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `getValue` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 418,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16+ declarations in getValue(): globalParamsCount, prefix, idxc, i, c, index, length, skippedNode, end, newParams, i, val, v, err, newParams, i...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`getValue` runs past the shown lines 418-433, so the 19-local count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-143bbdfcfbaa3e80",
+      "repository": "gin",
+      "language": "go",
+      "path": "tree.go",
+      "message": "Function `findCaseInsensitivePathRec` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 703,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16+ declarations in findCaseInsensitivePathRec(): npLen, oldPath, i, c, idxc, i, c, rv, off, max_, i, lo, idxc, i, c, out, up...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The recursive `findCaseInsensitivePathRec` body is much longer than the excerpt, so 25 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e3641e5ead229f3",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/RandomStringUtils.java",
+      "message": "Function `random` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 255,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "random: 18 declarations (ok x2, i x3, hasMatch, c, builder, gap, gapBits, desiredCacheSize, cacheSize, arb, maxRejections, rejections, randomValue, codePoint, numberOfChars) > 15 (15 if repeated ok/i names are merged)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the signature and first lines of `random` are shown, so the claimed 18 locals cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-514b455a6bc37fef",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "message": "Function `matches` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 5365,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "matches: max, min, range, matchIndexes, matchFlags, matches, mi, c1, xi, xn, ms1, ms2, i, si, transpositions, prefix = 16 distinct names (over 20 declarations counting repeated loop vars); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `matches` ends mid-loop at line 5380, so the full local-variable count of 17 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6dc40f1e56a3dae0",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+      "message": "Function `replaceEachOnce` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 6536,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "replaceEachOnce: 16 declarations (searchLength, replacementLength, noMoreMatchesForReplIndex, textIndex, replaceIndex, tempIndex, start, increase, greater, buf, textLength, plus five `i` loop variables); > 15 by declarations, but only 12 distinct names, so borderline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `replaceEachOnce` stops at line 6552 with only searchLength and replacementLength shown, so the 16-locals claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-2dd8142c616d66b5",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/math/Fraction.java",
+      "message": "Function `getFraction` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 132,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getFraction: sign, wholeNumber, numer0, denom0, numer1, denom1, numer2, denom2, a1, a2, x1, x2, y1, y2, delta1, delta2, fraction, i, numerator = 19 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `getFraction(double)` cuts off at the `int a2;` declaration, so the full 19-local count is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-2713d7ea620da0f8",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/math/Fraction.java",
+      "message": "Function `addSub` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 549,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "addSub: 16 declarations (thisGcd, thatGcd, thisNumerator, thisDenominator, thatNumerator, thatDenominator, d1, uvp, upv, t, uvp, upv, t, tmodd1, d2, w); > 15 by declaration count, but only 13 distinct names because uvp/upv/t are redeclared in two scopes, so borderline."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `addSub` ends at line 564 with only a few locals shown, so the 16-locals count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-961f86494fb4a4fc",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/math/NumberUtils.java",
+      "message": "Function `createNumber` has 21 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 355,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "createNumber: hexPrefixes, length, offset, pfxLen, lastChar, firstSigDigit, isLongCh, hexDigits, mant, dec, exp, decPos, expPos, requestType, numeric, f, d, b = 18 distinct names (21 declarations); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `createNumber` stops in the hex-prefix loop at line 369, so the claimed 21 locals cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-adde17ca93938d78",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrSubstitutor.java",
+      "message": "Function `substituteRecursive` has 26 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1169,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "substituteRecursive: pfxMatcher, suffMatcher, escape, valueDelimMatcher, substitutionInVariablesEnabled, top, altered, lengthChange, chars, bufEnd, pos, startMatchLen, startPos, endMatchLen, nestedVarCount, varNameExpr, bufName, endPos, varName, varDefaultValue, varNameExprChars, ... >= 25 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `substituteRecursive` ends mid-while-loop at line 1184 with only about a dozen locals visible, so the 26-locals figure is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-7bd3f8621de91b3d",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java",
+      "message": "Function `parsePattern` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1367,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parsePattern: symbols, rules, ERAs, months, shortMonths, weekdays, shortWeekdays, AmPmStrings, length, indexRef, i, token, tokenLen, rule, c, sub = 16 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `parsePattern` stops at line 1382 inside the for-loop, so the full set of 16 locals cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ab5b41e8112af2b",
+      "repository": "gson",
+      "language": "java",
+      "path": "extras/src/main/java/com/google/gson/typeadapters/UtcDateTypeAdapter.java",
+      "message": "Function `parse` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 140,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in parse(): fail, offset, year, month, day, hour, minutes, seconds, milliseconds, c, timezoneId, timezoneIndicator, timezoneOffset, timezone, calendar, input; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `parse` ends at line 155 while year/month extraction is still ongoing, so the 16-locals count is not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "parse() is truncated at line 155 during month extraction; confirming the claimed 16 locals requires the full method body, which the excerpt does not show."
+        }
+      ]
+    },
+    {
+      "id": "EA-63e028d6c2f016e3",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "Function `resolve` has 22 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 346,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 22 declarations in resolve() (18 distinct names): resolving, typeVariable, previouslyResolved, original x4, componentType x2, newComponentType x2, ownerType, newOwnerType, ownerChanged, args, argsChanged, t, length, resolvedTypeArgument, originalLowerBound, originalUpperBound, lowerBound, upperBound; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only lines 341-361 of the private `resolve(Type,Class,Type,Map)`; the rest of the body where the remaining locals would be declared is not shown, so 22 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "resolve() continues well past line 361 inside the while(true) loop, so the claimed 22-local count cannot be checked against the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-2c52fed223eff248",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/LinkedTreeMap.java",
+      "message": "Function `rebalance` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 338,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in rebalance(): node, left, right, leftHeight, rightHeight, delta, rightLeft, rightRight, rightRightHeight, rightLeftHeight, rightDelta, leftLeft, leftRight, leftRightHeight, leftLeftHeight, leftDelta; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only lines 333-353 of `rebalance` are shown, cutting off inside the first `if`; the remaining locals needed to total 16 are not visible."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "rebalance() extends beyond line 353 inside the delta == -2 branch; only about 11 declarations are visible, which neither confirms nor refutes the claimed count of 16."
+        }
+      ]
+    },
+    {
+      "id": "EA-d8920172485b8169",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java",
+      "message": "Function `parse` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 147,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 25 locals in parse(): fail, offset, year, month, day, hour, minutes, seconds, milliseconds, hasT, calendar, c, endOffset, parseEndOffset, fraction, timezone, timezoneIndicator, timezoneOffset, timezoneId, act, cleaned, calendar, input, msg, ex; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`parse` extends far beyond the excerpt (which stops at line 162), so the claimed 25 locals cannot be counted from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "parse() is cut off at line 162 after month extraction; the claimed 25 locals would require seeing the day/hour/timezone sections that are not in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-2c2c49bb21349735",
+      "repository": "gson",
+      "language": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/LegacyProtoTypeAdapterFactory.java",
+      "message": "Function `read` has 16 local variables (> 15).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 208,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Count not recomputed over the full function: read (LegacyProtoTypeAdapterFactory.java:208) declares locals such as defaultInstance, builder, presenceBitmask, oneofNameToCaseNumber, about 14 distinct names found in the body versus the reported 16."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 223 inside the `else` branch of `read`; the additional locals needed to reach 16 are not shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "read() runs past line 223 inside the while loop; the excerpt shows only around 9 declared locals, far short of the claimed 16, but the remainder of the method is not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-4345d7c6b1b1fd0e",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/schubfach/DoubleToDecimal.java",
+      "message": "Function `toDecimal` has 20 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 307,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20 locals in toDecimal(): out, cb, cbr, cbl, k, h, g1, g0, vb, vbl, vbr, s, sp10, tp10, upin, wpin, t, uin, win, cmp; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `toDecimal`'s signature and an explanatory comment are shown (lines 307-322); no body locals are visible to count toward 20."
+        }
+      ]
+    },
+    {
+      "id": "EA-10019c1a154759de",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/io/schubfach/FloatToDecimal.java",
+      "message": "Function `toDecimal` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 306,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 19 locals in toDecimal(): out, cb, cbr, cbl, k, h, g, vb, vbl, vbr, s, sp10, tp10, upin, wpin, t, uin, win, cmp; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only `toDecimal`'s signature and comment are shown (lines 306-321); the 19 locals are not visible in the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-c65908941afa106a",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/sym/CharsToNameCanonicalizer.java",
+      "message": "Function `rehash` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 669,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 18 declarations in rehash(): size, newSize, oldSyms, oldBuckets, count, maxColl, i, symbol, index, bix, newB, bucketSize, i, b, symbol, index, bix, newB (13 distinct names, declarations 18); > 15 by declaration count."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only lines 669-684 of `rehash` are shown, ending mid-body, so the claimed 18 locals cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-877cff7ea103a646",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Function `inBodyEndTagAdoption` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 794,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 19 declarations (17 distinct) in inBodyEndTagAdoption(): endTag, subject, outer, formatEl, i, next, furthestBlock, stack, fei, el, commonAncestor, bookmark, lastEl, inner, replacement, adoptor, child; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening steps of `inBodyEndTagAdoption` (through line 809), far short of the full method, so 18 locals are unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows just 3 locals (endTag, subject, outer) at the start of a much longer function, so the claimed 18 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-3faf938780464669",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi-adapters/src/main/java/com/squareup/moshi/adapters/Iso8601Utils.java",
+      "message": "Function `parse` has 21 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 21 locals in parse(): offset, year, month, day, hour, minutes, seconds, milliseconds, hasT, calendar, c, endOffset, parseEndOffset, fraction, timezone, timezoneIndicator, timezoneOffset, timezoneId, act, cleaned, calendar; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`parse` continues well past line 92 mid-body, so the claimed 21-local count cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-f102df946d24bfe3",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi/src/main/java/com/squareup/moshi/LinkedHashTreeMap.java",
+      "message": "Function `rebalance` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 334,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in rebalance(): node, left, right, leftHeight, rightHeight, delta, rightLeft, rightRight, rightRightHeight, rightLeftHeight, rightDelta, leftLeft, leftRight, leftRightHeight, leftLeftHeight, leftDelta; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`rebalance` extends beyond line 349, so the reported 16 locals (just over threshold) are unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-c733035eb8a227f2",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi/src/main/java/com/squareup/moshi/internal/Util.java",
+      "message": "Function `resolve` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20 declarations in resolve() (15 distinct names): typeVariable, original x3 ... componentType x2, newComponentType x2, ownerType, newOwnerType, changed, args, t, length, resolvedTypeArgument, originalLowerBound, originalUpperBound, lowerBound, upperBound; declarations > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The private `resolve` overload's body is truncated after line 232, so the 19-local count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-47b5ceecfa9966a1",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/fetch.js",
+      "message": "Function `<anonymous>` has 42 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 205,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Async arrow in fetch adapter: 15 destructured lets (url, method, data, signal, cancelToken, timeout, onDownloadProgress, onUploadProgress, responseType, headers, withCredentials, fetchOptions, maxContentLength, maxBodyLength, maxRedirects) + hasMaxContentLength, hasMaxBodyLength, own, _fetch, composedSignal, request, unsubscribe, requestContentLength, pendingBodyError, maxBodyLengthError = 25, plus many more in try (auth, parsedURL, ...); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The anonymous async arrow at line 205 continues far past the shown destructuring, so the 42-local claim cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "14 destructured locals (url through maxBodyLength) appear in a still-open async function, so the claimed 42 total cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-2b94f11aea25e317",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `setProxy` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 258,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setProxy: counted proxy, proxyEnvAgent, proxyUrl, name (x2 scopes), isProxyURL, readProxyField, proxyUsername, proxyPassword, proxyAuth, authIsObject, authUsername, authPassword, validProxyAuth, targetIsHttps, proxyHost (x2), proxyPort, ... >= 25 declarations > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`setProxy` runs beyond line 273, so the 25-local count is not verifiable from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "setProxy's body is only visible through line 273 mid-if-chain, so the claimed 25 locals cannot be counted against the threshold of 15."
+        }
+      ]
+    },
+    {
+      "id": "EA-92f685b9a5b73ba5",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "Function `dispatchHttpRequest` has 72 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 568,
+      "verdict": "true_positive",
+      "reason": "Production function declaring more than 15 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dispatchHttpRequest: top-level body alone declares own, transitional, data, lookup, family, httpVersion, rawHttpVersion, http2Options, httpAgent, httpsAgent, configProxy, responseType, responseEncoding, socketPath, method, maxRedirects, maxBodyLength, maxContentLength, decompress, isDone, rejected, req, ... >= 40 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`dispatchHttpRequest` is a large function truncated at line 583, so the 72-local count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "dispatchHttpRequest is shown only from line 568 to 583 and clearly continues far beyond the excerpt, so the 72-local claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-e561e307df9637b2",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/helpers/resolveConfig.js",
+      "message": "Function `resolveConfig` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "resolveConfig: newConfig, own, data, withXSRFToken, xsrfHeaderName, xsrfCookieName, headers, auth, baseURL, allowAbsoluteUrls, url, username, password, getHeaders, shouldSendXSRF, xsrfValue = 16 (catch binding e excluded); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`resolveConfig` extends past line 40, so the borderline 16-local count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "resolveConfig continues past line 40 with only about 11 locals visible, so whether the true count is 16 or 15 cannot be determined."
+        }
+      ]
+    },
+    {
+      "id": "EA-2f773e187dbb4fb7",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/cli.js",
+      "message": "Function `execute` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 199,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "execute: CLIOptions, options, files, useStdin, engine (x2), fileConfig, flatOptions, spawn, flags, emptyStringIndex, optionsURL, eslintOptions, results, unusedSuppressions, suppressionsFileLocation, suppressions, suppressionResults, resultsToPrint, resultCounts, tooManyWarnings, resultsMeta, shouldExitForFatalErrors, unusedSuppressionsCount = 24+ declarations (catch bindings excluded); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `execute` method continues beyond line 214, so the 24-local count is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-44909dd4be1c027e",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/worker.js",
+      "message": "Function `<anonymous>` has 23 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Worker async IIFE: eslintOptionsOrURL, filePathIndexArray, filePaths, eslintOptions, processedESLintOptions, warningService, linter, cacheFilePath, lintResultCache, defaultConfigs, configLoader, indexedResults, loadConfigTotalDuration, readFileCounter, lintingStartTime, fileLintingStartTime, index, filePath, ... = 23 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off the async IIFE at line 84, so the claimed 23 local variables cannot be counted or verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-d27641c1c6bfefcf",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "Function `key` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 709,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Arrow `key => {...}`: sourceFile, sourceLine, sourceColumn, content, validStartIndex, invalidStartIndex, validEndIndex, invalidEndIndex, validLines, invalidLines, objectDepth, validLineIndexes, invalidLineIndexes, i, start, end, errorLines, errorObjectDepth, errorLineIndexes = 19+ owned declarations (inner callbacks excluded); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The arrow function starting at line 709 continues past the excerpt (mid-map callback), so its 17 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4571ed92d4bc2c14",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "Function `testInvalidTemplate` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1437,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted >=22 locals in testInvalidTemplate() (requireMessage, requireLocation, requireData, ruleHasMetaMessages, friendlyIDList, result, messages, seenMessageIndices, i, suggestionMessage, previous, hasMessageOfThisRule, error, message, locationProperties, actualLocation, expectedLocation, key, ...); > 15; production eslint lib."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first ~15 lines of the long `testInvalidTemplate` body are shown, so the 24-local count is not verifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-28290bf4bb76b362",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent.js",
+      "message": "Function `create` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 671,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16+ locals in create(): DEFAULT_* x3, indentType, indentSize, options, sourceCode, tokenInfo, offsets, parameterParens, ignoredNodeFirstTokens, baseOffsetListeners, listenerCallQueue, offsetListeners, ignoredNodes, ignoredNodeListeners plus loop destructure selector/listener; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 6 locals are visible before the excerpt ends at line 686 while `create` in indent.js is far longer, so 16 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-3036e5700d2a61c6",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/no-extra-parens.js",
+      "message": "Function `create` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 17 locals in create(): sourceCode, tokensToIgnore, precedence, ALL_NODES, 10 IGNORE_/EXCEPT_ consts, two PRECEDENCE_OF_* consts, reportsBuffer; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only ~7 consts of `create` before truncating at line 131, so the 17-local claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-98a6543c4a3bc042",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/object-shorthand.js",
+      "message": "Function `makeFunctionShorthand` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 298,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in makeFunctionShorthand(): firstKeyToken, lastKeyToken, keyText, keyPrefix, fixRange, methodPrefix, functionToken, tokenBeforeParams, arrowToken, fnBody, firstValueToken, sliceStart, sliceEnd, shouldAddParens, oldParamText, newParamText; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`makeFunctionShorthand` continues past line 313 with only 4 locals visible, so the reported 16 locals cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-f138a42268447dc9",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/eslint-fuzzer.js",
+      "message": "Function `fuzz` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 62,
+      "verdict": "false_positive",
+      "reason": "Tooling code, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`tools/eslint-fuzzer.js` is ESLint's developer/tooling code (the `fuzz` fuzzer at line 62), which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-4ab9608cdcab9608",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/AdapterGenerator.kt",
+      "message": "Function `generateFromJsonFun` has 43 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 319,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 40+ vals/vars in generateFromJsonFun: result, propertiesByIndex, components, property, propertyCount, maskCount, maskNames, maskAllSetValues, useDefaultsConstructor, propertyIndex, constructorPropertyTypes, maskIndex, maskNameIndex, updateMaskIndexes, separator, resultName, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of the long `generateFromJsonFun` Kotlin function is shown, so the claimed 43 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6c5197fba19c2a45",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/metadata.kt",
+      "message": "Function `targetType` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 18+ owned locals in targetType: typeMetadata, kmClass, kotlinApi, typeVariables, appliedType, constructor, properties, resolvedTypes, superclass, localAppliedType, supertypeApi, appliedClassName, supertypeProperties, name, property, visibility, resolvedVisibility, forceInternal; > 15 (lambda-internal vals excluded)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 130 while `targetType` continues, so the claimed 16 locals cannot be counted from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e1e5fe418932af1",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin/src/main/java/com/squareup/moshi/kotlin/reflect/KotlinJsonAdapter.kt",
+      "message": "Function `create` has 22 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 22 locals in create(): rawType, generatedAdapter, rawTypeKotlin, constructor, parametersByName, bindingsByName, property, parameter, jsonAnnotation, allAnnotations, jsonName, propertyType, propertyTypeClassifier, resolvedPropertyType, adapter, bindings, binding, index, nonIgnoredBindings, options...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`create` is cut off at line 205 mid-catch block, so its 22 locals are not visible to verify."
+        }
+      ]
+    },
+    {
+      "id": "EA-73623fa35ee3fa6a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-idna-mapping-table/src/main/kotlin/okhttp3/internal/idn/MappingTables.kt",
+      "message": "Function `buildIdnaMappingTableData` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "Build-time generator for the IDNA table, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "buildIdnaMappingTableData lives in the okhttp-idna-mapping-table module, a build-time generator that produces the IDNA data table, so it is tooling code outside a runtime-quality scope."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 38 inside the first `for` loop of `buildIdnaMappingTableData`, far short of the whole function."
+        }
+      ]
+    },
+    {
+      "id": "EA-c80397e83ac43322",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-logging-interceptor/src/main/kotlin/okhttp3/logging/HttpLoggingInterceptor.kt",
+      "message": "Function `intercept` has 26 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 165,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 26 locals in intercept(): level, request, logBody, logHeaders, requestBody, connection, requestStartMessage, headers, i, buffer, gzippedLength, charset, startNs, response, tookMs, responseBody, contentLength, bodySize, source, totalMs, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`intercept` extends well past the line 180 excerpt cutoff, so the 26-locals claim cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-fb715f748da26aaf",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Cookie.kt",
+      "message": "Function `parse` has 23 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 450,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 23 locals in parse(): cookiePairEnd, pairEqualsSign, cookieName, cookieValue, expiresAt, deltaSeconds, domain, path, secureOnly, httpOnly, hostOnly, persistent, sameSite, pos, limit, attributePairEnd, attributeEqualsSign, attributeName, attributeValue, deltaMilliseconds, urlHost, encodedPath, lastSlash; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The internal `parse` body is truncated at line 465, leaving most of the 23 claimed locals unseen."
+        }
+      ]
+    },
+    {
+      "id": "EA-828dbab366392309",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-CacheControlCommon.kt",
+      "message": "Function `commonParse` has 23 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 23 locals in commonParse(): noCache, noStore, maxAgeSeconds, sMaxAgeSeconds, isPrivate, isPublic, mustRevalidate, maxStaleSeconds, minFreshSeconds, onlyIfCached, noTransform, immutable, canUseHeaderValue, headerValue, i, name, value, pos, tokenStart, directive, parameter, parameterStart x2; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 14 declarations are visible before the excerpt ends at line 125, and `commonParse` clearly continues."
+        }
+      ]
+    },
+    {
+      "id": "EA-e4ab9220e37dfdeb",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/-DnsMessageReader.kt",
+      "message": "Function `readHttpsResourceRecord` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 191,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in readHttpsResourceRecord(): svcPriority, targetName, lastKey, alpnIds, noDefaultAlpn, port, ipAddressHints, echConfigList, key, valueLength, i, serviceParameterKey, pos, alpnIdLength, i, i; 16 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 206 inside the `while` loop of `readHttpsResourceRecord`, so 16 locals are uncountable."
+        }
+      ]
+    },
+    {
+      "id": "EA-4add82166bbc991f",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/CallServerInterceptor.kt",
+      "message": "Function `intercept` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 17 owned locals in intercept(): realChain, exchange, request, requestBody, sentRequestMillis, invokeStartEvent, responseBuilder, sendRequestException, hasRequestBody, isUpgradeRequest, bufferedRequestBody x2, response, code, isUpgradeCode, isUpgradeResponse, responseBody (anonymous-object body excluded); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`intercept` is cut off at line 46 inside its `try` block, so the 17-locals claim cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-28cd0d944384659e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/idn/Punycode.kt",
+      "message": "Function `decodeLabel` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`decodeLabel` carries Punycode state (e.g. the shadowed `var pos = pos + 4` at line 191) plus decode counters and temporary values, consistent with the reported 16 locals."
+        }
+      ]
+    },
+    {
+      "id": "EA-37db18de6488482c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/publicsuffix/PublicSuffixDatabase.kt",
+      "message": "Function `binarySearch` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`binarySearch` declares low, high, match, mid, end and further search/candidate locals within the loop, consistent with 16 locals."
+        }
+      ]
+    },
+    {
+      "id": "EA-dffa05331b568c84",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/ws/WebSocketExtensions.kt",
+      "message": "Function `parse` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`parse` declares six state flags (compressionEnabled, clientMaxWindowBits, etc.) plus loop and nested parsing locals, consistent with 16."
+        }
+      ]
+    },
+    {
+      "id": "EA-269ab9eb6ca8420c",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Options.kt",
+      "message": "Function `buildTrieRecursive` has 20 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `buildTrieRecursive` has 20 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`buildTrieRecursive` is a long recursive trie builder declaring many locals (e.g. the shadowed `var fromIndex = fromIndex` at line 123), consistent with 20."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only the signature (7 params) plus i, fromIndex and from are visible before the body continues, so the claimed 20 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7e55832739995ec8",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "Function `selectPrefix` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `selectPrefix` has 18 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`selectPrefix` tracks head, s, data, pos, limit, trie, triePos, prefixIndex and further trie-navigation locals, consistent with 18."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Nine locals (head through scanOrSelect) are visible before the mid-loop cut, so the claimed 18 cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-126d65ee26cc2da5",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Md5.kt",
+      "message": "Function `hash` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `hash` has 18 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`hash` declares localK, localS, a, b, c, d plus per-round i/g/f temporaries across its loops, matching the reported 18 locals."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only 9 locals (localK through f) are shown inside the first round's loop, so the claimed 18 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-14be078b3db958bf",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha1.kt",
+      "message": "Function `processChunk` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `processChunk` has 19 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`processChunk` declares words, a shadowed pos, loop indices and the a-e working state plus round temporaries, consistent with 19."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows just words, pos and loop var w before the schedule-expansion loop, so the claimed 19 locals cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-703fecbda8b2a11d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha256.kt",
+      "message": "Function `hash` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 102,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `hash` has 16 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`hash` declares a-h state, localK, the loop index and s0/s1/ch/maj/t1/t2 temporaries, matching the reported 16 locals."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Eleven locals (localK through s0) are visible before the expression truncates mid-loop, so the claimed 16 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-098420272fb8cbd1",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/hashFunctions/kotlin/okio/internal/Sha512.kt",
+      "message": "Function `hash` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `hash` has 16 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in hash(): localK, a, b, c, d, e, f, g, h, i, s0, s1, ch, maj, t1, t2; 16 > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the start of `hash` (localK, a\u2013h, and loop vars s0/s1/ch) and cuts off at line 121, so the claimed 16 locals cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only 13 declared locals (localK, a\u2013h, i, s0, s1, ch) and the 80-round loop body continues past line 121, so the claimed 16 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4d9b9270a10ead7b",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/zlibMain/kotlin/okio/internal/ZipFiles.kt",
+      "message": "Function `readCentralDirectoryZipEntry` has 21 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 188,
+      "verdict": "true_positive",
+      "reason": "Measured correctly: Function `readCentralDirectoryZipEntry` has 21 local variables (> 15); a dense encoding, parsing, or I/O routine over the budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 21 owned locals in readCentralDirectoryZipEntry(): signature, bitFlag, compressionMethod, dosLastModifiedTime, dosLastModifiedDate, crc, compressedSize, size, nameSize, extraSize, commentByteCount, offset, name, requiredZip64ExtraSize, ntfsLastModifiedAtFiletime, ntfsLastAccessedAtFiletime, ntfsCreatedAtFiletime, hasZip64Extra, comment, canonicalPath, isDirectory (lambda locals excluded); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `readCentralDirectoryZipEntry` ends at `compressionMethod`, well before the end of the function, so the count of 21 locals cannot be checked."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The function continues well past the excerpt (only signature, bitFlag, compressionMethod declared by line 203), so the claimed 21 locals is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-e04c73b46e965938",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "Function `main` has 16 local variables (> 15).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 562,
+      "verdict": "false_positive",
+      "reason": "main binds 15 non-parameter names (AST count): config_source, e, error_msg, lines, method, mode, param, reformat_many (function-local import), report, root, sources, user_level_config, value, versions, write_back. Reassigned params (cache_dir, no_cache, quiet) are excluded. 15 is not > 15.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "main: AST count of non-parameter bound names = 14 (config_source, e, error_msg, lines, method, mode, param, report, root, sources, user_level_config, value, versions, write_back); only 15-16 if the `import reformat_many` and a comprehension variable were counted, which the rules do not list."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the parameter list of `main` is shown (lines 562\u2013577), not the body where the 16 locals would be declared."
+        }
+      ]
+    },
+    {
+      "id": "EA-067802475d8bd10d",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/comments.py",
+      "message": "Function `_handle_comment_only_fmt_block` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 277,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt for `_handle_comment_only_fmt_block` stops at `fmt_off_idx`/`fmt_on_idx`, leaving the rest of the body unshown, so 19 locals cannot be confirmed."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (16) at line 277"
+        }
+      ]
+    },
+    {
+      "id": "EA-fd1e10322894179f",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/comments.py",
+      "message": "Function `_handle_regular_fmt_block` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 465,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_handle_regular_fmt_block: 18 distinct non-parameter names (comment_lineno, first, first_idx, fmt_off_prefix, has_standalone, hidden_value, hint, ignored, ignored_parent, index, leaf_is_ignored, line, next_node, node, node_index, parent, parts, prefix, ...); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`_handle_regular_fmt_block` is truncated after `first.prefix = prefix[comment.consumed:]`, so the claimed 18 locals are not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-b1a413824914e39d",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/comments.py",
+      "message": "Function `_generate_ignored_nodes_from_fmt_skip` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 789,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_generate_ignored_nodes_from_fmt_skip: 17 distinct locals (body_node, bracket_depth, child, comments, current_node, grandparent, header_nodes, ignored, ignored_leaf, ignored_nodes, leaf_is_ignored, ...); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `_generate_ignored_nodes_from_fmt_skip` excerpt ends at the `prev_sibling` block, so the 17-local count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-10e679a93a64b53c",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Function `_first_right_hand_split` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1105,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `_first_right_hand_split` excerpt shows only six locals before cutting off at `closing_bracket`, not the full set of 18."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (17) at line 1105"
+        }
+      ]
+    },
+    {
+      "id": "EA-91bc37cb00484ddc",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/lines.py",
+      "message": "Function `can_omit_invisible_parens` has 21 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1545,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `can_omit_invisible_parens` excerpt shows only `line = rhs.body` before ending, so the claimed 21 locals cannot be counted."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (16) at line 1545"
+        }
+      ]
+    },
+    {
+      "id": "EA-3b33a1801feffbf4",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/parsing.py",
+      "message": "Function `lib2to3_parse` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "lib2to3_parse: 17 distinct non-parameter names (column, context, details, drv, error_msg, errors, exc, faulty_line, grammar, grammars, lineno, lines, max_tv, pe, result, te, tv_str); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the head of `lib2to3_parse` (ending mid-loop at line 92), so the claimed 16 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-26f3a4a878aea280",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `_merge_one_string_group` has 22 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 621,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening docstring/`atom_node` lines of `_merge_one_string_group` are shown, so the claimed 22 locals are unverifiable."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (20) at line 621"
+        }
+      ]
+    },
+    {
+      "id": "EA-480fd8c377e92591",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `do_transform` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2334,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off early in `do_transform` (line 2349), giving no basis to confirm the claimed 25 locals."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (23) at line 2334"
+        }
+      ]
+    },
+    {
+      "id": "EA-d31df9c463d777f0",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/driver.py",
+      "message": "Function `parse_tokens` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 123,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_tokens: 16 distinct non-parameter names (_indent_col, _prefix, column, end, indent_columns, line_text, lineno, p, prefix, proxy, quintuple, s_column, s_lineno, start, type, value); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`parse_tokens` continues well past the shown loop body, so the claimed 16 locals cannot be confirmed from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-6e47f3e1dffee88b",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "message": "Function `collect` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 261,
+      "verdict": "false_positive",
+      "reason": "Documentation and build support scripts, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`collect` lives in `support/python/mkdocstrings_handlers/cxx/`, documentation-tooling code that is outside the detector's production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2d3b3d1db9bb99ea",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urlparse.py",
+      "message": "Function `urlparse` has 32 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `urlparse` has 32 local variables (> 15) is plausible for the real function `_urlparse.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (30) at line 213"
+        }
+      ]
+    },
+    {
+      "id": "EA-371643f2e51b304f",
+      "repository": "nlohmann-json",
+      "language": "python",
+      "path": "docs/mkdocs/scripts/check_structure.py",
+      "message": "Function `check_structure` has 22 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 19,
+      "verdict": "false_positive",
+      "reason": "Documentation tooling, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`check_structure` is in `docs/mkdocs/scripts/`, a documentation build/maintenance script outside the detector's scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (18) at line 19"
+        }
+      ]
+    },
+    {
+      "id": "EA-082c284a14669a03",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_inspect.py",
+      "message": "Function `_render` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 125,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `_render` has 19 local variables (> 15) is plausible for the real function `_inspect.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (16) at line 125"
+        }
+      ]
+    },
+    {
+      "id": "EA-f73ab01909006776",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/ansi.py",
+      "message": "Function `decode_line` has 16 local variables (> 15).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 138,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "decode_line binds 15 distinct names excluding parameters (from_ansi, from_rgb, _Style, text, append, plain_text, sgr, osc, _params, semicolon, link, codes, iter_codes, code, color_type); the 16th, _code, is only a list-comprehension target, so the count is 15 or 16 depending on whether comprehension scopes count."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (rich/ansi.py:138) shows only the start of `decode_line` with a handful of locals, so the reported total of 16 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8849699b19fc86f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/columns.py",
+      "message": "Function `__rich_console__` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt (rich/columns.py:62-77) truncates `__rich_console__` after only a few assignments, so its 25-local count is unverifiable."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (22) at line 62"
+        }
+      ]
+    },
+    {
+      "id": "EA-d884c7a0595b40f8",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `print` has 18 local variables (> 15).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 1652,
+      "verdict": "false_positive",
+      "reason": "print binds 13 non-parameter names: add_new_line, buffer_extend, extend, hook, line, new_line, new_segments, render, render_hooks, render_options, render_style, renderable, renderables. 'segment' is a comprehension variable and reassigned params are excluded. 13 <= 15.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Counted 14 distinct non-parameter names bound in print() (add_new_line, buffer_extend, extend, hook, line, new_line, new_segments, render, render_hooks, render_options, render_style, renderable, renderables, segment); reassigned parameters are excluded; 14 <= 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the parameter list of `print` is shown (rich/console.py:1652-1667), not the body where locals would be defined, so the count of 18 cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-29f5c063d9d37483",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `log` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1947,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 17 non-parameter names in log() excluding comprehension targets: buffer_extend, extend, filename, hook, line, line_no, link_path, locals, locals_map, new_segments, path, render, render_hooks, render_options, render_scope, renderable, renderables (19 with comprehension targets key, value); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows just the signature/docstring of `log` (rich/console.py:1947), so the 17-local claim is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-e69cbe276ec1ddee",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Function `export_svg` has 46 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2352,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the signature and docstring of `export_svg` appear (rich/console.py:2352-2367); the body defining 46 locals is not shown."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (42) at line 2352"
+        }
+      ]
+    },
+    {
+      "id": "EA-19a460fa6f9e0269",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Function `__rich_console__` has 21 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 579,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `__rich_console__` has 21 local variables (> 15) is plausible for the real function `markdown.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (20) at line 579"
+        }
+      ]
+    },
+    {
+      "id": "EA-1bddad0457f0acf5",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markup.py",
+      "message": "Function `render` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `render` has 24 local variables (> 15) is plausible for the real function `markup.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (23) at line 106"
+        }
+      ]
+    },
+    {
+      "id": "EA-28ff95335a0a8fa9",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/panel.py",
+      "message": "Function `__rich_console__` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 141,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of `__rich_console__` (rich/panel.py:141-156), not the full body, so the 17-local count cannot be checked."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (16) at line 141"
+        }
+      ]
+    },
+    {
+      "id": "EA-26bed55e3d60defa",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Function `_get_syntax` has 34 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 652,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `_get_syntax` has 34 local variables (> 15) is plausible for the real function `syntax.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (29) at line 652"
+        }
+      ]
+    },
+    {
+      "id": "EA-f464aeb76209701f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_calculate_column_widths` has 18 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 523,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `_calculate_column_widths` has 18 local variables (> 15) is plausible for the real function `table.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (16) at line 523"
+        }
+      ]
+    },
+    {
+      "id": "EA-97716bf4cf379b9e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_get_cells` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 627,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20 non-parameter names in _get_cells(): _Padding, _append, _padding_cache, any_padding, cell, cell_style, collapse_padding, first, first_column, footer_style, get_padding, get_style, header_style, last, last_column, pad_edge, padding, raw_cells, renderable, style; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening lines of `_get_cells` are shown, including an inner `get_padding`, so the 19 local count is not verifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-f4ed1c0b451f426c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/table.py",
+      "message": "Function `_render` has 40 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 755,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`_render`'s body extends well beyond the excerpt, so the 40 local-variable claim cannot be checked."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (30) at line 755"
+        }
+      ]
+    },
+    {
+      "id": "EA-7923ab86beade831",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `render` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 719,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 18 non-parameter names in render(): _, _Segment, combine, enumerated_spans, get_current_style, get_style, leaving, next_offset, offset, spans, stack, stack_append, stack_pop, style_cache, style_cache_get, style_id, style_map, text; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the start of `render`, so its 17 local variables cannot be counted from the provided code."
+        }
+      ]
+    },
+    {
+      "id": "EA-354d0957bca3934a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Function `divide` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 1106,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `divide` has 24 local variables (> 15) is plausible for the real function `text.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (20) at line 1106"
+        }
+      ]
+    },
+    {
+      "id": "EA-3f5d9f9fea8678a0",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Function `extract` has 23 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 433,
+      "verdict": "true_positive",
+      "reason": "The function binds more than 15 distinct locals (assignments and loop targets), past the metric threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Function `extract` has 23 local variables (> 15) is plausible for the real function `traceback.py` at this site."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (20) at line 433"
+        }
+      ]
+    },
+    {
+      "id": "EA-b05ccc49b033f211",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/tree.py",
+      "message": "Function `__rich_console__` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "Production function over the budget; the reference tool confirms the measurement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the opening of `__rich_console__` is shown (with a nested `make_guide`), so the 25 local count cannot be verified."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff PLR0914 (23) at line 86"
+        }
+      ]
+    },
+    {
+      "id": "EA-e425223e77e9a58f",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `extract_fields` has 23 local variables (> 15).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 414,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Count not recomputed over the full function: extract_fields (mod.rs:414) declares locals such as member, span, fields_iter, last, about 15 distinct names found in the body versus the reported 23."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 429 inside the nested `fn member`, so the claimed 23 locals for the full `extract_fields` body cannot be counted or verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "extract_fields is truncated at line 429 and contains a nested fn member, so the claimed 23 (which may conflate nested-scope locals) cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-86dbf605b54105aa",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "Function `impl_struct_by_extracting_all_at_once` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 706,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "impl_struct_by_extracting_all_at_once: 16 distinct local names (fields, field, via, path_span, associated_rejection_type, map_err, rejection, via_marker_type, impl_generics, trait_generics, ident_generics, rejection_bound, via_type_generics, value_to_self, state_bounds, tokens) and ~18 let declarations; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 721 inside the `for field in fields` loop, so the 17-local count over the rest of the function is not verifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 721 inside impl_struct_by_extracting_all_at_once, so the marginal 17-vs-15 count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-1d043935f60b8cda",
+      "repository": "fd",
+      "language": "rust",
+      "path": "src/main.rs",
+      "message": "Function `construct_config` has 18 local variables (> 15).",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 248,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "construct_config has 16 let declarations in source (case_sensitive, path_separator, actual_path_separator, size_limits, time_constraints, owner_constraint, ansi_colors_support x2 cfg-alternatives, interactive_terminal, colored_output, no_color, ls_colors, hyperlink, command, has_command, full_path_base) but only 15 distinct names after cfg(windows)/cfg(not(windows)) duplication; within threshold margin and rule ambiguous."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only lines 248-262 of `construct_config` are shown, so the 18-local count over the remaining body cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-6f837f02db7172bd",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `parse` has 32 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 25+ lets in parse(): keep_alive, is_http_11, subject, version, len, headers_len, method, path_range, headers_indices, headers, req, bytes, uri, slice, decoder, expect_continue, con_len, is_cl, is_te, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only 8 uninitialized declarations (`keep_alive`...`path_range`) before cutting off, so the 32-local count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-79ccd774e02c0371",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "Function `parse` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1037,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 30+ lets in parse(): headers_indices, len, status, reason, version, headers_len, headers, res, bytes, slice, header_case_map, header_order, keep_alive, saw_connection_close, header, name, value, extensions, head, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends inside the `loop` at line 1052, so the 24-local count for `parse` cannot be confirmed from the shown code."
+        }
+      ]
+    },
+    {
+      "id": "EA-d26be9aa4b5a63c6",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/hiargs.rs",
+      "message": "Function `from_low_args` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16+ lets in from_low_args: state, patterns, paths, binary, colors, hyperlink_config, stats, types, globs, pre_globs, color, column, heading, path_terminator, quit_after_match, threads, with_filename, file_separator, line_number, mmap_choice...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 128 inside the `match low.mode` arm, so the 24-local count over `from_low_args` is not verifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "from_low_args is only visible through line 128 with its long match body still ahead, so the claimed 24 locals cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-2274968750fe4fdc",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/main.rs",
+      "message": "Function `search_parallel` has 20 local variables (> 15).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 160,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Count not recomputed over the full function: search_parallel (main.rs:160) declares locals such as started_at, haystack_builder, bufwtr, stats, about 11 distinct names found in the body versus the reported 20."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 7 locals are visible before the excerpt cuts off at the closure in `build_parallel().run`, so the 20-local count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "search_parallel is cut off at line 175 where the .run(|| {...}) closure begins, so the 20 count (possibly conflating closure locals) is unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-6ed29f4d49169e1b",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/client/client.ts",
+      "message": "Function `proxyCallback` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 19 locals in proxyCallback: buildSearchParamsOption, parts, lastParts, method, last, path, url, result, normalizedUrl, webSocketUrl, targetUrl, queryParams, searchParams, establishWebSocket, req, reqOptions, baseHeaders, reqHeaders, args; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only 3 locals (`buildSearchParamsOption`, `parts`, `lastParts`) are shown before the excerpt truncates, so the 19-local count for `proxyCallback` cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-a82d7f1d7e3176ad",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/helper/ssg/ssg.ts",
+      "message": "Function `<anonymous>` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 369,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 19 locals in toSSG arrow: result, getInfoPromises, savePromises, plugins, 3 hook arrays, plugin, outputDir, concurrency, combined hooks, getInfoGen, getInfo, files, savePromise, fileOrError, errorObj; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The `toSSG` arrow body runs far past the excerpt (only 7 of the reported 16 locals are visible by line 384), so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7da586b5d16030f9",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/intrinsic-element/components.ts",
+      "message": "Function `<anonymous>` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20+ locals in documentMetadataTag arrow: head, onLoad, onError, precedence, blocking, restProps, element, created, deDupeKeys, deDupeByKey, isDeDupeCandidateLink, existingElements, tags, cacheKey, insert, ref, key, value, promise, jsxNode; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`documentMetadataTag` is cut off after its first branch return at line 73, so the 16-local count can't be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-4128130b97eb57a8",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "Function `<anonymous>` has 23 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 512,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20+ locals in build(): buildWithPreviousChildren, foundErrorHandler, oldVChildren, vChildren, prevNode, scanBudget, oldChildrenByKey, i, child, oldChild, key, candidate, first, isMatchFirst, pP, oldContexts, ns, p, errorHandler tuple...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`build` is a long function whose body continues well beyond line 527, so the reported 23 locals can't be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-9c4cd0be44268c26",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/middleware/method-override/index.ts",
+      "message": "Function `methodOverride` has 23 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20+ locals in methodOverride: app, contentType, methodFormName, clonedRequest, newRequest, form, method, newForm, newHeaders, request, params, newParams, headerName, queryName, url, requestInit, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`methodOverride`'s body extends past the excerpt's last line (76), so the 23-local count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-b2d0302c8e541221",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/linear-router/router.ts",
+      "message": "Function `match` has 28 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 25+ locals in match(): handlers, i, len, routeMethod, routePath, handler, hasStar, hasLabel, endsWithStar, endsWithSlashStar, parts, lastIndex, j, pos, part, index, params, name, value, openBracePos, next, lookahead, pattern, restPath, match, endValuePos; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the first ~15 lines of `match` are shown, so the reported 28 locals can't be checked from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-bdbb969d6ffafc62",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/trie-router/node.ts",
+      "message": "Function `search` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 20+ locals in search(): handlerSets, curNode, curNodes, parts, curNodesQueue, len, partOffsets, i, part, isLast, tempNodes, j, len2, node, nextNode, child, pattern, params, name, matcher, m, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`search`'s loop body is truncated at line 100, leaving the claimed 24 locals unverifiable."
+        }
+      ]
+    },
+    {
+      "id": "EA-458bc0296fa481e9",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/ipaddr.ts",
+      "message": "Function `<anonymous>` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16+ locals in convertIPv6ToBinary: length, sections, hasZoneId, compressAt, index, code, value, digits, sectionStart, hex, ipv4End, i, ipv4, result, zeros, firstSectionEnd (plus further loop i's); > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`convertIPv6ToBinary`'s parsing loop continues past line 173, so the 19-local count can't be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-caf9d8803d9c754e",
+      "repository": "immer",
+      "language": "typescript",
+      "path": "src/plugins/arrayMethods.ts",
+      "message": "Function `handleNonMutatingOperation` has 17 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 440,
+      "verdict": "true_positive",
+      "reason": "Production function over the metric budget; the count is consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 17 declarations in handleNonMutatingOperation: source, predicate, thisArg, result, i, isForward, step, start, i, rawStart, rawEnd, start, end, result, i etc. across case blocks; > 15 (fewer if distinct names only, but declarations exceed)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`handleNonMutatingOperation` covers many method branches beyond line 455, so the reported 17 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-2b62f4d43bed7d77",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/next/src/ssrPrepass.ts",
+      "message": "Function `<anonymous>` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 21+ locals in getInitialProps arrow: shouldSsr, ssrEnabled, AppTree, isApp, ctx, pageProps, originalProps, originalPageProps, getAppTreeProps, config, trpcClient, queryClient, trpcProp, prepassProps, reactDomServer, dehydratedCache, dehydratedCacheWithErrors, appTreeProps, meta, key, value; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the opening of the anonymous `WithTRPC.getInitialProps` arrow function (lines 53-68), which clearly continues beyond the excerpt, so the 19-local count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The flagged unnamed arrow function WithTRPC.getInitialProps continues well past line 68, so the claimed 19 locals cannot be counted from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-7420ea4a3517751d",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "Function `extractProcedure` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1115,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in extractProcedure: schemaCtx, checker, $typesSym, $typesType, inputSym, outputSym, inputType, outputType, resolvedInputType, inputSchema, ensureRecoveredInputRegistration, initialSchema, outputSchema, runtimeDescs, resolvedInputSchema, resolvedOutputSchema; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only about nine locals are visible before line 1130 in `extractProcedure`, which continues past the excerpt, so the reported 16 cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off mid-statement at line 1130 showing only 9 of the claimed 16 locals, so the count for the rest of `extractProcedure` cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-fa576ece468895d9",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "Function `generateOpenAPIDocument` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1720,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 16 locals in generateOpenAPIDocument: resolvedPath, exportName, compilerOptions, program, checker, sourceFile, moduleSymbol, tsExports, routerSymbol, available, routerType, schemaCtx, runtimeDescriptions, router, walkCtx, errorSchema; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`generateOpenAPIDocument` continues well past the shown lines with only ~6 locals visible, so the 16-local count is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Only lines 1720-1735 are shown (6 locals visible) and the function clearly continues, so the claimed total of 16 locals in `generateOpenAPIDocument` cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-c5884406384be58b",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/http/resolveResponse.ts",
+      "message": "Function `resolveResponse` has 34 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 18+ owned locals in resolveResponse: router, req, headers, config, url, allowBatching, allowMethodOverride, infoTuple, ctxManager, methodMapper, isStreamCall, experimentalSSE, infoError, info, rpcCalls, call, error, result, results, errors, headResponse...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`resolveResponse` is a long function truncated at line 228 with only a few locals shown, so the 34-local count cannot be confirmed from the excerpt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only the first ~15 lines of `resolveResponse` (5 locals visible) before continuing, so the claimed count of 34 locals cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-d878e2bc41f1f77a",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Function `` has 24 local variables (> 15).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 262,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-df857291daa05e69",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Function `<anonymous>` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 262,
+      "verdict": "false_positive",
+      "reason": "www/docusaurus.config.ts is documentation-site build configuration, outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `postBuild` function is inside `www/docusaurus.config.ts`, a Docusaurus build/config file, i.e. build/tooling code outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The site is `www/docusaurus.config.ts`, docs-site build configuration, and the flagged code is a `postBuild` build hook \u2014 build/tooling code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-58e689639988daea",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/scripts/check-twoslash.ts",
+      "message": "Function `main` has 16 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 160,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, release script, docs/fuzz/codegen scripts, Gradle build-logic), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`main` is defined in `www/scripts/check-twoslash.ts`, a documentation/maintenance script, which is build/tooling code outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`www/scripts/check-twoslash.ts` is a developer tooling script (a docs twoslash-snippet checker), which is build/tooling code outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-4c28cbb8f7173a9d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/tsc/generate.ts",
+      "message": "Function `generate` has 19 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 49,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, release script, docs/fuzz/codegen scripts, Gradle build-logic), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`generate` in `packages/tsc/generate.ts` is a synthetic-schema/fixture generator ('Step 4: Write the generated schemas to a file'), i.e. tooling/test-generation code outside the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`generate` in `packages/tsc/generate.ts` is a synthetic-schema emitter (count params plus 'Write the generated schemas to a file' writing to \"src/index.ts\"), i.e. fixture/benchmark tooling outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-dc4adc93e69475ed",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "message": "Function `convertBaseSchema` has 47 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 390,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 40+ locals in convertBaseSchema: refPath, resolved, zodSchema, enumValues, literalSchemas, type, typeSchemas, stringSchema, format, numberSchema, shape, properties, requiredSet, additionalSchema, key, propSchema, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "`convertBaseSchema` extends far beyond the excerpted lines, so the reported 47-local count cannot be verified from the shown code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 405 mid-function with no locals yet declared, so the claimed 47 locals in `convertBaseSchema` cannot be verified from what is shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-460a9300bc872f00",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateStringFormatCheck` has 24 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 783,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 25+ locals in generateStringFormatCheck: fmt, validator (x5), alg, formatDef, parseConst, defConst, trimVar, urlVar, hostnameConst, protocolConst, outputVar, outputExpr, customFn, fnConst, patternConst, format, prefix, suffix; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 798 mid-function, so the full set of locals in `generateStringFormatCheck` cannot be counted."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "`generateStringFormatCheck` continues well past line 798, so the claimed 24 local variables cannot be verified from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-244fa2a0da6b21bd",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateObjectCheck` has 25 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1190,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 25+ locals in generateObjectCheck: def, shape, keys, symbolKeys, allKeys, keyExpr, propKey, propShape, propOutputs, key, propSchema, kx, inputVar, outputVar, catchall, unknownKeysMode, catchallType, condition, knownSet, hasConditionalKeys, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only reaches `const keys = Object.keys(shape)` at line 1205, so the 25 locals of `generateObjectCheck` cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 1205 mid-function, so the claimed 25 local variables cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6e7773bfd3d70847",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "Function `generateRecordCheck` has 21 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1940,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 21+ locals in generateRecordCheck: def, isPlainObjectConst, outputVar, kVar, valVar, recordDef, keyValues, inputKeys, key, inputKey, keyConst, outKey, valueVar, valOutput, knownKeysConst, keyDef, keyIsBareString, isLoose, keyFn, keyFast, numericConst, outKeyVar; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt stops at line 1955 while `generateRecordCheck` continues, so the 21-local count is not observable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "generateRecordCheck's body continues past line 1955, so the 21-local count can't be confirmed from the excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-7ae6c81b33066108",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/visit.ts",
+      "message": "Function `mapInner` has 30 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 59,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 30 locals in mapInner across case blocks: def, kind, oldShape, keys, changed, newShape, k, mapped, newCatchall, oldItems, newItems, item, newKey, newVal, oldOptions, newOptions, opt, newLeft, newRight, newInner, newIn, newOut, newInput, newOutput, original, rest...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 74 inside the switch, so `mapInner`'s 30 locals cannot be counted from what is shown."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt ends at line 74 inside mapInner's switch, so the claimed 30 locals cannot be counted."
+        }
+      ]
+    },
+    {
+      "id": "EA-f1bac33ee8ae1859",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/locales/he.ts",
+      "message": "Function `<anonymous>` has 28 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "Local-variable count above budget consistent with the function body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Counted 28 locals in the error-map arrow: expectedKey, expected, receivedType, received, stringified, lastValue, restValues, sizing, subject, comparison, verb, adj, be, singularPhrase, _issue, nounEntry, noun, gender, adjective, place, ...; > 15."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt cuts off at line 123 inside the returned arrow function, so the 28-local count for the unnamed function is unverifiable."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The arrow function at line 108 extends beyond line 123, so the 28-local claim can't be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ecbcd3afe30894be",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/compile-fuzz.ts",
+      "message": "Function `build` has 28 local variables (> 15).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, release script, docs/fuzz/codegen scripts, Gradle build-logic), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`scripts/compile-fuzz.ts` is a fuzzing/tooling script, placing `build` outside the detector's source scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "scripts/compile-fuzz.ts is a fuzz/tooling harness (the build() generator uses pick(leaves)()), i.e. build/tooling code outside the detector's scope."
+        }
+      ]
+    }
+  ]
+}

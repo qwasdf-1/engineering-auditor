@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/case-template-v1.schema.json",
+  "title": "Engineering Auditor Case Template V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "version",
+    "trigger",
+    "subject_policy",
+    "evidence_contract",
+    "mandatory_probes",
+    "optional_probe_policy",
+    "claim_slots",
+    "inference_guards",
+    "recommendation_families",
+    "route_policy",
+    "challenge_policy",
+    "closure_policy"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "kind": { "enum": ["lifecycle_mismatch", "shared_root_cause", "recommendation_consolidation"] },
+    "version": { "type": "integer", "const": 1 },
+    "trigger": { "$ref": "#/$defs/trigger" },
+    "subject_policy": { "$ref": "#/$defs/subject_policy" },
+    "evidence_contract": { "$ref": "#/$defs/evidence_contract" },
+    "mandatory_probes": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/probe" }
+    },
+    "optional_probe_policy": { "$ref": "#/$defs/optional_probe_policy" },
+    "claim_slots": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/claim_slot" }
+    },
+    "inference_guards": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/inference_guard" }
+    },
+    "recommendation_families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/recommendation_family" }
+    },
+    "route_policy": { "$ref": "#/$defs/route_policy" },
+    "challenge_policy": { "$ref": "#/$defs/challenge_policy" },
+    "closure_policy": { "$ref": "#/$defs/closure_policy" }
+  },
+  "$defs": {
+    "nonempty": { "type": "string", "minLength": 1 },
+    "decision_kind": {
+      "enum": ["evaluate_lifecycle_ownership", "evaluate_shared_root_cause", "reconcile_recommendations"]
+    },
+    "selection_reason": {
+      "enum": [
+        "same_subject_concentration",
+        "repeated_work_lifecycle_intersection",
+        "recommendation_overlap",
+        "recommendation_conflict",
+        "cross_layer_intersection",
+        "material_capability_limitation"
+      ]
+    },
+    "probe_kind": {
+      "enum": [
+        "existence",
+        "identity",
+        "semantic_equivalence",
+        "ordering",
+        "mutation",
+        "cost",
+        "cardinality",
+        "lifecycle",
+        "consumer_requirement",
+        "constraint",
+        "counterexample",
+        "alternative_feasibility",
+        "verification_availability"
+      ]
+    },
+    "evidence_class": {
+      "enum": [
+        "finding",
+        "evidence_graph",
+        "repository_map",
+        "source_role",
+        "capability",
+        "source_span",
+        "runtime_measurement",
+        "operator_constraint",
+        "mutation",
+        "consumer_requirement",
+        "retention_constraint",
+        "test"
+      ]
+    },
+    "claim_slot": {
+      "enum": [
+        "repetition",
+        "input_equivalence",
+        "mutation_boundary",
+        "material_impact",
+        "consumer_requirement",
+        "wider_owner",
+        "invalidation_feasibility",
+        "retention_risk",
+        "lifecycle_conclusion",
+        "responsibility",
+        "causal_overlap",
+        "independent_actionability",
+        "coupling_risk",
+        "remediation_boundary",
+        "compatibility",
+        "abstraction_level",
+        "supersession",
+        "property_conflict",
+        "required_ordering",
+        "proportionality",
+        "deferral"
+      ]
+    },
+    "conclusion": {
+      "enum": [
+        "lifecycle_mismatch_substantiated",
+        "repetition_justified",
+        "impact_immaterial",
+        "wider_ownership_infeasible",
+        "insufficient_evidence",
+        "shared_root_cause",
+        "partial_overlap",
+        "independent_findings",
+        "correlation_only",
+        "consolidated_action",
+        "sequenced_actions",
+        "preserved_independent_actions",
+        "narrowed_action",
+        "deferred_action",
+        "no_repository_specific_action"
+      ]
+    },
+    "inference_guard_kind": {
+      "enum": [
+        "relevant_mutation",
+        "distinct_configuration",
+        "test_only_repetition",
+        "freshness_constraint",
+        "retention_risk",
+        "quantitative_benefit",
+        "correlation_not_causation",
+        "coupling_increase",
+        "distinct_semantics",
+        "independent_actionability",
+        "action_compatibility",
+        "abstraction_mismatch",
+        "property_regression",
+        "disproportionate_change"
+      ]
+    },
+    "recommendation_family": {
+      "enum": [
+        "lifecycle_reownership",
+        "explicit_retention_avoidance",
+        "measurement_before_change",
+        "shared_root_remediation",
+        "preserve_independent_actions",
+        "consolidated_remediation",
+        "sequenced_remediation",
+        "narrowed_remediation",
+        "deferred_remediation"
+      ]
+    },
+    "route_predicate": {
+      "enum": [
+        "resource_lifetime_change",
+        "component_ownership_change",
+        "public_contract_change",
+        "critical_semantic_probe",
+        "three_layer_span",
+        "multiple_components",
+        "multiple_credible_actions",
+        "material_evidence_conflict",
+        "significant_benefit_claim"
+      ]
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_kind", "selection_reasons_any"],
+      "properties": {
+        "decision_kind": { "$ref": "#/$defs/decision_kind" },
+        "selection_reasons_any": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/selection_reason" }
+        }
+      }
+    },
+    "subject_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_subjects", "require_connected", "allow_multiple_findings"],
+      "properties": {
+        "minimum_subjects": { "type": "integer", "minimum": 1 },
+        "require_connected": { "type": "boolean" },
+        "allow_multiple_findings": { "type": "boolean" }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "evidence_class", "description"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" },
+        "evidence_class": { "$ref": "#/$defs/evidence_class" },
+        "description": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "evidence_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "optional", "blocking"],
+      "properties": {
+        "required": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/requirement" }
+        },
+        "optional": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/requirement" }
+        },
+        "blocking": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/requirement" }
+        }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot",
+        "kind",
+        "question",
+        "required_evidence_classes",
+        "positive_boundary",
+        "negative_boundary",
+        "blocked_claim_slots"
+      ],
+      "properties": {
+        "slot": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" },
+        "kind": { "$ref": "#/$defs/probe_kind" },
+        "question": { "$ref": "#/$defs/nonempty" },
+        "required_evidence_classes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidence_class" }
+        },
+        "positive_boundary": { "$ref": "#/$defs/nonempty" },
+        "negative_boundary": { "$ref": "#/$defs/nonempty" },
+        "blocked_claim_slots": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/claim_slot" }
+        }
+      }
+    },
+    "optional_probe_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_kinds",
+        "maximum_count",
+        "require_named_decision",
+        "require_case_boundary"
+      ],
+      "properties": {
+        "allowed_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/probe_kind" }
+        },
+        "maximum_count": { "type": "integer", "minimum": 1 },
+        "require_named_decision": { "type": "boolean" },
+        "require_case_boundary": { "type": "boolean" }
+      }
+    },
+    "inference_guard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "probe_slots", "blocked_claim_slots", "blocked_conclusions"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/inference_guard_kind" },
+        "probe_slots": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" }
+        },
+        "blocked_claim_slots": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/claim_slot" }
+        },
+        "blocked_conclusions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/conclusion" }
+        }
+      }
+    },
+    "route_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deterministic_allowed", "single_reviewer_allowed", "ensemble_required_when"],
+      "properties": {
+        "deterministic_allowed": { "type": "boolean" },
+        "single_reviewer_allowed": { "type": "boolean" },
+        "ensemble_required_when": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/route_predicate" }
+        }
+      }
+    },
+    "challenge_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mandatory_when"],
+      "properties": {
+        "mandatory_when": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["lifecycle_reownership", "shared_root_remediation", "consolidated_remediation", "sequenced_remediation", "narrowed_remediation"]
+          }
+        }
+      }
+    },
+    "closure_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed_conclusions", "insufficient_evidence_conclusion"],
+      "properties": {
+        "allowed_conclusions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/conclusion" }
+        },
+        "insufficient_evidence_conclusion": { "$ref": "#/$defs/conclusion" }
+      }
+    }
+  }
+}

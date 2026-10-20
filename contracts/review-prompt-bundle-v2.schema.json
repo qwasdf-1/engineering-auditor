@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.local/contracts/review-prompt-bundle-v2.schema.json",
+  "title": "Engineering Auditor Review Prompt Bundle V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "core_instruction",
+    "reviewer_instruction",
+    "shared_evidence_reconsideration_instruction",
+    "challenger_instruction",
+    "bounded_response_instruction",
+    "alternative_comparison_instruction"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "bundle_id": {
+      "type": "string",
+      "pattern": "^review-prompt-bundle:[0-9a-f]{64}$"
+    },
+    "core_instruction": { "type": "string", "minLength": 1 },
+    "reviewer_instruction": { "type": "string", "minLength": 1 },
+    "shared_evidence_reconsideration_instruction": { "type": "string", "minLength": 1 },
+    "challenger_instruction": { "type": "string", "minLength": 1 },
+    "bounded_response_instruction": { "type": "string", "minLength": 1 },
+    "alternative_comparison_instruction": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "detector": "constant_condition",
+  "labels": [
+    {
+      "id": "EA-d62e4fbd2d5abe67",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java",
+      "message": "Condition `true` at line 1704 does not depend on runtime state.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 1704,
+      "verdict": "false_positive",
+      "reason": "do { .. } while (true) with a break is the intentional infinite-loop idiom.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8ce4ae6cd6004826",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "Condition `true` at line 796 does not depend on runtime state.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 796,
+      "verdict": "false_positive",
+      "reason": "`for (; true; i++)` is the intentional infinite-loop idiom with labelled breaks, not a constant-condition bug.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`for (; true; i++)` with internal `break` (line 804) is the standard infinite-loop idiom; the literal `true` condition is intentional and no constant-condition bug exists."
+        }
+      ]
+    }
+  ]
+}

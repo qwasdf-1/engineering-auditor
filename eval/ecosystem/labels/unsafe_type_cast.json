@@ -1,0 +1,1191 @@
+{
+  "schema_version": 1,
+  "detector": "unsafe_type_cast",
+  "labels": [
+    {
+      "id": "EA-7e59f71edb7be543",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/scope/FragmentExt.kt",
+      "message": "Cast expression at line 37",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-f947192d7e8519a0",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/scope/FragmentExt.kt",
+      "message": "Cast expression at line 55",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 55,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-09c5ceb7dece731c",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/scope/FragmentExt.kt",
+      "message": "Cast expression at line 56",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 56,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c1d16f6d46da305e",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/ext/android/FragmentActivityVM.kt",
+      "message": "Cast expression at line 74",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a277c273a48a8078",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-androidx-compose-navigation/src/main/java/org/koin/androidx/compose/navigation/NavViewModel.kt",
+      "message": "Cast expression at line 33",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 33,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-97897a3ae1321f8f",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-androidx-compose/src/main/java/org/koin/androidx/compose/scope/KoinAndroidScope.kt",
+      "message": "Cast expression at line 32",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-727d57114c05cdb2",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-androidx-compose/src/main/java/org/koin/androidx/compose/scope/KoinAndroidScope.kt",
+      "message": "Cast expression at line 46",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 46,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e3b8396eb9e0e427",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/androidMain/kotlin/org/koin/compose/viewmodel/ViewModelExt.kt",
+      "message": "Cast expression at line 44",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`LocalActivity.current as ComponentActivity` is an unchecked throwing cast on a nullable value, so the potential-unsafe-cast claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-1d48ee7252d78f48",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose/src/androidMain/kotlin/org/koin/compose/KoinApplication.android.kt",
+      "message": "Cast expression at line 47",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`applicationContext as Application` is a genuine unchecked downcast from Context to the Application subtype."
+        }
+      ]
+    },
+    {
+      "id": "EA-6411ede81e731663",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core-viewmodel/src/commonMain/kotlin/org/koin/viewmodel/BundleExt.kt",
+      "message": "Cast expression at line 48",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`viewModelStoreOwner as SavedStateRegistryOwner` is a real downcast between unrelated interfaces, the exception merely being swallowed by runCatching."
+        }
+      ]
+    },
+    {
+      "id": "EA-4d7ac6ef2872c8a5",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/context/DefaultContextExt.kt",
+      "message": "Cast expression at line 38",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b668dac21c254323",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/context/KoinContext.kt",
+      "message": "Cast expression at line 51",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e710489417314430",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/definition/BeanDefinition.kt",
+      "message": "Cast expression at line 73",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "equals does 'other as BeanDefinition<*>' with no class check, throwing ClassCastException on other types."
+        }
+      ]
+    },
+    {
+      "id": "EA-a4dd538f30fd1a0d",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/extension/ExtensionManager.kt",
+      "message": "Cast expression at line 36",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-0b1f97194778d595",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/qualifier/TypeQualifier.kt",
+      "message": "Cast expression at line 32",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "Guarded: this::class != other::class is checked just above, so the cast cannot fail.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Cast follows 'this::class != other::class' guard, so it is safe."
+        }
+      ]
+    },
+    {
+      "id": "EA-241f04e3bb8114b7",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/InstanceRegistry.kt",
+      "message": "Cast expression at line 132",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 132,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-25fefe6964801320",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/OptionRegistry.kt",
+      "message": "Cast expression at line 38",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8d02d6d264a69d4e",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/OptionRegistry.kt",
+      "message": "Cast expression at line 42",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a5bbafbe4782ff1b",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/PropertyRegistry.kt",
+      "message": "Cast expression at line 62",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 62,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-f26ec58bddbed1f4",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/resolution/CoreResolver.kt",
+      "message": "Cast expression at line 111",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 111,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-6ea2a7943d768a1d",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/jvmMain/kotlin/org/koin/core/registry/PropertyRegistryExt.kt",
+      "message": "Cast expression at line 17",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Unchecked cast of toMap() to Map<String,String>; Properties may hold non-String values (suppressed)."
+        }
+      ]
+    },
+    {
+      "id": "EA-66ceaa923de6f6d8",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-fu-viewmodel/src/jvmMain/kotlin/org/koin/dsl/fu/KoinFuVIewModelDSL.kt",
+      "message": "Cast expression at line 45",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`buildComponent(this,function) as T` is a real downcast of the returned R to the narrower reified subtype T."
+        }
+      ]
+    },
+    {
+      "id": "EA-5196e0fb3c0d181c",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-fu/src/jvmMain/kotlin/org/koin/dsl/fu/KoinFu.kt",
+      "message": "Cast expression at line 45",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "classifier as KClass<*> can fail for type-parameter classifiers."
+        }
+      ]
+    },
+    {
+      "id": "EA-b2f2ffd2bd767d19",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-fu/src/jvmMain/kotlin/org/koin/dsl/fu/KoinFuDSL.kt",
+      "message": "Cast expression at line 29",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b47e17e34adcf2dd",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/plugins/koin-gradle-plugin/src/main/java/org/koin/gradle/KoinPlugin.kt",
+      "message": "Cast expression at line 46",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 46,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8b36779cf00a7410",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/api/AdapterGenerator.kt",
+      "message": "Cast expression at line 605",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 605,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`(input as ParameterProperty)` at line 605 is a genuine cast expression performing a downcast."
+        }
+      ]
+    },
+    {
+      "id": "EA-5d01f5f4b0ade308",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/AppliedType.kt",
+      "message": "Cast expression at line 44",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Unchecked 'supertype as DeclaredType' cast."
+        }
+      ]
+    },
+    {
+      "id": "EA-b050b73e035ded6f",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/metadata.kt",
+      "message": "Cast expression at line 265",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 265,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`superclass.element.superclass as DeclaredType` is a genuine downcast from TypeMirror to DeclaredType."
+        }
+      ]
+    },
+    {
+      "id": "EA-c77c7231dd669956",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/metadata.kt",
+      "message": "Cast expression at line 516",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 516,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d731b6e872aff3e7",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/apt/metadata.kt",
+      "message": "Cast expression at line 528",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 528,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Unchecked generic cast 'it as E' with suppressed warning."
+        }
+      ]
+    },
+    {
+      "id": "EA-0aaea7dd56cffc32",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/AppliedType.kt",
+      "message": "Cast expression at line 38",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e2959399b1d6ddcf",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/TargetTypes.kt",
+      "message": "Cast expression at line 269",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 269,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Declaration cast to KSClassDeclaration without type check."
+        }
+      ]
+    },
+    {
+      "id": "EA-6492d53f46b0c0fa",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Cast expression at line 94",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 94,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`(result as KSAnnotation)` is a genuine downcast of the generic result to KSAnnotation."
+        }
+      ]
+    },
+    {
+      "id": "EA-d72625613a9710cb",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Cast expression at line 124",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 124,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`... as Proxy` is a genuine downcast of the Object returned by newProxyInstance to java.lang.reflect.Proxy."
+        }
+      ]
+    },
+    {
+      "id": "EA-8b017eec65b7dee8",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Cast expression at line 130",
+      "status": "final",
+      "sampled_from": "t16-h",
+      "line": 130,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The cast sits in `asArray` annotated `@Suppress(\"UNCHECKED_CAST\")`, an acknowledged unchecked-cast idiom keyed off componentType.name that the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-6d589b1a8aba3ce5",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Cast expression at line 134",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 134,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`(this as List<Double>).toDoubleArray()` at line 134 is an unchecked `as` cast with no `is` guard, so the claimed potential unsafe cast holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-f5abffd4ff1b4556",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Cast expression at line 180",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`as T` at line 180 is an unchecked cast to a type parameter, so the potential-unsafe-cast claim is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-fcb21ce3962d05c9",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin-codegen/src/main/java/com/squareup/moshi/kotlin/codegen/ksp/shadedUtil.kt",
+      "message": "Cast expression at line 182",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 182,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "'this as Byte' unchecked cast fallback."
+        }
+      ]
+    },
+    {
+      "id": "EA-52f59def4cbe222c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "build-logic/src/main/kotlin/JavaModules.kt",
+      "message": "Cast expression at line 89",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, release script, docs/fuzz/codegen scripts, Gradle build-logic), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "JavaModules.kt lives in `build-logic`, Gradle build/tooling code that is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-084c8f5d4e093586",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver-junit5/src/main/kotlin/mockwebserver3/junit5/internal/StartStopExtension.kt",
+      "message": "Cast expression at line 44",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-57803edec5419a4e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver/src/main/kotlin/mockwebserver3/internal/MockWebServerSocket.kt",
+      "message": "Cast expression at line 90",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 90,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d3d5d60ac0e58b38",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-tls/src/main/kotlin/okhttp3/tls/internal/TlsUtil.kt",
+      "message": "Cast expression at line 74",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Cast guarded by check(result[0] is X509TrustManager) just above; it cannot fail.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The cast at line 74 is immediately guarded by `check(result.size == 1 && result[0] is X509TrustManager)` on line 70, so it cannot fail."
+        }
+      ]
+    },
+    {
+      "id": "EA-7df739f589d6385c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-tls/src/main/kotlin/okhttp3/tls/internal/der/CertificateAdapters.kt",
+      "message": "Cast expression at line 264",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 264,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "it[1] as Boolean from untyped list is an unchecked cast."
+        }
+      ]
+    },
+    {
+      "id": "EA-bdb9ab3ddccd2fe3",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp-tls/src/main/kotlin/okhttp3/tls/internal/der/CertificateAdapters.kt",
+      "message": "Cast expression at line 407",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 407,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`validity = it[4] as Validity` at line 407 is an unchecked `as` cast with no type check, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-fdb91fda4d13ee6d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/androidMain/kotlin/okhttp3/internal/platform/PlatformRegistry.kt",
+      "message": "Cast expression at line 45",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 45,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-becfb33028e4ca9d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/androidMain/kotlin/okhttp3/internal/platform/PlatformRegistry.kt",
+      "message": "Cast expression at line 47",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-e02d060948f715dd",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/androidMain/kotlin/okhttp3/internal/platform/android/AndroidCertificateChainCleaner.kt",
+      "message": "Cast expression at line 44",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "chain as List<X509Certificate> is an unchecked generic cast."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb30e28136098c21",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Connection.kt",
+      "message": "Cast expression at line 26",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 26,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8ecebd9e0b82616f",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/ConnectionSpec.kt",
+      "message": "Cast expression at line 280",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 280,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Array<String?> copy cast to Array<String> with suppressed unchecked warning."
+        }
+      ]
+    },
+    {
+      "id": "EA-75a4872a8c21133b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Handshake.kt",
+      "message": "Cast expression at line 83",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-5b803a4d3943598b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/Tags.kt",
+      "message": "Cast expression at line 109",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 109,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-007dc5f8eb3e9973",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/Exchange.kt",
+      "message": "Cast expression at line 54",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b0d9f624abfcbba5",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/LookupDnsCall.kt",
+      "message": "Cast expression at line 56",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 56,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-823adaac26f465c2",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/LookupDnsCall.kt",
+      "message": "Cast expression at line 65",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 65,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-3a91bf3217ddcf46",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/LookupDnsCall.kt",
+      "message": "Cast expression at line 72",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 72,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-4930c6bfda47690b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/platform/Platform.kt",
+      "message": "Cast expression at line 157",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 157,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-babaac6e3f58ef76",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/platform/Platform.kt",
+      "message": "Cast expression at line 159",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 159,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-09c11a60146c1a4d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/publicsuffix/BasePublicSuffixList.kt",
+      "message": "Cast expression at line 89",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-bfbecd8e164ea06e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/tls/BasicCertificateChainCleaner.kt",
+      "message": "Cast expression at line 79",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 79,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast throws ClassCastException on a mismatch; `as?` or an `is` check states the failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`i.next() as X509Certificate` at line 79 casts an iterator element with no `is` guard, so the potential-unsafe-cast claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c8ee4a6c9ce8d85",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/tls/OkHostnameVerifier.kt",
+      "message": "Cast expression at line 218",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "altName as String cast of Any? from SAN list."
+        }
+      ]
+    },
+    {
+      "id": "EA-00d683c9593245cb",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/url/-Url.kt",
+      "message": "Cast expression at line 118",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 118,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-acc758b90f66f8f6",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "build.gradle.kts",
+      "message": "Cast expression at line 49",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 49,
+      "verdict": "false_positive",
+      "reason": "Gradle build script (build.gradle.kts), tooling outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Gradle build script (build.gradle.kts) is build tooling, out of scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-f4fd94a2e9253e48",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-fakefilesystem/src/commonMain/kotlin/okio/fakefilesystem/FakeFileSystem.kt",
+      "message": "Cast expression at line 304",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 304,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-17e4c6e9d724d217",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-fakefilesystem/src/commonMain/kotlin/okio/fakefilesystem/FakeFileSystem.kt",
+      "message": "Cast expression at line 392",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 392,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-662a6fa511fa0981",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-nodefilesystem/src/commonMain/kotlin/okio/FsJs.kt",
+      "message": "Cast expression at line 29",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-fd55d2c71452fd1c",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Buffer.kt",
+      "message": "Cast expression at line 357",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 357,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-3199624a4701b396",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/BufferedSource.kt",
+      "message": "Cast expression at line 20",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 20,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-5a9bf18a19826ae6",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/FileMetadata.kt",
+      "message": "Cast expression at line 34",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a006c9af4f43b06d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/FileSystem.kt",
+      "message": "Cast expression at line 44",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 44,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-07990890a747569b",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jsMain/kotlin/okio/JsPlatform.kt",
+      "message": "Cast expression at line 31",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-76c55a8e8d57ce72",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jsMain/kotlin/okio/JsPlatform.kt",
+      "message": "Cast expression at line 52",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 52,
+      "verdict": "false_positive",
+      "reason": "`as?` is the safe cast; it returns null instead of throwing.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-774b4efd64088496",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/Buffer.kt",
+      "message": "Cast expression at line 589",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 589,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-bfa7a9f2f32adb2d",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/jvmMain/kotlin/okio/Throttler.kt",
+      "message": "Cast expression at line 27",
+      "status": "pre_label",
+      "sampled_from": "t16-h",
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "The word \"as\" in KDoc prose, not a cast.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1576eb7d70f16fd4",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/nativeMain/kotlin/okio/Inflater.kt",
+      "message": "Cast expression at line 72",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "cinterop pointer cast 'as CPointer<UByteVar>' is an unchecked cast."
+        }
+      ]
+    },
+    {
+      "id": "EA-e69721051668c761",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/nativeMain/kotlin/okio/internal/CRC32.kt",
+      "message": "Cast expression at line 31",
+      "status": "corroborated",
+      "sampled_from": "t16-k",
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "A hard `as` cast with no preceding type check throws ClassCastException (or defers an unchecked failure) on a mismatch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "cinterop cast 'as CValuesRef<uBytefVar>' is an unchecked cast."
+        }
+      ]
+    }
+  ]
+}

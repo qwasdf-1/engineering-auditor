@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "providers": [
+    {
+      "id": "openrouter_free",
+      "kind": "open_ai_compatible",
+      "endpoint_base": "https://openrouter.ai/api/v1",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "models": [
+        "minimax/minimax-m3.1-flash:free"
+      ],
+      "model_protocols": {},
+      "chat_completions_path": "/chat/completions",
+      "cost_class": "zero",
+      "estimated_cost_microusd_per_request": null,
+      "privacy_class": "operator_configured"
+    }
+  ],
+  "single_reviewer": {
+    "targets": [
+      {
+        "provider_id": "openrouter_free",
+        "model": "minimax/minimax-m3.1-flash:free"
+      }
+    ]
+  },
+  "ensemble": null,
+  "challenger": {
+    "targets": [
+      {
+        "provider_id": "openrouter_free",
+        "model": "minimax/minimax-m3.1-flash:free"
+      }
+    ]
+  },
+  "alternative_comparator": null,
+  "review_budget": {
+    "max_requests": 64,
+    "max_input_bytes": 8388608,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 0,
+    "allow_unknown_cost": false
+  },
+  "case_budgets": {
+    "defaults": {
+      "max_requests": 64,
+      "max_input_bytes": 8388608,
+      "max_output_tokens": 65536,
+      "timeout_ms": 360000,
+      "max_cost_microusd": 0,
+      "allow_unknown_cost": false
+    },
+    "per_template": {}
+  }
+}

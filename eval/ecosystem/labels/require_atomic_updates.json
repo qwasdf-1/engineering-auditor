@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "detector": "require_atomic_updates",
+  "labels": [
+    {
+      "id": "EA-f2bb53789909f36d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/docs/app/llms-full.txt/route.ts",
+      "message": "Async read-modify-write at line 37 may produce a race condition",
+      "status": "corroborated",
+      "sampled_from": "t27-l1-fill",
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "txt is a local string of the request handler, not shared state; no other task can read or write it across the await.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "txt is a local accumulator updated in a serial for-loop that awaits each iteration, so there is no concurrent read-modify-write race at txt += await getLLMText(page)."
+        }
+      ]
+    }
+  ]
+}

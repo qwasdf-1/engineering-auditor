@@ -1,0 +1,788 @@
+{
+  "schema_version": 1,
+  "detector": "unhandled_termination_in_production",
+  "labels": [
+    {
+      "id": "EA-68f5fab1a3f80863",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/extract/json_deserializer.rs",
+      "message": "Unhandled termination at line 127",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 127,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` is wrapped in `if cfg!(debug_assertions)` while the release branch returns `JsonSyntaxError::from_err(err)`, so it does not terminate in production."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` is a debug-only sanity check under `cfg!(debug_assertions)`, while the release path returns `JsonSyntaxError::from_err(err).into()`."
+        }
+      ]
+    },
+    {
+      "id": "EA-ebf3a31455d22ffb",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/json_lines.rs",
+      "message": "Unhandled termination at line 157",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 157,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` covers the `Inner::Extractor` variant that the comment states can never be constructed, the recognized idiom for an impossible match arm."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` arm is documented for an `Inner::Extractor` variant that cannot be constructed through `JsonLines::new`, making it an internal invariant rather than a production termination."
+        }
+      ]
+    },
+    {
+      "id": "EA-a80e924fbc2a3a15",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/routing/mod.rs",
+      "message": "Unhandled termination at line 37",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `panic!` in `__private_validate_static_path` is intentional compile-time path validation, documented at line 56 as aborting compilation, not runtime production termination."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "This panic is part of `__private_validate_static_path`'s compile-time path validation, which the following docs state aborts compilation rather than being runtime production error handling."
+        }
+      ]
+    },
+    {
+      "id": "EA-e692422d983a63f3",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-extra/src/routing/mod.rs",
+      "message": "Unhandled termination at line 46",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 46,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `panic!` is the same intentional compile-time deprecated-format validation in the `const fn`, aborting compilation rather than a runtime production path."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "This deprecated-path-format panic is likewise in the compile-time validation helper and is intended to abort compilation, not to be a runtime termination."
+        }
+      ]
+    },
+    {
+      "id": "EA-d31ed30f8925b4de",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/matched_path.rs",
+      "message": "Unhandled termination at line 110",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 110,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `panic!` is compiled only under `#[cfg(debug_assertions)]` with `#[cfg(not(debug_assertions))] return;`, so release builds do not terminate here."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The panic is compiled only with `#[cfg(debug_assertions)]`, while the `not(debug_assertions)` branch returns, so production builds do not terminate."
+        }
+      ]
+    },
+    {
+      "id": "EA-21689e9b0d2e5d69",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/path/de.rs",
+      "message": "Unhandled termination at line 480",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 480,
+      "verdict": "false_positive",
+      "reason": "unreachable! documents an invariant the surrounding code establishes; the reviewed Rust convention treats it as a contract guard.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` handles the `None` key case that the comment states only occurs for map deserialization, so `deserialize_seq` cannot reach it \u2014 the idiom for an impossible state."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7361186dd201144",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/json.rs",
+      "message": "Unhandled termination at line 184",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 184,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` is guarded by `if cfg!(debug_assertions)`, so it never executes in release/production and is the idiomatic marker for the genuinely impossible IO-error branch (release falls through to `JsonSyntaxError::from_err`)."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!()` is guarded by `cfg!(debug_assertions)`, with `JsonSyntaxError::from_err(err).into()` used as the release error path."
+        }
+      ]
+    },
+    {
+      "id": "EA-6058aa812d64e561",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Unhandled termination at line 315",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 315,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Called `Event::event` multiple times\")` at sse.rs:315 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Event::event` performs a reachable runtime panic when the `HAS_EVENT` flag is already set, with no `Result` or structured error handling."
+        }
+      ]
+    },
+    {
+      "id": "EA-1c209cd736c5e0bd",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Unhandled termination at line 382",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 382,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Called `Event::id` multiple times\")` at sse.rs:382 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Event::id` panics at runtime when the `HAS_ID` flag is already set; this is reachable builder misuse without a fallback."
+        }
+      ]
+    },
+    {
+      "id": "EA-cbbadec4ba46adb9",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Unhandled termination at line 450",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 450,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Called `Event::data*` multiple times\")` at sse.rs:450 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 450 is a real `panic!` in axum's production SSE `Event` builder, reachable when `Event::data*` is called a second time (the `HAS_DATA` flag branch)."
+        }
+      ]
+    },
+    {
+      "id": "EA-67bd82fe28221868",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/method_routing.rs",
+      "message": "Unhandled termination at line 840",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 840,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Overlapping method route...\")` at method_routing.rs:840 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 840 is a genuine `panic!` in the production routing helper `set_endpoint`, triggered when `out.is_some()` and an overlapping method route is added."
+        }
+      ]
+    },
+    {
+      "id": "EA-b920b2366725f8b2",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/mod.rs",
+      "message": "Unhandled termination at line 193",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 193,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Invalid route: `Router::route_service` cannot be used with `Router`s...\")` at routing/mod.rs:193 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 193 is a real `panic!` in the production `route_service` builder, fired when a `Router` is passed to `Router::route_service`."
+        }
+      ]
+    },
+    {
+      "id": "EA-3a1ea5a1901bc093",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/mod.rs",
+      "message": "Unhandled termination at line 211",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 211,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Nesting at the root is no longer supported...\")` at routing/mod.rs:211 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 211 is a genuine `panic!` in the production `Router::nest` API when the path is empty or \"/\"."
+        }
+      ]
+    },
+    {
+      "id": "EA-47722935c9b77234",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/mod.rs",
+      "message": "Unhandled termination at line 242",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 242,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`panic!(\"Nesting at the root is no longer supported. Use fallback_service instead.\")` at routing/mod.rs:242 is a real unhandled termination in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 242 is a genuine `panic!` in the production `nest_service` API when the path is empty or \"/\"."
+        }
+      ]
+    },
+    {
+      "id": "EA-95702be3daecc2a7",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Unhandled termination at line 320",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 320,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `panic!` at path_router.rs:320 genuinely executes when `self.routes.is_empty()`, a reachable misuse in production routing code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 320 is a real `panic!` in the production `route_layer` method of `PathRouter`, reached when no routes have been added yet."
+        }
+      ]
+    },
+    {
+      "id": "EA-0625de76a3eb5db2",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Unhandled termination at line 525",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 525,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `panic!` at path_router.rs:525 fires on an invalid route pattern at runtime in production code, so the termination claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 525 is a real `panic!` in the production nested-path validation helper (not cfg(test); tests only begin later in the file), firing on wildcard segments in nested routes."
+        }
+      ]
+    },
+    {
+      "id": "EA-a2c2282192a2c719",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/url_params.rs",
+      "message": "Unhandled termination at line 35",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 35,
+      "verdict": "false_positive",
+      "reason": "unreachable! documents an invariant the surrounding code establishes; the reviewed Rust convention treats it as a contract guard.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`unreachable!` at url_params.rs:35 documents a state the method already checked earlier, the invariant idiom the rule should recognise."
+        }
+      ]
+    },
+    {
+      "id": "EA-c13682bcfcf569c1",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Unhandled termination at line 1177",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 1177,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`unreachable!` at defs.rs:1177 asserts the flag-config invariant that this switch can only be disabled, not a real unhandled termination."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1177 is an `unreachable!` in ripgrep's production flag `update` impl (the `#[cfg(test)]` module starts only at line 1186), so a terminating call does exist there in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-eacefd012176d11e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Unhandled termination at line 1634",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 1634,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`unreachable!` at defs.rs:1634 asserts the `--encoding` flag always receives a value, an invariant idiom rather than a termination risk."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1634 is literally `unreachable!(\"--encoding must accept a value\")` inside the production `FlagValue` match arm of `update`, so the reported termination call exists at that site."
+        }
+      ]
+    },
+    {
+      "id": "EA-41a465dc03056f29",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/doc/help.rs",
+      "message": "Unhandled termination at line 153",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`unreachable!` at help.rs:153 asserts that help markup only references known flags, an internal invariant idiom."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 153 is the `unreachable!(r\"found unrecognized \\flag{{{name}}} in --help docs\")` emitted in the `--help` doc-rendering closure, exactly matching the claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-b9f40b242ae1eb24",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/doc/help.rs",
+      "message": "Unhandled termination at line 162",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 162,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`unreachable!` at help.rs:162 asserts the same known-flag invariant for `\\flag-negate`, not a genuine unhandled termination."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 862 (reported 162) opens the `unreachable!(\"found unrecognized \\flag-negate{{{name}}} in --help docs\")` call in the flag-negate renderer, so the panic is present as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-49619a2183462892",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/doc/help.rs",
+      "message": "Unhandled termination at line 168",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 168,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`unreachable!` at help.rs:168 asserts that a negated flag has a negation, an invariant idiom the rule should exempt."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 168 is the `unreachable!` executed when a documented flag lacks a negation, present verbatim in the production help-doc markup renderer."
+        }
+      ]
+    },
+    {
+      "id": "EA-f388779c0f7e8249",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/doc/man.rs",
+      "message": "Unhandled termination at line 68",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 68,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!` at man.rs:68 asserts an internal invariant that docs only reference known flags; replacing it with a Result type is not meaningful, so it is an idiomatic unreachable-state guard the rule should recognise."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 68 is `unreachable!(r\"found unrecognized \\flag{{{name}}} in roff docs\")` in the man-page generator, matching the reported line and macro."
+        }
+      ]
+    },
+    {
+      "id": "EA-71b063a46024127e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/doc/man.rs",
+      "message": "Unhandled termination at line 86",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 86,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!` at man.rs:86 guards the invariant that a negated flag always has a negation, an impossible-state assertion rather than an unhandled error path."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 86 begins the `unreachable!` fired when `\\flag-negate{{...}}` names a flag without a negation, exactly as reported in man.rs."
+        }
+      ]
+    },
+    {
+      "id": "EA-518561d6d6156d9d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/doc/mod.rs",
+      "message": "Unhandled termination at line 30",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "unreachable! documents an invariant the surrounding code establishes; the reviewed Rust convention treats it as a contract guard.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!` at mod.rs:30 marks malformed internal markup as impossible; it is an idiomatic invariant assertion, not a recoverable error the rule's Result advice fits."
+        }
+      ]
+    },
+    {
+      "id": "EA-cada2a47816216a5",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "Unhandled termination at line 595",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 595,
+      "verdict": "false_positive",
+      "reason": "unreachable!() marks a justified impossible state; there is no error to handle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The bare `unreachable!()` at glob.rs:595 is explicitly documented as an internal parser invariant ('there *must* be a bug in the parser'), the classic idiom the rule should recognise."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 595 is `unreachable!()` reached when `p.branches.is_empty()`; the comment marks it as an intentional invariant assertion, but the panic in production parsing code is real as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-5311b4822121b18f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "Unhandled termination at line 206",
+      "status": "final",
+      "sampled_from": "a159358",
+      "line": 206,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `panic!` at dir.rs:206 is a precondition/contract check on a public method's caller (non-root matcher), an idiomatic assertion for programmer error rather than an unhandled recoverable error."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 206 is `panic!(\"Ignore::add_parents called on non-root matcher\")` guarding a non-root precondition in production library code, matching the finding."
+        }
+      ]
+    },
+    {
+      "id": "EA-011b57e2de3eae46",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/matcher/src/lib.rs",
+      "message": "Unhandled termination at line 507",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 507,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `panic!` at lib.rs:507 is in the Display impl of the uninhabited `NoError` type, which can never be constructed, making it genuinely unreachable idiomatic code."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `panic!` is the conventional unreachable body for the uninhabited error type `NoError` (its own message says 'an impossible error occurred'), and `fmt` already returns `std::fmt::Result`, so the recommendation to return a Result/structured error type does not apply to this idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b2ea0867da3bb4e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/matcher/src/lib.rs",
+      "message": "Unhandled termination at line 513",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 513,
+      "verdict": "false_positive",
+      "reason": "Documented API-contract/programmer-error panic (idiomatic Rust), not an unhandled recoverable error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `panic!` at lib.rs:513 is the `From<NoError>` conversion for the uninhabited `NoError` type, so it cannot be executed and is an intentional impossibility assertion."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Same recognized idiom: `From<NoError> for std::io::Error` can only be invoked by constructing the uninhabited `NoError`, so the branch is impossible and the fixed trait signature (`-> std::io::Error`) makes the 'return a structured error type' recommendation inapplicable."
+        }
+      ]
+    },
+    {
+      "id": "EA-53fdf97f672b896f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/jsont.rs",
+      "message": "Unhandled termination at line 271",
+      "status": "corroborated",
+      "sampled_from": "t16-go-api",
+      "line": 271,
+      "verdict": "false_positive",
+      "reason": "unreachable! documents an invariant the surrounding code establishes; the reviewed Rust convention treats it as a contract guard.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `unreachable!` at jsont.rs:271 asserts the base64 remainder length is always < 3, an internal invariant rather than a recoverable error warranting a Result."
+        }
+      ]
+    },
+    {
+      "id": "EA-78eb049e8adfbd89",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Unhandled termination at line 253",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 253,
+      "verdict": "false_positive",
+      "reason": "Panic in test-utility code compiled only for tests.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b7e8d0c13a7fa448",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Unhandled termination at line 264",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 264,
+      "verdict": "false_positive",
+      "reason": "Panic in test-utility code compiled only for tests.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-90b90ee2b5830b97",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Unhandled termination at line 703",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 703,
+      "verdict": "false_positive",
+      "reason": "Panic in test-utility code compiled only for tests.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-f405d73e494a0e10",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Unhandled termination at line 720",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 720,
+      "verdict": "false_positive",
+      "reason": "Panic in test-utility code compiled only for tests.",
+      "labeller": "model:claude-opus-5-5"
+    }
+  ]
+}

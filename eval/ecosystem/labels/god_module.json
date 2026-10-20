@@ -1,0 +1,2551 @@
+{
+  "schema_version": 1,
+  "detector": "god_module",
+  "labels": [
+    {
+      "id": "EA-35198785613e2043",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "File has 34 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "aix.c (1321 lines) holds 34 genuine top-level C functions covering uv_loop, fs events, CPU/memory/interface info and more for the AIX port."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 34 top-level definitions in src/unix/aix.c cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-eb6683634f032e86",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/process.c",
+      "message": "File has 24 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.c (1123 lines) has 24 top-level C functions spanning fork/exec, pipe setup, spawn and signal handling, just over the 20 limit."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 24 top-level definitions in src/unix/process.c cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-abd1793d55db41dd",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/sunos.c",
+      "message": "File has 33 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sunos.c (915 lines) defines 33 top-level functions mixing loop init, event ports, CPU info and interface addresses."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 33 top-level definitions in src/unix/sunos.c cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-aa9c7103a47ee555",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/thread.c",
+      "message": "File has 73 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "thread.c (975 lines) defines 73 top-level functions for threads, mutexes, rwlocks, semaphores, condvars and barriers, a broad multi-primitive file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 73 top-level definitions in src/unix/thread.c cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-341dbc8eb816b215",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "include/yaml-cpp/emitter.h",
+      "message": "File has 29 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "verdict": "false_positive",
+      "reason": "Adjudicated: emitter.h's counted entries are member function declarations inside the Emitter class, not top-level definitions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "emitter.h is a 295-line class declaration; the 29 counted entries are mostly member function declarations (SetIntBase, Write overloads, etc.), not definitions."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 29 top-level definitions in include/yaml-cpp/emitter.h cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-5bf6512b64a436da",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "include/yaml-cpp/node/impl.h",
+      "message": "File has 46 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "node/impl.h (387 lines) holds 46 inline template member definitions for node_data, node and Node, so the count of real definitions is accurate."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 46 top-level definitions in include/yaml-cpp/node/impl.h cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-506c524d196dbbba",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitter.cpp",
+      "message": "File has 64 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "emitter.cpp has 64 real Emitter member definitions (Write overloads, Emit* state handlers, setters) in a single translation unit."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed 64 top-level definitions in src/emitter.cpp cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f04cf685a3906e7b",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitterstate.cpp",
+      "message": "File has 40 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "emitterstate.cpp has 40 definitions for EmitterState setters/getters and group handling, accurate for the count."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 40 top-level definitions in src/emitterstate.cpp cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f519907c2c8c553",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/emitterutils.cpp",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "emitterutils.cpp has 22 definitions of string/escape/UTF-8 write helpers, just over the 20 threshold."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 22 top-level definitions in src/emitterutils.cpp cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c29ce96052b68ca",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/exp.h",
+      "message": "File has 38 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "exp.h is a catalogue of 38 trivial inline regex factories (Empty, Space, Tab, Digit...), each a 3-line static-RegEx accessor; not a responsibility sprawl."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 38 top-level definitions in src/exp.h cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-e5c9ee09c4b691f2",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/scanner.cpp",
+      "message": "File has 21 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "scanner.cpp has 21 Scanner method definitions (scan-token handlers, indentation, simple keys), barely over the limit but accurately counted."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 21 top-level definitions in src/scanner.cpp cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-664056bd283a230a",
+      "repository": "zlib",
+      "language": "cpp",
+      "path": "contrib/iostream/zfstream.cpp",
+      "message": "File has 27 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "zfstream.cpp defines 27 methods across gzfilebuf, gzfilestream_common and stream classes, so the count is accurate."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 27 top-level definitions in contrib/iostream/zfstream.cpp cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-a98cad515ae3ff92",
+      "repository": "zlib",
+      "language": "cpp",
+      "path": "contrib/iostream3/zfstream.cc",
+      "message": "File has 26 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Contributed add-on bundled under contrib/, outside the zlib library.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "iostream3/zfstream.cc defines 26 methods/operators for gzfilebuf and the gz stream wrappers, accurate for the count."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 26 top-level definitions in contrib/iostream3/zfstream.cc cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f63aa6982b36e52a",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "cursed_renderer.go",
+      "message": "File has 28 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "cursed_renderer.go has 28 top-level funcs/methods (17 on cursedRenderer) mixing buffering, diffing, cursor/mouse/title modes in one file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 28 top-level definitions in cursed_renderer.go cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-75c8d4661170ead4",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "File has 37 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "tea.go has 37 top-level funcs/methods (29 Program methods) covering options, event loop, signals, terminal restore and send APIs."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt was provided, so the reported count of 37 top-level definitions in tea.go cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1d2001851f8cf809",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/rest/main.go",
+      "message": "File has 28 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Single-file example program, outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`_examples/rest/main.go` is example code, which is outside the detector scope despite the reported definition count."
+        }
+      ]
+    },
+    {
+      "id": "EA-c2d0db9a46dfd4d0",
+      "repository": "chi",
+      "language": "go",
+      "path": "mux.go",
+      "message": "File has 35 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 35 top-level definitions cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`mux.go` is normal core code and reports 35 top-level function-like definitions, exceeding the threshold of 20."
+        }
+      ]
+    },
+    {
+      "id": "EA-2eca49b52216d782",
+      "repository": "chi",
+      "language": "go",
+      "path": "tree.go",
+      "message": "File has 26 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 26 top-level definitions cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`tree.go` is normal core code and reports 26 top-level function-like definitions, exceeding the threshold of 20."
+        }
+      ]
+    },
+    {
+      "id": "EA-9225c2088871eb27",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "File has 127 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 127 top-level definitions cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`command.go` is normal core code and reports 127 top-level function-like definitions, well above the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c681dec81af2ed9",
+      "repository": "cobra",
+      "language": "go",
+      "path": "completions.go",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 22 top-level definitions cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`completions.go` is normal core code and reports 22 top-level function-like definitions, above the threshold of 20."
+        }
+      ]
+    },
+    {
+      "id": "EA-0f57dc28ce02e55b",
+      "repository": "gin",
+      "language": "go",
+      "path": "binding/form_mapping.go",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "form_mapping.go has 23 top-level funcs (mapping, setWith*, tag parsing, time/array setters), only slightly above the limit."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 23 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-34d3b9a074ea7fad",
+      "repository": "gin",
+      "language": "go",
+      "path": "context.go",
+      "message": "File has 146 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "context.go defines 146 methods on gin.Context (binding, rendering, params, headers, cookies, negotiation), a classic oversized API surface."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 146 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-0853e2091db3868c",
+      "repository": "gin",
+      "language": "go",
+      "path": "gin.go",
+      "message": "File has 44 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "gin.go has 44 top-level funcs/methods on Engine covering routing tree, middleware, server run methods, TLS and unix socket helpers."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 44 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-b282141fff0105a9",
+      "repository": "gin",
+      "language": "go",
+      "path": "ginS/gins.go",
+      "message": "File has 25 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ginS/gins.go is a facade whose 25 functions are one-line wrappers that forward to a singleton engine (GET, POST, Use...); a delegation idiom, not mixed responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the stated count of 25 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1e37be249c9a8d26",
+      "repository": "gin",
+      "language": "go",
+      "path": "routergroup.go",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "routergroup.go has 23 methods on RouterGroup (Handle, GET..., Static, StaticFS, combineHandlers), a cohesive but over-limit surface."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 23-definition count in routergroup.go cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-5afb30f27c2b9eec",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "File has 21 top-level function-like definitions (> 20).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 21 top-level function-like definitions (> 20) in lib/adapters/http.js cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-109acbdb28e4d8c5",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "Makefile.js",
+      "message": "File has 37 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Build script, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Makefile.js is build/tooling code, which is outside the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-67d19a0b2bede29e",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint-helpers.js",
+      "message": "File has 29 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "eslint-helpers.js has 28 top-level functions (file globbing, config loading, ignore handling, option validation) in one grab-bag helper module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt from lib/eslint/eslint-helpers.js is shown, so the 29-definition count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-75054508dd52ae99",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/languages/js/source-code/token-store/index.js",
+      "message": "File has 25 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "token-store/index.js has only ~5 top-level functions; the rest of the 25 are methods of the TokenStore class, which is not what 'top-level definitions' means."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The token-store/index.js source is not shown, so the 25-definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3d04e2941b7fcbe6",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rule-tester.js (2018 lines) has about 22 top-level functions for schema validation, assertions and test harness plumbing alongside the RuleTester class."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt of lib/rule-tester/rule-tester.js is given, so the 22-definition count cannot be confirmed."
+        }
+      ]
+    },
+    {
+      "id": "EA-9fa9eb6294338c19",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/index.js",
+      "message": "File has 292 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "A registry of lazy rule loaders; each entry is a one-line require thunk, not a responsibility.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "rules/index.js is a sorted lazy-loading map of ~290 `\"rule\": () => require(...)` arrow entries; they are registry data, not function definitions."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The lib/rules/index.js source is absent, so the implausible 292-definition count cannot be checked."
+        }
+      ]
+    },
+    {
+      "id": "EA-feb0f60b0536809b",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/utils/ast-utils.js",
+      "message": "File has 89 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ast-utils.js (2978 lines) has 77 top-level functions across unrelated AST helpers (tokens, parens, precedence, literals, functions)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt from lib/rules/utils/ast-utils.js is shown, so the 89-definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1293b8aa3e6f8a82",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/response.js",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "verdict": "true_positive",
+      "reason": "The file defines more than 20 top-level functions, the module-size claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "express response.js defines 22 res.* API functions (send, json, cookie, redirect, sendFile...), all on one prototype extension module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The lib/response.js source is not provided, so the 22-definition count cannot be confirmed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The 22 top-level definition count cannot be verified because no excerpt or file contents were provided."
+        }
+      ]
+    },
+    {
+      "id": "EA-cc7e7432c4791e8d",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/reply.js",
+      "message": "File has 54 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fastify reply.js has ~23 real top-level functions plus ~30 Reply.prototype members for headers, serialization, hooks, trailers and redirects."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 54 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-30d197d396e4e8c8",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/request.js",
+      "message": "File has 28 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "request.js has only ~7 top-level functions; the 28 count is inflated by prototype/getter members of the Request object, so the claim of top-level definitions is overstated."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 28 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9ac06f849b572ffb",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/fragment/dsl/FragmentOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "FragmentOf.kt holds 23 arity overloads of the same fragment DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 23 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ab679ec0aed08201",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/fragment/dsl/ScopeFragmentOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopeFragmentOf.kt holds 23 arity overloads of the same scoped fragment DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 23 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-42bf203f79d6693f",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/dsl/ScopeViewModelOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopeViewModelOf.kt holds 23 arity overloads of the same scoped ViewModel (android) DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 23 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6daac767b8dfc2f9",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/main/java/org/koin/androidx/viewmodel/dsl/ViewModelOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ViewModelOf.kt holds 23 arity overloads of the same ViewModel (android) DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 23 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-5e26bb206d8aa07e",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-androidx-workmanager/src/main/java/org/koin/androidx/workmanager/dsl/ScopeWorkerOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopeWorkerOf.kt holds 23 arity overloads of the same scoped worker DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 23 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-75e982a7db806c52",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-androidx-workmanager/src/main/java/org/koin/androidx/workmanager/dsl/WorkerOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "WorkerOf.kt holds 23 arity overloads of the same worker DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 23 top-level definition count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-a9e5826b0fb2f8af",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/commonMain/kotlin/org/koin/compose/viewmodel/dsl/ScopeViewModelOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopeViewModelOf.kt holds 23 arity overloads of the same scoped ViewModel (compose) DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-67bdf80bc70bd009",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/compose/koin-compose-viewmodel/src/commonMain/kotlin/org/koin/compose/viewmodel/dsl/ViewModelOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ViewModelOf.kt holds 23 arity overloads of the same ViewModel (compose) DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7b374e97b5ab62c2",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core-viewmodel/src/commonMain/kotlin/org/koin/core/module/dsl/ScopeViewModelOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopeViewModelOf.kt holds 23 arity overloads of the same scoped ViewModel (core) DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6389ee76a13bee86",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core-viewmodel/src/commonMain/kotlin/org/koin/core/module/dsl/ViewModelOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ViewModelOf.kt holds 23 arity overloads of the same ViewModel (core) DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-1c122a97a26528cb",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/dsl/FactoryOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "FactoryOf.kt holds 23 arity overloads of the same factory DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac9db0dc8dcee4ba",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/dsl/New.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "New.kt holds 23 arity overloads of the same new() DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-55aeb041e5eb2f8b",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/dsl/ScopedFactoryOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopedFactoryOf.kt holds 23 arity overloads of the same scoped factory DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9bf60a2cc99c5733",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/dsl/ScopedOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ScopedOf.kt holds 23 arity overloads of the same scoped DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level function-like definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-2470463682a60517",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/dsl/SingleOf.kt",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "One function in 23 constructor-arity overloads; a cohesive overload family, not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "SingleOf.kt holds 23 arity overloads of the same single DSL function (0..N constructor parameters, each a one-line delegation); a fixed overload family, not a mix of responsibilities."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level definitions in SingleOf.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ccfbd834291fe407",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-HeadersCommon.kt",
+      "message": "File has 21 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "-HeadersCommon.kt has 21 top-level Headers helper functions (commonName, commonValue, commonEquals, toHeaders...), accurately counted just over the limit."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 21 top-level definitions in -HeadersCommon.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-df42ff3359075f87",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-UtilCommon.kt",
+      "message": "File has 31 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "-UtilCommon.kt has 31 top-level utility functions (header/host/hash/string helpers), a grab-bag utility file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 31 top-level definitions in -UtilCommon.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-881db3a5f24c9847",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/-UtilJvm.kt",
+      "message": "File has 29 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "-UtilJvm.kt has 29 top-level JVM utility functions (header, socket, closing, exception helpers), a grab-bag file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 29 top-level definitions in -UtilJvm.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-8d8c402c2b2e7b55",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio-nodefilesystem/src/commonMain/kotlin/okio/FsJs.kt",
+      "message": "File has 25 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Adjudicated: FsJs.kt's 25 entries are bodiless `internal external fun` bindings to Node fs, not function definitions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "FsJs.kt's 25 entries are `internal external fun` declarations binding Node fs calls (closeSync, openSync, readSync...), with no bodies, so they are not definitions."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 25 top-level definitions in FsJs.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-02c5a87d4a3ec351",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/Util.kt",
+      "message": "File has 21 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Util.kt has 21 top-level internal helpers (reverseBytes, infix Byte ops, toHexString, minOf overloads), mostly tiny, but the count is accurate over the limit."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 21 top-level definitions in Util.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-0618261bce7797a5",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "File has 62 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "internal/Buffer.kt holds 62 top-level commonXxx functions implementing the entire Buffer API (read, write, indexOf, select, copy)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 62 top-level definitions in internal/Buffer.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-b4da7b333d9656ac",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/ByteString.kt",
+      "message": "File has 32 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "internal/ByteString.kt has 32 top-level commonXxx functions implementing ByteString encoding, comparison, hashing and slicing."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 32 top-level definitions in internal/ByteString.kt cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-11965756126771b0",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Path.kt",
+      "message": "File has 27 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "internal/Path.kt has 27 top-level functions for path parsing, resolution, normalization and comparison in one file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 27 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9b454e88a921cbab",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/RealBufferedSink.kt",
+      "message": "File has 25 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RealBufferedSink.kt has 25 top-level commonWrite* functions mirroring the entire BufferedSink API."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 25 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-9797812ab02cec95",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/RealBufferedSource.kt",
+      "message": "File has 37 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RealBufferedSource.kt has 37 top-level commonRead* functions mirroring the entire BufferedSource API."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 37 top-level definitions cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-de4604d5db8183a8",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "File has 35 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "black/__init__.py has 35 top-level defs (CLI main, format_file/format_stdin, parsing, versions, caching) in a 1910-line module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 35 top-level definitions in src/black/__init__.py cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-5c49546cd69793bc",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/comments.py",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "comments.py has 23 top-level defs for comment extraction, fmt:off/on and fmt:skip handling in a 1050-line module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level definitions in src/black/comments.py cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f30af42250e0af68",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "File has 41 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "linegen.py (2635 lines) has 41 top-level defs plus the LineGenerator and transformer machinery, a multi-purpose module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 41 top-level definitions in src/black/linegen.py cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3e481410998e46d9",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/nodes.py",
+      "message": "File has 54 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "Many top-level functions spanning several concerns in one production file; splitting by concern would help navigation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "nodes.py (1154 lines) has 54 top-level predicate and tree helper functions (is_*, whitespace, child_towards), a catch-all module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 54 top-level definitions in src/black/nodes.py cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-367dacb2b4ac88d4",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-core/src/response/into_response.rs",
+      "message": "File has 30 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Many one-method IntoResponse impls for std types; cohesive, not a god module.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "into_response.rs has no column-0 fns; the 30 counted are small `into_response` methods in trait impls for many std types, a catalogue of impls rather than top-level definitions."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 30 top-level definitions cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 30 top-level definitions in axum-core/src/response/into_response.rs cannot be verified against the file."
+        }
+      ]
+    },
+    {
+      "id": "EA-691582a47451fb78",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/debug_handler.rs",
+      "message": "File has 23 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "debug_handler.rs has ~22 genuine top-level fns (check_* generators for inputs, outputs, state, return types) in an 892-line macro module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level definitions in debug_handler.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 23 top-level definitions in axum-macros/src/debug_handler.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f4ac7ba6b56283f",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/from_request/mod.rs",
+      "message": "File has 21 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "from_request/mod.rs has only ~16 column-0 fns; the extra count comes from methods in impls, so top-level definitions do not exceed 20."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 21 top-level definitions in from_request/mod.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 21 top-level definitions in axum-macros/src/from_request/mod.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-4d68f31cad5ee411",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/path/de.rs",
+      "message": "File has 35 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Count is driven by the ~30 methods serde's Deserializer trait requires; not separable responsibilities.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "path/de.rs has 0 top-level fns; the count is serde Deserializer trait methods (deserialize_u8, deserialize_str, ...) which are an interface-mandated catalogue."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 35 top-level definitions in extract/path/de.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 35 top-level definitions in axum/src/extract/path/de.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-d022ed42f4facafc",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/path/mod.rs",
+      "message": "File has 24 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "extract/path/mod.rs has no top-level fns; the 24 counted are impl methods across Path, FailedToDeserializePathParams and rejection types."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 24 top-level definitions in extract/path/mod.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 24 top-level definitions in axum/src/extract/path/mod.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-91e635bab7cbfa5e",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "File has 53 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ws.rs has ~54 non-test fns across WebSocketUpgrade builder, WebSocket, Message and related types in a 1100-line module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 53 top-level definitions in extract/ws.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 53 top-level definitions in axum/src/extract/ws.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-a037b789600323cb",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "File has 32 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sse.rs has no top-level fns; its 32 are builder/impl methods of Event, Sse and KeepAlive, a cohesive SSE API."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 32 top-level definitions in response/sse.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 32 top-level definitions in axum/src/response/sse.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-b744b91247860a89",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/method_routing.rs",
+      "message": "File has 35 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "method_routing.rs (1344 non-test lines) has 43 fns, mostly per-method builder methods and merges on MethodRouter plus a few top-level helpers."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 35 top-level definitions in routing/method_routing.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the claimed 35 top-level definitions in method_routing.rs cannot be verified against the source."
+        }
+      ]
+    },
+    {
+      "id": "EA-e26712d96beb7861",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/mod.rs",
+      "message": "File has 43 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "routing/mod.rs has 46 fns on Router and related types (route, nest, merge, layer, fallback, with_state) in an 800-line core module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 43 top-level definitions in routing/mod.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "With no source excerpt, the 43-definition file-level count for routing/mod.rs is unverifiable from the finding alone."
+        }
+      ]
+    },
+    {
+      "id": "EA-a4e6bcc5a8a2ffd0",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "File has 28 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "path_router.rs has 4 top-level fns; the 28 counted are mostly PathRouter and Node methods in a 547-line cohesive file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 28 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided for path_router.rs, so the 28 top-level definitions cannot be confirmed or denied."
+        }
+      ]
+    },
+    {
+      "id": "EA-6455947ea0264b67",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/cli/src/decompress.rs",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "decompress.rs has 3 top-level fns; the 22 counted are builder/reader methods in a cohesive 533-line decompression module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 22 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The claimed 22 top-level definitions in decompress.rs cannot be checked without any source excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-53d823c1b9cb2f4e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "File has 766 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "flags/defs.rs is a declarative table of one struct per CLI flag with small trait-impl methods (878 fns, 104 top-level), a repetitive catalogue by design."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 766 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The 766-definition count for defs.rs is a file-level claim; with no excerpt, verifying it would require reading the whole file."
+        }
+      ]
+    },
+    {
+      "id": "EA-cd82400047877040",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/hiargs.rs",
+      "message": "File has 44 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "hiargs.rs has 45 fns (14 top-level) converting LowArgs into HiArgs with many option-specific builders in a 1481-line module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 44 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Excerpt is '(none)', so the 44 top-level definitions in hiargs.rs cannot be validated from the given evidence."
+        }
+      ]
+    },
+    {
+      "id": "EA-14c6a5524ac1123e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/search.rs",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "core/search.rs has 2 top-level fns; the 22 counted are methods on SearchWorker and its builder in a 450-line file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 22 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is shown, so the 22-definition count for search.rs is unverifiable here."
+        }
+      ]
+    },
+    {
+      "id": "EA-4becc175027cb216",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "File has 50 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "glob.rs has ~54 non-test fns spanning Glob, GlobBuilder, tokenizer and parser in a 1078-line module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 50 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "With excerpt '(none)', the 50-definition file-level count for glob.rs cannot be confirmed or rejected."
+        }
+      ]
+    },
+    {
+      "id": "EA-59741980e2709e55",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/lib.rs",
+      "message": "File has 72 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "globset/lib.rs has 72 non-test fns covering Glob matching, GlobSet, strategies and builders in 1134 lines."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 72 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 72 top-level function-like definitions in crates/globset/src/lib.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-d67ecb620e36a1a7",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "File has 40 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ignore/dir.rs has 41 non-test fns across Ignore, IgnoreBuilder and IgnoreInner, 1111 lines of mixed ignore-file logic."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is '(none)', so the reported count of 40 top-level definitions cannot be verified against the source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 40 top-level function-like definitions in crates/ignore/src/dir.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-7ef9ad1bf5093ed9",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/types.rs",
+      "message": "File has 22 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "types.rs has no top-level fns; the 22 counted are methods on Types, TypesBuilder and definitions in a 495-line cohesive file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 22 top-level definitions in crates/ignore/src/types.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 22 top-level function-like definitions in crates/ignore/src/types.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-b0f656df4cce9a2b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "File has 118 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "walk.rs has ~122 non-test fns (10 top-level) spanning WalkBuilder, Walk, WalkParallel, workers and DirEntry in 2116 lines."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 118 top-level definitions in crates/ignore/src/walk.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 118 top-level function-like definitions in crates/ignore/src/walk.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-32304ff25ce1bdad",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/matcher/src/lib.rs",
+      "message": "File has 58 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "matcher/lib.rs has 88 fns, largely the Matcher/Captures trait API plus forwarding impls and helper types in a 1380-line file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 58 top-level definitions in crates/matcher/src/lib.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 58 top-level function-like definitions in crates/matcher/src/lib.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-37a7d9e0691b9bf0",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/pcre2/src/matcher.rs",
+      "message": "File has 29 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "pcre2 matcher.rs has 1 top-level fn; the 29 counted are methods across builder, matcher and captures in a 434-line file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 29 top-level definitions in crates/pcre2/src/matcher.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 29 top-level function-like definitions in crates/pcre2/src/matcher.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-ccc66392474c7ea8",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/json.rs",
+      "message": "File has 28 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "printer/json.rs has no top-level fns; its 28 are builder and sink methods of JSON printer types, cohesive for a 900-line file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 28 top-level definitions in crates/printer/src/json.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 28 top-level function-like definitions in crates/printer/src/json.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-adc2f0c9b2e5ce7f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "File has 94 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "printer/standard.rs has 94 non-test fns in 1744 lines covering the Standard printer, builder, sink and per-line writing logic."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 94 top-level definitions in crates/printer/src/standard.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt is (none), so the claim of 94 top-level function-like definitions in crates/printer/src/standard.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7e5e6a0e5993af8",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/summary.rs",
+      "message": "File has 39 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "printer/summary.rs has 39 non-test fns for summary config, builder, sink and counting in a single file, above the limit."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 39 top-level definitions in crates/printer/src/summary.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 39 top-level function-like definitions in crates/printer/src/summary.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-46558050e9cfad9a",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/util.rs",
+      "message": "File has 30 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "printer/util.rs has 4 top-level fns; the 30 counted are mostly small methods in several helper type impls (PrinterPath, Replacer, etc.)."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the claimed count of 30 top-level definitions in crates/printer/src/util.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 30 top-level function-like definitions in crates/printer/src/util.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2153f55d86f10c4",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/literal.rs",
+      "message": "File has 45 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "regex/literal.rs has 45 non-test fns for literal extraction, Extractor and Seq handling in 641 lines of dense logic."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 45 top-level definition count for crates/regex/src/literal.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 45 top-level function-like definitions in crates/regex/src/literal.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-57d7413095bd2f35",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/matcher.rs",
+      "message": "File has 38 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "regex/matcher.rs has 38 non-test fns implementing RegexMatcher, builders and capture/ line-terminator handling in one file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 38 top-level definition count for crates/regex/src/matcher.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 38 top-level function-like definitions in crates/regex/src/matcher.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-138b3fd11339a664",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/line_buffer.rs",
+      "message": "File has 28 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "line_buffer.rs has 2 top-level fns; the 28-31 counted are methods of LineBufferBuilder and LineBuffer in a cohesive 554-line file."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 28 top-level definition count for crates/searcher/src/line_buffer.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 28 top-level function-like definitions in crates/searcher/src/line_buffer.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6e3e81079a64695e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "File has 32 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "searcher/core.rs has no top-level fns; the 32 counted are methods of the Core struct, a single cohesive search state machine."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 32 top-level definition count for crates/searcher/src/searcher/core.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 32 top-level function-like definitions in crates/searcher/src/searcher/core.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-de74d9be1656a5d6",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/sink.rs",
+      "message": "File has 30 top-level function-like definitions (> 20).",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Policy (operator): methods of an impl, class, or prototype are not top-level symbols; the file's free functions and types do not exceed the budget.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sink.rs has no top-level fns; its 40 fns are Sink/SinkError trait methods and forwarding impls for &mut S and Box<S>, a repetitive trait-impl catalogue."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 30 top-level definition count for crates/searcher/src/sink.rs cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 30 top-level function-like definitions in crates/searcher/src/sink.rs cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-94d4f971407a3828",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "File has 61 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "openapi/generate.ts has 61 top-level functions for schema conversion, path/param building and spec assembly in a 1792-line module."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 61 top-level definition count for packages/openapi/src/generate.ts cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 61 top-level function-like definitions in packages/openapi/src/generate.ts cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-807060b520d20011",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "File has 46 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 46 top-level definition count for packages/zod/src/v3/types.ts cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The zod source module is reported with 46 top-level function-like definitions, above the threshold of 20."
+        }
+      ]
+    },
+    {
+      "id": "EA-5ded965c337dd4a1",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/api.ts",
+      "message": "File has 118 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the 118 top-level definition count for packages/zod/src/v4/core/api.ts cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The core API source file has 118 top-level definitions, far exceeding the 20-definition threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-d2e72d60eaa25d14",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "File has 74 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "compile.ts is a real hand-written core source module, so a file-level count of 74 top-level function-like definitions exceeds the threshold and the god_module rationale applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The compile module has 74 top-level definitions, exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-227c1e23e0992f7d",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/util.ts",
+      "message": "File has 76 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "File holds many non-test functions/methods as counted (message says 'top-level' but methods are included).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "util.ts is a legitimate in-scope library source module, so 76 top-level function-like definitions exceeding the threshold supports the god_module claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The util module has 76 top-level definitions, exceeding the threshold."
+        }
+      ]
+    },
+    {
+      "id": "EA-4d72a610ee59b3af",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "scripts/triage-signal.ts",
+      "message": "File has 21 top-level function-like definitions (> 20).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "One-off maintenance script, just over the threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "scripts/triage-signal.ts is build/tooling code, which is outside the detector's stated scope regardless of the definition count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`scripts/triage-signal.ts` is tooling code outside the module-quality detector's scope, even though it has 21 definitions."
+        }
+      ]
+    }
+  ]
+}

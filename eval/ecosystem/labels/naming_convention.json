@@ -1,0 +1,1715 @@
+{
+  "schema_version": 1,
+  "detector": "naming_convention",
+  "labels": [
+    {
+      "id": "EA-0a8565d0d499408d",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/IsPolicy.cs",
+      "message": "Type `IsPolicy` at line 7 should be IPascalCase",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 7,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`IsPolicy` is a deliberate behavior interface reading as the predicate \"is policy\"; the leading `I` is part of the word, not a Hungarian interface prefix, so the I+PascalCase rule misfires (the file even suppresses IDE1006 around it)."
+        }
+      ]
+    },
+    {
+      "id": "EA-2f469ae8f1278511",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonIOException.java",
+      "message": "Constant `serialVersionUID` at line 26 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 26,
+      "verdict": "false_positive",
+      "reason": "`serialVersionUID` is the name Java serialization requires.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`serialVersionUID` (JsonIOException.java:26) is the Java serialization field whose name is fixed by the language spec, an idiom naming rules exempt (as the `@SuppressWarnings(\"MemberName\")` on line 24 also documents)."
+        }
+      ]
+    },
+    {
+      "id": "EA-e162b86503e29e89",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonParseException.java",
+      "message": "Constant `serialVersionUID` at line 33 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 33,
+      "verdict": "false_positive",
+      "reason": "`serialVersionUID` is the name Java serialization requires.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`serialVersionUID` (JsonParseException.java:33) is the mandated Java serialization field name, so the UPPER_SNAKE_CASE rationale does not apply to this recognized idiom."
+        }
+      ]
+    },
+    {
+      "id": "EA-f62b4c5e6407775b",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonSyntaxException.java",
+      "message": "Constant `serialVersionUID` at line 26 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 26,
+      "verdict": "false_positive",
+      "reason": "`serialVersionUID` is the name Java serialization requires.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`serialVersionUID` is a fixed Java serialization identifier; renaming it would break serialization, so the naming rule does not apply."
+        }
+      ]
+    },
+    {
+      "id": "EA-984f713f0329d92c",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/MalformedJsonException.java",
+      "message": "Constant `serialVersionUID` at line 27 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "`serialVersionUID` is the name Java serialization requires.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`serialVersionUID` is a mandatory Java serialization idiom recognized by the JVM, making the UPPER_SNAKE_CASE rationale inapplicable."
+        }
+      ]
+    },
+    {
+      "id": "EA-f330e2a7f66dd1d9",
+      "repository": "gson",
+      "language": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java",
+      "message": "Constant `gson` at line 279 should be UPPER_SNAKE_CASE",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 279,
+      "verdict": "unclear",
+      "reason": "static final Gson instance in a benchmark; constant-ness is debatable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The path `metrics/src/main/.../ParseBenchmark.java` identifies benchmark code, which is outside the detector's stated scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-486818dd5b950a2c",
+      "repository": "gson",
+      "language": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/ProtoTypeAdapter.java",
+      "message": "Constant `mapOfMapOfMethods` at line 229 should be UPPER_SNAKE_CASE",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 229,
+      "verdict": "false_positive",
+      "reason": "A mutable ConcurrentMap cache is not a constant under Java naming conventions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`mapOfMapOfMethods` is declared `private static final` in main source but uses lowerCamelCase instead of the required UPPER_SNAKE_CASE."
+        }
+      ]
+    },
+    {
+      "id": "EA-8822dcfb82583d65",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/CookieUtil.java",
+      "message": "Constant `Sep` at line 30 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 30,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Sep` is a `private static final String` constant that is not written in UPPER_SNAKE_CASE as the convention requires."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`Sep` is declared `private static final String` in main source and violates the UPPER_SNAKE_CASE convention."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 30"
+        }
+      ]
+    },
+    {
+      "id": "EA-508e7833d6e321e6",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/DataUtil.java",
+      "message": "Constant `firstReadBufferSize` at line 50 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`firstReadBufferSize` is a `private static final int` constant that is not written in UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`firstReadBufferSize` is declared `private static final int` in main source and does not follow the UPPER_SNAKE_CASE naming convention."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 50"
+        }
+      ]
+    },
+    {
+      "id": "EA-d823350199f00649",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/Re2jRegex.java",
+      "message": "Constant `PatternComplexityError` at line 8 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "t7-final2",
+      "line": 8,
+      "verdict": "true_positive",
+      "reason": "PascalCase static final constant, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`PatternComplexityError` is a `private static final String` constant that is not written in UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`PatternComplexityError` is declared `private static final String` in main source and should be UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 8"
+        }
+      ]
+    },
+    {
+      "id": "EA-5bb8e569ebcee2c3",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "message": "Constant `ContextProperty` at line 57 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ContextProperty` is a `private static final String` constant that is not written in UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`ContextProperty` is declared `private static final String` in main source and violates the required constant naming convention."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 57"
+        }
+      ]
+    },
+    {
+      "id": "EA-8f82713e2517fe7d",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "message": "Constant `XPathFactoryProperty` at line 64 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`XPathFactoryProperty` is a `public static final String` constant that is not written in UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 64 declares `public static final String XPathFactoryProperty`, a constant named in PascalCase rather than UPPER_SNAKE_CASE in main source."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 64"
+        }
+      ]
+    },
+    {
+      "id": "EA-9140df0fd3e3698c",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "message": "Method `OutputXml` at line 168 should be camelCase",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 168,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`OutputXml` is a static method named in PascalCase rather than camelCase, so the claim is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 168 declares method `public static HashMap<String, String> OutputXml()`, which starts uppercase and therefore violates camelCase."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd MethodNamingConventions at line 168"
+        }
+      ]
+    },
+    {
+      "id": "EA-a77bc24d8cbc214e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "message": "Constant `undefinedNs` at line 593 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 593,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`undefinedNs` is a `private static final String` constant declared in camelCase, so it violates UPPER_SNAKE_CASE as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 593 declares `private static final String undefinedNs`, a constant starting lowercase rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 593"
+        }
+      ]
+    },
+    {
+      "id": "EA-2c451e260af26345",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/SharedConstants.java",
+      "message": "Constant `AttrRangeKey` at line 10 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 10,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`AttrRangeKey` is a `public final static String` constant written in PascalCase, so the UPPER_SNAKE_CASE claim is factually correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 10 declares `public final static String AttrRangeKey`, a PascalCase constant rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 10"
+        }
+      ]
+    },
+    {
+      "id": "EA-3c598369d66a7a83",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/SharedConstants.java",
+      "message": "Constant `XmlnsAttr` at line 16 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 16,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`XmlnsAttr` is a `public static final String` constant declared in PascalCase, contradicting UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 16 declares `public static final String XmlnsAttr`, a PascalCase constant rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 16"
+        }
+      ]
+    },
+    {
+      "id": "EA-232528be8e804a12",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/SharedConstants.java",
+      "message": "Constant `DummyUri` at line 24 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`DummyUri` is a `public static final String` constant named in PascalCase, so the naming claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 declares `public static final String DummyUri`, a PascalCase constant rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 24"
+        }
+      ]
+    },
+    {
+      "id": "EA-e8b0c2efc00486de",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/internal/SoftPool.java",
+      "message": "Constant `MaxIdle` at line 22 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`MaxIdle` is a `static final int` constant declared in PascalCase rather than UPPER_SNAKE_CASE as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 22 declares `static final int MaxIdle`, a PascalCase constant rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 22"
+        }
+      ]
+    },
+    {
+      "id": "EA-d55f69e98f5d064a",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attributes.java",
+      "message": "Constant `dataPrefix` at line 50 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`dataPrefix` is a `protected static final String` constant in camelCase, violating UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 50 declares `protected static final String dataPrefix`, a constant starting lowercase rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 50"
+        }
+      ]
+    },
+    {
+      "id": "EA-0a58444944be54be",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Constant `ForText` at line 28 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "t7-final2",
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "PascalCase static final constant, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ForText` is a `static final int` constant in PascalCase, so the UPPER_SNAKE_CASE claim is factually correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`static final int ForText = 0x1;` is a compile-time constant whose UpperCamelCase name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 28"
+        }
+      ]
+    },
+    {
+      "id": "EA-910d4d649c1fac0a",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "message": "Constant `BaseCount` at line 40 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`BaseCount` is a `private static final int` constant named in lowerCamelCase, so UPPER_SNAKE_CASE is expected."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`private static final int BaseCount = 106;` is a static final constant named in UpperCamelCase, violating UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 40"
+        }
+      ]
+    },
+    {
+      "id": "EA-0b5882b1d9191502",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "message": "Constant `CycleError` at line 552 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 552,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`CycleError` is a `private static final String` constant (immutable) whose lowerCamelCase name should be UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`private static final String CycleError = \"Cannot add a node here because it would create a cycle.\";` is a static final constant with an UpperCamelCase name."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 552"
+        }
+      ]
+    },
+    {
+      "id": "EA-898a90fa648ef7d4",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/CharacterReader.java",
+      "message": "Constant `MaxStringCacheLen` at line 22 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`MaxStringCacheLen` is a `private static final int` constant that should use UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`private static final int MaxStringCacheLen = 12;` is a static final int constant whose name is UpperCamelCase, not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 22"
+        }
+      ]
+    },
+    {
+      "id": "EA-f3ca93003a53dcbc",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTagOptions.java",
+      "message": "Constant `ListScope` at line 14 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ListScope` is a `static final int` flag constant, and the claim that it should be UPPER_SNAKE_CASE holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`static final int ListScope = 1 << 1;` is a static final constant with an UpperCamelCase name instead of UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 14"
+        }
+      ]
+    },
+    {
+      "id": "EA-5d3701c668ed0328",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTagOptions.java",
+      "message": "Constant `ButtonScope` at line 15 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`ButtonScope` is a `static final int` flag constant named in CamelCase, violating the UPPER_SNAKE_CASE convention."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`static final int ButtonScope = 1 << 2;` is a static final constant whose UpperCamelCase name violates the rule."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 15"
+        }
+      ]
+    },
+    {
+      "id": "EA-438b0c89716c8b42",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTagOptions.java",
+      "message": "Constant `SelectScopeMember` at line 17 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 17,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`SelectScopeMember` is a `static final int` flag constant that should be UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`static final int SelectScopeMember = 1 << 4;` is a static final constant named in UpperCamelCase rather than UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 17"
+        }
+      ]
+    },
+    {
+      "id": "EA-af9eb2cdc89125e9",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTagOptions.java",
+      "message": "Constant `Special` at line 20 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Special` is a `static final int` flag constant, so the UPPER_SNAKE_CASE claim applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`static final int Special = 1 << 7;` is a static final constant whose UpperCamelCase name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 20"
+        }
+      ]
+    },
+    {
+      "id": "EA-ee5def673f506db5",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "Constant `MaxStackScan` at line 617 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 617,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`MaxStackScan` is a `private static final int` constant that should use UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 617 declares `private static final int MaxStackScan = 24;` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 617"
+        }
+      ]
+    },
+    {
+      "id": "EA-9518dc74fde38940",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Parser.java",
+      "message": "Constant `NamespaceMathml` at line 24 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "t7-final2",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "PascalCase static final constant, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`NamespaceMathml` is a `public static final String` constant not in UPPER_SNAKE_CASE, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 24 declares `public static final String NamespaceMathml = ...` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 24"
+        }
+      ]
+    },
+    {
+      "id": "EA-ca9d8506e5c70053",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/Token.java",
+      "message": "Constant `UnsetPos` at line 18 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 18,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`UnsetPos` is a `static final int` constant declared in mixed case, matching the reported line."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 18 declares `static final int UnsetPos = -1;` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 18"
+        }
+      ]
+    },
+    {
+      "id": "EA-86366299bdf1caad",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TokenQueue.java",
+      "message": "Constant `Hyphen_Minus` at line 12 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "t12-disputes",
+      "line": 12,
+      "verdict": "true_positive",
+      "reason": "A private static final char constant in lower or mixed case; Java convention is UPPER_SNAKE_CASE.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Hyphen_Minus` is a `private static final char` constant that is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`private static final char Hyphen_Minus` at line 12 is a constant and its name is not `UPPER_SNAKE_CASE`."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 12"
+        }
+      ]
+    },
+    {
+      "id": "EA-01b5caaa51f314d0",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TokenQueue.java",
+      "message": "Constant `Replacement` at line 14 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 14,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`Replacement` is a `private static final char` constant named in PascalCase, not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 14 declares `private static final char Replacement = '\\uFFFD';` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 14"
+        }
+      ]
+    },
+    {
+      "id": "EA-7559a2ef978e25bc",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TokeniserState.java",
+      "message": "Constant `replacementChar` at line 1632 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1632,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`replacementChar` is a `private static final char` constant that violates UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1632 declares `private static final char replacementChar = ...` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 1632"
+        }
+      ]
+    },
+    {
+      "id": "EA-b9ac6604d69705ba",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TokeniserState.java",
+      "message": "Constant `eof` at line 1634 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "t12-disputes",
+      "line": 1634,
+      "verdict": "true_positive",
+      "reason": "A private static final char constant in lower or mixed case; Java convention is UPPER_SNAKE_CASE.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`eof` is a `private static final char` constant declared lowercase, so the naming claim is correct."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`private static final char eof` at line 1634 is a constant whose lowercase name violates the stated naming convention."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 1634"
+        }
+      ]
+    },
+    {
+      "id": "EA-d3a6fb5b1226fc7e",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/safety/Safelist.java",
+      "message": "Constant `All` at line 74 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 74,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`All` is a `private static final String` constant not in UPPER_SNAKE_CASE, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 74 declares `private static final String All = \":all\";` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 74"
+        }
+      ]
+    },
+    {
+      "id": "EA-51158c08aed80a18",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/NodeTraversor.java",
+      "message": "Constant `VisitHead` at line 20 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "Non-UPPER_SNAKE static final constant / PascalCase method, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`VisitHead` is a `private static final byte` constant named in PascalCase, not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 20 declares `private static final byte VisitHead = 0;` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 20"
+        }
+      ]
+    },
+    {
+      "id": "EA-4896ff45f63ffb23",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/select/NodeTraversor.java",
+      "message": "Constant `AfterHead` at line 21 should be UPPER_SNAKE_CASE",
+      "status": "corroborated",
+      "sampled_from": "t7-final2",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "PascalCase static final constant, against Java convention (project style deviates deliberately).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`private static final byte AfterHead` is a constant declared in PascalCase, so the UPPER_SNAKE_CASE claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 21 declares `private static final byte AfterHead = 1;` in production code, and the name is not UPPER_SNAKE_CASE."
+        },
+        {
+          "source": "oracle:pmd@7.16.0",
+          "claim": "confirmed",
+          "detail": "pmd FieldNamingConventions at line 21"
+        }
+      ]
+    },
+    {
+      "id": "EA-b1d2d664a3ea955f",
+      "repository": "express",
+      "language": "javascript",
+      "path": "lib/application.js",
+      "message": "Function `mounted_app` at line 230 should be camelCase",
+      "status": "corroborated",
+      "sampled_from": "t28-l2",
+      "line": 230,
+      "verdict": "true_positive",
+      "reason": "mounted_app is a snake_case function name in camelCase JavaScript; mountedApp follows the codebase and language convention.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`function mounted_app(req, res, next)` uses snake_case, which is not camelCase."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The named function expression at line 230 is literally `function mounted_app(req, res, next)`, which is snake_case, so the camelCase claim is factually correct for real source code (not a test or fixture)."
+        }
+      ]
+    },
+    {
+      "id": "EA-7cda528b2d9937ed",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/definition/BeanDefinition.kt",
+      "message": "Function `_createDefinition` at line 115 should be camelCase",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "Kotlin function name with an underscore; detekt FunctionNaming and ktlint flag it, though koin uses the prefix to mark internal API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_createDefinition` is the library's `_`-prefixed internal-API idiom with a camelCase base, which the naming rule should recognize."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_createDefinition` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-8f66ee92cefcbd31",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/definition/BeanDefinition.kt",
+      "message": "Function `_createDeclaredDefinition` at line 132 should be camelCase",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 132,
+      "verdict": "true_positive",
+      "reason": "Kotlin function name with an underscore prefix; detekt FunctionNaming flags it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_createDeclaredDefinition` follows the same `_`-prefixed internal-API convention with camelCase base, not a genuine camelCase violation."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_createDeclaredDefinition` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-b9b71c1a5463269f",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/Module.kt",
+      "message": "Function `_singleInstanceFactory` at line 196 should be camelCase",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 196,
+      "verdict": "true_positive",
+      "reason": "Kotlin function name with an underscore prefix; detekt FunctionNaming flags it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_singleInstanceFactory` is marked `@KoinInternalApi` and uses the intentional `_`-prefix idiom over a camelCase base."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_singleInstanceFactory` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-1fa2406068a7573d",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/Module.kt",
+      "message": "Function `_factoryInstanceFactory` at line 206 should be camelCase",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 206,
+      "verdict": "true_positive",
+      "reason": "Kotlin function name with an underscore prefix; detekt FunctionNaming flags it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_factoryInstanceFactory` is `@KoinInternalApi` with the deliberate `_`-prefix internal idiom over a camelCase name."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_factoryInstanceFactory` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-bea38a11fa746eaf",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/Module.kt",
+      "message": "Function `_scopedInstanceFactory` at line 216 should be camelCase",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 216,
+      "verdict": "true_positive",
+      "reason": "Kotlin function name with an underscore prefix; detekt FunctionNaming flags it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_scopedInstanceFactory` likewise uses the intentional `_`-prefixed internal-API idiom with a camelCase base."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_scopedInstanceFactory` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-75a877ad66dd9239",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/qualifier/Qualifier.kt",
+      "message": "Function `_q` at line 37 should be camelCase",
+      "status": "final",
+      "sampled_from": "t15-final",
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "Public function `_q` violates Kotlin camelCase naming; detekt FunctionNaming flags it.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_q` follows the same `_`-prefixed internal helper convention over a lowercase/camelCase base."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_q` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-5e5348e44691a7f3",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonMain/kotlin/org/koin/core/qualifier/Qualifier.kt",
+      "message": "Function `_q` at line 52 should be camelCase",
+      "status": "corroborated",
+      "sampled_from": "t15-final",
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "Public function `_q` violates Kotlin camelCase naming; detekt FunctionNaming flags it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`_q` is a public production function whose name is not camelCase (leading underscore), so the naming claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The function name `_q` starts with a leading underscore and is therefore not camelCase, correctly violating the stated Kotlin naming convention."
+        }
+      ]
+    },
+    {
+      "id": "EA-795a008aa7d7ab9b",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "moshi-kotlin/src/main/java/com/squareup/moshi/KotlinJsonAdapter.kt",
+      "message": "File `moshi-kotlin/src/main/java/com/squareup/moshi/KotlinJsonAdapter.kt` contains declaration `KotlinJsonAdapterFactory` but is named `KotlinJsonAdapter.kt`",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The file `KotlinJsonAdapter.kt` declares only the deprecated `KotlinJsonAdapterFactory`, so the file/declaration mismatch claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-f2f011be84beac1a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/-DnsMessageReader.kt",
+      "message": "File `okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/dns/-DnsMessageReader.kt` contains declaration `DnsMessageReader` but is named `-DnsMessageReader.kt`",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "okhttp's leading '-' hides the file's JVM class; the declaration matches the name otherwise.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-7188f6cb8486b533",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `TErr` at line 60 should be lowercase_with_underscores",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`TErr` is a module-level function in black's trans.py that is not lowercase_with_underscores."
+        }
+      ]
+    },
+    {
+      "id": "EA-235a6f82bc0851d4",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pgen2/literals.py",
+      "message": "Function `evalString` at line 44 should be lowercase_with_underscores",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`evalString` is vendored lib2to3 code in blib2to3 retaining the upstream API name, outside the project's naming scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-c0d6a7ff28ee24db",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pygram.py",
+      "message": "Type `_python_symbols` at line 32 should be CapWords",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_python_symbols` is a vendored lib2to3 internal class whose intentionally preserved name should not be renamed."
+        }
+      ]
+    },
+    {
+      "id": "EA-e303c369206f9f57",
+      "repository": "black",
+      "language": "python",
+      "path": "src/blib2to3/pygram.py",
+      "message": "Type `_pattern_symbols` at line 152 should be CapWords",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 152,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`_pattern_symbols` is likewise vendored lib2to3 code with an intentional internal name outside the project's naming rules."
+        }
+      ]
+    },
+    {
+      "id": "EA-dbcbb6f6c133a2ea",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/debughelpers.py",
+      "message": "Type `newcls` at line 90 should be CapWords",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "The name breaks the language convention (PEP 8, Kotlin file naming, .NET interface naming) without an external-API reason.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`newcls` is a dynamically created class immediately used as a variable (and renamed via __name__), an idiom the class-naming rule should exempt."
+        }
+      ]
+    },
+    {
+      "id": "EA-a2182a11fd99e7e3",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_status_codes.py",
+      "message": "Type `codes` at line 8 should be CapWords",
+      "status": "final",
+      "sampled_from": "t26-dataflow",
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "class codes deliberately mirrors the requests.codes public API (httpx.codes.OK); renaming it breaks callers, and PEP 8 defers to consistency with an existing API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`class codes(IntEnum)` is a lowercase class name, so the CapWords claim is factually correct even though deliberate."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The class name `codes` is lowercase, which violates the Python PEP8 CapWords convention for type/class names that the detector cites."
+        }
+      ]
+    },
+    {
+      "id": "EA-e21d93c23978d3e0",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urlparse.py",
+      "message": "Function `PERCENT` at line 478 should be lowercase_with_underscores",
+      "status": "corroborated",
+      "sampled_from": "t26-dataflow",
+      "line": 478,
+      "verdict": "true_positive",
+      "reason": "PERCENT is a private module-level helper function named in upper case; PEP 8 and pep8-naming N802 call for percent(), and nothing outside the module depends on the name.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`def PERCENT(string: str) -> str:` is a function, and Python naming convention requires lowercase_with_underscores, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 478 defines `def PERCENT(string: str)`, which is all-caps and violates lowercase_with_underscores in production httpx source."
+        }
+      ]
+    },
+    {
+      "id": "EA-885f49e6378f04b9",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/body.rs",
+      "message": "Type `hyper_body` at line 33 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 33,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-80479dc2f0cd85b3",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/body.rs",
+      "message": "Type `hyper_buf` at line 47 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-8862e9f1f0d5c843",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/body.rs",
+      "message": "Type `hyper_body_foreach_callback` at line 56 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 56,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ef0c816547574d69",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/body.rs",
+      "message": "Type `hyper_body_data_callback` at line 58 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 58,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-92eb8ae82476a46c",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/client.rs",
+      "message": "Type `hyper_clientconn_options` at line 24 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-3ba35e8fadb981d8",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/client.rs",
+      "message": "Type `hyper_clientconn` at line 71 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 71,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-cdfe065ac8502447",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/error.rs",
+      "message": "Type `hyper_error` at line 13 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-04807997e9729277",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/error.rs",
+      "message": "Type `hyper_code` at line 17 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-9d24c84007760561",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/http_types.rs",
+      "message": "Type `hyper_request` at line 31 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 31,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-514c07fb817fea17",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/http_types.rs",
+      "message": "Type `hyper_response` at line 51 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b377b18f5a4d7de3",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/http_types.rs",
+      "message": "Type `hyper_headers` at line 66 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 66,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-b3396886f5cba08d",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/http_types.rs",
+      "message": "Type `hyper_request_on_informational_callback` at line 78 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 78,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-45bb976c4024b9c3",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/http_types.rs",
+      "message": "Type `hyper_headers_foreach_callback` at line 431 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 431,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-cf8d8ab2c033a5f5",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/io.rs",
+      "message": "Type `hyper_io_read_callback` at line 16 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c300008bd3dffbf9",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/io.rs",
+      "message": "Type `hyper_io_write_callback` at line 18 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 18,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-3570402acbd0da81",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/io.rs",
+      "message": "Type `hyper_io` at line 35 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 35,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-81f51b6667760675",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/mod.rs",
+      "message": "Type `size_t` at line 92 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-d7b6bccc441e4786",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/task.rs",
+      "message": "Type `hyper_executor` at line 54 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-aa2680ea45e38d86",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/task.rs",
+      "message": "Type `hyper_task` at line 115 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 115,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-ce945769c795950c",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/task.rs",
+      "message": "Type `hyper_context` at line 131 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 131,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c361031b18516336",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/task.rs",
+      "message": "Type `hyper_waker` at line 156 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 156,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-424041ea50924476",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/ffi/task.rs",
+      "message": "Type `hyper_task_return_type` at line 162 should be UpperCamelCase",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "line": 162,
+      "verdict": "false_positive",
+      "reason": "C ABI type of the FFI module, which allows non_camel_case_types to match the generated C header.",
+      "labeller": "model:claude-opus-5-5"
+    }
+  ]
+}

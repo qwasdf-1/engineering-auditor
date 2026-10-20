@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "detector": "quadratic_front_removal",
+  "labels": [
+    {
+      "id": "EA-7cf6074db2466fa3",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Function `_first_right_hand_split` calls `inner_body_leaves.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "corroborated",
+      "sampled_from": "t20-b",
+      "line": 1159,
+      "verdict": "true_positive",
+      "reason": "inner_body_leaves is a list (list(body_leaves)) and the while loop pops its front once per hugged bracket level, shifting every remaining leaf each time; a deque or start index avoids the shifts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`inner_body_leaves.pop(0)` on a list copy of body_leaves occurs inside the `while` loop at line 1159, so the claim holds, although iterations are bounded by bracket nesting depth."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c5aec79f8fbd7a5",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Function `_first_right_hand_split` calls `inner_body_leaves.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "corroborated",
+      "sampled_from": "t20-b",
+      "line": 1161,
+      "verdict": "true_positive",
+      "reason": "Same loop: inner_body_leaves.pop(0) on a list inside the while loop shifts every remaining leaf on each hugged bracket level.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`inner_body_leaves.pop(0)` at line 1161 runs every iteration of the same `while` loop on a plain list, shifting all remaining leaves, though the loop count is only nesting depth."
+        }
+      ]
+    },
+    {
+      "id": "EA-e689208b7d958239",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/jsx/dom/render.ts",
+      "message": "Function `` calls `oldVChildren.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "corroborated",
+      "sampled_from": "t20-b",
+      "line": 587,
+      "verdict": "true_positive",
+      "reason": "oldVChildren.shift() drains the old children array across the reconciliation loop over new children, shifting the rest each time: O(n^2) in the child count.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`oldVChildren.shift()` at line 587 runs inside the `for` loop over children on an array copy (`[...node.vC]`), so the common all-match-first case shifts the array repeatedly."
+        }
+      ]
+    },
+    {
+      "id": "EA-a793d3376c94f751",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/trie-router/node.ts",
+      "message": "Function `search` calls `curNodesQueue.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "corroborated",
+      "sampled_from": "t20-b",
+      "line": 205,
+      "verdict": "true_positive",
+      "reason": "curNodesQueue is an array used as a FIFO queue and drained with shift() in the per-segment loop; each shift moves every queued entry.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`curNodesQueue.shift()` runs once per path-part iteration of the `for` loop on an array, so the claim holds, although the queue is small and bounded by path segment count."
+        }
+      ]
+    }
+  ]
+}

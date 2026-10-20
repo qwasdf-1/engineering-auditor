@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "suite_id": "engineering-auditor-layer6-production-escalation-v1",
+  "thresholds": {
+    "minimum_complete_ensemble_runs": 3,
+    "minimum_useful_ensemble_runs": 1,
+    "minimum_template_cases": 1,
+    "maximum_suppressed_minority_targets": 0,
+    "require_nonincreasing_post_union_disagreement": true
+  },
+  "template_matrices": {
+    "lifecycle_mismatch": {
+      "required_probe_slots": [
+        "repetition",
+        "input_equivalence",
+        "intervening_mutation",
+        "material_cost",
+        "consumer_distinction",
+        "wider_owner",
+        "invalidation_feasibility",
+        "retention_risk"
+      ],
+      "allowed_conclusions": [
+        "lifecycle_mismatch_substantiated",
+        "repetition_justified",
+        "impact_immaterial",
+        "wider_ownership_infeasible",
+        "insufficient_evidence"
+      ],
+      "allowed_closures": [
+        "resolved",
+        "resolved_with_uncertainty",
+        "not_substantiated",
+        "blocked_by_missing_evidence"
+      ]
+    },
+    "shared_root_cause": {
+      "required_probe_slots": [
+        "same_responsibility",
+        "shared_change_impact",
+        "mere_correlation",
+        "recommendation_conflict",
+        "coupling_increase",
+        "distinct_semantics",
+        "independent_actionability"
+      ],
+      "allowed_conclusions": [
+        "shared_root_cause",
+        "partial_overlap",
+        "independent_findings",
+        "correlation_only",
+        "insufficient_evidence"
+      ],
+      "allowed_closures": [
+        "resolved",
+        "resolved_with_uncertainty",
+        "not_substantiated",
+        "blocked_by_missing_evidence"
+      ]
+    },
+    "recommendation_consolidation": {
+      "required_probe_slots": [
+        "simultaneous_compatibility",
+        "abstraction_alignment",
+        "supersession",
+        "measured_property_regression",
+        "required_ordering",
+        "proportionality",
+        "deferral_appropriateness"
+      ],
+      "allowed_conclusions": [
+        "consolidated_action",
+        "sequenced_actions",
+        "preserved_independent_actions",
+        "narrowed_action",
+        "deferred_action",
+        "no_repository_specific_action"
+      ],
+      "allowed_closures": [
+        "resolved",
+        "resolved_with_uncertainty",
+        "not_substantiated",
+        "blocked_by_missing_evidence"
+      ]
+    }
+  }
+}

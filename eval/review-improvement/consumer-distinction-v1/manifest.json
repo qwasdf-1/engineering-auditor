@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "improvement_id": "consumer-distinction-downstream-callers-v1",
+  "observed_failure": "lifecycle-immutable-equivalent-input: Mistral Medium 3.5 answers consumer_distinction unknown because it cannot confirm that every downstream caller outside the cited source is visible, although the function's outputs are identical whether the sort runs once or on every iteration.",
+  "owned_asset": {
+    "path": "config/auditor/review-case-templates-v1.json",
+    "case_kind": "lifecycle_mismatch",
+    "probe_slot": "consumer_distinction",
+    "field": "negative_boundary",
+    "change": "append a downstream-caller observability clause; bump template bundle version 1 -> 2"
+  },
+  "baseline": {
+    "case_templates": {
+      "path": "config/auditor/review-case-templates-v1.json",
+      "digest": "sha256:5612c23435b0e7ebeac1a2536cef30a4cdc5bb23beef8ccdc44b5bf8d83ed7d6"
+    }
+  },
+  "candidate": {
+    "case_templates": {
+      "path": "eval/review-improvement/consumer-distinction-v1/candidate-case-templates.json",
+      "digest": "sha256:1ba3e3c44798546b890df04e2340c1f73592c2602055636b5d109087e22fd41f"
+    },
+    "frozen": false
+  },
+  "prompt_bundle": {
+    "path": "config/auditor/review-prompt-bundle-v2.json",
+    "digest": "sha256:681f3528758e17c2abecfa34c7498b780de1553e5dd0a23a2e1352f414321c3b"
+  },
+  "routes": {
+    "path": "eval/review-improvement/consumer-distinction-v1/routes.json",
+    "digest": "sha256:857b16bed87e7db8e955d1d46eba2046781aacf1801aa36d89b30f98eef10733"
+  },
+  "release_corpus": {
+    "path": "config/auditor/review-eval-corpus-v2.json",
+    "digest": "sha256:aac7fc6b00b429073a82fd5995b2dca2ab68d30d4d1f78146e38f39f0dc46e74"
+  },
+  "runs_per_case": 3,
+  "training_case_ids": [
+    "lifecycle-immutable-equivalent-input",
+    "lifecycle-intervening-mutation",
+    "lifecycle-distinct-configurations"
+  ],
+  "held_out_cases": [
+    {
+      "id": "heldout-visible-read-only-helper",
+      "fixture_kind": "visible_read_only_helper",
+      "generator": "tooling/review_eval/generate_lifecycle_heldout_repo.py",
+      "generator_digest": "sha256:aa7c121fdb38b8b0c647273052466927911fef0628621cfa6dbec0c13c880e93",
+      "generator_support": {
+        "path": "tooling/review_eval/generate_lifecycle_repo.py",
+        "digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713"
+      },
+      "source_digest": "sha256:b4155ae6c0893b867b62f9c3bc24e9615945935b326cb584430adb1b0d9f45c0",
+      "expectation_source": "lifecycle-immutable-equivalent-input",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": [
+            "yes"
+          ],
+          "input_equivalence": [
+            "yes"
+          ],
+          "intervening_mutation": [
+            "no",
+            "not_applicable"
+          ],
+          "consumer_distinction": [
+            "no",
+            "not_applicable"
+          ],
+          "retention_risk": [
+            "no",
+            "unknown"
+          ]
+        },
+        "allowed_closures": [
+          "resolved",
+          "resolved_with_uncertainty"
+        ],
+        "allowed_case_conclusions": [
+          "lifecycle_mismatch_substantiated"
+        ],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": [
+          "lifecycle_reownership"
+        ],
+        "forbidden_recommendation_families": [],
+        "evidence_gaps": [
+          "material cost lacks a bound runtime measurement"
+        ],
+        "requires_abstention": false,
+        "requires_useful_novel_action": true,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": null
+    },
+    {
+      "id": "heldout-separate-output-write",
+      "fixture_kind": "separate_output_write",
+      "generator": "tooling/review_eval/generate_lifecycle_heldout_repo.py",
+      "generator_digest": "sha256:aa7c121fdb38b8b0c647273052466927911fef0628621cfa6dbec0c13c880e93",
+      "generator_support": {
+        "path": "tooling/review_eval/generate_lifecycle_repo.py",
+        "digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713"
+      },
+      "source_digest": "sha256:a331dac8bfabc110c1e47e3076fe75e7edcbba1db709cbf68143d01719b20659",
+      "expectation_source": "lifecycle-immutable-equivalent-input",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": [
+            "yes"
+          ],
+          "input_equivalence": [
+            "yes"
+          ],
+          "intervening_mutation": [
+            "no",
+            "not_applicable"
+          ],
+          "consumer_distinction": [
+            "no",
+            "not_applicable"
+          ],
+          "retention_risk": [
+            "no",
+            "unknown"
+          ]
+        },
+        "allowed_closures": [
+          "resolved",
+          "resolved_with_uncertainty"
+        ],
+        "allowed_case_conclusions": [
+          "lifecycle_mismatch_substantiated"
+        ],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": [
+          "lifecycle_reownership"
+        ],
+        "forbidden_recommendation_families": [],
+        "evidence_gaps": [
+          "material cost lacks a bound runtime measurement"
+        ],
+        "requires_abstention": false,
+        "requires_useful_novel_action": true,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": null
+    },
+    {
+      "id": "heldout-visible-replacement-mutation",
+      "fixture_kind": "visible_replacement_mutation",
+      "generator": "tooling/review_eval/generate_lifecycle_heldout_repo.py",
+      "generator_digest": "sha256:aa7c121fdb38b8b0c647273052466927911fef0628621cfa6dbec0c13c880e93",
+      "generator_support": {
+        "path": "tooling/review_eval/generate_lifecycle_repo.py",
+        "digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713"
+      },
+      "source_digest": "sha256:179112accb17a2f77c337e67e7b79935ca4d68db07d0811acb3beee69aac1f10",
+      "expectation_source": "lifecycle-intervening-mutation",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": [
+            "yes"
+          ],
+          "input_equivalence": [
+            "no"
+          ],
+          "intervening_mutation": [
+            "yes"
+          ],
+          "consumer_distinction": [
+            "yes"
+          ]
+        },
+        "allowed_closures": [
+          "not_substantiated"
+        ],
+        "allowed_case_conclusions": [
+          "repetition_justified"
+        ],
+        "forbidden_claim_slots": [],
+        "required_recommendation_families": [
+          "explicit_retention_avoidance"
+        ],
+        "forbidden_recommendation_families": [
+          "lifecycle_reownership"
+        ],
+        "evidence_gaps": [],
+        "requires_abstention": false,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": null
+    },
+    {
+      "id": "heldout-opaque-trait-refresh",
+      "fixture_kind": "opaque_trait_refresh",
+      "generator": "tooling/review_eval/generate_lifecycle_heldout_repo.py",
+      "generator_digest": "sha256:aa7c121fdb38b8b0c647273052466927911fef0628621cfa6dbec0c13c880e93",
+      "generator_support": {
+        "path": "tooling/review_eval/generate_lifecycle_repo.py",
+        "digest": "sha256:ac19c6b052e3c321b1208bb0af4ac89a3f9ea609ea22b1f0c8a5f19c92cb3713"
+      },
+      "source_digest": "sha256:4cfdb896faeb5a9063020e7e0ecd11b62caccf909ea30ddb9ad8db75d360d5cb",
+      "expectation_source": "lifecycle-missing-evidence",
+      "expectations": {
+        "candidate_count": 1,
+        "probe_answers": {
+          "repetition": [
+            "yes"
+          ],
+          "input_equivalence": [
+            "unknown"
+          ],
+          "intervening_mutation": [
+            "unknown"
+          ],
+          "material_cost": [
+            "unknown"
+          ]
+        },
+        "allowed_closures": [
+          "blocked_by_missing_evidence"
+        ],
+        "allowed_case_conclusions": [
+          "insufficient_evidence"
+        ],
+        "forbidden_claim_slots": [
+          "lifecycle_conclusion"
+        ],
+        "required_recommendation_families": [
+          "measurement_before_change"
+        ],
+        "forbidden_recommendation_families": [
+          "lifecycle_reownership"
+        ],
+        "evidence_gaps": [
+          "runtime values and mutation behavior are opaque"
+        ],
+        "requires_abstention": true,
+        "requires_useful_novel_action": false,
+        "requires_unsupported_numeric_removal": false
+      },
+      "human_review": null
+    }
+  ],
+  "baseline_seed": {
+    "from_improvement": "intervening-mutation-negative-boundary-v1",
+    "reason": "The baseline arm is the production wording on the same binary (adapter 45), model, prompt bundle, and route digest, so its scored adapter-45 training runs are reused as this candidate's control; missing baseline runs are executed."
+  },
+  "decision_rules": [
+    "Both arms use the same cases, model, run count, prompt bundle, and routes; only the case templates differ.",
+    "The gate routes (Mistral Medium 3.5, mistral-medium-2604, adapter 45) decide every rule below.",
+    "Training: candidate consumer_distinction hits strictly exceed baseline on lifecycle-immutable-equivalent-input and are not lower on any training case.",
+    "Training: no training case loses exact-gate passes, and candidate forbidden outputs, unsafe recommendations, and finding mutations are zero.",
+    "The candidate is frozen (wording and digest fixed) before any held-out run; held-out results never revise it.",
+    "Held-out: candidate consumer_distinction hits are not lower than baseline on any held-out case with a consumer_distinction expectation, heldout-opaque-trait-refresh keeps every expected unknown in every candidate run, and safety counts stay zero.",
+    "Runs that end in provider, budget, qualification, or execution errors are rerun, not scored. Scored runs are reused only from a report whose arm, split, template digest, and route digest match.",
+    "Promotion requires operator approval of the held-out expectations and the results; this tool never writes active configuration."
+  ],
+  "outcome": {
+    "date": "2026-10-19",
+    "gate_model": "mistral-medium-2604 (adapter 45, prompt caching)",
+    "status": "rejected_at_training_gate",
+    "training": {
+      "lifecycle-immutable-equivalent-input": "candidate 2/3 vs baseline 3/3",
+      "lifecycle-distinct-configurations": "baseline 1/3; candidate not run (stopped once the gate could not pass)"
+    },
+    "failed_rules": [
+      "candidate consumer_distinction hits do not exceed and are lower than baseline on lifecycle-immutable-equivalent-input"
+    ],
+    "diagnosis": "On adapter 45 the baseline answers consumer distinction correctly on immutable input; the earlier consumer-distinction unknowns came from adapter-44 runs. Baseline distinct-configurations consumer distinction (1/3) is a separate weakness.",
+    "safety": "zero forbidden outputs, unsafe recommendations, finding mutations, and leaks in scored runs",
+    "held_out": "not run; the rules allow held-out runs only after a passed training gate"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "detector": "known_size_preallocation",
+  "labels": [
+    {
+      "id": "EA-c626b1c598cc3f29",
+      "repository": "chi",
+      "language": "go",
+      "path": "_examples/rest/main.go",
+      "message": "Function `NewArticleListResponse` grows `list` once per item in `articles`.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 379,
+      "verdict": "true_positive",
+      "reason": "Appends once per element of `articles` into an empty slice; `make(..., 0, len(articles))` applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The path `_examples/rest/main.go` is example code, which is outside the detector's stated scope, regardless of the preallocation claim being technically valid."
+        }
+      ]
+    },
+    {
+      "id": "EA-3c36f7388f8ae1ec",
+      "repository": "chi",
+      "language": "go",
+      "path": "middleware/route_headers.go",
+      "message": "Function `RouteAny` grows `patterns` once per item in `match`.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "Appends once per element of `match` into an empty slice; preallocation applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`patterns` is appended once per element of `match`, so its final size `len(match)` is known and could be preallocated."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`patterns := []Pattern{}` at route_headers.go:64 is grown by exactly one append per element of `match` in the loop below, so `len(match)` is a proven initial capacity."
+        }
+      ]
+    }
+  ]
+}

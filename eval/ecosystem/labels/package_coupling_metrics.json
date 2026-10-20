@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "detector": "package_coupling_metrics",
+  "labels": [
+    {
+      "id": "EA-c14144dc21a60552",
+      "repository": "axios",
+      "language": "repository",
+      "path": "lib",
+      "message": "Package `lib` has Ca=1, Ce=0, I=0.000, A=0.000, D=1.000.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Degenerate package graph (Ca=1, Ce=0); a single edge gives a meaningless distance of 1.0.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided to verify the package-wide counts (Ca=1, Ce=0, A=0) or to determine whether 'lib' is source, vendored, or build output."
+        }
+      ]
+    },
+    {
+      "id": "EA-8c3e5ea5223644c7",
+      "repository": "gin",
+      "language": "repository",
+      "path": "codec",
+      "message": "Package `codec` has Ca=3, Ce=0, I=0.000, A=0.429, D=0.571.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The package metrics are as stated: stable and concrete (distance from the main sequence over budget).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "With Ca=3, Ce=0, A=0.429, the distance D=|A+I-1|=0.571 matches the evidence, so the package is off the main sequence as claimed."
+        }
+      ]
+    },
+    {
+      "id": "EA-d7acdf0122c46f56",
+      "repository": "gin",
+      "language": "repository",
+      "path": "internal",
+      "message": "Package `internal` has Ca=3, Ce=0, I=0.000, A=0.000, D=1.000.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "The package metrics are as stated: stable and concrete (distance from the main sequence over budget).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "With A=0 and I=0, D=|A+I-1|=1.000 is consistent with the reported metrics, confirming the package lies outside the main sequence."
+        }
+      ]
+    },
+    {
+      "id": "EA-419e0ae6b0fbbd45",
+      "repository": "trpc",
+      "language": "repository",
+      "path": "packages/openapi",
+      "message": "Package `packages/openapi` has Ca=0, Ce=1, I=1.000, A=1.000, D=1.000.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Degenerate package graph (Ca=0, Ce=1) on 72% topology; abstractness 1.0 for a TS package is an artefact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "With no excerpt or file listing, the package-level metrics (A=1.000, I=1.000, Ce=1) for packages/openapi cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-d23d32ca3d0736fd",
+      "repository": "trpc",
+      "language": "repository",
+      "path": "packages/tanstack-react-query",
+      "message": "Package `packages/tanstack-react-query` has Ca=0, Ce=1, I=1.000, A=1.000, D=1.000.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Degenerate package graph (Ca=0, Ce=1) on 72% topology; abstractness 1.0 is an artefact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "Package-level abstraction/instability counts span the whole package and cannot be checked from the finding alone, which includes no excerpt."
+        }
+      ]
+    },
+    {
+      "id": "EA-3babe44102b8ffcd",
+      "repository": "zod",
+      "language": "repository",
+      "path": "scripts",
+      "message": "Package `scripts` has Ca=0, Ce=1, I=1.000, A=1.000, D=1.000.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Degenerate package graph for a scripts folder (Ca=0, Ce=1, 64% topology).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is given to confirm A=1.000 for the scripts directory or to determine whether it is build/tooling code outside the detector's scope."
+        }
+      ]
+    }
+  ]
+}

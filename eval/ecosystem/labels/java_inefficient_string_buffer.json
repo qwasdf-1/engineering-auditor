@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "detector": "java_inefficient_string_buffer",
+  "labels": [
+    {
+      "id": "EA-5ec838a98fde3ca5",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/builder/ToStringBuilder.java",
+      "message": "src/main/java/org/apache/commons/lang3/builder/ToStringBuilder.java constructs a StringBuffer at line 314 instead of a StringBuilder",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 314,
+      "verdict": "false_positive",
+      "reason": "The public API exposes a StringBuffer (getStringBuffer), so the type is required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`buffer` is a StringBuffer-typed field that is passed to `style.appendStart(buffer, object)`, so StringBuilder cannot substitute here."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac5253e63dcc10aa",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/CompositeFormat.java",
+      "message": "src/main/java/org/apache/commons/lang3/text/CompositeFormat.java uses StringBuffer instead of StringBuilder",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "No StringBuffer is constructed: a java.text.Format override, Javadoc, or a lookalike field name.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-4682763d399463f1",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "message": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java constructs a StringBuffer at line 3011 instead of a StringBuilder",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 3011,
+      "verdict": "false_positive",
+      "reason": "toStringBuffer() exists to return a StringBuffer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`public StringBuffer toStringBuffer()` returns StringBuffer by API contract, so the StringBuffer construction is required, not inefficient."
+        }
+      ]
+    },
+    {
+      "id": "EA-f8a73ba787dada0d",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/package-info.java",
+      "message": "src/main/java/org/apache/commons/lang3/text/package-info.java uses StringBuffer instead of StringBuilder",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "No StringBuffer is constructed: a java.text.Format override, Javadoc, or a lookalike field name.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a9a2201d83095ff1",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDateFormat.java",
+      "message": "src/main/java/org/apache/commons/lang3/time/FastDateFormat.java uses StringBuffer instead of StringBuilder",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "No StringBuffer is constructed: a java.text.Format override, Javadoc, or a lookalike field name.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-f73ee1a51179674f",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "message": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java constructs a StringBuffer at line 680 instead of a StringBuilder",
+      "status": "corroborated",
+      "sampled_from": "t16-h",
+      "line": 680,
+      "verdict": "false_positive",
+      "reason": "The type adapter for the StringBuffer class must construct one.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "This `read` method of the `StringBuffer` TypeAdapter must return a StringBuffer, so StringBuilder is not a valid replacement."
+        }
+      ]
+    },
+    {
+      "id": "EA-c6e25ded8fdd6502",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/JsonParserBase.java",
+      "message": "src/main/java/tools/jackson/core/json/JsonParserBase.java uses StringBuffer instead of StringBuilder",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "No StringBuffer is constructed: a java.text.Format override, Javadoc, or a lookalike field name.",
+      "labeller": "model:claude-opus-5-5"
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "detector": "section_divider_comment",
+  "labels": [
+    {
+      "id": "EA-a18e797351938cf5",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/conversions/to_chars.hpp",
+      "message": "Function `grisu2_round` contains 6 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 546,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: ASCII number-line diagram lines counted as section dividers (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Lines 554-562 form a single ASCII number-line diagram, not six section-divider comments."
+        }
+      ]
+    },
+    {
+      "id": "EA-99a87010368c0591",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/conversions/to_chars.hpp",
+      "message": "Function `grisu2_digit_gen` contains 3 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 587,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: ASCII number-line diagram lines counted as section dividers (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "Lines 597-599 are part of the same ASCII interval diagram, not section-divider comments."
+        }
+      ]
+    },
+    {
+      "id": "EA-37b3acd1595fca34",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/conversions/to_chars.hpp",
+      "message": "Function `grisu2` contains 4 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 828,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: ASCII number-line diagram lines counted as section dividers (fixed).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The visible counted lines 834 and 837 are ASCII interval diagrams, so the claimed four section-divider comments are a misparse."
+        }
+      ]
+    },
+    {
+      "id": "EA-36e4a4a127368b17",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/scanscalar.cpp",
+      "message": "Function `ScanScalar` contains 3 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "Comment dividers split one function into sections; separate functions would name them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Lines 36, 112 and 117 of ScanScalar are asterisk-line banner comments (\"// ****\" followed by \"Phase #1/#2/#3\" headings) dividing the function into phases: 3 dividers > 2, in production source."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Line 36 is a genuine `// ****` divider, but lines 112 and 117 are not shown in the excerpt, so the claimed count of 3 cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-6cd7823d9ed9f961",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `do_transform` contains 4 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1536,
+      "verdict": "true_positive",
+      "reason": "Comment dividers split one function into sections; separate functions would name them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "do_transform contains four \"# ---\" headed comments (Calculate Max Break Width, Construct next_value/next_leaf/next_line) delimiting phases inside one function."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the start of `do_transform`; the cited divider lines 1601, 1676, 1711, and 1716 lie outside the excerpt, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-a0f1c7587222c919",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "Function `do_transform` contains 3 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 2334,
+      "verdict": "true_positive",
+      "reason": "Comment dividers split one function into sections; separate functions would name them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "do_transform has \"# --- First Line\", \"# --- Middle (String) Line\", \"# --- Last Line\" dividers at lines 2363, 2394, 2446, each introducing a separate stage of one method."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the start of `do_transform`; the cited divider lines 2363, 2394, and 2446 lie outside the excerpt, so the count cannot be verified."
+        }
+      ]
+    },
+    {
+      "id": "EA-49533f4f7b5a6062",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urlparse.py",
+      "message": "Function `urlparse` contains 3 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "Function uses `# -----` underline section dividers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "Only the divider at line 215 is visible; lines 232 and 264 are outside the excerpt, so the claimed count of 3 cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 215 is a genuine decorative divider (the '# ----' underline under the 'Initial basic checks on allowable URLs.' header) in production module httpx/_urlparse.py, corroborating the evidence lines 215/232/264, and intentional sectioning still counts."
+        }
+      ]
+    },
+    {
+      "id": "EA-79222619fd125a68",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_utils.py",
+      "message": "Function `get_environment_proxies` contains 4 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "Flagged lines are ordinary prose comments (`NO_PROXY=...`, `all://*`), not dividers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The excerpt covers essentially all of the short get_environment_proxies function, whose only comment block is four lines of explanatory prose at 33-36 (not '# ----' dividers), so the count of 4 miscounts prose lines as dividers."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f31159613afb1cb",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum-macros/src/debug_handler.rs",
+      "message": "Function `expand` contains 4 section-divider comments (> 2).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 11,
+      "verdict": "false_positive",
+      "reason": "Flagged lines are `#ident` interpolations inside `quote!`, not comments.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "expand is a long proc-macro function and the claimed 4 dividers would lie past the excerpt window (lines 6-26 show only code and prose comments), so the count cannot be verified from what is shown."
+        }
+      ]
+    },
+    {
+      "id": "EA-57e40a32f85bf798",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "Function `on_upgrade` contains 3 section-divider comments (> 2).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 347,
+      "verdict": "false_positive",
+      "reason": "Flagged lines are `#[allow(...)]` attributes and a URL comment, not dividers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "on_upgrade continues well past the excerpt, which ends inside the still-open tokio::spawn(async move { ... }) block showing no divider comments, so the claimed 3 cannot be verified here."
+        }
+      ]
+    },
+    {
+      "id": "EA-6a03be2d23a507a5",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Function `test_context` contains 4 section-divider comments (> 2).",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1039,
+      "verdict": "false_positive",
+      "reason": "Flagged lines are prose comments mentioning `-A/-B`, not dividers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "test_context is annotated '#[cfg(test)]' and '#[test]' at lines 1037-1038, i.e. unit-test code, which is outside this detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-2d064545b4521ea3",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/hiargs.rs",
+      "message": "Function `from_low_args` contains 5 section-divider comments (> 2).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 980,
+      "verdict": "false_positive",
+      "reason": "Flagged lines are prose comments mentioning `-e/--regexp`, not dividers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "from_low_args extends far beyond the excerpt window; the visible region contains only normal multi-line prose comments (lines 984-995), and the claimed 5 dividers cannot be confirmed or refuted from the shown lines."
+        }
+      ]
+    },
+    {
+      "id": "EA-9465c5fb7ca3ab70",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/parse.rs",
+      "message": "Function `parse` contains 6 section-divider comments (> 2).",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 221,
+      "verdict": "false_positive",
+      "reason": "Flagged lines are prose comments mentioning `-h/--help` and `--context-separator`, not dividers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "parse contains a long lexopt parsing loop that continues past the excerpt, and the window (216-236) shows only doc and prose comments, so the count of 6 dividers cannot be verified."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4070 @@
+{
+  "schema_version": 1,
+  "detector": "large_file",
+  "labels": [
+    {
+      "id": "EA-0b971d175cde98e3",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/builtin.c",
+      "message": "source file has 1910 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1910 nonblank lines exceeds the 1500 strict threshold, matching the reported violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1910 nonblank lines vs threshold 1000 (EA 1910)"
+        }
+      ]
+    },
+    {
+      "id": "EA-9b225566a043171d",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/compile.c",
+      "message": "source file has 1237 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1237 nonblank lines exceeds the 1000 advisory threshold and falls below 1500, matching the advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1237 nonblank lines vs threshold 1000 (EA 1237)"
+        }
+      ]
+    },
+    {
+      "id": "EA-21562302383c14e7",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/execute.c",
+      "message": "source file has 1185 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1185 nonblank lines exceeds the 1000 advisory threshold and is below 1500, matching the advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1185 nonblank lines vs threshold 1000 (EA 1185)"
+        }
+      ]
+    },
+    {
+      "id": "EA-24ce51b90939daac",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv.c",
+      "message": "source file has 1786 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1786 nonblank lines exceeds the 1500 strict threshold, matching the reported violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1786 nonblank lines vs threshold 1000 (EA 1786)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f213e74e31a693c9",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_dtoa.c",
+      "message": "source file has 4083 nonblank lines.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Vendored David M. Gay dtoa implementation.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "4083 nonblank lines exceeds the 1500 strict threshold, matching the reported violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "4083 nonblank lines vs threshold 1000 (EA 4083)"
+        }
+      ]
+    },
+    {
+      "id": "EA-715de9487dd6d5ac",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/util.c",
+      "message": "source file has 1126 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/util.c is a real source file reported at 1126 nonblank lines, exceeding the 1000 advisory threshold with no scope exclusion."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1126 nonblank lines vs threshold 1000 (EA 1126)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6f56a68dfb616fa4",
+      "repository": "libuv",
+      "language": "c",
+      "path": "include/uv.h",
+      "message": "source file has 1749 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/uv.h is library source at 1749 nonblank lines, above the 1500 strict threshold as the finding states."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1749 nonblank lines vs threshold 1000 (EA 1749)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6980da62fc4ff151",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/aix.c",
+      "message": "source file has 1064 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/aix.c is in-scope source at 1064 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1064 nonblank lines vs threshold 1000 (EA 1064)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6af0069859f0fe22",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/core.c",
+      "message": "source file has 1646 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/core.c is in-scope source at 1646 nonblank lines, above the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1646 nonblank lines vs threshold 1000 (EA 1646)"
+        }
+      ]
+    },
+    {
+      "id": "EA-295725e6030a355a",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/fs.c",
+      "message": "source file has 1905 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/fs.c is in-scope source at 1905 nonblank lines, above the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1905 nonblank lines vs threshold 1000 (EA 1905)"
+        }
+      ]
+    },
+    {
+      "id": "EA-25498c3aec7a7a01",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/linux.c",
+      "message": "source file has 2204 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/linux.c is in-scope source at 2204 nonblank lines, above the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2204 nonblank lines vs threshold 1000 (EA 2204)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5c36d8c6b374f40f",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/stream.c",
+      "message": "source file has 1244 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/stream.c is in-scope source at 1244 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1244 nonblank lines vs threshold 1000 (EA 1244)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8e7c98bda29a0566",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/udp.c",
+      "message": "source file has 1197 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/unix/udp.c is in-scope source at 1197 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1197 nonblank lines vs threshold 1000 (EA 1197)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8605eb402b00098c",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs.c",
+      "message": "source file has 3139 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 3139 nonblank lines in src/win/fs.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3139 nonblank lines vs threshold 1000 (EA 3139)"
+        }
+      ]
+    },
+    {
+      "id": "EA-836d1eb1c62a41dd",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/pipe.c",
+      "message": "source file has 2235 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 2235 nonblank lines in src/win/pipe.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2235 nonblank lines vs threshold 1000 (EA 2235)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ffbb625da7b80992",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/process.c",
+      "message": "source file has 1199 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1199 nonblank lines in src/win/process.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1199 nonblank lines vs threshold 1000 (EA 1199)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f9fef4881c0d4e20",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tcp.c",
+      "message": "source file has 1401 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1401 nonblank lines in src/win/tcp.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1401 nonblank lines vs threshold 1000 (EA 1401)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5a611c8e898724cc",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tty.c",
+      "message": "source file has 2047 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 2047 nonblank lines in src/win/tty.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2047 nonblank lines vs threshold 1000 (EA 2047)"
+        }
+      ]
+    },
+    {
+      "id": "EA-23584d78ead34e4d",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/util.c",
+      "message": "source file has 1364 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1364 nonblank lines in src/win/util.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1364 nonblank lines vs threshold 1000 (EA 1364)"
+        }
+      ]
+    },
+    {
+      "id": "EA-934a49d3d5cdeafc",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/winapi.h",
+      "message": "source file has 3710 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 3710 nonblank lines in src/win/winapi.h cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3710 nonblank lines vs threshold 1000 (EA 3710)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7ac0d18b63fc1f53",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4.c",
+      "message": "source file has 2498 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 2498 nonblank lines in lib/lz4.c cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2498 nonblank lines vs threshold 1000 (EA 2498)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d6f8570723b29e20",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4frame.c",
+      "message": "source file has 1890 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/lz4frame.c is a source file reported at 1890 nonblank lines, above the 1500 strict threshold, so the large_file claim holds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1890 nonblank lines vs threshold 1000 (EA 1890)"
+        }
+      ]
+    },
+    {
+      "id": "EA-24bc9741465425f4",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "source file has 1969 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/lz4hc.c is a source file reported at 1969 nonblank lines, exceeding the strict threshold, matching the detector's claim."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1969 nonblank lines vs threshold 1000 (EA 1969)"
+        }
+      ]
+    },
+    {
+      "id": "EA-11fec3bc4dd9dce1",
+      "repository": "lz4",
+      "language": "c",
+      "path": "programs/lz4io.c",
+      "message": "source file has 2556 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "programs/lz4io.c is application source reported at 2556 nonblank lines, well above the threshold, so the finding is accurate."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2556 nonblank lines vs threshold 1000 (EA 2556)"
+        }
+      ]
+    },
+    {
+      "id": "EA-b5120f328a615c8a",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/unzip.c",
+      "message": "source file has 1608 nonblank lines.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "MiniZip, a separate third-party project bundled under contrib/.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "contrib/minizip/unzip.c is C source (not test/generated/build code) reported at 1608 nonblank lines above the strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1608 nonblank lines vs threshold 1000 (EA 1608)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5768e1f0338a4a79",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/zip.c",
+      "message": "source file has 1845 nonblank lines.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "MiniZip, a separate third-party project bundled under contrib/.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "contrib/minizip/zip.c is C source reported at 1845 nonblank lines, exceeding the 1500 strict threshold as claimed."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1845 nonblank lines vs threshold 1000 (EA 1845)"
+        }
+      ]
+    },
+    {
+      "id": "EA-785d045dc8e7d8d7",
+      "repository": "zlib",
+      "language": "c",
+      "path": "crc32.h",
+      "message": "source file has 9383 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Generated CRC table (\"Generated automatically by crc32.c\").",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1198d2faea456c90",
+      "repository": "zlib",
+      "language": "c",
+      "path": "deflate.c",
+      "message": "source file has 1966 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "deflate.c is source reported at 1966 nonblank lines above the strict threshold, so the detector's rationale applies."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1966 nonblank lines vs threshold 1000 (EA 1966)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f45505a9a6595544",
+      "repository": "zlib",
+      "language": "c",
+      "path": "inflate.c",
+      "message": "source file has 1328 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "inflate.c is source reported at 1328 nonblank lines, exceeding the advisory threshold as stated in the evidence."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1328 nonblank lines vs threshold 1000 (EA 1328)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c869167f9754a945",
+      "repository": "zlib",
+      "language": "c",
+      "path": "zlib.h",
+      "message": "source file has 1752 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "zlib.h is a real header file reported at 1752 nonblank lines above the strict threshold, so the large_file finding holds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1752 nonblank lines vs threshold 1000 (EA 1752)"
+        }
+      ]
+    },
+    {
+      "id": "EA-65182f89c5d99aa2",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/base.h",
+      "message": "source file has 2613 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/fmt/base.h is a real library source file with 2613 nonblank lines, exceeding the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2613 nonblank lines vs threshold 1000 (EA 2613)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8673474cf776f2b8",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/chrono.h",
+      "message": "source file has 2013 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/fmt/chrono.h is genuine library source with 2013 nonblank lines, consistent with the reported violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2013 nonblank lines vs threshold 1000 (EA 2013)"
+        }
+      ]
+    },
+    {
+      "id": "EA-e049b7892349a970",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/format-inl.h",
+      "message": "source file has 1782 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/fmt/format-inl.h is library source with 1782 nonblank lines, exceeding the 1500 threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1782 nonblank lines vs threshold 1000 (EA 1782)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f1e57b2039ea6994",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/format.h",
+      "message": "source file has 3930 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/fmt/format.h is library source with 3930 nonblank lines, well above the strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3930 nonblank lines vs threshold 1000 (EA 3930)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7199dfb80fab9fbc",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/db_impl.cc",
+      "message": "source file has 1400 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "db/db_impl.cc has 1400 nonblank lines, correctly placed in the 1000-1500 advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1400 nonblank lines vs threshold 1000 (EA 1400)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d8d40760017767ba",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/version_set.cc",
+      "message": "source file has 1407 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "db/version_set.cc has 1407 nonblank lines, correctly placed in the advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1407 nonblank lines vs threshold 1000 (EA 1407)"
+        }
+      ]
+    },
+    {
+      "id": "EA-eaa801ba550c61e7",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "source file has 2740 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/nlohmann/detail/input/binary_reader.hpp is library source with 2740 nonblank lines, exceeding the strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2740 nonblank lines vs threshold 1000 (EA 2740)"
+        }
+      ]
+    },
+    {
+      "id": "EA-1357b71ffc3f40da",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/lexer.hpp",
+      "message": "source file has 1450 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/nlohmann/detail/input/lexer.hpp has 1450 nonblank lines, correctly in the advisory tier above 1000."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1450 nonblank lines vs threshold 1000 (EA 1450)"
+        }
+      ]
+    },
+    {
+      "id": "EA-74457943f99b6cd2",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "source file has 1677 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/nlohmann/detail/output/binary_writer.hpp is first-party library source reported at 1677 nonblank lines, above the strict threshold, so the large-file claim holds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1677 nonblank lines vs threshold 1000 (EA 1677)"
+        }
+      ]
+    },
+    {
+      "id": "EA-abba3627bc5d27b5",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/json.hpp",
+      "message": "source file has 4630 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "include/nlohmann/json.hpp is the authored modular main header (the generated amalgamation lives under single_include/), reported at 4630 nonblank lines above threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "4630 nonblank lines vs threshold 1000 (EA 4630)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6ee5e8df5256c842",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/thirdparty/hedley/hedley.hpp",
+      "message": "source file has 1907 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Vendored Hedley header under thirdparty/.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-01d8ae8cb31005db",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/contrib/dragonbox.h",
+      "message": "source file has 3772 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Vendored copy of the dragonbox library (third-party header).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "src/contrib/dragonbox.h is a vendored third-party single-header library in a contrib directory, so the deletion/consolidation audit rationale does not apply to first-party code."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3772 nonblank lines vs threshold 1000 (EA 3772)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a9435ce3840dddec",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.Async.cs",
+      "message": "source file has 1265 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Dapper/SqlMapper.Async.cs is first-party library source reported at 1265 nonblank lines, exceeding the advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1265 nonblank lines vs threshold 1000 (EA 1265)"
+        }
+      ]
+    },
+    {
+      "id": "EA-e14efb43dfa20b92",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "source file has 3883 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Dapper/SqlMapper.cs is first-party library source reported at 3883 nonblank lines, well above the strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3883 nonblank lines vs threshold 1000 (EA 3883)"
+        }
+      ]
+    },
+    {
+      "id": "EA-9d3b2c2b83b64bda",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "source file has 1929 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs is authored library source reported at 1929 nonblank lines above the strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1929 nonblank lines vs threshold 1000 (EA 1929)"
+        }
+      ]
+    },
+    {
+      "id": "EA-edc5fd9485fefa22",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonConvert.cs",
+      "message": "source file has 1049 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Src/Newtonsoft.Json/JsonConvert.cs is authored library source reported at 1049 nonblank lines, exceeding the advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1049 nonblank lines vs threshold 1000 (EA 1049)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8a17d248d7318bc4",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonReader.cs",
+      "message": "source file has 1129 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Src/Newtonsoft.Json/JsonReader.cs is authored library source reported at 1129 nonblank lines, exceeding the advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1129 nonblank lines vs threshold 1000 (EA 1129)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d52ccfd69ea80373",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonSerializer.cs",
+      "message": "source file has 1106 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonSerializer.cs is genuine library source and its 1106 nonblank lines exceed the 1000 advisory threshold as stated."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1106 nonblank lines vs threshold 1000 (EA 1106)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2e188a8d35e4175d",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
+      "message": "source file has 1596 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonTextReader.Async.cs has 1596 nonblank lines, correctly exceeding the 1500 strict threshold and tiered violation."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1596 nonblank lines vs threshold 1000 (EA 1596)"
+        }
+      ]
+    },
+    {
+      "id": "EA-fa381b28b56af39b",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
+      "message": "source file has 2379 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonTextReader.cs at 2379 nonblank lines is well over the strict threshold, so the large-file claim holds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2379 nonblank lines vs threshold 1000 (EA 2379)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d4b4ada9105123f9",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextWriter.Async.cs",
+      "message": "source file has 1223 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonTextWriter.Async.cs has 1223 nonblank lines, exceeding the 1000 advisory threshold as reported."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1223 nonblank lines vs threshold 1000 (EA 1223)"
+        }
+      ]
+    },
+    {
+      "id": "EA-dd295630c97bfb36",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonWriter.Async.cs",
+      "message": "source file has 1616 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonWriter.Async.cs at 1616 nonblank lines exceeds the 1500 strict threshold consistent with its violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1616 nonblank lines vs threshold 1000 (EA 1616)"
+        }
+      ]
+    },
+    {
+      "id": "EA-93fa53299786b834",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonWriter.cs",
+      "message": "source file has 1592 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonWriter.cs has 1592 nonblank lines, over the strict threshold, and is library source in scope."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1592 nonblank lines vs threshold 1000 (EA 1592)"
+        }
+      ]
+    },
+    {
+      "id": "EA-18f144a8d8e74411",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
+      "message": "source file has 1086 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JContainer.cs at 1086 nonblank lines exceeds the 1000 advisory threshold as stated."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1086 nonblank lines vs threshold 1000 (EA 1086)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0c66d51677ef0553",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JToken.cs",
+      "message": "source file has 2515 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JToken.cs with 2515 nonblank lines is far above the strict threshold and is legitimate library source."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2515 nonblank lines vs threshold 1000 (EA 2515)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ab612ed3e6ca411f",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JValue.cs",
+      "message": "source file has 1097 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JValue.cs is a production source file reported at 1097 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1097 nonblank lines vs threshold 1000 (EA 1097)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5e63628b9e21eedd",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
+      "message": "source file has 1490 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "DefaultContractResolver.cs is production source at 1490 nonblank lines, over the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1490 nonblank lines vs threshold 1000 (EA 1490)"
+        }
+      ]
+    },
+    {
+      "id": "EA-bfccf47671c3aedc",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "source file has 2339 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonSerializerInternalReader.cs at 2339 nonblank lines exceeds the 1500 strict threshold, matching the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2339 nonblank lines vs threshold 1000 (EA 2339)"
+        }
+      ]
+    },
+    {
+      "id": "EA-867968694ca424bc",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalWriter.cs",
+      "message": "source file has 1083 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "JsonSerializerInternalWriter.cs is production source at 1083 nonblank lines, over the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1083 nonblank lines vs threshold 1000 (EA 1083)"
+        }
+      ]
+    },
+    {
+      "id": "EA-28a894a43d0ceb20",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "source file has 1429 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ConvertUtils.cs at 1429 nonblank lines exceeds the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1429 nonblank lines vs threshold 1000 (EA 1429)"
+        }
+      ]
+    },
+    {
+      "id": "EA-315bd56e54934e5b",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/LinqBridge.cs",
+      "message": "source file has 2501 nonblank lines.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Vendored LINQBridge backport (third-party code compiled only without LINQ).",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "LinqBridge.cs at 2501 nonblank lines exceeds the 1500 strict threshold, consistent with its violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2501 nonblank lines vs threshold 1000 (EA 2501)"
+        }
+      ]
+    },
+    {
+      "id": "EA-15e1833e32425f12",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs",
+      "message": "source file has 1017 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "ReflectionUtils.cs at 1017 nonblank lines just exceeds the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1017 nonblank lines vs threshold 1000 (EA 1017)"
+        }
+      ]
+    },
+    {
+      "id": "EA-b2a5ed34e72f2378",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Retry/AsyncRetrySyntax.cs",
+      "message": "source file has 1065 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Polly's AsyncRetrySyntax.cs at 1065 nonblank lines exceeds the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1065 nonblank lines vs threshold 1000 (EA 1065)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2cf3fc6c5a3ef39b",
+      "repository": "polly",
+      "language": "csharp",
+      "path": "src/Polly/Retry/AsyncRetryTResultSyntax.cs",
+      "message": "source file has 1101 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/Polly/Retry/AsyncRetryTResultSyntax.cs is a real source file reported at 1101 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1101 nonblank lines vs threshold 1000 (EA 1101)"
+        }
+      ]
+    },
+    {
+      "id": "EA-1dcd7cf446cc4433",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Core/Logger.cs",
+      "message": "source file has 1353 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/Serilog/Core/Logger.cs is a real source file reported at 1353 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1353 nonblank lines vs threshold 1000 (EA 1353)"
+        }
+      ]
+    },
+    {
+      "id": "EA-87e395eef84ec35c",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/ILogger.cs",
+      "message": "source file has 1284 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/Serilog/ILogger.cs is a real source file reported at 1284 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1284 nonblank lines vs threshold 1000 (EA 1284)"
+        }
+      ]
+    },
+    {
+      "id": "EA-95ce9390b136decd",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Log.cs",
+      "message": "source file has 1118 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/Serilog/Log.cs is a real source file reported at 1118 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1118 nonblank lines vs threshold 1000 (EA 1118)"
+        }
+      ]
+    },
+    {
+      "id": "EA-37b8e44e1fc61896",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "source file has 1273 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "tea.go is a real source file reported at 1273 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1273 nonblank lines vs threshold 1000 (EA 1273)"
+        }
+      ]
+    },
+    {
+      "id": "EA-3eec4c10941284fd",
+      "repository": "cobra",
+      "language": "go",
+      "path": "command.go",
+      "message": "source file has 1796 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "command.go is a real source file reported at 1796 nonblank lines, exceeding the 1500 strict threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "command.go is in-scope library source and 1796 nonblank lines exceeds the 1500-line strict threshold (violation tier)."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1796 nonblank lines vs threshold 1000 (EA 1796)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5a218e6f9640a3e3",
+      "repository": "gin",
+      "language": "go",
+      "path": "context.go",
+      "message": "source file has 1276 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "context.go is a real source file reported at 1276 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1276 nonblank lines vs threshold 1000 (EA 1276)"
+        }
+      ]
+    },
+    {
+      "id": "EA-deb78842268ea0a7",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/ArrayUtils.java",
+      "message": "source file has 9428 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/apache/commons/lang3/ArrayUtils.java is a real source file reported at 9428 nonblank lines, exceeding the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "9428 nonblank lines vs threshold 1000 (EA 9428)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0de6527b5e1e5d18",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/BooleanUtils.java",
+      "message": "source file has 1198 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 1198 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1198 nonblank lines vs threshold 1000 (EA 1198)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2fe812dd016877c5",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Strings.java",
+      "message": "source file has 1414 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 1414 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1414 nonblank lines vs threshold 1000 (EA 1414)"
+        }
+      ]
+    },
+    {
+      "id": "EA-24e461c340dc039f",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Validate.java",
+      "message": "source file has 1289 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 1289 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1289 nonblank lines vs threshold 1000 (EA 1289)"
+        }
+      ]
+    },
+    {
+      "id": "EA-739af19dc6182e10",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/builder/ToStringBuilder.java",
+      "message": "source file has 1091 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 1091 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1091 nonblank lines vs threshold 1000 (EA 1091)"
+        }
+      ]
+    },
+    {
+      "id": "EA-79fecf84ca375c36",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/builder/ToStringStyle.java",
+      "message": "source file has 2158 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 2158 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2158 nonblank lines vs threshold 1000 (EA 2158)"
+        }
+      ]
+    },
+    {
+      "id": "EA-009365539f5095ed",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/exception/ExceptionUtils.java",
+      "message": "source file has 1173 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 1173 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1173 nonblank lines vs threshold 1000 (EA 1173)"
+        }
+      ]
+    },
+    {
+      "id": "EA-3ea0273e04e4f55c",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java",
+      "message": "source file has 1728 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 1728 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1728 nonblank lines vs threshold 1000 (EA 1728)"
+        }
+      ]
+    },
+    {
+      "id": "EA-fa3ac138c272a7c1",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/text/StrBuilder.java",
+      "message": "source file has 2899 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided to verify the reported 2899 nonblank lines."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2899 nonblank lines vs threshold 1000 (EA 2899)"
+        }
+      ]
+    },
+    {
+      "id": "EA-af2bcb8fe928c8be",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/DateUtils.java",
+      "message": "source file has 1864 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The file is production source (src/main/java) with 1864 nonblank lines, exceeding the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1864 nonblank lines vs threshold 1000 (EA 1864)"
+        }
+      ]
+    },
+    {
+      "id": "EA-b2715d75f9f8abf5",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/FastDatePrinter.java",
+      "message": "source file has 1442 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1442 nonblank lines exceeds the 1000 advisory threshold and the file is production source in scope."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1442 nonblank lines vs threshold 1000 (EA 1442)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ff0c5ce49abc804b",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "message": "source file has 1196 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1196 nonblank lines exceeds the 1000 advisory threshold for this in-scope production source file."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Gson.java is handwritten library source, and 1196 nonblank lines exceeds the 1000-line advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1196 nonblank lines vs threshold 1000 (EA 1196)"
+        }
+      ]
+    },
+    {
+      "id": "EA-be77391879178ca6",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/GsonBuilder.java",
+      "message": "source file has 1011 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1011 nonblank lines exceeds the 1000 advisory threshold for this in-scope production source file."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "GsonBuilder.java is handwritten library source, and 1011 nonblank lines exceeds the 1000-line advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1011 nonblank lines vs threshold 1000 (EA 1011)"
+        }
+      ]
+    },
+    {
+      "id": "EA-b4f221a98b3119a0",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "message": "source file has 1764 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1764 nonblank lines exceeds the 1500 strict threshold for this in-scope production source file."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "gson/src/main/java/com/google/gson/stream/JsonReader.java is core main-tree Java source, and the reported 1764 nonblank lines exceed the 1000-line advisory threshold, so the detector's claim and scope both apply."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1764 nonblank lines vs threshold 1000 (EA 1764)"
+        }
+      ]
+    },
+    {
+      "id": "EA-fadf9c457c9d84b3",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/JsonGenerator.java",
+      "message": "source file has 2370 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "2370 nonblank lines exceeds the 1500 strict threshold for this in-scope production source file."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2370 nonblank lines vs threshold 1000 (EA 2370)"
+        }
+      ]
+    },
+    {
+      "id": "EA-9c89def0c584c209",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/TokenStreamFactory.java",
+      "message": "source file has 1317 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1317 nonblank lines exceeds the 1000 advisory threshold for this in-scope production source file."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1317 nonblank lines vs threshold 1000 (EA 1317)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6a423b3cd855c590",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/base/ParserBase.java",
+      "message": "source file has 1067 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "1067 nonblank lines exceeds the 1000 advisory threshold for this in-scope production source file."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1067 nonblank lines vs threshold 1000 (EA 1067)"
+        }
+      ]
+    },
+    {
+      "id": "EA-87f8ea00a43aa4d2",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/ReaderBasedJsonParser.java",
+      "message": "source file has 3047 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 3047 nonblank-line count for ReaderBasedJsonParser.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3047 nonblank lines vs threshold 1000 (EA 3047)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5cf5acf0c0db3f61",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8DataInputJsonParser.java",
+      "message": "source file has 3053 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 3053 nonblank-line count for UTF8DataInputJsonParser.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3053 nonblank lines vs threshold 1000 (EA 3053)"
+        }
+      ]
+    },
+    {
+      "id": "EA-70b4aa385680ad3d",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/UTF8StreamJsonParser.java",
+      "message": "source file has 4289 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 4289 nonblank-line count for UTF8StreamJsonParser.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "4289 nonblank lines vs threshold 1000 (EA 4289)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0e67d6e0adc4b0d2",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/WriterBasedJsonGenerator.java",
+      "message": "source file has 2039 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 2039 nonblank-line count for WriterBasedJsonGenerator.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2039 nonblank lines vs threshold 1000 (EA 2039)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d815898a8e1abf65",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/json/async/NonBlockingUtf8JsonParserBase.java",
+      "message": "source file has 3170 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 3170 nonblank-line count for NonBlockingUtf8JsonParserBase.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3170 nonblank lines vs threshold 1000 (EA 3170)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c2a16937a2325b04",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/sym/ByteQuadsCanonicalizer.java",
+      "message": "source file has 1308 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 1308 nonblank-line count for ByteQuadsCanonicalizer.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1308 nonblank lines vs threshold 1000 (EA 1308)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f00740067bba8054",
+      "repository": "jackson-core",
+      "language": "java",
+      "path": "src/main/java/tools/jackson/core/util/TextBuffer.java",
+      "message": "source file has 1126 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 1126 nonblank-line count for TextBuffer.java cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1126 nonblank lines vs threshold 1000 (EA 1126)"
+        }
+      ]
+    },
+    {
+      "id": "EA-244493690a6bb5f0",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "message": "source file has 1286 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the 1286 nonblank-line count for HttpConnection.java cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/helper/HttpConnection.java is production main-tree source, and 1286 nonblank lines correctly exceeds the 1000-line advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1286 nonblank lines vs threshold 1000 (EA 1286)"
+        }
+      ]
+    },
+    {
+      "id": "EA-93272f448b928d9b",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/nodes/Element.java",
+      "message": "source file has 1966 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/nodes/Element.java is application source and its reported 1966 nonblank lines exceed the 1500 strict threshold, so the size claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/nodes/Element.java is main-tree source, and 1966 nonblank lines exceeds both the 1000-line advisory and 1500-line strict thresholds, matching the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1966 nonblank lines vs threshold 1000 (EA 1966)"
+        }
+      ]
+    },
+    {
+      "id": "EA-86248e413af26373",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilder.java",
+      "message": "source file has 1036 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/parser/HtmlTreeBuilder.java is application source and its reported 1036 nonblank lines exceed the 1000 advisory threshold as stated."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/parser/HtmlTreeBuilder.java is main-tree parser source, and 1036 nonblank lines surpasses the 1000-line advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1036 nonblank lines vs threshold 1000 (EA 1036)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7d2700ec643efc08",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "message": "source file has 1863 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java is application source and its reported 1863 nonblank lines exceed the 1500 strict threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java is main-tree parser source, and 1863 nonblank lines exceeds the strict threshold, consistent with the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1863 nonblank lines vs threshold 1000 (EA 1863)"
+        }
+      ]
+    },
+    {
+      "id": "EA-fcf647cec1439316",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/TokeniserState.java",
+      "message": "source file has 1803 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/parser/TokeniserState.java is hand-written application source and its reported 1803 nonblank lines exceed the strict threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "src/main/java/org/jsoup/parser/TokeniserState.java is main-tree parser source, and 1803 nonblank lines exceeds the strict threshold, consistent with the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1803 nonblank lines vs threshold 1000 (EA 1803)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c049c7521c93892f",
+      "repository": "moshi",
+      "language": "java",
+      "path": "moshi/src/main/java/com/squareup/moshi/JsonUtf8Reader.java",
+      "message": "source file has 1139 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "moshi/src/main/java/com/squareup/moshi/JsonUtf8Reader.java is library source and its reported 1139 nonblank lines exceed the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1139 nonblank lines vs threshold 1000 (EA 1139)"
+        }
+      ]
+    },
+    {
+      "id": "EA-40e968f5e700aeba",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/adapters/http.js",
+      "message": "source file has 1305 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/adapters/http.js is axios production source and its reported 1305 nonblank lines exceed the advisory threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "lib/adapters/http.js is a production library file (not a test, fixture, or build artifact), and 1305 nonblank lines exceed the 1000-line advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1305 nonblank lines vs threshold 1000 (EA 1305)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a00127f5133437de",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "lib/utils.js",
+      "message": "source file has 1013 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/utils.js is axios production source and its reported 1013 nonblank lines exceed the 1000 advisory threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "lib/utils.js is a production library file, and 1013 nonblank lines just exceeds the 1000-line advisory threshold, so the claim applies."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1013 nonblank lines vs threshold 1000 (EA 1013)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6800352d6d3e6af4",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint-helpers.js",
+      "message": "source file has 1287 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/eslint/eslint-helpers.js is ESLint core library source (not test/fixture/build script) and its reported 1287 nonblank lines exceed the advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1287 nonblank lines vs threshold 1000 (EA 1287)"
+        }
+      ]
+    },
+    {
+      "id": "EA-28d735e3a345d3a8",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint.js",
+      "message": "source file has 1230 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 1230 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1230 nonblank lines vs threshold 1000 (EA 1230)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4dc34f3a1dad32e0",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/languages/js/source-code/source-code.js",
+      "message": "source file has 1052 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 1052 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1052 nonblank lines vs threshold 1000 (EA 1052)"
+        }
+      ]
+    },
+    {
+      "id": "EA-e391b15f95892540",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/code-path-analysis/code-path-state.js",
+      "message": "source file has 2097 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 2097 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2097 nonblank lines vs threshold 1000 (EA 2097)"
+        }
+      ]
+    },
+    {
+      "id": "EA-4ada378d70fa01fa",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/linter.js",
+      "message": "source file has 1467 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 1467 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1467 nonblank lines vs threshold 1000 (EA 1467)"
+        }
+      ]
+    },
+    {
+      "id": "EA-b7cd875d62789114",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rule-tester/rule-tester.js",
+      "message": "source file has 1820 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 1820 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1820 nonblank lines vs threshold 1000 (EA 1820)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c848f9e947816335",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent-legacy.js",
+      "message": "source file has 1221 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 1221 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1221 nonblank lines vs threshold 1000 (EA 1221)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c43034a1a611e279",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/indent.js",
+      "message": "source file has 2110 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 2110 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2110 nonblank lines vs threshold 1000 (EA 2110)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ebd4ce66f3fa1ad5",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/no-extra-parens.js",
+      "message": "source file has 1494 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No excerpt is provided, so the claimed 1494 nonblank lines cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1494 nonblank lines vs threshold 1000 (EA 1494)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ea73bd82b8bdc4b6",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/no-unused-vars.js",
+      "message": "source file has 1605 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/rules/no-unused-vars.js is an in-scope source file reported at 1605 nonblank lines, exceeding the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1605 nonblank lines vs threshold 1000 (EA 1605)"
+        }
+      ]
+    },
+    {
+      "id": "EA-220423243f6c9ac1",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/rules/utils/ast-utils.js",
+      "message": "source file has 2683 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "lib/rules/utils/ast-utils.js is in-scope production source at 2683 nonblank lines, well over the violation threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2683 nonblank lines vs threshold 1000 (EA 2683)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c9131605db928b66",
+      "repository": "fastify",
+      "language": "javascript",
+      "path": "lib/config-validator.js",
+      "message": "source file has 1263 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Generated validator code (\"autogenerated by build/build-validation.js, do not edit\").",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-33d8cedaf52f0f5a",
+      "repository": "immer",
+      "language": "javascript",
+      "path": "perf-testing/immutability-benchmarks.mjs",
+      "message": "source file has 1155 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Benchmark script (perf-testing), outside production scope.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-1dcc8786b8eea534",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver/src/main/kotlin/mockwebserver3/MockWebServer.kt",
+      "message": "source file has 1162 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "MockWebServer.kt is an in-scope main source file at 1162 nonblank lines, exceeding the 1000 advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1162 nonblank lines vs threshold 1000 (EA 1162)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f74402f6f9553fe8",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/HttpUrl.kt",
+      "message": "source file has 1690 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "HttpUrl.kt is in-scope main source at 1690 nonblank lines, above the 1500 strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1690 nonblank lines vs threshold 1000 (EA 1690)"
+        }
+      ]
+    },
+    {
+      "id": "EA-a093464700c41558",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+      "message": "source file has 1258 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "OkHttpClient.kt is in-scope main source at 1258 nonblank lines, exceeding the advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1258 nonblank lines vs threshold 1000 (EA 1258)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2ab200d3f880a833",
+      "repository": "okio",
+      "language": "kotlin",
+      "path": "okio/src/commonMain/kotlin/okio/internal/Buffer.kt",
+      "message": "source file has 1486 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "okio Buffer.kt is in-scope commonMain source at 1486 nonblank lines, above the advisory threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1486 nonblank lines vs threshold 1000 (EA 1486)"
+        }
+      ]
+    },
+    {
+      "id": "EA-80ff88f5d2569c69",
+      "repository": "black",
+      "language": "python",
+      "path": "profiling/dict_big.py",
+      "message": "source file has 8001 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Profiling input data for the formatter benchmark, not production code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a11e437cd4ddd1b0",
+      "repository": "black",
+      "language": "python",
+      "path": "profiling/dict_huge.py",
+      "message": "source file has 41440 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Profiling input data for the formatter benchmark, not production code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-60223224b66a3621",
+      "repository": "black",
+      "language": "python",
+      "path": "profiling/list_big.py",
+      "message": "source file has 4000 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Profiling input data for the formatter benchmark, not production code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-385213e53cb093d8",
+      "repository": "black",
+      "language": "python",
+      "path": "profiling/list_huge.py",
+      "message": "source file has 22431 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Profiling input data for the formatter benchmark, not production code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-a15d78e79a39c049",
+      "repository": "black",
+      "language": "python",
+      "path": "profiling/mix_big.py",
+      "message": "source file has 1002 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Profiling input data for the formatter benchmark, not production code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-c800256775fe2090",
+      "repository": "black",
+      "language": "python",
+      "path": "profiling/mix_huge.py",
+      "message": "source file has 7692 nonblank lines.",
+      "status": "pre_label",
+      "sampled_from": "t16-e",
+      "verdict": "false_positive",
+      "reason": "Profiling input data for the formatter benchmark, not production code.",
+      "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-7f20a87749f9a0ba",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/__init__.py",
+      "message": "source file has 1697 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/black/__init__.py is in-scope production source at 1697 nonblank lines, above the strict threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1697 nonblank lines vs threshold 1000 (EA 1697)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d4a95c280844ecae",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "source file has 2318 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/black/linegen.py is in-scope production source at 2318 nonblank lines, well over the violation threshold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2318 nonblank lines vs threshold 1000 (EA 2318)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6a02960b6c783fe1",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/lines.py",
+      "message": "source file has 1565 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/black/lines.py has 1565 nonblank lines, exceeding both the 1000 advisory and 1500 strict thresholds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1565 nonblank lines vs threshold 1000 (EA 1565)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d6bf37476963c628",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/trans.py",
+      "message": "source file has 2263 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/black/trans.py has 2263 nonblank lines, well above the 1500 strict threshold, so the large-file claim holds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2263 nonblank lines vs threshold 1000 (EA 2263)"
+        }
+      ]
+    },
+    {
+      "id": "EA-bde67de4c85c2c45",
+      "repository": "flask",
+      "language": "python",
+      "path": "src/flask/app.py",
+      "message": "source file has 1253 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/flask/app.py has 1253 nonblank lines, exceeding the 1000 advisory threshold, matching the advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1253 nonblank lines vs threshold 1000 (EA 1253)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6cd76d638cfb023e",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "source file has 1770 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_client.py has 1770 nonblank lines, exceeding the 1500 strict threshold as a violation."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_client.py is core library source and 1770 nonblank lines exceeds the 1500 strict threshold, so the violation tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1770 nonblank lines vs threshold 1000 (EA 1770)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5f63bf703d850a23",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "source file has 1106 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_models.py has 1106 nonblank lines, exceeding the 1000 advisory threshold, matching the advisory tier."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_models.py is library source and 1106 nonblank lines is above the 1000 advisory threshold but below 1500, so the advisory tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1106 nonblank lines vs threshold 1000 (EA 1106)"
+        }
+      ]
+    },
+    {
+      "id": "EA-db3b155ea27768fc",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_emoji_codes.py",
+      "message": "source file has 3610 nonblank lines.",
+      "status": "final",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Generated emoji data table.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "rich/_emoji_codes.py is library source and 3610 nonblank lines exceeds the 1500 strict threshold, so the violation tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3610 nonblank lines vs threshold 1000 (EA 3610)"
+        }
+      ]
+    },
+    {
+      "id": "EA-80118f2ca8dffe0b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "source file has 2312 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/console.py has 2312 nonblank lines, far above the 1500 strict threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "rich/console.py is library source and 2312 nonblank lines exceeds the 1500 strict threshold, so the violation tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2312 nonblank lines vs threshold 1000 (EA 2312)"
+        }
+      ]
+    },
+    {
+      "id": "EA-0705b427056d084f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "source file has 1457 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/progress.py has 1457 nonblank lines, exceeding the 1000 advisory threshold and correctly tiered advisory."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "rich/progress.py is library source and 1457 nonblank lines is above the 1000 advisory threshold but below 1500, so the advisory tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1457 nonblank lines vs threshold 1000 (EA 1457)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c3f8c1b5890c0cf7",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "source file has 1171 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/text.py has 1171 nonblank lines, exceeding the 1000 advisory threshold and correctly tiered advisory."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "rich/text.py is library source and 1171 nonblank lines is above the 1000 advisory threshold but below 1500, so the advisory tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1171 nonblank lines vs threshold 1000 (EA 1171)"
+        }
+      ]
+    },
+    {
+      "id": "EA-82e987003bf4ccf0",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/ws.rs",
+      "message": "source file has 1128 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1128 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "axum/src/extract/ws.rs is library source and 1128 nonblank lines is above the 1000 advisory threshold but below 1500, so the advisory tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1128 nonblank lines vs threshold 1000 (EA 1128)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5639365f81e07d43",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/method_routing.rs",
+      "message": "source file has 1518 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1518 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "axum/src/routing/method_routing.rs is library source and 1518 nonblank lines exceeds the 1500 strict threshold, so the violation tier is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1518 nonblank lines vs threshold 1000 (EA 1518)"
+        }
+      ]
+    },
+    {
+      "id": "EA-81b524be59f84add",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/conn.rs",
+      "message": "source file has 1282 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1282 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1282 nonblank lines vs threshold 1000 (EA 1282)"
+        }
+      ]
+    },
+    {
+      "id": "EA-c93a8318679f0949",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/decode.rs",
+      "message": "source file has 1178 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1178 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1178 nonblank lines vs threshold 1000 (EA 1178)"
+        }
+      ]
+    },
+    {
+      "id": "EA-2c6c629003728b23",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "source file has 3276 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 3276 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3276 nonblank lines vs threshold 1000 (EA 3276)"
+        }
+      ]
+    },
+    {
+      "id": "EA-47e2ab163235af84",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "source file has 6871 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 6871 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The excerpt-independent claim that crates/core/flags/defs.rs has 6871 nonblank lines exceeds the 1500-line strict threshold, matching the reported 'violation' tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "6871 nonblank lines vs threshold 1000 (EA 6871)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6a6698462ab25c92",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/hiargs.rs",
+      "message": "source file has 1411 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1411 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1411 nonblank lines is above the 1000-line advisory threshold and below the 1500-line strict threshold, so the 'advisory' tier claim for hiargs.rs holds."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1411 nonblank lines vs threshold 1000 (EA 1411)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8fc0bf4facb420d0",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "source file has 1570 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "No source excerpt is provided, so the reported 1570 nonblank-line count cannot be verified."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1570 nonblank lines in crates/globset/src/glob.rs exceeds the 1500-line strict threshold, consistent with the reported 'violation' tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1570 nonblank lines vs threshold 1000 (EA 1570)"
+        }
+      ]
+    },
+    {
+      "id": "EA-488efd2d0284c88b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/lib.rs",
+      "message": "source file has 1145 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 1145 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1145 nonblank lines is above the advisory threshold but under the strict threshold, so the advisory finding for crates/globset/src/lib.rs is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1145 nonblank lines vs threshold 1000 (EA 1145)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f614b6757da13709",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/dir.rs",
+      "message": "source file has 1478 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 1478 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1478 nonblank lines in crates/ignore/src/dir.rs exceeds the 1000-line advisory threshold, making the advisory claim factually correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1478 nonblank lines vs threshold 1000 (EA 1478)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f7c47384fb4d39fd",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/ignore/src/walk.rs",
+      "message": "source file has 2392 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 2392 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "2392 nonblank lines in crates/ignore/src/walk.rs exceeds the 1500-line strict threshold, so the violation claim is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2392 nonblank lines vs threshold 1000 (EA 2392)"
+        }
+      ]
+    },
+    {
+      "id": "EA-99cec953c327e3cb",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/matcher/src/lib.rs",
+      "message": "source file has 1269 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 1269 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1269 nonblank lines in crates/matcher/src/lib.rs exceeds the advisory threshold and is under the strict threshold, matching the reported advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1269 nonblank lines vs threshold 1000 (EA 1269)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8a369dcbe90aefa7",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/hyperlink/mod.rs",
+      "message": "source file has 1076 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 1076 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1076 nonblank lines in crates/printer/src/hyperlink/mod.rs exceeds the 1000-line advisory threshold, so the advisory finding is correct."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1076 nonblank lines vs threshold 1000 (EA 1076)"
+        }
+      ]
+    },
+    {
+      "id": "EA-d6e7008630498f15",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "source file has 3688 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 3688 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "standard.rs is ordinary first-party crate source with no test/generated/fixture scope exclusion, and 3688 nonblank lines is consistent with the 1500-line violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "3688 nonblank lines vs threshold 1000 (EA 3688)"
+        }
+      ]
+    },
+    {
+      "id": "EA-517eea88f8bc2d56",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/summary.rs",
+      "message": "source file has 1061 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 1061 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "summary.rs is ordinary first-party source in the printer crate, and 1061 nonblank lines exceeds the 1000-line advisory threshold with a consistent tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1061 nonblank lines vs threshold 1000 (EA 1061)"
+        }
+      ]
+    },
+    {
+      "id": "EA-810749000e937876",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "source file has 1397 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The finding reports 1397 nonblank lines but no source excerpt is provided to verify the count."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "searcher/glue.rs is ordinary first-party source with no scope exclusion, and 1397 nonblank lines exceeds the 1000-line advisory threshold with a consistent tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1397 nonblank lines vs threshold 1000 (EA 1397)"
+        }
+      ]
+    },
+    {
+      "id": "EA-5a8f40ae6507652b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/mod.rs",
+      "message": "source file has 1005 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "crates/searcher/src/searcher/mod.rs is hand-written production source exceeding the advisory threshold, so the claim and rationale apply."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "searcher/mod.rs is ordinary first-party source with no scope exclusion, and 1005 nonblank lines exceeds the 1000-line threshold with a consistent advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1005 nonblank lines vs threshold 1000 (EA 1005)"
+        }
+      ]
+    },
+    {
+      "id": "EA-97ed7dcdf72ddb89",
+      "repository": "eslint",
+      "language": "typescript",
+      "path": "lib/types/index.d.ts",
+      "message": "source file has 1312 nonblank lines.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "lib/types/index.d.ts is a generated TypeScript declaration file (build output), which is outside the detector's scope."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1312 nonblank lines vs threshold 1000 (EA 1312)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8c82d0f8401d8602",
+      "repository": "eslint",
+      "language": "typescript",
+      "path": "lib/types/rules.d.ts",
+      "message": "source file has 5324 nonblank lines.",
+      "status": "final",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "lib/types/rules.d.ts is an emitted .d.ts declaration file generated by the build, outside the detector's scope."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "5324 nonblank lines vs threshold 1000 (EA 5324)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f4376cc98a2b6805",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/types.ts",
+      "message": "source file has 2660 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "verdict": "true_positive",
+      "reason": "First-party source over the nonblank-line budget; the recount confirms the size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "src/types.ts is hand-written application source at 2660 lines, so the large-file claim holds in scope."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2660 nonblank lines vs threshold 1000 (EA 2660)"
+        }
+      ]
+    },
+    {
+      "id": "EA-6ffd741b28d8ac4a",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/openapi/src/generate.ts",
+      "message": "source file has 1576 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/openapi/src/generate.ts is the package's own hand-written source, not generated output, so the large-file finding applies."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "packages/openapi/src/generate.ts is first-party package source rather than build/tooling scripts, and 1576 nonblank lines exceeds the 1500-line strict threshold with a consistent tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1576 nonblank lines vs threshold 1000 (EA 1576)"
+        }
+      ]
+    },
+    {
+      "id": "EA-7c45fbb2d3aae1bf",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/src/components/TwitterWall/script.output.ts",
+      "message": "source file has 2587 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "false_positive",
+      "reason": "Generated script output (written by script.ts).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "script.output.ts is a generated output artifact, which is excluded from the detector's scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "script.output.ts is generated output code (the .output.ts artifact produced by a script/build step), which falls outside the detector's scope for hand-written source."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2587 nonblank lines vs threshold 1000 (EA 2587)"
+        }
+      ]
+    },
+    {
+      "id": "EA-da7a021bb5fc69ff",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "source file has 4636 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v3/types.ts is real source code (not generated) exceeding the threshold, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v3/types.ts is first-party library source (a large type-definition module); its intentional size still counts, and 4636 nonblank lines matches the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "4636 nonblank lines vs threshold 1000 (EA 4636)"
+        }
+      ]
+    },
+    {
+      "id": "EA-ce98ac1d8af707cc",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/schemas.ts",
+      "message": "source file has 2674 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/classic/schemas.ts is hand-authored source exceeding the threshold, so the finding applies in scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/classic/schemas.ts is first-party library source with no scope exclusion, and 2674 nonblank lines exceeds the 1500-line strict threshold with a consistent tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2674 nonblank lines vs threshold 1000 (EA 2674)"
+        }
+      ]
+    },
+    {
+      "id": "EA-f903465810d6d943",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/api.ts",
+      "message": "source file has 1733 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/core/api.ts is hand-written source reported at 1733 nonblank lines, well over both the 1000 advisory and 1500 strict thresholds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Reported 1733 nonblank lines in library source api.ts exceeds the 1500 strict threshold, so the size claim and tier hold."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1733 nonblank lines vs threshold 1000 (EA 1733)"
+        }
+      ]
+    },
+    {
+      "id": "EA-649cc4467b5ed5d6",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/checks.ts",
+      "message": "source file has 1097 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/core/checks.ts is source with 1097 nonblank lines, exceeding the 1000-line advisory threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1097 nonblank lines in checks.ts exceed the 1000 advisory threshold, matching the advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1097 nonblank lines vs threshold 1000 (EA 1097)"
+        }
+      ]
+    },
+    {
+      "id": "EA-49f8efa15b0525ae",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/compile.ts",
+      "message": "source file has 2109 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/core/compile.ts is reported at 2109 nonblank lines, over the 1500 strict/violation threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "2109 nonblank lines in compile.ts exceeds the 1500 strict threshold, matching the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "2109 nonblank lines vs threshold 1000 (EA 2109)"
+        }
+      ]
+    },
+    {
+      "id": "EA-8352c224c8f0da57",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "source file has 4492 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/core/schemas.ts is a very large source file at 4492 nonblank lines, far past both thresholds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "4492 nonblank lines in schemas.ts far exceeds the 1500 strict threshold in real library source."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "4492 nonblank lines vs threshold 1000 (EA 4492)"
+        }
+      ]
+    },
+    {
+      "id": "EA-3a63f5f298a042e3",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/util.ts",
+      "message": "source file has 1131 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/core/util.ts is source at 1131 nonblank lines, above the 1000-line advisory threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1131 nonblank lines in util.ts exceed the 1000 advisory threshold, matching the advisory tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1131 nonblank lines vs threshold 1000 (EA 1131)"
+        }
+      ]
+    },
+    {
+      "id": "EA-aa90d39cbddcdc1f",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/mini/schemas.ts",
+      "message": "source file has 1849 nonblank lines.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "verdict": "true_positive",
+      "reason": "Hand-written source file above the nonblank-line budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "packages/zod/src/v4/mini/schemas.ts is source at 1849 nonblank lines, over the 1500 strict threshold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "1849 nonblank lines in mini/schemas.ts exceeds the 1500 strict threshold, matching the violation tier."
+        },
+        {
+          "source": "oracle:nonblank@1",
+          "claim": "confirmed",
+          "detail": "1849 nonblank lines vs threshold 1000 (EA 1849)"
+        }
+      ]
+    }
+  ]
+}

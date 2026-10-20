@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "detector": "nested_cross_collection_traversal",
+  "labels": [
+    {
+      "id": "EA-4ae8131d8692fd5c",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java",
+      "message": "Function `isAssignable` nests `upperBounds` inside `toUpperBounds` with pair-dependent work.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1235,
+      "verdict": "false_positive",
+      "reason": "Pairwise subtype checks over small bound lists are the algorithm.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The code comment and `isAssignable` logic require testing every (toUpperBounds, upperBounds) pair, so the nested traversal is the semantically required work and an index would not preserve it."
+        }
+      ]
+    },
+    {
+      "id": "EA-91dbcec6a137df92",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/reflect/TypeUtils.java",
+      "message": "Function `isAssignable` nests `lowerBounds` inside `toLowerBounds` with pair-dependent work.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1251,
+      "verdict": "false_positive",
+      "reason": "Pairwise subtype checks over small bound lists are the algorithm.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The comment states 'each lower bound of the target type has to be assignable to each lower bound of the subject type', so the pairwise check against `lowerBounds` is required, not an avoidable product."
+        }
+      ]
+    },
+    {
+      "id": "EA-58d61500566bf6ce",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "tools/config-rule.js",
+      "message": "Function `combinePropertyObjects` nests `objArr2` inside `objArr1` with pair-dependent work.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 162,
+      "verdict": "false_positive",
+      "reason": "Tooling, documentation, or integration-test script, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`res.push(combinedObj)` is executed for every obj1/obj2 pair, so the nested product is the intended output, and the file lives under `tools/` as build tooling."
+        }
+      ]
+    }
+  ]
+}

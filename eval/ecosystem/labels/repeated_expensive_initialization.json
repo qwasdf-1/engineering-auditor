@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "detector": "repeated_expensive_initialization",
+  "labels": [
+    {
+      "id": "EA-afc934067e08079a",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/router/linear-router/router.ts",
+      "message": "Function `match` constructs expensive reusable state inside a loop.",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 82,
+      "verdict": "true_positive",
+      "reason": "Adjudicated: new RegExp(pattern) is rebuilt per route on every match call; it could be compiled once per route.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "The `:name{...}` branch entered when `name.charCodeAt(name.length-1) === 125` (line 97) compiles a RegExp from the route pattern inside the loop beginning at line 82."
+        }
+      ]
+    },
+    {
+      "id": "EA-8c1ca31ebcc46276",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "www/docusaurus.config.ts",
+      "message": "Function `` constructs expensive reusable state inside a loop.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 317,
+      "verdict": "false_positive",
+      "reason": "Adjudicated: Tooling (Docusaurus config, release script, docs/fuzz/codegen scripts, Gradle build-logic), outside the verdict standard's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "`www/docusaurus.config.ts` is Docusaurus website build/tooling configuration, outside the detector's runtime-code scope."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported line 317 is the loop header and the excerpt contains no RegExp construction or reusable state being built; the empty function name and absent operation indicate a misparsed site."
+        }
+      ]
+    },
+    {
+      "id": "EA-7961c7d307b04409",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "Function `_parse` constructs expensive reusable state inside a loop.",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 751,
+      "verdict": "false_positive",
+      "reason": "The only RegExp in the loop is lazily cached behind `if (!emojiRegex)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The new RegExp for emoji is guarded by `if (!emojiRegex)` and stored in the module-level `let emojiRegex`, so it is built once lazily, not on every loop iteration."
+        },
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "unclear",
+          "reason": "The excerpt only shows the loop header and the min/max branches (lines 751-766); no RegExp construction is visible and the loop continues past the excerpt, so the claimed in-loop RegExp initialization can't be confirmed or denied."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "unclear",
+          "reason": "The excerpt shows only min/max check branches in the loop and no RegExp initialization; later loop branches are not visible."
+        }
+      ]
+    },
+    {
+      "id": "EA-275e9a39887657aa",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/classic/from-json-schema.ts",
+      "message": "Function `convertBaseSchema` constructs expensive reusable state inside a loop.",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 649,
+      "verdict": "false_positive",
+      "reason": "Each iteration compiles a different pattern (`new RegExp(pattern)` per key); nothing is reusable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "new RegExp(pattern) is constructed inside the for (const pattern of patternKeys) loop, matching the finding."
+        }
+      ]
+    }
+  ]
+}

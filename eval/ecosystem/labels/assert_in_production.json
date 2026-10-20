@@ -1,0 +1,2026 @@
+{
+  "schema_version": 1,
+  "detector": "assert_in_production",
+  "labels": [
+    {
+      "id": "EA-e949ffec539cd88b",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/WrappedReader.cs",
+      "message": "Non-test source calls `assert` at line 220",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 220,
+      "verdict": "true_positive",
+      "reason": "Debug.Assert compiles out of release builds, so the check stops running.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "WrappedReader.cs line 220 is production code and calls Debug.Assert, matching the detector's assertion-in-production claim."
+        }
+      ]
+    },
+    {
+      "id": "EA-15de0608db6506ab",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Conversion.java",
+      "message": "Non-test source calls `assert` at line 1296",
+      "status": "corroborated",
+      "sampled_from": "t16-e",
+      "line": 1296,
+      "verdict": "true_positive",
+      "reason": "Java assertions are disabled by default at runtime, so the check does not run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Conversion.java line 1296 in src/main/java contains a literal Java assert statement, exactly the assertion the rule targets."
+        }
+      ]
+    },
+    {
+      "id": "EA-15e973f940721966",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Non-test source calls `assert` at line 52",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "A Python assert guarding arguments or invariants in non-test code; python -O strips it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 52 is `assert child in uniq`, a runtime assertion in non-test source support/docopt.py, so the claim and rationale hold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "docopt.py:52 contains a real runtime assert (`assert child in uniq`) inside fix_identities, and support/ is non-test library code within the detector's stated scope."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 52"
+        }
+      ]
+    },
+    {
+      "id": "EA-db08d36e8dc0700d",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Non-test source calls `assert` at line 183",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 183,
+      "verdict": "true_positive",
+      "reason": "A Python assert guarding arguments or invariants in non-test code; python -O strips it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 183 is `assert argcount in (0, 1)` in the Option constructor, a production assertion as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "docopt.py:183 has a genuine precondition assert (`assert argcount in (0, 1)`) in Option.__init__, which the production-assert rule correctly targets."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 183"
+        }
+      ]
+    },
+    {
+      "id": "EA-bd7d48556e2a228a",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Non-test source calls `assert` at line 249",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 249,
+      "verdict": "true_positive",
+      "reason": "A Python assert guarding arguments or invariants in non-test code; python -O strips it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 249 is `assert len(self.children) == 1` in OneOrMore.match, matching the finding."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "docopt.py:249 has a real invariant assert (`assert len(self.children) == 1`) in OneOrMore.match in non-test source code."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 249"
+        }
+      ]
+    },
+    {
+      "id": "EA-fa06058257db7ceb",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Non-test source calls `assert` at line 304",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 304,
+      "verdict": "true_positive",
+      "reason": "A Python assert guarding arguments or invariants in non-test code; python -O strips it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 304 is `assert long.startswith('--')` in parse_long, a genuine production assertion."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "docopt.py:304 has a genuine input-precondition assert (`assert long.startswith('--')`) in parse_long, in scope as production library code."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 304"
+        }
+      ]
+    },
+    {
+      "id": "EA-017129585432bdb8",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/docopt.py",
+      "message": "Non-test source calls `assert` at line 337",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 337,
+      "verdict": "true_positive",
+      "reason": "A Python assert guarding arguments or invariants in non-test code; python -O strips it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 337 is `assert token.startswith('-') and not token.startswith('--')` in parse_shorts, as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "docopt.py:337 has a real precondition assert (`assert token.startswith('-') and not token.startswith('--')`) in parse_shorts, correctly flagged."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 337"
+        }
+      ]
+    },
+    {
+      "id": "EA-f0d714fc601a2331",
+      "repository": "fmt",
+      "language": "python",
+      "path": "support/printable.py",
+      "message": "Non-test source calls `assert` at line 100",
+      "status": "corroborated",
+      "sampled_from": "t15-t2l1b",
+      "line": 100,
+      "verdict": "true_positive",
+      "reason": "A Python assert guarding arguments or invariants in non-test code; python -O strips it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 100 is `assert truelen < 0x8000 and falselen < 0x8000` in non-test source support/printable.py."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "printable.py:100 has a genuine range-check assert (`assert truelen < 0x8000 and falselen < 0x8000`) in non-test support code."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 100"
+        }
+      ]
+    },
+    {
+      "id": "EA-db767550b1556c15",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_auth.py",
+      "message": "Non-test source calls `assert` at line 235",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 235 is `assert scheme.lower() == \"digest\"` in httpx/_auth.py, a production assertion as claimed."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`httpx/_auth.py` is production source and line 235 is an actual `assert scheme.lower() == \"digest\"` call."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 235"
+        }
+      ]
+    },
+    {
+      "id": "EA-21ad3ad36a1d61c9",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_client.py",
+      "message": "Non-test source calls `assert` at line 1016",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1016,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`httpx/_client.py` is production source and line 1016 is an actual `assert isinstance(response.stream, SyncByteStream)` call."
+        }
+      ]
+    },
+    {
+      "id": "EA-9da106cb765948a1",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_config.py",
+      "message": "Non-test source calls `assert` at line 97",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 97,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 97 is `assert connect is UNSET` in httpx/_config.py, a real production assertion as reported."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`httpx/_config.py` is production source and line 97 contains a real `assert connect is UNSET` statement."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 97"
+        }
+      ]
+    },
+    {
+      "id": "EA-459088b337cac881",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_config.py",
+      "message": "Non-test source calls `assert` at line 98",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 98,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_config.py is production source and line 98 is a real `assert read is UNSET`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`httpx/_config.py` is production source and line 98 contains a real `assert read is UNSET` statement."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 98"
+        }
+      ]
+    },
+    {
+      "id": "EA-96d3bb2dffa95397",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_config.py",
+      "message": "Non-test source calls `assert` at line 99",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 99,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 99 is a real `assert write is UNSET` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`httpx/_config.py` is production source and line 99 contains a real `assert write is UNSET` statement."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 99"
+        }
+      ]
+    },
+    {
+      "id": "EA-51a0d38021adb397",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_config.py",
+      "message": "Non-test source calls `assert` at line 100",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 100,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 100 is a real `assert pool is UNSET` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 100 asserts sentinel timeout args are UNSET when an explicit Timeout is supplied, a real production guard in `_config.py`."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 100"
+        }
+      ]
+    },
+    {
+      "id": "EA-863f76e24e0a5a73",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_models.py",
+      "message": "Non-test source calls `assert` at line 473",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 473,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The `isinstance(self.stream, typing.Iterable)` assert is a typing/narrowing idiom before joining the stream, not a production error-handling guard."
+        }
+      ]
+    },
+    {
+      "id": "EA-af3d5fdc35d763b3",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Non-test source calls `assert` at line 103",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 103,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`assert isinstance(request.stream, AsyncByteStream)` is a type-narrowing idiom for the typed async transport path."
+        }
+      ]
+    },
+    {
+      "id": "EA-bbcd6253fa8546d9",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Non-test source calls `assert` at line 152",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 152,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_transports/asgi.py is production source and line 152 is `assert not response_started`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert not response_started` enforces an ASGI protocol invariant in the production `send()` handler."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 152"
+        }
+      ]
+    },
+    {
+      "id": "EA-942adcc1a3e33ebf",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Non-test source calls `assert` at line 159",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 159,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 159 is a real `assert not response_complete.is_set()` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 159 contains `assert not response_complete.is_set()` in non-test httpx transport code, so the claim and rationale apply."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 159"
+        }
+      ]
+    },
+    {
+      "id": "EA-0e32181d92e36a59",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Non-test source calls `assert` at line 181",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 181,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 181 is a real `assert response_complete.is_set()` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert response_complete.is_set()` checks a real ASGI response-completion invariant."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 181"
+        }
+      ]
+    },
+    {
+      "id": "EA-508dc5eff1588d46",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/asgi.py",
+      "message": "Non-test source calls `assert` at line 182",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 182,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "After the preceding `status_code = 500` default, `assert status_code is not None` is redundant Optional-narrowing for typing."
+        }
+      ]
+    },
+    {
+      "id": "EA-82e94d3b13cf4a87",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Non-test source calls `assert` at line 252",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 252,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`assert isinstance(resp.stream, typing.Iterable)` is a type-narrowing idiom before wrapping the sync response stream."
+        }
+      ]
+    },
+    {
+      "id": "EA-30211d6a447c2be6",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/default.py",
+      "message": "Non-test source calls `assert` at line 396",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 396,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`assert isinstance(resp.stream, typing.AsyncIterable)` is a type-narrowing idiom before wrapping the async response stream."
+        }
+      ]
+    },
+    {
+      "id": "EA-c350b8838b6a8772",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_transports/wsgi.py",
+      "message": "Non-test source calls `assert` at line 139",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 139 `assert seen_response_headers is not None` is a runtime assertion in non-test production code (WSGI transport response handling)."
+        }
+      ]
+    },
+    {
+      "id": "EA-d8174ac2b55da97f",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urls.py",
+      "message": "Non-test source calls `assert` at line 426",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 426,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "httpx/_urls.py is production source and line 426 is `assert len(args) < 2, \"Too many arguments.\"`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 426 contains `assert len(args) < 2, \"Too many arguments.\"` in non-test httpx source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 426"
+        }
+      ]
+    },
+    {
+      "id": "EA-40ec8e502121f01f",
+      "repository": "httpx",
+      "language": "python",
+      "path": "httpx/_urls.py",
+      "message": "Non-test source calls `assert` at line 427",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 427,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 427 is a real `assert not (args and kwargs)` in production source."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 427 `assert not (args and kwargs)` validates user-supplied arguments in a public constructor, where asserts are unsafe under `-O`."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 427"
+        }
+      ]
+    },
+    {
+      "id": "EA-7ed823f49041456f",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_pick.py",
+      "message": "Non-test source calls `assert` at line 13",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 13,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/_pick.py is production library source and line 13 does call `assert values`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 13 contains `assert values, \"1 or more values required\"` in non-test rich source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 13"
+        }
+      ]
+    },
+    {
+      "id": "EA-31988c8bd8c127bf",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_ratio.py",
+      "message": "Non-test source calls `assert` at line 123",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 123,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/_ratio.py is production source and line 123 calls `assert total_ratio > 0`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 123 contains `assert total_ratio > 0, \"Sum of ratios must be > 0\"` in non-test rich source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 123"
+        }
+      ]
+    },
+    {
+      "id": "EA-ce1bbdb707b8f624",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_unicode_data/__init__.py",
+      "message": "Non-test source calls `assert` at line 92",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "Assert sits under `if TYPE_CHECKING:` and never executes at runtime.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The assert is inside `if TYPE_CHECKING:`, which is False at runtime, so it never executes and is a type-checker idiom, not a production assertion."
+        }
+      ]
+    },
+    {
+      "id": "EA-4be97ac69bbadb8c",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_win32_console.py",
+      "message": "Non-test source calls `assert` at line 435",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 435,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 435 `assert fore is not None` is a runtime invariant check in non-test production code (Win32 console color handling)."
+        }
+      ]
+    },
+    {
+      "id": "EA-84b5867f151a9c5e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/_win32_console.py",
+      "message": "Non-test source calls `assert` at line 565",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 565,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/_win32_console.py production code and line 565 calls `assert len(title) < 255`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 565 contains `assert len(title) < 255, \"Console title must be less than 255 characters\"` inside a non-test method, prior to the unrelated `__main__` block."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 565"
+        }
+      ]
+    },
+    {
+      "id": "EA-ee070e05c47488a2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Non-test source calls `assert` at line 377",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 377,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/color.py production source and line 377 calls `assert self.number is None`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 377 `assert self.number is None` is an internal invariant assert in production color-conversion code."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 377"
+        }
+      ]
+    },
+    {
+      "id": "EA-3d8707315c0a1587",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Non-test source calls `assert` at line 546",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 546,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 546 `assert self.triplet is not None` is an internal invariant assert in production color-system conversion code."
+        }
+      ]
+    },
+    {
+      "id": "EA-7670546187dea106",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/color.py",
+      "message": "Non-test source calls `assert` at line 573",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 573,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/color.py production source and line 573 calls `assert len(hex_color) == 6`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 573 contains `assert len(hex_color) == 6, \"must be 6 characters\"` in non-test rich source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 573"
+        }
+      ]
+    },
+    {
+      "id": "EA-adc840a85c807cbb",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Non-test source calls `assert` at line 1143",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1143,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/console.py production source and line 1143 calls `assert count >= 0`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1143 `assert count >= 0, \"count must be >= 0\"` validates a public API argument with an assert, which is a known production anti-pattern."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 1143"
+        }
+      ]
+    },
+    {
+      "id": "EA-b3f003efaeea1c5b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Non-test source calls `assert` at line 1939",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1939,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1939 `assert frame is not None` is a runtime loop condition check in non-test production code (frame introspection helper)."
+        }
+      ]
+    },
+    {
+      "id": "EA-c1ba77241e9af246",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Non-test source calls `assert` at line 2204",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 2204,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/console.py production source and line 2204 calls `assert self.record`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 2204 contains `assert (self.record), \"To export console contents set record=True in the constructor or instance\"` in non-test rich console source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 2204"
+        }
+      ]
+    },
+    {
+      "id": "EA-f19bd8a8e0271ab4",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/console.py",
+      "message": "Non-test source calls `assert` at line 2268",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 2268,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "rich/console.py production source and line 2268 calls `assert self.record`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 2268 contains `assert (self.record), \"To export console contents set record=True in the constructor or instance\"` in non-test rich console source."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 2268"
+        }
+      ]
+    },
+    {
+      "id": "EA-af986a9eceaa719e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/live.py",
+      "message": "Non-test source calls `assert` at line 71",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 71,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert refresh_per_second > 0` is a real assertion in non-test `rich/live.py`, so the detector's claim and recommendation hold."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Live.__init__ in the library genuinely validates its argument at runtime with `assert refresh_per_second > 0`, so the production-assert claim and rationale apply."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 71"
+        }
+      ]
+    },
+    {
+      "id": "EA-fbf51241dbc33544",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/logging.py",
+      "message": "Non-test source calls `assert` at line 149",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 149,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 149 is exactly `assert exc_value is not None` in rich/logging.py, a production (non-test) module, so the detector's claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-2cd40eeb90e6fd24",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Non-test source calls `assert` at line 326",
+      "status": "final",
+      "sampled_from": "t8-conv",
+      "line": 326,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert justify in get_args(JustifyMethod)` is a genuine runtime assertion in production `rich/markdown.py`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`assert justify in get_args(JustifyMethod)` exists solely to narrow `str` to the `JustifyMethod` Literal for the type checker immediately before `return cls(justify=justify)`, a recognized idiom with no runtime error to handle."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 326"
+        }
+      ]
+    },
+    {
+      "id": "EA-643bd10daa406f6b",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Non-test source calls `assert` at line 353",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 353,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 353 is `assert isinstance(child, ListItem)` in rich/markdown.py production code, matching the reported line and path."
+        }
+      ]
+    },
+    {
+      "id": "EA-ae8a4a6919980f7e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/markdown.py",
+      "message": "Non-test source calls `assert` at line 632",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 632,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 632 is `assert isinstance(element, Link)` in rich/markdown.py, a real assert in non-test source at the reported line."
+        }
+      ]
+    },
+    {
+      "id": "EA-b05b2fa525a45a03",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Non-test source calls `assert` at line 198",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 198 is `assert console is not None` in rich/pretty.py; the assertion is genuinely present in production code at that line."
+        }
+      ]
+    },
+    {
+      "id": "EA-0299a624a0ea4715",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Non-test source calls `assert` at line 516",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 516,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 516 is `assert self.node is not None` in rich/pretty.py's `_Line.check_length`, so the claim is factually correct."
+        }
+      ]
+    },
+    {
+      "id": "EA-6ddf7e5eed7e866a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/pretty.py",
+      "message": "Non-test source calls `assert` at line 524",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 524,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert node.children` is an assertion in non-test `rich/pretty.py`, matching the detector's claim."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 524 is `assert node.children` in rich/pretty.py's `_Line.expand`, matching the reported site exactly."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 524"
+        }
+      ]
+    },
+    {
+      "id": "EA-7fef4c1dddc0e92a",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/progress.py",
+      "message": "Non-test source calls `assert` at line 1091",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 1091,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert refresh_per_second > 0` is a real assertion in production `rich/progress.py`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1091 is `assert refresh_per_second > 0, ...` in rich/progress.py's `__init__`; an assert in production code as claimed."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 1091"
+        }
+      ]
+    },
+    {
+      "id": "EA-5975fdf932705595",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/segment.py",
+      "message": "Non-test source calls `assert` at line 168",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 168,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert cut >= 0` is an assertion in non-test `rich/segment.py`, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert cut >= 0` in Segment.split is a real runtime precondition check on a public method argument, so the rationale applies."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 168"
+        }
+      ]
+    },
+    {
+      "id": "EA-f2ef0cb784457eca",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/syntax.py",
+      "message": "Non-test source calls `assert` at line 510",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 510,
+      "verdict": "false_positive",
+      "reason": "`assert lexer  # required to make MyPy happy` narrows an Optional for the type checker; a bare-name narrowing assert the detector cannot tell from validation without types.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "false_positive",
+          "reason": "The `assert lexer` is an explicit MyPy type-narrowing idiom (`# required to make MyPy happy`), an idiom the rule should recognise rather than demand error handling."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The inline comment states it is \"required to make MyPy happy - we know lexer is not None at this point\", i.e. a static type-narrowing idiom the rule should recognize, not a runtime validation."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 510"
+        }
+      ]
+    },
+    {
+      "id": "EA-c8c4cb6e02c74410",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Non-test source calls `assert` at line 907",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 907,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert len(character) == 1` is a real assertion in non-test `rich/text.py`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert len(character) == 1` in Text.pad is a genuine input-validation assert that would catch caller misuse at runtime."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 907"
+        }
+      ]
+    },
+    {
+      "id": "EA-9e475750f1470ab2",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Non-test source calls `assert` at line 924",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 924,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "`assert len(character) == 1` in `pad_left` is another genuine assertion in production `rich/text.py`."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert len(character) == 1` in Text.pad_left is a genuine input-validation assert that would catch caller misuse at runtime."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 924"
+        }
+      ]
+    },
+    {
+      "id": "EA-42f1829e5d49dba3",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Non-test source calls `assert` at line 940",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 940,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 940 is a real `assert len(character) == 1` in the production library source rich/text.py, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert len(character) == 1` in Text.pad_right is a genuine input-validation assert that would catch caller misuse at runtime."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 940"
+        }
+      ]
+    },
+    {
+      "id": "EA-b9e75a1013fbe5bf",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/text.py",
+      "message": "Non-test source calls `assert` at line 1079",
+      "status": "corroborated",
+      "sampled_from": "t8-conv",
+      "line": 1079,
+      "verdict": "true_positive",
+      "reason": "The assert validates an input or state precondition, which `python -O` strips; not a type-narrowing assert.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/deepseek-v4.1-flash-free",
+          "verdict": "true_positive",
+          "reason": "Line 1079 is a real `assert separator` in production library source rich/text.py, so the claim holds."
+        },
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert separator, \"separator must not be empty\"` in Text.split validates a parameter that would otherwise cause incorrect behavior, so the rationale applies."
+        },
+        {
+          "source": "oracle:ruff@0.17.0",
+          "claim": "confirmed",
+          "detail": "ruff S101 at line 1079"
+        }
+      ]
+    },
+    {
+      "id": "EA-2c799b02a58b691e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Non-test source calls `assert` at line 342",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 342,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 342 is `assert (suppress_entity.__file__ is not None), ...` in rich/traceback.py, a genuine assert in non-test source."
+        }
+      ]
+    },
+    {
+      "id": "EA-7bb5f4144a3f0f4e",
+      "repository": "rich",
+      "language": "python",
+      "path": "rich/traceback.py",
+      "message": "Non-test source calls `assert` at line 798",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 798,
+      "verdict": "true_positive",
+      "reason": "Python assert in shipped code is stripped under -O (Bandit B101); claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 798 is a literal `assert exclude_frames is not None` in non-test library code rich/traceback.py, so the claim that production source asserts holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-80c36198ccad045e",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/extract/matched_path.rs",
+      "message": "Non-test source calls `assert` at line 119",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 119,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The flagged macro is `debug_assert!`, Rust's standard debug-only assertion idiom, so the 'replace assertions' rationale does not apply (recognized idiom/wrong symbol)."
+        }
+      ]
+    },
+    {
+      "id": "EA-ca6ee5512bbbc7a8",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/redirect.rs",
+      "message": "Non-test source calls `assert` at line 75",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 75,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert!(status_code.is_redirection(), ...)` is a real release-active `assert!` in the non-test `with_status_code` constructor, matching the claim and scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-fcd8dcd629094d7b",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Non-test source calls `assert` at line 387",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 387,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert_eq!(memchr::memchr(b'\\0', id), None, ...)` panics on user-supplied id in non-test sse.rs, where a guard clause/Result is the proper handling."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f173aed04ec62e6",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/response/sse.rs",
+      "message": "Non-test source calls `assert` at line 399",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 399,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "The `assert_eq!` rejecting CR/LF in `field` is a production assert on caller-supplied bytes in non-test sse.rs, within the detector's scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-5a7818fee744502e",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Non-test source calls `assert` at line 519",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 519,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert!(path.starts_with('/'))` in the non-test `validate_nest_path` is a release-active assert validating a route path."
+        }
+      ]
+    },
+    {
+      "id": "EA-dc9d3bc6ba33f4fb",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Non-test source calls `assert` at line 520",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 520,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert!(path.len() > 1)` is another release-active assert in the same non-test validator at line 520."
+        }
+      ]
+    },
+    {
+      "id": "EA-bca94bf901d52555",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Non-test source calls `assert` at line 536",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 536,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The reported line uses `debug_assert!`, the intentional debug-only Rust idiom that an assert-in-production rule should recognize and exclude."
+        }
+      ]
+    },
+    {
+      "id": "EA-e8afc1dd35ccd5e0",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/path_router.rs",
+      "message": "Non-test source calls `assert` at line 537",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 537,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 537 is `debug_assert!(path.starts_with('/'))`, a debug-only macro stripped from release builds \u2014 the recognized idiom for invariant checks, not the `assert!` the rule targets."
+        }
+      ]
+    },
+    {
+      "id": "EA-d1976a726630df65",
+      "repository": "axum",
+      "language": "rust",
+      "path": "axum/src/routing/strip_prefix.rs",
+      "message": "Non-test source calls `assert` at line 125",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 125,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 125 is a plain `assert!(s.starts_with('/'), ...)` in the non-test production helper `segments`, so the claim holds."
+        }
+      ]
+    },
+    {
+      "id": "EA-58cada02ea532b1d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 1358",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1358,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1358 is `assert!(v.unwrap_switch(), ...)` inside the production `update` fn, outside the `#[cfg(test)]` module that follows at 1364."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ba17b0991028e1d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 2209",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 2209,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 2209 is `assert!(v.unwrap_switch(), ...)` in production flag-parsing code; the tests only begin at 2215."
+        }
+      ]
+    },
+    {
+      "id": "EA-0269083db0f6a72b",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 3630",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 3630,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 3630 is `assert!(v.unwrap_switch(), ...)` in the production `update` fn, separate from the `#[cfg(test)]` block at 3636."
+        }
+      ]
+    },
+    {
+      "id": "EA-0bf65da0af4f6da4",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 4993",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 4993,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 4993 is `assert!(v.unwrap_switch(), ...)` in production source; the test module starts at 4999."
+        }
+      ]
+    },
+    {
+      "id": "EA-e7fb7f4505e3c72d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 6180",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 6180,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 6180 is `assert!(v.unwrap_switch(), ...)` in production code, above the `#[cfg(test)]` tests at 6186."
+        }
+      ]
+    },
+    {
+      "id": "EA-f7566fe3efae6339",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 7321",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 7321,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 7321 is `assert!(v.unwrap_switch(), ...)` in the production `update` fn, distinct from the test at 7329."
+        }
+      ]
+    },
+    {
+      "id": "EA-13712c873b5f16cd",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/defs.rs",
+      "message": "Non-test source calls `assert` at line 7490",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 7490,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 7490 of defs.rs is a genuine `assert!(v.unwrap_switch(), ...)` call in a non-test flag `update` implementation (the `#[cfg(test)]` module begins only at line 7496)."
+        }
+      ]
+    },
+    {
+      "id": "EA-7b0e75b783e7685c",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/flags/parse.rs",
+      "message": "Non-test source calls `assert` at line 382",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 382,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 382 of parse.rs contains `assert_eq!(None, map.insert(vec![byte], i));`, an assertion macro invoked in non-test `FlagMap` construction code."
+        }
+      ]
+    },
+    {
+      "id": "EA-1d9d5452e5f13d5e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/globset/src/glob.rs",
+      "message": "Non-test source calls `assert` at line 935",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 935,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 935 of glob.rs contains `assert!(self.bump().map(is_separator).unwrap_or(false));` inside the glob-parser match arm, in non-test library code."
+        }
+      ]
+    },
+    {
+      "id": "EA-90367a9f0e088d74",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/matcher/src/interpolate.rs",
+      "message": "Non-test source calls `assert` at line 36",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 36 of interpolate.rs is a `debug_assert!(!replacement.is_empty());` call in the production `replace` function, matching the detector's assertion-in-production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-0de6987d26b3fdfb",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/matcher/src/lib.rs",
+      "message": "Non-test source calls `assert` at line 124",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 124,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 124 of matcher/src/lib.rs is a real `assert!(self.start <= end, ...)` call in the public `with_end` method; even though it documents a `# Panics` contract, the assertion exists exactly where reported."
+        }
+      ]
+    },
+    {
+      "id": "EA-051ac0a918664314",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Non-test source calls `assert` at line 996",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 996,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 996 of printer/src/standard.rs is `debug_assert!(!self.multi_line() || self.is_context());`, an assertion macro in production printer code (`sink_slow`)."
+        }
+      ]
+    },
+    {
+      "id": "EA-50c1b447eceef8be",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/printer/src/standard.rs",
+      "message": "Non-test source calls `assert` at line 1030",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 1030,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 1030 of printer/src/standard.rs is `debug_assert!(!self.sunk.matches().is_empty());`, an assertion macro in the non-test `sink_slow_multi_line` method."
+        }
+      ]
+    },
+    {
+      "id": "EA-b892cc3ddbfeff06",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/regex/src/literal.rs",
+      "message": "Non-test source calls `assert` at line 390",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 390,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "Line 390 of regex/src/literal.rs contains `assert!(seq1.len().map_or(true, |x| x <= self.limit_total));`, a real assertion in non-test literal-sequence code."
+        }
+      ]
+    },
+    {
+      "id": "EA-48b65ee3c4027872",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Non-test source calls `assert` at line 434",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 434,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert!` at line 434 in invert-match handling is a real assertion in production searcher code (non-test)."
+        }
+      ]
+    },
+    {
+      "id": "EA-803362e9e12ba842",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/core.rs",
+      "message": "Non-test source calls `assert` at line 481",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 481,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The call is `debug_assert!`, a conventional internal invariant check the rule should recognise; not a `assert!` production error-handling issue."
+        }
+      ]
+    },
+    {
+      "id": "EA-4b470255bd72895e",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Non-test source calls `assert` at line 29",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "Line 29 is a `debug_assert!` documenting an internal precondition, not a user-facing `assert!`."
+        }
+      ]
+    },
+    {
+      "id": "EA-48d040da23693402",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/glue.rs",
+      "message": "Non-test source calls `assert` at line 261",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 261,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert!(self.config.invert_match)` at line 261 asserts a caller invariant in production inverted-sink code."
+        }
+      ]
+    },
+    {
+      "id": "EA-0db2f7d64814c702",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/searcher/mod.rs",
+      "message": "Non-test source calls `assert` at line 979",
+      "status": "pre_label",
+      "sampled_from": "a159358",
+      "line": 979,
+      "verdict": "false_positive",
+      "reason": "Rust assert!/debug_assert! is the idiomatic invariant/contract check and is not stripped silently; debug_assert! is designed for production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "true_positive",
+          "reason": "`assert!(self.config.multi_line)` at line 979 is a genuine `assert!` guarding a caller-supplied configuration flag in production code."
+        }
+      ]
+    },
+    {
+      "id": "EA-d7cfdf12b9f4347f",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Non-test source calls `assert` at line 137",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 137,
+      "verdict": "false_positive",
+      "reason": "Assertion in test-utility code compiled only for tests.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "`crates/searcher/src/testutil.rs` is test utility code, outside the detector's production scope."
+        }
+      ]
+    },
+    {
+      "id": "EA-cb4d3036c7aef57d",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/searcher/src/testutil.rs",
+      "message": "Non-test source calls `assert` at line 159",
+      "status": "corroborated",
+      "sampled_from": "a159358",
+      "line": 159,
+      "verdict": "false_positive",
+      "reason": "Assertion in test-utility code compiled only for tests.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:opencode/step-5-preview-free",
+          "verdict": "false_positive",
+          "reason": "The assertion sits in `testutil.rs`, a test-only helper module, so it is out of scope."
+        }
+      ]
+    }
+  ]
+}
