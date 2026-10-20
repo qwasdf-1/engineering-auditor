@@ -138,6 +138,7 @@ mod tests {
                 in_test: false,
                 implicitly_used: false,
                 overload_stub: false,
+                memoized: false,
                 associated: false,
             })
             .collect::<Vec<_>>();

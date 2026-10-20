@@ -32,12 +32,10 @@ detections, so the baseline only moves up; rewrite it with
 Six detectors in Rust, Python, TypeScript, Go, and Java (116 cases; Go has no
 `async`, so `blocking_io_in_async_context` covers four languages). Every
 `direct` case is detected and every `negative` stays silent.
-`per_item_external_io`, `blocking_io_in_async_context`,
-`loop_artifact_rewrite`, `repeated_sort_in_loop`, and
-`n_plus_one_query_in_loop` follow calls into repository functions, so their
-`helper` and `cross_file` cases are detected too: 24 of 29 in each shape.
-`loop_invariant_regex_compilation` still misses every `helper` and
-`cross_file` case.
+All six follow calls into repository functions, so every `helper` and
+`cross_file` case is detected too: 29 of 29 in each shape. The benchmark no
+longer separates further call-following work; harder shapes (calls on
+instances, which stay unresolved) need new cases.
 
 Helpers use neutral names (`details`, `refresh`, `matcher`) so a hit means
 the detector followed the call, not that the helper's name looked like I/O.

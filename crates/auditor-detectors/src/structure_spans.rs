@@ -43,6 +43,44 @@ pub(super) fn python_overload_spans(
     file: &crate::AuditedFile,
     tree: &auditor_ast::AstTree,
 ) -> Vec<SourceSpan> {
+    python_decorated_spans(
+        file,
+        tree,
+        &[
+            "overload",
+            "typing.overload",
+            "t.overload",
+            "typing_extensions.overload",
+        ],
+    )
+}
+
+/// Python definitions whose results are cached per argument, so a call
+/// repeats no work after the first: `@functools.cache`, `@lru_cache(..)`.
+pub(super) fn python_memoized_spans(
+    file: &crate::AuditedFile,
+    tree: &auditor_ast::AstTree,
+) -> Vec<SourceSpan> {
+    python_decorated_spans(
+        file,
+        tree,
+        &[
+            "cache",
+            "functools.cache",
+            "lru_cache",
+            "functools.lru_cache",
+            "cached_property",
+            "functools.cached_property",
+        ],
+    )
+}
+
+/// Python definitions with a decorator named in `names`, called or not.
+fn python_decorated_spans(
+    file: &crate::AuditedFile,
+    tree: &auditor_ast::AstTree,
+    names: &[&str],
+) -> Vec<SourceSpan> {
     if file.language != Language::Python {
         return Vec::new();
     }
@@ -50,14 +88,9 @@ pub(super) fn python_overload_spans(
         .into_iter()
         .filter(|node| {
             node.named_children().any(|decorator| {
+                let text = decorator.text().trim_start_matches('@');
                 decorator.kind() == "decorator"
-                    && matches!(
-                        decorator.text().trim_start_matches('@').trim(),
-                        "overload"
-                            | "typing.overload"
-                            | "t.overload"
-                            | "typing_extensions.overload"
-                    )
+                    && names.contains(&text.split('(').next().unwrap_or(text).trim())
             })
         })
         .filter_map(|node| node.child_by_field_name("definition"))

@@ -24,8 +24,9 @@ use build::build_structure_file;
 use imports::normalize_path;
 use imports::{first_quoted, import_bindings, parse_import, resolve_imports};
 use spans::{
-    import_has_documented_reason, module_name, python_guarded_import_spans, python_overload_spans,
-    python_type_checking_spans, rust_associated_spans, rust_implicitly_used_spans, rust_test_spans,
+    import_has_documented_reason, module_name, python_guarded_import_spans, python_memoized_spans,
+    python_overload_spans, python_type_checking_spans, rust_associated_spans,
+    rust_implicitly_used_spans, rust_test_spans,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -57,6 +58,9 @@ pub(crate) struct StructureSymbol {
     /// A Python `@overload` stub: a typing declaration whose implementation
     /// is a separate, undecorated definition.
     pub(crate) overload_stub: bool,
+    /// A Python function whose results are cached per argument
+    /// (`@functools.cache`, `@lru_cache`).
+    pub(crate) memoized: bool,
     /// A function defined in a Rust `impl` block: an associated item reached
     /// through its type, not its module.
     pub(crate) associated: bool,

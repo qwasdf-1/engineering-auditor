@@ -26,6 +26,13 @@
   anything on the 46-repository corpus, directly or through calls. The call
   graph is now built once per scan and shared by the indexes that follow
   calls.
+- `loop_invariant_regex_compilation` follows calls into repository
+  functions: a loop calling a helper that compiles a fixed expression, with
+  loop-invariant arguments, is reported at the call site. A helper's pattern
+  must read only plain values (parameters, literals, names it never assigns;
+  no nested call or member of `self`, `this`, or a parameter), and a helper
+  decorated with `@functools.cache` or `@lru_cache` is excluded. Helper and
+  cross-file recall rises to 29 of 29 each; the corpus is unchanged.
 - A seeded recall benchmark (`tooling/recall/`, `eval/recall/`) for the
   algorithmic, systems, and optimization detectors: 116 cases in Rust,
   Python, TypeScript, Go, and Java, each putting a known problem directly in

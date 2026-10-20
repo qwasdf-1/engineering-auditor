@@ -40,6 +40,18 @@ expected import or constructor identity; Go matches `regexp.Compile` and
 `regexp.MustCompile` by resolved identity. The recommendation uses lazy
 first-use caching so zero-iteration and first-failure behavior are preserved.
 
+It also follows calls into repository functions, through up to four resolved
+calls (`call_graph.rs`): a loop calling a helper that compiles a fixed
+expression is reported at the call site, with `via` evidence naming the
+helper chain and Medium confidence. A helper compiles a fixed expression when
+its uncached compile reads only plain values: its parameters, literals, and
+names it never assigns, with no nested call and no member of `self`, `this`,
+or a parameter. A call carries the compilation when its own arguments meet
+the same rule, and the loop call when they are also loop-invariant. A Python
+helper decorated with `@functools.cache` or `@lru_cache` compiles once, and a
+caller that caches the helper's result on first use is excluded as in the
+direct case.
+
 ## `immutable_string_concatenation_in_loop` (gating)
 
 Detects ordered concatenation into a pre-loop empty string over a typed string

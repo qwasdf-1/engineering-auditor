@@ -91,12 +91,15 @@ impl ScanRun<'_> {
         }
         self.ensure_call_following_indexes(owner);
         if owner.uses_optimization_index() && self.context.optimization.is_none() {
-            self.context.optimization = Some(optimization_facts::OptimizationIndex::build(
-                self.context.structure.as_ref().expect("structure index"),
-                self.context
-                    .algorithmic
-                    .as_ref()
-                    .expect("algorithmic index"),
+            let context = &mut self.context;
+            let structure = context.structure.as_ref().expect("structure index");
+            let graph = context
+                .call_graph
+                .get_or_insert_with(|| call_graph::CallGraph::build(structure));
+            context.optimization = Some(optimization_facts::OptimizationIndex::build(
+                structure,
+                context.algorithmic.as_ref().expect("algorithmic index"),
+                graph,
             ));
         }
         if owner.uses_complexity_index() && self.context.complexity.is_none() {

@@ -3,6 +3,7 @@ use std::collections::BTreeSet;
 use auditor_ast::SymbolKind;
 
 use crate::algorithmic_facts::AlgorithmicIndex;
+use crate::call_graph::CallGraph;
 use crate::structure_index::{StructureFile, StructureIndex, StructureSymbol};
 
 #[path = "optimization_fact_collections.rs"]
@@ -11,6 +12,8 @@ mod collections;
 mod collectors;
 #[path = "optimization_fact_flow.rs"]
 mod flow;
+#[path = "optimization_fact_inherited.rs"]
+mod inherited;
 #[path = "optimization_fact_language_forms.rs"]
 mod language_forms;
 #[path = "optimization_fact_loop_forms.rs"]
@@ -38,6 +41,9 @@ pub(crate) struct OptimizationFact {
     pub(crate) line: usize,
     pub(crate) kind: OptimizationFactKind,
     pub(crate) proof: OptimizationProof,
+    /// The called functions, as `name (path:line)` joined by ` -> `, through
+    /// which the operation is reached; `None` when the function performs it.
+    pub(crate) via: Option<String>,
 }
 
 #[derive(Clone, Debug)]
@@ -113,7 +119,11 @@ struct FunctionView<'a> {
 }
 
 impl OptimizationIndex {
-    pub(crate) fn build(structure: &StructureIndex, algorithmic: &AlgorithmicIndex) -> Self {
+    pub(crate) fn build(
+        structure: &StructureIndex,
+        algorithmic: &AlgorithmicIndex,
+        graph: &CallGraph,
+    ) -> Self {
         let algorithmic_lines = algorithmic
             .facts()
             .iter()
@@ -135,6 +145,7 @@ impl OptimizationIndex {
                 );
             }
         }
+        inherited::inherited_facts(structure, graph, &mut facts);
         facts.sort_by(|left, right| {
             (&left.path, left.line, left.kind.rank(), &left.function).cmp(&(
                 &right.path,

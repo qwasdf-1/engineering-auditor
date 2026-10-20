@@ -68,17 +68,9 @@ fn collect_loop_calls(
     facts: &mut Vec<OptimizationFact>,
 ) {
     for call in calls(view) {
-        let Some(loop_info) = containing_loop(view.file, view.owner, call.control_region) else {
+        let Some(loop_info) = invariant_loop(view, call) else {
             continue;
         };
-        if loop_info
-            .iterable_span
-            .is_some_and(|span| contains_span(span, call.span))
-            || !operands_are_invariant(view, loop_info, &call.expression, call.span)
-            || runs_once_per_key(view, loop_info, call)
-        {
-            continue;
-        }
         if recognized_regex_call(view, call) {
             if lazily_cached(view, call) {
                 continue;
@@ -572,10 +564,11 @@ pub(super) fn push_fact(
         line,
         kind,
         proof,
+        via: None,
     });
 }
 
-fn pure_proof(
+pub(super) fn pure_proof(
     evaluation_order: &'static str,
     failure_behavior: &'static str,
     receiver_kind: &'static str,

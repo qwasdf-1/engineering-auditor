@@ -65,6 +65,7 @@ fn collect_symbols(
     let test_spans = rust_test_spans(file, tree);
     let implicitly_used_spans = rust_implicitly_used_spans(file, tree);
     let overload_spans = python_overload_spans(file, tree);
+    let memoized_spans = python_memoized_spans(file, tree);
     let associated_spans = rust_associated_spans(file, tree);
     facts
         .symbols
@@ -149,6 +150,9 @@ fn collect_symbols(
                         && symbol.span.end_byte <= span.end_byte
                 }),
                 overload_stub: overload_spans
+                    .iter()
+                    .any(|span| span.start_byte == symbol.span.start_byte),
+                memoized: memoized_spans
                     .iter()
                     .any(|span| span.start_byte == symbol.span.start_byte),
                 associated: associated_spans

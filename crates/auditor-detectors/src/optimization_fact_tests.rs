@@ -27,8 +27,9 @@ fn go_preallocation_uses_range_and_append_facts() {
         &cache,
         &mut repo_ast,
     ));
-    let algorithmic = AlgorithmicIndex::build(&structure, &CallGraph::build(&structure));
-    let optimization = OptimizationIndex::build(&structure, &algorithmic);
+    let graph = CallGraph::build(&structure);
+    let algorithmic = AlgorithmicIndex::build(&structure, &graph);
+    let optimization = OptimizationIndex::build(&structure, &algorithmic, &graph);
     assert!(
         optimization.facts.iter().any(|fact| matches!(
             fact.kind,
@@ -115,8 +116,9 @@ fn build_optimization(
         &cache,
         &mut repo_ast,
     ));
-    let algorithmic = AlgorithmicIndex::build(&structure, &CallGraph::build(&structure));
-    let optimization = OptimizationIndex::build(&structure, &algorithmic);
+    let graph = CallGraph::build(&structure);
+    let algorithmic = AlgorithmicIndex::build(&structure, &graph);
+    let optimization = OptimizationIndex::build(&structure, &algorithmic, &graph);
     (structure, optimization, root)
 }
 

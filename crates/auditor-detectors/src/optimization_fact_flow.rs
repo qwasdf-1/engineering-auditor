@@ -60,6 +60,22 @@ pub(super) fn containing_loop(
         .max_by_key(|loop_info| loop_info.span.start_byte)
 }
 
+/// The loop that repeats `call` with the same operands on every pass: the
+/// nearest enclosing loop, when the call is outside its iterable, reads
+/// nothing the loop binds or assigns, and does not run once per key.
+pub(super) fn invariant_loop<'a>(
+    view: &FunctionView<'a>,
+    call: &StructureCall,
+) -> Option<&'a StructureLoop> {
+    let loop_info = containing_loop(view.file, view.owner, call.control_region)?;
+    let repeated = !loop_info
+        .iterable_span
+        .is_some_and(|span| contains_span(span, call.span))
+        && operands_are_invariant(view, loop_info, &call.expression, call.span)
+        && !runs_once_per_key(view, loop_info, call);
+    repeated.then_some(loop_info)
+}
+
 /// A call guarded by a switch on, or an equality test of, the key of a loop
 /// over a map runs at most once per loop: map keys are unique, so each
 /// constant case matches one iteration at most and hoisting saves nothing.
