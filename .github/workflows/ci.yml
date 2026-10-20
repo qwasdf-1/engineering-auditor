@@ -40,7 +40,12 @@ jobs:
           python3 tooling/lint/detector_arch.py
           python3 -m unittest tooling.lint.test_detector_arch tooling.test_detector_gate_contract
           python3 -m unittest tooling.ecosystem.test_manifest tooling.ecosystem.test_run tooling.ecosystem.test_labels tooling.ecosystem.test_oracles
-          python3 -m unittest tooling.release.test_changelog_section tooling.release.test_third_party_licenses tooling.live_provider.test_compare_prompt_candidate
+          python3 -m unittest tooling.release.test_changelog_section tooling.release.test_third_party_licenses tooling.recall.test_run tooling.live_provider.test_compare_prompt_candidate
+
+      - name: Recall benchmark
+        run: |
+          cargo build --locked -p auditor-cli
+          python3 tooling/recall/run.py --auditor target/debug/auditor --check eval/recall/baseline.json
 
       - name: Feature capability contract
         run: >-

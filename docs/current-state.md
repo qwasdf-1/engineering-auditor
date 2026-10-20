@@ -67,6 +67,12 @@ residual false positives run only in `full`.
 [`detector-precision.md`](reference/detector-precision.md) has the
 per-detector record.
 
+Recall is measured separately on seeded cases
+([`eval/recall/`](../eval/recall/README.md)). For six algorithmic and systems
+detectors in Rust and Python, every case with the problem directly in a loop
+is caught, but only 2 of 12 with it in a helper and 2 of 12 with it in an
+imported helper.
+
 ## AI Review (Experimental)
 
 - **Implemented.** The full staged review described in

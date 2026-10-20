@@ -9,6 +9,10 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
   would need them stay silent rather than guess. Your language's own linters
   (Clippy, Ruff, ESLint, golangci-lint, and others) use type information and
   catch defects Engineering Auditor cannot.
+- Algorithmic and systems detectors mostly need the expensive call to appear
+  directly in the loop or async function. When it sits in a helper, they
+  usually miss it (2 of 12 seeded helper cases are caught;
+  [`eval/recall/`](../eval/recall/README.md)).
 - Reflection, plugin loading, and entry points defined outside the scanned
   code are not resolved, so reachability findings such as `dead_code` and
   `orphan_symbol` exclude what they cannot prove.
