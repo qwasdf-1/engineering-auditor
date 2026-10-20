@@ -5,10 +5,10 @@
 ### Added
 
 - A seeded recall benchmark (`tooling/recall/`, `eval/recall/`) for the
-  algorithmic, systems, and optimization detectors: each case puts a known
-  problem directly in a loop, in a same-file helper, or in an imported
-  helper, with a fixed negative. CI fails if a detected case is missed or a
-  negative fires.
+  algorithmic, systems, and optimization detectors: 116 cases in Rust,
+  Python, TypeScript, Go, and Java, each putting a known problem directly in
+  a loop, in a same-file helper, or in an imported helper, with a fixed
+  negative. CI fails if a detected case is missed or a negative fires.
 
 ## 1.1.0 - First Public Release
 
