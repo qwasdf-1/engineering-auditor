@@ -7,6 +7,7 @@
 use auditor_ast::AstNode;
 
 use crate::ast_scan;
+use crate::bound_reads::released;
 use crate::java_api_rules::{is_shell_invocation, JVM_PREDICTABLE_RANDOM};
 use crate::jca_algorithms::weak_jca_algorithm;
 use crate::kotlin_api_identity::{
@@ -396,19 +397,9 @@ pub(crate) fn kotlin_unclosed_streams(root: AstNode<'_>) -> Vec<AstNode<'_>> {
                     .resolve_call(child)
                     .is_some_and(|api| OPENERS.contains(&api.as_str()))
             });
-            let Some(function) = enclosing_kotlin_function(*declaration) else {
-                return false;
-            };
             opens
-                && !ast_scan::nodes_of_kind(function, &["simple_identifier"])
-                    .into_iter()
-                    .filter(|usage| {
-                        usage.start_byte() > declaration.end_byte() && usage.text() == name.text()
-                    })
-                    .any(|usage| {
-                        kotlin_method_called_on(usage)
-                            .is_none_or(|method| method == "close" || method == "use")
-                    })
+                && enclosing_kotlin_function(*declaration).is_some()
+                && !released(name, kotlin_method_called_on, &["close", "use"])
         })
         .collect()
 }

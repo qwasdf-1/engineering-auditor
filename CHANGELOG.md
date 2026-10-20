@@ -79,6 +79,16 @@
   a loop, in a same-file helper, or in an imported helper, with a fixed
   negative. CI fails if a detected case is missed or a negative fires.
 
+### Changed
+
+- `resource_not_closed` follows a handle through the data-flow layer in
+  every language: only reads its binding reaches count as a close or a
+  hand-off, so a handle replaced by a reassignment before it is closed is
+  reported, and a name shadowed by a lambda parameter is not mistaken for
+  it. `unused_assignment` takes each function's declared locals from the
+  layer. The data-flow layer binds C and C++ variables declared without a
+  value (`size_t len;`). The 46-repository corpus is unchanged.
+
 ### Fixed
 
 - `sql_injection` no longer reports queries whose only runtime values are

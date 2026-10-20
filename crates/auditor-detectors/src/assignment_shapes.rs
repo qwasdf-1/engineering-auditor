@@ -3,7 +3,7 @@
 
 use std::collections::BTreeSet;
 
-use auditor_ast::AstNode;
+use auditor_ast::{AstNode, Binding, BindingKind, FunctionFlow};
 
 use crate::ast_scan;
 use crate::{util, Language};
@@ -58,7 +58,7 @@ impl LocalNames {
                     .flat_map(mentions)
                     .collect(),
             ),
-            _ => Self::Declared(declared_names(language, function)),
+            _ => Self::Declared(declared_names(language, function, block)),
         })
     }
 
@@ -70,56 +70,43 @@ impl LocalNames {
     }
 }
 
-/// Names a function declares: locals, parameters, loop and catch
-/// variables.
-fn declared_names(language: &Language, function: AstNode<'_>) -> BTreeSet<String> {
-    let (named, listed): (&[&str], &[&str]) = match language {
-        Language::C | Language::Cpp => return tier_two::c_declared_names(function),
-        Language::Kotlin => return tier_two::kotlin_declared_names(function),
-        Language::CSharp => return tier_two::csharp_declared_names(function),
-        Language::Go => (
-            &["var_spec", "parameter_declaration"],
-            &["short_var_declaration", "range_clause"],
-        ),
-        Language::Java => (
-            &[
-                "variable_declarator",
-                "formal_parameter",
-                "catch_formal_parameter",
-                "enhanced_for_statement",
-            ],
-            &["inferred_parameters"],
-        ),
-        _ => (
-            &["variable_declarator"],
-            &["formal_parameters", "catch_clause", "for_in_statement"],
-        ),
-    };
-    declared_in(function, named, listed)
-}
-
-/// The `name` fields of the `named` declaration kinds, and every name the
-/// `listed` kinds declare (a Go `a, b :=`, a loop variable, a catch
-/// parameter).
-fn declared_in(function: AstNode<'_>, named: &[&str], listed: &[&str]) -> BTreeSet<String> {
-    let mut names = ast_scan::nodes_of_kind(function, named)
-        .into_iter()
-        .filter_map(|node| node.child_by_field_name("name"))
-        .map(|name| name.text().to_string())
+/// Names `function` declares, as the data-flow layer binds them: locals,
+/// parameters, loop and catch variables, less those another name may alias
+/// (C# by-reference parameters; C and C++ `volatile`, address-taken, and
+/// reference-bound locals).
+fn declared_names(
+    language: &Language,
+    function: AstNode<'_>,
+    block: AstNode<'_>,
+) -> BTreeSet<String> {
+    let flow = FunctionFlow::enclosing(block);
+    let mut names = flow
+        .bindings()
+        .iter()
+        .filter(|binding| {
+            !matches!(
+                binding.kind,
+                BindingKind::Assignment | BindingKind::Augmented
+            ) && function.start_byte() <= binding.node.start_byte()
+                && binding.node.end_byte() <= function.end_byte()
+                && !may_be_aliased(language, binding)
+        })
+        .map(|binding| binding.name.to_string())
         .collect::<BTreeSet<_>>();
-    for node in ast_scan::nodes_of_kind(function, listed) {
-        let declared = match node.kind() {
-            "short_var_declaration" | "range_clause" | "for_in_statement" | "foreach_statement" => {
-                node.child_by_field_name("left")
-            }
-            "catch_clause" => node.child_by_field_name("parameter"),
-            _ => Some(node),
-        };
-        if let Some(declared) = declared {
-            names.extend(mentions(declared));
+    if matches!(language, Language::C | Language::Cpp) {
+        for name in tier_two::aliased_names(function) {
+            names.remove(&name);
         }
     }
     names
+}
+
+fn may_be_aliased(language: &Language, binding: &Binding<'_>) -> bool {
+    match language {
+        Language::CSharp => tier_two::is_by_reference_parameter(binding),
+        Language::C | Language::Cpp => tier_two::is_volatile(binding),
+        _ => false,
+    }
 }
 
 /// The one local a store target names: an identifier, or a wrapper that

@@ -7,6 +7,7 @@
 use auditor_ast::AstNode;
 
 use crate::ast_scan;
+use crate::bound_reads::reads_of_target;
 use crate::java_api_rules::is_shell_invocation;
 use crate::js_api_identity::{js_arguments, js_string, object_properties, JsScope};
 use crate::AuditedFile;
@@ -428,22 +429,17 @@ pub(crate) fn js_unclosed_files(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         {
             continue;
         }
-        let Some(body) = enclosing_function_body(declarator) else {
+        if enclosing_function_body(declarator).is_none() {
             continue;
-        };
-        let handled = ast_scan::nodes_of_kind(body, &["identifier"])
-            .into_iter()
-            .filter(|usage| {
-                usage.start_byte() > declarator.end_byte() && usage.text() == name.text()
-            })
-            .any(|usage| {
-                if handle {
-                    method_called_on(usage).is_none_or(|method| method == "close")
-                } else {
-                    fs_descriptor_use(&scope, usage)
-                        .is_none_or(|function| function.starts_with("close"))
-                }
-            });
+        }
+        let handled = reads_of_target(name).into_iter().any(|usage| {
+            if handle {
+                method_called_on(usage).is_none_or(|method| method == "close")
+            } else {
+                fs_descriptor_use(&scope, usage)
+                    .is_none_or(|function| function.starts_with("close"))
+            }
+        });
         if !handled {
             unclosed.push(declaration);
         }

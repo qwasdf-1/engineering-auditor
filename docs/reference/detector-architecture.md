@@ -136,7 +136,9 @@ Representative module boundaries:
 - `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`, and
   `dataflow_values.rs`: findings-free def-use flow within one function
   (reaching bindings, value origins, value destinations); detector-side
-  request sources and security sinks live in `dataflow_sources.rs`
+  request sources and security sinks live in `dataflow_sources.rs`, and
+  `bound_reads.rs` gives owners the reads of a bound handle and whether
+  it is released or handed on
 - `algorithmic.rs` and `optimization.rs`: one literal constructor call per
   Layer 3 or Layer 5 detector owner
 - `repository_graph.rs`: typed external graph/provider contract and six

@@ -6,6 +6,7 @@ use auditor_ast::AstNode;
 
 use crate::api_identity::{arguments, go_integer, go_package, go_string, ImportScope};
 use crate::ast_scan;
+use crate::bound_reads::released;
 use crate::{AuditedFile, Language};
 
 /// Calls in a Go file to one of `apis`, with the argument at each API's index.
@@ -180,19 +181,10 @@ pub(crate) fn go_unclosed_files(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         else {
             continue;
         };
-        let Some(body) = enclosing_go_function_body(declaration) else {
-            continue;
-        };
-        if !opens || target.text() == "_" {
+        if !opens || target.text() == "_" || enclosing_go_function_body(declaration).is_none() {
             continue;
         }
-        let handled = ast_scan::nodes_of_kind(body, &["identifier"])
-            .into_iter()
-            .filter(|usage| {
-                usage.start_byte() > declaration.end_byte() && usage.text() == target.text()
-            })
-            .any(|usage| go_method_called_on(usage).is_none_or(|method| method == "Close"));
-        if !handled {
+        if !released(target, go_method_called_on, &["Close"]) {
             unclosed.push(declaration);
         }
     }

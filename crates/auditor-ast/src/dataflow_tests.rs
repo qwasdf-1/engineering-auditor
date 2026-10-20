@@ -192,3 +192,18 @@ fn a_name_is_made_of_the_values_bound_and_appended_to_it() {
         [Assigned::Outside(node)] if node.text() == "base"
     ));
 }
+
+#[test]
+fn a_c_declaration_without_a_value_binds_its_variables() {
+    let source = "int f(void) {\n  size_t len;\n  char *p, buf[8];\n  int g(int);\n  len = 0;\n  return len + p[0] + buf[0];\n}\n";
+    let tree = tree(AstLang::C, source);
+    let len = nth(tree.root_node(), "identifier", "len", 2);
+    let flow = FunctionFlow::enclosing(len);
+    assert_eq!(values(&flow.reaching(len)), ["0"]);
+    let names = flow
+        .bindings()
+        .iter()
+        .map(|binding| binding.name)
+        .collect::<Vec<_>>();
+    assert_eq!(names, ["len", "p", "buf", "len"]);
+}

@@ -101,7 +101,14 @@ flow through fields or aliases. Between functions, owners carry what a
 function returns through the call graph's certain targets.
 `dataflow_sources.rs` names request input (framework request members and
 accessors, request-bound parameters) and security sinks for the owners that
-use the layer (`sql_injection`, `random_for_security`).
+use the layer (`sql_injection`, `random_for_security`). `bound_reads.rs`
+gives the resource owners (`resource_not_closed` in every language) the
+reads a handle's binding reaches, and `unused_assignment` takes a
+function's declared locals from the layer's bindings, keeping only its own
+alias rules (C# by-reference parameters; C and C++ `volatile`,
+address-taken, and reference-bound locals). The algorithmic, systems, and
+optimization families read assignments from the structure index's semantic
+facts instead, which has its own assignment table.
 
 Graph-dependent detectors (the `graph-analysis` feature) read optional
 repository-graph and co-edit inputs through a `GraphProvider`; without them

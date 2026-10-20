@@ -7,6 +7,7 @@
 use auditor_ast::AstNode;
 
 use crate::ast_scan;
+use crate::bound_reads::released;
 use crate::java_api_identity::{
     declares_java_main, enclosing_java_method, is_java_main_method, java_arguments, java_string,
     java_string_arguments, JavaScope,
@@ -466,19 +467,10 @@ pub(crate) fn java_unclosed_streams(root: AstNode<'_>) -> Vec<AstNode<'_>> {
             let opens = scope
                 .resolve_call(value)
                 .is_some_and(|api| OPENERS.contains(&api.as_str()));
-            let Some(method) = enclosing_java_method(declaration) else {
-                continue;
-            };
-            if !opens {
+            if !opens || enclosing_java_method(declaration).is_none() {
                 continue;
             }
-            let handled = ast_scan::nodes_of_kind(method, &["identifier"])
-                .into_iter()
-                .filter(|usage| {
-                    usage.start_byte() > declarator.end_byte() && usage.text() == name.text()
-                })
-                .any(|usage| java_method_called_on(usage).is_none_or(|method| method == "close"));
-            if !handled {
+            if !released(name, java_method_called_on, &["close"]) {
                 unclosed.push(declaration);
             }
         }

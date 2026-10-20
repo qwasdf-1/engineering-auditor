@@ -1,6 +1,7 @@
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::ast_scan::{self, AstScan};
+use crate::bound_reads::reads_of_target;
 use crate::braced_statement_shapes::{
     assignment_conditions, empty_if_branches, java_empty_catches,
 };
@@ -124,7 +125,6 @@ pub(crate) fn resource_not_closed_findings(scan: AstScan<'_, '_>) -> Vec<Finding
                 }
                 return;
             }
-            let calls = ast_scan::nodes_of_kind(root, &["call"]);
             for assignment in ast_scan::nodes_of_kind(root, &["assignment"]) {
                 let Some(target) = assignment.child_by_field_name("left") else {
                     continue;
@@ -139,7 +139,7 @@ pub(crate) fn resource_not_closed_findings(scan: AstScan<'_, '_>) -> Vec<Finding
                         .any(|call| ast_scan::callee(*call) == "open");
                 if !is_simple_identifier(target_name)
                     || !opens_resource
-                    || resource_is_closed(assignment, target_name, &calls)
+                    || resource_is_closed(target)
                 {
                     continue;
                 }
@@ -174,27 +174,19 @@ fn is_simple_identifier(value: &str) -> bool {
             .all(|character| character.is_ascii_alphanumeric() || character == '_')
 }
 
-fn resource_is_closed(
-    assignment: auditor_ast::AstNode<'_>,
-    target: &str,
-    calls: &[auditor_ast::AstNode<'_>],
-) -> bool {
-    let owner = enclosing_function_span(assignment);
-    calls.iter().any(|call| {
-        call.start_byte() > assignment.end_byte()
-            && ast_scan::callee(*call) == format!("{target}.close")
-            && enclosing_function_span(*call) == owner
+/// Whether a read of the handle bound to `target` calls its `close()`.
+fn resource_is_closed(target: auditor_ast::AstNode<'_>) -> bool {
+    reads_of_target(target).into_iter().any(|read| {
+        read.parent()
+            .filter(|attribute| attribute.kind() == "attribute")
+            .filter(|attribute| {
+                attribute
+                    .child_by_field_name("attribute")
+                    .is_some_and(|name| name.text() == "close")
+            })
+            .and_then(|attribute| attribute.parent())
+            .is_some_and(|call| call.kind() == "call")
     })
-}
-
-fn enclosing_function_span(mut node: auditor_ast::AstNode<'_>) -> Option<(usize, usize)> {
-    while let Some(parent) = node.parent() {
-        if matches!(parent.kind(), "function_definition" | "lambda") {
-            return Some((parent.start_byte(), parent.end_byte()));
-        }
-        node = parent;
-    }
-    None
 }
 
 pub(crate) fn empty_conditional_branch_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {

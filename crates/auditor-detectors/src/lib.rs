@@ -15,6 +15,7 @@ mod ast_scan;
 mod async_rules;
 mod bloat;
 mod block_strings;
+mod bound_reads;
 mod braced_statement_shapes;
 mod c_api_rules;
 mod call_graph;

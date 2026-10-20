@@ -104,6 +104,52 @@ fn node_bindings<'a>(node: AstNode<'a>, scope: AstNode<'a>, out: &mut Vec<Bindin
         catch_parameter(node, out);
     } else if let Some((_, kind)) = BINDING_KINDS.iter().find(|(name, _)| *name == node.kind()) {
         declaration(node, *kind, scope, out);
+    } else if node.kind() == "declaration" {
+        uninitialized(node, scope, out);
+    }
+}
+
+/// The variables a C or C++ declaration declares without a value
+/// (`size_t len;`, `char *p, buf[8];`); `init_declarator`s bind their own,
+/// and a function declarator declares no variable.
+fn uninitialized<'a>(declaration: AstNode<'a>, scope: AstNode<'a>, out: &mut Vec<Binding<'a>>) {
+    const DECLARATORS: &[&str] = &[
+        "identifier",
+        "pointer_declarator",
+        "array_declarator",
+        "reference_declarator",
+        "parenthesized_declarator",
+    ];
+    for declarator in declaration
+        .named_children()
+        .filter(|child| DECLARATORS.contains(&child.kind()))
+    {
+        let mut name = declarator;
+        while name.kind() != "identifier" {
+            let Some(inner) = name
+                .child_by_field_name("declarator")
+                .or_else(|| {
+                    name.named_children()
+                        .find(|child| DECLARATORS.contains(&child.kind()))
+                })
+                .filter(|inner| DECLARATORS.contains(&inner.kind()))
+            else {
+                break;
+            };
+            name = inner;
+        }
+        if name.kind() != "identifier" {
+            continue;
+        }
+        out.push(Binding {
+            name: name.text(),
+            target: name,
+            value: None,
+            node: declarator,
+            kind: BindingKind::Declaration,
+            region: scope,
+            point: declarator.end_byte(),
+        });
     }
 }
 

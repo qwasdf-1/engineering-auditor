@@ -8,6 +8,7 @@
 use auditor_ast::AstNode;
 
 use crate::ast_scan;
+use crate::bound_reads::released;
 use crate::csharp_api_identity::{
     csharp_arguments, csharp_is_public, csharp_string, csharp_string_arguments,
     declares_csharp_entry_point, enclosing_csharp_method, CSharpScope,
@@ -442,20 +443,13 @@ pub(crate) fn csharp_unclosed_streams(root: AstNode<'_>) -> Vec<AstNode<'_>> {
                     .resolve_call(value)
                     .is_some_and(|api| OPENERS.contains(&api.as_str()))
             });
-            let Some(method) = enclosing_csharp_method(*statement) else {
-                return false;
-            };
             opens
-                && !ast_scan::nodes_of_kind(method, &["identifier"])
-                    .into_iter()
-                    .filter(|usage| {
-                        usage.start_byte() > statement.end_byte() && usage.text() == name.text()
-                    })
-                    .any(|usage| {
-                        csharp_method_called_on(usage).is_none_or(|method| {
-                            matches!(method, "Dispose" | "Close" | "DisposeAsync")
-                        })
-                    })
+                && enclosing_csharp_method(*statement).is_some()
+                && !released(
+                    name,
+                    csharp_method_called_on,
+                    &["Dispose", "Close", "DisposeAsync"],
+                )
         })
         .collect()
 }

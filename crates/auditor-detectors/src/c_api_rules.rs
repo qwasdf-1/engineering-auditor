@@ -10,6 +10,7 @@ use std::collections::BTreeSet;
 use auditor_ast::AstNode;
 
 use crate::ast_scan;
+use crate::bound_reads::reads_of_target;
 use crate::java_api_rules::is_shell_invocation;
 
 /// The functions and macros a C or C++ file defines, which shadow library
@@ -505,6 +506,14 @@ pub(crate) fn c_xxe_parsers(root: AstNode<'_>) -> Vec<AstNode<'_>> {
 
 /// `FILE *f = fopen(..)` (or `f = fopen(..)`) in a function that neither
 /// closes `f` nor hands it on: passing it to anything but a stdio routine,
+/// The identifier a C declarator names, under any pointer stars.
+fn declared_identifier(mut declarator: AstNode<'_>) -> AstNode<'_> {
+    while let Some(inner) = declarator.child_by_field_name("declarator") {
+        declarator = inner;
+    }
+    declarator
+}
+
 /// returning it, or storing it transfers ownership (CERT FIO42-C).
 pub(crate) fn c_unclosed_files(root: AstNode<'_>) -> Vec<AstNode<'_>> {
     const STDIO: &[&str] = &[
@@ -527,36 +536,32 @@ pub(crate) fn c_unclosed_files(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         let variable = match holder.kind() {
             "init_declarator" => holder
                 .child_by_field_name("declarator")
-                .map(|declarator| declarator.text().trim_start_matches(['*', ' '])),
+                .map(declared_identifier),
             "assignment_expression" => holder
                 .child_by_field_name("left")
-                .filter(|left| left.kind() == "identifier")
-                .map(|left| left.text()),
+                .filter(|left| left.kind() == "identifier"),
             _ => None,
         };
-        let (Some(variable), Some(function)) = (variable, enclosing_c_function(call)) else {
+        let Some(variable) = variable.filter(|_| enclosing_c_function(call).is_some()) else {
             continue;
         };
-        let handled = ast_scan::nodes_of_kind(function, &["identifier"])
-            .into_iter()
-            .filter(|usage| usage.start_byte() > holder.end_byte() && usage.text() == variable)
-            .any(|usage| {
-                let Some(parent) = usage.parent() else {
-                    return true;
-                };
-                match parent.kind() {
-                    "argument_list" => parent
-                        .parent()
-                        .and_then(|call| scope.resolve_call(call))
-                        .is_none_or(|callee| !STDIO.contains(&callee)),
-                    // Tests of the handle (`if (!f)`, `f == NULL`) are not uses.
-                    "unary_expression"
-                    | "binary_expression"
-                    | "parenthesized_expression"
-                    | "condition_clause" => false,
-                    _ => true,
-                }
-            });
+        let handled = reads_of_target(variable).into_iter().any(|usage| {
+            let Some(parent) = usage.parent() else {
+                return true;
+            };
+            match parent.kind() {
+                "argument_list" => parent
+                    .parent()
+                    .and_then(|call| scope.resolve_call(call))
+                    .is_none_or(|callee| !STDIO.contains(&callee)),
+                // Tests of the handle (`if (!f)`, `f == NULL`) are not uses.
+                "unary_expression"
+                | "binary_expression"
+                | "parenthesized_expression"
+                | "condition_clause" => false,
+                _ => true,
+            }
+        });
         if !handled {
             sites.push(holder);
         }
