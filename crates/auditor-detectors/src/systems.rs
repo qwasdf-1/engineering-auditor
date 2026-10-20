@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 
 use auditor_core::{Confidence, Finding, Severity};
 
+use crate::finding_via::through_calls;
 use crate::systems_facts::{EffectKind, SystemEffect, SystemsIndex};
 use crate::AuditedFile;
 
@@ -27,25 +28,18 @@ pub(crate) fn loop_artifact_rewrite_findings(index: &SystemsIndex) -> Vec<Findin
         .into_iter()
         .filter_map(|((path, function, loop_line), effects)| {
             let (read, write) = artifact_rewrite_pair(&effects)?;
-            // Effects inherited through calls name the called function and
-            // are less certain, as in `effect_finding`.
-            let via = write.via.as_deref().or(read.via.as_deref());
-            let through = via.map_or(String::new(), |via| {
-                format!(", through `{}`", via.split(" (").next().unwrap_or(via))
-            });
-            let mut finding = grouped_finding(
-                "loop_artifact_rewrite",
-                "Loop rewrites whole artifact",
-                format!(
-                    "Function `{function}` performs whole-artifact read and write effects inside one loop{through}."
+            let finding = through_calls(
+                grouped_finding(
+                    "loop_artifact_rewrite",
+                    "Loop rewrites whole artifact",
+                    format!(
+                        "Function `{function}` performs whole-artifact read and write effects inside one loop."
+                    ),
+                    "Use incremental updates or move whole-artifact I/O outside the loop.",
+                    (path, Some(loop_line)),
                 ),
-                "Use incremental updates or move whole-artifact I/O outside the loop.",
-                (path, Some(loop_line)),
+                write.via.as_deref().or(read.via.as_deref()),
             );
-            if let Some(via) = via {
-                finding.confidence = Confidence::Medium;
-                finding = finding.with_evidence("via", via.to_string());
-            }
             Some(
                 finding
             .with_evidence("function", function)
@@ -312,29 +306,13 @@ fn effect_finding(
     behavior: &str,
     recommendation: &str,
 ) -> Finding {
-    // An inherited effect is one resolved call or more away from the call
-    // site, so the finding names the called function and is less certain.
-    let (message, confidence) = match effect.via.as_deref() {
-        Some(via) => (
-            format!(
-                "Function `{}` {behavior}, through `{}`.",
-                effect.function,
-                via.split(" (").next().unwrap_or(via)
-            ),
-            Confidence::Medium,
-        ),
-        None => (
-            format!("Function `{}` {behavior}.", effect.function),
-            Confidence::High,
-        ),
-    };
     let finding = auditor_core::finding!(
         detector,
         "systems_economics",
         title,
-        message,
+        format!("Function `{}` {behavior}.", effect.function),
         Severity::Low,
-        confidence,
+        Confidence::High,
         effect.path.clone(),
         Some(effect.loop_line.unwrap_or(effect.line)),
     )
@@ -350,10 +328,7 @@ fn effect_finding(
     .with_evidence("async_context", effect.in_async)
     .with_evidence("hot_path", effect.in_hot_path)
     .with_evidence("request_path", effect.in_request_path);
-    match &effect.via {
-        Some(via) => finding.with_evidence("via", via.clone()),
-        None => finding,
-    }
+    through_calls(finding, effect.via.as_deref())
 }
 
 /// Find files that are both high-churn and non-trivially complex.

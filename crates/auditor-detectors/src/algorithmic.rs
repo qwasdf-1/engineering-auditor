@@ -1,6 +1,8 @@
 use auditor_ast::SourceSpan;
 use auditor_core::{Confidence, Finding, Severity};
 
+use crate::finding_via::through_calls;
+
 use crate::algorithmic_facts::{
     AlgorithmicFact, AlgorithmicFactKind, AlgorithmicIndex, SelectionKind,
 };
@@ -545,32 +547,17 @@ fn finding(
     message: String,
 ) -> Finding {
     let cost = fact.cost();
-    let (message, confidence) = match fact.via.as_deref() {
-        Some(via) => (
-            format!(
-                "{}, through `{}`.",
-                message.trim_end_matches('.'),
-                via.split(" (").next().unwrap_or(via)
-            ),
-            Confidence::Medium,
-        ),
-        None => (message, Confidence::High),
-    };
     let finding = auditor_core::finding!(
         detector,
         category,
         spec.title,
         message,
         spec.severity,
-        confidence,
+        Confidence::High,
         &fact.path,
         Some(fact.line),
     );
-    let finding = match &fact.via {
-        Some(via) => finding.with_evidence("via", via.clone()),
-        None => finding,
-    };
-    finding
+    through_calls(finding, fact.via.as_deref())
         .with_recommendation(spec.recommendation)
         .with_evidence("function", fact.function.clone())
         .with_evidence("cost_model", spec.cost_model)

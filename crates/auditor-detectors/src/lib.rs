@@ -37,6 +37,7 @@ mod duplication;
 mod errorprone;
 mod errorprone_language_rules;
 mod finding_anchor;
+mod finding_via;
 mod go_api_rules;
 mod golang;
 mod java;

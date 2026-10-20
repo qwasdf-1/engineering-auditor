@@ -1,8 +1,7 @@
 use auditor_core::{Confidence, Finding, Severity};
 
-use crate::optimization_facts::{
-    OptimizationFact, OptimizationFactKind, OptimizationIndex, OptimizationProof,
-};
+use crate::finding_via::through_calls;
+use crate::optimization_facts::{OptimizationFactKind, OptimizationIndex, OptimizationProof};
 
 pub(crate) fn cache_miss_opportunity_findings(index: &OptimizationIndex) -> Vec<Finding> {
     index
@@ -73,22 +72,6 @@ pub(crate) fn repeated_format_allocation_findings(index: &OptimizationIndex) -> 
         .collect()
 }
 
-/// A finding for an operation reached through calls: the message names the
-/// first called function, the confidence is Medium, and `via` evidence holds
-/// the chain.
-fn with_via(mut finding: Finding, fact: &OptimizationFact) -> Finding {
-    let Some(via) = &fact.via else {
-        return finding;
-    };
-    finding.message = format!(
-        "{}, through `{}`.",
-        finding.message.trim_end_matches('.'),
-        via.split(" (").next().unwrap_or(via)
-    );
-    finding.confidence = Confidence::Medium;
-    finding.with_evidence("via", via.clone())
-}
-
 pub(crate) fn loop_invariant_regex_compilation_findings(index: &OptimizationIndex) -> Vec<Finding> {
     index
         .facts()
@@ -117,7 +100,7 @@ pub(crate) fn loop_invariant_regex_compilation_findings(index: &OptimizationInde
             )),
             _ => None,
         }
-        .map(|finding| with_via(finding, fact)))
+        .map(|finding| through_calls(finding, fact.via.as_deref())))
         .collect()
 }
 
