@@ -77,7 +77,26 @@ const NAMING_WORDS: &[&str] = &[
     "route",
     "prefix",
     "label",
+    "id",
+    "help",
+    "message",
+    "text",
+    "hint",
+    "prompt",
+    "title",
+    "description",
+    "placeholder",
+    "error",
+    "condition",
+    "query",
+    "template",
+    "pattern",
+    "regex",
+    "format",
 ];
+
+/// The Fetch API's `credentials` modes (`credentials: "include"`).
+const FETCH_CREDENTIAL_MODES: &[&str] = &["include", "omit", "same-origin"];
 
 /// Words before a final `key` that make it a lookup key (`SECRET_CONFIG_KEY`)
 /// rather than a key (`SECRET_KEY`).
@@ -89,11 +108,41 @@ const LOOKUP_KEY_WORDS: &[&str] = &[
 /// A target or literal that names where a credential lives rather than
 /// holding one: `API_KEY_ENV = "SERVICE_API_KEY"`, `TOKEN_HEADER = ".."`,
 /// `SECRET_STORE_DIR = "secrets"`, `SECRET_BACKEND_CONFIG_KEY = ".."`, a
-/// literal that is the target's own name (`api_key: "api_key"`), a property
-/// key (`SOCKS_PASSWORD = "java.net.socks.password"`), or a character set
-/// with no letter or digit (`PASSWORD_ENCODE_SET = " \"':;"`).
+/// literal that restates the target's name (`api_key: "api_key"`,
+/// `CLIENT_CREDENTIALS = "clientCredentials"`), a property key
+/// (`SOCKS_PASSWORD = "java.net.socks.password"`), a Fetch credentials mode
+/// (`credentials: "include"`), or text no credential has the shape of.
 fn names_a_credential(target: &str, value: &str) -> bool {
-    naming_target(target) || value.eq_ignore_ascii_case(target) || names_by_shape(value)
+    naming_target(target)
+        || value.eq_ignore_ascii_case(target)
+        || restates_target(target, value)
+        || fetch_credentials_mode(target, value)
+        || names_by_shape(value)
+}
+
+/// A literal of two or more words, at least two thirds of them words of the
+/// target's name: `ACCESS_TOKEN_NOT_FOUND = "access_token/not_found"`,
+/// `SECRET_REF = "x-secret-ref"`. A password of one word (`"password1"`) or
+/// of other words (`DB_PASSWORD = "SuperSecretPassword"`) is not one.
+fn restates_target(target: &str, value: &str) -> bool {
+    let target_words = util::split_identifier(target);
+    let value_words = value
+        .split(|character: char| !character.is_ascii_alphanumeric() && character != '_')
+        .flat_map(util::split_identifier)
+        .filter(|word| {
+            word.chars()
+                .all(|character| character.is_ascii_alphabetic())
+        })
+        .collect::<Vec<_>>();
+    let shared = value_words
+        .iter()
+        .filter(|word| target_words.contains(word))
+        .count();
+    value_words.len() >= 2 && shared * 3 >= value_words.len() * 2
+}
+
+fn fetch_credentials_mode(target: &str, value: &str) -> bool {
+    target.eq_ignore_ascii_case("credentials") && FETCH_CREDENTIAL_MODES.contains(&value)
 }
 
 /// A target whose last word names something about a credential.
@@ -105,18 +154,46 @@ fn naming_target(target: &str) -> bool {
     }
 }
 
-/// An environment variable name, a property key, or symbols only.
+/// An environment variable name, a property key, symbols only, a regular
+/// expression with alternation, or text over several lines that is not a
+/// PEM block.
 fn names_by_shape(value: &str) -> bool {
-    let environment_name = value.contains('_')
+    [
+        environment_name,
+        property_key,
+        regular_expression,
+        multiline_text,
+        symbols_only,
+    ]
+    .iter()
+    .any(|shape| shape(value))
+}
+
+fn environment_name(value: &str) -> bool {
+    value.contains('_')
         && value.chars().all(|character| {
             character.is_ascii_uppercase() || character.is_ascii_digit() || character == '_'
-        });
-    let property_key = value.contains('.')
+        })
+}
+
+fn property_key(value: &str) -> bool {
+    value.contains('.')
         && credential_context(value)
         && value.chars().all(|character| {
             character.is_ascii_lowercase()
                 || character.is_ascii_digit()
                 || ".-_".contains(character)
-        });
-    environment_name || property_key || !value.chars().any(char::is_alphanumeric)
+        })
+}
+
+fn regular_expression(value: &str) -> bool {
+    value.contains('|') && value.contains('(')
+}
+
+fn multiline_text(value: &str) -> bool {
+    value.contains('\n') && !value.contains("-----BEGIN")
+}
+
+fn symbols_only(value: &str) -> bool {
+    !value.chars().any(char::is_alphanumeric)
 }

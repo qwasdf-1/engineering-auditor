@@ -57,6 +57,15 @@ are unchanged.
 
 ### Fixed
 
+- `hardcoded_credential` no longer reports literals that restate the
+  target's name (`ACCESS_TOKEN_NOT_FOUND = "access_token/not_found"`,
+  `CLIENT_CREDENTIALS = "clientCredentials"`, `SECRET_REF =
+  "x-secret-ref"`), Fetch `credentials: "include"`, or targets naming text
+  about a credential (`_ID`, `_HELP`, `_MESSAGE`, `_ERROR`, `_TEMPLATE`,
+  `_QUERY`, `_CONDITION`, `_PATTERN`, `_REGEX`), regular expressions with
+  alternation, or multi-line text other than a PEM block. On the
+  46-repository corpus this removes 12 of the detector's 13 findings, all
+  false positives; the remaining one is a real key literal.
 - Recovery of C, C++, and C# files with syntax errors goes further. It
   keeps one configuration of the preprocessor conditionals (the first live
   branch of each `#if` group, without the directive lines), and in C and

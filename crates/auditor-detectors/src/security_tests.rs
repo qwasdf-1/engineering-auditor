@@ -258,6 +258,31 @@ mod tests {
     }
 
     #[test]
+    fn literals_that_restate_name_or_describe_a_credential_are_not_credentials() {
+        let script = "export const ACCESS_TOKEN_NOT_FOUND = 'access_token/access_token_not_found';\n\
+            const grants = { CLIENT_CREDENTIALS: \"clientCredentials\" };\n\
+            const keys = { SECRET_ENVIRONMENTS: \"secretEnvironments\" };\n\
+            const init = { credentials: \"include\" };\n\
+            const SECRET_KEY = `(?:api[-_]?key|private[-_]?key)`;\n\
+            const DB_PASSWORD = \"SuperSecretPassword\";\n\
+            const POSTHOG_API_KEY = 'phc_9CipPajQC22mSkk2wxe2TXsUA0Ysyupe8dt5KQQ';\n";
+        assert_eq!(
+            credential_targets("src/errors.ts", script),
+            ["DB_PASSWORD", "POSTHOG_API_KEY"]
+        );
+        let java = "class Mapper {\n\
+            static final String SECRET_REF = \"x-secret-ref\";\n\
+            static final String PARAMETER_PROJECT_ACL_API_KEY_ID = \"projectAclApiKeyId\";\n\
+            static final String ADMIN_PASSWORD = \"Tr0ub4dor&3xyz\";\n}\n";
+        assert_eq!(
+            credential_targets("src/main/java/app/Mapper.java", java),
+            ["ADMIN_PASSWORD"]
+        );
+        let go = "package cli\n\nconst flagResetPasswordHelp = \"Reset user password\"\n";
+        assert_eq!(credential_targets("internal/cli/cli.go", go), Vec::<String>::new());
+    }
+
+    #[test]
     fn security_detects_unsafe_pickle() {
         let root = temp_root("pickle");
         let file = make_file(&root, "src/main.py", "data = pickle.loads(blob)\n");

@@ -573,6 +573,7 @@ return silently.
 | `go_errcheck` | Writes to a `bytes.Buffer` or `strings.Builder` (errcheck's default exclusions); a method the file declares without results (chi `LogEntry.Write`) | A receiver declared with those types, and result-less methods, are skipped |
 | `out_parameter` | `@Override` methods whose supertype fixes an output buffer (`Reader.read(char[] cbuf, ..)`) | Overrides exempt |
 | `hardcoded_credential` | Property-key names (`"java.net.socks.password"`) and character sets with no letter or digit (okhttp `PASSWORD_ENCODE_SET`) | Not credential values |
+| `hardcoded_credential` | Literals restating the target's name (hoppscotch `ACCESS_TOKEN_NOT_FOUND = 'access_token/access_token_not_found'`, `CLIENT_CREDENTIALS: "clientCredentials"`, dependency-track `SECRET_REF = "x-secret-ref"`), Fetch `credentials: "include"`, help text and SQL or regex templates under credential names | Not credential values: 12 of 13 corpus findings; a PostHog project key remains |
 | `repeated_format_allocation` | Error messages formatted in a branch before `throw` or a reporting call | Only calls that run on every iteration are reported |
 | `loop_invariant_regex_compilation` | A compile already cached behind `if (!re)` (zod) | Lazily cached compiles are exempt |
 | `debugger_in_production` | A trap followed by `abort()` (libuv's fatal-error path) | A deliberate fatal breakpoint |
