@@ -12,11 +12,14 @@ pub struct FileChurn {
     pub loc_delta: i64,
 }
 
-/// Collect churn for the commits reachable from `HEAD` within
+/// Collect churn for the commits on `HEAD`'s first-parent line within
 /// [`CHURN_WINDOW_DAYS`] of `HEAD`'s commit time. Anchoring on the scanned
 /// commit instead of the wall clock and other refs keeps a scan of one commit
-/// reproducible on any day and in any clone. Returns an empty map when git is
-/// unavailable or the directory is not a repository with commits.
+/// reproducible on any day and in any clone. A merge counts once, as its
+/// change against the first parent, so commits of a merged branch (or an
+/// unrelated history linked by a merge) are not counted again. Returns an
+/// empty map when git is unavailable or the directory is not a repository with
+/// commits.
 pub fn collect_file_churn(root: &Path) -> HashMap<PathBuf, FileChurn> {
     let Some(head_time) = head_commit_time(root) else {
         return HashMap::new();
@@ -25,6 +28,8 @@ pub fn collect_file_churn(root: &Path) -> HashMap<PathBuf, FileChurn> {
     let output = Command::new("git")
         .arg("log")
         .arg("HEAD")
+        .arg("--first-parent")
+        .arg("--diff-merges=first-parent")
         .arg(format!("--since=@{since}"))
         .arg("--numstat")
         .arg("--summary")

@@ -15,6 +15,9 @@
 
 ### Changed
 
+- Churn follows `HEAD`'s first-parent line and counts a merge once, as its
+  change against the first parent, so commits of a merged branch or a linked
+  unrelated history are not counted again.
 - `tooling/r3_a2_hot_path_measure.py` is now `tooling/scoped_scan_latency.py`,
   and docs and code comments no longer point into the implementation plans,
   which the published repository excludes.

@@ -95,6 +95,57 @@ fn churn_window_is_anchored_on_head_not_the_wall_clock_or_other_refs() {
 }
 
 #[test]
+fn churn_follows_the_first_parent_line_through_merges() {
+    let root = temp_root("churn-merge");
+    let git = |args: &[&str], date: &str| {
+        let out = std::process::Command::new("git")
+            .args(args)
+            .env("GIT_AUTHOR_DATE", date)
+            .env("GIT_COMMITTER_DATE", date)
+            .current_dir(&root)
+            .output()
+            .unwrap();
+        assert!(out.status.success(), "git {args:?} failed");
+    };
+    let commit = |body: &str, date: &str| {
+        write(&root, "src/a.rs", body);
+        git(&["add", "src"], date);
+        git(&["commit", "-m", "a"], date);
+    };
+    git(&["init", "-b", "main"], "");
+    git(&["config", "user.name", "test"], "");
+    git(&["config", "user.email", "test@test"], "");
+    commit("pub fn a() {}\n", "2020-01-01T00:00:00Z");
+    commit("pub fn a() {}\npub fn b() {}\n", "2020-01-02T00:00:00Z");
+    // An unrelated history with its own edits to the same path, linked by a
+    // merge that keeps this side's tree.
+    git(&["checkout", "--orphan", "other"], "");
+    commit("pub fn x() {}\n", "2020-01-03T00:00:00Z");
+    commit("pub fn x() {}\npub fn y() {}\n", "2020-01-04T00:00:00Z");
+    git(&["checkout", "main"], "");
+    git(
+        &["merge", "-s", "ours", "--allow-unrelated-histories", "-m", "link", "other"],
+        "2020-01-05T00:00:00Z",
+    );
+    let churn = crate::churn::collect_file_churn(&root);
+    assert_eq!(churn[Path::new("src/a.rs")].commits, 2);
+    assert_eq!(churn[Path::new("src/a.rs")].loc_delta, 1);
+
+    // A merge that brings in changes counts once, with its net growth.
+    git(&["checkout", "-b", "feature"], "");
+    commit("pub fn a() {}\npub fn b() {}\npub fn c() {}\n", "2020-01-06T00:00:00Z");
+    commit(
+        "pub fn a() {}\npub fn b() {}\npub fn c() {}\npub fn d() {}\n",
+        "2020-01-07T00:00:00Z",
+    );
+    git(&["checkout", "main"], "");
+    git(&["merge", "--no-ff", "-m", "feature", "feature"], "2020-01-08T00:00:00Z");
+    let churn = crate::churn::collect_file_churn(&root);
+    assert_eq!(churn[Path::new("src/a.rs")].commits, 3);
+    assert_eq!(churn[Path::new("src/a.rs")].loc_delta, 3);
+}
+
+#[test]
 fn churn_complexity_hotspot_detects_high_churn_high_complexity_function() {
     let root = temp_root("churn-hotspot");
     write(
