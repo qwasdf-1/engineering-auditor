@@ -226,19 +226,40 @@ fn declarations_with_syntax_errors_are_quarantined_in_a_recovered_tree() {
 }
 
 #[test]
-fn a_function_split_by_an_error_is_quarantined_whole() {
+fn preprocessor_branches_that_split_a_function_are_resolved() {
     let source = "int clean(int a) {\n  int total = a * 2 + 1;\n  if (total > 10) {\n    total -= 10;\n  }\n  return total;\n}\n\nint other(int a) {\n  int total = a * 3 + 1;\n  while (total > 10) {\n    total -= 10;\n  }\n  return total;\n}\n\nint split(int a) {\n  int b = 0;\n#ifdef WIDE\n  if (a) {\n#else\n  if (!a) {\n#endif\n    b = 1;\n  }\n  return b;\n}\n";
     let tree = parser().parse(&AstLang::C, source).unwrap();
     assert!(tree.root_node().has_error());
     let recovered = tree.error_free().expect("recoverable");
-    assert_eq!(function_names(recovered), ["clean", "other"]);
-    for quarantine in recovered.quarantined() {
-        for span in recovered.function_spans().iter() {
-            assert!(
-                span.end_byte <= quarantine.start_byte || quarantine.end_byte <= span.start_byte
-            );
-        }
-    }
+    assert_eq!(function_names(recovered), ["clean", "other", "split"]);
+    let reasons = recovered
+        .quarantined()
+        .iter()
+        .map(|quarantine| (quarantine.reason, quarantine.text.trim()))
+        .collect::<Vec<_>>();
+    assert_eq!(
+        reasons,
+        [
+            (QuarantineReason::InactiveBranch, "#ifdef WIDE"),
+            (
+                QuarantineReason::InactiveBranch,
+                "#else\n  if (!a) {\n#endif"
+            ),
+        ]
+    );
+}
+
+#[test]
+fn macros_in_declaration_headers_are_elided() {
+    let source = "static int clean(int a) {\n  return a;\n}\n\nstatic DWORD WINAPI worker(void* arg) {\n  return 0;\n}\n\nlocal int helper(int b) {\n  return b;\n}\n";
+    let tree = parser().parse(&AstLang::C, source).unwrap();
+    assert!(tree.root_node().has_error());
+    let recovered = tree.error_free().expect("recoverable");
+    assert_eq!(function_names(recovered), ["clean", "worker", "helper"]);
+    assert!(recovered
+        .quarantined()
+        .iter()
+        .all(|quarantine| quarantine.reason == QuarantineReason::Macro));
 }
 
 #[test]

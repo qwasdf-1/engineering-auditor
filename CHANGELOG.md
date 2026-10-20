@@ -57,6 +57,16 @@ are unchanged.
 
 ### Fixed
 
+- Recovery of C, C++, and C# files with syntax errors goes further. It
+  keeps one configuration of the preprocessor conditionals (the first live
+  branch of each `#if` group, without the directive lines), and in C and
+  C++ it blanks a macro in a declaration header (`WINAPI`, `GTEST_API_`,
+  zlib's `local`) when that lets the declaration parse, before
+  quarantining what remains. Reparses during recovery are incremental. On
+  the 46-repository corpus, 442 files are recovered and 148 are still
+  skipped (from 361 and 234), adding 208 more findings; 27 console-output
+  findings in zlib's `miniunz.c` are gone because its `main` is no longer
+  quarantined, so the file reads as the program it is.
 - A file with syntax errors is no longer dropped from structural analysis.
   Each top-level item or type member holding an error is quarantined:
   blanked with spaces, keeping every offset and line, and the source is

@@ -40,12 +40,12 @@ impl AstParser {
         if tree.root_node().has_error() {
             if let Some(alternate) = self.parse_alternate(lang, parsed.as_ref())? {
                 tree = alternate;
-            } else if let Some(recovery) = self.recover(&language, &tree, parsed.as_ref())? {
+            } else if let Some(recovery) = self.recover(lang, &language, &tree, parsed.as_ref())? {
                 recovered = Some(Box::new(AstTree {
                     tree: recovery.tree,
-                    source: Arc::from(quarantine::blanked(&source, &recovery.ranges)),
+                    source: Arc::from(quarantine::blanked(&source, &recovery.removals)),
                     language: *lang,
-                    quarantined: quarantine::records(&source, &recovery.ranges),
+                    quarantined: quarantine::records(&source, &recovery.removals),
                     recovered: None,
                     function_spans: OnceLock::new(),
                     semantic_facts: OnceLock::new(),
@@ -70,6 +70,7 @@ impl AstParser {
     /// `language`, which `tree` was parsed with.
     fn recover(
         &mut self,
+        lang: &AstLang,
         language: &tree_sitter::Language,
         tree: &Tree,
         parsed: &str,
@@ -77,7 +78,7 @@ impl AstParser {
         self.parser
             .set_language(language)
             .map_err(|e| format!("failed to set language: {e}"))?;
-        Ok(quarantine::recover(&mut self.parser, tree, parsed))
+        Ok(quarantine::recover(&mut self.parser, lang, tree, parsed))
     }
 
     /// The tree of `lang`'s alternate grammar, when it parses `source`

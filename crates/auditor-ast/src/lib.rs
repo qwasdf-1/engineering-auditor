@@ -21,7 +21,7 @@ pub use extract::{
 pub use languages::function_node_kinds;
 pub use languages::AstLang;
 pub use languages::SUPPORTED_LANGUAGES;
-pub use quarantine::Quarantine;
+pub use quarantine::{Quarantine, QuarantineReason};
 pub use semantic::{
     AssignmentFact, CallFact, ControlRegionFact, ControlRegionKind, ImportFact, LiteralFact,
     LoopFact, ReferenceFact, ReferenceKind, SemanticFileFacts, SourceSpan, SymbolFact, SymbolKind,
