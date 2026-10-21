@@ -511,7 +511,14 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         "Needs Kotlin collection facts: `toList()` and `toMutableList()` copies resolve by receiver type.",
     ),
     deferred(
-        ALGORITHMIC_IDS,
+        &[
+            "full_sort_for_top_k",
+            "repeated_collection_traversal",
+            "hot_path_linear_membership",
+            "n_plus_one_query_in_loop",
+            "loop_carried_copy_accumulation",
+            "nested_cross_collection_traversal",
+        ],
         &["c"],
         "C has no collection library to identify: arrays and hand-rolled lists need cardinality and call-cost facts the frontend does not derive.",
     ),
@@ -526,8 +533,18 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         "C++ keeps a sorted prefix by resizing or copying an iterator range (`resize(k)`, `vector(v.begin(), v.begin() + k)`), which the selection facts do not read yet.",
     ),
     deferred(
+        &[
+            "latest_only_unbounded_cache",
+            "loop_artifact_rewrite",
+            "architectural_layering",
+            "package_coupling_metrics",
+        ],
+        &["c"],
+        "C keeps caches in hand-rolled arrays and reads and writes files through `FILE *` streams (`fread`, `fwrite`) the artifact facts do not follow; its topology needs include paths resolved through the build's include directories.",
+    ),
+    deferred(
         SYSTEMS_IDS,
-        &["kotlin", "c"],
+        &["kotlin"],
         "Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle or CMake).",
     ),
     deferred(
@@ -557,8 +574,18 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         OPTIMIZATION_IDS,
-        &["kotlin", "c"],
+        &["kotlin"],
         "Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs.",
+    ),
+    not_applicable(
+        &["repeated_format_allocation"],
+        &["c"],
+        "C formats into a caller's buffer (`snprintf`) rather than allocating a string per call.",
+    ),
+    deferred(
+        &["manual_collection_copy_loop"],
+        &["c"],
+        "A C copy loop is bounded by a separate length (`i < n`) the facts do not tie to the arrays it copies.",
     ),
     deferred(
         &["intermediate_collection_materialization", "range_for_each_iteration"],

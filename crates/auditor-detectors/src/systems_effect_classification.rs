@@ -310,7 +310,8 @@ const CSHARP_EFFECTS: &[(&str, &[EffectKind])] = &[
 ];
 
 /// C and C++ effects by callee: these libraries resolve no imports, so the
-/// name as written (`std::` or `nlohmann::` qualified) is the identity.
+/// name as written (`std::` or `nlohmann::` qualified, or a C function) is
+/// the identity.
 const C_FAMILY_EFFECTS: &[(&str, &[EffectKind])] = &[
     ("std::regex", &[EffectKind::ExpensiveInitialization]),
     ("std::wregex", &[EffectKind::ExpensiveInitialization]),
@@ -331,6 +332,14 @@ const C_FAMILY_EFFECTS: &[(&str, &[EffectKind])] = &[
     ),
     ("std::this_thread::sleep_for", &[EffectKind::BlockingIo]),
     ("curl_easy_perform", &[EffectKind::ExternalIo]),
+    ("regcomp", &[EffectKind::ExpensiveInitialization]),
+    ("cJSON_Parse", &[EffectKind::Parse]),
+    ("cJSON_ParseWithLength", &[EffectKind::Parse]),
+    ("cJSON_Print", &[EffectKind::Serialize]),
+    ("cJSON_PrintUnformatted", &[EffectKind::Serialize]),
+    ("opendir", &[EffectKind::RepositoryScan]),
+    ("scandir", &[EffectKind::RepositoryScan]),
+    ("nftw", &[EffectKind::RepositoryScan]),
 ];
 
 pub(super) fn classify_call(call: &CallSignature) -> Vec<EffectKind> {

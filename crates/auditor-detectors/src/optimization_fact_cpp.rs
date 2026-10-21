@@ -1,6 +1,6 @@
-//! C++ forms of the L5 facts: `<cmath>` calls that are pure, `std::regex`
-//! construction, `value_or` defaults built eagerly, and the
-//! find-then-insert map shape.
+//! C++ (and C) forms of the L5 facts: `<cmath>` calls that are pure,
+//! `std::regex` construction and `regcomp`, `value_or` defaults built
+//! eagerly, and the find-then-insert map shape.
 
 use super::collections::call_argument_is_typed;
 use super::language_forms::java_map_value_is_pure;
@@ -9,13 +9,8 @@ use super::syntax::{call_name, compact, strip_call_delimiters};
 use super::FunctionView;
 use crate::structure_index::StructureCall;
 
-const PURE_NUMERIC_CALLS: &[&str] = &[
-    "std::abs",
-    "std::fabs",
-    "std::floor",
-    "std::ceil",
-    "std::round",
-];
+/// `<cmath>` and `<math.h>` functions, with or without `std::`.
+const PURE_NUMERIC_CALLS: &[&str] = &["abs", "labs", "fabs", "fabsf", "floor", "ceil", "round"];
 const NUMERIC_TYPES: &[&str] = &["double ", "float ", "int ", "long "];
 const CONTAINERS: &[&str] = &[
     "std::vector<",
@@ -28,14 +23,20 @@ const CONTAINERS: &[&str] = &[
     "std::list<",
 ];
 
-/// `std::abs(x)` and its rounding siblings on a numeric local or parameter.
-pub(super) fn cpp_pure_numeric_call(view: &FunctionView<'_>, call: &StructureCall) -> bool {
-    PURE_NUMERIC_CALLS.contains(&compact(&call.callee).as_str())
+/// `std::abs(x)` (C `fabs(x)`) and its rounding siblings on a numeric local
+/// or parameter.
+pub(super) fn c_family_pure_numeric_call(view: &FunctionView<'_>, call: &StructureCall) -> bool {
+    let callee = compact(&call.callee);
+    PURE_NUMERIC_CALLS.contains(&callee.strip_prefix("std::").unwrap_or(&callee))
         && call_argument_is_typed(view, call, NUMERIC_TYPES)
 }
 
-pub(super) fn cpp_regex_construction(call: &StructureCall) -> bool {
-    matches!(compact(&call.callee).as_str(), "std::regex" | "std::wregex")
+/// A C++ `std::regex` construction or a C `regcomp`.
+pub(super) fn c_family_regex_compilation(call: &StructureCall) -> bool {
+    matches!(
+        compact(&call.callee).as_str(),
+        "std::regex" | "std::wregex" | "regcomp"
+    )
 }
 
 /// The default of `opt.value_or(std::vector<int>{})`: an empty container

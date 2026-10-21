@@ -1,5 +1,6 @@
 //! Collection operations spelled as package functions: Go's `sort` and
-//! `slices`, Java's `Collections` and `Arrays`, and C++ `<algorithm>`, each
+//! `slices`, Java's `Collections` and `Arrays`, C++ `<algorithm>`, and C's
+//! `qsort`, each
 //! read as the method it performs on the collection it is given.
 
 use std::collections::BTreeMap;
@@ -99,6 +100,22 @@ pub(super) fn cpp_algorithm_call_shape(
     aliases: &BTreeMap<String, String>,
 ) -> Option<CallShape> {
     let callee = call.callee.replace(' ', "");
+    // C's `qsort(base, n, size, compare)` is its only sort: a sort of `base`
+    // in the order its comparator defines.
+    if callee == "qsort" {
+        let arguments = trim_arguments(call.arguments.as_deref()?);
+        let base = crate::optimization_facts::split_arguments(&arguments)
+            .first()?
+            .trim()
+            .to_string();
+        let root = canonical(&exact_identifier(&base)?, aliases);
+        return Some(CallShape {
+            collection: collection_identity(&base, aliases).unwrap_or_else(|| root.clone()),
+            root,
+            method: "sort".to_string(),
+            arguments: String::new(),
+        });
+    }
     let (ranges, name) = match callee.strip_prefix("std::ranges::") {
         Some(name) => (true, name),
         None => (false, callee.strip_prefix("std::")?),

@@ -41,7 +41,7 @@ pub(super) fn cacheable_pure_call(view: &FunctionView<'_>, call: &StructureCall)
         }
         Language::Java => java_pure_numeric_call(view, call) || java_pure_string_call(call),
         Language::CSharp => csharp_pure_numeric_call(view, call) || csharp_pure_string_call(call),
-        Language::Cpp => super::cpp::cpp_pure_numeric_call(view, call),
+        Language::C | Language::Cpp => super::cpp::c_family_pure_numeric_call(view, call),
         _ => false,
     }
 }
@@ -89,7 +89,7 @@ pub(super) fn general_invariant_call(view: &FunctionView<'_>, call: &StructureCa
         Language::Go => go_pure_numeric_call(view, call),
         Language::Java => java_pure_numeric_call(view, call),
         Language::CSharp => csharp_pure_numeric_call(view, call),
-        Language::Cpp => super::cpp::cpp_pure_numeric_call(view, call),
+        Language::C | Language::Cpp => super::cpp::c_family_pure_numeric_call(view, call),
         _ => false,
     }
 }
@@ -115,7 +115,7 @@ pub(super) fn recognized_regex_call(view: &FunctionView<'_>, call: &StructureCal
             Some("regexp.Compile" | "regexp.MustCompile")
         ),
         Language::CSharp => csharp_regex_construction(call),
-        Language::Cpp => super::cpp::cpp_regex_construction(call),
+        Language::C | Language::Cpp => super::cpp::c_family_regex_compilation(call),
         _ => false,
     }
 }

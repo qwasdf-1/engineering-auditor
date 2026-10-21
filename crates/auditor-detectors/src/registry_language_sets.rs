@@ -84,7 +84,20 @@ pub(super) const MANAGED_LOOP_LANGUAGES: &[&str] = &[
     "csharp",
     "cpp",
 ];
-pub(super) const RECURSIVE_LANGUAGES: &[&str] = TIER_ONE_CSHARP_CPP;
+/// Tier 1, C#, C++, and C: library calls and plain recursion every one of
+/// them resolves.
+pub(super) const TIER_ONE_CSHARP_CPP_C: &[&str] = &[
+    "rust",
+    "python",
+    "javascript",
+    "typescript",
+    "go",
+    "java",
+    "csharp",
+    "cpp",
+    "c",
+];
+pub(super) const RECURSIVE_LANGUAGES: &[&str] = TIER_ONE_CSHARP_CPP_C;
 pub(super) const GOD_MODULE_LANGUAGES: &[&str] = &[
     "rust",
     "python",
@@ -229,22 +242,23 @@ pub(super) const GO_IDS: &[&str] = &["go_log_fatal", "go_errcheck", "go_repeated
 pub(super) const RUST_ONLY_IDS: &[&str] = &[];
 pub(super) const RUST_PYTHON_PARTIAL_IDS: &[&str] = &["churn_complexity_hotspot"];
 pub(super) const SYSTEMS_SEMANTIC_IDS: &[&str] = &["blocking_io_in_async_context"];
-/// Systems effects that Go, Java, C#, and C++ resolve as well.
+/// Systems effects that Go, Java, C#, C++, and C resolve as well.
 pub(super) const SYSTEMS_EFFECT_IDS: &[&str] = &[
-    "latest_only_unbounded_cache",
     "repeated_parse_scan_serialize",
     "per_item_external_io",
     "repeated_expensive_initialization",
     "request_path_repository_scan",
 ];
+/// Cache growth and latest reads on a library collection.
+pub(super) const SYSTEMS_CACHE_IDS: &[&str] = &["latest_only_unbounded_cache"];
 /// Artifact reads and writes that Go, Java, and C# resolve as well.
 pub(super) const SYSTEMS_ARTIFACT_IDS: &[&str] = &["loop_artifact_rewrite"];
 /// Import topology that Go and Java resolve as well.
 pub(super) const SYSTEMS_TOPOLOGY_IDS: &[&str] =
     &["architectural_layering", "package_coupling_metrics"];
+/// Sorts C reads too, through `qsort`.
+pub(super) const SORT_IDS: &[&str] = &["repeated_sort_in_loop", "sort_for_extremum"];
 pub(super) const ALGORITHMIC_IDS: &[&str] = &[
-    "repeated_sort_in_loop",
-    "sort_for_extremum",
     "repeated_collection_traversal",
     "hot_path_linear_membership",
 ];

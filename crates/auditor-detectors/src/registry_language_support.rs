@@ -65,6 +65,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: SYSTEMS_EFFECT_IDS,
         policy: selected(
+            TIER_ONE_CSHARP_CPP_C,
+            LanguageSupportMode::Semantic,
+            LanguageSupportMode::Unsupported,
+        ),
+    },
+    PolicyRule {
+        ids: SYSTEMS_CACHE_IDS,
+        policy: selected(
             TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -430,7 +438,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["cache_miss_opportunity", "loop_invariant_computation"],
         policy: selected(
-            TIER_ONE_CSHARP_CPP,
+            TIER_ONE_CSHARP_CPP_C,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -438,7 +446,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["loop_invariant_regex_compilation"],
         policy: selected(
-            TIER_ONE_CSHARP_CPP,
+            TIER_ONE_CSHARP_CPP_C,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -655,6 +663,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         policy: selected(
             RUST,
             LanguageSupportMode::ExactLexical,
+            LanguageSupportMode::Unsupported,
+        ),
+    },
+    PolicyRule {
+        ids: SORT_IDS,
+        policy: selected(
+            TIER_ONE_CSHARP_CPP_C,
+            LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
     },
@@ -952,6 +968,7 @@ fn classify_unsupported_reason(detector_id: &str, language: &str) -> Unsupported
     if [
         SYSTEMS_SEMANTIC_IDS,
         SYSTEMS_EFFECT_IDS,
+        SYSTEMS_CACHE_IDS,
         SYSTEMS_ARTIFACT_IDS,
         SYSTEMS_TOPOLOGY_IDS,
     ]

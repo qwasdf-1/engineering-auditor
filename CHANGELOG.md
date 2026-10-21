@@ -83,6 +83,18 @@
   call in the structure index. Artifact rewrites, layering, coupling,
   coroutine blocking, and `known_size_preallocation` stay unsupported for
   C++. No corpus finding changes.
+- C joins the detectors whose facts it has: `repeated_sort_in_loop` and
+  `sort_for_extremum` (`qsort`, C's only sort, then `items[0]`),
+  `repeated_recursive_subproblem`, `repeated_parse_scan_serialize`
+  (`cJSON_Parse`, `cJSON_Print`), `per_item_external_io`
+  (`curl_easy_perform`), `repeated_expensive_initialization` and
+  `loop_invariant_regex_compilation` (`regcomp`),
+  `request_path_repository_scan` (`opendir`, `scandir`, `nftw`), and
+  `cache_miss_opportunity` and `loop_invariant_computation` (`fabs`,
+  `floor`, `ceil`, `round`, `abs` on numbers). `repeated_format_allocation`
+  is not applicable to C (`snprintf` writes a caller's buffer); detectors
+  that need a collection library, `FILE *` stream lineage, or include-path
+  topology stay unsupported. No corpus finding changes.
 
 ### Changed
 
