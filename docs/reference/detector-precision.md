@@ -55,6 +55,11 @@ at least 22 clean labels, or about 40 with one false positive.
 > reason ("This test fails because..", "All tests in this file will be
 > disabled"); reading those removed 20 findings.
 >
+> The full-only `mutable_default_argument` has no corpus finding: the one
+> production mutable default in the Python libraries (a Sphinx role's
+> `options={}, content=[]` in libuv's docs) is only read, and the libraries
+> lint for the rest, so it rests on its capability boundary.
+>
 > The full-only `network_call_without_timeout` has no library-corpus
 > finding (fmt's release-script `urlopen` calls now have the tooling role),
 > so it is measured on the application slice (scan `a1-b`; see the corpus

@@ -82,4 +82,13 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
         DiscardedFallibleResult
     )
     .with_roles(RoleApplicability::Production),
+    spec!(
+        "mutable_default_argument",
+        "correctness",
+        Medium,
+        Full,
+        "L1",
+        MutableDefaultArgument
+    )
+    .with_roles(RoleApplicability::Production),
 ];

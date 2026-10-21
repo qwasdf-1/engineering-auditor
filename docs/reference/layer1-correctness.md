@@ -62,6 +62,7 @@ are file-local or bounded intraprocedural checks.
 | `go_log_fatal` | gating | Go | exact lexical `log.Fatal` contract |
 | `go_errcheck` | gating | Go | exact lexical ignored-error contract; returned, assigned, or tested results are used |
 | `discarded_fallible_result` | full | Rust, Python, JavaScript, TypeScript, Go, Java | AST discard sites: Rust `let _ =`, `_ =`, and `.ok();` on `write_all`/`flush`/`sync_all`/`sync_data`/`commit`/`persist` and `fs::write`/`rename`/`copy`; Go blank assignments of `Sync`/`Commit` and `os.WriteFile`/`os.Rename` (bare or blank); Java statements dropping the boolean of `File` `mkdir(s)`/`renameTo`/`createNewFile`/`set*` and of `delete()` on a `File`; JS/TS non-top-level statements calling a same-file `async` function or `this` method, or `.then(onFulfilled)` alone; Python statements calling a same-file `async def` (or `self`/`cls` method) or `asyncio.sleep`, and dropped `asyncio.create_task`/`ensure_future` results |
+| `mutable_default_argument` | full | Python | a parameter default that is a mutable literal, comprehension, or constructor (`[]`, `{}`, `set()`, `defaultdict(..)`), reached through the data-flow layer by a mutating method call, an item store or delete, an in-place `+=`/`\|=`, a store into an attribute or item, or a `return`/`yield` |
 | `unused_assignment` | gating | Rust, Python, JavaScript, TypeScript, Go, Java, Kotlin, C#, C, C++ | statement-list local def-use over AST assignments; Python blocks and Rust `let`/assignment statements, with Rust format-string captures (`{name}`) counted as reads and attributed (`#[cfg]`) statements skipped; JS/TS and Java declarations and plain `=` assignments; only function locals are judged (a field, package variable, or captured variable may be read by a call) |
 | `kt_non_null_assertion` | gating | Kotlin | exact lexical non-null assertion contract |
 | `unsafe_type_cast` | full | Kotlin | exact lexical unsafe cast contract |
@@ -96,6 +97,18 @@ are file-local or bounded intraprocedural checks.
   `catch`, `Promise.resolve().then(..)` microtasks, a script's top-level
   call, a `void`-marked promise, and a Python `async def` behind a decorator
   that may wrap it.
+
+- `mutable_default_argument`: Python evaluates a default once, when the
+  `def` runs, so a mutable default is one object shared by every call that
+  omits the argument. Ruff `B006` and Pylint `W0102` flag every such
+  default; EA reports one only when it leaves the call, through a mutation,
+  a store, or a return, since a default that is only read cannot carry one
+  call's changes into the next. A parameter rebound before the use
+  (`items = items or []`, `rows = list(rows)`) is not reported, nor is a
+  private or cache-named parameter (`_cache={}`, `memo={}`), the memoizing
+  idiom that shares the default on purpose. Every other parsed language
+  evaluates defaults per call, allows only constants, or has none, so the
+  cell is not applicable there.
 
 ## Bounded Semantic Behavior
 

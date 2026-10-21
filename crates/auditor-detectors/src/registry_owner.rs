@@ -118,6 +118,7 @@ pub(crate) enum DetectorOwner {
     TestWithoutAssertion,
     TautologicalAssertion,
     SkippedTestWithoutReason,
+    MutableDefaultArgument,
     NetworkCallWithoutTimeout,
     QuadraticFrontRemoval,
     CatastrophicBacktrackingRegex,

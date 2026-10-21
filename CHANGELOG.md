@@ -4,6 +4,13 @@
 
 ### Added
 
+- `mutable_default_argument` (full-only, Python) reports a parameter whose
+  mutable default (`[]`, `{}`, `set()`, `defaultdict(..)`) the function
+  mutates, stores, or returns, so one call's changes reach the next. A
+  default rebound before the use (`items = items or []`) and memo tables
+  (`_cache={}`) are not reported. The corpus libraries have no such default
+  (they lint for it), so the cell rests on its capability boundary.
+
 - `skipped_test_without_reason` (full-only, Tier 1) reports a test or a
   test group disabled with no reason in the mark (`#[ignore = ".."]`,
   `@Disabled("..")`, `skip(reason=..)`, `t.Skip("..")`), no condition

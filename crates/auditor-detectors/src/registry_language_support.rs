@@ -540,6 +540,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         ),
     },
     PolicyRule {
+        ids: PYTHON_ONLY_SEMANTIC_IDS,
+        policy: selected(
+            PYTHON,
+            LanguageSupportMode::Semantic,
+            LanguageSupportMode::NotApplicable,
+        ),
+    },
+    PolicyRule {
         ids: PYTHON_IDS,
         policy: selected(
             PYTHON,

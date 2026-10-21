@@ -406,6 +406,9 @@ fn run_correctness_owner(
 ) -> Option<Vec<Finding>> {
     let config = context.config;
     Some(match owner {
+        DetectorOwner::MutableDefaultArgument => {
+            mutable_defaults::mutable_default_argument_findings(context.ast_scan())
+        }
         DetectorOwner::TodoUnimplementedInProduction => {
             correctness::todo_unimplemented_in_production_findings(context.ast_scan())
         }

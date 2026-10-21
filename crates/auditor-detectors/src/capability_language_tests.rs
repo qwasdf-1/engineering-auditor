@@ -48,6 +48,10 @@ pub(crate) use hygiene::hygiene_capability_files;
 mod l3_rules;
 pub(crate) use l3_rules::l3_rule_capability_files;
 
+#[path = "capability_language_mutable_default_tests.rs"]
+mod mutable_default;
+pub(crate) use mutable_default::mutable_default_capability_files;
+
 #[path = "capability_language_network_timeout_tests.rs"]
 mod network_timeout;
 pub(crate) use network_timeout::network_timeout_capability_files;

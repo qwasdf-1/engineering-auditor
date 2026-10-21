@@ -190,6 +190,10 @@ pub(super) const FLOW_LANGUAGES: &[&str] = &[
     "cpp",
 ];
 pub(super) const PYTHON_IDS: &[&str] = &["try_except_pass", "flask_debug_true"];
+/// Python evaluates a default once, at definition; every other parsed
+/// language evaluates it per call (JS/TS, Kotlin, C++, Ruby, Julia), allows
+/// only constants (C#), or has no defaults (Rust, Go, Java, C, Bash).
+pub(super) const PYTHON_ONLY_SEMANTIC_IDS: &[&str] = &["mutable_default_argument"];
 pub(super) const LITERAL_SECURITY_SEMANTIC_IDS: &[&str] =
     &["hardcoded_credential", "hardcoded_tmp_directory"];
 /// Rules resolved through API identity in every Tier-1 and Tier-2 language.

@@ -52,6 +52,7 @@ Correctness and security defects.
 | `insecure_cryptography` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `kotlin_empty_when` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `kt_non_null_assertion` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
+| `mutable_default_argument` | not_applicable | semantic | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `no_await_in_loop` | semantic | semantic | semantic | semantic | not_applicable | not_applicable | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `random_for_security` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `request_no_cert_verify` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
@@ -181,7 +182,7 @@ Markdown and structured-data cells are excluded from these source-language total
 
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
-| L1 | 244 | 10 | 0 | 121 | 132 |
+| L1 | 245 | 10 | 0 | 121 | 144 |
 | L2 | 135 | 17 | 53 | 179 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 81 | 0 | 2 | 71 | 2 |
@@ -197,7 +198,7 @@ Each not-applicable source cell carries one of these reviewed reasons.
 | A JavaScript event-loop race (a read-modify-write split by `await`); concurrency here is governed by threads, locks, or ownership instead. | `require_atomic_updates` | C, C++, C#, Go, Java, Kotlin, Python, Rust |
 | A Python construct (Flask's debug server, `except: pass`); the language has no counterpart. | `flask_debug_true`, `try_except_pass` | C, C++, C#, Go, Java, JavaScript, Kotlin, Rust, TypeScript |
 | A documentation and path capability: it reads Markdown links, anchors, and generated-file markers, not source code. | `generated_vs_source`, `stale_link_reference`, `stale_path_reference`, `stale_section_anchor` | C, C++, C#, Go, Java, JavaScript, Kotlin, Python, Rust, TypeScript |
-| A language-specific or repository-metadata detector: it reads another language's construct, or the repository as a whole. | `cpp_raw_ptr_ownership`, `csharp_linq_enumeration`, `go_errcheck`, `go_log_fatal`, `go_repeated_string_literal`, `java_inefficient_string_buffer`, `kotlin_empty_when`, `kt_non_null_assertion`, `kt_require_check_misuse`, `ruby_double_bang`, `unsafe_type_cast` | C, C++, C#, Go, Java, JavaScript, Julia, Kotlin, Python, Ruby, Rust, Shell, TypeScript |
+| A language-specific or repository-metadata detector: it reads another language's construct, or the repository as a whole. | `cpp_raw_ptr_ownership`, `csharp_linq_enumeration`, `go_errcheck`, `go_log_fatal`, `go_repeated_string_literal`, `java_inefficient_string_buffer`, `kotlin_empty_when`, `kt_non_null_assertion`, `kt_require_check_misuse`, `mutable_default_argument`, `ruby_double_bang`, `unsafe_type_cast` | C, C++, C#, Go, Java, JavaScript, Julia, Kotlin, Python, Ruby, Rust, Shell, TypeScript |
 | A pointer or reference parameter declares the write in the signature, and output pointers are the C convention for multiple results. | `out_parameter` | C, C++ |
 | Assignment is not an expression in Go, and Python's walrus operator is the deliberate form of it. | `assignment_in_operand` | Go, Python |
 | Assignment is not an expression in Kotlin. | `assignment_in_operand` | Kotlin |

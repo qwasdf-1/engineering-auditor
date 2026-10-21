@@ -66,14 +66,14 @@ auditor gate --repo-root . --baseline auditor-baseline.json
 
 | Layer | Focus | Detectors (gating / full-only) |
 |---|---|---|
-| 1. Correctness | Insecure APIs, injection, swallowed errors, unsafe termination, dead code | 16 / 23 |
+| 1. Correctness | Insecure APIs, injection, swallowed errors, unsafe termination, dead code | 16 / 24 |
 | 2. Structure | Complexity, size, duplication, naming, stale references, test quality | 22 / 16 |
 | 3. Algorithms | Quadratic loops, repeated sorts and lookups in loops, N+1 queries | 4 / 9 |
 | 4. Systems | Layering rules, coupling, blocking I/O in async code, missing timeouts | 6 / 6 |
 | 5. Optimization | Preallocation, bulk operations, loop-invariant work | 4 / 9 |
 
 The default `gating` profile runs the 52 detectors precise enough to fail a
-build; `--profile full` runs all 115.
+build; `--profile full` runs all 116.
 `auditor catalog --profile full --format json` lists every detector, and
 [language support](docs/reference/language-support.md) shows which detectors
 run for each language.

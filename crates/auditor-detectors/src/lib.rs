@@ -76,6 +76,7 @@ mod rust_test_modules;
 mod scan_filters;
 mod scan_indexes;
 use scan_indexes::RemainingIndexUsers;
+mod mutable_defaults;
 mod security;
 mod security_api_rules;
 mod security_crypto;

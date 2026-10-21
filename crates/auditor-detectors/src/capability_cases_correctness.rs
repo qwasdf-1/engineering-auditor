@@ -96,6 +96,9 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
             "src/service.py",
             "try:\n    risky()\nexcept ValueError as error:\n    handle(error)\n",
         ),
+        CapabilityCase::new("mutable_default_argument", ScanProfile::Full, "", "", "", "")
+            .positive_files(super::language_tests::mutable_default_capability_files(true))
+            .negative_files(super::language_tests::mutable_default_capability_files(false)),
         CapabilityCase::new(
             "world_writable_file",
             ScanProfile::Full,
