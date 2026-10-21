@@ -619,6 +619,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         ),
     },
     PolicyRule {
+        ids: FLOAT_EQUALITY_IDS,
+        policy: selected(
+            TIER_ONE,
+            LanguageSupportMode::Semantic,
+            LanguageSupportMode::Unsupported,
+        ),
+    },
+    PolicyRule {
         ids: DISCARDED_RESULT_IDS,
         policy: selected(
             TIER_ONE,

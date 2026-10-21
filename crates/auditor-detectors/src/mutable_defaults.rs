@@ -220,6 +220,7 @@ fn finding(shared: &SharedDefault<'_>, relative: &str) -> Finding {
     .with_recommendation(
         "Default to `None` and build the value inside the function (`if items is None: items = []`), so each call gets its own.",
     )
+    .with_identity("parameter", parameter)
     .with_evidence("function", function)
     .with_evidence("parameter", parameter)
     .with_evidence("default", default_text.as_str())

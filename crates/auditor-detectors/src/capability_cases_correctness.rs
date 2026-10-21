@@ -96,6 +96,15 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
             "src/service.py",
             "try:\n    risky()\nexcept ValueError as error:\n    handle(error)\n",
         ),
+        CapabilityCase::new("float_equality_comparison", ScanProfile::Full, "", "", "", "")
+            .positive_files(
+                super::language_tests::float_capability_files("float_equality_comparison", "python", true)
+                    .unwrap_or_default(),
+            )
+            .negative_files(
+                super::language_tests::float_capability_files("float_equality_comparison", "python", false)
+                    .unwrap_or_default(),
+            ),
         CapabilityCase::new("mutable_default_argument", ScanProfile::Full, "", "", "", "")
             .positive_files(super::language_tests::mutable_default_capability_files(true))
             .negative_files(super::language_tests::mutable_default_capability_files(false)),

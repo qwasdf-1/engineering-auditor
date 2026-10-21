@@ -91,4 +91,13 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
         MutableDefaultArgument
     )
     .with_roles(RoleApplicability::Production),
+    spec!(
+        "float_equality_comparison",
+        "correctness",
+        Medium,
+        Full,
+        "L1",
+        FloatEqualityComparison
+    )
+    .with_roles(RoleApplicability::Production),
 ];

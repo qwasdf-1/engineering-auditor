@@ -4,11 +4,20 @@
 
 ### Added
 
+- `float_equality_comparison` (full-only, Tier 1) reports `==`/`!=`
+  between float arithmetic (an arithmetic expression, or a local whose
+  reaching value is one or a `+=` accumulation) and a literal binary
+  floating point cannot represent exactly (`0.1`, not `0.5`). Values
+  parsed or assigned from the same literal compare equal and are not
+  reported. The corpus libraries have no such comparison in production
+  code, so the cells rest on their capability boundaries.
+
 - `mutable_default_argument` (full-only, Python) reports a parameter whose
   mutable default (`[]`, `{}`, `set()`, `defaultdict(..)`) the function
   mutates, stores, or returns, so one call's changes reach the next. A
   default rebound before the use (`items = items or []`) and memo tables
-  (`_cache={}`) are not reported. The corpus libraries have no such default
+  (`_cache={}`) are not reported; two shared defaults on one line are
+  reported separately. The corpus libraries have no such default
   (they lint for it), so the cell rests on its capability boundary.
 
 - `skipped_test_without_reason` (full-only, Tier 1) reports a test or a

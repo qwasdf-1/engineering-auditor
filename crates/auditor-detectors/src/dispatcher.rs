@@ -406,6 +406,9 @@ fn run_correctness_owner(
 ) -> Option<Vec<Finding>> {
     let config = context.config;
     Some(match owner {
+        DetectorOwner::FloatEqualityComparison => {
+            float_equality::float_equality_comparison_findings(context.ast_scan())
+        }
         DetectorOwner::MutableDefaultArgument => {
             mutable_defaults::mutable_default_argument_findings(context.ast_scan())
         }

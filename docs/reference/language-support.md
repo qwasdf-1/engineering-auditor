@@ -45,6 +45,7 @@ Correctness and security defects.
 | `eval_in_production` | not_applicable | semantic | semantic | semantic | not_applicable | semantic | semantic | semantic | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `exit_in_production` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `flask_debug_true` | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `float_equality_comparison` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `go_errcheck` | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `go_log_fatal` | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `hardcoded_credential` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
@@ -182,7 +183,7 @@ Markdown and structured-data cells are excluded from these source-language total
 
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
-| L1 | 245 | 10 | 0 | 121 | 144 |
+| L1 | 251 | 10 | 0 | 128 | 144 |
 | L2 | 135 | 17 | 53 | 179 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 81 | 0 | 2 | 71 | 2 |
@@ -291,13 +292,14 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |
-| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 187 | 63 | Julia, Ruby, Shell |
+| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 190 | 64 | Julia, Ruby, Shell |
 | No qualified language-specific API identity and dataflow boundary exists for this security capability. | 18 | 6 | Julia, Ruby, Shell |
 | Qualified on Python only; the Tier-1 extensions were reviewed and deferred (type names in lexical spans, conventional short names, shared receiver callees), and the Tier-2 grammars share those blockers. | 16 | 4 | C, C++, C#, Kotlin |
 | Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile. | 1 | 1 | Go |
 | Reviewed and rejected: writing a parameter object's fields is how these languages fill, normalize, and configure objects; the corpus probe (347 findings) was dominated by such designed writes. | 3 | 1 | JavaScript, Python, TypeScript |
 | SQL text is assembled into buffers (`snprintf`, `strcat`, `std::string` appends) before `sqlite3_exec` or `PQexec`; the rule needs buffer dataflow to connect the build to the sink. | 2 | 1 | C, C++ |
 | The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
+| The Tier-2 float literal and comparison forms (Kotlin `Double`/`Float`, C# `double`/`float`/`decimal`, C and C++ suffixes) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet. | 2 | 1 | C, Kotlin |
 | The front removals (Kotlin `removeAt(0)`, C `memmove` over an array) and their array-backed declarations are not modelled yet. | 2 | 1 | C, Kotlin |
 | The frontend lacks a qualified collection, cardinality, mutation, or call-cost proof for this algorithmic capability. | 33 | 11 | Julia, Ruby, Shell |

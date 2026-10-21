@@ -48,6 +48,11 @@ def options(overrides={}):
     return overrides
 
 
+def pair(left=[], right={}):
+    left.append(1)
+    right["k"] = 1
+
+
 def walk(node, seen=set()):
     seen.add(node.id)
     for child in node.children:
@@ -115,6 +120,8 @@ fn mutable_default_boundary_reports_exactly_the_shared_defaults() {
         "merged",
         "rows",
         "overrides",
+        "left",
+        "right",
         "seen",
         "groups",
     ]

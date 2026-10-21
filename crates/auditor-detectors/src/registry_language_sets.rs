@@ -243,6 +243,7 @@ pub(super) const FRONT_REMOVAL_IDS: &[&str] = &["quadratic_front_removal"];
 pub(super) const REGEX_BACKTRACKING_IDS: &[&str] = &["catastrophic_backtracking_regex"];
 /// Discarded failure results, floating promises, and unawaited coroutines.
 pub(super) const DISCARDED_RESULT_IDS: &[&str] = &["discarded_fallible_result"];
+pub(super) const FLOAT_EQUALITY_IDS: &[&str] = &["float_equality_comparison"];
 /// Manifest dependencies against source imports; findings sit on the
 /// manifest line and name a package source file for its language.
 pub(super) const UNUSED_DEPENDENCY_IDS: &[&str] = &["unused_declared_dependency"];

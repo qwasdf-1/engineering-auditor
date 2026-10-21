@@ -48,6 +48,10 @@ pub(crate) use hygiene::hygiene_capability_files;
 mod l3_rules;
 pub(crate) use l3_rules::l3_rule_capability_files;
 
+#[path = "capability_language_float_tests.rs"]
+mod float;
+pub(crate) use float::float_capability_files;
+
 #[path = "capability_language_mutable_default_tests.rs"]
 mod mutable_default;
 pub(crate) use mutable_default::mutable_default_capability_files;
@@ -320,6 +324,12 @@ pub(super) fn retarget_case(case: &CapabilityCase, language: &str) -> Capability
         if let Some(files) = tier2_capability_files(case.id, language, false) {
             variant.negative = files;
         }
+    }
+    if let Some(files) = float_capability_files(case.id, language, true) {
+        variant.positive = files;
+    }
+    if let Some(files) = float_capability_files(case.id, language, false) {
+        variant.negative = files;
     }
     if let Some(files) = hygiene_capability_files(case.id, language, true) {
         variant.positive = files;

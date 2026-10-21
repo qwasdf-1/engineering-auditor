@@ -352,6 +352,11 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         "The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet.",
     ),
     deferred(
+        &["float_equality_comparison"],
+        TIER_TWO,
+        "The Tier-2 float literal and comparison forms (Kotlin `Double`/`Float`, C# `double`/`float`/`decimal`, C and C++ suffixes) are not modelled yet.",
+    ),
+    deferred(
         &["discarded_fallible_result"],
         TIER_TWO,
         "The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet.",

@@ -62,6 +62,7 @@ are file-local or bounded intraprocedural checks.
 | `go_log_fatal` | gating | Go | exact lexical `log.Fatal` contract |
 | `go_errcheck` | gating | Go | exact lexical ignored-error contract; returned, assigned, or tested results are used |
 | `discarded_fallible_result` | full | Rust, Python, JavaScript, TypeScript, Go, Java | AST discard sites: Rust `let _ =`, `_ =`, and `.ok();` on `write_all`/`flush`/`sync_all`/`sync_data`/`commit`/`persist` and `fs::write`/`rename`/`copy`; Go blank assignments of `Sync`/`Commit` and `os.WriteFile`/`os.Rename` (bare or blank); Java statements dropping the boolean of `File` `mkdir(s)`/`renameTo`/`createNewFile`/`set*` and of `delete()` on a `File`; JS/TS non-top-level statements calling a same-file `async` function or `this` method, or `.then(onFulfilled)` alone; Python statements calling a same-file `async def` (or `self`/`cls` method) or `asyncio.sleep`, and dropped `asyncio.create_task`/`ensure_future` results |
+| `float_equality_comparison` | full | Rust, Python, JavaScript, TypeScript, Go, Java | `==`/`!=` (`===`/`!==`) between a float literal inexact in binary (`0.1`, not `0.5`) and float arithmetic: an arithmetic expression, or a local whose reaching value (through the data-flow layer) is one or a `+=` accumulation; production code, outside Rust `#[cfg(test)]` modules |
 | `mutable_default_argument` | full | Python | a parameter default that is a mutable literal, comprehension, or constructor (`[]`, `{}`, `set()`, `defaultdict(..)`), reached through the data-flow layer by a mutating method call, an item store or delete, an in-place `+=`/`\|=`, a store into an attribute or item, or a `return`/`yield` |
 | `unused_assignment` | gating | Rust, Python, JavaScript, TypeScript, Go, Java, Kotlin, C#, C, C++ | statement-list local def-use over AST assignments; Python blocks and Rust `let`/assignment statements, with Rust format-string captures (`{name}`) counted as reads and attributed (`#[cfg]`) statements skipped; JS/TS and Java declarations and plain `=` assignments; only function locals are judged (a field, package variable, or captured variable may be read by a call) |
 | `kt_non_null_assertion` | gating | Kotlin | exact lexical non-null assertion contract |
@@ -98,6 +99,16 @@ are file-local or bounded intraprocedural checks.
   call, a `void`-marked promise, and a Python `async def` behind a decorator
   that may wrap it.
 
+- `float_equality_comparison`: Clippy's `float_cmp` judges operands by
+  their type; without types, EA reports only
+  what is certain from syntax and data flow: the literal is inexact in
+  binary (decided exactly, by whether its denominator is a power of two
+  once the factors of 5 cancel, within the 53-bit or `f32` 24-bit
+  significand), and the other side is computed by arithmetic, which rounds
+  at each step. A value parsed or assigned from the same literal text
+  (`float(config["ratio"]) == 0.1`, a parameter) compares equal by
+  construction and is not reported, nor are literals exact in binary
+  (`0.0`, `0.5`), deliberate sentinels.
 - `mutable_default_argument`: Python evaluates a default once, when the
   `def` runs, so a mutable default is one object shared by every call that
   omits the argument. Ruff `B006` and Pylint `W0102` flag every such

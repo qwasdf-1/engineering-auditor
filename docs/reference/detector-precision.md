@@ -58,7 +58,12 @@ at least 22 clean labels, or about 40 with one false positive.
 > The full-only `mutable_default_argument` has no corpus finding: the one
 > production mutable default in the Python libraries (a Sphinx role's
 > `options={}, content=[]` in libuv's docs) is only read, and the libraries
-> lint for the rest, so it rests on its capability boundary.
+> lint for the rest, so it rests on its capability boundary. Neither has
+> the full-only `float_equality_comparison`: the libraries compare inexact
+> float literals only in tests, and there with values parsed or assigned
+> from the same literal (flask's `config["FLOAT"] == 1.2`), which compare
+> equal by construction; that is why the detector requires the other side
+> to be computed by arithmetic.
 >
 > The full-only `network_call_without_timeout` has no library-corpus
 > finding (fmt's release-script `urlopen` calls now have the tooling role),
