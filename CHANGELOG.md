@@ -28,6 +28,18 @@
   carry their reason in a comment, a doc comment, or the class doc and are
   not reported.
 
+### Changed
+
+- `n_plus_one_query_in_loop` reads a DB-API `execute` or JDBC
+  `executeQuery` whose first argument is a `SELECT` literal as a read
+  query, whatever its receiver is called (`cur.execute("SELECT ..",
+  (user.id,))`, `conn.execute(..).fetchall()`), directly and through
+  helpers; `executemany` and other statements are not. Receivers named with
+  the word `db` or `conn` (`db`, `self.db`, `userDb`) are stores, matched as
+  whole words so `feedback` and `dbg` are not. No corpus finding changes:
+  the corpus applications query through ORMs, query managers, and typed
+  `*sql.DB` stores the detector already read.
+
 ## 1.3.0 - C#, C++, And C Cost Detectors
 
 The algorithmic, systems, and optimization detectors now run on C# (31 of

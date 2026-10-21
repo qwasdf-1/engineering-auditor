@@ -153,7 +153,7 @@ fn own_operations(structure: &StructureIndex, scopes: &[FileScopes]) -> Summarie
             };
             // Aliases change a call's receiver, not its method.
             let candidate = call_shape(call, &BTreeMap::new()).is_some_and(|shape| {
-                is_default_sort(&shape.method, &shape.arguments) || is_read_query(&shape.method)
+                is_default_sort(&shape.method, &shape.arguments) || may_be_store_query(&shape)
             });
             if !candidate
                 || file
@@ -190,7 +190,7 @@ fn own_operation(
             return None;
         };
         (Operation::Sort, vec![position])
-    } else if is_read_query(&shape.method) && query_receiver_is_proven(file, owner, &shape.root) {
+    } else if is_store_query(file, owner, &shape) {
         let params = scope.positions(&shape.arguments);
         if params.is_empty() {
             return None;

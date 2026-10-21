@@ -172,11 +172,17 @@ A query method is one of the fixed query names (`query`, `query_row`,
 `fetch_one`, `find_one`, `find_unique`, ...) or a read of one record by key:
 `get`, `find`, `load`, or `fetch`, then `by`, ending in `id`, `uuid`, or `key`
 (`findById`, `getObjectByUuid`, `findUserById`), but not a lookup that writes
-when the record is missing (`getOrCreateById`). A receiver is proven when its
-name reads as a store (`repo`, `repository`, `database`, `connection`,
-`session`); when it is declared with a store type (repository, database,
-connection, session, query client or manager, persistence or entity manager,
-Go `sql.DB`/`Tx`/`Conn`) as a parameter or local of the function, including
+when the record is missing (`getOrCreateById`). A SQL runner (DB-API
+`execute`, JDBC `executeQuery`) is a read query whatever its receiver is
+called when its first argument is a string literal starting with `SELECT`
+(`cur.execute("SELECT .. WHERE uid = ?", (user.id,))`): the SQL proves the
+store. `executemany` and statements other than `SELECT` are not. A receiver
+is proven when its name reads as a store (`repo`, `repository`, `database`,
+`connection`, `session`) or contains the word `db` or `conn` (`db`, `userDb`,
+`db_conn`, but not `feedback` or `dbg`); when it is declared with a store
+type (repository, database, connection, session, query client or manager,
+persistence or entity manager, Go `sql.DB`/`Tx`/`Conn`) as a parameter or
+local of the function, including
 a Java try-with-resources local or a `var` bound to `new` of such a type, or
 as a Java field; or when it is a JavaScript module-level binding imported
 from a module whose export queries directly (`redbean-node`, `knex`). Write methods,

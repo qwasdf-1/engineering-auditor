@@ -131,3 +131,151 @@ function pick(rows) {
         Vec::<String>::new()
     );
 }
+
+#[test]
+fn select_literals_start_the_first_argument() {
+    for arguments in [
+        "\"SELECT * FROM posts WHERE uid=?\", (user.id,)",
+        "'select name from t where id = %s', [row]",
+        "f\"SELECT * FROM t WHERE id = {item}\"",
+        "r\"\"\"\n    SELECT id FROM t WHERE k = ?\"\"\", (key,)",
+        "`SELECT * FROM t WHERE id = $1`, id",
+        "@\"SELECT * FROM t\", conn",
+        "\"SELECT\\n*\", x",
+    ] {
+        assert!(super::starts_with_select_literal(arguments), "{arguments}");
+    }
+    for arguments in [
+        "\"INSERT INTO t VALUES (?)\", (item,)",
+        "\"UPDATE t SET a = ?\", (item,)",
+        "query, (item,)",
+        "build(\"SELECT * FROM t\")",
+        "\"SELECTED_ROWS\"",
+        "selector",
+        "\"\"",
+    ] {
+        assert!(!super::starts_with_select_literal(arguments), "{arguments}");
+    }
+}
+
+#[test]
+fn python_db_api_selects_are_queries_whatever_the_receiver() {
+    let source = "\
+def posts(cur, users):
+    out = []
+    for user in users:
+        cur.execute(\"SELECT * FROM posts WHERE uid = ?\", (user.id,))
+        out.append(cur.fetchall())
+    return out
+
+
+def chained(conn, users):
+    res = []
+    for u in users:
+        res.append(conn.execute(\"SELECT * FROM posts WHERE uid=?\", (u.id,)).fetchall())
+    return res
+
+
+def through_self(self, users):
+    for user in users:
+        consume(self.db.query(user.id))
+
+
+def writes(cur, items):
+    for item in items:
+        cur.execute(\"INSERT INTO t VALUES (?)\", (item,))
+
+
+def batched(cur, items):
+    for item in items:
+        prepare(item)
+    cur.executemany(\"SELECT * FROM t WHERE id = ?\", [(item,) for item in items])
+
+
+def invariant(cur, items):
+    for item in items:
+        consume(item, cur.execute(\"SELECT count(*) FROM t\"))
+
+
+def not_stores(feedback, dbg, items):
+    for item in items:
+        consume(feedback.query(item))
+        consume(dbg.query(item))
+";
+    assert_eq!(
+        messages("python-db-api", "app/posts.py", source),
+        [
+            "Function `posts` calls `cur.execute` with loop-derived `user`.",
+            "Function `chained` calls `conn.execute` with loop-derived `u`.",
+            "Function `through_self` calls `db.query` with loop-derived `user`.",
+        ]
+    );
+}
+
+#[test]
+fn db_receivers_and_jdbc_selects_in_other_languages() {
+    let javascript = "\
+async function rows(db, ids) {
+    const out = [];
+    for (const id of ids) {
+        out.push(await db.query(\"SELECT * FROM t WHERE id = $1\", [id]));
+    }
+    return out;
+}
+
+async function userDbRows(userDb, ids) {
+    for (const id of ids) {
+        consume(await userDb.query(\"SELECT * FROM t WHERE id = $1\", [id]));
+    }
+}
+";
+    let java = "\
+package app;
+
+import java.sql.*;
+import java.util.*;
+
+class Lookup {
+    void names(Statement stmt, List<String> ids) throws SQLException {
+        for (String id : ids) {
+            consume(stmt.executeQuery(\"SELECT name FROM t WHERE id = '\" + id + \"'\"));
+        }
+    }
+
+    void updates(Statement stmt, List<String> ids) throws SQLException {
+        for (String id : ids) {
+            consume(stmt.executeQuery(\"UPDATE t SET seen = 1 WHERE id = '\" + id + \"'\"));
+        }
+    }
+}
+";
+    assert_eq!(
+        messages("js-db", "server/rows.js", javascript),
+        [
+            "Function `rows` calls `db.query` with loop-derived `id`.",
+            "Function `userDbRows` calls `userDb.query` with loop-derived `id`.",
+        ]
+    );
+    assert_eq!(
+        messages("jdbc", "src/main/java/app/Lookup.java", java),
+        ["Function `names` calls `stmt.executeQuery` with loop-derived `id`."]
+    );
+}
+
+#[test]
+fn helpers_pass_select_runners_to_their_callers() {
+    let source = "\
+def load(cur, uid):
+    cur.execute(\"SELECT * FROM posts WHERE uid = ?\", (uid,))
+    return cur.fetchall()
+
+
+def each(cur, users):
+    for user in users:
+        consume(load(cur, user.id))
+";
+    assert_eq!(
+        messages("python-helper", "app/load.py", source),
+        ["Function `each` calls `cur.execute` with loop-derived `user`, through `load`."]
+    );
+}

@@ -638,7 +638,7 @@ fn collect_queries_in_loops(
         let Some(shape) = call_shape(call, aliases) else {
             continue;
         };
-        if !is_read_query(&shape.method) || !query_receiver_is_proven(file, owner, &shape.root) {
+        if !is_store_query(file, owner, &shape) {
             continue;
         }
         let Some((loop_fact, binding)) =
@@ -687,7 +687,7 @@ use collections::*;
 use cost_collectors::*;
 use effects::*;
 use front_removal::collect_front_removals;
-use queries::{is_read_query, query_receiver_is_proven};
+use queries::{is_store_query, may_be_store_query};
 use semantics::*;
 use structure::*;
 
