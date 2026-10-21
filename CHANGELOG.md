@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 - Data Flow And Syntax Recovery
+
+Files with syntax errors are analyzed after recovery instead of being
+skipped. A def-use data-flow layer covers all 13 parsed grammars, so
+`sql_injection` follows queries built in locals, `random_for_security`
+follows weak random values to where they go, and resource and assignment
+checks share one model of bindings. The cost detectors follow calls into
+repository functions, with a seeded recall benchmark to measure it, and
+several security and tooling-path false positives are gone. Reports gain
+optional syntax-coverage fields; stable surfaces are otherwise unchanged.
 
 ### Added
 
@@ -134,17 +143,6 @@
   its own list of tooling paths. On the corpus this removes 16
   `shell_execution`, 64 `exit_in_production`, and 223 console findings in
   release scripts and command-line tools.
-
-## 1.1.0 - First Public Release
-
-The first release from the public repository. Scans are faster and use all
-cores, release archives carry third-party license notices, churn follows the
-first-parent history, and two detectors specific to one downstream project
-are removed from the experimental `graph-analysis` feature. Stable surfaces
-are unchanged.
-
-### Fixed
-
 - `hardcoded_credential` no longer reports literals that restate the
   target's name (`ACCESS_TOKEN_NOT_FOUND = "access_token/not_found"`,
   `CLIENT_CREDENTIALS = "clientCredentials"`, `SECRET_REF =
@@ -208,6 +206,14 @@ are unchanged.
   comprehension by its outer braces, so
   `{(e["path"], e["kind"]) for e in rows.get("allow", [])}` is a set even
   though it contains `[]`.
+
+## 1.1.0 - First Public Release
+
+The first release from the public repository. Scans are faster and use all
+cores, release archives carry third-party license notices, churn follows the
+first-parent history, and two detectors specific to one downstream project
+are removed from the experimental `graph-analysis` feature. Stable surfaces
+are unchanged.
 
 ### Performance
 

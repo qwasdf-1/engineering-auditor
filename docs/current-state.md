@@ -1,6 +1,6 @@
 # Current State
 
-What Engineering Auditor does today, by area, as of 1.1.0. Limitations are
+What Engineering Auditor does today, by area, as of 1.2.0. Limitations are
 in [`known-gaps.md`](known-gaps.md).
 
 ## Release
@@ -12,7 +12,9 @@ v5, finding-ID v3, baseline v2, gate result 2, SARIF 2.1.0, and the stable
 archives with checksums, the license, and third-party license notices
 ([`distribution.md`](distribution.md)). 1.1.0 is the first release from the
 public repository; it adds parallel parsing and the license notices and keeps
-every stable surface unchanged.
+every stable surface unchanged. 1.2.0 analyzes files with syntax errors after
+recovery, adds the data-flow layer below, and adds optional syntax-coverage
+fields to the report.
 
 ## Scanning
 
@@ -25,6 +27,14 @@ every stable surface unchanged.
 - **Analysis method.** `--method auto` (the default) uses syntax trees where
   a grammar exists and falls back to token rules; `ast` and `token` force
   one.
+- **Syntax errors.** A file that does not parse cleanly is analyzed after
+  recovery: declarations still in error are blanked and the file parsed
+  again, and for C, C++, and C# one preprocessor configuration is chosen.
+  The report marks each such file `recovered` or `unparsed`.
+- **Data flow.** Within a function, every parsed grammar answers the same
+  def-use questions (which bindings reach a read, where a value comes from
+  and goes). `sql_injection`, `random_for_security`, `resource_not_closed`,
+  `unused_assignment`, and the structure index's assignment facts use it.
 - **Determinism.** The same inputs give byte-identical reports, including
   with parallel parsing.
 - **Speed.** Parsing and the structure and complexity indexes use all cores;
@@ -70,10 +80,10 @@ per-detector record.
 Recall is measured separately on seeded cases
 ([`eval/recall/`](../eval/recall/README.md)). For six algorithmic and systems
 detectors in five languages, every case with the problem directly in a loop
-is caught (29 of 29). External-I/O and blocking-I/O effects are followed
-through calls into repository functions, which catches 9 of 29 cases each
-with the problem in a helper or an imported helper; the sort, query, regex,
-and artifact-rewrite detectors do not follow calls yet.
+is caught (29 of 29). All six follow calls into repository functions,
+through up to four calls that resolve to one certain target, and also catch
+every case with the problem in a same-file helper or an imported helper (29
+of 29 each).
 
 ## AI Review (Experimental)
 
@@ -115,5 +125,5 @@ ordinary test runs.
 ## Repository Health
 
 The repository scans itself in CI and fails on any finding not in its
-baseline. The full test suite (584 tests, plus the 21 ignored parity groups)
+baseline. The full test suite (641 tests, plus the 21 ignored parity groups)
 passes on stable Rust and on the minimum supported Rust, 1.86.

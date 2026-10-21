@@ -76,7 +76,7 @@ Verify a download with `sha256sum -c SHA256SUMS --ignore-missing`.
 
 First-party code is licensed under Apache-2.0 (`LICENSE`).
 
-Donor provenance in `auditor-donors.lock.json` was audited for 1.1.0:
+Donor provenance in `auditor-donors.lock.json` was audited for 1.2.0:
 
 - No donor source is vendored into, linked into, or imported by a
   production crate; the lock file declares no imported files. Detector code

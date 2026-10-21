@@ -1,6 +1,6 @@
 # Known Gaps
 
-What Engineering Auditor does not do, or does only partly, as of 1.1.0.
+What Engineering Auditor does not do, or does only partly, as of 1.2.0.
 
 ## Analysis Depth
 
@@ -70,8 +70,10 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
 
 ## Performance
 
-- Scans run on a single thread. A repository of a few hundred thousand lines
-  takes 10 to 20 seconds.
+- Parsing and the structure and complexity indexes use all cores, but
+  detectors run one at a time, so a scan's later stages use one core. A
+  repository of a few hundred thousand lines takes about 8 seconds on a
+  16-core machine.
 
 ## AI Review (Experimental)
 
