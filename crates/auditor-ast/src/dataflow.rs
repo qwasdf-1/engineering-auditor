@@ -21,10 +21,12 @@
 //! types: no aliasing, no flow through fields, and no flow between functions;
 //! callers carry that through call summaries.
 
-use crate::AstNode;
+use crate::{AstLang, AstNode};
 
 #[path = "dataflow_bindings.rs"]
 mod bindings;
+#[path = "dataflow_shapes.rs"]
+mod shapes;
 #[path = "dataflow_values.rs"]
 mod values;
 
@@ -55,7 +57,25 @@ const ANONYMOUS_FUNCTION_KINDS: &[&str] = &[
     "anonymous_method_expression",
     "func_literal",
     "closure_expression",
+    "arrow_function_expression",
 ];
+
+/// Ruby's named methods and its blocks, whose kinds other grammars use for
+/// statement blocks.
+const RUBY_NAMED_FUNCTION_KINDS: &[&str] = &["method", "singleton_method"];
+const RUBY_ANONYMOUS_FUNCTION_KINDS: &[&str] = &["block", "do_block"];
+
+/// A function with a name of its own, which is a flow scope.
+pub(super) fn is_named_function(node: AstNode<'_>) -> bool {
+    NAMED_FUNCTION_KINDS.contains(&node.kind())
+        || node.language() == AstLang::Ruby && RUBY_NAMED_FUNCTION_KINDS.contains(&node.kind())
+}
+
+/// An anonymous function, which shares the scope of the function around it.
+pub(super) fn is_anonymous_function(node: AstNode<'_>) -> bool {
+    ANONYMOUS_FUNCTION_KINDS.contains(&node.kind())
+        || node.language() == AstLang::Ruby && RUBY_ANONYMOUS_FUNCTION_KINDS.contains(&node.kind())
+}
 
 /// Statements that run their body zero or more times.
 const LOOP_KINDS: &[&str] = &[
@@ -71,6 +91,10 @@ const LOOP_KINDS: &[&str] = &[
     "loop_expression",
     "while_expression",
     "for_expression",
+    // Ruby.
+    "for",
+    "while",
+    "until",
 ];
 
 /// Nodes whose parts may not run: branches, loops, handlers, short-circuit
@@ -238,9 +262,7 @@ impl<'a> FunctionFlow<'a> {
 
     /// The scope's name, when it is a named function.
     pub fn function_name(&self) -> Option<&'a str> {
-        NAMED_FUNCTION_KINDS
-            .contains(&self.scope.kind())
-            .then(|| bindings::function_name(self.scope))?
+        is_named_function(self.scope).then(|| shapes::function_name(self.scope))?
     }
 
     pub fn bindings(&self) -> &[Binding<'a>] {
@@ -394,7 +416,7 @@ impl<'a> FunctionFlow<'a> {
 fn enclosing_scope(node: AstNode<'_>) -> AstNode<'_> {
     let mut current = node;
     while let Some(parent) = current.parent() {
-        if NAMED_FUNCTION_KINDS.contains(&parent.kind()) {
+        if is_named_function(parent) {
             return parent;
         }
         current = parent;
@@ -421,7 +443,7 @@ fn in_same_loop(binding: &Binding<'_>, read: AstNode<'_>) -> bool {
         return false;
     };
     std::iter::successors(Some(common), AstNode::parent)
-        .take_while(|node| !NAMED_FUNCTION_KINDS.contains(&node.kind()))
+        .take_while(|node| !is_named_function(*node))
         .any(|node| LOOP_KINDS.contains(&node.kind()))
 }
 
@@ -440,7 +462,7 @@ fn dominates(node: AstNode<'_>, read: AstNode<'_>) -> bool {
 fn is_conditional(node: AstNode<'_>) -> bool {
     CONDITIONAL_KINDS.contains(&node.kind())
         || LOOP_KINDS.contains(&node.kind())
-        || ANONYMOUS_FUNCTION_KINDS.contains(&node.kind())
+        || is_anonymous_function(node)
         || node.kind() == "binary_expression"
             && node
                 .child_by_field_name("operator")

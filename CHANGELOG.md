@@ -81,6 +81,13 @@
 
 ### Changed
 
+- The data-flow layer covers all 13 parsed grammars: TypeScript, Rust, C#,
+  Kotlin, C, C++, Ruby (methods, blocks, `for`), Julia (signatures, `->`
+  functions, `for` bindings), and Bash (variable assignments, `$x` and
+  `${x}` expansions) join JavaScript, Python, Java, and Go, checked by one
+  conformance program per grammar. C# implicitly typed lambda parameters
+  and C++ lambda parameters now shadow outer names, and loop variables and
+  signature names are no longer counted as reads of themselves.
 - `resource_not_closed` follows a handle through the data-flow layer in
   every language: only reads its binding reaches count as a close or a
   hand-off, so a handle replaced by a reassignment before it is closed is

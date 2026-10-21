@@ -4,8 +4,8 @@ use std::collections::HashSet;
 
 use super::bindings::is_member;
 use super::{
-    contains, BindingKind, CallFlow, Destination, FunctionFlow, Origin, ANONYMOUS_FUNCTION_KINDS,
-    NAMED_FUNCTION_KINDS,
+    contains, is_anonymous_function, is_named_function, BindingKind, CallFlow, Destination,
+    FunctionFlow, Origin,
 };
 use crate::AstNode;
 
@@ -53,6 +53,8 @@ const INTERPOLATION_KINDS: &[&str] = &[
     "interpolation",
     "interpolated_identifier",
     "interpolated_expression",
+    "simple_expansion",
+    "expansion",
 ];
 
 /// Expressions whose value is made of their operands' values.
@@ -238,7 +240,7 @@ impl<'f, 'a> Tracer<'f, 'a> {
 pub(super) fn is_name(node: AstNode<'_>) -> bool {
     matches!(
         node.kind(),
-        "identifier" | "simple_identifier" | "shorthand_property_identifier"
+        "identifier" | "simple_identifier" | "shorthand_property_identifier" | "variable_name"
     )
 }
 
@@ -307,7 +309,7 @@ impl<'f, 'a> Walker<'f, 'a> {
             self.call(call, CallFlow::Receiver, Destination::Receiver(call));
         } else if let Some(function) = returned_from(node, parent) {
             self.destinations.push(Destination::Returned { function });
-            if ANONYMOUS_FUNCTION_KINDS.contains(&function.kind()) {
+            if is_anonymous_function(function) {
                 self.pending.push(function);
             }
         } else if let Some(key) = property_key(node, parent) {
@@ -394,7 +396,7 @@ fn returned_from<'a>(node: AstNode<'a>, parent: AstNode<'a>) -> Option<AstNode<'
         parent.kind(),
         "return_statement" | "return" | "return_expression" | "jump_expression"
     ) && (parent.kind() != "jump_expression" || parent.text().starts_with("return"));
-    let body = ANONYMOUS_FUNCTION_KINDS.contains(&parent.kind())
+    let body = is_anonymous_function(parent)
         && parent.child_by_field_name("body") == Some(node)
         && !node.kind().contains("block");
     if body {
@@ -403,10 +405,8 @@ fn returned_from<'a>(node: AstNode<'a>, parent: AstNode<'a>) -> Option<AstNode<'
     if !returns {
         return None;
     }
-    std::iter::successors(parent.parent(), AstNode::parent).find(|ancestor| {
-        NAMED_FUNCTION_KINDS.contains(&ancestor.kind())
-            || ANONYMOUS_FUNCTION_KINDS.contains(&ancestor.kind())
-    })
+    std::iter::successors(parent.parent(), AstNode::parent)
+        .find(|ancestor| is_named_function(*ancestor) || is_anonymous_function(*ancestor))
 }
 
 /// The key `node` is stored under: an object pair's key, a keyword

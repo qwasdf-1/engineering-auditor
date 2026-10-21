@@ -1,26 +1,21 @@
 //! The bindings and reads of a flow scope, read from the node kinds and
 //! fields the grammars share.
 
-use super::{Binding, BindingKind, ANONYMOUS_FUNCTION_KINDS, LOOP_KINDS, NAMED_FUNCTION_KINDS};
+use super::shapes::{
+    list_items, loop_target_and_iterable, operator, parameter_list, target_and_value,
+    PARAMETER_LIST_KINDS,
+};
+use super::{is_anonymous_function, is_named_function, Binding, BindingKind, LOOP_KINDS};
 use crate::AstNode;
 
 /// Identifiers that name a local value.
 const NAME_KINDS: &[&str] = &[
     "identifier",
     "simple_identifier",
+    "implicit_parameter",
+    "variable_name",
     "shorthand_property_identifier_pattern",
     "shorthand_property_identifier",
-];
-
-/// Parameter lists, by kind, for functions without a `parameters` field.
-const PARAMETER_LIST_KINDS: &[&str] = &[
-    "formal_parameters",
-    "parameters",
-    "parameter_list",
-    "lambda_parameters",
-    "function_value_parameters",
-    "closure_parameters",
-    "bracketed_parameter_list",
 ];
 
 /// Declarations and assignments: (kind, binding kind).
@@ -38,6 +33,7 @@ const BINDING_KINDS: &[(&str, BindingKind)] = &[
     ("assignment", BindingKind::Assignment),
     ("assignment_expression", BindingKind::Assignment),
     ("assignment_statement", BindingKind::Assignment),
+    ("variable_assignment", BindingKind::Assignment),
     ("augmented_assignment", BindingKind::Augmented),
     ("augmented_assignment_expression", BindingKind::Augmented),
     ("compound_assignment_expr", BindingKind::Augmented),
@@ -49,7 +45,7 @@ const BINDING_KINDS: &[(&str, BindingKind)] = &[
 /// Every binding in `scope`, in source order.
 pub(super) fn collect(scope: AstNode<'_>) -> Vec<Binding<'_>> {
     let mut bindings = Vec::new();
-    if NAMED_FUNCTION_KINDS.contains(&scope.kind()) {
+    if is_named_function(scope) {
         parameters(scope, scope, &mut bindings);
     }
     visit(scope, &mut |node| node_bindings(node, scope, &mut bindings));
@@ -69,22 +65,10 @@ pub(super) fn reads<'a>(scope: AstNode<'a>, name: &str) -> Vec<AstNode<'a>> {
     reads
 }
 
-/// A function's name: its `name` field, or a C declarator's identifier.
-pub(super) fn function_name(function: AstNode<'_>) -> Option<&str> {
-    if let Some(name) = function.child_by_field_name("name") {
-        return Some(name.text());
-    }
-    let mut declarator = function.child_by_field_name("declarator")?;
-    while let Some(inner) = declarator.child_by_field_name("declarator") {
-        declarator = inner;
-    }
-    Some(declarator.text())
-}
-
 /// Calls `f` on every node of `scope`, not entering nested named functions.
 fn visit<'a>(scope: AstNode<'a>, f: &mut impl FnMut(AstNode<'a>)) {
     for child in scope.named_children() {
-        if NAMED_FUNCTION_KINDS.contains(&child.kind()) {
+        if is_named_function(child) {
             continue;
         }
         f(child);
@@ -93,7 +77,7 @@ fn visit<'a>(scope: AstNode<'a>, f: &mut impl FnMut(AstNode<'a>)) {
 }
 
 fn node_bindings<'a>(node: AstNode<'a>, scope: AstNode<'a>, out: &mut Vec<Binding<'a>>) {
-    if ANONYMOUS_FUNCTION_KINDS.contains(&node.kind()) {
+    if is_anonymous_function(node) {
         parameters(node, node, out);
     } else if LOOP_KINDS.contains(&node.kind()) {
         loop_variable(node, out);
@@ -155,15 +139,7 @@ fn uninitialized<'a>(declaration: AstNode<'a>, scope: AstNode<'a>, out: &mut Vec
 
 /// The parameters of `function`, visible in `region`.
 fn parameters<'a>(function: AstNode<'a>, region: AstNode<'a>, out: &mut Vec<Binding<'a>>) {
-    let list = function
-        .child_by_field_name("parameters")
-        .or_else(|| function.child_by_field_name("parameter"))
-        .or_else(|| {
-            function
-                .named_children()
-                .find(|child| PARAMETER_LIST_KINDS.contains(&child.kind()))
-        });
-    let Some(list) = list else {
+    let Some(list) = parameter_list(function) else {
         return;
     };
     let parameters = if NAME_KINDS.contains(&list.kind()) {
@@ -190,17 +166,7 @@ fn parameters<'a>(function: AstNode<'a>, region: AstNode<'a>, out: &mut Vec<Bind
 }
 
 fn loop_variable<'a>(node: AstNode<'a>, out: &mut Vec<Binding<'a>>) {
-    let clause = node
-        .named_children()
-        .find(|child| matches!(child.kind(), "range_clause" | "for_in_clause"))
-        .unwrap_or(node);
-    let target = ["left", "name", "pattern", "variable"]
-        .iter()
-        .find_map(|field| clause.child_by_field_name(field));
-    let iterable = ["right", "value", "iterable"]
-        .iter()
-        .find_map(|field| clause.child_by_field_name(field));
-    let (Some(target), Some(iterable)) = (target, iterable) else {
+    let (Some(target), Some(iterable)) = loop_target_and_iterable(node) else {
         return;
     };
     for name in declared_names(target) {
@@ -276,53 +242,6 @@ fn declaration<'a>(
     }
 }
 
-/// A declaration's target and value. `with open(p) as f` binds `f` to the
-/// expression before `as`; `x++` has a target only.
-fn target_and_value(node: AstNode<'_>) -> (Option<AstNode<'_>>, Option<AstNode<'_>>) {
-    if node.kind() == "as_pattern" {
-        return (node.child_by_field_name("alias"), node.named_child(0));
-    }
-    if matches!(node.kind(), "var_spec" | "const_spec") {
-        return (Some(node), node.child_by_field_name("value"));
-    }
-    if node.kind() == "property_declaration" {
-        let target = node.named_children().find(|child| {
-            matches!(
-                child.kind(),
-                "variable_declaration" | "multi_variable_declaration"
-            )
-        });
-        let value = node.text().find('=').and_then(|offset| {
-            node.named_children()
-                .find(|child| child.start_byte() > node.start_byte() + offset)
-        });
-        return (target, value);
-    }
-    let target = ["left", "name", "pattern", "declarator", "argument"]
-        .iter()
-        .find_map(|field| node.child_by_field_name(field))
-        .or_else(|| node.named_child(0));
-    let value = ["right", "value", "initializer"]
-        .iter()
-        .find_map(|field| node.child_by_field_name(field))
-        .or_else(|| {
-            let last = node.named_children().last()?;
-            (node.named_child_count() > 1 && node.text().contains('=') && Some(last) != target)
-                .then_some(last)
-        });
-    (target, value)
-}
-
-fn operator(node: AstNode<'_>) -> Option<&str> {
-    node.child_by_field_name("operator")
-        .map(|operator| operator.text())
-        .or_else(|| {
-            node.children()
-                .find(|child| !child.is_named() && child.text().ends_with('='))
-                .map(|operator| operator.text())
-        })
-}
-
 /// The names a target or parameter declares: the identifiers in a pattern,
 /// without property keys, type annotations, or default values.
 pub(super) fn declared_names(node: AstNode<'_>) -> Vec<AstNode<'_>> {
@@ -362,18 +281,6 @@ pub(super) fn declared_names(node: AstNode<'_>) -> Vec<AstNode<'_>> {
     names
 }
 
-/// The items of a list on either side of a multiple assignment.
-fn list_items(node: AstNode<'_>) -> Vec<AstNode<'_>> {
-    if matches!(
-        node.kind(),
-        "expression_list" | "pattern_list" | "tuple" | "tuple_expression"
-    ) {
-        node.named_children().collect()
-    } else {
-        vec![node]
-    }
-}
-
 /// A member or element access: not a local name.
 pub(super) fn is_member(node: AstNode<'_>) -> bool {
     matches!(
@@ -409,26 +316,38 @@ fn is_read(identifier: AstNode<'_>) -> bool {
 /// writes the name rather than reading it (`x++` and `x += 1` do both, and
 /// count as reads).
 fn is_binding_target(identifier: AstNode<'_>) -> bool {
-    std::iter::successors(identifier.parent(), AstNode::parent)
-        .take_while(|ancestor| !NAMED_FUNCTION_KINDS.contains(&ancestor.kind()))
-        .find_map(|ancestor| {
-            let declares = BINDING_KINDS.iter().any(|(kind, binding)| {
-                *kind == ancestor.kind() && *binding != BindingKind::Augmented
-            }) || LOOP_KINDS.contains(&ancestor.kind())
-                || PARAMETER_LIST_KINDS.contains(&ancestor.kind());
-            if !declares {
-                return None;
-            }
-            let target = if LOOP_KINDS.contains(&ancestor.kind()) {
-                ["left", "name", "pattern", "variable"]
-                    .iter()
-                    .find_map(|field| ancestor.child_by_field_name(field))
-            } else if PARAMETER_LIST_KINDS.contains(&ancestor.kind()) {
-                Some(ancestor)
-            } else {
-                target_and_value(ancestor).0
-            };
-            Some(target.is_some_and(|target| declared_names(target).contains(&identifier)))
-        })
-        .unwrap_or(false)
+    for ancestor in std::iter::successors(identifier.parent(), AstNode::parent) {
+        if let Some(declared) = declares(ancestor, identifier) {
+            return declared;
+        }
+        if is_named_function(ancestor) {
+            return false;
+        }
+    }
+    false
+}
+
+/// Whether `identifier` is a name `ancestor` declares, when `ancestor`
+/// declares names (a binding, a loop, a parameter list, a function's
+/// parameters, or a Julia signature); `None` when it declares none around
+/// `identifier`.
+fn declares(ancestor: AstNode<'_>, identifier: AstNode<'_>) -> Option<bool> {
+    let kind = ancestor.kind();
+    let target = if kind == "signature" {
+        return Some(true);
+    } else if is_named_function(ancestor) || is_anonymous_function(ancestor) {
+        Some(parameter_list(ancestor).filter(|list| super::contains(*list, identifier))?)
+    } else if LOOP_KINDS.contains(&kind) {
+        loop_target_and_iterable(ancestor).0
+    } else if PARAMETER_LIST_KINDS.contains(&kind) {
+        Some(ancestor)
+    } else if BINDING_KINDS
+        .iter()
+        .any(|(binding, binding_kind)| *binding == kind && *binding_kind != BindingKind::Augmented)
+    {
+        target_and_value(ancestor).0
+    } else {
+        return None;
+    };
+    Some(target.is_some_and(|target| declared_names(target).contains(&identifier)))
 }

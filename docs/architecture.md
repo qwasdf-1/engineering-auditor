@@ -90,7 +90,8 @@ Analysis is syntax-based: there is no type checker, whole-program dataflow, or
 alias analysis. Detectors that would need them stay silent rather than guess.
 
 Within one function, `auditor_ast::FunctionFlow` answers def-use questions
-the same way for every language: which bindings (parameters, declarations,
+the same way for every language (all 13 grammars, with a conformance test
+that runs one program shape in each): which bindings (parameters, declarations,
 assignments, loop variables) reach a read, where a value comes from, and
 where it goes (names, call arguments, properties, the return), and which
 expressions a name's value is made of (whole values and parts appended

@@ -133,9 +133,12 @@ Representative module boundaries:
 - `auditor-ast/src/semantic.rs`, `semantic_controls.rs`, and
   `semantic_fields.rs`: lazy span-only semantic facts plus control and
   grammar-field normalization over the same source allocation
-- `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`, and
-  `dataflow_values.rs`: findings-free def-use flow within one function
-  (reaching bindings, value origins, value destinations); detector-side
+- `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`,
+  `dataflow_shapes.rs`, and `dataflow_values.rs`: findings-free def-use flow
+  within one function (reaching bindings, value origins, value
+  destinations), with each grammar's binding shapes (function names,
+  parameter lists, loop variables, targets and values) in
+  `dataflow_shapes.rs`; detector-side
   request sources and security sinks live in `dataflow_sources.rs`, and
   `bound_reads.rs` gives owners the reads of a bound handle and whether
   it is released or handed on

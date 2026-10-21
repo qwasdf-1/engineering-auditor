@@ -14,7 +14,12 @@ What Engineering Auditor does not do, or does only partly, as of 1.1.0.
   through at most four calls. Calls on values whose type is unknown, such as
   methods of an injected service (`this.userService.find(..)`), are never
   followed, so the work such a call does stays hidden.
-- Data flow is followed within a function and through certain calls only.
+- Data flow is followed within a function and through certain calls only,
+  in all 13 parsed grammars. It does not model aliasing: a C or C++ local
+  whose address is taken, a C# `ref`/`out` parameter, or a Bash variable
+  set by `read` or `export` from another function is followed by its name
+  alone. Bash functions have positional parameters only, so a value from
+  `$1` is reported as unbound rather than as a parameter.
   `sql_injection` reads a query held in a local through the values bound to
   it, and reports a name or a clause fragment spliced into a query when it
   comes from request input in the same function (a framework request member
