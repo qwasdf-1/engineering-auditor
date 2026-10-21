@@ -88,7 +88,10 @@ python3 tooling/ecosystem/labels.py precision --scan current
   disputed and waits for review. `checks` records checks from JSON Lines:
   `{id, claim, detail}` from an oracle (`--source oracle:<tool>@<version>`),
   or `{id, verdict, reason}` from a second model (`--source model:<id>`,
-  which must differ from the labeller). An oracle that confirms the claim
+  which must differ from the labeller). A run replaces that source's earlier
+  checks; `--detector` limits the run, and the replacement, to those
+  detectors' labels, so a check of one detector keeps the source's checks
+  of the others. An oracle that confirms the claim
   agrees with a true positive; one that refutes it agrees with a false
   positive. A confirmed claim is neutral toward a false positive, because
   linters do not judge scope or idiom.

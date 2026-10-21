@@ -146,23 +146,27 @@ def check_record(check, source) -> dict:
     return {"source": source, "verdict": check.get("verdict"), "reason": str(check.get("reason", "")).strip()}
 
 
-def apply_checks(labels, checks, source) -> tuple:
+def apply_checks(labels, checks, source, detectors=None) -> tuple:
     """Replace `source`'s checks with [{id, claim, detail}] or [{id, verdict, reason}].
 
     Returns (applied, skipped messages). A run of one source replaces all of
     that source's earlier checks, whatever their version, so a finding the
-    source no longer covers loses its stale check. Pre-label statuses are then
-    recomputed.
+    source no longer covers loses its stale check. With `detectors`, the run
+    covers only those detectors' labels: their earlier checks are replaced,
+    other detectors' checks are kept, and checks of findings outside them are
+    skipped. Pre-label statuses are then recomputed.
     """
     if not source.startswith(("oracle:", "model:")):
         raise ValueError("check source must be oracle:<tool> or model:<id>")
-    index = by_id(labels)
+    index = {entry["id"]: entry for _, entries in selected(labels, detectors) for entry in entries}
+    outside = by_id(labels).keys() - index.keys()
     for entry in index.values():
         drop_checks(entry, source)
     applied, skipped = 0, []
     for check in checks:
         entry, record = index.get(check.get("id")), check_record(check, source)
-        errors = ["not sampled"] if entry is None else check_errors({**entry, "checks": [record]})
+        missing = "outside the selected detectors" if check.get("id") in outside else "not sampled"
+        errors = [missing] if entry is None else check_errors({**entry, "checks": [record]})
         if entry is None or errors:
             skipped.append(f"{check.get('id')}: {errors[0]}")
             continue

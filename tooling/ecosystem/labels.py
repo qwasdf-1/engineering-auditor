@@ -11,9 +11,10 @@ Commands:
                      as JSON Lines, for a human or model labeller
   import FILE --labeller human:NAME|model:ID
                      apply {id, verdict, reason} JSON Lines verdicts
-  checks FILE --source oracle:TOOL|model:ID
+  checks FILE --source oracle:TOOL|model:ID [--detector D..]
                      record independent checks of pre-labels ({id, claim, detail}
-                     for an oracle, {id, verdict, reason} for a second model)
+                     for an oracle, {id, verdict, reason} for a second model); a
+                     run replaces the source's earlier checks, only for D if given
   confirm --labeller human:NAME [--detector D..] [--ids ID..]
                      accept reviewed pre-labels as final human verdicts
   precision [--scan L] [--claims F] [--json F]
@@ -78,7 +79,8 @@ def import_command(args, labels) -> str:
 
 
 def checks_command(args, labels) -> str:
-    applied, skipped = label_workflow.apply_checks(labels, label_store.read_jsonl(args.checks), args.source)
+    applied, skipped = label_workflow.apply_checks(labels, label_store.read_jsonl(args.checks), args.source,
+                                                   args.detector)
     label_store.write_labels(labels)
     report_skipped(skipped)
     corroborated = sum(entry["status"] == "corroborated" for entry in label_store.by_id(labels).values())
@@ -136,6 +138,8 @@ def parser() -> argparse.ArgumentParser:
     checking = commands.add_parser("checks")
     checking.add_argument("checks", type=Path, help="JSON Lines of {id, claim, detail} or {id, verdict, reason}")
     checking.add_argument("--source", required=True, help="oracle:<tool>[@version] or model:<id>")
+    checking.add_argument("--detector", nargs="+",
+                          help="replace this source's checks only for these detectors (default: all)")
     confirming = commands.add_parser("confirm")
     confirming.add_argument("--labeller", required=True, help="human:<name>")
     confirming.add_argument("--detector", nargs="+", help="detectors to confirm (default: all)")

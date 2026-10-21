@@ -234,6 +234,15 @@ class CheckTest(unittest.TestCase):
         self.assertEqual(self.entries[0]["status"], "pre_label")
         self.assertEqual(self.entries[1]["checks"][0]["source"], "oracle:lizard@2.0")
 
+    def test_a_detector_scoped_run_keeps_other_detectors_checks(self):
+        self.oracle({0: "confirmed"})
+        check = {"id": self.entries[1]["id"], "claim": "confirmed", "detail": "d"}
+        applied, skipped = label_workflow.apply_checks(self.labels, [check], "oracle:lizard@2.0", ["other"])
+        self.assertEqual((applied, self.entries[0]["status"]), (0, "corroborated"))
+        self.assertIn("outside the selected detectors", skipped[0])
+        applied, _ = label_workflow.apply_checks(self.labels, [check], "oracle:lizard@2.0", ["too_many_parameters"])
+        self.assertEqual((applied, self.entries[0]["status"]), (1, "pre_label"))
+
     def test_second_model_must_be_independent_and_can_dispute(self):
         applied, skipped = label_workflow.apply_checks(
             self.labels, [{"id": self.entries[0]["id"], "verdict": "true_positive", "reason": "r"}], "model:primary")
