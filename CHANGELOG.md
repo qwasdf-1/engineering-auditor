@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## 1.3.0 - C#, C++, And C Cost Detectors
+
+The algorithmic, systems, and optimization detectors now run on C# (31 of
+38 cells), C++ (24), and C (10); every cell still unsupported names its
+reason in `language-support.md`. Each new cell is held by a positive and an
+adversarial negative capability case; the Tier-2 corpus libraries gave
+these detectors no positive sample yet. Loop headers now record their
+counters, removing two JavaScript/TypeScript false positives, and C#
+`foreach` loops count toward nesting depth. Stable surfaces are unchanged.
 
 ### Added
 

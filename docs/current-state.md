@@ -1,6 +1,6 @@
 # Current State
 
-What Engineering Auditor does today, by area, as of 1.2.0. Limitations are
+What Engineering Auditor does today, by area, as of 1.3.0. Limitations are
 in [`known-gaps.md`](known-gaps.md).
 
 ## Release
@@ -14,7 +14,8 @@ archives with checksums, the license, and third-party license notices
 public repository; it adds parallel parsing and the license notices and keeps
 every stable surface unchanged. 1.2.0 analyzes files with syntax errors after
 recovery, adds the data-flow layer below, and adds optional syntax-coverage
-fields to the report.
+fields to the report. 1.3.0 extends the algorithmic, systems, and
+optimization detectors to C#, C++, and C.
 
 ## Scanning
 
@@ -125,5 +126,5 @@ ordinary test runs.
 ## Repository Health
 
 The repository scans itself in CI and fails on any finding not in its
-baseline. The full test suite (641 tests, plus the 21 ignored parity groups)
+baseline. The full test suite (645 tests, plus the 21 ignored parity groups)
 passes on stable Rust and on the minimum supported Rust, 1.86.

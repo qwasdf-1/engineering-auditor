@@ -20,8 +20,8 @@ and the checksum file from the release page, then:
 
 ```sh
 sha256sum -c SHA256SUMS --ignore-missing   # macOS: shasum -a 256 -c SHA256SUMS --ignore-missing
-tar -xzf auditor-1.2.0-x86_64-unknown-linux-gnu.tar.gz
-sudo install auditor-1.2.0-x86_64-unknown-linux-gnu/auditor /usr/local/bin/
+tar -xzf auditor-1.3.0-x86_64-unknown-linux-gnu.tar.gz
+sudo install auditor-1.3.0-x86_64-unknown-linux-gnu/auditor /usr/local/bin/
 auditor version
 ```
 
@@ -164,7 +164,7 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     env:
-      AUDITOR_VERSION: 1.2.0
+      AUDITOR_VERSION: 1.3.0
       AUDITOR_TARGET: x86_64-unknown-linux-gnu
     steps:
       - uses: actions/checkout@v4
