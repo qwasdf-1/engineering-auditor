@@ -383,26 +383,26 @@
   },
   "console_output_in_production": {
     "true_positive": 62,
-    "false_positive": 22,
+    "false_positive": 20,
     "unclear": 0,
-    "stale": 82,
-    "precision": 0.7380952380952381,
+    "stale": 84,
+    "precision": 0.7560975609756098,
     "standing": "below_bar",
     "unverified": 0,
     "audit": [
       46,
-      16
+      14
     ],
     "accepted": 0,
     "final": 20,
-    "corroborated": 64,
+    "corroborated": 62,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        82,
-        105
+        80,
+        103
       ],
       "oracle": [
         47,
@@ -443,7 +443,7 @@
         "standing": "insufficient_sample"
       },
       "python": {
-        "false_positive": 14,
+        "false_positive": 12,
         "true_positive": 16,
         "unverified": 0,
         "accepted": 0,
@@ -2215,11 +2215,11 @@
     }
   },
   "network_call_without_timeout": {
-    "true_positive": 20,
+    "true_positive": 19,
     "false_positive": 1,
     "unclear": 0,
-    "stale": 6,
-    "precision": 0.9523809523809523,
+    "stale": 7,
+    "precision": 0.95,
     "standing": "insufficient_sample",
     "unverified": 1,
     "audit": [
@@ -2228,7 +2228,7 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 21,
+    "corroborated": 20,
     "disputed": 0,
     "provisional": {
       "true_positive": 1
@@ -2236,8 +2236,8 @@
     "provisional_precision": 1.0,
     "agreement": {
       "model": [
-        21,
-        21
+        20,
+        20
       ],
       "oracle": [
         0,
@@ -2245,12 +2245,6 @@
       ]
     },
     "by_language": {
-      "go": {
-        "true_positive": 1,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
       "java": {
         "false_positive": 1,
         "unverified": 0,
@@ -2609,27 +2603,27 @@
     }
   },
   "random_for_security": {
-    "true_positive": 1,
-    "false_positive": 24,
+    "true_positive": 0,
+    "false_positive": 1,
     "unclear": 0,
-    "stale": 0,
-    "precision": 0.04,
-    "standing": "below_bar",
+    "stale": 24,
+    "precision": 0.0,
+    "standing": "insufficient_sample",
     "unverified": 0,
     "audit": [
       0,
-      3
+      0
     ],
     "accepted": 0,
     "final": 1,
-    "corroborated": 24,
+    "corroborated": 0,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        27,
-        28
+        0,
+        1
       ],
       "oracle": [
         0,
@@ -2639,48 +2633,6 @@
     "by_language": {
       "c": {
         "false_positive": 1,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "csharp": {
-        "false_positive": 3,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "java": {
-        "false_positive": 2,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "javascript": {
-        "false_positive": 4,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "kotlin": {
-        "true_positive": 1,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "python": {
-        "false_positive": 3,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "rust": {
-        "false_positive": 4,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      },
-      "typescript": {
-        "false_positive": 7,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
@@ -2725,11 +2677,11 @@
     }
   },
   "repeated_expensive_initialization": {
-    "true_positive": 1,
+    "true_positive": 0,
     "false_positive": 2,
     "unclear": 0,
-    "stale": 1,
-    "precision": 0.3333333333333333,
+    "stale": 2,
+    "precision": 0.0,
     "standing": "insufficient_sample",
     "unverified": 0,
     "audit": [
@@ -2738,14 +2690,14 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 3,
+    "corroborated": 2,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        4,
-        4
+        3,
+        3
       ],
       "oracle": [
         0,
@@ -2755,7 +2707,6 @@
     "by_language": {
       "typescript": {
         "false_positive": 2,
-        "true_positive": 1,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
@@ -3015,12 +2966,55 @@
       }
     }
   },
+  "skipped_test_without_reason": {
+    "true_positive": 10,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": 1.0,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 10,
+    "disputed": 0,
+    "provisional": {},
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        10,
+        10
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {
+      "java": {
+        "true_positive": 9,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "typescript": {
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      }
+    }
+  },
   "source_duplicate_detection": {
-    "true_positive": 169,
+    "true_positive": 163,
     "false_positive": 9,
     "unclear": 0,
-    "stale": 126,
-    "precision": 0.949438202247191,
+    "stale": 132,
+    "precision": 0.9476744186046512,
     "standing": "meets_bar",
     "unverified": 0,
     "audit": [
@@ -3029,14 +3023,14 @@
     ],
     "accepted": 36,
     "final": 8,
-    "corroborated": 170,
+    "corroborated": 164,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        268,
-        276
+        258,
+        266
       ],
       "oracle": [
         32,
@@ -3045,7 +3039,7 @@
     },
     "by_language": {
       "c": {
-        "true_positive": 28,
+        "true_positive": 22,
         "unverified": 0,
         "accepted": 0,
         "standing": "meets_bar"
@@ -3088,10 +3082,10 @@
   },
   "sql_injection": {
     "true_positive": 0,
-    "false_positive": 2,
+    "false_positive": 0,
     "unclear": 0,
-    "stale": 0,
-    "precision": 0.0,
+    "stale": 2,
+    "precision": null,
     "standing": "insufficient_sample",
     "unverified": 0,
     "audit": [
@@ -3100,28 +3094,21 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 2,
+    "corroborated": 0,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        2,
-        2
+        0,
+        0
       ],
       "oracle": [
         0,
         0
       ]
     },
-    "by_language": {
-      "csharp": {
-        "false_positive": 2,
-        "unverified": 0,
-        "accepted": 0,
-        "standing": "insufficient_sample"
-      }
-    }
+    "by_language": {}
   },
   "ssl_with_bad_defaults": {
     "true_positive": 2,
@@ -3323,10 +3310,10 @@
   },
   "test_without_assertion": {
     "true_positive": 12,
-    "false_positive": 1,
+    "false_positive": 0,
     "unclear": 0,
-    "stale": 0,
-    "precision": 0.9230769230769231,
+    "stale": 1,
+    "precision": 1.0,
     "standing": "insufficient_sample",
     "unverified": 1,
     "audit": [
@@ -3334,7 +3321,7 @@
       0
     ],
     "accepted": 0,
-    "final": 1,
+    "final": 0,
     "corroborated": 12,
     "disputed": 0,
     "provisional": {
@@ -3343,8 +3330,8 @@
     "provisional_precision": 1.0,
     "agreement": {
       "model": [
-        13,
-        14
+        12,
+        12
       ],
       "oracle": [
         0,
@@ -3377,7 +3364,6 @@
         "standing": "insufficient_sample"
       },
       "typescript": {
-        "false_positive": 1,
         "true_positive": 5,
         "unverified": 1,
         "accepted": 0,

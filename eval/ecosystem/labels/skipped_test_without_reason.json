@@ -8,12 +8,19 @@
       "language": "java",
       "path": "src/test/java/org/apache/commons/lang3/StringUtilsTest.java",
       "message": "Test `testLang1593` is skipped at line 1303 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 1303,
       "verdict": "true_positive",
       "reason": "A bare @Disabled with no comment; the test name cites LANG-1593 but nothing says why it is disabled.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled on testLang1593 with no argument or comment above, inside, or in the class."
+        }
+      ]
     },
     {
       "id": "EA-62b917ced8a289ff",
@@ -21,12 +28,19 @@
       "language": "java",
       "path": "src/test/java/org/apache/commons/lang3/builder/ReflectionToStringBuilderMutateInspectConcurrencyTest.java",
       "message": "Test `testConcurrency` is skipped at line 93 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 93,
       "verdict": "true_positive",
       "reason": "A bare @Disabled; the class Javadoc links LANG-762 but does not say the tests are disabled or why.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled on testConcurrency; no comment, argument, or class doc explains it."
+        }
+      ]
     },
     {
       "id": "EA-e6cda6ea543deba4",
@@ -34,12 +48,19 @@
       "language": "java",
       "path": "gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java",
       "message": "Test `disable_testCustomSerializersOfSelf` is skipped at line 98 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 98,
       "verdict": "true_positive",
       "reason": "A bare JUnit 4 @Ignore; the disable_ name prefix records that it is off, not why.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore; only the disable_ name prefix and a class Javadoc describing the tests generally, no reason."
+        }
+      ]
     },
     {
       "id": "EA-a8a1d797ee347f3b",
@@ -47,12 +68,19 @@
       "language": "java",
       "path": "gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java",
       "message": "Test `disable_testCustomDeserializersOfSelf` is skipped at line 110 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 110,
       "verdict": "true_positive",
       "reason": "A bare JUnit 4 @Ignore; the disable_ name prefix records that it is off, not why.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore; only the disable_ name prefix, no comment or argument giving a reason."
+        }
+      ]
     },
     {
       "id": "EA-72344b516a0cdf07",
@@ -60,12 +88,19 @@
       "language": "java",
       "path": "moshi/src/test/java/com/squareup/moshi/JsonUtf8ReaderTest.java",
       "message": "Test `numberWithOctalPrefix` is skipped at line 145 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 145,
       "verdict": "true_positive",
       "reason": "A bare @Ignore with no comment, doc, or class-level explanation.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore on numberWithOctalPrefix; no comment, argument, or class comment."
+        }
+      ]
     },
     {
       "id": "EA-4f5903675d762c6e",
@@ -73,12 +108,19 @@
       "language": "java",
       "path": "moshi/src/test/java/com/squareup/moshi/JsonUtf8ReaderTest.java",
       "message": "Test `bomIgnoredAsFirstCharacterOfDocument` is skipped at line 961 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 961,
       "verdict": "true_positive",
       "reason": "A bare @Ignore with no comment, doc, or class-level explanation.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore on bomIgnoredAsFirstCharacterOfDocument; no stated reason anywhere."
+        }
+      ]
     },
     {
       "id": "EA-884e665142bb72f0",
@@ -86,12 +128,19 @@
       "language": "java",
       "path": "moshi/src/test/java/com/squareup/moshi/JsonUtf8ReaderTest.java",
       "message": "Test `failWithPositionIsOffsetByBom` is skipped at line 1021 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 1021,
       "verdict": "true_positive",
       "reason": "A bare @Ignore with no comment, doc, or class-level explanation.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore on failWithPositionIsOffsetByBom; no stated reason anywhere."
+        }
+      ]
     },
     {
       "id": "EA-d6b09d515cf51917",
@@ -99,12 +148,19 @@
       "language": "java",
       "path": "moshi/src/test/java/com/squareup/moshi/JsonUtf8ReaderTest.java",
       "message": "Test `strictVeryLongNumber` is skipped at line 1087 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 1087,
       "verdict": "true_positive",
       "reason": "A bare @Ignore with no comment, doc, or class-level explanation.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore on strictVeryLongNumber; no stated reason anywhere."
+        }
+      ]
     },
     {
       "id": "EA-ed68f98acec2d37f",
@@ -112,12 +168,19 @@
       "language": "java",
       "path": "moshi/src/test/java/com/squareup/moshi/JsonUtf8ReaderTest.java",
       "message": "Test `lenientVeryLongNumber` is skipped at line 1099 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 1099,
       "verdict": "true_positive",
       "reason": "A bare @Ignore with no comment, doc, or class-level explanation.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore on lenientVeryLongNumber; no stated reason anywhere."
+        }
+      ]
     },
     {
       "id": "EA-9641ed19af4d5743",
@@ -125,12 +188,19 @@
       "language": "typescript",
       "path": "src/utils/buffer.test.ts",
       "message": "Test `comparing variables except string are deprecated` is skipped at line 69 with no stated reason",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "d3-1.3.0",
       "line": 69,
       "verdict": "true_positive",
       "reason": "it.skip with no comment; the title hints that the behaviour is deprecated, but no reason is attached to the skip (borderline).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "it.skip with no comment; the test title only says 'are deprecated', which is the name, not a stated reason for skipping."
+        }
+      ]
     }
   ]
 }
