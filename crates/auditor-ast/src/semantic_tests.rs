@@ -579,3 +579,77 @@ fn c_and_cpp_function_symbols_are_named_by_their_declarator() {
         ["Compare"]
     );
 }
+
+/// `(target, value)` of each assignment fact in `source`.
+fn stores(language: AstLang, source: &str) -> Vec<(Option<String>, Option<String>)> {
+    let tree = AstParser::new().unwrap().parse(&language, source).unwrap();
+    let facts = tree.semantic_facts();
+    facts
+        .assignments
+        .iter()
+        .map(|assignment| {
+            let text = |span: Option<crate::SourceSpan>| {
+                span.map(|span| tree.text_for_span(span).to_string())
+            };
+            (text(assignment.target), text(assignment.value))
+        })
+        .collect()
+}
+
+fn store(target: &str, value: Option<&str>) -> (Option<String>, Option<String>) {
+    (Some(target.to_string()), value.map(str::to_string))
+}
+
+#[test]
+fn assignment_facts_share_the_data_flow_layers_shapes() {
+    assert_eq!(
+        stores(
+            AstLang::Kotlin,
+            "fun f() {\n    @Ann val x: Int = 1\n    val lazyValue by lazy { 2 }\n}\n"
+        ),
+        [store("x", Some("1")), store("lazyValue", None)]
+    );
+    assert_eq!(
+        stores(
+            AstLang::Go,
+            "package p\nfunc f() {\n\tvar x int = 5\n\ti := 0\n\ti++\n}\n"
+        ),
+        [
+            store("x", Some("5")),
+            store("i", Some("0")),
+            store("i", None)
+        ]
+    );
+    assert_eq!(
+        stores(AstLang::C, "void f(int *q) { int *p = q; p++; }\n"),
+        [store("p", Some("q")), store("p", None)]
+    );
+    assert_eq!(
+        stores(
+            AstLang::CSharp,
+            "class C { public int A { get; set; } void F() { var x = G(); } }\n"
+        ),
+        [store("A", None), store("x", Some("G()"))]
+    );
+    assert_eq!(
+        stores(
+            AstLang::TypeScript,
+            "let resolve!: (v: number) => void;\nlet n = 1;\n"
+        ),
+        [store("resolve", None), store("n", Some("1"))]
+    );
+    assert_eq!(
+        stores(
+            AstLang::Python,
+            "def f():\n    with open(p) as fp:\n        pass\n    try:\n        pass\n    except (TypeError, KeyError) as e:\n        pass\n"
+        ),
+        [store("fp", Some("open(p)")), store("e", None)]
+    );
+    assert_eq!(
+        stores(
+            AstLang::Java,
+            "class A { void f() { for (int i = 0; i < 3; i++) {} } }\n"
+        ),
+        [store("i", Some("0")), store("i", None)]
+    );
+}

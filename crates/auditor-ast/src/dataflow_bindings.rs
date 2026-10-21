@@ -3,7 +3,7 @@
 
 use super::shapes::{
     list_items, loop_target_and_iterable, operator, parameter_list, target_and_value,
-    PARAMETER_LIST_KINDS,
+    BINDING_KINDS, PARAMETER_LIST_KINDS,
 };
 use super::{is_anonymous_function, is_named_function, Binding, BindingKind, LOOP_KINDS};
 use crate::AstNode;
@@ -16,30 +16,6 @@ const NAME_KINDS: &[&str] = &[
     "variable_name",
     "shorthand_property_identifier_pattern",
     "shorthand_property_identifier",
-];
-
-/// Declarations and assignments: (kind, binding kind).
-const BINDING_KINDS: &[(&str, BindingKind)] = &[
-    ("variable_declarator", BindingKind::Declaration),
-    ("init_declarator", BindingKind::Declaration),
-    ("let_declaration", BindingKind::Declaration),
-    ("short_var_declaration", BindingKind::Declaration),
-    ("var_spec", BindingKind::Declaration),
-    ("const_spec", BindingKind::Declaration),
-    ("property_declaration", BindingKind::Declaration),
-    ("named_expression", BindingKind::Declaration),
-    ("resource", BindingKind::Declaration),
-    ("as_pattern", BindingKind::Declaration),
-    ("assignment", BindingKind::Assignment),
-    ("assignment_expression", BindingKind::Assignment),
-    ("assignment_statement", BindingKind::Assignment),
-    ("variable_assignment", BindingKind::Assignment),
-    ("augmented_assignment", BindingKind::Augmented),
-    ("augmented_assignment_expression", BindingKind::Augmented),
-    ("compound_assignment_expr", BindingKind::Augmented),
-    ("update_expression", BindingKind::Augmented),
-    ("inc_statement", BindingKind::Augmented),
-    ("dec_statement", BindingKind::Augmented),
 ];
 
 /// Every binding in `scope`, in source order.

@@ -7,60 +7,6 @@ pub(super) fn first_field(node: AstNode<'_>, fields: &[&str]) -> Option<SourceSp
         .find_map(|field| node.child_by_field_name(field).map(SourceSpan::from_node))
 }
 
-pub(super) fn assignment_fields(node: AstNode<'_>) -> (Option<SourceSpan>, Option<SourceSpan>) {
-    if node.language() == AstLang::Kotlin && node.kind() == "property_declaration" {
-        let Some(offset) = node.text().find('=') else {
-            return (None, None);
-        };
-        let operator = node.start_byte() + offset;
-        return (
-            first_identifier_before(node, operator),
-            first_named_node_after(node, operator + 1),
-        );
-    }
-    let target = first_field(
-        node,
-        &["left", "target", "pattern", "variable", "argument", "name"],
-    );
-    let value = first_field(node, &["right", "value", "initializer", "expression"]);
-    if target.is_some() || value.is_some() || !node.text().contains('=') {
-        return (target, value);
-    }
-    let count = node.named_child_count();
-    if count < 2 {
-        return (None, None);
-    }
-    let target = node.named_child(0).map(SourceSpan::from_node);
-    (
-        target,
-        node.named_child(count - 1).map(SourceSpan::from_node),
-    )
-}
-
-fn first_named_node_after(node: AstNode<'_>, byte: usize) -> Option<SourceSpan> {
-    node.named_children().find_map(|child| {
-        if child.start_byte() >= byte {
-            Some(SourceSpan::from_node(child))
-        } else if child.end_byte() > byte {
-            first_named_node_after(child, byte)
-        } else {
-            None
-        }
-    })
-}
-
-fn first_identifier_before(node: AstNode<'_>, byte: usize) -> Option<SourceSpan> {
-    node.named_children().find_map(|child| {
-        if child.start_byte() >= byte {
-            None
-        } else if NodeKind::of(child).is(IDENTIFIER_KINDS) {
-            Some(SourceSpan::from_node(child))
-        } else {
-            first_identifier_before(child, byte)
-        }
-    })
-}
-
 pub(super) fn loop_field(node: AstNode<'_>, fields: &[&str]) -> Option<SourceSpan> {
     first_field(node, fields)
         .or_else(|| {

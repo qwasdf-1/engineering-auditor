@@ -7,7 +7,7 @@ mod controls;
 use controls::{control_kind, is_control_branch, nesting_increment};
 #[path = "semantic_fields.rs"]
 mod fields;
-use fields::{assignment_fields, first_field, loop_field, symbol_name};
+use fields::{first_field, loop_field, symbol_name};
 #[path = "semantic_symbols.rs"]
 mod symbols;
 use symbols::{in_anonymous_function, symbol_kind};
@@ -345,12 +345,11 @@ fn record_operations(
             control_region: context.control,
         });
     }
-    if node_kind.is(ASSIGNMENT_KINDS) {
-        let (target, value) = assignment_fields(node);
+    if let Some((target, value)) = crate::dataflow::assignment_parts(node) {
         builder.assignments.push(AssignmentFact {
             span,
-            target,
-            value,
+            target: target.map(SourceSpan::from_node),
+            value: value.map(SourceSpan::from_node),
             owner: context.owner,
             control_region: context.control,
         });
@@ -408,21 +407,6 @@ const CALL_KINDS: &[&str] = &[
     "new_expression",
     "command",
     "macro_invocation",
-];
-const ASSIGNMENT_KINDS: &[&str] = &[
-    "assignment",
-    "assignment_expression",
-    "assignment_statement",
-    "augmented_assignment",
-    "augmented_assignment_expression",
-    "compound_assignment_expr",
-    "dec_statement",
-    "inc_statement",
-    "let_declaration",
-    "property_declaration",
-    "short_var_declaration",
-    "update_expression",
-    "variable_declarator",
 ];
 const IMPORT_KINDS: &[&str] = &[
     "use_declaration",

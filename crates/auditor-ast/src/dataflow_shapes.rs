@@ -2,7 +2,32 @@
 //! parameter list, a loop's variable and iterable, and a declaration's or
 //! assignment's target and value. Findings-free.
 
-use crate::AstNode;
+use super::BindingKind;
+use crate::{AstLang, AstNode};
+
+/// Declarations and assignments: (kind, binding kind).
+pub(super) const BINDING_KINDS: &[(&str, BindingKind)] = &[
+    ("variable_declarator", BindingKind::Declaration),
+    ("init_declarator", BindingKind::Declaration),
+    ("let_declaration", BindingKind::Declaration),
+    ("short_var_declaration", BindingKind::Declaration),
+    ("var_spec", BindingKind::Declaration),
+    ("const_spec", BindingKind::Declaration),
+    ("property_declaration", BindingKind::Declaration),
+    ("named_expression", BindingKind::Declaration),
+    ("resource", BindingKind::Declaration),
+    ("as_pattern", BindingKind::Declaration),
+    ("assignment", BindingKind::Assignment),
+    ("assignment_expression", BindingKind::Assignment),
+    ("assignment_statement", BindingKind::Assignment),
+    ("variable_assignment", BindingKind::Assignment),
+    ("augmented_assignment", BindingKind::Augmented),
+    ("augmented_assignment_expression", BindingKind::Augmented),
+    ("compound_assignment_expr", BindingKind::Augmented),
+    ("update_expression", BindingKind::Augmented),
+    ("inc_statement", BindingKind::Augmented),
+    ("dec_statement", BindingKind::Augmented),
+];
 
 /// Parameter lists, by kind, for functions without a `parameters` field.
 pub(super) const PARAMETER_LIST_KINDS: &[&str] = &[
@@ -131,23 +156,24 @@ pub(super) fn loop_target_and_iterable(
 /// expression before `as`; `x++` has a target only.
 pub(super) fn target_and_value(node: AstNode<'_>) -> (Option<AstNode<'_>>, Option<AstNode<'_>>) {
     if node.kind() == "as_pattern" {
-        return (node.child_by_field_name("alias"), node.named_child(0));
+        // `except E as e` binds the exception raised, not the types listed.
+        let value = node.named_child(0).filter(|_| {
+            node.parent()
+                .is_none_or(|parent| parent.kind() != "except_clause")
+        });
+        return (node.child_by_field_name("alias"), value);
     }
     if matches!(node.kind(), "var_spec" | "const_spec") {
         return (Some(node), node.child_by_field_name("value"));
     }
-    if node.kind() == "property_declaration" {
+    if node.kind() == "property_declaration" && node.language() == AstLang::Kotlin {
         let target = node.named_children().find(|child| {
             matches!(
                 child.kind(),
                 "variable_declaration" | "multi_variable_declaration"
             )
         });
-        let value = node.text().find('=').and_then(|offset| {
-            node.named_children()
-                .find(|child| child.start_byte() > node.start_byte() + offset)
-        });
-        return (target, value);
+        return (target, after_assignment_operator(node));
     }
     let target = ["left", "name", "pattern", "declarator", "argument"]
         .iter()
@@ -156,12 +182,26 @@ pub(super) fn target_and_value(node: AstNode<'_>) -> (Option<AstNode<'_>>, Optio
     let value = ["right", "value", "initializer"]
         .iter()
         .find_map(|field| node.child_by_field_name(field))
-        .or_else(|| {
-            let last = node.named_children().last()?;
-            (node.named_child_count() > 1 && node.text().contains('=') && Some(last) != target)
-                .then_some(last)
-        });
+        .or_else(|| after_assignment_operator(node).filter(|value| Some(*value) != target));
     (target, value)
+}
+
+/// The expression after a node's `=` (or `+=`, `:=`) token: a C#
+/// declarator's or Julia assignment's value, which no field holds. A `=`
+/// inside a type (`(v: T) => void`) is not an operator token.
+fn after_assignment_operator(node: AstNode<'_>) -> Option<AstNode<'_>> {
+    let mut assigned = false;
+    for child in node.children() {
+        let token = !child.is_named() || child.kind() == "operator";
+        if assigned && !token && !child.kind().contains("comment") {
+            return Some(child);
+        }
+        let text = child.text();
+        assigned |= token
+            && text.ends_with('=')
+            && !matches!(text, "==" | "!=" | "<=" | ">=" | "===" | "!==");
+    }
+    None
 }
 
 pub(super) fn operator(node: AstNode<'_>) -> Option<&str> {
@@ -183,5 +223,43 @@ pub(super) fn list_items(node: AstNode<'_>) -> Vec<AstNode<'_>> {
         node.named_children().collect()
     } else {
         vec![node]
+    }
+}
+
+/// The target and value of a store, for the semantic facts: `None` when
+/// `node` is not a declaration or assignment. The target is the name
+/// declared (`x` of Kotlin's `val x: Int = ..`, of Go's `var x int = ..`,
+/// and of C's `int *x = ..`), or the expression written (`a.b`, `m[k]`).
+pub(crate) fn assignment_parts(
+    node: AstNode<'_>,
+) -> Option<(Option<AstNode<'_>>, Option<AstNode<'_>>)> {
+    BINDING_KINDS
+        .iter()
+        .any(|(kind, _)| *kind == node.kind())
+        .then_some(())?;
+    let (target, value) = target_and_value(node);
+    Some((target.map(declared_name), value))
+}
+
+/// The name a declaration target declares, when it declares one name.
+fn declared_name(target: AstNode<'_>) -> AstNode<'_> {
+    match target.kind() {
+        "variable_declaration" => target
+            .named_children()
+            .find(|child| child.kind() == "simple_identifier")
+            .unwrap_or(target),
+        "var_spec" | "const_spec" => target.child_by_field_name("name").unwrap_or(target),
+        "pointer_declarator" | "reference_declarator" | "array_declarator" => {
+            std::iter::successors(Some(target), |declarator| {
+                declarator.child_by_field_name("declarator").or_else(|| {
+                    declarator
+                        .named_children()
+                        .find(|child| child.kind() == "identifier")
+                })
+            })
+            .find(|declarator| declarator.kind() == "identifier")
+            .unwrap_or(target)
+        }
+        _ => target,
     }
 }

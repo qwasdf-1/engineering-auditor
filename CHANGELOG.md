@@ -88,6 +88,17 @@
   conformance program per grammar. C# implicitly typed lambda parameters
   and C++ lambda parameters now shadow outer names, and loop variables and
   signature names are no longer counted as reads of themselves.
+- The structure index's assignment facts, read by the algorithmic, systems,
+  optimization, and structural families, come from the data-flow layer's
+  binding shapes instead of a separate table. They now include C and C++
+  initialized declarations, Go `var`/`const` specs, Java try-with-resources
+  variables, Python `with .. as`/`except .. as` names and `:=`, and Bash
+  assignments; C# declarations carry their initializer; Java and Go `i++`
+  carry their target; Kotlin targets are the declared name, not a leading
+  annotation; and `=` inside a type (`(v: T) => void`) or a Kotlin getter
+  is no longer read as an initializer. `too_many_locals` counts `except ..
+  as e` names, as pylint does: 5 new apprise findings on the 46-repository
+  corpus, nothing else changed.
 - `resource_not_closed` follows a handle through the data-flow layer in
   every language: only reads its binding reaches count as a close or a
   hand-off, so a handle replaced by a reassignment before it is closed is

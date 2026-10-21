@@ -132,7 +132,8 @@ Representative module boundaries:
   fingerprints over the shared tree
 - `auditor-ast/src/semantic.rs`, `semantic_controls.rs`, and
   `semantic_fields.rs`: lazy span-only semantic facts plus control and
-  grammar-field normalization over the same source allocation
+  grammar-field normalization over the same source allocation; assignment
+  facts read their target and value through `dataflow_shapes.rs`
 - `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`,
   `dataflow_shapes.rs`, and `dataflow_values.rs`: findings-free def-use flow
   within one function (reaching bindings, value origins, value
