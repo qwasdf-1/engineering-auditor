@@ -3,8 +3,6 @@
 //! rebuilding a string, and a range driven by `for_each` (Rust) or
 //! `forEach` (Java).
 
-use auditor_ast::ControlRegionKind;
-
 use super::collections::*;
 use super::collectors::{push_fact, structural_proof};
 use super::flow::*;
@@ -21,6 +19,10 @@ pub(super) fn collect_loop_form_facts(view: &FunctionView<'_>, facts: &mut Vec<O
             collect_range_for_each(view, facts);
         }
         Language::Java => collect_range_for_each(view, facts),
+        Language::CSharp => {
+            collect_range_for_each(view, facts);
+            super::csharp::collect_csharp_map_entry(view, facts);
+        }
         _ => {}
     }
 }
@@ -29,23 +31,11 @@ pub(super) fn collect_loop_form_facts(view: &FunctionView<'_>, facts: &mut Vec<O
 /// `groups.setdefault(key, [])` does in one lookup. The default must be a
 /// literal or empty constructor, since `setdefault` evaluates it eagerly.
 fn collect_python_map_entry(view: &FunctionView<'_>, facts: &mut Vec<OptimizationFact>) {
-    for control in view.file.controls.iter().filter(|control| {
-        control.owner == Some(view.owner) && control.kind == ControlRegionKind::Conditional
-    }) {
-        let Some((key, map)) = control
-            .condition
-            .as_deref()
-            .map(compact)
-            .and_then(|condition| {
-                let (key, map) = condition.split_once("notin")?;
-                Some((simple_target(key)?, simple_target(map)?))
-            })
-        else {
-            continue;
-        };
-        let inside = assignments(view)
-            .filter(|assignment| contains_span(control.span, assignment.span))
-            .collect::<Vec<_>>();
+    let guards = map_guards(view, |condition| {
+        condition.split_once("notin").map(|(key, map)| (map, key))
+    });
+    for (control, map, key) in guards {
+        let inside = assignments_within(view, control.span);
         let [insertion] = inside.as_slice() else {
             continue;
         };
@@ -227,11 +217,17 @@ fn collect_rust_format_accumulation(view: &FunctionView<'_>, facts: &mut Vec<Opt
 }
 
 /// `(0..n).for_each(|v| ..)` in Rust (clippy `needless_for_each`) and
-/// `IntStream.range(0, n).forEach(i -> ..)` in Java: a counting `for` loop
-/// reads plainly and allows `break`, `?`, and checked exceptions.
+/// `IntStream.range(0, n).forEach(i -> ..)` in Java, or
+/// `Enumerable.Range(0, n).ToList().ForEach(i => ..)` in C#: a counting `for`
+/// loop reads plainly and allows `break`, `?`, and checked exceptions (and
+/// builds no list).
 fn collect_range_for_each(view: &FunctionView<'_>, facts: &mut Vec<OptimizationFact>) {
     let java = view.file.language == Language::Java;
-    let method = if java { "forEach" } else { "for_each" };
+    let method = match view.file.language {
+        Language::Java => "forEach",
+        Language::CSharp => "ForEach",
+        _ => "for_each",
+    };
     for call in calls(view).filter(|&call| call_name(call) == method) {
         let receiver = call.receiver.as_deref().unwrap_or_else(|| {
             call.expression
@@ -240,7 +236,9 @@ fn collect_range_for_each(view: &FunctionView<'_>, facts: &mut Vec<OptimizationF
                 .unwrap_or_default()
         });
         let receiver = compact(receiver);
-        let range = if java {
+        let range = if view.file.language == Language::CSharp {
+            receiver.starts_with("Enumerable.Range(") && receiver.ends_with(").ToList()")
+        } else if java {
             [
                 "IntStream.range(",
                 "IntStream.rangeClosed(",

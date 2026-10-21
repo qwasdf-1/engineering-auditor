@@ -125,7 +125,9 @@ Representative module boundaries:
   `optimization_fact_flow.rs`, `optimization_fact_operations.rs`,
   `optimization_fact_collections.rs`, and `optimization_fact_syntax.rs`:
   proof-oriented fact support; `optimization_fact_collectors.rs`: fact
-  orchestration
+  orchestration; `optimization_fact_fallback.rs`: eager fallback arguments;
+  `optimization_fact_csharp.rs`: the C# forms (`Math` and
+  `string` calls, `GetValueOrDefault`, LINQ materialization, `TryAdd`)
 - `source_cache.rs`: scan-owned source bytes, line offsets, and canonical span
   handles
 - `auditor-ast/src/extract.rs`: function/comment extraction and structural

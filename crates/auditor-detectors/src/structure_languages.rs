@@ -1,6 +1,6 @@
 //! Per-language structure facts resolved from the syntax tree: call
 //! identities (Java, C#, JavaScript/TypeScript), the expression that consumes a
-//! JS/TS call, and JSDoc parameter types for JavaScript.
+//! JS/TS or C# call, and JSDoc parameter types for JavaScript.
 
 use std::collections::BTreeMap;
 
@@ -29,24 +29,35 @@ pub(super) fn call_apis(
         .collect()
 }
 
-/// For each JS/TS call, by span, the expression that consumes its value
+/// For each JS/TS or C# call, by span, the expression that consumes its value
 /// through member or index access: `xs.filter(p).length > 0` for
 /// `xs.filter(p)`, or `xs.filter(p)[0]`.
 pub(super) fn call_consumers(
     file: &crate::AuditedFile,
     tree: &auditor_ast::AstTree,
 ) -> BTreeMap<(usize, usize), String> {
-    if !matches!(file.language, Language::JavaScript | Language::TypeScript) {
-        return BTreeMap::new();
-    }
-    crate::ast_scan::nodes_of_kind(tree.root_node(), &["call_expression"])
+    let (call_kind, access_kinds, object_field): (&str, [&str; 2], &str) = match file.language {
+        Language::JavaScript | Language::TypeScript => (
+            "call_expression",
+            ["member_expression", "subscript_expression"],
+            "object",
+        ),
+        // `xs.Where(p).ToList().Count`.
+        Language::CSharp => (
+            "invocation_expression",
+            ["member_access_expression", "element_access_expression"],
+            "expression",
+        ),
+        _ => return BTreeMap::new(),
+    };
+    crate::ast_scan::nodes_of_kind(tree.root_node(), &[call_kind])
         .into_iter()
         .filter_map(|call| {
             let mut consumer = call;
             while let Some(parent) = consumer.parent().filter(|parent| {
-                matches!(parent.kind(), "member_expression" | "subscript_expression")
+                access_kinds.contains(&parent.kind())
                     && parent
-                        .child_by_field_name("object")
+                        .child_by_field_name(object_field)
                         .is_some_and(|object| object.start_byte() == consumer.start_byte())
             }) {
                 consumer = parent;
@@ -57,7 +68,12 @@ pub(super) fn call_consumers(
             }
             let consumer = consumer
                 .parent()
-                .filter(|parent| matches!(parent.kind(), "binary_expression" | "unary_expression"))
+                .filter(|parent| {
+                    matches!(
+                        parent.kind(),
+                        "binary_expression" | "unary_expression" | "prefix_unary_expression"
+                    )
+                })
                 .unwrap_or(consumer);
             Some((
                 (call.start_byte(), call.end_byte()),

@@ -36,7 +36,7 @@ pub(super) fn initialized_as_string_before(
             let compact = compact(value);
             matches!(
                 compact.as_str(),
-                "\"\"" | "''" | "String::new()" | "String()"
+                "\"\"" | "''" | "String::new()" | "String()" | "string.Empty" | "String.Empty"
             )
         })
 }
@@ -70,6 +70,7 @@ pub(super) fn iterable_has_string_elements(
         Language::JavaScript | Language::TypeScript => &["string[]", "Array<string>"],
         Language::Go => &["[]string"],
         Language::Java | Language::Kotlin => &["List<String>", "Collection<String>"],
+        Language::CSharp => super::csharp::CSHARP_STRING_SEQUENCES,
         _ => return false,
     };
     declared_with_any_type(view, &iterable, markers)
@@ -104,6 +105,12 @@ pub(super) fn bulk_sequence_types_are_proven(
         Language::Java => {
             declared_with_any_type(view, source, JAVA_COLLECTION_TYPES)
                 && declared_with_any_type(view, target, JAVA_COLLECTION_TYPES)
+        }
+        // `AddRange` takes any sequence, into a `List<T>` (not an `IList<T>`).
+        Language::CSharp => {
+            (declared_with_any_type(view, source, super::csharp::CSHARP_COLLECTION_TYPES)
+                || declared_with_any_type(view, source, &["IEnumerable<", "[]"]))
+                && super::csharp::declared_as_list(view, target)
         }
         _ => false,
     }
@@ -153,7 +160,7 @@ pub(super) fn bulk_extension_candidate<'a>(
     let candidates = calls(view)
         .filter(|call| {
             contains_span(loop_info.span, call.span)
-                && matches!(call_name(call).as_str(), "push" | "append" | "add")
+                && matches!(call_name(call).as_str(), "push" | "append" | "add" | "Add")
                 && !has_nested_control(view.file, call.control_region, loop_info.control_region)
         })
         .collect::<Vec<_>>();
@@ -180,6 +187,7 @@ pub(super) fn bulk_extension_candidate<'a>(
         Language::Rust | Language::Python => "extend",
         Language::JavaScript | Language::TypeScript => "push_spread",
         Language::Java => "add_all",
+        Language::CSharp => "add_range",
         _ => return None,
     };
     Some(BulkExtensionCandidate {

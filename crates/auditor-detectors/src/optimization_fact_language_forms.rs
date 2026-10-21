@@ -24,7 +24,10 @@ pub(super) fn indexed_copy_bounds(
     let array = |source: &String| declared_with_any_type(view, source, &["[]"]);
     match (&view.file.language, loop_info.binding.as_slice()) {
         (Language::Java | Language::JavaScript | Language::TypeScript, []) => {
-            counting_index_bound(iterable).filter(|(_, source)| array(source))
+            counting_index_bound(iterable, ".length").filter(|(_, source)| array(source))
+        }
+        (Language::CSharp, []) => {
+            counting_index_bound(iterable, ".Length").filter(|(_, source)| array(source))
         }
         (Language::Go, [binding]) => simple_target(iterable)
             .filter(array)
@@ -142,21 +145,53 @@ pub(super) fn java_map_value_is_pure(expression: &str) -> bool {
 }
 
 /// `(index, array)` of a counting loop condition `index < array.length`
-/// (Java, JavaScript, TypeScript).
-pub(super) fn counting_index_bound(condition: &str) -> Option<(String, String)> {
+/// (Java, JavaScript, TypeScript; C# spells it `Length`).
+pub(super) fn counting_index_bound(condition: &str, length: &str) -> Option<(String, String)> {
     let compact = compact(condition);
     let (index, bound) = compact.split_once('<')?;
-    let array = bound.strip_suffix(".length")?;
+    let array = bound.strip_suffix(length)?;
     Some((simple_target(index)?, simple_target(array)?))
 }
 
+/// A language's list: its collection types and their size, its array
+/// length, its `add` method, and its empty constructor.
+struct ListForm {
+    collection_types: &'static [&'static str],
+    size: &'static str,
+    length: &'static str,
+    add: &'static str,
+    empty: &'static str,
+}
+
+const JAVA_LIST: ListForm = ListForm {
+    collection_types: JAVA_COLLECTION_TYPES,
+    size: ".size()",
+    length: ".length",
+    add: "add",
+    empty: "newArrayList<",
+};
+
+const CSHARP_LIST: ListForm = ListForm {
+    collection_types: super::csharp::CSHARP_COLLECTION_TYPES,
+    size: ".Count",
+    length: ".Length",
+    add: "Add",
+    empty: "newList<",
+};
+
 /// `List<T> result = new ArrayList<>(); for (x : items) result.add(f(x));`
-/// grows a list to `items.size()` elements one reallocation at a time. Adding
-/// the element itself unchanged is `bulk_collection_extension`'s instead.
-pub(super) fn collect_java_known_size_preallocation(
+/// (C# `new List<T>()` and `Add`) grows a list to `items.size()` elements one
+/// reallocation at a time. Adding the element itself unchanged is
+/// `bulk_collection_extension`'s instead.
+pub(super) fn collect_list_known_size_preallocation(
     view: &FunctionView<'_>,
     facts: &mut Vec<OptimizationFact>,
 ) {
+    let form = if view.file.language == Language::CSharp {
+        &CSHARP_LIST
+    } else {
+        &JAVA_LIST
+    };
     for loop_info in loops(view) {
         let ([binding], Some(collection)) = (
             loop_info.binding.as_slice(),
@@ -164,10 +199,10 @@ pub(super) fn collect_java_known_size_preallocation(
         ) else {
             continue;
         };
-        let size_expression = if declared_with_any_type(view, &collection, JAVA_COLLECTION_TYPES) {
-            format!("{collection}.size()")
+        let size_expression = if declared_with_any_type(view, &collection, form.collection_types) {
+            format!("{collection}{}", form.size)
         } else if declared_with_any_type(view, &collection, &["[]"]) {
-            format!("{collection}.length")
+            format!("{collection}{}", form.length)
         } else {
             continue;
         };
@@ -175,7 +210,7 @@ pub(super) fn collect_java_known_size_preallocation(
             .filter(|call| contains_span(loop_info.span, call.span))
             .collect::<Vec<_>>();
         let Some(add) = inside.iter().copied().find(|call| {
-            call_name(call) == "add"
+            call_name(call) == form.add
                 && !has_nested_control(view.file, call.control_region, loop_info.control_region)
         }) else {
             continue;
@@ -200,7 +235,7 @@ pub(super) fn collect_java_known_size_preallocation(
             .as_deref()
             .map(compact)
             .unwrap_or_default();
-        if !(value.starts_with("newArrayList<") && value.ends_with(">()")) {
+        if !(value.starts_with(form.empty) && value.ends_with(">()")) {
             continue;
         }
         push_fact(

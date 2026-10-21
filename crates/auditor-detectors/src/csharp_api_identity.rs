@@ -33,6 +33,8 @@ const IMPLICIT_NAMESPACES: &[&str] = &[
 const TYPES: &[(&str, &str)] = &[
     ("Console", "System"),
     ("Environment", "System"),
+    ("Math", "System"),
+    ("String", "System"),
     ("NotImplementedException", "System"),
     ("Random", "System"),
     ("Regex", "System.Text.RegularExpressions"),
@@ -207,6 +209,8 @@ impl CSharpScope {
     pub(crate) fn resolve_type(&self, node: AstNode<'_>) -> Option<String> {
         match node.kind() {
             "identifier" => self.type_named(node.text()),
+            // The `string` keyword names `System.String`.
+            "predefined_type" if node.text() == "string" => self.type_named("String"),
             "generic_name" => self.type_named(node.named_child(0)?.text()),
             "qualified_name" | "member_access_expression" => {
                 self.qualified_type(&node.text().split_whitespace().collect::<String>())
@@ -271,6 +275,7 @@ impl CSharpScope {
             "object_creation_expression" | "cast_expression" => {
                 self.resolve_type(expression.child_by_field_name("type")?)
             }
+            "predefined_type" => self.resolve_type(expression),
             "invocation_expression" => self.returned_type(expression),
             "member_access_expression" => self.member_type(expression),
             "parenthesized_expression" => self.expression_type(expression.named_child(0)?),

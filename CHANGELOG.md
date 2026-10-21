@@ -34,6 +34,21 @@
   `RemoveAt` or `Dequeue` follow the Go forms. Layering and package coupling
   stay unsupported for C#: a `using` directive names a namespace, not a
   file. No corpus finding changes.
+- C# joins every optimization detector: `cache_miss_opportunity` and
+  `loop_invariant_computation` (`Math.Abs`, `Floor`, `Ceiling`, `Round` on
+  numbers; `string` case conversions and `Trim`), `repeated_format_allocation`
+  (`string.Format`), `loop_invariant_regex_compilation` (`new Regex(..)`),
+  `manual_collection_copy_loop` (`i < source.Length` over arrays),
+  `immutable_string_concatenation_in_loop`, `known_size_preallocation`
+  (`new List<T>()` grown to a known `Count`), `bulk_collection_extension`
+  (`Add` per item into a concrete `List<T>`, which has `AddRange`),
+  `map_entry_opportunity` (`!ContainsKey` then an indexer store or `Add` of
+  a literal, which `TryAdd` does), `eager_fallback_computation`
+  (`GetValueOrDefault(key, new List<T>())`),
+  `intermediate_collection_materialization` (`.ToList().Count`, and
+  `.ToList().Any()` when the lambdas call nothing), and
+  `range_for_each_iteration` (`Enumerable.Range(..).ToList().ForEach`). No
+  corpus finding changes.
 
 ### Changed
 

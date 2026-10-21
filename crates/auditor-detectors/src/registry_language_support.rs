@@ -396,7 +396,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["eager_fallback_computation"],
         policy: selected(
-            &["rust", "java"],
+            &["rust", "java", "csharp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -412,6 +412,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
                 "go",
                 "java",
                 "kotlin",
+                "csharp",
             ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -420,7 +421,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["cache_miss_opportunity", "loop_invariant_computation"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -428,7 +429,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["loop_invariant_regex_compilation"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -436,7 +437,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["bulk_collection_extension"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -444,7 +445,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["repeated_format_allocation"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -452,7 +453,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["manual_collection_copy_loop"],
         policy: selected(
-            TIER_ONE,
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -460,7 +461,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["map_entry_opportunity"],
         policy: selected(
-            &["rust", "python", "java"],
+            &["rust", "python", "java", "csharp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -475,6 +476,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
                 "typescript",
                 "java",
                 "kotlin",
+                "csharp",
             ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -483,7 +485,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["range_for_each_iteration"],
         policy: selected(
-            &["rust", "java", "kotlin"],
+            &["rust", "java", "kotlin", "csharp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -491,7 +493,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["known_size_preallocation"],
         policy: selected(
-            &["rust", "go", "java"],
+            &["rust", "go", "java", "csharp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),

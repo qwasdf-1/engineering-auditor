@@ -20,7 +20,7 @@ pub(super) fn collect_function_facts(
     collect_loop_calls(&view, algorithmic_lines, facts);
     collect_string_accumulation(&view, facts);
     collect_manual_collection_copy(&view, facts);
-    collect_eager_fallback(&view, facts);
+    super::fallback::collect_eager_fallback(&view, facts);
     collect_intermediate_materialization(&view, facts);
     collect_range_for_each(&view, facts);
     collect_known_size_preallocation(&view, facts);
@@ -139,6 +139,7 @@ fn collect_string_accumulation(view: &FunctionView<'_>, facts: &mut Vec<Optimiza
             | Language::Go
             | Language::Java
             | Language::Kotlin
+            | Language::CSharp
     ) {
         return;
     }
@@ -201,6 +202,7 @@ fn collect_manual_collection_copy(view: &FunctionView<'_>, facts: &mut Vec<Optim
             | Language::Java
             | Language::JavaScript
             | Language::TypeScript
+            | Language::CSharp
     ) {
         return;
     }
@@ -245,44 +247,6 @@ fn collect_manual_collection_copy(view: &FunctionView<'_>, facts: &mut Vec<Optim
                 loop_line: loop_info.span.start_line,
             },
             structural_proof("slice", None, "bulk_copy", "same_bounds_failure"),
-            facts,
-        );
-    }
-}
-
-fn collect_eager_fallback(view: &FunctionView<'_>, facts: &mut Vec<OptimizationFact>) {
-    if !matches!(view.file.language, Language::Rust | Language::Java) {
-        return;
-    }
-    for call in calls(view) {
-        let api = call_name(call);
-        let eager = match view.file.language {
-            Language::Java => call.api.as_deref() == Some("java.util.Optional.orElse"),
-            _ => matches!(api.as_str(), "unwrap_or" | "ok_or" | "or"),
-        };
-        if !eager {
-            continue;
-        }
-        let Some(arguments) = call.arguments.as_deref() else {
-            continue;
-        };
-        let fallback = strip_call_delimiters(arguments).trim().to_string();
-        let pure = match view.file.language {
-            Language::Java => java_pure_eager_fallback(&fallback),
-            _ => pure_eager_fallback(&fallback),
-        };
-        if !pure {
-            continue;
-        }
-        push_fact(
-            view,
-            call.line,
-            OptimizationFactKind::EagerFallback { api, fallback },
-            pure_proof(
-                "lazy_fallback_only",
-                "same_fallback_failure_when_needed",
-                "option_or_result",
-            ),
             facts,
         );
     }
@@ -346,8 +310,8 @@ fn collect_range_for_each(view: &FunctionView<'_>, facts: &mut Vec<OptimizationF
 }
 
 fn collect_known_size_preallocation(view: &FunctionView<'_>, facts: &mut Vec<OptimizationFact>) {
-    if view.file.language == Language::Java {
-        collect_java_known_size_preallocation(view, facts);
+    if matches!(view.file.language, Language::Java | Language::CSharp) {
+        collect_list_known_size_preallocation(view, facts);
         return;
     }
     if view.file.language != Language::Go {
@@ -412,6 +376,7 @@ fn collect_bulk_collection_extension(view: &FunctionView<'_>, facts: &mut Vec<Op
             | Language::TypeScript
             | Language::Go
             | Language::Java
+            | Language::CSharp
     ) {
         return;
     }
@@ -537,7 +502,13 @@ fn map_entry_fact(
     };
     if compact(insert_key) != key
         || !pure
-        || map_is_touched_between(view, control.span, contains_call, insert_call, &map)
+        || map_is_touched_between(
+            view,
+            control.span,
+            contains_call.span,
+            insert_call.span,
+            &map,
+        )
     {
         return None;
     }

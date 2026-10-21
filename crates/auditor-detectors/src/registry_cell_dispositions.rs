@@ -542,18 +542,18 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         OPTIMIZATION_IDS,
-        TIER_TWO,
+        &["kotlin", "c", "cpp"],
         "Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs.",
     ),
     deferred(
         &["immutable_string_concatenation_in_loop", "intermediate_collection_materialization", "range_for_each_iteration"],
-        &["csharp", "cpp"],
-        "Needs receiver-type facts for the language's string and sequence APIs (C# `string` versus `StringBuilder` and LINQ `ToList`; C++ `std::string` and ranges).",
+        &["cpp"],
+        "Needs receiver-type facts for C++'s string and sequence APIs (`std::string` and ranges).",
     ),
     deferred(
         &["eager_fallback_computation", "known_size_preallocation", "bulk_collection_extension", "map_entry_opportunity"],
-        &["kotlin", "csharp", "cpp"],
-        "Needs receiver-type facts for the language's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`; `GetValueOrDefault`, `List<T>` capacity, `AddRange`, `TryAdd`; `reserve`, `insert`, `try_emplace`).",
+        &["kotlin", "cpp"],
+        "Needs receiver-type facts for the language's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`; `reserve`, `insert`, `try_emplace`).",
     ),
     not_applicable(
         &[

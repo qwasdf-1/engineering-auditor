@@ -1,5 +1,5 @@
 {
-  "analysis_contract_digest": "fnv1a64:26dc5900d370cab7",
+  "analysis_contract_digest": "fnv1a64:f9807ab1815b135f",
   "analysis_method": "auto",
   "entries": [
     {
@@ -289,17 +289,6 @@
       "title": "Normalized source clone class exceeds budget"
     },
     {
-      "detector": "source_duplicate_detection",
-      "id": "EA-1f4ec783a03e8fd4",
-      "identity": {
-        "anchor": "structural:clone:93ed00836c0d1f2c"
-      },
-      "message": "Clone class spans 50 normalized tokens across 2 non-overlapping occurrence(s).",
-      "path": "crates/auditor-detectors/src/optimization_fact_language_forms.rs",
-      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
-      "title": "Normalized source clone class exceeds budget"
-    },
-    {
       "detector": "function_complexity",
       "id": "EA-f9667f3e04a496f0",
       "identity": {
@@ -369,7 +358,7 @@
       "detector": "churn_complexity_hotspot",
       "id": "EA-522ac207adaa1de0",
       "identity": {},
-      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=57, growth=+63 LOC).",
+      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=57, growth=+70 LOC).",
       "path": "crates/auditor-detectors/src/systems_effects.rs",
       "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"

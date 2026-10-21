@@ -3,6 +3,10 @@ use std::collections::BTreeSet;
 use auditor_ast::SymbolKind;
 
 use super::collections::{call_argument_is_typed, declared_with_any_type};
+use super::csharp::{
+    csharp_materialization, csharp_pure_numeric_call, csharp_pure_string_call,
+    csharp_regex_construction,
+};
 use super::flow::calls;
 use super::language_forms::{
     java_collects_only_to_count, java_pure_numeric_call, java_pure_string_call,
@@ -36,6 +40,7 @@ pub(super) fn cacheable_pure_call(view: &FunctionView<'_>, call: &StructureCall)
                     && call_argument_is_typed(view, call, &["string"])
         }
         Language::Java => java_pure_numeric_call(view, call) || java_pure_string_call(call),
+        Language::CSharp => csharp_pure_numeric_call(view, call) || csharp_pure_string_call(call),
         _ => false,
     }
 }
@@ -82,6 +87,7 @@ pub(super) fn general_invariant_call(view: &FunctionView<'_>, call: &StructureCa
         Language::JavaScript | Language::TypeScript => js_pure_math_call(view, call),
         Language::Go => go_pure_numeric_call(view, call),
         Language::Java => java_pure_numeric_call(view, call),
+        Language::CSharp => csharp_pure_numeric_call(view, call),
         _ => false,
     }
 }
@@ -106,6 +112,7 @@ pub(super) fn recognized_regex_call(view: &FunctionView<'_>, call: &StructureCal
             call.api.as_deref(),
             Some("regexp.Compile" | "regexp.MustCompile")
         ),
+        Language::CSharp => csharp_regex_construction(call),
         _ => false,
     }
 }
@@ -113,7 +120,7 @@ pub(super) fn recognized_regex_call(view: &FunctionView<'_>, call: &StructureCal
 pub(super) fn format_call(call: &StructureCall) -> bool {
     if matches!(
         call.api.as_deref(),
-        Some("fmt.Sprintf" | "java.lang.String.format" | "util.format")
+        Some("fmt.Sprintf" | "java.lang.String.format" | "util.format" | "System.String.Format")
     ) {
         return true;
     }
@@ -264,6 +271,8 @@ pub(super) fn intermediate_materialization_operation(
         Language::JavaScript | Language::TypeScript
     ) {
         js_filter_materialization(call)
+    } else if view.file.language == Language::CSharp {
+        csharp_materialization(call)
     } else if view.file.language == Language::Kotlin
         && expression.contains('*')
         && expression.contains(".toTypedArray()")

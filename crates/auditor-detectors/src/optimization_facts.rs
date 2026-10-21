@@ -10,6 +10,10 @@ use crate::structure_index::{StructureFile, StructureIndex, StructureSymbol};
 mod collections;
 #[path = "optimization_fact_collectors.rs"]
 mod collectors;
+#[path = "optimization_fact_csharp.rs"]
+mod csharp;
+#[path = "optimization_fact_fallback.rs"]
+mod fallback;
 #[path = "optimization_fact_flow.rs"]
 mod flow;
 #[path = "optimization_fact_inherited.rs"]

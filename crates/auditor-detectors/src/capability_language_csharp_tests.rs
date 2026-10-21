@@ -1,6 +1,7 @@
 //! C# capability boundaries for the L3 collection facts (`List<T>`, LINQ,
-//! indexers, .NET `Regex`) and the L4 effects (`System.IO`, `HttpClient`,
-//! JSON, `async` methods). Each negative is the nearest correct form of its
+//! indexers, .NET `Regex`), the L4 effects (`System.IO`, `HttpClient`,
+//! JSON, `async` methods), and the L5 receiver facts (`Math`, `string`,
+//! `List<T>` capacity and `AddRange`, `TryAdd`, `GetValueOrDefault`). Each negative is the nearest correct form of its
 //! positive, and covers the C# spellings the facts must not misread
 //! (`First(predicate)`, `Any()` without one, `Remove(value)`, the `Async`
 //! file APIs).
@@ -104,6 +105,66 @@ pub(super) fn csharp_fact_capability_files(
             "using System.IO;\n",
             "void HandleRequest() {\n        Consume(Directory.GetFiles(\".\"));\n    }",
             "void RefreshIndex() {\n        Consume(Directory.GetFiles(\".\"));\n    }",
+        ),
+        "cache_miss_opportunity" => (
+            "",
+            "bool Inspect(double data) {\n        return Math.Abs(data) == Math.Abs(data) && Math.Abs(data) > 0;\n    }",
+            "bool Inspect(double data) {\n        return Math.Abs(data) == Math.Abs(data);\n    }",
+        ),
+        "repeated_format_allocation" => (
+            "",
+            "void Render(List<int> items, string mode) {\n        foreach (var item in items) {\n            Consume(item, string.Format(\"mode={0}\", mode));\n        }\n    }",
+            "void Render(List<int> items) {\n        foreach (var item in items) {\n            Consume(string.Format(\"{0}\", item));\n        }\n    }",
+        ),
+        "loop_invariant_computation" => (
+            "",
+            "void Render(List<double> items, double limit) {\n        foreach (var item in items) {\n            Consume(item, Math.Abs(limit));\n        }\n    }",
+            "void Render(List<double> items) {\n        foreach (var item in items) {\n            Consume(item, Math.Abs(item));\n        }\n    }",
+        ),
+        "loop_invariant_regex_compilation" => (
+            "using System.Text.RegularExpressions;\n",
+            "void Inspect(string[] items) {\n        foreach (var item in items) {\n            var pattern = new Regex(\"^fixed$\");\n            Consume(pattern, item);\n        }\n    }",
+            "void Inspect(string[] items) {\n        var pattern = new Regex(\"^fixed$\");\n        foreach (var item in items) {\n            Consume(pattern, item);\n        }\n    }\n\n    void Cached(string[] items) {\n        Regex pattern = null;\n        foreach (var item in items) {\n            if (pattern == null) {\n                pattern = new Regex(\"^fixed$\");\n            }\n            Consume(pattern, item);\n        }\n    }",
+        ),
+        "manual_collection_copy_loop" => (
+            "",
+            "int[] Duplicate(int[] source) {\n        var target = new int[source.Length];\n        for (int index = 0; index < source.Length; index++) {\n            target[index] = source[index];\n        }\n        return target;\n    }",
+            "int[] Duplicate(int[] source) {\n        var target = new int[source.Length];\n        for (int index = 0; index < source.Length; index++) {\n            target[index] = source[index] * 2;\n        }\n        return target;\n    }",
+        ),
+        "immutable_string_concatenation_in_loop" => (
+            "",
+            "string Join(List<string> items) {\n        var result = \"\";\n        foreach (var item in items) {\n            result += item;\n        }\n        return result;\n    }",
+            "string Join(List<string> items) {\n        var result = new System.Text.StringBuilder();\n        foreach (var item in items) {\n            result.Append(item);\n        }\n        return result.ToString();\n    }\n\n    int Total(List<int> items) {\n        var total = 0;\n        foreach (var item in items) {\n            total += item;\n        }\n        return total;\n    }",
+        ),
+        "intermediate_collection_materialization" => (
+            "",
+            "int Count(List<int> items) {\n        return items.Where(item => item > 0).ToList().Count;\n    }",
+            "int Count(List<int> items) {\n        return items.Count(item => item > 0);\n    }\n\n    bool Any(List<int> items) {\n        return items.Where(item => Check(item)).ToList().Any();\n    }",
+        ),
+        "range_for_each_iteration" => (
+            "",
+            "void Visit(int count) {\n        Enumerable.Range(0, count).ToList().ForEach(i => Consume(i));\n    }",
+            "void Visit(List<int> items, int count) {\n        items.ForEach(i => Consume(i));\n        for (int i = 0; i < count; i++) {\n            Consume(i);\n        }\n    }",
+        ),
+        "known_size_preallocation" => (
+            "",
+            "List<string> Render(List<int> items) {\n        var result = new List<string>();\n        foreach (var item in items) {\n            result.Add(item.ToString());\n        }\n        return result;\n    }",
+            "List<string> Render(List<int> items) {\n        var result = new List<string>(items.Count);\n        foreach (var item in items) {\n            result.Add(item.ToString());\n        }\n        return result;\n    }\n\n    List<string> Filtered(List<int> items) {\n        var result = new List<string>();\n        foreach (var item in items) {\n            if (item > 0) {\n                result.Add(item.ToString());\n            }\n        }\n        return result;\n    }",
+        ),
+        "bulk_collection_extension" => (
+            "",
+            "List<string> ExtendAll(List<string> target, List<string> items) {\n        foreach (var item in items) {\n            target.Add(item);\n        }\n        return target;\n    }",
+            "List<string> ExtendAll(List<string> target, List<string> items) {\n        foreach (var item in items) {\n            target.Add(item.Trim());\n        }\n        return target;\n    }\n\n    void Extend(IList<string> target, IEnumerable<string> items) {\n        foreach (var item in items) {\n            target.Add(item);\n        }\n    }",
+        ),
+        "map_entry_opportunity" => (
+            "",
+            "void InsertMissing(Dictionary<string, int> map, string key) {\n        if (!map.ContainsKey(key)) {\n            map[key] = \"value\".Length;\n        }\n    }\n\n    void AddMissing(Dictionary<string, int> map, string key) {\n        if (!map.ContainsKey(key)) {\n            map.Add(key, 1);\n        }\n    }",
+            "void Overwrite(Dictionary<string, int> map, string key, string other) {\n        if (map.ContainsKey(key)) {\n            map[key] = 1;\n        }\n        if (!map.ContainsKey(key)) {\n            map[other] = 1;\n        }\n        if (!map.ContainsKey(key)) {\n            map.Add(key, Compute());\n        }\n    }",
+        ),
+        "eager_fallback_computation" => (
+            "",
+            "List<string> Resolve(Dictionary<string, List<string>> map, string key) {\n        return map.GetValueOrDefault(key, new List<string>());\n    }",
+            "List<string> Resolve(Dictionary<string, List<string>> map, string key) {\n        return map.GetValueOrDefault(key) ?? new List<string>();\n    }\n\n    int Count(Dictionary<string, int> counts, string key) {\n        return counts.GetValueOrDefault(key, 0);\n    }",
         ),
         _ => return None,
     };

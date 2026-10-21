@@ -15,6 +15,46 @@ pub(super) fn calls<'a>(view: &FunctionView<'a>) -> impl Iterator<Item = &'a Str
         .filter(move |call| call.owner == Some(owner))
 }
 
+/// The function's conditionals whose compacted condition `parse` reads as a
+/// membership test of a plain `(map, key)`, with the map and key.
+pub(super) fn map_guards<'a>(
+    view: &FunctionView<'a>,
+    parse: impl Fn(&str) -> Option<(&str, &str)>,
+) -> Vec<(&'a crate::structure_index::StructureControl, String, String)> {
+    view.file
+        .controls
+        .iter()
+        .filter(|control| {
+            control.owner == Some(view.owner) && control.kind == ControlRegionKind::Conditional
+        })
+        .filter_map(|control| {
+            let condition = compact(control.condition.as_deref()?);
+            let (map, key) = parse(&condition)?;
+            Some((control, simple_target(map)?, simple_target(key)?))
+        })
+        .collect()
+}
+
+/// The function's calls inside `span`.
+pub(super) fn calls_within<'a>(
+    view: &FunctionView<'a>,
+    span: SourceSpan,
+) -> Vec<&'a StructureCall> {
+    calls(view)
+        .filter(|call| contains_span(span, call.span))
+        .collect()
+}
+
+/// The function's assignments inside `span`.
+pub(super) fn assignments_within<'a>(
+    view: &FunctionView<'a>,
+    span: SourceSpan,
+) -> Vec<&'a StructureAssignment> {
+    assignments(view)
+        .filter(|assignment| contains_span(span, assignment.span))
+        .collect()
+}
+
 pub(super) fn assignments<'a>(
     view: &FunctionView<'a>,
 ) -> impl Iterator<Item = &'a StructureAssignment> + 'a {
@@ -226,12 +266,12 @@ pub(super) fn loop_is_single_append(
 pub(super) fn map_is_touched_between(
     view: &FunctionView<'_>,
     scope: SourceSpan,
-    contains_call: &StructureCall,
-    insert_call: &StructureCall,
+    lookup: SourceSpan,
+    insertion: SourceSpan,
     map: &str,
 ) -> bool {
-    let start = contains_call.span.end_byte;
-    let end = insert_call.span.start_byte;
+    let start = lookup.end_byte;
+    let end = insertion.start_byte;
     assignments(view).any(|assignment| {
         contains_span(scope, assignment.span)
             && span_is_between(assignment.span, start, end)
