@@ -30,15 +30,11 @@ fn seed_windows(files: &[TokenizedFile]) -> BTreeMap<u64, Vec<WindowLocation>> {
             continue;
         }
         let mut hash = hash_window(tokens[..MIN_TOKENS].iter().map(|token| token.hash));
-        if window_is_function_bounded(tokens, 0) {
-            seeds
-                .entry(hash)
-                .or_default()
-                .push(WindowLocation { file, start: 0 });
-        }
-        for end in MIN_TOKENS..tokens.len() {
-            hash = roll(hash, tokens[end - MIN_TOKENS].hash, tokens[end].hash, power);
-            let start = end - MIN_TOKENS + 1;
+        for start in 0..=tokens.len() - MIN_TOKENS {
+            if start > 0 {
+                let incoming = tokens[start + MIN_TOKENS - 1].hash;
+                hash = roll(hash, tokens[start - 1].hash, incoming, power);
+            }
             if window_is_function_bounded(tokens, start) {
                 seeds
                     .entry(hash)
@@ -68,7 +64,7 @@ fn build_seed_classes(
     for candidate in locations.iter().copied().skip(1) {
         if windows_overlap(representative, candidate, MIN_TOKENS)
             || files[representative.file].package != files[candidate.file].package
-            || !seed_matches(files, representative, candidate)
+            || alpha_map_for(files, representative, candidate, MIN_TOKENS).is_none()
             || has_equal_predecessor(files, representative, candidate)
         {
             continue;
@@ -120,10 +116,6 @@ fn has_sufficient_semantic_reuse(tokens: &[DetectionToken]) -> bool {
         .take(MIN_REUSED_IDENTITIES)
         .count()
         >= MIN_REUSED_IDENTITIES
-}
-
-fn seed_matches(files: &[TokenizedFile], left: WindowLocation, right: WindowLocation) -> bool {
-    alpha_map_for(files, left, right, MIN_TOKENS).is_some()
 }
 
 fn has_equal_predecessor(
@@ -207,8 +199,7 @@ fn tokens_match(left: DetectionToken, right: DetectionToken, mapping: &mut Alpha
     if left.kind == TokenKind::Syntax {
         return true;
     }
-    let left_identity = left.identity ^ (left.kind as u64).wrapping_mul(HASH_BASE);
-    let right_identity = right.identity ^ (right.kind as u64).wrapping_mul(HASH_BASE);
+    let (left_identity, right_identity) = (keyed_identity(left), keyed_identity(right));
     if mapping
         .left_to_right
         .get(&left_identity)
@@ -223,6 +214,12 @@ fn tokens_match(left: DetectionToken, right: DetectionToken, mapping: &mut Alpha
     mapping.left_to_right.insert(left_identity, right_identity);
     mapping.right_to_left.insert(right_identity, left_identity);
     true
+}
+
+/// A token's identity told apart by kind, so a name and an equal literal
+/// never map to each other.
+fn keyed_identity(token: DetectionToken) -> u64 {
+    token.identity ^ (token.kind as u64).wrapping_mul(HASH_BASE)
 }
 
 /// Distinct identifier and literal bindings that differ between two
@@ -275,12 +272,13 @@ fn parameterized_hash(tokens: &[DetectionToken]) -> u64 {
         if token.kind == TokenKind::Syntax {
             return token.hash;
         }
-        let identity = token.identity ^ (token.kind as u64).wrapping_mul(HASH_BASE);
-        let ordinal = *identifiers.entry(identity).or_insert_with(|| {
-            let ordinal = next_identifier;
-            next_identifier += 1;
-            ordinal
-        });
+        let ordinal = *identifiers
+            .entry(keyed_identity(*token))
+            .or_insert_with(|| {
+                let ordinal = next_identifier;
+                next_identifier += 1;
+                ordinal
+            });
         token.hash ^ ordinal.wrapping_mul(FNV1A_PRIME)
     }))
 }
@@ -299,16 +297,13 @@ fn suppress_overlapping_classes(classes: Vec<CloneClass>, file_count: usize) -> 
         occurrences.sort_by_key(|occurrence| (occurrence.file, occurrence.start, occurrence.end));
         let mut retained = Vec::new();
         for occurrence in occurrences {
-            if occupied[occurrence.file]
-                .iter()
-                .any(|range| ranges_overlap(*range, (occurrence.start, occurrence.end)))
-                || retained.iter().any(|other: &CloneOccurrence| {
-                    other.file == occurrence.file
-                        && ranges_overlap(
-                            (other.start, other.end),
-                            (occurrence.start, occurrence.end),
-                        )
-                })
+            let range = (occurrence.start, occurrence.end);
+            let overlaps = |other: (usize, usize)| ranges_overlap(other, range);
+            if occupied[occurrence.file].iter().copied().any(overlaps)
+                || retained
+                    .iter()
+                    .filter(|other: &&CloneOccurrence| other.file == occurrence.file)
+                    .any(|other| overlaps((other.start, other.end)))
             {
                 continue;
             }

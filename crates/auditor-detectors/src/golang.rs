@@ -314,120 +314,108 @@ mod tests {
         }
     }
 
+    /// The findings `scan` reports on one Go file holding `text`.
+    fn scan_go(
+        name: &str,
+        text: &str,
+        scan: impl FnOnce(&std::path::Path, &AuditedFile, &crate::util::FileCache) -> Vec<Finding>,
+    ) -> Vec<Finding> {
+        let root = temp_root(name);
+        let file = make_go_file(&root, "src/main.go", text);
+        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
+        let findings = scan(&root, &file, &cache);
+        fs::remove_dir_all(&root).unwrap();
+        findings
+    }
+
+    fn errcheck(name: &str, text: &str) -> Vec<Finding> {
+        scan_go(name, text, |_, file, cache| {
+            go_errcheck_findings(&[file], cache)
+        })
+    }
+
+    fn unused_assignments(name: &str, text: &str) -> Vec<Finding> {
+        scan_go(name, text, |_, file, cache| {
+            let mut repo_ast = auditor_ast::RepoAst::new();
+            unused_assignment_findings(crate::ast_scan::AstScan::new(
+                std::slice::from_ref(file),
+                crate::AnalysisMethod::Ast,
+                cache,
+                &mut repo_ast,
+            ))
+        })
+    }
+
     #[test]
     fn go_detects_log_fatal() {
-        let root = temp_root("gofatal");
-        let file = make_go_file(
-            &root,
-            "src/main.go",
+        let findings = scan_go(
+            "gofatal",
             "package main\nimport \"log\"\nfunc main() {\n    log.Fatal(\"die\")\n}\n",
+            |_, file, cache| go_log_fatal_findings(&[file], cache),
         );
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let go_files = vec![&file];
-        let findings = go_log_fatal_findings(&go_files, &cache);
         assert!(findings.iter().any(|f| f.detector == "go_log_fatal"));
-        fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
     fn go_errcheck_ignored_return() {
-        let root = temp_root("goerr");
-        let file = make_go_file(
-            &root,
-            "src/main.go",
+        let findings = errcheck(
+            "goerr",
             "package main\nfunc main() {\n    f.Write(data)\n}\n",
         );
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let go_files = vec![&file];
-        let findings = go_errcheck_findings(&go_files, &cache);
         assert!(findings.iter().any(|f| f.detector == "go_errcheck"));
-        fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
     fn go_errcheck_skips_infallible_buffers_and_resultless_methods() {
-        let root = temp_root("goerrskip");
-        let file = make_go_file(
-            &root,
-            "src/main.go",
+        let findings = errcheck(
+            "goerrskip",
             "package main\nimport (\n    \"bytes\"\n    \"net/http\"\n)\ntype LogEntry interface {\n    Write(status int, header http.Header)\n}\nfunc main(entry LogEntry) {\n    var buf bytes.Buffer\n    buf.Write(data)\n    entry.Write(200, nil)\n}\n",
         );
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let findings = go_errcheck_findings(&[&file], &cache);
         assert!(findings.is_empty(), "{findings:?}");
-        fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
     fn go_errcheck_still_reports_fallible_writers() {
-        let root = temp_root("goerrkeep");
-        let file = make_go_file(
-            &root,
-            "src/main.go",
+        let findings = errcheck(
+            "goerrkeep",
             "package main\nimport \"os\"\nfunc main(buf *os.File) {\n    var other bytes.Buffer\n    buf.Write(data)\n    s.buf.Write(data)\n}\n",
         );
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let findings = go_errcheck_findings(&[&file], &cache);
         assert_eq!(findings.len(), 2, "{findings:?}");
-        fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
     fn go_unused_assignment_ineffectual() {
-        let root = temp_root("goineff");
-        let file = make_go_file(
-            &root,
-            "src/main.go",
+        let findings = unused_assignments(
+            "goineff",
             "package main\nfunc value() int {\n    x := 42\n    x = 7\n    return x\n}\n",
         );
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let mut repo_ast = auditor_ast::RepoAst::new();
-        let findings = unused_assignment_findings(crate::ast_scan::AstScan::new(
-            std::slice::from_ref(&file),
-            crate::AnalysisMethod::Ast,
-            &cache,
-            &mut repo_ast,
-        ));
         assert!(
             findings.iter().any(|f| f.detector == "unused_assignment"),
             "expected unused_assignment finding for ineffectual assignment"
         );
-        fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
     fn go_unused_assignment_skips_used_variable() {
-        let root = temp_root("goineff_used");
-        let file = make_go_file(
-            &root,
-            "src/main.go",
+        let findings = unused_assignments(
+            "goineff_used",
             "package main\nfunc main() {\n    x := 42\n    println(x)\n}\n",
         );
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let mut repo_ast = auditor_ast::RepoAst::new();
-        let findings = unused_assignment_findings(crate::ast_scan::AstScan::new(
-            std::slice::from_ref(&file),
-            crate::AnalysisMethod::Ast,
-            &cache,
-            &mut repo_ast,
-        ));
         assert!(
             !findings.iter().any(|f| f.detector == "unused_assignment"),
             "expected no unused_assignment finding when variable is used"
         );
-        fs::remove_dir_all(&root).unwrap();
     }
 
     #[test]
     fn go_goconst_repeated_literal() {
-        let root = temp_root("goconst");
-        let file = make_go_file(&root, "src/main.go", "package main\nfunc main() {\n    a := \"hello\"\n    b := \"hello\"\n    c := \"hello\"\n}\n");
-        let cache = crate::util::FileCache::new(std::slice::from_ref(&file));
-        let go_files = vec![&file];
-        let findings = go_repeated_string_literal_findings(&root, &go_files, &cache);
+        let findings = scan_go(
+            "goconst",
+            "package main\nfunc main() {\n    a := \"hello\"\n    b := \"hello\"\n    c := \"hello\"\n}\n",
+            |root, file, cache| go_repeated_string_literal_findings(root, &[file], cache),
+        );
         assert!(findings
             .iter()
             .any(|f| f.detector == "go_repeated_string_literal"));
-        fs::remove_dir_all(&root).unwrap();
     }
 }
