@@ -28,6 +28,15 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
     )
     .with_roles(RoleApplicability::TestScope),
     spec!(
+        "skipped_test_without_reason",
+        "test_quality",
+        Low,
+        Full,
+        "L2",
+        SkippedTestWithoutReason
+    )
+    .with_roles(RoleApplicability::TestScope),
+    spec!(
         "network_call_without_timeout",
         "systems_economics",
         High,

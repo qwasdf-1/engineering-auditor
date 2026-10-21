@@ -13,8 +13,11 @@ use crate::{AuditedFile, Language};
 mod evidence;
 #[path = "testing_scope_frameworks.rs"]
 mod frameworks;
+#[path = "testing_scope_skips.rs"]
+mod skips;
 pub(crate) use evidence::{asserts, exempt_by_name, EvidenceScope};
 pub(crate) use frameworks::test_cases;
+pub(crate) use skips::{comments, explained_by_comment, skipped_groups, SkipMark};
 
 /// Languages whose test frameworks the test-scope facts model.
 pub(crate) fn models_tests(language: &Language) -> bool {
@@ -47,6 +50,9 @@ pub(crate) struct TestCase<'t> {
     pub(crate) context: Vec<String>,
     /// Disabled: `#[ignore]`, `@Disabled`, `it.skip`, `t.Skip()`.
     pub(crate) skipped: bool,
+    /// The mark that disables the test, when it is a skip rather than an
+    /// expected failure (`xfail`) or a placeholder (`it.todo`).
+    pub(crate) skip: Option<SkipMark<'t>>,
     /// Passes by failing: `#[should_panic]`, `@Test(expected = ..)`.
     pub(crate) expects_failure: bool,
 }

@@ -266,6 +266,9 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         CapabilityCase::new("tautological_assertion", ScanProfile::Full, "", "", "", "")
             .positive_files(test_quality_files("tautological_assertion", true))
             .negative_files(test_quality_files("tautological_assertion", false)),
+        CapabilityCase::new("skipped_test_without_reason", ScanProfile::Full, "", "", "", "")
+            .positive_files(test_quality_files("skipped_test_without_reason", true))
+            .negative_files(test_quality_files("skipped_test_without_reason", false)),
         CapabilityCase::new(
             "generated_vs_source",
             ScanProfile::Gating,

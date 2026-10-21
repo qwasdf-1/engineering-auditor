@@ -1,6 +1,13 @@
 use super::*;
 use registry::DetectorOwner;
 
+impl DetectorContext<'_> {
+    /// The parsed-file scan over the files this owner may emit on.
+    fn ast_scan(&mut self) -> ast_scan::AstScan<'_, '_> {
+        ast_scan::AstScan::new(self.files, self.method, self.cache, &mut self.repo_ast)
+    }
+}
+
 pub(super) fn run_detector_owner(
     owner: DetectorOwner,
     context: &mut DetectorContext<'_>,
@@ -51,12 +58,7 @@ fn run_foundation_owner(
             context.structure.as_ref().expect("structure index"),
         ),
         DetectorOwner::SourceDuplicateDetection => {
-            bloat::source_duplicate_detection_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            bloat::source_duplicate_detection_findings(context.ast_scan())
         }
         _ => return None,
     })
@@ -153,13 +155,16 @@ fn run_structural_owner(
             context.cache,
             &mut context.repo_ast,
         ),
-        DetectorOwner::CatastrophicBacktrackingRegex => {
-            regex_backtracking::catastrophic_backtracking_regex_findings(ast_scan::AstScan::new(
+        DetectorOwner::SkippedTestWithoutReason => {
+            testing_skips::skipped_test_without_reason_findings(
                 context.files,
                 context.method,
                 context.cache,
                 &mut context.repo_ast,
-            ))
+            )
+        }
+        DetectorOwner::CatastrophicBacktrackingRegex => {
+            regex_backtracking::catastrophic_backtracking_regex_findings(context.ast_scan())
         }
         DetectorOwner::UnusedDeclaredDependency => {
             dependency_usage::unused_declared_dependency_findings(
@@ -170,12 +175,7 @@ fn run_structural_owner(
             )
         }
         DetectorOwner::DiscardedFallibleResult => {
-            discarded_results::discarded_fallible_result_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            discarded_results::discarded_fallible_result_findings(context.ast_scan())
         }
         DetectorOwner::NetworkCallWithoutTimeout => {
             network_timeouts::network_call_without_timeout_findings(
@@ -404,79 +404,35 @@ fn run_correctness_owner(
     owner: DetectorOwner,
     context: &mut DetectorContext<'_>,
 ) -> Option<Vec<Finding>> {
+    let config = context.config;
     Some(match owner {
         DetectorOwner::TodoUnimplementedInProduction => {
-            correctness::todo_unimplemented_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            correctness::todo_unimplemented_in_production_findings(context.ast_scan())
         }
         DetectorOwner::AssertInProduction => {
-            correctness::assert_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            correctness::assert_in_production_findings(context.ast_scan())
         }
         DetectorOwner::EvalInProduction => {
-            correctness::eval_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            correctness::eval_in_production_findings(context.ast_scan())
         }
-        DetectorOwner::HardcodedCredential => security_rules::hardcoded_credential_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
-        DetectorOwner::UnsafeDeserialization => security_rules::unsafe_deserialization_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
-        DetectorOwner::BindAllInterfaces => security_rules::bind_all_interfaces_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
+        DetectorOwner::HardcodedCredential => {
+            security_rules::hardcoded_credential_findings(context.ast_scan(), config)
+        }
+        DetectorOwner::UnsafeDeserialization => {
+            security_rules::unsafe_deserialization_findings(context.ast_scan(), config)
+        }
+        DetectorOwner::BindAllInterfaces => {
+            security_rules::bind_all_interfaces_findings(context.ast_scan(), config)
+        }
         DetectorOwner::TryExceptPass => {
             security_rules::try_except_pass_findings(context.files, context.cache, context.config)
         }
-        DetectorOwner::WorldWritableFile => security_rules::world_writable_file_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
-        DetectorOwner::HardcodedTmpDirectory => security_rules::hardcoded_tmp_directory_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
+        DetectorOwner::WorldWritableFile => {
+            security_rules::world_writable_file_findings(context.ast_scan(), config)
+        }
+        DetectorOwner::HardcodedTmpDirectory => {
+            security_rules::hardcoded_tmp_directory_findings(context.ast_scan(), config)
+        }
         DetectorOwner::FlaskDebugTrue => {
             security_rules::flask_debug_true_findings(context.files, context.cache, context.config)
         }
@@ -487,49 +443,23 @@ fn run_correctness_owner(
                 context.cache,
                 &mut context.repo_ast,
             ),
-            context.config,
+            config,
             (
                 context.structure.as_ref().expect("structure index"),
                 context.call_graph.as_ref().expect("call graph"),
             ),
         ),
-        DetectorOwner::RequestNoCertVerify => security_rules::request_no_cert_verify_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
-        DetectorOwner::XmlXxeVulnerable => security_rules::xml_xxe_vulnerable_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
-        DetectorOwner::SslWithBadDefaults => security_rules::ssl_with_bad_defaults_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.config,
-        ),
+        DetectorOwner::RequestNoCertVerify => {
+            security_rules::request_no_cert_verify_findings(context.ast_scan(), config)
+        }
+        DetectorOwner::XmlXxeVulnerable => {
+            security_rules::xml_xxe_vulnerable_findings(context.ast_scan(), config)
+        }
+        DetectorOwner::SslWithBadDefaults => {
+            security_rules::ssl_with_bad_defaults_findings(context.ast_scan(), config)
+        }
         DetectorOwner::SshNoHostKeyVerification => {
-            security_rules::ssh_no_host_key_verification_findings(
-                ast_scan::AstScan::new(
-                    context.files,
-                    context.method,
-                    context.cache,
-                    &mut context.repo_ast,
-                ),
-                context.config,
-            )
+            security_rules::ssh_no_host_key_verification_findings(context.ast_scan(), config)
         }
         _ => return None,
     })
@@ -541,44 +471,19 @@ fn run_error_owner(
 ) -> Option<Vec<Finding>> {
     Some(match owner {
         DetectorOwner::AssignmentInOperand => {
-            errorprone::assignment_in_operand_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::assignment_in_operand_findings(context.ast_scan())
         }
         DetectorOwner::ResourceNotClosed => {
-            errorprone::resource_not_closed_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::resource_not_closed_findings(context.ast_scan())
         }
         DetectorOwner::EmptyConditionalBranch => {
-            errorprone::empty_conditional_branch_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::empty_conditional_branch_findings(context.ast_scan())
         }
         DetectorOwner::UnreachableCode => {
-            control_flow::unreachable_code_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            control_flow::unreachable_code_findings(context.ast_scan())
         }
         DetectorOwner::ConstantCondition => {
-            control_flow::constant_condition_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            control_flow::constant_condition_findings(context.ast_scan())
         }
         DetectorOwner::CppRawPtrOwnership => {
             errorprone::cpp_raw_ptr_ownership_findings(context.files, context.cache)
@@ -593,75 +498,26 @@ fn run_error_owner(
             errorprone::kotlin_empty_when_findings(context.files, context.cache)
         }
         DetectorOwner::ExitInProduction => {
-            errorprone::exit_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::exit_in_production_findings(context.ast_scan())
         }
         DetectorOwner::UnhandledTerminationInProduction => {
-            errorprone::unhandled_termination_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::unhandled_termination_in_production_findings(context.ast_scan())
         }
-        DetectorOwner::SqlInjection => security::sql_injection_findings(ast_scan::AstScan::new(
-            context.files,
-            context.method,
-            context.cache,
-            &mut context.repo_ast,
-        )),
-        DetectorOwner::ShellExecution => {
-            security::shell_execution_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
-        }
+        DetectorOwner::SqlInjection => security::sql_injection_findings(context.ast_scan()),
+        DetectorOwner::ShellExecution => security::shell_execution_findings(context.ast_scan()),
         DetectorOwner::InsecureCryptography => {
-            security::insecure_cryptography_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            security::insecure_cryptography_findings(context.ast_scan())
         }
         DetectorOwner::ConsoleOutputInProduction => {
-            errorprone::console_output_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::console_output_in_production_findings(context.ast_scan())
         }
         DetectorOwner::DebuggerInProduction => {
-            errorprone::debugger_in_production_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::debugger_in_production_findings(context.ast_scan())
         }
         DetectorOwner::EmptyCatchBlock => {
-            errorprone::empty_catch_block_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
+            errorprone::empty_catch_block_findings(context.ast_scan())
         }
-        DetectorOwner::NoAwaitInLoop => {
-            errorprone::no_await_in_loop_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
-        }
+        DetectorOwner::NoAwaitInLoop => errorprone::no_await_in_loop_findings(context.ast_scan()),
         DetectorOwner::RequireAtomicUpdates => {
             errorprone::require_atomic_updates_findings(context.files, context.cache)
         }
@@ -692,14 +548,7 @@ fn run_language_owner(
             &files_for_language(context.files, Language::Go),
             context.cache,
         ),
-        DetectorOwner::UnusedAssignment => {
-            golang::unused_assignment_findings(ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ))
-        }
+        DetectorOwner::UnusedAssignment => golang::unused_assignment_findings(context.ast_scan()),
         DetectorOwner::GoRepeatedStringLiteral => golang::go_repeated_string_literal_findings(
             context.root,
             &files_for_language(context.files, Language::Go),

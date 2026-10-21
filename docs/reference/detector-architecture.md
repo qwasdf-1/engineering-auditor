@@ -19,7 +19,7 @@ the typed spec shape. Each `DetectorSpec` contains:
 - explicit finding-emission and read-only context role sets
 - one explicit language-support policy, expanded into complete pair metadata
 
-The default catalog contains 114 detectors: 52 gating and 62 full-only. The
+The default catalog contains 115 detectors: 52 gating and 63 full-only. The
 `graph-analysis` feature adds seven gating detectors. The six graph-dependent
 owners share `repository_graph.rs`, while retaining independent catalog and
 capability contracts.

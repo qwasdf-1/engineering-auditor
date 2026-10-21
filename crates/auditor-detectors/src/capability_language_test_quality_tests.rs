@@ -61,7 +61,7 @@ pub(crate) fn test_quality_capability_files(
         ("test_without_assertion", "java", false) => vec![(JAVA_PATH, JAVA_ASSERTING)],
         ("tautological_assertion", "java", true) => vec![(JAVA_PATH, JAVA_TAUTOLOGIES)],
         ("tautological_assertion", "java", false) => vec![(JAVA_PATH, JAVA_SOUND)],
-        _ => return None,
+        _ => return super::skip_tests::skip_capability_files(detector, language, positive),
     };
     Some(
         files

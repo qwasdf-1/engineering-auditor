@@ -117,6 +117,7 @@ pub(crate) enum DetectorOwner {
     OrphanSymbol,
     TestWithoutAssertion,
     TautologicalAssertion,
+    SkippedTestWithoutReason,
     NetworkCallWithoutTimeout,
     QuadraticFrontRemoval,
     CatastrophicBacktrackingRegex,

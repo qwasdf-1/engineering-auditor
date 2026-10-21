@@ -103,6 +103,7 @@ Structure, complexity, duplication, and maintainability.
 | `ruby_double_bang` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | unsupported | unsupported |
 | `section_divider_comment` | partial | partial | partial | partial | partial | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `sibling_call_redundancy` | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `skipped_test_without_reason` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `source_duplicate_detection` | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `stale_link_reference` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | exact_lexical | unsupported |
 | `stale_path_reference` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | exact_lexical | unsupported |
@@ -181,7 +182,7 @@ Markdown and structured-data cells are excluded from these source-language total
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
 | L1 | 244 | 10 | 0 | 121 | 132 |
-| L2 | 129 | 17 | 53 | 172 | 110 |
+| L2 | 135 | 17 | 53 | 179 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 81 | 0 | 2 | 71 | 2 |
 | L5 | 84 | 1 | 0 | 49 | 35 |
@@ -289,7 +290,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |
-| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 184 | 62 | Julia, Ruby, Shell |
+| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 187 | 63 | Julia, Ruby, Shell |
 | No qualified language-specific API identity and dataflow boundary exists for this security capability. | 18 | 6 | Julia, Ruby, Shell |
 | Qualified on Python only; the Tier-1 extensions were reviewed and deferred (type names in lexical spans, conventional short names, shared receiver callees), and the Tier-2 grammars share those blockers. | 16 | 4 | C, C++, C#, Kotlin |
 | Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile. | 1 | 1 | Go |
@@ -301,7 +302,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | The frontend lacks a qualified collection, cardinality, mutation, or call-cost proof for this algorithmic capability. | 33 | 11 | Julia, Ruby, Shell |
 | The frontend lacks a qualified effect, lifecycle, or resolved-topology classifier for this systems capability. | 27 | 9 | Julia, Ruby, Shell |
 | The frontend lacks a qualified receiver type, alias, evaluation-order, or failure-behavior proof for this optimization. | 36 | 12 | Julia, Ruby, Shell |
-| The test-scope facts model the Tier-1 frameworks; the Tier-2 forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet. | 8 | 2 | C, C++, C#, Kotlin |
+| The test-scope facts model the Tier-1 frameworks; the Tier-2 forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet. | 12 | 3 | C, C++, C#, Kotlin |
 | Untyped parameters: a collection cannot be told from an output sink or builder (a `StringBuilder`-like accumulator), which dominated the typed-language probe. | 1 | 1 | JavaScript |
 | libcurl's default is no timeout (`CURLOPT_TIMEOUT` 0), but the client API table does not model curl handles and their option calls yet. | 2 | 1 | C, C++ |
 ## Role Contracts

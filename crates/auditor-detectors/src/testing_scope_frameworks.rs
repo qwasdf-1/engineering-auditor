@@ -3,6 +3,7 @@
 
 use auditor_ast::AstNode;
 
+use super::skips::{go_skip_mark, java_skip_mark, js_skip_mark, python_skip_mark, rust_skip_mark};
 use super::{call_view, preorder, TestCase};
 use crate::ast_scan::{self, nodes_of_kind};
 use crate::{AuditedFile, Language, SourceRole};
@@ -54,7 +55,9 @@ fn rust_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
     nodes_of_kind(root, &["function_item"])
         .into_iter()
         .filter_map(|function| {
-            let attributes = ast_scan::preceding_attributes(function)
+            let attribute_nodes = ast_scan::preceding_attributes(function).collect::<Vec<_>>();
+            let attributes = attribute_nodes
+                .iter()
                 .map(|attribute| attribute_path(attribute.text()).to_string())
                 .collect::<Vec<_>>();
             let is_test = attributes.iter().any(|path| {
@@ -78,6 +81,7 @@ fn rust_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
                 body: function.child_by_field_name("body")?,
                 context: Vec::new(),
                 skipped: attributes.iter().any(|path| path == "ignore"),
+                skip: rust_skip_mark(&attribute_nodes),
                 expects_failure: attributes.iter().any(|path| path == "should_panic"),
             })
         })
@@ -125,6 +129,7 @@ fn python_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
                 body: function.child_by_field_name("body")?,
                 context: Vec::new(),
                 skipped,
+                skip: decorated.and_then(python_skip_mark),
                 expects_failure: false,
             })
         })
@@ -180,6 +185,9 @@ fn js_tests<'t>(root: AstNode<'t>, language: &Language) -> Vec<TestCase<'t>> {
                     || modifiers
                         .iter()
                         .any(|modifier| matches!(*modifier, "skip" | "todo")),
+                skip: (base.starts_with('x') || modifiers.contains(&"skip"))
+                    .then(|| js_skip_mark(call))
+                    .flatten(),
                 expects_failure: modifiers.contains(&"failing"),
             })
         })
@@ -255,19 +263,21 @@ fn go_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
                         && context.iter().any(|context| context == call.segments[0])
                         && call.name().starts_with("Skip")
                 });
+            let skip = go_skip_mark(body, &context);
             Some(TestCase {
                 name: name.text().to_string(),
                 line: line_of(name),
                 body,
                 context,
                 skipped,
+                skip,
                 expects_failure: false,
             })
         })
         .collect()
 }
 
-fn java_annotations(method: AstNode<'_>) -> Vec<AstNode<'_>> {
+pub(super) fn java_annotations(method: AstNode<'_>) -> Vec<AstNode<'_>> {
     method
         .named_children()
         .filter(|child| child.kind() == "modifiers")
@@ -310,6 +320,7 @@ fn java_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
                     || annotations.iter().any(|annotation| {
                         matches!(annotation_name(*annotation), "Disabled" | "Ignore")
                     }),
+                skip: java_skip_mark(method, &annotations),
                 expects_failure: test_arguments.contains("expected="),
             })
         })

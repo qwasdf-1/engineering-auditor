@@ -225,7 +225,11 @@ pub(super) const KOTLIN_IDS: &[&str] = &[
 ];
 /// Test-quality rules over the test-scope facts (test functions, assertion
 /// calls, mock stubs) of the Tier-1 frameworks.
-pub(super) const TEST_QUALITY_IDS: &[&str] = &["test_without_assertion", "tautological_assertion"];
+pub(super) const TEST_QUALITY_IDS: &[&str] = &[
+    "test_without_assertion",
+    "tautological_assertion",
+    "skipped_test_without_reason",
+];
 /// Network clients whose library default never times out, per the Tier-1
 /// client API table.
 pub(super) const NETWORK_TIMEOUT_IDS: &[&str] = &["network_call_without_timeout"];

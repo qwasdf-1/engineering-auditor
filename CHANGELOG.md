@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `skipped_test_without_reason` (full-only, Tier 1) reports a test or a
+  test group disabled with no reason in the mark (`#[ignore = ".."]`,
+  `@Disabled("..")`, `skip(reason=..)`, `t.Skip("..")`), no condition
+  around a Go skip, and no comment giving one. On the corpus it reports 10
+  skips (9 JUnit, 1 Vitest), all pre-labelled true positives; 20 more
+  carry their reason in a comment, a doc comment, or the class doc and are
+  not reported.
+
 ## 1.3.0 - C#, C++, And C Cost Detectors
 
 The algorithmic, systems, and optimization detectors now run on C# (31 of

@@ -52,6 +52,8 @@ pub(crate) use l3_rules::l3_rule_capability_files;
 mod network_timeout;
 pub(crate) use network_timeout::network_timeout_capability_files;
 
+#[path = "capability_language_skip_tests.rs"]
+mod skip_tests;
 #[path = "capability_language_test_quality_tests.rs"]
 mod test_quality;
 pub(crate) use test_quality::test_quality_capability_files;

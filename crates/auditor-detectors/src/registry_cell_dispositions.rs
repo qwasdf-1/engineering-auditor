@@ -323,7 +323,11 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         "Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile.",
     ),
     deferred(
-        &["test_without_assertion", "tautological_assertion"],
+        &[
+            "test_without_assertion",
+            "tautological_assertion",
+            "skipped_test_without_reason",
+        ],
         TIER_TWO,
         "The test-scope facts model the Tier-1 frameworks; the Tier-2 forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet.",
     ),

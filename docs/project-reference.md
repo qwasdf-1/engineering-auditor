@@ -17,8 +17,8 @@ and can never change deterministic findings.
 
 ## Detectors
 
-The default catalog has 114 detectors: 52 in the `gating` profile, precise
-enough to fail a build, and 62 more in `full`. A build with
+The default catalog has 115 detectors: 52 in the `gating` profile, precise
+enough to fail a build, and 63 more in `full`. A build with
 `--features graph-analysis` adds seven detectors that read an externally
 produced repository graph and co-edit journal.
 

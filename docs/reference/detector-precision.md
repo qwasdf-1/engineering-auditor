@@ -46,6 +46,15 @@ at least 22 clean labels, or about 40 with one false positive.
 > review of the first scan fixed the mechanisms behind 133 of the 169
 > findings (round nine under [Fixed Noise Mechanisms](#fixed-noise-mechanisms)).
 >
+> The full-only `skipped_test_without_reason` reports 10 library-corpus
+> skips, all pre-labelled true positives (9 JUnit `@Ignore`/`@Disabled`
+> with no reason anywhere, 1 Vitest `it.skip` whose title only hints at
+> one); the labels await a blind second check and are not yet in the table
+> below, whose scans predate the detector. Before labelling, the first scan's
+> 30 findings showed that doc comments and class docs often carry the
+> reason ("This test fails because..", "All tests in this file will be
+> disabled"); reading those removed 20 findings.
+>
 > The full-only `network_call_without_timeout` has no library-corpus
 > finding (fmt's release-script `urlopen` calls now have the tooling role),
 > so it is measured on the application slice (scan `a1-b`; see the corpus

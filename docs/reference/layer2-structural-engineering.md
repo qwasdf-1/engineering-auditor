@@ -709,6 +709,34 @@ Language contract: Tier 1; the Tier-2 frameworks are deferred (see
 
 ---
 
+## `skipped_test_without_reason` (full-only)
+
+Reports a test, or a group of tests, disabled with no reason written down:
+Rust `#[ignore]`, pytest `@pytest.mark.skip` and `@unittest.skip` (on a
+test or a test class), Jest/Vitest/Mocha `it.skip`, `xit`, `test.skip`,
+`describe.skip`, and `xdescribe`, Go `t.Skip()` and `t.SkipNow()`, and JUnit
+`@Disabled`/`@Ignore` (on a test or a test class) or TestNG
+`@Test(enabled = false)`.
+
+A skip states its reason when the mark carries one (`#[ignore = ".."]`,
+`skip(reason=..)`, `@Disabled("..")`, `t.Skip("..")`), when a Go skip runs
+under a condition (`if testing.Short() { t.Skip() }`), or when a comment
+gives it. A plain comment beside the mark counts: after it on the same line,
+inside the attribute or annotation block, or ending on the line above. A doc
+comment above the test, a comment opening the test body, or a Python
+docstring describes the test, so it counts only when it speaks of the skip
+or a failure (skip, disabled, ignore, fails, flaky, broken, TODO, FIXME,
+manual) or points to an issue (`#123`, `LANG-1655`, a URL); a comment above
+the enclosing class counts only when it speaks of the skip. Lint directives
+(`eslint-disable`, `noqa`) are not reasons. Conditional skips (`skipif`,
+`skipIf`, `#[cfg_attr(.., ignore)]`), expected failures (`xfail`), and
+placeholders (`it.todo`) are not reported.
+
+Language contract: Tier 1; the Tier-2 frameworks are deferred (see
+[`language-support.md`](./language-support.md)).
+
+---
+
 ## Graph Analysis Support Detectors
 
 ### `tooling_overlap` (gating, `--features graph-analysis`)
