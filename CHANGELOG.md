@@ -49,6 +49,22 @@
   `.ToList().Any()` when the lambdas call nothing), and
   `range_for_each_iteration` (`Enumerable.Range(..).ToList().ForEach`). No
   corpus finding changes.
+- C++ joins the algorithmic detectors: `repeated_sort_in_loop`,
+  `sort_for_extremum`, `repeated_collection_traversal`,
+  `hot_path_linear_membership`, `n_plus_one_query_in_loop`,
+  `nested_quadratic_iteration`, `nested_cross_collection_traversal`,
+  `repeated_recursive_subproblem`, `quadratic_front_removal`, and
+  `catastrophic_backtracking_regex`. `<algorithm>` calls over a whole
+  container (`std::sort(v.begin(), v.end())`, `std::ranges::sort(v)`,
+  `std::find`, `std::any_of`, `std::count_if`) read as that container's
+  methods, `front()` and `back()` as selections, `v[i]` as a subscript,
+  `erase(v.begin())` on a `std::vector` as a front removal, and
+  `std::regex` constructions and declarations (including raw strings) as
+  patterns; container mutators (`push_back`, `erase`, `resize`) and a
+  container passed by reference or iterator count as mutations.
+  `full_sort_for_top_k` stays unsupported for C++, and
+  `loop_carried_copy_accumulation` and `invariant_collection_copy_in_loop`
+  are not applicable. No corpus finding changes.
 
 ### Changed
 
@@ -74,6 +90,9 @@
   as a loop variable through a shape meant for Kotlin's field-less `for`.
 - A subscript index written with spaces (`xs[xs.Count - 1]`) is read as the
   last element, as `xs[len(xs)-1]` already was.
+- A call through a type or namespace path (`std::numeric_limits<T>::max()`)
+  is not read as a method on a collection: an ungated probe had reported
+  such calls in nlohmann-json as traversals of a collection named `std`.
 
 ## 1.2.0 - Data Flow And Syntax Recovery
 

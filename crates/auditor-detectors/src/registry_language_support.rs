@@ -572,6 +572,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
                 "typescript",
                 "java",
                 "csharp",
+                "cpp",
             ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -580,7 +581,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: REGEX_BACKTRACKING_IDS,
         policy: selected(
-            &["python", "javascript", "typescript", "java", "csharp"],
+            &[
+                "python",
+                "javascript",
+                "typescript",
+                "java",
+                "csharp",
+                "cpp",
+            ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -644,6 +652,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: ALGORITHMIC_IDS,
         policy: selected(
+            TIER_ONE_CSHARP_CPP,
+            LanguageSupportMode::Semantic,
+            LanguageSupportMode::Unsupported,
+        ),
+    },
+    PolicyRule {
+        ids: &["full_sort_for_top_k"],
+        policy: selected(
             TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -668,7 +684,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["n_plus_one_query_in_loop"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -691,7 +707,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["nested_cross_collection_traversal"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),

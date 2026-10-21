@@ -1,7 +1,7 @@
+use super::package_calls::{cpp_algorithm_call_shape, package_collection_call_shape};
 use super::semantics::{is_mutator, root_identifier, selection_kind, trim_arguments};
 use super::structure::{
-    call_shape, collection_identity, loop_bindings, nearest_loop, package_collection_call_shape,
-    region_within, CallShape,
+    call_shape, collection_identity, loop_bindings, nearest_loop, region_within, CallShape,
 };
 use super::*;
 use crate::Language;
@@ -82,8 +82,10 @@ pub(super) fn calls_receiving_collection(
 /// Whether `call` may mutate the scope's collection: a mutator method on it,
 /// or (in languages that pass references) the collection as an argument.
 fn call_mutates(file: &StructureFile, call: &StructureCall, scope: &MutationScope<'_>) -> bool {
-    // A Go or Java collection API is judged by its table entry alone.
-    if let Some(shape) = package_collection_call_shape(call, scope.aliases) {
+    // A Go, Java, or C++ collection API is judged by its table entry alone.
+    if let Some(shape) = package_collection_call_shape(call, scope.aliases)
+        .or_else(|| cpp_algorithm_call_shape(call, scope.aliases))
+    {
         return shape.collection == scope.root && is_mutator(&shape.method);
     }
     call.arguments
@@ -98,7 +100,14 @@ fn direct_argument_may_mutate(language: &Language, arguments: &str, target: &str
         .chars()
         .filter(|ch| !ch.is_whitespace())
         .collect::<String>();
-    trim_arguments(arguments).split(',').any(|argument| {
+    let arguments = trim_arguments(arguments);
+    // A C or C++ iterator argument nests calls (`std::find(v.begin(), ..)`),
+    // so its arguments are split at the top level only.
+    let arguments = match language {
+        Language::C | Language::Cpp => crate::optimization_facts::split_arguments(&arguments),
+        _ => arguments.split(',').collect(),
+    };
+    arguments.iter().any(|argument| {
         let compact = argument
             .chars()
             .filter(|ch| !ch.is_whitespace())
@@ -109,6 +118,13 @@ fn direct_argument_may_mutate(language: &Language, arguments: &str, target: &str
             // argument is a reference.
             Language::JavaScript | Language::TypeScript | Language::Go | Language::Java => {
                 compact == compact_target
+            }
+            // A C or C++ argument may be a reference or pointer, or an
+            // iterator into the container (`std::fill(v.begin(), ..)`).
+            Language::C | Language::Cpp => {
+                compact == compact_target
+                    || compact.trim_start_matches('&') == compact_target
+                    || compact.starts_with(&format!("{compact_target}.begin("))
             }
             // A C# reference type, or a `ref`/`out` argument.
             Language::CSharp => ["", "ref", "out"]

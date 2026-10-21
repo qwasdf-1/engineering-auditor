@@ -1,3 +1,4 @@
+use super::package_calls::{cpp_algorithm_call_shape, package_collection_call_shape};
 use super::semantics::{exact_identifier, is_keyword, root_identifier, trim_arguments};
 use super::*;
 
@@ -16,6 +17,9 @@ pub(super) fn call_shape(
     if let Some(shape) = package_collection_call_shape(call, aliases) {
         return Some(shape);
     }
+    if let Some(shape) = cpp_algorithm_call_shape(call, aliases) {
+        return Some(shape);
+    }
     let method = util::identifiers(&call.callee).into_iter().next_back()?;
     let receiver = call.receiver.as_deref().unwrap_or_else(|| {
         call.callee
@@ -23,6 +27,11 @@ pub(super) fn call_shape(
             .map(|index| &call.callee[..index])
             .unwrap_or_default()
     });
+    // A call through a path (`std::numeric_limits<T>::max()`, `Vec::new()`)
+    // names a type or namespace, not a collection value.
+    if receiver.trim_end().ends_with("::") {
+        return None;
+    }
     let root = root_identifier(receiver)?;
     let root = canonical(&root, aliases);
     let arguments = call
@@ -35,73 +44,6 @@ pub(super) fn call_shape(
         root,
         method: canonical_method(method, &arguments),
         arguments,
-    })
-}
-
-/// Go operates on slices through package functions, and Java on lists and
-/// arrays through `Collections` and `Arrays`: `sort.Ints(xs)` and
-/// `Collections.sort(xs)` are default sorts of `xs`, `slices.Contains(xs, v)`
-/// a linear membership test. The method each API is read as; its first
-/// argument is the collection it operates on. A sort given a comparator is
-/// `sort_by`.
-const PACKAGE_COLLECTION_APIS: &[(&str, &str)] = &[
-    ("sort.Ints", "sort"),
-    ("sort.Strings", "sort"),
-    ("sort.Float64s", "sort"),
-    ("slices.Sort", "sort"),
-    ("sort.Slice", "sort_by"),
-    ("sort.SliceStable", "sort_by"),
-    ("slices.SortFunc", "sort_by"),
-    ("slices.SortStableFunc", "sort_by"),
-    ("slices.Reverse", "reverse"),
-    ("slices.Contains", "contains"),
-    ("slices.ContainsFunc", "any"),
-    ("slices.IndexFunc", "position"),
-    ("slices.Min", "min"),
-    ("slices.Max", "max"),
-    ("slices.Clone", "clone"),
-    ("java.util.Collections.sort", "sort"),
-    ("java.util.Arrays.sort", "sort"),
-    ("java.util.Collections.reverse", "reverse"),
-    ("java.util.Collections.shuffle", "shuffle"),
-    ("java.util.Collections.min", "min"),
-    ("java.util.Collections.max", "max"),
-];
-
-/// The method-call shape of a Go or Java collection API call, or `None` for
-/// any other call. Only resolved standard-library identities qualify.
-pub(super) fn package_collection_call_shape(
-    call: &StructureCall,
-    aliases: &BTreeMap<String, String>,
-) -> Option<CallShape> {
-    let api = call.api.as_deref()?;
-    let method = PACKAGE_COLLECTION_APIS
-        .iter()
-        .find(|(name, _)| *name == api)?
-        .1;
-    let arguments = call
-        .arguments
-        .as_deref()
-        .map(trim_arguments)
-        .unwrap_or_default();
-    let (receiver, rest) = arguments
-        .split_once(',')
-        .map_or((arguments.as_str(), ""), |(receiver, rest)| {
-            (receiver, rest)
-        });
-    let receiver = receiver.trim();
-    let root = canonical(&exact_identifier(receiver)?, aliases);
-    let rest = rest.trim();
-    let method = if method == "sort" && !rest.is_empty() && api.starts_with("java.") {
-        "sort_by"
-    } else {
-        method
-    };
-    Some(CallShape {
-        collection: collection_identity(receiver, aliases).unwrap_or_else(|| root.clone()),
-        root,
-        method: method.to_string(),
-        arguments: rest.to_string(),
     })
 }
 

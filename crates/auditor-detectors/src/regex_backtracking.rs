@@ -4,19 +4,21 @@
 //! literals and `RegExp(..)`, Python `re`/`regex` calls, Java
 //! `Pattern.compile` and the `String` regex methods, and .NET `Regex`
 //! constructors, static methods, and `[GeneratedRegex]` (unless
-//! `RegexOptions.NonBacktracking`). Go's `regexp` and Rust's `regex` are
-//! linear-time automata and never backtrack.
+//! `RegexOptions.NonBacktracking`), and C++ `std::regex` objects. Go's
+//! `regexp` and Rust's `regex` are linear-time automata and never backtrack.
 
 use auditor_ast::AstNode;
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::algorithmic_facts::{CostExpression, CostTermKind};
 use crate::ast_scan::{self, AstScan};
-use crate::csharp_api_identity::{csharp_arguments, verbatim_content, CSharpScope};
 use crate::js_api_identity::{js_arguments, js_string};
 use crate::python_api_identity::{positional_arguments, py_string, PyScope};
 use crate::regex_ambiguity::ambiguous_repetition;
 use crate::{util, Language};
+
+#[path = "regex_sites_tier_two.rs"]
+mod tier_two;
 
 pub(crate) fn catastrophic_backtracking_regex_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
     let mut findings = Vec::new();
@@ -69,6 +71,7 @@ fn backtracking_engine(language: &Language) -> bool {
             | Language::TypeScript
             | Language::Java
             | Language::CSharp
+            | Language::Cpp
     )
 }
 
@@ -78,7 +81,8 @@ fn regex_literals<'a>(root: AstNode<'a>, language: &Language) -> Vec<(AstNode<'a
         Language::JavaScript | Language::TypeScript => js_regexes(root),
         Language::Python => python_regexes(root),
         Language::Java => java_regexes(root),
-        Language::CSharp => csharp_regexes(root),
+        Language::CSharp => tier_two::csharp_regexes(root),
+        Language::Cpp => tier_two::cpp_regexes(root),
         _ => Vec::new(),
     }
 }
@@ -174,87 +178,9 @@ fn java_regexes(root: AstNode<'_>) -> Vec<(AstNode<'_>, String)> {
         .collect()
 }
 
-const CSHARP_REGEX: &str = "System.Text.RegularExpressions.Regex";
-const CSHARP_STATIC_REGEX_METHODS: &[&str] = &[
-    "IsMatch",
-    "Match",
-    "Matches",
-    "Replace",
-    "Split",
-    "Count",
-    "EnumerateMatches",
-];
-
-/// `new Regex(pattern, ..)`, the static `Regex.IsMatch(input, pattern, ..)`
-/// family, and `[GeneratedRegex(pattern)]`. An instance call
-/// (`regex.Replace(input, replacement)`) takes no pattern.
-fn csharp_regexes(root: AstNode<'_>) -> Vec<(AstNode<'_>, String)> {
-    let mut regexes = CSharpScope::new(root)
-        .calls(root)
-        .into_iter()
-        .filter_map(|(api, call)| {
-            let position = if api == format!("{CSHARP_REGEX}..ctor") {
-                0
-            } else {
-                let method = api.strip_prefix(CSHARP_REGEX)?.strip_prefix('.')?;
-                let receiver = call
-                    .child_by_field_name("function")?
-                    .child_by_field_name("expression")?;
-                let static_call = receiver.text() == "Regex" || receiver.text() == CSHARP_REGEX;
-                (static_call && CSHARP_STATIC_REGEX_METHODS.contains(&method)).then_some(1)?
-            };
-            csharp_regex_site(call, position)
-        })
-        .collect::<Vec<_>>();
-    for attribute in ast_scan::nodes_of_kind(root, &["attribute"]) {
-        let generated = attribute.child_by_field_name("name").is_some_and(|name| {
-            matches!(name.text(), "GeneratedRegex" | "GeneratedRegexAttribute")
-        });
-        let pattern = attribute
-            .named_children()
-            .find(|child| child.kind() == "attribute_argument_list")
-            .and_then(|list| list.named_child(0))
-            .and_then(|argument| argument.named_child(0));
-        let non_backtracking = attribute.text().contains("NonBacktracking");
-        if let (true, Some(pattern), false) = (generated, pattern, non_backtracking) {
-            if let Some(pattern) = csharp_pattern(pattern) {
-                regexes.push((attribute, pattern));
-            }
-        }
-    }
-    regexes
-}
-
-fn csharp_regex_site(call: AstNode<'_>, position: usize) -> Option<(AstNode<'_>, String)> {
-    let arguments = csharp_arguments(call);
-    if arguments
-        .iter()
-        .any(|(_, value)| value.text().contains("NonBacktracking"))
-    {
-        return None;
-    }
-    let (_, literal) = arguments.get(position)?;
-    Some((call, csharp_pattern(*literal)?))
-}
-
-/// A C# string literal's pattern: a regular string unescaped, a verbatim
-/// string with `""` for a quote, a raw string as written.
-fn csharp_pattern(literal: AstNode<'_>) -> Option<String> {
-    let text = literal.text();
-    match literal.kind() {
-        "string_literal" => Some(unescape_string(text.strip_prefix('"')?.strip_suffix('"')?)),
-        "verbatim_string_literal" => Some(verbatim_content(text)?.replace("\"\"", "\"")),
-        "raw_string_literal" => literal
-            .named_children()
-            .find(|child| child.kind() == "raw_string_content")
-            .map(|content| content.text().to_string()),
-        _ => None,
-    }
-}
-
 /// A string literal's regex: `\\` is one backslash and `\"` a quote; other
 /// escapes are left for the regex.
-fn unescape_string(content: &str) -> String {
+pub(super) fn unescape_string(content: &str) -> String {
     let mut pattern = String::with_capacity(content.len());
     let mut characters = content.chars();
     while let Some(character) = characters.next() {

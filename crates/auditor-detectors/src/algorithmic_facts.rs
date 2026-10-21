@@ -674,6 +674,8 @@ mod effects;
 mod front_removal;
 #[path = "algorithmic_facts_inherited.rs"]
 mod inherited;
+#[path = "algorithmic_facts_package_calls.rs"]
+mod package_calls;
 #[path = "algorithmic_facts_queries.rs"]
 mod queries;
 #[path = "algorithmic_facts_semantics.rs"]

@@ -204,7 +204,7 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     not_applicable(
         &["invariant_collection_copy_in_loop"],
-        &["javascript", "typescript", "go", "java", "csharp"],
+        &["javascript", "typescript", "go", "java", "csharp", "cpp"],
         "Copying a collection only to measure it has no idiom in the language.",
     ),
     not_applicable(
@@ -339,13 +339,13 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         &["quadratic_front_removal"],
-        &["kotlin", "c", "cpp"],
-        "The front removals (Kotlin `removeAt(0)`, C++ `erase(begin())`) and their array-backed declarations are not modelled yet.",
+        &["kotlin", "c"],
+        "The front removals (Kotlin `removeAt(0)`, C `memmove` over an array) and their array-backed declarations are not modelled yet.",
     ),
     deferred(
         &["catastrophic_backtracking_regex"],
-        &["kotlin", "c", "cpp"],
-        "The backtracking engines (Kotlin `Regex`, C++ `std::regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet.",
+        &["kotlin", "c"],
+        "The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet.",
     ),
     deferred(
         &["discarded_fallible_result"],
@@ -502,8 +502,8 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         &["nested_quadratic_iteration", "invariant_collection_copy_in_loop"],
-        C_CPP,
-        "Needs per-language loop and collection facts (C index loops over arrays, C++ range-for over STL containers).",
+        &["c"],
+        "Needs C loop and collection facts: index loops over arrays and hand-rolled lists.",
     ),
     deferred(
         &["invariant_collection_copy_in_loop"],
@@ -515,10 +515,15 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         &["c"],
         "C has no collection library to identify: arrays and hand-rolled lists need cardinality and call-cost facts the frontend does not derive.",
     ),
-    deferred(
-        ALGORITHMIC_IDS,
+    not_applicable(
+        &["loop_carried_copy_accumulation"],
         &["cpp"],
-        "Needs STL identity (`std::sort`, `std::find`, container types) resolved through templates, overloads, and `using` declarations.",
+        "C++ grows a container in place (`push_back`, `insert`); rebuilding one by concatenation in a loop has no idiom.",
+    ),
+    deferred(
+        &["full_sort_for_top_k"],
+        &["cpp"],
+        "C++ keeps a sorted prefix by resizing or copying an iterator range (`resize(k)`, `vector(v.begin(), v.begin() + k)`), which the selection facts do not read yet.",
     ),
     deferred(
         SYSTEMS_IDS,

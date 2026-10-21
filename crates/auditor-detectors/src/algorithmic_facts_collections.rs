@@ -97,7 +97,8 @@ pub(super) fn collection_kind_from_text(text: &str) -> CollectionKind {
     {
         CollectionKind::Map
     } else if [
-        "vec<", "vec::", "vec!", "list<", "list[", "array<", "[]", "slice", "sequence",
+        "vec<", "vec::", "vec!", "list<", "list[", "array<", "[]", "slice", "sequence", "vector<",
+        "deque<",
     ]
     .iter()
     .any(|marker| lower.contains(marker))

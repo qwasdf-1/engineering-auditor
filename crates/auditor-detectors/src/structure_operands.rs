@@ -1,5 +1,5 @@
 //! Operand facts read from the syntax tree: index and slice expressions (Go,
-//! Python, and C#) and Python membership tests (`x in xs`, which calls
+//! Python, C#, C, and C++) and Python membership tests (`x in xs`, which calls
 //! `xs.__contains__(x)`), each owned by its innermost function, and the
 //! Python locals count, which assignments introduce rather than declarations.
 
@@ -22,6 +22,7 @@ pub(super) fn collect_subscripts(
         Language::Go => &["index_expression", "slice_expression"],
         Language::Python => &["subscript"],
         Language::CSharp => &["element_access_expression"],
+        Language::C | Language::Cpp => &["subscript_expression"],
         _ => return Vec::new(),
     };
     crate::ast_scan::nodes_of_kind(tree.root_node(), kinds)
@@ -52,11 +53,15 @@ fn go_subscript(node: auditor_ast::AstNode<'_>) -> Option<SubscriptParts> {
             .map(|child| compact_text(child.text()))
             .unwrap_or_default()
     };
-    let operand = compact_text(node.child_by_field_name("operand")?.text());
-    Some(if node.kind() == "index_expression" {
-        (operand, Some(text("index")), Default::default())
-    } else {
+    // A C or C++ subscript names its operand `argument`.
+    let operand = node
+        .child_by_field_name("operand")
+        .or_else(|| node.child_by_field_name("argument"))?;
+    let operand = compact_text(operand.text());
+    Some(if node.kind() == "slice_expression" {
         (operand, None, (text("start"), text("end")))
+    } else {
+        (operand, Some(text("index")), Default::default())
     })
 }
 

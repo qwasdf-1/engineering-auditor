@@ -47,6 +47,18 @@ pub(super) const TIER_ONE_CSHARP: &[&str] = &[
     "java",
     "csharp",
 ];
+/// Tier 1, C#, and C++, whose STL algorithm and container facts the
+/// algorithmic index reads as well.
+pub(super) const TIER_ONE_CSHARP_CPP: &[&str] = &[
+    "rust",
+    "python",
+    "javascript",
+    "typescript",
+    "go",
+    "java",
+    "csharp",
+    "cpp",
+];
 /// Tier-1 and Tier-2 source languages.
 pub(super) const TIERED: &[&str] = &[
     "rust",
@@ -70,8 +82,9 @@ pub(super) const MANAGED_LOOP_LANGUAGES: &[&str] = &[
     "java",
     "kotlin",
     "csharp",
+    "cpp",
 ];
-pub(super) const RECURSIVE_LANGUAGES: &[&str] = TIER_ONE_CSHARP;
+pub(super) const RECURSIVE_LANGUAGES: &[&str] = TIER_ONE_CSHARP_CPP;
 pub(super) const GOD_MODULE_LANGUAGES: &[&str] = &[
     "rust",
     "python",
@@ -231,7 +244,6 @@ pub(super) const SYSTEMS_TOPOLOGY_IDS: &[&str] =
 pub(super) const ALGORITHMIC_IDS: &[&str] = &[
     "repeated_sort_in_loop",
     "sort_for_extremum",
-    "full_sort_for_top_k",
     "repeated_collection_traversal",
     "hot_path_linear_membership",
 ];

@@ -30,13 +30,16 @@ pub(super) fn pure_traversal_arguments(arguments: &str) -> bool {
     if trimmed.is_empty() {
         return true;
     }
-    // A Go function literal: judge its body (`func(i Item) bool { return i.ready }`).
+    // A Go function literal (`func(i Item) bool { return i.ready }`) or a C++
+    // lambda (`[](const Item& i) { return i.ready; }`): judge its body.
     if let Some(body) = trimmed
         .strip_prefix("func(")
+        .or_else(|| trimmed.strip_prefix('['))
         .and_then(|rest| rest.split_once('{'))
         .and_then(|(_, body)| body.trim_end().strip_suffix('}'))
     {
         let expression = body.trim().strip_prefix("return ").unwrap_or(body).trim();
+        let expression = expression.strip_suffix(';').unwrap_or(expression);
         return !expression.contains(['\n', ';'])
             && !expression.contains(" = ")
             && !expression.contains("<-")
@@ -109,12 +112,14 @@ pub(super) fn canonical_method(method: String, arguments: &str) -> String {
         .map_or(method, |(_, canonical, _)| canonical.to_string())
 }
 
-/// Java names for the selections other languages spell `first`, `last`, and
-/// `slice`.
+/// Java and C++ names for the selections other languages spell `first`,
+/// `last`, and `slice`.
 const JAVA_SELECTION_ALIASES: &[(&str, &str)] = &[
     ("getFirst", "first"),
     ("getLast", "last"),
     ("subList", "slice"),
+    ("front", "first"),
+    ("back", "last"),
 ];
 
 pub(super) fn selection_kind(method: &str, arguments: &str) -> Option<SelectionKind> {
@@ -202,6 +207,17 @@ pub(super) fn is_mutator(method: &str) -> bool {
             | "removeIf"
             | "replaceAll"
             | "discard"
+            // C++ containers.
+            | "push_back"
+            | "emplace_back"
+            | "push_front"
+            | "pop_back"
+            | "pop_front"
+            | "emplace"
+            | "erase"
+            | "resize"
+            | "assign"
+            | "swap"
     )
 }
 
