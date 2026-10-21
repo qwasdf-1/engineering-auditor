@@ -226,6 +226,48 @@ fn typescript_loop_facts_preserve_binding_iterable_and_call_context() {
 }
 
 #[test]
+fn csharp_foreach_and_cpp_range_for_are_loops_with_a_binding_and_iterable() {
+    let cases = [
+        (
+            AstLang::CSharp,
+            "class C { void Run(List<int> ids) { foreach (var id in ids) { Use(id); } } }",
+            "id",
+        ),
+        (
+            AstLang::Cpp,
+            "void run(const std::vector<int>& ids) { for (const auto& id : ids) { use(id); } }",
+            "& id",
+        ),
+    ];
+    let mut parser = AstParser::new().unwrap();
+    for (language, source, binding) in cases {
+        let tree = parser.parse(&language, source).unwrap();
+        let facts = tree.semantic_facts();
+        assert_eq!(facts.loops.len(), 1, "{language:?}");
+        let fact = facts.loops[0];
+        assert_eq!(
+            fact.binding.map(|span| tree.text_for_span(span)),
+            Some(binding),
+            "{language:?}"
+        );
+        assert_eq!(
+            fact.iterable.map(|span| tree.text_for_span(span)),
+            Some("ids"),
+            "{language:?}"
+        );
+        let call = facts
+            .calls
+            .iter()
+            .find(|call| call.control_region.is_some());
+        assert_eq!(
+            call.and_then(|call| call.control_region),
+            Some(fact.control_region),
+            "{language:?}"
+        );
+    }
+}
+
+#[test]
 fn go_parameters_are_one_symbol_per_signature_name() {
     // Results, function types, and closure parameters reuse the parameter
     // node kinds but are not the declaration's parameters.

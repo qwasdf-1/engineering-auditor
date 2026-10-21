@@ -311,10 +311,16 @@ fn record_control(
         nesting_increment: nesting_increment(node, kind),
     });
     if kind == ControlRegionKind::Loop {
+        // Fields first (a `while` loop's condition stands in for its
+        // iterable), then the data-flow layer's loop shapes (a C++ range
+        // `for` declarator).
+        let (target, value) = crate::dataflow::loop_target_and_iterable(node);
         builder.loops.push(LoopFact {
             span,
-            binding: loop_field(node, &["left", "pattern", "variable", "name"]),
-            iterable: loop_field(node, &["right", "value", "iterable", "condition"]),
+            binding: loop_field(node, &["left", "pattern", "variable", "name"])
+                .or_else(|| target.map(SourceSpan::from_node)),
+            iterable: loop_field(node, &["right", "value", "iterable", "condition"])
+                .or_else(|| value.map(SourceSpan::from_node)),
             control_region: index,
             owner: context.owner,
         });

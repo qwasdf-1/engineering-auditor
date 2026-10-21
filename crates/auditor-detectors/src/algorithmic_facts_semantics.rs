@@ -63,6 +63,52 @@ fn contains_nested_call(text: &str) -> bool {
     })
 }
 
+/// C# `List<T>` and LINQ methods, by the name the other languages' tables
+/// use, and whether the C# form needs arguments to mean it: `Any()` and
+/// `Count()` without a predicate read one element or a stored count, and
+/// `First(p)` searches rather than selects. `Remove(x)` removes a value
+/// (`discard`); `RemoveAt(i)` removes by index, as Java's `remove(i)` does.
+const CSHARP_METHOD_ALIASES: &[(&str, &str, Option<bool>)] = &[
+    ("Sort", "sort", None),
+    ("Reverse", "reverse", None),
+    ("Add", "add", None),
+    ("AddRange", "addAll", None),
+    ("Insert", "insert", None),
+    ("InsertRange", "addAll", None),
+    ("Remove", "discard", None),
+    ("RemoveAt", "remove", None),
+    ("RemoveAll", "removeIf", None),
+    ("RemoveRange", "removeAll", None),
+    ("Clear", "clear", None),
+    ("Contains", "contains", None),
+    ("Any", "any", Some(true)),
+    ("All", "all", None),
+    ("Exists", "any", None),
+    ("TrueForAll", "all", None),
+    ("Count", "count", Some(true)),
+    ("Sum", "sum", None),
+    ("Min", "min", None),
+    ("Max", "max", None),
+    ("Aggregate", "reduce", None),
+    ("Find", "find", None),
+    ("FindIndex", "position", None),
+    ("First", "first", Some(false)),
+    ("Last", "last", Some(false)),
+    ("Take", "take", None),
+    ("GetRange", "slice", None),
+];
+
+/// The method name the collection tables use for `method`.
+pub(super) fn canonical_method(method: String, arguments: &str) -> String {
+    CSHARP_METHOD_ALIASES
+        .iter()
+        .find(|(name, _, needs_arguments)| {
+            *name == method
+                && needs_arguments.is_none_or(|needed| needed != arguments.trim().is_empty())
+        })
+        .map_or(method, |(_, canonical, _)| canonical.to_string())
+}
+
 /// Java names for the selections other languages spell `first`, `last`, and
 /// `slice`.
 const JAVA_SELECTION_ALIASES: &[(&str, &str)] = &[
@@ -155,6 +201,7 @@ pub(super) fn is_mutator(method: &str) -> bool {
             | "retainAll"
             | "removeIf"
             | "replaceAll"
+            | "discard"
     )
 }
 

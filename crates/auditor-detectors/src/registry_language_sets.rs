@@ -36,6 +36,17 @@ pub(super) const CATALOG_LANGUAGES: &[&str] = &[
 
 pub(super) const RUST: &[&str] = &["rust"];
 pub(super) const TIER_ONE: &[&str] = &["rust", "python", "javascript", "typescript", "go", "java"];
+/// Tier 1 and C#, whose collection, loop, and LINQ facts the algorithmic
+/// index reads.
+pub(super) const TIER_ONE_CSHARP: &[&str] = &[
+    "rust",
+    "python",
+    "javascript",
+    "typescript",
+    "go",
+    "java",
+    "csharp",
+];
 /// Tier-1 and Tier-2 source languages.
 pub(super) const TIERED: &[&str] = &[
     "rust",
@@ -58,9 +69,9 @@ pub(super) const MANAGED_LOOP_LANGUAGES: &[&str] = &[
     "go",
     "java",
     "kotlin",
+    "csharp",
 ];
-pub(super) const RECURSIVE_LANGUAGES: &[&str] =
-    &["rust", "python", "javascript", "typescript", "go", "java"];
+pub(super) const RECURSIVE_LANGUAGES: &[&str] = TIER_ONE_CSHARP;
 pub(super) const GOD_MODULE_LANGUAGES: &[&str] = &[
     "rust",
     "python",

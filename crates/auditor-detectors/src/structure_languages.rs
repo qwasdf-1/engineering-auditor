@@ -1,5 +1,5 @@
 //! Per-language structure facts resolved from the syntax tree: call
-//! identities (Java, JavaScript/TypeScript), the expression that consumes a
+//! identities (Java, C#, JavaScript/TypeScript), the expression that consumes a
 //! JS/TS call, and JSDoc parameter types for JavaScript.
 
 use std::collections::BTreeMap;
@@ -9,7 +9,7 @@ use auditor_ast::SymbolKind;
 use super::StructureSymbol;
 use crate::Language;
 
-/// Resolved identities of the Java and JS/TS calls in a file, by span.
+/// Resolved identities of the Java, C#, and JS/TS calls in a file, by span.
 pub(super) fn call_apis(
     file: &crate::AuditedFile,
     tree: &auditor_ast::AstTree,
@@ -17,6 +17,7 @@ pub(super) fn call_apis(
     let root = tree.root_node();
     let calls = match file.language {
         Language::Java => crate::java_api_identity::JavaScope::new(root).calls(root),
+        Language::CSharp => crate::csharp_api_identity::CSharpScope::new(root).calls(root),
         Language::JavaScript | Language::TypeScript => {
             crate::js_api_identity::JsScope::new(root).calls(root)
         }

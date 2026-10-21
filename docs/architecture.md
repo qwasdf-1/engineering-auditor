@@ -110,8 +110,8 @@ alias rules (C# by-reference parameters; C and C++ `volatile`,
 address-taken, and reference-bound locals). The algorithmic, systems, and
 optimization families read assignments from the structure index's semantic
 facts, which take their stores (which node kinds assign, and each one's
-target and value) from the layer's `dataflow_shapes.rs`, so both agree on
-what is assigned where.
+target and value) and the loop variables their fields do not name from the
+layer's `dataflow_shapes.rs`, so both agree on what is assigned where.
 
 Graph-dependent detectors (the `graph-analysis` feature) read optional
 repository-graph and co-edit inputs through a `GraphProvider`; without them

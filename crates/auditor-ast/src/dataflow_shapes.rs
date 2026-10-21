@@ -110,7 +110,7 @@ pub(super) fn parameter_list(function: AstNode<'_>) -> Option<AstNode<'_>> {
 /// A loop's variable and what it iterates: by field (`for x in xs`, C++
 /// `for (T x : xs)`), in a Go, Python, or Julia clause, or by position for
 /// Kotlin (`for (x in xs)`) and Julia (`for x in xs`).
-pub(super) fn loop_target_and_iterable(
+pub(crate) fn loop_target_and_iterable(
     node: AstNode<'_>,
 ) -> (Option<AstNode<'_>>, Option<AstNode<'_>>) {
     let clause = node
@@ -139,7 +139,9 @@ pub(super) fn loop_target_and_iterable(
     let mut parts = clause.named_children();
     match clause.kind() {
         "for_binding" => (parts.next(), clause.named_children().last()),
-        "for_statement" => {
+        // Kotlin's `for (x in xs)` has no fields; a JavaScript
+        // `for (var i = 0; ..)` initializer is not a loop variable.
+        "for_statement" if clause.language() == AstLang::Kotlin => {
             let target = parts.find(|part| {
                 matches!(
                     part.kind(),

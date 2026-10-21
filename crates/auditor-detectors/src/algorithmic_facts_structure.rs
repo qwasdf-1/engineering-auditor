@@ -25,15 +25,16 @@ pub(super) fn call_shape(
     });
     let root = root_identifier(receiver)?;
     let root = canonical(&root, aliases);
+    let arguments = call
+        .arguments
+        .as_deref()
+        .map(trim_arguments)
+        .unwrap_or_default();
     Some(CallShape {
         collection: collection_identity(receiver, aliases).unwrap_or_else(|| root.clone()),
         root,
-        method,
-        arguments: call
-            .arguments
-            .as_deref()
-            .map(trim_arguments)
-            .unwrap_or_default(),
+        method: canonical_method(method, &arguments),
+        arguments,
     })
 }
 

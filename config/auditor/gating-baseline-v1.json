@@ -1,5 +1,5 @@
 {
-  "analysis_contract_digest": "fnv1a64:d5100a352d700187",
+  "analysis_contract_digest": "fnv1a64:41076c292118a2e3",
   "analysis_method": "auto",
   "entries": [
     {
@@ -47,24 +47,6 @@
       "title": "Function exceeds branch complexity budget"
     },
     {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-c0df8a7f8f3e0276",
-      "identity": {},
-      "message": "crates/auditor-core/src/lib.rs is complex and growing (CCX=93, growth=+132 LOC).",
-      "path": "crates/auditor-core/src/lib.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
-    },
-    {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-58cbbed2b850d96a",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/algorithmic_facts.rs is complex and growing (CCX=50, growth=+144 LOC).",
-      "path": "crates/auditor-detectors/src/algorithmic_facts.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
-    },
-    {
       "detector": "source_duplicate_detection",
       "id": "EA-cbeaba0fac078003",
       "identity": {
@@ -87,15 +69,6 @@
       "title": "Function parameter list exceeds budget"
     },
     {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-e06d8d383aa27c5d",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/config.rs is complex and growing (CCX=87, growth=+60 LOC).",
-      "path": "crates/auditor-detectors/src/config.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
-    },
-    {
       "detector": "function_complexity",
       "id": "EA-e422eca036d594b8",
       "identity": {
@@ -105,15 +78,6 @@
       "path": "crates/auditor-detectors/src/config.rs",
       "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
       "title": "Function exceeds branch complexity budget"
-    },
-    {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-efbd42205f5d6c11",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/control_flow.rs is complex and growing (CCX=54, growth=+70 LOC).",
-      "path": "crates/auditor-detectors/src/control_flow.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
     },
     {
       "detector": "source_duplicate_detection",
@@ -198,7 +162,7 @@
       "identity": {
         "anchor": "symbol:run_structural_owner"
       },
-      "message": "Function `run_structural_owner` has 20 branch decision points.",
+      "message": "Function `run_structural_owner` has 25 branch decision points.",
       "path": "crates/auditor-detectors/src/dispatcher.rs",
       "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
       "title": "Function exceeds branch complexity budget"
@@ -271,17 +235,6 @@
     },
     {
       "detector": "source_duplicate_detection",
-      "id": "EA-8122066059163397",
-      "identity": {
-        "anchor": "structural:clone:7872a0493bce5c45"
-      },
-      "message": "Clone class spans 70 normalized tokens across 2 non-overlapping occurrence(s).",
-      "path": "crates/auditor-detectors/src/go_api_rules.rs",
-      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, per-language mirror rule family: the same API rule over different grammar accessors (the mirror-pair convention).",
-      "title": "Normalized source clone class exceeds budget"
-    },
-    {
-      "detector": "source_duplicate_detection",
       "id": "EA-0969aa862038141f",
       "identity": {
         "anchor": "structural:clone:f4edba7e40b8af83"
@@ -336,33 +289,6 @@
       "title": "Normalized source clone class exceeds budget"
     },
     {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-d8d6bd3ed17ef9b6",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/markdown.rs is complex and growing (CCX=67, growth=+190 LOC).",
-      "path": "crates/auditor-detectors/src/markdown.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the hotspot surfaced when churn began netting moved code, which lowered the quartile cutoffs. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
-    },
-    {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-bf163c43e3f6c65f",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/naming.rs is complex and growing (CCX=66, growth=+147 LOC).",
-      "path": "crates/auditor-detectors/src/naming.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the hotspot surfaced when churn began netting moved code, which lowered the quartile cutoffs. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
-    },
-    {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-9fb4c1447291b422",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/optimization_fact_collectors.rs is complex and growing (CCX=61, growth=+58 LOC).",
-      "path": "crates/auditor-detectors/src/optimization_fact_collectors.rs",
-      "reason": "Reviewed 2026-10-19: growth is from the Go, Java, JS/TS, Python, and Rust optimization-fact passes; the file is owner-aligned and unchanged since, and it entered the 14-day window as release-hygiene commits shifted the relative growth/complexity quartiles. History-dependent hotspot accepted (operator approved) until it leaves the window.",
-      "title": "Growth-weighted file complexity hotspot"
-    },
-    {
       "detector": "source_duplicate_detection",
       "id": "EA-1f4ec783a03e8fd4",
       "identity": {
@@ -372,15 +298,6 @@
       "path": "crates/auditor-detectors/src/optimization_fact_language_forms.rs",
       "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
       "title": "Normalized source clone class exceeds budget"
-    },
-    {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-69f7bf10946b0c3c",
-      "identity": {},
-      "message": "crates/auditor-detectors/src/optimization_fact_operations.rs is complex and growing (CCX=43, growth=+59 LOC).",
-      "path": "crates/auditor-detectors/src/optimization_fact_operations.rs",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
     },
     {
       "detector": "function_complexity",
@@ -449,21 +366,10 @@
       "title": "Function parameter list exceeds budget"
     },
     {
-      "detector": "source_duplicate_detection",
-      "id": "EA-7316ea9fde23ada9",
-      "identity": {
-        "anchor": "structural:clone:9ad9439311fc8432"
-      },
-      "message": "Clone class spans 68 normalized tokens across 2 non-overlapping occurrence(s).",
-      "path": "crates/auditor-detectors/src/structure_spans.rs",
-      "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
-      "title": "Normalized source clone class exceeds budget"
-    },
-    {
       "detector": "churn_complexity_hotspot",
       "id": "EA-522ac207adaa1de0",
       "identity": {},
-      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=56, growth=+106 LOC).",
+      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=57, growth=+63 LOC).",
       "path": "crates/auditor-detectors/src/systems_effects.rs",
       "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
@@ -522,15 +428,6 @@
       "path": "crates/auditor-review/src/provider/native_tool_adapter.rs",
       "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
       "title": "Normalized source clone class exceeds budget"
-    },
-    {
-      "detector": "churn_complexity_hotspot",
-      "id": "EA-6d2983a87ceb60ba",
-      "identity": {},
-      "message": "tooling/detector_gate_contract.py is complex and growing (CCX=47, growth=+68 LOC).",
-      "path": "tooling/detector_gate_contract.py",
-      "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
-      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,

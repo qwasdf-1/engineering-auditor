@@ -30,7 +30,7 @@ mod shapes;
 #[path = "dataflow_values.rs"]
 mod values;
 
-pub(crate) use shapes::assignment_parts;
+pub(crate) use shapes::{assignment_parts, loop_target_and_iterable};
 pub use values::{call_arguments, call_receiver};
 
 /// Functions with a name of their own, each a flow scope.

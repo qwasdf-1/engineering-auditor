@@ -204,7 +204,7 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     not_applicable(
         &["invariant_collection_copy_in_loop"],
-        &["javascript", "typescript", "go", "java"],
+        &["javascript", "typescript", "go", "java", "csharp"],
         "Copying a collection only to measure it has no idiom in the language.",
     ),
     not_applicable(
@@ -339,13 +339,13 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         &["quadratic_front_removal"],
-        TIER_TWO,
-        "The Tier-2 front removals (Kotlin `removeAt(0)`, C# `RemoveAt(0)`, C++ `erase(begin())`) and their array-backed declarations are not modelled yet.",
+        &["kotlin", "c", "cpp"],
+        "The front removals (Kotlin `removeAt(0)`, C++ `erase(begin())`) and their array-backed declarations are not modelled yet.",
     ),
     deferred(
         &["catastrophic_backtracking_regex"],
-        TIER_TWO,
-        "The Tier-2 backtracking engines (Kotlin `Regex`, .NET `Regex`, C++ `std::regex`) take patterns through APIs the regex literal extraction does not model yet.",
+        &["kotlin", "c", "cpp"],
+        "The backtracking engines (Kotlin `Regex`, C++ `std::regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet.",
     ),
     deferred(
         &["discarded_fallible_result"],
@@ -502,18 +502,13 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         &["nested_quadratic_iteration", "invariant_collection_copy_in_loop"],
-        &["csharp", "c", "cpp"],
-        "Needs per-language loop and collection facts (C# `foreach` over `IEnumerable`, C index loops over arrays, C++ range-for over STL containers).",
+        C_CPP,
+        "Needs per-language loop and collection facts (C index loops over arrays, C++ range-for over STL containers).",
     ),
     deferred(
         &["invariant_collection_copy_in_loop"],
         &["kotlin"],
         "Needs Kotlin collection facts: `toList()` and `toMutableList()` copies resolve by receiver type.",
-    ),
-    deferred(
-        ALGORITHMIC_IDS,
-        &["csharp"],
-        "Needs LINQ and BCL collection identity (`OrderBy`, `Contains`, `List<T>`, `HashSet<T>`); deferred `IEnumerable` execution changes the cost model.",
     ),
     deferred(
         ALGORITHMIC_IDS,

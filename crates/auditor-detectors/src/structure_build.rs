@@ -90,7 +90,17 @@ fn collect_symbols(
                     SymbolKind::Parameter => Some(bounded_declaration(source)),
                     // A Java local's or field's declared type (`List<String> names`).
                     SymbolKind::Variable | SymbolKind::Field if file.language == Language::Java => {
-                        Some(bounded_declaration(&java_declaration(source)))
+                        Some(bounded_declaration(&declared_type(
+                            source,
+                            &['(', '<', '{', '['],
+                        )))
+                    }
+                    // A C# local's or field's declared type (`List<int> ids`,
+                    // `var ids = new HashSet<int>()`).
+                    SymbolKind::Variable | SymbolKind::Field
+                        if file.language == Language::CSharp =>
+                    {
+                        Some(bounded_declaration(&declared_type(source, &['(', '{'])))
                     }
                     // A Kotlin function's annotations and modifiers, through
                     // `fun` (visibility, `external`).
@@ -163,15 +173,18 @@ fn collect_symbols(
         .collect()
 }
 
-/// A Java declaration's type and name; for `var`, the type it constructs
-/// (`var store = new Store(..)` reads as `Store store`).
-fn java_declaration(source: &str) -> String {
+/// A Java or C# declaration's type and name; for `var`, the type it
+/// constructs, up to the first of `type_end` (`var store = new Store(..)`
+/// reads as `Store store`). C# keeps the type arguments (`var ids = new
+/// HashSet<int>()` reads as `HashSet<int> ids`); Java drops them.
+fn declared_type(source: &str, type_end: &[char]) -> String {
     let (head, initializer) = source.split_once('=').unwrap_or((source, ""));
     let words = crate::util::identifiers(head);
     let constructed = initializer
         .trim_start()
-        .strip_prefix("new ")
-        .and_then(|rest| rest.split(['(', '<', '{', '[']).next())
+        .strip_prefix("new")
+        .filter(|rest| !rest.starts_with(|ch: char| ch.is_alphanumeric() || ch == '_'))
+        .and_then(|rest| rest.split(type_end).next())
         .map(str::trim)
         .filter(|name| !name.is_empty());
     match (
@@ -180,7 +193,7 @@ fn java_declaration(source: &str) -> String {
         words.last(),
     ) {
         (true, Some(constructed), Some(name)) => format!("{constructed} {name}"),
-        _ => head.to_string(),
+        _ => head.trim().to_string(),
     }
 }
 

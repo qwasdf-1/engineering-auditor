@@ -1,5 +1,5 @@
-//! Operand facts read from the syntax tree: index and slice expressions (Go
-//! and Python) and Python membership tests (`x in xs`, which calls
+//! Operand facts read from the syntax tree: index and slice expressions (Go,
+//! Python, and C#) and Python membership tests (`x in xs`, which calls
 //! `xs.__contains__(x)`), each owned by its innermost function, and the
 //! Python locals count, which assignments introduce rather than declarations.
 
@@ -21,15 +21,16 @@ pub(super) fn collect_subscripts(
     let kinds: &[&str] = match file.language {
         Language::Go => &["index_expression", "slice_expression"],
         Language::Python => &["subscript"],
+        Language::CSharp => &["element_access_expression"],
         _ => return Vec::new(),
     };
     crate::ast_scan::nodes_of_kind(tree.root_node(), kinds)
         .into_iter()
         .filter_map(|node| {
-            let (operand, index, bounds) = if file.language == Language::Python {
-                python_subscript(node)?
-            } else {
-                go_subscript(node)?
+            let (operand, index, bounds) = match file.language {
+                Language::Python => python_subscript(node)?,
+                Language::CSharp => csharp_subscript(node)?,
+                _ => go_subscript(node)?,
             };
             let span = SourceSpan::from_node(node);
             Some(StructureSubscript {
@@ -59,18 +60,40 @@ fn go_subscript(node: auditor_ast::AstNode<'_>) -> Option<SubscriptParts> {
     })
 }
 
+/// `xs[i]`, `xs[^1]`, or the range `xs[a..b]` with one argument.
+fn csharp_subscript(node: auditor_ast::AstNode<'_>) -> Option<SubscriptParts> {
+    let operand = compact_text(node.child_by_field_name("expression")?.text());
+    let arguments = node
+        .child_by_field_name("subscript")?
+        .named_children()
+        .filter(|child| child.kind() == "argument")
+        .filter_map(|argument| argument.named_child(0));
+    single_subscript(operand, arguments, "range_expression", "..")
+}
+
 /// `xs[0]`, `xs[-1]`, or `xs[a:b]` (a stepped slice is not a prefix).
 fn python_subscript(node: auditor_ast::AstNode<'_>) -> Option<SubscriptParts> {
     let operand = compact_text(node.child_by_field_name("value")?.text());
-    let mut indices = node
+    let indices = node
         .named_children()
         .skip(1)
         .filter(|child| child.kind() != "comment");
+    single_subscript(operand, indices, "slice", ":")
+}
+
+/// The one index of a subscript, or the start and end of its range (a
+/// `range_kind` node with exactly two `separator`-split bounds).
+fn single_subscript<'a>(
+    operand: String,
+    mut indices: impl Iterator<Item = auditor_ast::AstNode<'a>>,
+    range_kind: &str,
+    separator: &str,
+) -> Option<SubscriptParts> {
     let index = indices.next()?;
     if indices.next().is_some() {
         return None;
     }
-    if index.kind() != "slice" {
+    if index.kind() != range_kind {
         return Some((
             operand,
             Some(compact_text(index.text())),
@@ -78,7 +101,7 @@ fn python_subscript(node: auditor_ast::AstNode<'_>) -> Option<SubscriptParts> {
         ));
     }
     let bounds = compact_text(index.text());
-    let parts = bounds.split(':').collect::<Vec<_>>();
+    let parts = bounds.split(separator).collect::<Vec<_>>();
     let [start, end] = parts.as_slice() else {
         return None;
     };

@@ -296,7 +296,8 @@ fn initialized_empty_before(file: &StructureFile, owner: u32, target: &str, befo
                     | "List.of()"
                     | "newArrayList<>()"
                     | "Collections.emptyList()"
-            )
+            ) || (value.starts_with("newList<") || value.starts_with("Array.Empty<"))
+                && value.ends_with(">()")
         })
 }
 
@@ -321,6 +322,12 @@ fn copy_rebuild_expression(
         crate::Language::Java => {
             expression.starts_with("Stream.concat(")
                 && expression.contains(&format!("{accumulator}.stream()"))
+        }
+        // `acc.Concat(new[] { item }).ToList()`, or the spread `[..acc, item]`.
+        crate::Language::CSharp => {
+            expression.starts_with(&format!("{accumulator}.Concat("))
+                && (expression.ends_with(".ToList()") || expression.ends_with(".ToArray()"))
+                || expression.starts_with(&format!("[..{accumulator},"))
         }
         _ => false,
     }

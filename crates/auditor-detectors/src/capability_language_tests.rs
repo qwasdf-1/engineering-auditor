@@ -13,6 +13,10 @@ use go::{go_capability_files, go_fact_capability_files};
 mod js;
 use js::{js_capability_files, js_fact_capability_files};
 
+#[path = "capability_language_csharp_tests.rs"]
+mod csharp;
+use csharp::csharp_fact_capability_files;
+
 #[path = "capability_language_java_tests.rs"]
 mod java;
 use java::{java_capability_files, java_fact_capability_files};
@@ -236,6 +240,14 @@ pub(super) fn retarget_case(case: &CapabilityCase, language: &str) -> Capability
             variant.positive = files;
         }
         if let Some(files) = java_fact_capability_files(case.id, false) {
+            variant.negative = files;
+        }
+    }
+    if language == "csharp" {
+        if let Some(files) = csharp_fact_capability_files(case.id, true) {
+            variant.positive = files;
+        }
+        if let Some(files) = csharp_fact_capability_files(case.id, false) {
             variant.negative = files;
         }
     }

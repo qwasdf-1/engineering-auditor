@@ -548,7 +548,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: FRONT_REMOVAL_IDS,
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "java"],
+            &[
+                "rust",
+                "python",
+                "javascript",
+                "typescript",
+                "java",
+                "csharp",
+            ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -556,7 +563,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: REGEX_BACKTRACKING_IDS,
         policy: selected(
-            &["python", "javascript", "typescript", "java"],
+            &["python", "javascript", "typescript", "java", "csharp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -620,7 +627,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: ALGORITHMIC_IDS,
         policy: selected(
-            TIER_ONE,
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -644,7 +651,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["n_plus_one_query_in_loop"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -652,7 +659,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["loop_carried_copy_accumulation"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "java"],
+            &[
+                "rust",
+                "python",
+                "javascript",
+                "typescript",
+                "java",
+                "csharp",
+            ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -660,7 +674,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["nested_cross_collection_traversal"],
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),

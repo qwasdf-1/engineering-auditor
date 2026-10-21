@@ -121,19 +121,19 @@ Algorithmic cost and repeated-work patterns.
 
 | Detector | Rust | Python | JavaScript | TypeScript | Go | Java | Kotlin | C# | C | C++ | Ruby | Julia | Shell | Markdown | Structured |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `catastrophic_backtracking_regex` | not_applicable | semantic | semantic | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `full_sort_for_top_k` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `hot_path_linear_membership` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `invariant_collection_copy_in_loop` | semantic | semantic | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `loop_carried_copy_accumulation` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `n_plus_one_query_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `nested_cross_collection_traversal` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `nested_quadratic_iteration` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `quadratic_front_removal` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_collection_traversal` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_recursive_subproblem` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_sort_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `sort_for_extremum` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `catastrophic_backtracking_regex` | not_applicable | semantic | semantic | semantic | not_applicable | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `full_sort_for_top_k` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `hot_path_linear_membership` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `invariant_collection_copy_in_loop` | semantic | semantic | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `loop_carried_copy_accumulation` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `n_plus_one_query_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `nested_cross_collection_traversal` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `nested_quadratic_iteration` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `quadratic_front_removal` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_collection_traversal` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_recursive_subproblem` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_sort_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `sort_for_extremum` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 
 ### Layer 4 - Systems Engineering
 
@@ -182,7 +182,7 @@ Markdown and structured-data cells are excluded from these source-language total
 |---|---:|---:|---:|---:|---:|
 | L1 | 244 | 10 | 0 | 121 | 132 |
 | L2 | 129 | 17 | 53 | 172 | 110 |
-| L3 | 71 | 0 | 0 | 90 | 8 |
+| L3 | 83 | 0 | 0 | 77 | 9 |
 | L4 | 65 | 0 | 2 | 87 | 2 |
 | L5 | 60 | 1 | 0 | 74 | 34 |
 
@@ -206,7 +206,7 @@ Each not-applicable source cell carries one of these reviewed reasons.
 | C has no string objects, lazy sequences, optional type, growable collection, or map in its standard library. | `bulk_collection_extension`, `eager_fallback_computation`, `immutable_string_concatenation_in_loop`, `intermediate_collection_materialization`, `known_size_preallocation`, `map_entry_opportunity`, `range_for_each_iteration` | C |
 | C++ releases resources by RAII (`std::ifstream`, smart pointers) when the owner goes out of scope. | `resource_not_closed` | C++ |
 | Compiled languages with no runtime evaluation of source text, and no standard deserializer that constructs arbitrary types. | `eval_in_production`, `unsafe_deserialization` | C, C++ |
-| Copying a collection only to measure it has no idiom in the language. | `invariant_collection_copy_in_loop` | Go, Java, JavaScript, TypeScript |
+| Copying a collection only to measure it has no idiom in the language. | `invariant_collection_copy_in_loop` | C#, Go, Java, JavaScript, TypeScript |
 | ES imports cannot be function-local; a function-local `require()` or `import()` is CommonJS or ESM lazy loading, the exception the rule allows. | `function_local_import` | JavaScript, TypeScript |
 | Effective Go asks for short local names (`r`, `w`, `buf`), so terse locals are the convention. | `identifier_tersity` | Go |
 | Exceptions are the language's normal error channel, so a raise or throw is not an unhandled termination. | `unhandled_termination_in_production` | Java, JavaScript, Python, TypeScript |
@@ -268,13 +268,12 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Lexical occurrences include type and enum-variant names, which carry domain vocabulary (a `match` over long variant names reads as verbose); the rule needs binding-level identifiers before it extends. | 5 | 1 | Go, Java, JavaScript, Rust, TypeScript |
 | Needs Kotlin collection and cardinality facts: stdlib extension functions (`sorted`, `contains`, `first`) resolve by receiver type, and `Sequence` chains are lazy, so the Java tables do not transfer. | 9 | 9 | Kotlin |
 | Needs Kotlin collection facts: `toList()` and `toMutableList()` copies resolve by receiver type. | 1 | 1 | Kotlin |
-| Needs LINQ and BCL collection identity (`OrderBy`, `Contains`, `List<T>`, `HashSet<T>`); deferred `IEnumerable` execution changes the cost model. | 9 | 9 | C# |
 | Needs STL identity (`std::sort`, `std::find`, container types) resolved through templates, overloads, and `using` declarations. | 9 | 9 | C++ |
 | Needs a per-language escape-hatch table (Kotlin `!!` and `as`, C# `dynamic` and `unsafe`, C `void *` casts, C++ `reinterpret_cast`). | 4 | 1 | C, C++, C#, Kotlin |
 | Needs a per-language escape-hatch table (`unsafe`/`transmute`, untyped JavaScript, `interface{}`, raw casts and `@SuppressWarnings`). | 4 | 1 | Go, Java, JavaScript, Rust |
 | Needs async-context resolution (Kotlin `suspend` and dispatchers, C# `async` methods, C++ coroutines) plus blocking-I/O API identity. | 3 | 1 | C++, C#, Kotlin |
 | Needs cross-file reference resolution and the language's export model (`__all__`, ES exports, Go capitalization, Java and Kotlin visibility, C# assemblies, C/C++ linkage and headers); only Rust has it. | 18 | 2 | C, C++, C#, Go, Java, JavaScript, Kotlin, Python, TypeScript |
-| Needs per-language loop and collection facts (C# `foreach` over `IEnumerable`, C index loops over arrays, C++ range-for over STL containers). | 6 | 2 | C, C++, C# |
+| Needs per-language loop and collection facts (C index loops over arrays, C++ range-for over STL containers). | 4 | 2 | C, C++ |
 | Needs receiver-type facts for the language's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`; `GetValueOrDefault`, `List<T>` capacity, `AddRange`, `TryAdd`; `reserve`, `insert`, `try_emplace`). | 12 | 4 | C++, C#, Kotlin |
 | Needs receiver-type facts for the language's string and sequence APIs (C# `string` versus `StringBuilder` and LINQ `ToList`; C++ `std::string` and ranges). | 6 | 3 | C++, C# |
 | Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs. | 20 | 5 | C, C++, C#, Kotlin |
@@ -288,9 +287,9 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile. | 1 | 1 | Go |
 | Reviewed and rejected: writing a parameter object's fields is how these languages fill, normalize, and configure objects; the corpus probe (347 findings) was dominated by such designed writes. | 3 | 1 | JavaScript, Python, TypeScript |
 | SQL text is assembled into buffers (`snprintf`, `strcat`, `std::string` appends) before `sqlite3_exec` or `PQexec`; the rule needs buffer dataflow to connect the build to the sink. | 2 | 1 | C, C++ |
-| The Tier-2 backtracking engines (Kotlin `Regex`, .NET `Regex`, C++ `std::regex`) take patterns through APIs the regex literal extraction does not model yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
-| The Tier-2 front removals (Kotlin `removeAt(0)`, C# `RemoveAt(0)`, C++ `erase(begin())`) and their array-backed declarations are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
+| The backtracking engines (Kotlin `Regex`, C++ `std::regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet. | 3 | 1 | C, C++, Kotlin |
+| The front removals (Kotlin `removeAt(0)`, C++ `erase(begin())`) and their array-backed declarations are not modelled yet. | 3 | 1 | C, C++, Kotlin |
 | The frontend lacks a qualified collection, cardinality, mutation, or call-cost proof for this algorithmic capability. | 33 | 11 | Julia, Ruby, Shell |
 | The frontend lacks a qualified effect, lifecycle, or resolved-topology classifier for this systems capability. | 27 | 9 | Julia, Ruby, Shell |
 | The frontend lacks a qualified receiver type, alias, evaluation-order, or failure-behavior proof for this optimization. | 36 | 12 | Julia, Ruby, Shell |

@@ -1,5 +1,44 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- C# joins the algorithmic detectors: `repeated_sort_in_loop`,
+  `sort_for_extremum`, `full_sort_for_top_k`,
+  `repeated_collection_traversal`, `hot_path_linear_membership`,
+  `n_plus_one_query_in_loop`, `loop_carried_copy_accumulation`,
+  `nested_quadratic_iteration`, `nested_cross_collection_traversal`,
+  `repeated_recursive_subproblem`, `quadratic_front_removal`, and
+  `catastrophic_backtracking_regex`. The facts read `List<T>` and LINQ
+  methods by the names the other languages' tables use (`Sort`, `Any`,
+  `GetRange`, `RemoveAt`), indexers and ranges (`xs[0]`, `xs[^1]`,
+  `xs[..5]`), declared and `var`-constructed collection types, calls'
+  resolved .NET identities, and `new Regex(..)`, the static `Regex`
+  methods, and `[GeneratedRegex]` unless `RegexOptions.NonBacktracking`.
+  `First(predicate)`, `Any()` and `Count()` without a predicate, and
+  `Remove(value)` are not read as selections, traversals, or front
+  removals. `invariant_collection_copy_in_loop` is not applicable to C#,
+  as to Java. The four C# corpus libraries have no findings from these
+  detectors.
+
+### Changed
+
+- C# `foreach` and C++ range `for` loops are loops in the structure index,
+  with their variable and iterable read through the data-flow layer's loop
+  shapes. `excessive_nesting_depth` counts them as it counts every other
+  loop: 5 new findings in Newtonsoft.Json, each nesting a `foreach`.
+- A Python `set.discard(x)`, like C# `Remove(x)`, counts as a mutation of
+  the collection.
+
+### Fixed
+
+- C# verbatim strings (`@"C:\dir"`) were read as empty by the C# rules;
+  they now read their content, with `""` as a quote. No corpus finding
+  changes.
+- The data-flow layer read a JavaScript `for (var i = 0; ..)` initializer
+  as a loop variable through a shape meant for Kotlin's field-less `for`.
+
 ## 1.2.0 - Data Flow And Syntax Recovery
 
 Files with syntax errors are analyzed after recovery instead of being

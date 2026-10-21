@@ -10,6 +10,8 @@ const CONTROL_KIND_GROUPS: &[(&[&str], ControlRegionKind)] = &[
             "for",
             "for_statement",
             "enhanced_for_statement",
+            "foreach_statement",
+            "for_range_loop",
             "for_in_statement",
             "for_expression",
             "while",

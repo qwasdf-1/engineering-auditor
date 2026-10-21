@@ -35,6 +35,7 @@ const TYPES: &[(&str, &str)] = &[
     ("Environment", "System"),
     ("NotImplementedException", "System"),
     ("Random", "System"),
+    ("Regex", "System.Text.RegularExpressions"),
     ("Debug", "System.Diagnostics"),
     ("Debugger", "System.Diagnostics"),
     ("Process", "System.Diagnostics"),
@@ -376,7 +377,9 @@ fn declared_variable<'a>(
 /// The value of a C# string literal without escapes or interpolation.
 pub(crate) fn csharp_string(node: AstNode<'_>) -> Option<String> {
     match node.kind() {
-        "string_literal" | "verbatim_string_literal" | "raw_string_literal" => {
+        // A verbatim string is one token: `@"C:\dir"`, with `""` for a quote.
+        "verbatim_string_literal" => Some(verbatim_content(node.text())?.replace("\"\"", "\"")),
+        "string_literal" | "raw_string_literal" => {
             let mut parts = node.named_children();
             match (parts.next(), parts.next()) {
                 (None, _) => Some(String::new()),
@@ -392,6 +395,12 @@ pub(crate) fn csharp_string(node: AstNode<'_>) -> Option<String> {
         }
         _ => None,
     }
+}
+
+/// The text between a verbatim string's `@"` and closing quote.
+pub(crate) fn verbatim_content(text: &str) -> Option<&str> {
+    let text = text.trim_end_matches(['u', 'U', '8']);
+    text.strip_prefix("@\"")?.strip_suffix('"')
 }
 
 /// The argument expressions of a call or object creation, with their names
@@ -521,6 +530,24 @@ namespace Demo
             .iter()
             .any(|(name, _)| name == "System.Net.IPAddress.Any"));
         assert!(!declares_csharp_entry_point(tree.root_node()));
+    }
+
+    #[test]
+    fn verbatim_strings_read_their_content() {
+        let source = "class C { void F() { G(@\"C:\\tmp\\\"\"x\"\"\", \"plain\", @\"\"); } }\n";
+        let tree = AstParser::new()
+            .unwrap()
+            .parse(&AstLang::CSharp, source)
+            .unwrap();
+        let call = ast_scan::nodes_of_kind(tree.root_node(), &["invocation_expression"])[0];
+        assert_eq!(
+            csharp_string_arguments(call),
+            [
+                Some("C:\\tmp\\\"x\"".to_string()),
+                Some("plain".to_string()),
+                Some(String::new()),
+            ]
+        );
     }
 
     #[test]

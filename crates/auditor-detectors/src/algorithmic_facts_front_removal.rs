@@ -1,7 +1,7 @@
 //! Front removal from an array-backed sequence inside a loop: every removal
 //! shifts the remaining elements, so draining `n` items costs O(n^2).
 //! Python `list.pop(0)`, JavaScript `array.shift()`, Java
-//! `ArrayList.remove(0)`, Rust `Vec::remove(0)`. A deque, linked list, or
+//! `ArrayList.remove(0)`, C# `List<T>.RemoveAt(0)`, Rust `Vec::remove(0)`. A deque, linked list, or
 //! queue removes from the front in O(1), and Go's `xs = xs[1:]` reslices.
 
 use std::collections::BTreeMap;
@@ -57,7 +57,10 @@ fn removes_front(language: &Language, method: &str, arguments: &str) -> bool {
     match language {
         Language::Python => method == "pop" && arguments == "0",
         Language::JavaScript | Language::TypeScript => method == "shift" && arguments.is_empty(),
-        Language::Java | Language::Rust => method == "remove" && arguments == "0",
+        // C# `RemoveAt(0)` reads as `remove(0)`.
+        Language::Java | Language::Rust | Language::CSharp => {
+            method == "remove" && arguments == "0"
+        }
         _ => false,
     }
 }
@@ -125,6 +128,9 @@ fn array_text(language: &Language, text: &str) -> bool {
                 || text.contains("Array<")
         }
         Language::Java => text.contains("ArrayList"),
+        Language::CSharp => {
+            text.starts_with("List<") || text.contains(" List<") || text.contains("[]")
+        }
         Language::Rust => text.contains("Vec<") || text.contains("Vec::") || text.contains("vec!"),
         _ => false,
     }

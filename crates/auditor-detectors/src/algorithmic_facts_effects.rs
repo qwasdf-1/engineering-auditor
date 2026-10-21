@@ -110,6 +110,10 @@ fn direct_argument_may_mutate(language: &Language, arguments: &str, target: &str
             Language::JavaScript | Language::TypeScript | Language::Go | Language::Java => {
                 compact == compact_target
             }
+            // A C# reference type, or a `ref`/`out` argument.
+            Language::CSharp => ["", "ref", "out"]
+                .iter()
+                .any(|modifier| compact.strip_prefix(modifier) == Some(compact_target.as_str())),
             _ => false,
         }
     })
@@ -174,7 +178,8 @@ pub(super) fn sort_selection_after(
 }
 
 /// `xs[0]`, `xs[len(xs)-1]`, or `xs[:k]` read after the sort with no
-/// mutation in between (Go selects by indexing, not by method).
+/// mutation in between (Go, Python, and C# select by indexing, not by
+/// method).
 fn subscript_selection_after(
     file: &StructureFile,
     query: &SortUseQuery<'_>,
@@ -204,15 +209,21 @@ fn subscript_selection_after(
     if !between.is_empty() {
         return None;
     }
-    let last = format!("len({root})-1");
+    let last = [
+        format!("len({root})-1"),
+        format!("{root}.Count-1"),
+        format!("{root}.Length-1"),
+    ];
     let selection = match (&subscript.index, &subscript.bounds) {
         (Some(index), _) if index == "0" => SelectionKind::Extremum {
             endpoint: "first".to_string(),
         },
-        // Python counts from the end: `xs[-1]`.
-        (Some(index), _) if *index == last || index == "-1" => SelectionKind::Extremum {
-            endpoint: "last".to_string(),
-        },
+        // Python and C# count from the end: `xs[-1]`, `xs[^1]`.
+        (Some(index), _) if last.contains(index) || matches!(index.as_str(), "-1" | "^1") => {
+            SelectionKind::Extremum {
+                endpoint: "last".to_string(),
+            }
+        }
         (None, (start, end)) if matches!(start.as_str(), "" | "0") => {
             let k = end.parse::<usize>().ok().filter(|k| *k > 1)?;
             SelectionKind::TopK { k }

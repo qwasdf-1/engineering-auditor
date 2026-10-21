@@ -133,7 +133,8 @@ Representative module boundaries:
 - `auditor-ast/src/semantic.rs`, `semantic_controls.rs`, and
   `semantic_fields.rs`: lazy span-only semantic facts plus control and
   grammar-field normalization over the same source allocation; assignment
-  facts read their target and value through `dataflow_shapes.rs`
+  facts read their target and value, and loop facts a loop variable and
+  iterable the fields do not name, through `dataflow_shapes.rs`
 - `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`,
   `dataflow_shapes.rs`, and `dataflow_values.rs`: findings-free def-use flow
   within one function (reaching bindings, value origins, value
