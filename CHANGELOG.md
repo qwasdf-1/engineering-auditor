@@ -21,6 +21,19 @@
   removals. `invariant_collection_copy_in_loop` is not applicable to C#,
   as to Java. The four C# corpus libraries have no findings from these
   detectors.
+- C# joins the systems effect detectors: `loop_artifact_rewrite`,
+  `latest_only_unbounded_cache`, `repeated_parse_scan_serialize`,
+  `per_item_external_io`, `repeated_expensive_initialization`,
+  `request_path_repository_scan`, and `blocking_io_in_async_context`. A C#
+  effect table names the `System.IO.File` reads and writes (the synchronous
+  forms block, the `Async` forms do not), `Directory` scans, `HttpClient`
+  requests, `System.Text.Json` and Newtonsoft.Json parsing and
+  serialization, `Thread.Sleep`, and `new Regex(..)` and `new HttpClient()`
+  as expensive state; `async` methods are async contexts; a cache's latest
+  entry read by index (`cache[cache.Count - 1]`, `cache[^1]`) and bounded by
+  `RemoveAt` or `Dequeue` follow the Go forms. Layering and package coupling
+  stay unsupported for C#: a `using` directive names a namespace, not a
+  file. No corpus finding changes.
 
 ### Changed
 
@@ -30,6 +43,12 @@
   loop: 5 new findings in Newtonsoft.Json, each nesting a `foreach`.
 - A Python `set.discard(x)`, like C# `Remove(x)`, counts as a mutation of
   the collection.
+- Java and C# object creations (`new T(..)`) are calls in the structure
+  index, as JavaScript and C++ `new` already were, so effect tables can name
+  constructors. No Java corpus finding changes.
+- `repeated_expensive_initialization` no longer reports state built in the
+  function's `return` inside a loop (`while (..) { .. return new
+  Regex(pattern); }`): it is built once per call.
 
 ### Fixed
 
@@ -38,6 +57,8 @@
   changes.
 - The data-flow layer read a JavaScript `for (var i = 0; ..)` initializer
   as a loop variable through a shape meant for Kotlin's field-less `for`.
+- A subscript index written with spaces (`xs[xs.Count - 1]`) is read as the
+  last element, as `xs[len(xs)-1]` already was.
 
 ## 1.2.0 - Data Flow And Syntax Recovery
 

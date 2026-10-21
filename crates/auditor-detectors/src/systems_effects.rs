@@ -15,7 +15,7 @@ pub(super) fn extract_effects(file: &StructureFile) -> Vec<SystemEffect> {
         .iter()
         .flat_map(|call| effects_for_call(file, call, &aliases))
         .collect::<Vec<_>>();
-    effects.extend(go_cache_effects(file));
+    effects.extend(indexed_cache_effects(file));
     effects.sort_by(|left, right| {
         (&left.path, left.line, left.kind, &left.operation).cmp(&(
             &right.path,
@@ -54,6 +54,10 @@ fn effects_for_call(
     classify_call(&signature)
         .into_iter()
         .map(|kind| {
+            // State built in a `return` is built once, however deep in a loop
+            // (`while (..) { .. return new Regex(pattern); }`).
+            let enclosing_loop = enclosing_loop
+                .filter(|_| !(kind == EffectKind::ExpensiveInitialization && call.returned));
             let artifact = artifact_expression(kind, call);
             let input = loop_input_expression(kind, call, artifact.as_ref());
             SystemEffect {
@@ -140,12 +144,13 @@ pub(super) fn inherited_effect(
     })
 }
 
-/// Go grows a slice with `cache = append(cache, entry)`, reads its latest
-/// entry as `cache[len(cache)-1]`, and bounds it by reslicing it into itself
-/// (`cache = cache[1:]`). Only cache- or history-named slices qualify, as for
-/// the method forms.
-fn go_cache_effects(file: &StructureFile) -> Vec<SystemEffect> {
-    if file.language != crate::Language::Go {
+/// Go grows a slice with `cache = append(cache, entry)`; Go and C# read the
+/// latest entry by index (`cache[len(cache)-1]`, `cache[cache.Count - 1]`,
+/// `cache[^1]`) and bound a cache by reslicing it into itself
+/// (`cache = cache[1:]`, `cache = cache[1..]`). Only cache- or history-named
+/// collections qualify, as for the method forms.
+fn indexed_cache_effects(file: &StructureFile) -> Vec<SystemEffect> {
+    if !matches!(file.language, crate::Language::Go | crate::Language::CSharp) {
         return Vec::new();
     }
     let is_cache = |name: &str| {
@@ -179,8 +184,10 @@ fn go_cache_effects(file: &StructureFile) -> Vec<SystemEffect> {
             continue;
         }
         let line = subscript.span.start_line;
-        let kind = match &subscript.index {
-            Some(index) if *index == format!("len({operand})-1") => EffectKind::CacheLatestRead,
+        let latest = [format!("len({operand})-1"), format!("{operand}.Count-1")];
+        let index = subscript.index.as_ref().map(|index| index.replace(' ', ""));
+        let kind = match &index {
+            Some(index) if latest.contains(index) || index == "^1" => EffectKind::CacheLatestRead,
             None if reassigned(subscript.owner, line, operand) => EffectKind::CacheBound,
             _ => continue,
         };

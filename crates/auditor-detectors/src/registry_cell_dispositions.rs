@@ -522,13 +522,18 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         SYSTEMS_IDS,
-        TIER_TWO,
-        "Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle, MSBuild, or CMake).",
+        &["kotlin", "c", "cpp"],
+        "Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle or CMake).",
+    ),
+    deferred(
+        &["architectural_layering", "package_coupling_metrics"],
+        &["csharp"],
+        "C# `using` directives name namespaces, not files: layering and coupling need a namespace-to-file index and project (`.csproj`) boundaries.",
     ),
     deferred(
         &["blocking_io_in_async_context"],
-        &["kotlin", "csharp", "cpp"],
-        "Needs async-context resolution (Kotlin `suspend` and dispatchers, C# `async` methods, C++ coroutines) plus blocking-I/O API identity.",
+        &["kotlin", "cpp"],
+        "Needs async-context resolution (Kotlin `suspend` and dispatchers, C++ coroutines) plus blocking-I/O API identity.",
     ),
     not_applicable(
         &["blocking_io_in_async_context"],

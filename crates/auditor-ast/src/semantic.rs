@@ -10,7 +10,7 @@ mod fields;
 use fields::{first_field, loop_field, symbol_name};
 #[path = "semantic_symbols.rs"]
 mod symbols;
-use symbols::{in_anonymous_function, symbol_kind};
+use symbols::{in_anonymous_function, is_function_boundary, symbol_kind};
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct SourceSpan {
@@ -89,6 +89,9 @@ pub struct CallFact {
     pub arguments: Option<SourceSpan>,
     pub owner: Option<u32>,
     pub control_region: Option<u32>,
+    /// The call is part of its function's `return` (not a lambda's inside
+    /// it): it runs at most once per call of the function.
+    pub returned: bool,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -192,6 +195,7 @@ struct NodeKind<'a>(&'a str);
 struct TraversalContext {
     owner: Option<u32>,
     control: Option<u32>,
+    returning: bool,
 }
 
 impl<'a> NodeKind<'a> {
@@ -208,7 +212,7 @@ pub(crate) fn extract_semantic_facts(tree: &AstTree) -> SemanticFileFacts {
     let root = tree.root_node();
     let parse_has_errors = root.has_error();
     let mut builder = FactsBuilder::default();
-    walk(root, None, None, &mut builder);
+    walk(root, None, None, false, &mut builder);
     SemanticFileFacts {
         parse_has_errors,
         symbols: builder.symbols.into(),
@@ -228,6 +232,7 @@ fn walk(
     node: AstNode<'_>,
     parent_symbol: Option<u32>,
     parent_control: Option<u32>,
+    returning: bool,
     builder: &mut FactsBuilder,
 ) {
     let span = SourceSpan::from_node(node);
@@ -236,13 +241,23 @@ fn walk(
     let parent = TraversalContext {
         owner,
         control: parent_control,
+        returning,
     };
     let control = record_control(node, kind, span, parent, builder);
-    let context = TraversalContext { owner, control };
+    let context = TraversalContext {
+        owner,
+        control,
+        returning,
+    };
     record_operations(node, kind, span, context, builder);
     record_leaf(kind, span, context, builder);
+    let returning = if is_function_boundary(node.kind()) {
+        false
+    } else {
+        returning || kind.is(RETURN_KINDS) && !in_anonymous_function(node)
+    };
     for child in node.named_children() {
-        walk(child, owner, control, builder);
+        walk(child, owner, control, returning, builder);
     }
 }
 
@@ -349,6 +364,7 @@ fn record_operations(
             arguments: first_field(node, &["arguments", "argument_list"]),
             owner: context.owner,
             control_region: context.control,
+            returned: context.returning,
         });
     }
     if let Some((target, value)) = crate::dataflow::assignment_parts(node) {
@@ -411,6 +427,8 @@ const CALL_KINDS: &[&str] = &[
     "method_invocation",
     "invocation_expression",
     "new_expression",
+    // Java and C# `new T(..)`.
+    "object_creation_expression",
     "command",
     "macro_invocation",
 ];

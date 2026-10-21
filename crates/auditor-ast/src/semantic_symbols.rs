@@ -77,6 +77,11 @@ const ANONYMOUS_FUNCTION_KINDS: &[&str] = &[
 ];
 
 /// Whether the nearest enclosing function-like node is a lambda or closure.
+/// A named or anonymous function, whose body runs in its own call.
+pub(super) fn is_function_boundary(kind: &str) -> bool {
+    languages::function_node_kinds().contains(&kind) || ANONYMOUS_FUNCTION_KINDS.contains(&kind)
+}
+
 pub(super) fn in_anonymous_function(node: AstNode<'_>) -> bool {
     let mut current = node.parent();
     while let Some(ancestor) = current {

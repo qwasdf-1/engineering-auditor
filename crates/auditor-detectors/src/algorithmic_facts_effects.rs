@@ -214,7 +214,8 @@ fn subscript_selection_after(
         format!("{root}.Count-1"),
         format!("{root}.Length-1"),
     ];
-    let selection = match (&subscript.index, &subscript.bounds) {
+    let index = subscript.index.as_ref().map(|index| index.replace(' ', ""));
+    let selection = match (&index, &subscript.bounds) {
         (Some(index), _) if index == "0" => SelectionKind::Extremum {
             endpoint: "first".to_string(),
         },

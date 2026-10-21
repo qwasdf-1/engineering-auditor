@@ -123,6 +123,9 @@ pub(crate) struct StructureCall {
     pub(crate) line: usize,
     /// The call's value is consumed rather than evaluated for effect.
     pub(crate) result_consumed: bool,
+    /// The call is part of its function's `return`, so it runs at most once
+    /// per call of the function, even inside a loop.
+    pub(crate) returned: bool,
     /// The callee's resolved API identity (`sort.Ints`, `os/exec.Command`),
     /// where the language's import bindings are resolved (Go, Java, JS/TS).
     pub(crate) api: Option<String>,

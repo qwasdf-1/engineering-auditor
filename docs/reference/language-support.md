@@ -142,16 +142,16 @@ Repository and systems-economics behavior.
 | Detector | Rust | Python | JavaScript | TypeScript | Go | Java | Kotlin | C# | C | C++ | Ruby | Julia | Shell | Markdown | Structured |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `architectural_layering` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `blocking_io_in_async_context` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | unsupported | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `blocking_io_in_async_context` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `churn_complexity_hotspot` | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `latest_only_unbounded_cache` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `loop_artifact_rewrite` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `latest_only_unbounded_cache` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `loop_artifact_rewrite` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `network_call_without_timeout` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `package_coupling_metrics` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `per_item_external_io` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_expensive_initialization` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_parse_scan_serialize` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `request_path_repository_scan` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `per_item_external_io` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_expensive_initialization` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_parse_scan_serialize` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `request_path_repository_scan` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `unused_declared_dependency` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 
 ### Layer 5 - Optimization Opportunities
@@ -183,7 +183,7 @@ Markdown and structured-data cells are excluded from these source-language total
 | L1 | 244 | 10 | 0 | 121 | 132 |
 | L2 | 129 | 17 | 53 | 172 | 110 |
 | L3 | 83 | 0 | 0 | 77 | 9 |
-| L4 | 65 | 0 | 2 | 87 | 2 |
+| L4 | 72 | 0 | 2 | 80 | 2 |
 | L5 | 60 | 1 | 0 | 74 | 34 |
 
 ## Not-Applicable Source Capabilities
@@ -256,6 +256,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | C has no classes; a struct-plus-functions module would need ownership by naming convention or first parameter, which the structure facts do not model. | 1 | 1 | C |
 | C has no collection library to identify: arrays and hand-rolled lists need cardinality and call-cost facts the frontend does not derive. | 9 | 9 | C |
 | C strings are `char *` buffers whose comparison is a `strcmp` call, not an equality the structure facts record; C++ adds `std::string` overloads. The rule needs string-comparison facts for these grammars. | 2 | 1 | C, C++ |
+| C# `using` directives name namespaces, not files: layering and coupling need a namespace-to-file index and project (`.csproj`) boundaries. | 2 | 2 | C# |
 | C++20 coroutines (`co_await`) appear in none of the corpus repositories, so the cell has no capability evidence or precision sample. | 1 | 1 | C++ |
 | Calls to `abort` and `std::terminate` guard broken invariants in libraries much as Go's `panic` does; the Go cell was reviewed and rejected for the same convention. | 2 | 1 | C, C++ |
 | Collections are arrays and pointers (or STL containers passed by reference): a mutation through a non-`const` pointer or reference is declared in the signature, and the rule needs `const`-qualification facts to tell a surprising write from a designed output buffer. | 2 | 1 | C, C++ |
@@ -271,13 +272,13 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Needs STL identity (`std::sort`, `std::find`, container types) resolved through templates, overloads, and `using` declarations. | 9 | 9 | C++ |
 | Needs a per-language escape-hatch table (Kotlin `!!` and `as`, C# `dynamic` and `unsafe`, C `void *` casts, C++ `reinterpret_cast`). | 4 | 1 | C, C++, C#, Kotlin |
 | Needs a per-language escape-hatch table (`unsafe`/`transmute`, untyped JavaScript, `interface{}`, raw casts and `@SuppressWarnings`). | 4 | 1 | Go, Java, JavaScript, Rust |
-| Needs async-context resolution (Kotlin `suspend` and dispatchers, C# `async` methods, C++ coroutines) plus blocking-I/O API identity. | 3 | 1 | C++, C#, Kotlin |
+| Needs async-context resolution (Kotlin `suspend` and dispatchers, C++ coroutines) plus blocking-I/O API identity. | 2 | 1 | C++, Kotlin |
 | Needs cross-file reference resolution and the language's export model (`__all__`, ES exports, Go capitalization, Java and Kotlin visibility, C# assemblies, C/C++ linkage and headers); only Rust has it. | 18 | 2 | C, C++, C#, Go, Java, JavaScript, Kotlin, Python, TypeScript |
 | Needs per-language loop and collection facts (C index loops over arrays, C++ range-for over STL containers). | 4 | 2 | C, C++ |
 | Needs receiver-type facts for the language's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`; `GetValueOrDefault`, `List<T>` capacity, `AddRange`, `TryAdd`; `reserve`, `insert`, `try_emplace`). | 12 | 4 | C++, C#, Kotlin |
 | Needs receiver-type facts for the language's string and sequence APIs (C# `string` versus `StringBuilder` and LINQ `ToList`; C++ `std::string` and ranges). | 6 | 3 | C++, C# |
 | Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs. | 20 | 5 | C, C++, C#, Kotlin |
-| Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle, MSBuild, or CMake). | 32 | 8 | C, C++, C#, Kotlin |
+| Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle or CMake). | 24 | 8 | C, C++, Kotlin |
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |

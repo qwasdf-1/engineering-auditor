@@ -268,6 +268,29 @@ fn csharp_foreach_and_cpp_range_for_are_loops_with_a_binding_and_iterable() {
 }
 
 #[test]
+fn calls_in_a_functions_return_are_marked_returned() {
+    let source = "class C {\n  Regex Read(Reader r) {\n    while (r.Read()) {\n      Use(r);\n      if (r.Done) { return new Regex(\"a\"); }\n    }\n    return Build(items.Select(x => Make(x)), () => { return Inner(); });\n  }\n}\n";
+    let mut parser = AstParser::new().unwrap();
+    let tree = parser.parse(&AstLang::CSharp, source).unwrap();
+    let facts = tree.semantic_facts();
+    let returned = |callee: &str| {
+        facts
+            .calls
+            .iter()
+            .find(|call| tree.text_for_span(call.callee) == callee)
+            .map(|call| call.returned)
+    };
+    assert_eq!(returned("Regex"), Some(true));
+    assert_eq!(returned("Build"), Some(true));
+    assert_eq!(returned("r.Read"), Some(false));
+    assert_eq!(returned("Use"), Some(false));
+    // A lambda's body runs per call of the lambda, and its `return` leaves
+    // the lambda.
+    assert_eq!(returned("Make"), Some(false));
+    assert_eq!(returned("Inner"), Some(false));
+}
+
+#[test]
 fn go_parameters_are_one_symbol_per_signature_name() {
     // Results, function types, and closure parameters reuse the parameter
     // node kinds but are not the declaration's parameters.

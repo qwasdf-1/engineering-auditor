@@ -216,17 +216,18 @@ pub(super) const GO_IDS: &[&str] = &["go_log_fatal", "go_errcheck", "go_repeated
 pub(super) const RUST_ONLY_IDS: &[&str] = &[];
 pub(super) const RUST_PYTHON_PARTIAL_IDS: &[&str] = &["churn_complexity_hotspot"];
 pub(super) const SYSTEMS_SEMANTIC_IDS: &[&str] = &["blocking_io_in_async_context"];
-/// Systems effects and topology that Go and Java resolve as well.
-pub(super) const SYSTEMS_GO_JAVA_IDS: &[&str] = &[
+/// Systems effects that Go, Java, and C# resolve as well.
+pub(super) const SYSTEMS_EFFECT_IDS: &[&str] = &[
     "latest_only_unbounded_cache",
-    "architectural_layering",
-    "package_coupling_metrics",
     "loop_artifact_rewrite",
     "repeated_parse_scan_serialize",
     "per_item_external_io",
     "repeated_expensive_initialization",
     "request_path_repository_scan",
 ];
+/// Import topology that Go and Java resolve as well.
+pub(super) const SYSTEMS_TOPOLOGY_IDS: &[&str] =
+    &["architectural_layering", "package_coupling_metrics"];
 pub(super) const ALGORITHMIC_IDS: &[&str] = &[
     "repeated_sort_in_loop",
     "sort_for_extremum",

@@ -37,6 +37,16 @@ const TYPES: &[(&str, &str)] = &[
     ("Random", "System"),
     ("Regex", "System.Text.RegularExpressions"),
     ("Debug", "System.Diagnostics"),
+    ("Directory", "System.IO"),
+    ("DirectoryInfo", "System.IO"),
+    ("HttpClient", "System.Net.Http"),
+    ("WebClient", "System.Net"),
+    ("Thread", "System.Threading"),
+    ("JsonSerializer", "System.Text.Json"),
+    ("JsonConvert", "Newtonsoft.Json"),
+    ("JObject", "Newtonsoft.Json.Linq"),
+    ("JToken", "Newtonsoft.Json.Linq"),
+    ("JArray", "Newtonsoft.Json.Linq"),
     ("Debugger", "System.Diagnostics"),
     ("Process", "System.Diagnostics"),
     ("ProcessStartInfo", "System.Diagnostics"),
@@ -213,7 +223,12 @@ impl CSharpScope {
                 let function = call.child_by_field_name("function")?;
                 match function.kind() {
                     "member_access_expression" => {
-                        let member = function.child_by_field_name("name")?.text();
+                        // A generic method by its name: `Deserialize<T>`.
+                        let name = function.child_by_field_name("name")?;
+                        let member = match name.kind() {
+                            "generic_name" => name.named_child(0)?.text(),
+                            _ => name.text(),
+                        };
                         let owner = function.child_by_field_name("expression")?;
                         Some(format!("{}.{member}", self.expression_type(owner)?))
                     }

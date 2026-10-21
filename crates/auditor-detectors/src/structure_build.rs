@@ -378,6 +378,11 @@ fn declaration_is_async(language: &crate::Language, source: &str) -> bool {
         crate::Language::JavaScript | crate::Language::TypeScript => {
             header.contains("async function ") || header.trim_start().starts_with("async ")
         }
+        // A C# modifier: `public async Task<int> Load(..)`.
+        crate::Language::CSharp => header
+            .split('(')
+            .next()
+            .is_some_and(|head| util::identifiers(head).iter().any(|word| word == "async")),
         _ => false,
     }
 }
@@ -431,6 +436,7 @@ fn collect_calls(
             control_region: call.control_region,
             line: call.span.start_line,
             result_consumed: result_consumed(tree.source(), call.span.start_byte),
+            returned: call.returned,
             api: scope
                 .as_ref()
                 .and_then(|scope| {

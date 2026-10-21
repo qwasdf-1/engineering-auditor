@@ -139,6 +139,176 @@ const JAVA_EFFECTS: &[(&str, &[EffectKind])] = &[
     ("java.net.URL.openStream", &[EffectKind::ExternalIo]),
 ];
 
+/// C# effects by resolved .NET identity; like Java, a call missing from the
+/// table falls back to the name heuristics. The synchronous file APIs block;
+/// their `Async` forms do not.
+const CSHARP_EFFECTS: &[(&str, &[EffectKind])] = &[
+    (
+        "System.IO.File.ReadAllText",
+        &[EffectKind::ArtifactRead, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.ReadAllBytes",
+        &[EffectKind::ArtifactRead, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.ReadAllLines",
+        &[EffectKind::ArtifactRead, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.ReadLines",
+        &[EffectKind::ArtifactRead, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.ReadAllTextAsync",
+        &[EffectKind::ArtifactRead],
+    ),
+    (
+        "System.IO.File.ReadAllBytesAsync",
+        &[EffectKind::ArtifactRead],
+    ),
+    (
+        "System.IO.File.ReadAllLinesAsync",
+        &[EffectKind::ArtifactRead],
+    ),
+    (
+        "System.IO.File.WriteAllText",
+        &[EffectKind::ArtifactWrite, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.WriteAllBytes",
+        &[EffectKind::ArtifactWrite, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.WriteAllLines",
+        &[EffectKind::ArtifactWrite, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.AppendAllText",
+        &[EffectKind::ArtifactWrite, EffectKind::BlockingIo],
+    ),
+    (
+        "System.IO.File.WriteAllTextAsync",
+        &[EffectKind::ArtifactWrite],
+    ),
+    (
+        "System.IO.File.WriteAllBytesAsync",
+        &[EffectKind::ArtifactWrite],
+    ),
+    (
+        "System.IO.File.WriteAllLinesAsync",
+        &[EffectKind::ArtifactWrite],
+    ),
+    (
+        "System.IO.File.AppendAllTextAsync",
+        &[EffectKind::ArtifactWrite],
+    ),
+    ("System.Threading.Thread.Sleep", &[EffectKind::BlockingIo]),
+    (
+        "System.Text.Json.JsonSerializer.Deserialize",
+        &[EffectKind::Parse],
+    ),
+    (
+        "System.Text.Json.JsonSerializer.Serialize",
+        &[EffectKind::Serialize],
+    ),
+    (
+        "Newtonsoft.Json.JsonConvert.DeserializeObject",
+        &[EffectKind::Parse],
+    ),
+    (
+        "Newtonsoft.Json.JsonConvert.SerializeObject",
+        &[EffectKind::Serialize],
+    ),
+    ("Newtonsoft.Json.Linq.JObject.Parse", &[EffectKind::Parse]),
+    ("Newtonsoft.Json.Linq.JToken.Parse", &[EffectKind::Parse]),
+    ("Newtonsoft.Json.Linq.JArray.Parse", &[EffectKind::Parse]),
+    (
+        "System.Text.RegularExpressions.Regex..ctor",
+        &[EffectKind::ExpensiveInitialization],
+    ),
+    (
+        "System.Net.Http.HttpClient..ctor",
+        &[EffectKind::ExpensiveInitialization],
+    ),
+    (
+        "System.IO.Directory.GetFiles",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.Directory.EnumerateFiles",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.Directory.GetDirectories",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.Directory.EnumerateDirectories",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.Directory.GetFileSystemEntries",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.Directory.EnumerateFileSystemEntries",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.DirectoryInfo.GetFiles",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.IO.DirectoryInfo.EnumerateFiles",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "System.Net.Http.HttpClient.GetAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.GetStringAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.GetByteArrayAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.GetStreamAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.PostAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.PutAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.PatchAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.DeleteAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.Http.HttpClient.SendAsync",
+        &[EffectKind::ExternalIo],
+    ),
+    (
+        "System.Net.WebClient.DownloadString",
+        &[EffectKind::ExternalIo, EffectKind::BlockingIo],
+    ),
+    (
+        "System.Net.WebClient.DownloadData",
+        &[EffectKind::ExternalIo, EffectKind::BlockingIo],
+    ),
+];
+
 pub(super) fn classify_call(call: &CallSignature) -> Vec<EffectKind> {
     if let Some(api) = &call.package_api {
         match call.language {
@@ -149,8 +319,13 @@ pub(super) fn classify_call(call: &CallSignature) -> Vec<EffectKind> {
                     .map(|(_, kind)| *kind)
                     .collect();
             }
-            Language::Java => {
-                if let Some((_, kinds)) = JAVA_EFFECTS.iter().find(|(name, _)| name == api) {
+            Language::Java | Language::CSharp => {
+                let table = if call.language == Language::Java {
+                    JAVA_EFFECTS
+                } else {
+                    CSHARP_EFFECTS
+                };
+                if let Some((_, kinds)) = table.iter().find(|(name, _)| name == api) {
                     return kinds.to_vec();
                 }
             }
@@ -263,6 +438,10 @@ fn is_cache_bound(call: &CallSignature) -> bool {
                 | "pollfirst"
                 | "poll"
                 | "clear"
+                // C# `List<T>` and `Queue<T>`.
+                | "removeat"
+                | "removerange"
+                | "dequeue"
         )
 }
 

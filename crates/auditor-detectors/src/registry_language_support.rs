@@ -63,9 +63,17 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         policy: SupportPolicy::AllSource(LanguageSupportMode::Semantic),
     },
     PolicyRule {
-        ids: SYSTEMS_GO_JAVA_IDS,
+        ids: SYSTEMS_EFFECT_IDS,
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "java"],
+            TIER_ONE_CSHARP,
+            LanguageSupportMode::Semantic,
+            LanguageSupportMode::Unsupported,
+        ),
+    },
+    PolicyRule {
+        ids: SYSTEMS_TOPOLOGY_IDS,
+        policy: selected(
+            TIER_ONE,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -73,7 +81,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: SYSTEMS_SEMANTIC_IDS,
         policy: selected(
-            &["rust", "python", "javascript", "typescript", "java"],
+            &[
+                "rust",
+                "python",
+                "javascript",
+                "typescript",
+                "java",
+                "csharp",
+            ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -907,7 +922,14 @@ fn classify_unsupported_reason(detector_id: &str, language: &str) -> Unsupported
     if OPTIMIZATION_IDS.contains(&detector_id) {
         return UnsupportedReason::Optimization;
     }
-    if SYSTEMS_SEMANTIC_IDS.contains(&detector_id) || SYSTEMS_GO_JAVA_IDS.contains(&detector_id) {
+    if [
+        SYSTEMS_SEMANTIC_IDS,
+        SYSTEMS_EFFECT_IDS,
+        SYSTEMS_TOPOLOGY_IDS,
+    ]
+    .iter()
+    .any(|ids| ids.contains(&detector_id))
+    {
         return UnsupportedReason::Systems;
     }
     if FLOW_LANGUAGES.contains(&language) && FLOW_METRIC_IDS.contains(&detector_id) {
