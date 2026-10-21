@@ -148,8 +148,9 @@ per group is the batched form.
 Reports construction of a proven expensive client, parser, regex, runtime, or
 repository state inside a repeated control region. Loop-invariant reused
 initialization is excluded, and so is a constructor whose arguments come
-from the loop variable (`new RegExp(pattern)` per pattern key): each
-iteration builds different state, so nothing could be hoisted.
+from the loop variable or a counter assigned in the loop's header
+(`new RegExp(pattern)` per pattern key, or per `args[i]`): each iteration
+builds different state, so nothing could be hoisted.
 
 ### `network_call_without_timeout`
 

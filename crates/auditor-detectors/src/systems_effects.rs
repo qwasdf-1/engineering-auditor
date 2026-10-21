@@ -293,7 +293,12 @@ fn expression_depends_on_loop(
     loop_fact: &StructureLoop,
     expression: &str,
 ) -> bool {
-    let bindings = loop_fact.binding.iter().cloned().collect::<BTreeSet<_>>();
+    let bindings = loop_fact
+        .binding
+        .iter()
+        .chain(&loop_fact.counters)
+        .cloned()
+        .collect::<BTreeSet<_>>();
     let mut pending = util::identifiers(expression);
     let mut seen = BTreeSet::new();
     while let Some(subject) = pending.pop() {

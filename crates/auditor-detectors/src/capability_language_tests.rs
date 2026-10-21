@@ -503,7 +503,7 @@ fn systems_capability_files(
         ("repeated_expensive_initialization", "python", true) => "import re\ndef validate(items):\n    for item in items:\n        parser = re.compile('[a-z]+')\n        consume(parser, item)\n",
         ("repeated_expensive_initialization", "python", false) => "import re\ndef validate(items):\n    parser = re.compile('[a-z]+')\n    for item in items:\n        consume(parser, item)\n",
         ("repeated_expensive_initialization", _, true) => "function validate(items) { for (const item of items) { const parser = RegExp('[a-z]+'); consume(parser, item) } }\n",
-        ("repeated_expensive_initialization", _, false) => "function validate(items) { const parser = RegExp('[a-z]+'); for (const item of items) consume(parser, item) }\n",
+        ("repeated_expensive_initialization", _, false) => "function validate(items) { const parser = RegExp('[a-z]+'); for (const item of items) consume(parser, item) }\nfunction perPattern(args) { for (var i = 0; i < args.length; i++) { var value = valueOf(args[i]); consume(new RegExp(value)) } }\n",
         ("request_path_repository_scan", "python", true) => "import os\ndef handle_request():\n    consume(os.scandir('.'))\n",
         ("request_path_repository_scan", "python", false) => "import os\ndef refresh_index():\n    consume(os.scandir('.'))\n",
         ("request_path_repository_scan", _, true) => "function handleRequest() { consume(fs.readdirSync('.')) }\n",

@@ -7,7 +7,7 @@ mod controls;
 use controls::{control_kind, is_control_branch, nesting_increment};
 #[path = "semantic_fields.rs"]
 mod fields;
-use fields::{first_field, loop_field, symbol_name};
+use fields::{first_field, loop_field, loop_header, symbol_name};
 #[path = "semantic_symbols.rs"]
 mod symbols;
 use symbols::{in_anonymous_function, is_function_boundary, symbol_kind};
@@ -129,6 +129,9 @@ pub struct LoopFact {
     pub span: SourceSpan,
     pub binding: Option<SourceSpan>,
     pub iterable: Option<SourceSpan>,
+    /// From the loop's start to its body: a classic `for` loop's
+    /// initializer, condition, and update, or a `while` loop's condition.
+    pub header: Option<SourceSpan>,
     pub control_region: u32,
     pub owner: Option<u32>,
 }
@@ -336,6 +339,7 @@ fn record_control(
                 .or_else(|| target.map(SourceSpan::from_node)),
             iterable: loop_field(node, &["right", "value", "iterable", "condition"])
                 .or_else(|| value.map(SourceSpan::from_node)),
+            header: loop_header(node),
             control_region: index,
             owner: context.owner,
         });

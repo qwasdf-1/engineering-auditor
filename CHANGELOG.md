@@ -123,6 +123,11 @@
 - A call through a type or namespace path (`std::numeric_limits<T>::max()`)
   is not read as a method on a collection: an ungated probe had reported
   such calls in nlohmann-json as traversals of a collection named `std`.
+- Names assigned in a loop's header (`i` in `for (let i = 0; ..; i++)`,
+  `m` in `while ((m = re.exec(s)) !== null)`) are recorded as the loop's
+  counters. `repeated_expensive_initialization` reads them as varying, so
+  a constructor whose argument comes from `xs[i]` is no longer reported
+  as hoistable: two corpus false positives removed (hono, hoppscotch).
 
 ## 1.2.0 - Data Flow And Syntax Recovery
 

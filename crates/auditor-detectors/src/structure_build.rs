@@ -8,7 +8,7 @@ pub(super) fn build_structure_file(
     let mut symbols = collect_symbols(file, tree, &facts);
     super::languages::apply_jsdoc_types(file, tree, &mut symbols);
     let assignments = collect_assignments(tree, &facts, &symbols);
-    let loops = collect_loops(tree, &facts, &symbols);
+    let loops = super::loops::collect_loops(tree, &facts, &symbols, &assignments);
     let mut function_metrics = collect_function_metrics(&symbols, &facts);
     if file.language == Language::Python {
         super::operands::count_python_locals(&assignments, &loops, &mut function_metrics);
@@ -535,30 +535,6 @@ fn go_case_switch_subjects(
                 .filter(|parent| parent.kind() == "expression_switch_statement")?;
             let subject = switch.child_by_field_name("value")?;
             Some((case.start_byte(), compact_text(subject.text())))
-        })
-        .collect()
-}
-
-fn collect_loops(
-    tree: &auditor_ast::AstTree,
-    facts: &auditor_ast::SemanticFileFacts,
-    symbols: &[StructureSymbol],
-) -> Vec<StructureLoop> {
-    facts
-        .loops
-        .iter()
-        .map(|loop_fact| StructureLoop {
-            owner: nearest_function_owner(symbols, loop_fact.owner),
-            binding: loop_fact
-                .binding
-                .map(|span| util::identifiers(tree.text_for_span(span)))
-                .unwrap_or_default(),
-            iterable: loop_fact
-                .iterable
-                .map(|span| bounded_expression(tree.text_for_span(span))),
-            iterable_span: loop_fact.iterable,
-            span: loop_fact.span,
-            control_region: loop_fact.control_region,
         })
         .collect()
 }

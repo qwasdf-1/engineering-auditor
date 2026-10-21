@@ -100,7 +100,8 @@ Representative module boundaries:
   tests for the structure index; `optimization_fact_loop_forms.rs`: Python
   and Rust L5 loop forms
 - `structure_index.rs`, `structure_build.rs`, and `structure_imports.rs`: one
-  findings-free resolution-aware Layer 2 fact index
+  findings-free resolution-aware Layer 2 fact index; `structure_loops.rs`:
+  its loop facts, with the counters each loop header assigns
 - `structural_metrics.rs`, `structural_types.rs`, and
   `structural_classes.rs`: detector-owned Layer 2 constructors
 - `naming.rs`: naming finding construction; `naming_java.rs` and
@@ -142,7 +143,9 @@ Representative module boundaries:
   `semantic_fields.rs`: lazy span-only semantic facts plus control and
   grammar-field normalization over the same source allocation; assignment
   facts read their target and value, and loop facts a loop variable and
-  iterable the fields do not name, through `dataflow_shapes.rs`
+  iterable the fields do not name, through `dataflow_shapes.rs`; a loop
+  fact's header span (start to body) gives the structure index the
+  counters a classic `for` or `while` header assigns
 - `auditor-ast/src/dataflow.rs`, `dataflow_bindings.rs`,
   `dataflow_shapes.rs`, and `dataflow_values.rs`: findings-free def-use flow
   within one function (reaching bindings, value origins, value

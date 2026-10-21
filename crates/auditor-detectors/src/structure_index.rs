@@ -17,6 +17,8 @@ mod declared_metrics;
 mod imports;
 #[path = "structure_languages.rs"]
 mod languages;
+#[path = "structure_loops.rs"]
+mod loops;
 #[path = "structure_operands.rs"]
 mod operands;
 #[path = "structure_spans.rs"]
@@ -188,6 +190,10 @@ pub(crate) struct StructureControl {
 pub(crate) struct StructureLoop {
     pub(crate) owner: Option<u32>,
     pub(crate) binding: Vec<String>,
+    /// Names assigned in the loop's header (`i` in
+    /// `for (let i = 0; i < n; i++)`): they change from one iteration to the
+    /// next without being the loop's element.
+    pub(crate) counters: Vec<String>,
     pub(crate) iterable: Option<String>,
     pub(crate) iterable_span: Option<SourceSpan>,
     pub(crate) span: SourceSpan,

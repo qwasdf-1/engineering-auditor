@@ -303,6 +303,7 @@ fn loops_over_batches_pages_and_windows_walk_batches() {
         StructureLoop {
             owner: None,
             binding: vec![binding.to_string()],
+            counters: Vec::new(),
             iterable: Some(iterable.to_string()),
             iterable_span: None,
             span: SourceSpan {
@@ -326,4 +327,35 @@ fn loops_over_batches_pages_and_windows_walk_batches() {
     assert!(!walks("pages_seen", "counts"));
     assert!(!walks("part", "self.batches"));
     assert!(!walks("part", "rechunks(ids)"));
+}
+
+#[test]
+fn names_assigned_in_a_loop_header_are_its_counters() {
+    let root = temp_root("loop-counters");
+    let cases = [
+        ("a.js", Language::JavaScript, "function f(xs) { for (var i = 0, j = 1; i < xs.length; i++) { use(xs[i]); } }", vec!["i", "j"]),
+        ("a.ts", Language::TypeScript, "function f(xs: string[]) { for (let i = 0; i < xs.length; i++) { use(xs[i]); } }", vec!["i"]),
+        ("A.java", Language::Java, "class A { void f(int[] xs) { for (int i = 0; i < xs.length; i++) { use(xs[i]); } } }", vec!["i"]),
+        ("A.cs", Language::CSharp, "class A { void F(int[] xs) { for (int i = 0; i < xs.Length; i++) { Use(xs[i]); } } }", vec!["i"]),
+        ("a.c", Language::C, "void f(int *xs, int n) { int i; for (i = 0; i < n; i++) { use(xs[i]); } }", vec!["i"]),
+        ("a.cpp", Language::Cpp, "void f(std::vector<int> xs) { for (size_t i = 0; i < xs.size(); ++i) { use(xs[i]); } }", vec!["i"]),
+        ("a.go", Language::Go, "package a\nfunc f(xs []int) { for i := 0; i < len(xs); i++ { use(xs[i]) } }\n", vec!["i"]),
+        ("a.js", Language::JavaScript, "function f(re, s) { let m; while ((m = re.exec(s)) !== null) { use(m); } }", vec!["m"]),
+        ("a.js", Language::JavaScript, "function f(xs) { for (const x of xs) { let i = 0; i++; use(x, i); } }", vec![]),
+    ];
+    for (index_case, (relative, language, source, counters)) in cases.into_iter().enumerate() {
+        let case_root = root.join(index_case.to_string());
+        let files = vec![file(
+            &case_root,
+            relative,
+            language,
+            SourceRole::Production,
+            source,
+        )];
+        let index = index(&files);
+        let loops = &index.files()[0].loops;
+        assert_eq!(loops.len(), 1, "{source}");
+        assert_eq!(loops[0].counters, counters, "{source}");
+    }
+    std::fs::remove_dir_all(root).unwrap();
 }

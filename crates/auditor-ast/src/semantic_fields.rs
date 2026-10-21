@@ -35,6 +35,18 @@ pub(super) fn loop_field(node: AstNode<'_>, fields: &[&str]) -> Option<SourceSpa
         })
 }
 
+/// The part of a loop before its body, or `None` when the grammar names no
+/// body.
+pub(super) fn loop_header(node: AstNode<'_>) -> Option<SourceSpan> {
+    let body = SourceSpan::from_node(node.child_by_field_name("body")?);
+    Some(SourceSpan {
+        end_byte: body.start_byte,
+        end_line: body.start_line,
+        end_column: body.start_column,
+        ..SourceSpan::from_node(node)
+    })
+}
+
 pub(super) fn symbol_name(node: AstNode<'_>) -> Option<SourceSpan> {
     if NodeKind::of(node).is(IDENTIFIER_KINDS) {
         return Some(SourceSpan::from_node(node));
