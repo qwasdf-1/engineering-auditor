@@ -6,10 +6,14 @@ use crate::algorithmic_facts::AlgorithmicIndex;
 use crate::call_graph::CallGraph;
 use crate::structure_index::{StructureFile, StructureIndex, StructureSymbol};
 
+#[path = "optimization_fact_bulk.rs"]
+mod bulk;
 #[path = "optimization_fact_collections.rs"]
 mod collections;
 #[path = "optimization_fact_collectors.rs"]
 mod collectors;
+#[path = "optimization_fact_cpp.rs"]
+mod cpp;
 #[path = "optimization_fact_csharp.rs"]
 mod csharp;
 #[path = "optimization_fact_fallback.rs"]
@@ -22,6 +26,8 @@ mod inherited;
 mod language_forms;
 #[path = "optimization_fact_loop_forms.rs"]
 mod loop_forms;
+#[path = "optimization_fact_map_entry.rs"]
+mod map_entry;
 #[path = "optimization_fact_operations.rs"]
 mod operations;
 #[path = "optimization_fact_syntax.rs"]

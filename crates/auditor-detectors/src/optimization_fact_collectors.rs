@@ -140,10 +140,15 @@ fn collect_string_accumulation(view: &FunctionView<'_>, facts: &mut Vec<Optimiza
             | Language::Java
             | Language::Kotlin
             | Language::CSharp
+            | Language::Cpp
     ) {
         return;
     }
     for assignment in assignments(view) {
+        // A C++ `std::string` appends in place: only `s = s + x` copies.
+        if view.file.language == Language::Cpp && assignment.expression.contains("+=") {
+            continue;
+        }
         let Some(loop_info) = containing_loop(view.file, view.owner, assignment.control_region)
         else {
             continue;
@@ -203,6 +208,7 @@ fn collect_manual_collection_copy(view: &FunctionView<'_>, facts: &mut Vec<Optim
             | Language::JavaScript
             | Language::TypeScript
             | Language::CSharp
+            | Language::Cpp
     ) {
         return;
     }
@@ -377,6 +383,7 @@ fn collect_bulk_collection_extension(view: &FunctionView<'_>, facts: &mut Vec<Op
             | Language::Go
             | Language::Java
             | Language::CSharp
+            | Language::Cpp
     ) {
         return;
     }

@@ -111,7 +111,9 @@ Representative module boundaries:
 - `lexical.rs`, `structural.rs`, and `systems.rs`: shared
   traversal helpers with detector-specific entry points
 - `algorithmic_facts.rs` and its support modules: findings-free Layer 3 effect,
-  collection, recursive, copy/allocation, and feasible control-path facts;
+  collection, recursive, copy/allocation, and feasible control-path facts
+  (`algorithmic_facts_package_calls.rs` reads Go, Java, and C++
+  `<algorithm>` package calls as collection methods);
   `algorithmic_cost.rs` and `algorithmic_cost_model.rs`: exhaustive cost
   catalog plus typed source-spanned sum/max/product expressions
 - `systems_facts.rs`: findings-free Layer 4 index boundary and typed facts;
@@ -126,8 +128,12 @@ Representative module boundaries:
   `optimization_fact_collections.rs`, and `optimization_fact_syntax.rs`:
   proof-oriented fact support; `optimization_fact_collectors.rs`: fact
   orchestration; `optimization_fact_fallback.rs`: eager fallback arguments;
-  `optimization_fact_csharp.rs`: the C# forms (`Math` and
-  `string` calls, `GetValueOrDefault`, LINQ materialization, `TryAdd`)
+  `optimization_fact_bulk.rs`: per-item appends a bulk operation replaces;
+  `optimization_fact_map_entry.rs`: lookup-guarded map insertion (C#
+  `TryAdd`, C++ `try_emplace`); `optimization_fact_csharp.rs` and
+  `optimization_fact_cpp.rs`: the C# and C++ forms (pure numeric and string
+  calls, regex construction, `GetValueOrDefault` and `value_or`, LINQ
+  materialization)
 - `source_cache.rs`: scan-owned source bytes, line offsets, and canonical span
   handles
 - `auditor-ast/src/extract.rs`: function/comment extraction and structural

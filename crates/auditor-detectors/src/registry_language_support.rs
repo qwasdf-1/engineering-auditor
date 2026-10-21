@@ -65,6 +65,14 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: SYSTEMS_EFFECT_IDS,
         policy: selected(
+            TIER_ONE_CSHARP_CPP,
+            LanguageSupportMode::Semantic,
+            LanguageSupportMode::Unsupported,
+        ),
+    },
+    PolicyRule {
+        ids: SYSTEMS_ARTIFACT_IDS,
+        policy: selected(
             TIER_ONE_CSHARP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -396,7 +404,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["eager_fallback_computation"],
         policy: selected(
-            &["rust", "java", "csharp"],
+            &["rust", "java", "csharp", "cpp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -413,6 +421,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
                 "java",
                 "kotlin",
                 "csharp",
+                "cpp",
             ],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
@@ -421,7 +430,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["cache_miss_opportunity", "loop_invariant_computation"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -429,7 +438,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["loop_invariant_regex_compilation"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -437,7 +446,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["bulk_collection_extension"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -445,7 +454,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["repeated_format_allocation"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -453,7 +462,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["manual_collection_copy_loop"],
         policy: selected(
-            TIER_ONE_CSHARP,
+            TIER_ONE_CSHARP_CPP,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -461,7 +470,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     PolicyRule {
         ids: &["map_entry_opportunity"],
         policy: selected(
-            &["rust", "python", "java", "csharp"],
+            &["rust", "python", "java", "csharp", "cpp"],
             LanguageSupportMode::Semantic,
             LanguageSupportMode::Unsupported,
         ),
@@ -943,6 +952,7 @@ fn classify_unsupported_reason(detector_id: &str, language: &str) -> Unsupported
     if [
         SYSTEMS_SEMANTIC_IDS,
         SYSTEMS_EFFECT_IDS,
+        SYSTEMS_ARTIFACT_IDS,
         SYSTEMS_TOPOLOGY_IDS,
     ]
     .iter()

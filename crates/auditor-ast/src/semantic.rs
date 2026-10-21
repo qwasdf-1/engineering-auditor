@@ -367,6 +367,9 @@ fn record_operations(
             returned: context.returning,
         });
     }
+    if let Some(call) = cpp_construction(node, span, context) {
+        builder.calls.push(call);
+    }
     if let Some((target, value)) = crate::dataflow::assignment_parts(node) {
         builder.assignments.push(AssignmentFact {
             span,
@@ -397,6 +400,32 @@ fn record_operations(
             owner: context.owner,
         });
     }
+}
+
+/// A C++ declaration that constructs its variable with arguments
+/// (`std::regex re("[a-z]+");`) calls the type's constructor: the call's
+/// callee is the declared type and its arguments the declarator's list.
+fn cpp_construction(
+    node: AstNode<'_>,
+    span: SourceSpan,
+    context: TraversalContext,
+) -> Option<CallFact> {
+    if node.kind() != "init_declarator" || node.language() != AstLang::Cpp {
+        return None;
+    }
+    let arguments = node
+        .child_by_field_name("value")
+        .filter(|value| value.kind() == "argument_list")?;
+    let declared_type = node.parent()?.child_by_field_name("type")?;
+    Some(CallFact {
+        span,
+        callee: SourceSpan::from_node(declared_type),
+        receiver: None,
+        arguments: Some(SourceSpan::from_node(arguments)),
+        owner: context.owner,
+        control_region: context.control,
+        returned: context.returning,
+    })
 }
 
 fn record_leaf(

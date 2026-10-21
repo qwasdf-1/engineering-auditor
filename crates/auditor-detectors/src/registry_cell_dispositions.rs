@@ -527,8 +527,18 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         SYSTEMS_IDS,
-        &["kotlin", "c", "cpp"],
+        &["kotlin", "c"],
         "Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle or CMake).",
+    ),
+    deferred(
+        &["loop_artifact_rewrite"],
+        &["cpp"],
+        "C++ streams read and write an artifact through `>>` and `<<` on stream objects (`std::ifstream in(path)`), which the artifact facts do not follow from read to write.",
+    ),
+    deferred(
+        &["architectural_layering", "package_coupling_metrics"],
+        &["cpp"],
+        "C++ topology needs include paths resolved through the build's include directories (CMake or compiler flags), which the scan does not read.",
     ),
     deferred(
         &["architectural_layering", "package_coupling_metrics"],
@@ -547,18 +557,23 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
     ),
     deferred(
         OPTIMIZATION_IDS,
-        &["kotlin", "c", "cpp"],
+        &["kotlin", "c"],
         "Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs.",
     ),
     deferred(
-        &["immutable_string_concatenation_in_loop", "intermediate_collection_materialization", "range_for_each_iteration"],
+        &["intermediate_collection_materialization", "range_for_each_iteration"],
         &["cpp"],
-        "Needs receiver-type facts for C++'s string and sequence APIs (`std::string` and ranges).",
+        "Needs C++20 ranges facts: views materialized with `ranges::to` or iterated with `ranges::for_each` over `views::iota`.",
     ),
     deferred(
         &["eager_fallback_computation", "known_size_preallocation", "bulk_collection_extension", "map_entry_opportunity"],
-        &["kotlin", "cpp"],
-        "Needs receiver-type facts for the language's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`; `reserve`, `insert`, `try_emplace`).",
+        &["kotlin"],
+        "Needs receiver-type facts for Kotlin's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`).",
+    ),
+    deferred(
+        &["known_size_preallocation"],
+        &["cpp"],
+        "A default-constructed `std::vector` local is a declaration with no value, and the facts do not record C++ local declarations' types yet.",
     ),
     not_applicable(
         &[

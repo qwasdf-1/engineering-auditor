@@ -1,6 +1,6 @@
 //! Eager fallback arguments: Rust `unwrap_or`/`ok_or`/`or`, Java
-//! `Optional.orElse`, and C# `GetValueOrDefault` given a value built whether
-//! or not it is needed.
+//! `Optional.orElse`, C# `GetValueOrDefault`, and C++ `value_or` given a value
+//! built whether or not it is needed.
 
 use super::collectors::{pure_proof, push_fact};
 use super::flow::calls;
@@ -13,7 +13,7 @@ use crate::Language;
 pub(super) fn collect_eager_fallback(view: &FunctionView<'_>, facts: &mut Vec<OptimizationFact>) {
     if !matches!(
         view.file.language,
-        Language::Rust | Language::Java | Language::CSharp
+        Language::Rust | Language::Java | Language::CSharp | Language::Cpp
     ) {
         return;
     }
@@ -25,6 +25,7 @@ pub(super) fn collect_eager_fallback(view: &FunctionView<'_>, facts: &mut Vec<Op
             .map(|arguments| strip_call_delimiters(arguments).trim().to_string());
         let fallback = match view.file.language {
             Language::CSharp => super::csharp::csharp_eager_fallback(call),
+            Language::Cpp => super::cpp::cpp_eager_fallback(call),
             Language::Java => argument.filter(|fallback| {
                 call.api.as_deref() == Some("java.util.Optional.orElse")
                     && java_pure_eager_fallback(fallback)

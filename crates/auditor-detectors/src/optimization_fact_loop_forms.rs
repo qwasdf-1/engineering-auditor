@@ -21,7 +21,14 @@ pub(super) fn collect_loop_form_facts(view: &FunctionView<'_>, facts: &mut Vec<O
         Language::Java => collect_range_for_each(view, facts),
         Language::CSharp => {
             collect_range_for_each(view, facts);
-            super::csharp::collect_csharp_map_entry(view, facts);
+            super::map_entry::collect_guarded_map_entries(
+                view,
+                &super::csharp::CSHARP_MAP_ENTRY,
+                facts,
+            );
+        }
+        Language::Cpp => {
+            super::map_entry::collect_guarded_map_entries(view, &super::cpp::CPP_MAP_ENTRY, facts)
         }
         _ => {}
     }

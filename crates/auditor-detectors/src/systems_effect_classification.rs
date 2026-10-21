@@ -309,7 +309,37 @@ const CSHARP_EFFECTS: &[(&str, &[EffectKind])] = &[
     ),
 ];
 
+/// C and C++ effects by callee: these libraries resolve no imports, so the
+/// name as written (`std::` or `nlohmann::` qualified) is the identity.
+const C_FAMILY_EFFECTS: &[(&str, &[EffectKind])] = &[
+    ("std::regex", &[EffectKind::ExpensiveInitialization]),
+    ("std::wregex", &[EffectKind::ExpensiveInitialization]),
+    ("nlohmann::json::parse", &[EffectKind::Parse]),
+    ("json::parse", &[EffectKind::Parse]),
+    (
+        "std::filesystem::directory_iterator",
+        &[EffectKind::RepositoryScan],
+    ),
+    (
+        "std::filesystem::recursive_directory_iterator",
+        &[EffectKind::RepositoryScan],
+    ),
+    ("fs::directory_iterator", &[EffectKind::RepositoryScan]),
+    (
+        "fs::recursive_directory_iterator",
+        &[EffectKind::RepositoryScan],
+    ),
+    ("std::this_thread::sleep_for", &[EffectKind::BlockingIo]),
+    ("curl_easy_perform", &[EffectKind::ExternalIo]),
+];
+
 pub(super) fn classify_call(call: &CallSignature) -> Vec<EffectKind> {
+    if matches!(call.language, Language::C | Language::Cpp) {
+        let callee = call.qualified.replace(' ', "");
+        if let Some((_, kinds)) = C_FAMILY_EFFECTS.iter().find(|(name, _)| *name == callee) {
+            return kinds.to_vec();
+        }
+    }
     if let Some(api) = &call.package_api {
         match call.language {
             Language::Go => {
@@ -403,6 +433,8 @@ fn is_scan(call: &CallSignature) -> bool {
 fn is_serialize(call: &CallSignature) -> bool {
     match call.method.as_str() {
         "dumps" | "stringify" | "serialize" => true,
+        // nlohmann::json's `j.dump()`.
+        "dump" => call.language == Language::Cpp,
         "to_string" => names_data_format(call),
         _ => false,
     }
@@ -413,7 +445,11 @@ fn is_cache(call: &CallSignature) -> bool {
 }
 
 fn is_cache_insert(call: &CallSignature) -> bool {
-    is_cache(call) && matches!(call.method.as_str(), "push" | "insert" | "append" | "add")
+    is_cache(call)
+        && matches!(
+            call.method.as_str(),
+            "push" | "insert" | "append" | "add" | "push_back" | "emplace_back"
+        )
 }
 
 fn is_cache_latest_read(call: &CallSignature) -> bool {
@@ -442,6 +478,9 @@ fn is_cache_bound(call: &CallSignature) -> bool {
                 | "removeat"
                 | "removerange"
                 | "dequeue"
+                // C++ containers.
+                | "erase"
+                | "resize"
         )
 }
 

@@ -3,12 +3,11 @@
 //! results materialized only to count or test them, and the
 //! `ContainsKey`-then-insert map shape.
 
-use super::collections::{call_argument_is_typed, declared_with_any_type};
-use super::collectors::{push_fact, structural_proof};
-use super::flow::{assignments_within, calls_within, map_guards, map_is_touched_between};
+use super::collections::call_argument_is_typed;
 use super::language_forms::java_map_value_is_pure;
-use super::syntax::{call_name, call_receiver, compact, split_arguments, strip_call_delimiters};
-use super::{FunctionView, OptimizationFact, OptimizationFactKind};
+use super::map_entry::MapEntryForm;
+use super::syntax::{call_name, compact, split_arguments, strip_call_delimiters};
+use super::FunctionView;
 use crate::structure_index::StructureCall;
 
 const PURE_NUMERIC_APIS: &[&str] = &[
@@ -125,85 +124,17 @@ fn lambdas_call_nothing(expression: &str) -> bool {
 }
 
 /// `if (!map.ContainsKey(key)) { map[key] = value; }` (or `map.Add(key,
-/// value)`) on a dictionary, which `TryAdd` does in one lookup. The value
-/// must be a literal, since `TryAdd` evaluates it whether or not it adds.
-pub(super) fn collect_csharp_map_entry(view: &FunctionView<'_>, facts: &mut Vec<OptimizationFact>) {
-    let guards = map_guards(view, |condition| {
+/// value)`) on a dictionary, which `TryAdd` does in one lookup.
+pub(super) const CSHARP_MAP_ENTRY: MapEntryForm = MapEntryForm {
+    guard: |condition| {
         condition
             .trim_start_matches('(')
             .strip_prefix('!')?
             .strip_suffix(')')?
             .split_once(".ContainsKey(")
-    });
-    for (control, map, key) in guards {
-        let (lookups, rest): (Vec<_>, Vec<_>) = calls_within(view, control.span)
-            .into_iter()
-            .partition(|call| call_name(call) == "ContainsKey");
-        let ([lookup], Some((line, span, value, insertion))) = (
-            lookups.as_slice(),
-            insertion(view, control.span, &rest, &map, &key),
-        ) else {
-            continue;
-        };
-        // Nothing else runs in the branch: an `Add` is the insertion itself.
-        if rest.iter().any(|call| call.span != span)
-            || !java_map_value_is_pure(&value.replace(".Length", ".length()"))
-            || !declared_with_any_type(view, &map, &["Dictionary<", "IDictionary<"])
-            || map_is_touched_between(view, control.span, lookup.span, span, &map)
-        {
-            continue;
-        }
-        push_fact(
-            view,
-            line,
-            OptimizationFactKind::MapEntryOpportunity {
-                map,
-                key,
-                insertion,
-            },
-            structural_proof("hash_map", None, "same_inserted_value", "literal_default"),
-            facts,
-        );
-    }
-}
-
-type Insertion = (usize, auditor_ast::SourceSpan, String, String);
-
-/// The one insertion of `key` into `map` inside `scope`: an indexer
-/// assignment or an `Add` call, as `(line, span, value, expression)`.
-fn insertion(
-    view: &FunctionView<'_>,
-    scope: auditor_ast::SourceSpan,
-    scoped: &[&StructureCall],
-    map: &str,
-    key: &str,
-) -> Option<Insertion> {
-    let stores = assignments_within(view, scope);
-    let adds = scoped
-        .iter()
-        .filter(|call| call_name(call) == "Add" && call_receiver(call) == Some(map))
-        .collect::<Vec<_>>();
-    match (stores.as_slice(), adds.as_slice()) {
-        ([store], []) if compact(&store.target) == format!("{map}[{key}]") => Some((
-            store.line,
-            store.span,
-            store.value.clone()?,
-            store.expression.clone(),
-        )),
-        ([], [add]) => {
-            let arguments = split_arguments(strip_call_delimiters(add.arguments.as_deref()?));
-            let [added_key, value] = arguments.as_slice() else {
-                return None;
-            };
-            (compact(added_key) == key).then(|| {
-                (
-                    add.line,
-                    add.span,
-                    value.to_string(),
-                    add.expression.clone(),
-                )
-            })
-        }
-        _ => None,
-    }
-}
+    },
+    lookups: &["ContainsKey"],
+    insert: "Add",
+    map_types: &["Dictionary<", "IDictionary<"],
+    value_is_pure: |value| java_map_value_is_pure(&value.replace(".Length", ".length()")),
+};

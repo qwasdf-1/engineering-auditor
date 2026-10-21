@@ -144,14 +144,14 @@ Repository and systems-economics behavior.
 | `architectural_layering` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `blocking_io_in_async_context` | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `churn_complexity_hotspot` | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `latest_only_unbounded_cache` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `latest_only_unbounded_cache` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `loop_artifact_rewrite` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `network_call_without_timeout` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `package_coupling_metrics` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `per_item_external_io` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_expensive_initialization` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_parse_scan_serialize` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `request_path_repository_scan` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `per_item_external_io` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_expensive_initialization` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_parse_scan_serialize` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `request_path_repository_scan` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `unused_declared_dependency` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 
 ### Layer 5 - Optimization Opportunities
@@ -160,19 +160,19 @@ Bounded optimization opportunities.
 
 | Detector | Rust | Python | JavaScript | TypeScript | Go | Java | Kotlin | C# | C | C++ | Ruby | Julia | Shell | Markdown | Structured |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `bulk_collection_extension` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `cache_miss_opportunity` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `eager_fallback_computation` | semantic | not_applicable | not_applicable | not_applicable | not_applicable | semantic | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `immutable_string_concatenation_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `bulk_collection_extension` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `cache_miss_opportunity` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `eager_fallback_computation` | semantic | not_applicable | not_applicable | not_applicable | not_applicable | semantic | unsupported | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `immutable_string_concatenation_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `intermediate_collection_materialization` | semantic | semantic | semantic | semantic | not_applicable | semantic | semantic | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `java_inefficient_string_buffer` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `known_size_preallocation` | semantic | not_applicable | not_applicable | not_applicable | semantic | semantic | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `loop_invariant_computation` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `loop_invariant_regex_compilation` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `manual_collection_copy_loop` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `map_entry_opportunity` | semantic | semantic | not_applicable | not_applicable | not_applicable | semantic | unsupported | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `loop_invariant_computation` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `loop_invariant_regex_compilation` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `manual_collection_copy_loop` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `map_entry_opportunity` | semantic | semantic | not_applicable | not_applicable | not_applicable | semantic | unsupported | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `range_for_each_iteration` | semantic | not_applicable | not_applicable | not_applicable | not_applicable | semantic | semantic | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `repeated_format_allocation` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `repeated_format_allocation` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | unsupported | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 
 ## Source Coverage Summary
 
@@ -183,8 +183,8 @@ Markdown and structured-data cells are excluded from these source-language total
 | L1 | 244 | 10 | 0 | 121 | 132 |
 | L2 | 129 | 17 | 53 | 172 | 110 |
 | L3 | 93 | 0 | 0 | 65 | 11 |
-| L4 | 72 | 0 | 2 | 80 | 2 |
-| L5 | 72 | 1 | 0 | 62 | 34 |
+| L4 | 77 | 0 | 2 | 75 | 2 |
+| L5 | 81 | 1 | 0 | 53 | 34 |
 
 ## Not-Applicable Source Capabilities
 
@@ -244,6 +244,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Missing capability | Pairs | Detector families | Languages |
 |---|---:|---:|---|
 | A C# file's top-level unit is its type; methods belong to classes that `class_structure_metrics` judges, and file-scoped namespaces need type-member ownership before module size means anything. | 1 | 1 | C# |
+| A default-constructed `std::vector` local is a declaration with no value, and the facts do not record C++ local declarations' types yet. | 1 | 1 | C++ |
 | An `assert` compiles out under `NDEBUG`, but whether a build defines it lives in the build system; the rule needs the build configuration to tell a stripped check from a live one. | 2 | 1 | C, C++ |
 | Below the precision bar on our own Rust (0 of 2): parsers receive string kinds from external APIs (tree-sitter node kinds), which an enum cannot replace. | 1 | 1 | Rust |
 | Below the precision bar on the corpus probe: writes to a parameter object's fields were designed output buffers and builders (okio segments, Newtonsoft readers), and C# `out`/`ref` parameters declare the write in the signature. | 2 | 1 | C#, Kotlin |
@@ -259,6 +260,8 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | C strings are `char *` buffers whose comparison is a `strcmp` call, not an equality the structure facts record; C++ adds `std::string` overloads. The rule needs string-comparison facts for these grammars. | 2 | 1 | C, C++ |
 | C# `using` directives name namespaces, not files: layering and coupling need a namespace-to-file index and project (`.csproj`) boundaries. | 2 | 2 | C# |
 | C++ keeps a sorted prefix by resizing or copying an iterator range (`resize(k)`, `vector(v.begin(), v.begin() + k)`), which the selection facts do not read yet. | 1 | 1 | C++ |
+| C++ streams read and write an artifact through `>>` and `<<` on stream objects (`std::ifstream in(path)`), which the artifact facts do not follow from read to write. | 1 | 1 | C++ |
+| C++ topology needs include paths resolved through the build's include directories (CMake or compiler flags), which the scan does not read. | 2 | 2 | C++ |
 | C++20 coroutines (`co_await`) appear in none of the corpus repositories, so the cell has no capability evidence or precision sample. | 1 | 1 | C++ |
 | Calls to `abort` and `std::terminate` guard broken invariants in libraries much as Go's `panic` does; the Go cell was reviewed and rejected for the same convention. | 2 | 1 | C, C++ |
 | Collections are arrays and pointers (or STL containers passed by reference): a mutation through a non-`const` pointer or reference is declared in the signature, and the rule needs `const`-qualification facts to tell a surprising write from a designed output buffer. | 2 | 1 | C, C++ |
@@ -270,16 +273,16 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Kotlin's common clients (OkHttp, Ktor engines) and .NET's HttpClient bound requests by default; the unbounded forms (Ktor engines without HttpTimeout, a `Timeout` of `InfiniteTimeSpan`) are not in the client API table yet. | 2 | 1 | C#, Kotlin |
 | Lexical occurrences include type and enum-variant names, which carry domain vocabulary (a `match` over long variant names reads as verbose); the rule needs binding-level identifiers before it extends. | 5 | 1 | Go, Java, JavaScript, Rust, TypeScript |
 | Needs C loop and collection facts: index loops over arrays and hand-rolled lists. | 2 | 2 | C |
+| Needs C++20 ranges facts: views materialized with `ranges::to` or iterated with `ranges::for_each` over `views::iota`. | 2 | 2 | C++ |
 | Needs Kotlin collection and cardinality facts: stdlib extension functions (`sorted`, `contains`, `first`) resolve by receiver type, and `Sequence` chains are lazy, so the Java tables do not transfer. | 9 | 9 | Kotlin |
 | Needs Kotlin collection facts: `toList()` and `toMutableList()` copies resolve by receiver type. | 1 | 1 | Kotlin |
 | Needs a per-language escape-hatch table (Kotlin `!!` and `as`, C# `dynamic` and `unsafe`, C `void *` casts, C++ `reinterpret_cast`). | 4 | 1 | C, C++, C#, Kotlin |
 | Needs a per-language escape-hatch table (`unsafe`/`transmute`, untyped JavaScript, `interface{}`, raw casts and `@SuppressWarnings`). | 4 | 1 | Go, Java, JavaScript, Rust |
 | Needs async-context resolution (Kotlin `suspend` and dispatchers, C++ coroutines) plus blocking-I/O API identity. | 2 | 1 | C++, Kotlin |
 | Needs cross-file reference resolution and the language's export model (`__all__`, ES exports, Go capitalization, Java and Kotlin visibility, C# assemblies, C/C++ linkage and headers); only Rust has it. | 18 | 2 | C, C++, C#, Go, Java, JavaScript, Kotlin, Python, TypeScript |
-| Needs receiver-type facts for C++'s string and sequence APIs (`std::string` and ranges). | 3 | 3 | C++ |
-| Needs receiver-type facts for the language's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`; `reserve`, `insert`, `try_emplace`). | 8 | 4 | C++, Kotlin |
-| Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs. | 15 | 5 | C, C++, Kotlin |
-| Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle or CMake). | 24 | 8 | C, C++, Kotlin |
+| Needs receiver-type facts for Kotlin's optional, sequence, and map APIs (`getOrDefault`, `ArrayList` capacity, `addAll`, `getOrPut`). | 4 | 4 | Kotlin |
+| Needs receiver-type, alias, and evaluation-order facts for the language's string, regex, and collection APIs. | 10 | 5 | C, Kotlin |
+| Needs the language's effect, lifecycle, and topology classifiers (I/O, network, and database APIs per ecosystem; module and package graphs from Gradle or CMake). | 16 | 8 | C, Kotlin |
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |

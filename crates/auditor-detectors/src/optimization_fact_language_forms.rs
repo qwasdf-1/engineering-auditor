@@ -29,6 +29,9 @@ pub(super) fn indexed_copy_bounds(
         (Language::CSharp, []) => {
             counting_index_bound(iterable, ".Length").filter(|(_, source)| array(source))
         }
+        // `i < source.size()` over a `std::vector`, which `std::copy` replaces.
+        (Language::Cpp, []) => counting_index_bound(iterable, ".size()")
+            .filter(|(_, source)| declared_with_any_type(view, source, &["vector<"])),
         (Language::Go, [binding]) => simple_target(iterable)
             .filter(array)
             .map(|source| (binding.clone(), source)),

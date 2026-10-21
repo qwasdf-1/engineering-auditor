@@ -65,6 +65,24 @@
   `full_sort_for_top_k` stays unsupported for C++, and
   `loop_carried_copy_accumulation` and `invariant_collection_copy_in_loop`
   are not applicable. No corpus finding changes.
+- C++ joins the systems and optimization detectors:
+  `latest_only_unbounded_cache` (`push_back` and `back()`, bounded by
+  `erase`), `repeated_parse_scan_serialize` (`nlohmann::json::parse` and
+  `dump()`), `per_item_external_io`, `repeated_expensive_initialization` and
+  `loop_invariant_regex_compilation` (`std::regex`),
+  `request_path_repository_scan` (`std::filesystem` directory iterators),
+  `cache_miss_opportunity` and `loop_invariant_computation` (`std::abs`,
+  `floor`, `ceil`, `round` on numbers), `repeated_format_allocation`
+  (`fmt::format`), `manual_collection_copy_loop` (`i < source.size()` over a
+  `std::vector`), `immutable_string_concatenation_in_loop` (`s = s + x`
+  only: `s += x` appends in place), `bulk_collection_extension`,
+  `map_entry_opportunity` (`find(k) == end()`, `!count(k)`, or
+  `!contains(k)` before an indexer store or `emplace`), and
+  `eager_fallback_computation` (`value_or(std::vector<int>{})`). A C++
+  declaration that constructs with arguments (`std::regex re("..")`) is a
+  call in the structure index. Artifact rewrites, layering, coupling,
+  coroutine blocking, and `known_size_preallocation` stay unsupported for
+  C++. No corpus finding changes.
 
 ### Changed
 

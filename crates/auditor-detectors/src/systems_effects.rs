@@ -408,10 +408,11 @@ pub(super) fn simple_subject(value: &str) -> Option<String> {
 }
 
 fn call_subject(call: &StructureCall, aliases: &BTreeMap<String, String>) -> Option<String> {
+    // The receiver as written when the grammar gives none (`parsed.dump()`).
     call.arguments
         .as_deref()
         .and_then(simple_subject)
-        .or_else(|| call.receiver.as_deref().and_then(simple_subject))
+        .or_else(|| call_receiver(call).as_deref().and_then(simple_subject))
         .map(|subject| normalize_subject(&subject, aliases))
 }
 
