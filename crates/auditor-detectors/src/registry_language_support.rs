@@ -37,811 +37,450 @@ const fn selected(
     }
 }
 
+const fn rule(ids: &'static [&'static str], policy: SupportPolicy) -> PolicyRule {
+    PolicyRule { ids, policy }
+}
+
+/// Grammar-backed in `languages`; unsupported in the other source languages.
+const fn semantic(languages: &'static [&'static str]) -> SupportPolicy {
+    selected(
+        languages,
+        LanguageSupportMode::Semantic,
+        LanguageSupportMode::Unsupported,
+    )
+}
+
+/// Heuristic in `languages`; unsupported in the other source languages.
+const fn partial(languages: &'static [&'static str]) -> SupportPolicy {
+    selected(
+        languages,
+        LanguageSupportMode::Partial,
+        LanguageSupportMode::Unsupported,
+    )
+}
+
 const SUPPORT_RULES: &[PolicyRule] = &[
-    PolicyRule {
-        ids: &["generated_vs_source"],
-        policy: selected(
+    rule(
+        &["generated_vs_source"],
+        selected(
             MARKDOWN,
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::Unsupported,
         ),
-    },
-    PolicyRule {
-        ids: &["large_file"],
-        policy: SupportPolicy::AllSource(LanguageSupportMode::ExactLexical),
-    },
-    PolicyRule {
-        ids: DOCUMENTATION_IDS,
-        policy: SupportPolicy::Documentation(LanguageSupportMode::ExactLexical),
-    },
-    PolicyRule {
-        ids: REPOSITORY_METADATA_IDS,
-        policy: SupportPolicy::RepositoryMetadata,
-    },
-    PolicyRule {
-        ids: SEMANTIC_IDS,
-        policy: SupportPolicy::AllSource(LanguageSupportMode::Semantic),
-    },
-    PolicyRule {
-        ids: SYSTEMS_EFFECT_IDS,
-        policy: selected(
-            TIER_ONE_CSHARP_CPP_C,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: SYSTEMS_CACHE_IDS,
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: SYSTEMS_ARTIFACT_IDS,
-        policy: selected(
-            TIER_ONE_CSHARP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: SYSTEMS_TOPOLOGY_IDS,
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: SYSTEMS_SEMANTIC_IDS,
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "csharp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["npath_complexity"],
-        policy: selected(
-            NPATH_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["halstead_information_density"],
-        policy: selected(
-            HALSTEAD_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["excessive_nesting_depth"],
-        policy: selected(
-            FLOW_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["duplicate_import"],
-        policy: selected(
-            &[
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "kotlin",
-                "csharp",
-                "c",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["identifier_stutter"],
-        policy: selected(
-            &["rust", "go"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["out_parameter"],
-        policy: selected(
-            &["java"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["class_structure_metrics"],
-        policy: selected(
-            &[
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "kotlin",
-                "csharp",
-                "cpp",
-            ],
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["too_many_parameters"],
-        policy: selected(
-            FLOW_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["god_module"],
-        policy: selected(
-            GOD_MODULE_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["too_many_locals"],
-        policy: selected(
-            LOCAL_METRIC_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["too_many_returns", "too_many_statements"],
-        policy: selected(
-            STATEMENT_METRIC_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: RUST_PYTHON_PARTIAL_IDS,
-        policy: selected(
-            RUST_PYTHON,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["source_duplicate_detection"],
-        policy: selected(
-            &["rust", "python", "javascript", "typescript", "go", "c"],
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["orphan_symbol"],
-        policy: selected(
-            RUST,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: RUST_CORRECTNESS_SEMANTIC_IDS,
-        policy: selected(
-            RUST,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: PYTHON_JAVA_CORRECTNESS_SEMANTIC_IDS,
-        policy: selected(
-            &["python", "java", "kotlin", "csharp"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: API_IDENTITY_SEMANTIC_IDS,
-        policy: selected(
-            TIERED,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        // Rust releases resources by RAII.
-        ids: &["resource_not_closed"],
-        policy: selected(
-            &[
-                "python",
-                "go",
-                "java",
-                "javascript",
-                "typescript",
-                "kotlin",
-                "csharp",
-                "c",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: TIER_ONE_CORRECTNESS_SEMANTIC_IDS,
-        policy: selected(
-            TIERED,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["unsafe_deserialization", "eval_in_production"],
-        policy: selected(
-            &[
-                "python",
-                "java",
-                "javascript",
-                "typescript",
-                "kotlin",
-                "csharp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["xml_xxe_vulnerable"],
-        policy: selected(
-            &[
-                "python",
-                "java",
-                "javascript",
-                "typescript",
-                "kotlin",
-                "csharp",
-                "c",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: LITERAL_SECURITY_SEMANTIC_IDS,
-        policy: selected(
-            TIERED,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: PYTHON_JS_CORRECTNESS_SEMANTIC_IDS,
-        policy: selected(
-            &[
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "kotlin",
-                "csharp",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: BRACE_CORRECTNESS_SEMANTIC_IDS,
-        policy: selected(
-            &[
-                "rust",
-                "javascript",
-                "typescript",
-                "java",
-                "csharp",
-                "c",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["empty_conditional_branch"],
-        policy: selected(
-            TIERED,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: RUST_PYTHON_JS_CORRECTNESS_SEMANTIC_IDS,
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "csharp",
-                "c",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["sql_injection"],
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "go",
-                "java",
-                "kotlin",
-                "csharp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["unused_assignment"],
-        policy: selected(
-            TIERED,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["eager_fallback_computation"],
-        policy: selected(
-            &["rust", "java", "csharp", "cpp"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["immutable_string_concatenation_in_loop"],
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "go",
-                "java",
-                "kotlin",
-                "csharp",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["cache_miss_opportunity", "loop_invariant_computation"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP_C,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["loop_invariant_regex_compilation"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP_C,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["bulk_collection_extension"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["repeated_format_allocation"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["manual_collection_copy_loop"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["map_entry_opportunity"],
-        policy: selected(
-            &["rust", "python", "java", "csharp", "cpp"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["intermediate_collection_materialization"],
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "kotlin",
-                "csharp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["range_for_each_iteration"],
-        policy: selected(
-            &["rust", "java", "kotlin", "csharp"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["known_size_preallocation"],
-        policy: selected(
-            &["rust", "go", "java", "csharp"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["no_await_in_loop"],
-        policy: selected(
-            &["rust", "python", "javascript", "typescript", "csharp"],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["require_atomic_updates"],
-        policy: selected(
+    ),
+    rule(
+        &["large_file"],
+        SupportPolicy::AllSource(LanguageSupportMode::ExactLexical),
+    ),
+    rule(
+        DOCUMENTATION_IDS,
+        SupportPolicy::Documentation(LanguageSupportMode::ExactLexical),
+    ),
+    rule(REPOSITORY_METADATA_IDS, SupportPolicy::RepositoryMetadata),
+    rule(
+        SEMANTIC_IDS,
+        SupportPolicy::AllSource(LanguageSupportMode::Semantic),
+    ),
+    rule(SYSTEMS_EFFECT_IDS, semantic(TIER_ONE_CSHARP_CPP_C)),
+    rule(SYSTEMS_CACHE_IDS, semantic(TIER_ONE_CSHARP_CPP)),
+    rule(SYSTEMS_ARTIFACT_IDS, semantic(TIER_ONE_CSHARP)),
+    rule(SYSTEMS_TOPOLOGY_IDS, semantic(TIER_ONE)),
+    rule(
+        SYSTEMS_SEMANTIC_IDS,
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "csharp",
+        ]),
+    ),
+    rule(&["npath_complexity"], semantic(NPATH_LANGUAGES)),
+    rule(
+        &["halstead_information_density"],
+        semantic(HALSTEAD_LANGUAGES),
+    ),
+    rule(&["excessive_nesting_depth"], semantic(FLOW_LANGUAGES)),
+    rule(
+        &["duplicate_import"],
+        semantic(&[
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "kotlin",
+            "csharp",
+            "c",
+            "cpp",
+        ]),
+    ),
+    rule(&["identifier_stutter"], semantic(&["rust", "go"])),
+    rule(&["out_parameter"], semantic(&["java"])),
+    rule(
+        &["class_structure_metrics"],
+        partial(&[
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "kotlin",
+            "csharp",
+            "cpp",
+        ]),
+    ),
+    rule(&["too_many_parameters"], semantic(FLOW_LANGUAGES)),
+    rule(&["god_module"], semantic(GOD_MODULE_LANGUAGES)),
+    rule(&["too_many_locals"], semantic(LOCAL_METRIC_LANGUAGES)),
+    rule(
+        &["too_many_returns", "too_many_statements"],
+        semantic(STATEMENT_METRIC_LANGUAGES),
+    ),
+    rule(RUST_PYTHON_PARTIAL_IDS, partial(RUST_PYTHON)),
+    rule(
+        &["source_duplicate_detection"],
+        partial(&["rust", "python", "javascript", "typescript", "go", "c"]),
+    ),
+    rule(&["orphan_symbol"], partial(RUST)),
+    rule(RUST_CORRECTNESS_SEMANTIC_IDS, semantic(RUST)),
+    rule(
+        PYTHON_JAVA_CORRECTNESS_SEMANTIC_IDS,
+        semantic(&["python", "java", "kotlin", "csharp"]),
+    ),
+    rule(API_IDENTITY_SEMANTIC_IDS, semantic(TIERED)),
+    // Rust releases resources by RAII.
+    rule(
+        &["resource_not_closed"],
+        semantic(&[
+            "python",
+            "go",
+            "java",
+            "javascript",
+            "typescript",
+            "kotlin",
+            "csharp",
+            "c",
+        ]),
+    ),
+    rule(TIER_ONE_CORRECTNESS_SEMANTIC_IDS, semantic(TIERED)),
+    rule(
+        &["unsafe_deserialization", "eval_in_production"],
+        semantic(&[
+            "python",
+            "java",
+            "javascript",
+            "typescript",
+            "kotlin",
+            "csharp",
+        ]),
+    ),
+    rule(
+        &["xml_xxe_vulnerable"],
+        semantic(&[
+            "python",
+            "java",
+            "javascript",
+            "typescript",
+            "kotlin",
+            "csharp",
+            "c",
+            "cpp",
+        ]),
+    ),
+    rule(LITERAL_SECURITY_SEMANTIC_IDS, semantic(TIERED)),
+    rule(
+        PYTHON_JS_CORRECTNESS_SEMANTIC_IDS,
+        semantic(&[
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "kotlin",
+            "csharp",
+            "cpp",
+        ]),
+    ),
+    rule(
+        BRACE_CORRECTNESS_SEMANTIC_IDS,
+        semantic(&[
+            "rust",
+            "javascript",
+            "typescript",
+            "java",
+            "csharp",
+            "c",
+            "cpp",
+        ]),
+    ),
+    rule(&["empty_conditional_branch"], semantic(TIERED)),
+    rule(
+        RUST_PYTHON_JS_CORRECTNESS_SEMANTIC_IDS,
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "csharp",
+            "c",
+            "cpp",
+        ]),
+    ),
+    rule(
+        &["sql_injection"],
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "go",
+            "java",
+            "kotlin",
+            "csharp",
+        ]),
+    ),
+    rule(&["unused_assignment"], semantic(TIERED)),
+    rule(
+        &["eager_fallback_computation"],
+        semantic(&["rust", "java", "csharp", "cpp"]),
+    ),
+    rule(
+        &["immutable_string_concatenation_in_loop"],
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "go",
+            "java",
+            "kotlin",
+            "csharp",
+            "cpp",
+        ]),
+    ),
+    rule(
+        &["cache_miss_opportunity", "loop_invariant_computation"],
+        semantic(TIER_ONE_CSHARP_CPP_C),
+    ),
+    rule(
+        &["loop_invariant_regex_compilation"],
+        semantic(TIER_ONE_CSHARP_CPP_C),
+    ),
+    rule(
+        &["bulk_collection_extension"],
+        semantic(TIER_ONE_CSHARP_CPP),
+    ),
+    rule(
+        &["repeated_format_allocation"],
+        semantic(TIER_ONE_CSHARP_CPP),
+    ),
+    rule(
+        &["manual_collection_copy_loop"],
+        semantic(TIER_ONE_CSHARP_CPP),
+    ),
+    rule(
+        &["map_entry_opportunity"],
+        semantic(&["rust", "python", "java", "csharp", "cpp"]),
+    ),
+    rule(
+        &["intermediate_collection_materialization"],
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "kotlin",
+            "csharp",
+        ]),
+    ),
+    rule(
+        &["range_for_each_iteration"],
+        semantic(&["rust", "java", "kotlin", "csharp"]),
+    ),
+    rule(
+        &["known_size_preallocation"],
+        semantic(&["rust", "go", "java", "csharp"]),
+    ),
+    rule(
+        &["no_await_in_loop"],
+        semantic(&["rust", "python", "javascript", "typescript", "csharp"]),
+    ),
+    rule(
+        &["require_atomic_updates"],
+        selected(
             JAVASCRIPT_TYPESCRIPT,
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::Unsupported,
         ),
-    },
-    PolicyRule {
-        ids: &["unreachable_code", "constant_condition"],
-        policy: selected(
-            FLOW_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: PYTHON_ONLY_SEMANTIC_IDS,
-        policy: selected(
+    ),
+    rule(
+        &["unreachable_code", "constant_condition"],
+        semantic(FLOW_LANGUAGES),
+    ),
+    rule(
+        PYTHON_ONLY_SEMANTIC_IDS,
+        selected(
             PYTHON,
             LanguageSupportMode::Semantic,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: PYTHON_IDS,
-        policy: selected(
+    ),
+    rule(
+        PYTHON_IDS,
+        selected(
             PYTHON,
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::Unsupported,
         ),
-    },
-    PolicyRule {
-        ids: &["cpp_raw_ptr_ownership"],
-        policy: selected(
+    ),
+    rule(
+        &["cpp_raw_ptr_ownership"],
+        selected(
             &["cpp"],
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: &["ruby_double_bang"],
-        policy: selected(
+    ),
+    rule(
+        &["ruby_double_bang"],
+        selected(
             &["ruby"],
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: &["csharp_linq_enumeration"],
-        policy: selected(
+    ),
+    rule(
+        &["csharp_linq_enumeration"],
+        selected(
             &["csharp"],
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: KOTLIN_IDS,
-        policy: selected(
+    ),
+    rule(
+        KOTLIN_IDS,
+        selected(
             &["kotlin"],
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: FRONT_REMOVAL_IDS,
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "csharp",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: REGEX_BACKTRACKING_IDS,
-        policy: selected(
-            &[
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "csharp",
-                "cpp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: FLOAT_EQUALITY_IDS,
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: DISCARDED_RESULT_IDS,
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: UNUSED_DEPENDENCY_IDS,
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: NETWORK_TIMEOUT_IDS,
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: TEST_QUALITY_IDS,
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: GO_IDS,
-        policy: selected(
+    ),
+    rule(
+        FRONT_REMOVAL_IDS,
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "csharp",
+            "cpp",
+        ]),
+    ),
+    rule(
+        REGEX_BACKTRACKING_IDS,
+        semantic(&[
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "csharp",
+            "cpp",
+        ]),
+    ),
+    rule(FLOAT_EQUALITY_IDS, semantic(TIER_ONE)),
+    rule(DISCARDED_RESULT_IDS, semantic(TIER_ONE)),
+    rule(UNUSED_DEPENDENCY_IDS, semantic(TIER_ONE)),
+    rule(NETWORK_TIMEOUT_IDS, semantic(TIER_ONE)),
+    rule(TEST_QUALITY_IDS, semantic(TIER_ONE)),
+    rule(
+        GO_IDS,
+        selected(
             &["go"],
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: &["java_inefficient_string_buffer"],
-        policy: selected(
+    ),
+    rule(
+        &["java_inefficient_string_buffer"],
+        selected(
             &["java"],
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::NotApplicable,
         ),
-    },
-    PolicyRule {
-        ids: RUST_ONLY_IDS,
-        policy: selected(
+    ),
+    rule(
+        RUST_ONLY_IDS,
+        selected(
             RUST,
             LanguageSupportMode::ExactLexical,
             LanguageSupportMode::Unsupported,
         ),
-    },
-    PolicyRule {
-        ids: SORT_IDS,
-        policy: selected(
-            TIER_ONE_CSHARP_CPP_C,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: ALGORITHMIC_IDS,
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["full_sort_for_top_k"],
-        policy: selected(
-            TIER_ONE_CSHARP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["nested_quadratic_iteration"],
-        policy: selected(
-            MANAGED_LOOP_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["repeated_recursive_subproblem"],
-        policy: selected(
-            RECURSIVE_LANGUAGES,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["n_plus_one_query_in_loop"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["loop_carried_copy_accumulation"],
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "java",
-                "csharp",
-            ],
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["nested_cross_collection_traversal"],
-        policy: selected(
-            TIER_ONE_CSHARP_CPP,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["invariant_collection_copy_in_loop"],
-        policy: selected(
-            RUST_PYTHON,
-            LanguageSupportMode::Semantic,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["section_divider_comment"],
-        policy: selected(
-            TIERED,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["magic_literal_cluster"],
-        policy: selected(
-            TIER_ONE,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["stringly_typed_parameter"],
-        policy: selected(
-            &["python", "javascript", "typescript", "java"],
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["identifier_tersity", "identifier_verbosity"],
-        policy: selected(
-            PYTHON,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["function_local_import"],
-        policy: selected(
-            PYTHON,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["sibling_call_redundancy"],
-        policy: selected(
-            PYTHON,
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["escape_hatch_type_density"],
-        policy: selected(
-            &["python", "typescript"],
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["collection_parameter_mutation"],
-        policy: selected(
-            &["python", "typescript", "java", "kotlin", "csharp"],
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
-    PolicyRule {
-        ids: &["naming_convention"],
-        policy: selected(
-            &[
-                "rust",
-                "python",
-                "javascript",
-                "typescript",
-                "go",
-                "java",
-                "kotlin",
-                "csharp",
-            ],
-            LanguageSupportMode::Partial,
-            LanguageSupportMode::Unsupported,
-        ),
-    },
+    ),
+    rule(SORT_IDS, semantic(TIER_ONE_CSHARP_CPP_C)),
+    rule(ALGORITHMIC_IDS, semantic(TIER_ONE_CSHARP_CPP)),
+    rule(&["full_sort_for_top_k"], semantic(TIER_ONE_CSHARP)),
+    rule(
+        &["nested_quadratic_iteration"],
+        semantic(MANAGED_LOOP_LANGUAGES),
+    ),
+    rule(
+        &["repeated_recursive_subproblem"],
+        semantic(RECURSIVE_LANGUAGES),
+    ),
+    rule(&["n_plus_one_query_in_loop"], semantic(TIER_ONE_CSHARP_CPP)),
+    rule(
+        &["loop_carried_copy_accumulation"],
+        semantic(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "java",
+            "csharp",
+        ]),
+    ),
+    rule(
+        &["nested_cross_collection_traversal"],
+        semantic(TIER_ONE_CSHARP_CPP),
+    ),
+    rule(
+        &["invariant_collection_copy_in_loop"],
+        semantic(RUST_PYTHON),
+    ),
+    rule(&["section_divider_comment"], partial(TIERED)),
+    rule(&["magic_literal_cluster"], partial(TIER_ONE)),
+    rule(
+        &["stringly_typed_parameter"],
+        partial(&["python", "javascript", "typescript", "java"]),
+    ),
+    rule(
+        &["identifier_tersity", "identifier_verbosity"],
+        partial(PYTHON),
+    ),
+    rule(&["function_local_import"], partial(PYTHON)),
+    rule(&["sibling_call_redundancy"], partial(PYTHON)),
+    rule(
+        &["escape_hatch_type_density"],
+        partial(&["python", "typescript"]),
+    ),
+    rule(
+        &["collection_parameter_mutation"],
+        partial(&["python", "typescript", "java", "kotlin", "csharp"]),
+    ),
+    rule(
+        &["naming_convention"],
+        partial(&[
+            "rust",
+            "python",
+            "javascript",
+            "typescript",
+            "go",
+            "java",
+            "kotlin",
+            "csharp",
+        ]),
+    ),
 ];
 
 pub(crate) fn support_policy_for(id: &str) -> SupportPolicy {
