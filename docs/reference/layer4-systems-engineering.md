@@ -1,6 +1,6 @@
 # Layer 4 - Systems Engineering
 
-Default catalog: 13 detectors (6 gating, 7 full-only). The `graph-analysis`
+Default catalog: 15 detectors (6 gating, 9 full-only). The `graph-analysis`
 feature adds four Layer 4 gating detectors. Language modes are authoritative in
 [`language-support.md`](./language-support.md).
 
@@ -215,6 +215,49 @@ TypeScript, Go, and Java.
 The corpus has no such loop in production code: its retries go through
 retry policies or wait between attempts, so the cells rest on their
 capability boundaries.
+
+### `unbounded_concurrency`
+
+Reports one concurrent task, thread, or request started per item of a
+collection with no limit on how many run at once, so the input's size sets
+the concurrency: a large one opens that many connections, handles, or
+threads together. Production files only. Tier 1.
+
+- Fan-out: Go `go` in a `range` loop; Rust `tokio::spawn`,
+  `tokio::task::spawn(_blocking)`, `std::thread::spawn`, or
+  `async_std::task::spawn` in a `for` loop, and `join_all`/`try_join_all`
+  over a mapped iterator; Python `asyncio.gather(*..)` over a comprehension
+  or generator, and `asyncio.create_task`/`ensure_future`, a `create_task`
+  method (`TaskGroup`), or `threading.Thread` in a `for` loop; JS/TS
+  `Promise.all`/`allSettled` over a `.map(..)`; Java `new Thread(..)` in a
+  loop and `Executors.newCachedThreadPool()`.
+- Bounded by construction: a literal collection or range, a counted loop,
+  and a collection named for workers, shards, partitions, cores, or
+  registered handlers, listeners, callbacks, hooks, plugins, or
+  subscribers. A `.map` whose callback takes a promise, future, or task, or
+  calls its item (`callback => callback(event)`), starts nothing new.
+- A limit anywhere in the enclosing function is a bound: a semaphore,
+  limiter, permit, or `p-limit` name, an errgroup `SetLimit`,
+  `buffer_unordered`, or a Go channel send before the `go` statement.
+
+### `unbounded_channel_or_queue`
+
+Reports a channel or work queue created without a capacity: nothing slows a
+producer that outpaces its consumers, so the backlog grows in memory without
+limit instead of applying backpressure. Production files only. Rust, Python,
+and Java; Go channels always have a capacity and JavaScript has no channel
+or blocking queue type.
+
+- Rust: `std::sync::mpsc::channel` (not `sync_channel`), tokio
+  `mpsc::unbounded_channel`, and the `unbounded` constructors of crossbeam,
+  flume, async-channel, and `futures::channel::mpsc`.
+- Python: `queue.Queue`/`LifoQueue`/`PriorityQueue`, the `asyncio` queues,
+  and `multiprocessing.Queue`/`JoinableQueue` without a positive `maxsize`
+  (a `**options` splat or a name may carry one), and `queue.SimpleQueue`.
+- Java: `LinkedBlockingQueue`/`LinkedBlockingDeque` without a capacity,
+  `LinkedTransferQueue`, `PriorityBlockingQueue`, and
+  `Executors.newFixedThreadPool`/`newSingleThreadExecutor`, whose work
+  queue is an unbounded `LinkedBlockingQueue`.
 
 ### `unused_declared_dependency`
 

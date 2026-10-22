@@ -71,7 +71,8 @@ at least 22 clean labels, or about 40 with one false positive.
 > helper), so it rests on its capability boundary. The full-only
 > `eager_log_formatting` has 400 corpus findings (390 in apprise's debug
 > f-strings, 10 in dependency-track's `.formatted` messages), not yet
-> labelled.
+> labelled, and so do the full-only `unbounded_concurrency` (24, most of
+> them JS `Promise.all` over a `.map`) and `unbounded_channel_or_queue` (5).
 >
 > The full-only `network_call_without_timeout` has no library-corpus
 > finding (fmt's release-script `urlopen` calls now have the tooling role),

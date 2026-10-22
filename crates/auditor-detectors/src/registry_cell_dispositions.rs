@@ -371,6 +371,26 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         &["c", "cpp"],
         "C and C++ have no standard manifest; vcpkg and Conan manifests are not parsed yet.",
     ),
+    deferred(
+        &["unbounded_concurrency"],
+        TIER_TWO,
+        "The Tier-2 fan-out forms (Kotlin `launch`/`async` in a loop, C# `Task.Run` and `Task.WhenAll` over a `Select`, C and C++ thread creation in a loop) are not modelled yet.",
+    ),
+    not_applicable(
+        &["unbounded_channel_or_queue"],
+        &["go"],
+        "A Go channel always has a fixed capacity (`make(chan T, n)`, or none, unbuffered).",
+    ),
+    not_applicable(
+        &["unbounded_channel_or_queue"],
+        &["javascript", "typescript"],
+        "JavaScript has no channel or blocking queue type; a queue is an array, which no producer waits on.",
+    ),
+    deferred(
+        &["unbounded_channel_or_queue"],
+        TIER_TWO,
+        "The Tier-2 constructors (Kotlin `Channel(UNLIMITED)`, C# `Channel.CreateUnbounded` and `BlockingCollection` without a bound, C++ queue wrappers) are not in the constructor table yet.",
+    ),
     not_applicable(
         &["eager_log_formatting"],
         &["rust"],

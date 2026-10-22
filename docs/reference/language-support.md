@@ -156,6 +156,8 @@ Repository and systems-economics behavior.
 | `repeated_parse_scan_serialize` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `request_path_repository_scan` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `retry_without_backoff` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `unbounded_channel_or_queue` | semantic | semantic | not_applicable | not_applicable | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `unbounded_concurrency` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `unused_declared_dependency` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 
 ### Layer 5 - Optimization Opportunities
@@ -188,7 +190,7 @@ Markdown and structured-data cells are excluded from these source-language total
 | L1 | 251 | 10 | 0 | 128 | 144 |
 | L2 | 135 | 17 | 53 | 179 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
-| L4 | 87 | 0 | 2 | 78 | 2 |
+| L4 | 96 | 0 | 2 | 92 | 5 |
 | L5 | 89 | 1 | 0 | 56 | 36 |
 
 ## Not-Applicable Source Capabilities
@@ -197,6 +199,7 @@ Each not-applicable source cell carries one of these reviewed reasons.
 
 | Reason | Detectors | Languages |
 |---|---|---|
+| A Go channel always has a fixed capacity (`make(chan T, n)`, or none, unbuffered). | `unbounded_channel_or_queue` | Go |
 | A Java file's top-level unit is its class, whose size `class_structure_metrics` judges; methods are not module definitions. | `god_module` | Java |
 | A JavaScript event-loop race (a read-modify-write split by `await`); concurrency here is governed by threads, locks, or ownership instead. | `require_atomic_updates` | C, C++, C#, Go, Java, Kotlin, Python, Rust |
 | A Python construct (Flask's debug server, `except: pass`); the language has no counterpart. | `flask_debug_true`, `try_except_pass` | C, C++, C#, Go, Java, JavaScript, Kotlin, Rust, TypeScript |
@@ -225,6 +228,7 @@ Each not-applicable source cell carries one of these reviewed reasons.
 | Goroutines are not async functions: the runtime parks a goroutine blocked on I/O. | `blocking_io_in_async_context` | Go |
 | Idiomatic Rust: a function-scoped `use` limits an import to where it is needed, and `&mut` declares a collection mutation in the signature. | `collection_parameter_mutation`, `function_local_import` | Rust |
 | Importing one name twice is a Rust compile error (E0252); separate `use` items of one module are rustfmt's default granularity. | `duplicate_import` | Rust |
+| JavaScript has no channel or blocking queue type; a queue is an array, which no producer waits on. | `unbounded_channel_or_queue` | JavaScript, TypeScript |
 | Kotlin has no debugger statement or debug-trap call in its standard library. | `debugger_in_production` | Kotlin |
 | Rust releases resources by RAII when the owner goes out of scope. | `resource_not_closed` | Rust |
 | Standard and common deserializers (serde, `encoding/*`) construct plain data and run no code. | `unsafe_deserialization` | Go, Rust |
@@ -295,13 +299,15 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |
-| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 196 | 66 | Julia, Ruby, Shell |
+| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 202 | 68 | Julia, Ruby, Shell |
 | No qualified language-specific API identity and dataflow boundary exists for this security capability. | 18 | 6 | Julia, Ruby, Shell |
 | Qualified on Python only; the Tier-1 extensions were reviewed and deferred (type names in lexical spans, conventional short names, shared receiver callees), and the Tier-2 grammars share those blockers. | 16 | 4 | C, C++, C#, Kotlin |
 | Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile. | 1 | 1 | Go |
 | Reviewed and rejected: writing a parameter object's fields is how these languages fill, normalize, and configure objects; the corpus probe (347 findings) was dominated by such designed writes. | 3 | 1 | JavaScript, Python, TypeScript |
 | SQL text is assembled into buffers (`snprintf`, `strcat`, `std::string` appends) before `sqlite3_exec` or `PQexec`; the rule needs buffer dataflow to connect the build to the sink. | 2 | 1 | C, C++ |
+| The Tier-2 constructors (Kotlin `Channel(UNLIMITED)`, C# `Channel.CreateUnbounded` and `BlockingCollection` without a bound, C++ queue wrappers) are not in the constructor table yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
+| The Tier-2 fan-out forms (Kotlin `launch`/`async` in a loop, C# `Task.Run` and `Task.WhenAll` over a `Select`, C and C++ thread creation in a loop) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 float literal and comparison forms (Kotlin `Double`/`Float`, C# `double`/`float`/`decimal`, C and C++ suffixes) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 retry shapes (Kotlin `runCatching` and `repeat`, C# `catch` filters, C and C++ return-code loops) and their wait calls are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |

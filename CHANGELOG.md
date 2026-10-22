@@ -4,6 +4,22 @@
 
 ### Added
 
+- `unbounded_concurrency` (full-only, Tier 1) reports one concurrent task
+  per item of a collection with no limit: Go `go` in a `range` loop, Rust
+  spawns in a `for` loop and `join_all` over a mapped iterator, Python
+  `gather` over a comprehension and `create_task`/`Thread` in a loop,
+  JS/TS `Promise.all` over a `.map`, Java `new Thread` in a loop and
+  `newCachedThreadPool`. Literal collections, counted loops, worker and
+  handler sets, and functions holding a semaphore or limiter are not
+  reported. The corpus has 24 findings, not yet labelled.
+
+- `unbounded_channel_or_queue` (full-only; Rust, Python, Java) reports a
+  channel or work queue created without a capacity (`mpsc::channel`,
+  `unbounded_channel`, `queue.Queue()`, `new LinkedBlockingQueue<>()`,
+  `Executors.newFixedThreadPool`). Go channels always have a capacity and
+  JavaScript has no queue type, so those cells are not applicable. The
+  corpus has 5 findings, not yet labelled.
+
 - `retry_without_backoff` (full-only, Tier 1) reports a loop that retries
   a failed operation at once: a counted loop, or an open loop naming its
   attempts, whose `try` (Go `err` check, Rust `match` on a `Result`) leaves

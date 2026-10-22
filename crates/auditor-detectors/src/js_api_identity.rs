@@ -20,6 +20,7 @@ use crate::ast_scan;
 const GLOBALS: &[&str] = &[
     "Function",
     "Math",
+    "Promise",
     "eval",
     "process",
     "setInterval",

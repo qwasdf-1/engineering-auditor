@@ -123,6 +123,8 @@ pub(crate) enum DetectorOwner {
     NetworkCallWithoutTimeout,
     RetryWithoutBackoff,
     EagerLogFormatting,
+    UnboundedConcurrency,
+    UnboundedChannelOrQueue,
     QuadraticFrontRemoval,
     CatastrophicBacktrackingRegex,
     UnusedDeclaredDependency,

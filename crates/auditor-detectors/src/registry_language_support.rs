@@ -393,6 +393,8 @@ const SUPPORT_RULES: &[PolicyRule] = &[
     rule(UNUSED_DEPENDENCY_IDS, semantic(TIER_ONE)),
     rule(NETWORK_TIMEOUT_IDS, semantic(TIER_ONE)),
     rule(RETRY_BACKOFF_IDS, semantic(TIER_ONE)),
+    rule(UNBOUNDED_CONCURRENCY_IDS, semantic(TIER_ONE)),
+    rule(UNBOUNDED_QUEUE_IDS, semantic(&["rust", "python", "java"])),
     rule(
         EAGER_LOG_IDS,
         semantic(&["python", "javascript", "typescript", "go", "java"]),

@@ -109,6 +109,8 @@ mod testing_scope;
 mod testing_skips;
 mod tier_two_sql;
 mod tier_two_statement_shapes;
+mod unbounded_concurrency;
+mod unbounded_queue;
 pub(crate) mod util;
 
 pub use config::AuditorConfig;

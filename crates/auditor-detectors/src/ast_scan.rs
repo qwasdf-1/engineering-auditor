@@ -102,6 +102,29 @@ pub(crate) fn visit_ast_files(
     }
 }
 
+/// Findings at the sites `sites` picks in each parsed file, one per
+/// `(node, api)` pair, built by `finding` with the file's relative path.
+pub(crate) fn site_findings(
+    scan: AstScan<'_, '_>,
+    supports: impl Fn(&Language) -> bool,
+    sites: impl for<'a> Fn(
+        &Language,
+        auditor_ast::AstNode<'a>,
+    ) -> Vec<(auditor_ast::AstNode<'a>, String)>,
+    finding: impl Fn(auditor_ast::AstNode<'_>, &str, &str) -> auditor_core::Finding,
+) -> Vec<auditor_core::Finding> {
+    let mut findings = Vec::new();
+    visit_ast_files(scan, supports, |file, tree, _| {
+        let relative = util::path_slash(&file.relative);
+        findings.extend(
+            sites(&file.language, tree.root_node())
+                .into_iter()
+                .map(|(node, api)| finding(node, &api, &relative)),
+        );
+    });
+    findings
+}
+
 /// `visit_ast_files` as a parallel map: parses uncached files and runs `map`
 /// on all cores, returning results in file order.
 pub(crate) fn map_ast_files<'files, R: Send>(

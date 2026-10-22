@@ -250,6 +250,13 @@ fn retry_files(positive: bool) -> Vec<(String, String)> {
         .expect("Python retry boundary")
 }
 
+/// The Python boundary of an unbounded fan-out or queue rule; the other
+/// languages retarget through the same fixtures.
+fn unbounded_files(id: &str, positive: bool) -> Vec<(String, String)> {
+    super::language_tests::unbounded_capability_files(id, "python", positive)
+        .expect("Python unbounded boundary")
+}
+
 /// The Python eager-log boundary; the other languages retarget through the
 /// same fixtures.
 fn eager_log_files(positive: bool) -> Vec<(String, String)> {
@@ -277,6 +284,12 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         CapabilityCase::new("retry_without_backoff", ScanProfile::Full, "", "", "", "")
             .positive_files(retry_files(true))
             .negative_files(retry_files(false)),
+        CapabilityCase::new("unbounded_concurrency", ScanProfile::Full, "", "", "", "")
+            .positive_files(unbounded_files("unbounded_concurrency", true))
+            .negative_files(unbounded_files("unbounded_concurrency", false)),
+        CapabilityCase::new("unbounded_channel_or_queue", ScanProfile::Full, "", "", "", "")
+            .positive_files(unbounded_files("unbounded_channel_or_queue", true))
+            .negative_files(unbounded_files("unbounded_channel_or_queue", false)),
         CapabilityCase::new("eager_log_formatting", ScanProfile::Full, "", "", "", "")
             .positive_files(eager_log_files(true))
             .negative_files(eager_log_files(false)),

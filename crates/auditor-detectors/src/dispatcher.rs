@@ -177,6 +177,12 @@ fn run_structural_owner(
         DetectorOwner::DiscardedFallibleResult => {
             discarded_results::discarded_fallible_result_findings(context.ast_scan())
         }
+        DetectorOwner::UnboundedConcurrency => {
+            unbounded_concurrency::unbounded_concurrency_findings(context.ast_scan())
+        }
+        DetectorOwner::UnboundedChannelOrQueue => {
+            unbounded_queue::unbounded_channel_or_queue_findings(context.ast_scan())
+        }
         DetectorOwner::EagerLogFormatting => {
             eager_log::eager_log_formatting_findings(context.ast_scan())
         }

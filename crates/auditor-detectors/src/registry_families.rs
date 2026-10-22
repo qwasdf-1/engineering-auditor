@@ -55,6 +55,24 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
     )
     .with_roles(RoleApplicability::Production),
     spec!(
+        "unbounded_concurrency",
+        "systems_economics",
+        Medium,
+        Full,
+        "L4",
+        UnboundedConcurrency
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
+        "unbounded_channel_or_queue",
+        "systems_economics",
+        Medium,
+        Full,
+        "L4",
+        UnboundedChannelOrQueue
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
         "eager_log_formatting",
         "optimization",
         Low,

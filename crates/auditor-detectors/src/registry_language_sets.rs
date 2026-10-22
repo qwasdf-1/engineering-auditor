@@ -239,6 +239,8 @@ pub(super) const TEST_QUALITY_IDS: &[&str] = &[
 pub(super) const NETWORK_TIMEOUT_IDS: &[&str] = &["network_call_without_timeout"];
 pub(super) const RETRY_BACKOFF_IDS: &[&str] = &["retry_without_backoff"];
 pub(super) const EAGER_LOG_IDS: &[&str] = &["eager_log_formatting"];
+pub(super) const UNBOUNDED_CONCURRENCY_IDS: &[&str] = &["unbounded_concurrency"];
+pub(super) const UNBOUNDED_QUEUE_IDS: &[&str] = &["unbounded_channel_or_queue"];
 /// Front removal from an array-backed sequence in a loop.
 pub(super) const FRONT_REMOVAL_IDS: &[&str] = &["quadratic_front_removal"];
 /// Regex literals read by a backtracking engine.
