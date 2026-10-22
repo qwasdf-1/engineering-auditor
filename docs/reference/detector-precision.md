@@ -65,6 +65,14 @@ at least 22 clean labels, or about 40 with one false positive.
 > equal by construction; that is why the detector requires the other side
 > to be computed by arithmetic.
 >
+> The full-only `retry_without_backoff` has no corpus finding: the
+> libraries and applications retry through client retry policies or wait
+> between attempts (apprise's socket reads wait in `select` through a
+> helper), so it rests on its capability boundary. The full-only
+> `eager_log_formatting` has 400 corpus findings (390 in apprise's debug
+> f-strings, 10 in dependency-track's `.formatted` messages), not yet
+> labelled.
+>
 > The full-only `network_call_without_timeout` has no library-corpus
 > finding (fmt's release-script `urlopen` calls now have the tooling role),
 > so it is measured on the application slice (scan `a3-b`; see the corpus

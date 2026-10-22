@@ -155,6 +155,7 @@ Repository and systems-economics behavior.
 | `repeated_expensive_initialization` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `repeated_parse_scan_serialize` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `request_path_repository_scan` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `retry_without_backoff` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `unused_declared_dependency` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 
 ### Layer 5 - Optimization Opportunities
@@ -166,6 +167,7 @@ Bounded optimization opportunities.
 | `bulk_collection_extension` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `cache_miss_opportunity` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `eager_fallback_computation` | semantic | not_applicable | not_applicable | not_applicable | not_applicable | semantic | unsupported | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `eager_log_formatting` | not_applicable | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `immutable_string_concatenation_in_loop` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | not_applicable | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `intermediate_collection_materialization` | semantic | semantic | semantic | semantic | not_applicable | semantic | semantic | semantic | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `java_inefficient_string_buffer` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
@@ -186,8 +188,8 @@ Markdown and structured-data cells are excluded from these source-language total
 | L1 | 251 | 10 | 0 | 128 | 144 |
 | L2 | 135 | 17 | 53 | 179 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
-| L4 | 81 | 0 | 2 | 71 | 2 |
-| L5 | 84 | 1 | 0 | 49 | 35 |
+| L4 | 87 | 0 | 2 | 78 | 2 |
+| L5 | 89 | 1 | 0 | 56 | 36 |
 
 ## Not-Applicable Source Capabilities
 
@@ -228,6 +230,7 @@ Each not-applicable source cell carries one of these reviewed reasons.
 | Standard and common deserializers (serde, `encoding/*`) construct plain data and run no code. | `unsafe_deserialization` | Go, Rust |
 | The Go compiler rejects duplicate imports. | `duplicate_import` | Go |
 | The XML parsers in use (`encoding/xml`, quick-xml, roxmltree, xml-rs) resolve no external entities. | `xml_xxe_vulnerable` | Go, Rust |
+| The `log` and `tracing` macros check the level before evaluating their arguments, so a message is never formatted for a disabled level. | `eager_log_formatting` | Rust |
 | The language has no `await`; goroutines and futures are composed explicitly. | `no_await_in_loop` | Go, Java |
 | The language has no `catch`: errors are values. | `empty_catch_block` | Go, Rust |
 | The language has no assertion that release builds strip: Rust's `assert!` and Node's `assert` always run, and Go has no assert. | `assert_in_production` | Go, JavaScript, Rust, TypeScript |
@@ -292,7 +295,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |
-| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 190 | 64 | Julia, Ruby, Shell |
+| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 196 | 66 | Julia, Ruby, Shell |
 | No qualified language-specific API identity and dataflow boundary exists for this security capability. | 18 | 6 | Julia, Ruby, Shell |
 | Qualified on Python only; the Tier-1 extensions were reviewed and deferred (type names in lexical spans, conventional short names, shared receiver callees), and the Tier-2 grammars share those blockers. | 16 | 4 | C, C++, C#, Kotlin |
 | Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile. | 1 | 1 | Go |
@@ -300,6 +303,8 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | SQL text is assembled into buffers (`snprintf`, `strcat`, `std::string` appends) before `sqlite3_exec` or `PQexec`; the rule needs buffer dataflow to connect the build to the sink. | 2 | 1 | C, C++ |
 | The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 float literal and comparison forms (Kotlin `Double`/`Float`, C# `double`/`float`/`decimal`, C and C++ suffixes) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
+| The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
+| The Tier-2 retry shapes (Kotlin `runCatching` and `repeat`, C# `catch` filters, C and C++ return-code loops) and their wait calls are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet. | 2 | 1 | C, Kotlin |
 | The front removals (Kotlin `removeAt(0)`, C `memmove` over an array) and their array-backed declarations are not modelled yet. | 2 | 1 | C, Kotlin |
 | The frontend lacks a qualified collection, cardinality, mutation, or call-cost proof for this algorithmic capability. | 33 | 11 | Julia, Ruby, Shell |

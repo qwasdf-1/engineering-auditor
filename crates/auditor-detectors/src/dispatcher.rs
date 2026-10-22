@@ -177,6 +177,12 @@ fn run_structural_owner(
         DetectorOwner::DiscardedFallibleResult => {
             discarded_results::discarded_fallible_result_findings(context.ast_scan())
         }
+        DetectorOwner::EagerLogFormatting => {
+            eager_log::eager_log_formatting_findings(context.ast_scan())
+        }
+        DetectorOwner::RetryWithoutBackoff => {
+            retry_backoff::retry_without_backoff_findings(context.ast_scan())
+        }
         DetectorOwner::NetworkCallWithoutTimeout => {
             network_timeouts::network_call_without_timeout_findings(
                 context.files,

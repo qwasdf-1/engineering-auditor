@@ -4,6 +4,23 @@
 
 use auditor_ast::{AstNode, AstNodeKind};
 
+/// `node` and its named descendants, depth first.
+pub(crate) fn descendants(node: AstNode<'_>) -> impl Iterator<Item = AstNode<'_>> {
+    let mut stack = vec![node];
+    std::iter::from_fn(move || {
+        let next = stack.pop()?;
+        stack.extend(next.named_children());
+        Some(next)
+    })
+}
+
+/// A node's source on one line, cut at 80 characters, for a finding
+/// identity.
+pub(crate) fn source_summary(node: AstNode<'_>) -> String {
+    let text = node.text().split_whitespace().collect::<Vec<_>>().join(" ");
+    text.chars().take(80).collect()
+}
+
 pub(crate) fn nodes_of_kind<'a>(root: AstNode<'a>, kinds: &[&str]) -> Vec<AstNode<'a>> {
     kinds
         .iter()

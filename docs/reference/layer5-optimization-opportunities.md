@@ -1,7 +1,7 @@
 # Layer 5 - Optimization Opportunities
 
-Profiles: 4 gating, 9 full-only
-Detectors: 13 (all unconditional)
+Profiles: 4 gating, 10 full-only
+Detectors: 14 (all unconditional)
 
 Layer 5 reports only transformations with an explicit semantics-preservation
 argument. Twelve owners consume one scan-scoped `OptimizationIndex` derived
@@ -9,6 +9,7 @@ from structure and algorithmic facts; the Java-specific buffer owner remains a
 bounded ecosystem rule. The shared proof records invariant operands, purity,
 intervening mutation, evaluation order, failure behavior, receiver/container
 type, known size, and result use. An unresolved obligation fails closed.
+`eager_log_formatting` reads log calls from the syntax tree.
 
 ## `cache_miss_opportunity` (gating)
 
@@ -135,6 +136,22 @@ another literal or empty constructor, which `setdefault` may evaluate eagerly). 
 
 Detects local Java `StringBuffer` construction where thread-safe synchronization
 is not required and `StringBuilder` is the appropriate local replacement.
+
+## `eager_log_formatting` (full-only)
+
+Detects a debug or trace log call whose message is formatted before the
+call: a Python f-string, `%` or `.format`, a JavaScript/TypeScript template
+literal with a substitution, Java `String.format` or `.formatted`, Go
+`fmt.Sprintf`, or concatenation of a string with a value. The logger checks
+the level inside the call, so with debug logging off the string is built and
+discarded on every call; passing the values as arguments (`%s` arguments,
+SLF4J `{}` placeholders, `Debugf`, structured fields) formats only enabled
+messages (Pylint `W1201`-`W1203`, SonarJava `S2629`). The receiver must name
+a logger (`logger`, `log`, `LOG`, `self._log`, `logging`, `slog`); `console`
+formats whatever the level. Calls inside an enabled-level guard
+(`isDebugEnabled()`, `isEnabledFor(DEBUG)`) are lazy already, and Rust is not
+applicable: the `log` and `tracing` macros check the level before evaluating
+their arguments. Python, JavaScript, TypeScript, Go, and Java.
 
 The exact detector-language modes are generated from the executable catalog in
 [`language-support.md`](./language-support.md).

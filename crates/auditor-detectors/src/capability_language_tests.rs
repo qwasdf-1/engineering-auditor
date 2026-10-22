@@ -48,6 +48,14 @@ pub(crate) use hygiene::hygiene_capability_files;
 mod l3_rules;
 pub(crate) use l3_rules::l3_rule_capability_files;
 
+#[path = "capability_language_retry_tests.rs"]
+mod retry;
+pub(crate) use retry::retry_capability_files;
+
+#[path = "capability_language_eager_log_tests.rs"]
+mod eager_log;
+pub(crate) use eager_log::eager_log_capability_files;
+
 #[path = "capability_language_float_tests.rs"]
 mod float;
 pub(crate) use float::float_capability_files;
@@ -324,6 +332,18 @@ pub(super) fn retarget_case(case: &CapabilityCase, language: &str) -> Capability
         if let Some(files) = tier2_capability_files(case.id, language, false) {
             variant.negative = files;
         }
+    }
+    if let Some(files) = retry_capability_files(case.id, language, true) {
+        variant.positive = files;
+    }
+    if let Some(files) = retry_capability_files(case.id, language, false) {
+        variant.negative = files;
+    }
+    if let Some(files) = eager_log_capability_files(case.id, language, true) {
+        variant.positive = files;
+    }
+    if let Some(files) = eager_log_capability_files(case.id, language, false) {
+        variant.negative = files;
     }
     if let Some(files) = float_capability_files(case.id, language, true) {
         variant.positive = files;

@@ -121,6 +121,8 @@ pub(crate) enum DetectorOwner {
     MutableDefaultArgument,
     FloatEqualityComparison,
     NetworkCallWithoutTimeout,
+    RetryWithoutBackoff,
+    EagerLogFormatting,
     QuadraticFrontRemoval,
     CatastrophicBacktrackingRegex,
     UnusedDeclaredDependency,

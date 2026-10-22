@@ -4,6 +4,22 @@
 
 ### Added
 
+- `retry_without_backoff` (full-only, Tier 1) reports a loop that retries
+  a failed operation at once: a counted loop, or an open loop naming its
+  attempts, whose `try` (Go `err` check, Rust `match` on a `Result`) leaves
+  on success and falls through on failure, with no sleep, delay, backoff,
+  or `select` in the loop or in a same-file helper it calls. A loop trying
+  a different target each pass is not a retry. The corpus retries through
+  policies or with waits, so the cells rest on their capability boundaries.
+
+- `eager_log_formatting` (full-only; Python, JavaScript, TypeScript, Go,
+  Java) reports a debug or trace log call whose message is formatted
+  before the call (f-string, `%`, `.format`, template literal,
+  `String.format`, `fmt.Sprintf`, concatenation), so the string is built
+  even when the level is off. Enabled-level guards and `console` are not
+  reported; Rust's logging macros are lazy, so its cell is not applicable.
+  The corpus has 400 such calls (390 in apprise, 10 in dependency-track).
+
 - `float_equality_comparison` (full-only, Tier 1) reports `==`/`!=`
   between float arithmetic (an arithmetic expression, or a local whose
   reaching value is one or a `+=` accumulation) and a literal binary

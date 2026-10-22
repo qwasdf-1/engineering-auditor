@@ -243,6 +243,20 @@ fn network_timeout_files(positive: bool) -> Vec<(String, String)> {
         .expect("Python network-timeout boundary")
 }
 
+/// The Python retry boundary; the other languages retarget through the same
+/// fixtures.
+fn retry_files(positive: bool) -> Vec<(String, String)> {
+    super::language_tests::retry_capability_files("retry_without_backoff", "python", positive)
+        .expect("Python retry boundary")
+}
+
+/// The Python eager-log boundary; the other languages retarget through the
+/// same fixtures.
+fn eager_log_files(positive: bool) -> Vec<(String, String)> {
+    super::language_tests::eager_log_capability_files("eager_log_formatting", "python", positive)
+        .expect("Python eager-log boundary")
+}
+
 pub(super) fn default_cases() -> Vec<CapabilityCase> {
     vec![
         CapabilityCase::new("unused_declared_dependency", ScanProfile::Full, "", "", "", "")
@@ -260,6 +274,12 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         CapabilityCase::new("network_call_without_timeout", ScanProfile::Full, "", "", "", "")
             .positive_files(network_timeout_files(true))
             .negative_files(network_timeout_files(false)),
+        CapabilityCase::new("retry_without_backoff", ScanProfile::Full, "", "", "", "")
+            .positive_files(retry_files(true))
+            .negative_files(retry_files(false)),
+        CapabilityCase::new("eager_log_formatting", ScanProfile::Full, "", "", "", "")
+            .positive_files(eager_log_files(true))
+            .negative_files(eager_log_files(false)),
         CapabilityCase::new("test_without_assertion", ScanProfile::Full, "", "", "", "")
             .positive_files(test_quality_files("test_without_assertion", true))
             .negative_files(test_quality_files("test_without_assertion", false)),

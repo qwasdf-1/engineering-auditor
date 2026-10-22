@@ -371,6 +371,21 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         &["c", "cpp"],
         "C and C++ have no standard manifest; vcpkg and Conan manifests are not parsed yet.",
     ),
+    not_applicable(
+        &["eager_log_formatting"],
+        &["rust"],
+        "The `log` and `tracing` macros check the level before evaluating their arguments, so a message is never formatted for a disabled level.",
+    ),
+    deferred(
+        &["eager_log_formatting"],
+        TIER_TWO,
+        "The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet.",
+    ),
+    deferred(
+        &["retry_without_backoff"],
+        TIER_TWO,
+        "The Tier-2 retry shapes (Kotlin `runCatching` and `repeat`, C# `catch` filters, C and C++ return-code loops) and their wait calls are not modelled yet.",
+    ),
     deferred(
         &["network_call_without_timeout"],
         KOTLIN_CSHARP,

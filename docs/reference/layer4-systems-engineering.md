@@ -1,6 +1,6 @@
 # Layer 4 - Systems Engineering
 
-Default catalog: 12 detectors (6 gating, 6 full-only). The `graph-analysis`
+Default catalog: 13 detectors (6 gating, 7 full-only). The `graph-analysis`
 feature adds four Layer 4 gating detectors. Language modes are authoritative in
 [`language-support.md`](./language-support.md).
 
@@ -184,6 +184,37 @@ are listed:
 
 A client construction is skipped in a file that mentions a timeout anywhere,
 where it is set on the client or its requests.
+
+### `retry_without_backoff`
+
+Reports a loop that retries a failed operation at once, with no wait between
+attempts. Immediate retries add load to a peer that is already failing and
+fail again for the same reason; a bounded loop spends its attempts in
+microseconds, before a transient fault can clear. Production files only, and
+not inline Rust `#[cfg(test)]` modules. Rust, Python, JavaScript,
+TypeScript, Go, and Java.
+
+- Retry loop: a counted loop (`range(n)`, a C-style `for` with a counter,
+  a Rust `0..n` range) whose operation does not read the counter or a local
+  assigned from it (`url = urls[i]` tries a different target each pass), or
+  a `while`/`loop`/`do` whose condition calls nothing and which names its
+  attempts (an identifier with the word `attempt`, `retry`, `retries`, or
+  `tries`): an open loop without one reads, polls, or iterates.
+- Retry: a `try` whose success leaves the loop (`return`/`break` in the
+  `try` or its `else`, or right after it) and whose handler does not end in
+  `raise`/`throw`/`return`/`break`; a Go `if err == nil { break }` after the
+  call assigning `err`, or `if err != nil { continue }` before the exit; a
+  Rust `match` on a call whose `Ok` arm leaves the loop and whose `Err` arm
+  falls through, or `if let Ok(..) = call { break }`.
+- Backoff: any call in the loop whose name has the word `sleep`, `wait`,
+  `delay`, `backoff`, `pause`, `throttle`, `timeout`, `park`, `jitter`, or
+  `select` (`time.sleep`, `Thread.sleep`, `setTimeout`, `select.select`), Go
+  `time.After` or a `select` statement, or a call to a function of the same
+  file that waits, directly or through another.
+
+The corpus has no such loop in production code: its retries go through
+retry policies or wait between attempts, so the cells rest on their
+capability boundaries.
 
 ### `unused_declared_dependency`
 

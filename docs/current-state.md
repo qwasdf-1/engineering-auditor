@@ -19,7 +19,7 @@ optimization detectors to C#, C++, and C.
 
 ## Scanning
 
-- **Catalog.** 117 detectors by default (52 gating, 65 full-only); the
+- **Catalog.** 119 detectors by default (52 gating, 67 full-only); the
   `graph-analysis` build feature adds seven. Each detector's languages and
   roles are declared in the catalog and enforced on every finding.
 - **Discovery.** Repository ignore files and `.eaignore` bound the scan;
@@ -126,5 +126,5 @@ ordinary test runs.
 ## Repository Health
 
 The repository scans itself in CI and fails on any finding not in its
-baseline. The full test suite (649 tests, plus the 21 ignored parity groups)
+baseline. The full test suite (656 tests, plus the 21 ignored parity groups)
 passes on stable Rust and on the minimum supported Rust, 1.86.

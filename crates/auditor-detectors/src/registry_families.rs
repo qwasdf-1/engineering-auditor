@@ -46,6 +46,24 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
     )
     .with_roles(RoleApplicability::Production),
     spec!(
+        "retry_without_backoff",
+        "systems_economics",
+        Medium,
+        Full,
+        "L4",
+        RetryWithoutBackoff
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
+        "eager_log_formatting",
+        "optimization",
+        Low,
+        Full,
+        "L5",
+        EagerLogFormatting
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
         "quadratic_front_removal",
         "algorithmic",
         Low,
