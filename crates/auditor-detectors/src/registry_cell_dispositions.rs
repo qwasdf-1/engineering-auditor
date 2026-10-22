@@ -327,11 +327,6 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         TIER_TWO,
         "The test-scope facts model the Tier-1 frameworks; the Tier-2 assertion forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet.",
     ),
-    deferred(
-        &["skipped_test_without_reason"],
-        C_CPP,
-        "GoogleTest's `DISABLED_` prefix and `GTEST_SKIP()`, and Catch2's hidden `[.]` tags, are not modelled yet.",
-    ),
     not_applicable(
         &["quadratic_front_removal"],
         &["go"],

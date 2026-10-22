@@ -230,19 +230,9 @@ pub(super) const KOTLIN_IDS: &[&str] = &[
 /// Test-quality rules over the test-scope facts (test functions, assertion
 /// calls, mock stubs) of the Tier-1 frameworks.
 pub(super) const TEST_QUALITY_IDS: &[&str] = &["test_without_assertion", "tautological_assertion"];
-/// Skip marks of the Tier-1 frameworks, Kotlin JUnit, and C# xUnit, NUnit,
-/// and MSTest.
+/// Skip marks of the Tier-1 frameworks, Kotlin JUnit, C# xUnit, NUnit, and
+/// MSTest, C Unity, and C++ GoogleTest, Catch2, doctest, and CppUTest.
 pub(super) const SKIPPED_TEST_IDS: &[&str] = &["skipped_test_without_reason"];
-pub(super) const TIER_ONE_KOTLIN_CSHARP: &[&str] = &[
-    "rust",
-    "python",
-    "javascript",
-    "typescript",
-    "go",
-    "java",
-    "kotlin",
-    "csharp",
-];
 /// Network clients whose library default never times out, per the Tier-1
 /// client API table.
 pub(super) const NETWORK_TIMEOUT_IDS: &[&str] = &["network_call_without_timeout"];

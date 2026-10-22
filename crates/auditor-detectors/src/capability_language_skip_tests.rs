@@ -1,5 +1,6 @@
 //! `skipped_test_without_reason` capability boundaries for each Tier-1
-//! framework, Kotlin JUnit, and C# xUnit, NUnit, and MSTest. Positives hold skips with no reason (beside a doc comment, a
+//! framework, Kotlin JUnit, C# xUnit, NUnit, and MSTest, C Unity, and C++
+//! GoogleTest, Catch2, doctest, and CppUTest. Positives hold skips with no reason (beside a doc comment, a
 //! lint directive, or a URL in the title, none of which is one); negatives
 //! hold every form of a stated reason: an argument, a comment, a condition.
 
@@ -36,10 +37,165 @@ pub(crate) fn skip_capability_files(
         ("kotlin", false) => (KOTLIN_PATH, KOTLIN_EXPLAINED),
         ("csharp", true) => ("tests/ParserTests.cs", CSHARP_UNEXPLAINED),
         ("csharp", false) => ("tests/ParserTests.cs", CSHARP_EXPLAINED),
+        ("c", true) => ("test/test_parser.c", C_UNEXPLAINED),
+        ("c", false) => ("test/test_parser.c", C_EXPLAINED),
+        ("cpp", true) => ("tests/parser_test.cpp", CPP_UNEXPLAINED),
+        ("cpp", false) => ("tests/parser_test.cpp", CPP_EXPLAINED),
         _ => return None,
     };
     Some(vec![(path.to_string(), source.to_string())])
 }
+
+const C_UNEXPLAINED: &str = r#"#include "unity.h"
+
+void test_parses_tabs(void) {
+    TEST_IGNORE();
+    TEST_ASSERT_EQUAL(1, parse("\t"));
+}
+
+void test_parses_spaces(void) {
+    TEST_IGNORE_MESSAGE("");
+}
+
+IGNORE_TEST(Parser, ParsesHex) {
+    TEST_ASSERT_EQUAL(16, parse("0x10"));
+}
+"#;
+
+const C_EXPLAINED: &str = r#"#include "unity.h"
+
+void test_parses_tabs(void) {
+    TEST_IGNORE_MESSAGE("tabs are not tokenized yet");
+}
+
+void test_parses_locale(void) {
+    if (!has_locale()) {
+        TEST_IGNORE();
+    }
+    TEST_ASSERT_EQUAL(1, parse("e"));
+}
+
+/* Hex literals wait on the lexer rewrite. */
+IGNORE_TEST(Parser, ParsesHex) {
+    TEST_ASSERT_EQUAL(16, parse("0x10"));
+}
+
+void test_parses_ascii(void) {
+    TEST_ASSERT_EQUAL(1, parse("a"));
+}
+"#;
+
+const CPP_UNEXPLAINED: &str = r#"#include <gtest/gtest.h>
+
+TEST(ParserTest, DISABLED_ParsesTabs) {
+  EXPECT_EQ(1, parse("\t"));
+}
+
+TEST_F(DISABLED_ParserFixture, ParsesSpaces) {
+  EXPECT_EQ(1, parse(" "));
+}
+
+TEST(ParserTest, ParsesNewlines) {
+  GTEST_SKIP();
+  EXPECT_EQ(1, parse("\n"));
+}
+
+/// Parses a carriage return.
+TEST(ParserTest, DISABLED_ParsesReturns) {
+  EXPECT_EQ(1, parse("\r"));
+}
+
+TEST_CASE("parses unicode", "[.]") {
+  REQUIRE(parse("u") == 1);
+}
+
+TEST_CASE("parses emoji", "[!hide]") {
+  SECTION("single") { REQUIRE(parse("x") == 1); }
+}
+
+TEST_CASE("parses bytes") {
+  SKIP();
+}
+
+TEST_CASE("parses streams" * doctest::skip()) {
+  CHECK(parse("s") == 1);
+}
+
+TEST_SUITE("legacy parser" * doctest::skip(true)) {
+  TEST_CASE("parses") { CHECK(legacy("a") == 1); }
+}
+
+IGNORE_TEST(ParserGroup, ParsesHex) {
+  CHECK_EQUAL(16, parse("0x10"));
+}
+"#;
+
+const CPP_EXPLAINED: &str = r#"#include <gtest/gtest.h>
+
+// Tabs are not tokenized yet.
+TEST(ParserTest, DISABLED_ParsesTabs) {
+  EXPECT_EQ(1, parse("\t"));
+}
+
+TEST(ParserTest, DISABLED_ParsesSpaces) {  // flaky on CI
+  EXPECT_EQ(1, parse(" "));
+}
+
+TEST(ParserTest, ParsesNewlines) {
+  GTEST_SKIP() << "newline handling is platform-specific";
+}
+
+TEST(ParserTest, ParsesLocale) {
+  if (!has_locale()) {
+    GTEST_SKIP();
+  }
+  EXPECT_EQ(1, parse("e"));
+}
+
+TEST(ParserTest, ParsesWide) {
+#ifdef _WIN32
+  GTEST_SKIP();
+#endif
+  EXPECT_EQ(1, parse("w"));
+}
+
+TEST(ParserTest, ParsesAscii) {
+  EXPECT_EQ(1, parse("a"));
+}
+
+TEST_CASE("parses unicode", "[.][slow]") {
+  REQUIRE(parse("u") == 1);
+}
+
+TEST_CASE("parses emoji", "[.integration]") {
+  REQUIRE(parse("x") == 1);
+}
+
+TEST_CASE("parses bytes") {
+  SKIP("byte input is not supported yet");
+}
+
+TEST_CASE("parses streams" * doctest::skip() * doctest::description("needs a network stream")) {
+  CHECK(parse("s") == 1);
+}
+
+TEST_CASE("parses files" * doctest::skip(false)) {
+  CHECK(parse("f") == 1);
+}
+
+TEST_CASE("parses pipes" * doctest::skip(!has_pipes())) {
+  CHECK(parse("p") == 1);
+}
+
+TEST_CASE("parses words", "[parser]") {
+  REQUIRE(parse("w") == 1);
+}
+
+// Superseded by the new parser; kept for reference.
+TEST_SUITE("legacy parser" * doctest::skip()) {
+  TEST_CASE("parses") { CHECK(legacy("a") == 1); }
+}
+"#;
 
 const JAVA_PATH: &str = "src/test/java/ParserTest.java";
 const KOTLIN_PATH: &str = "src/test/kotlin/ParserTest.kt";
@@ -556,6 +712,25 @@ fn skip_boundaries_report_exactly_the_unexplained_skips() {
         (
             "csharp",
             &["ParsesTabs", "ParsesSpaces", "LegacyParserTests"],
+        ),
+        (
+            "c",
+            &["test_parses_tabs", "test_parses_spaces", "Parser.ParsesHex"],
+        ),
+        (
+            "cpp",
+            &[
+                "ParserTest.DISABLED_ParsesTabs",
+                "DISABLED_ParserFixture.ParsesSpaces",
+                "ParserTest.ParsesNewlines",
+                "ParserTest.DISABLED_ParsesReturns",
+                "parses unicode",
+                "parses emoji",
+                "parses bytes",
+                "parses streams",
+                "legacy parser",
+                "ParserGroup.ParsesHex",
+            ],
         ),
     ];
     let mut failures = Vec::new();

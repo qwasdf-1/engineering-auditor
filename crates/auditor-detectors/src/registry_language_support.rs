@@ -400,7 +400,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         semantic(&["python", "javascript", "typescript", "go", "java"]),
     ),
     rule(TEST_QUALITY_IDS, semantic(TIER_ONE)),
-    rule(SKIPPED_TEST_IDS, semantic(TIER_ONE_KOTLIN_CSHARP)),
+    rule(SKIPPED_TEST_IDS, semantic(TIERED)),
     rule(
         GO_IDS,
         selected(

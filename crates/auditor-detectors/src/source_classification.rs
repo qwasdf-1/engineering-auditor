@@ -5,6 +5,8 @@
 use std::fs;
 use std::path::Path;
 
+use super::has_component;
+
 /// A .NET test project (`Newtonsoft.Json.Tests/`, `App.UnitTests/`) or a
 /// Gradle or Kotlin Multiplatform test source set (`src/jvmTest/`,
 /// `src/commonTest/`, `src/androidUnitTest/`).
@@ -44,6 +46,39 @@ pub(super) fn layout_components(components: &[String]) -> &[String] {
         .windows(3)
         .position(|window| window[0] == "src" && JVM_ROOTS.contains(&window[2].as_str()))
         .map_or(components, |start| &components[..start + 3])
+}
+
+const REFERENCE_COMPONENTS: &[&str] = &[
+    "references",
+    "reference",
+    "vendor",
+    "third_party",
+    "thirdparty",
+    "third-party",
+    "3rdparty",
+];
+
+/// Reference material and vendored code: a `references/` or `third_party/`
+/// tree, or a directory holding a released copy of another project.
+pub(super) fn is_reference_path(components: &[String]) -> bool {
+    has_component(components, REFERENCE_COMPONENTS)
+        || is_versioned_copy(&components[..components.len().saturating_sub(1)])
+}
+
+/// A directory holding a released copy of another project, named for its
+/// release (`test/googletest-1.13.0/`, `deps/lua-5.4.6/`): vendored code,
+/// like a `third_party/` tree.
+fn is_versioned_copy(directories: &[String]) -> bool {
+    directories.iter().any(|directory| {
+        directory.rsplit_once('-').is_some_and(|(name, version)| {
+            let groups: Vec<&str> = version.trim_start_matches('v').split('.').collect();
+            name.starts_with(|c: char| c.is_ascii_alphabetic())
+                && groups.len() >= 2
+                && groups
+                    .iter()
+                    .all(|group| !group.is_empty() && group.bytes().all(|b| b.is_ascii_digit()))
+        })
+    })
 }
 
 /// A JVM or .NET test class file (`BufferTest.kt`, `JArrayTests.cs`,
@@ -178,6 +213,14 @@ mod tests {
                 "include/nlohmann/thirdparty/hedley/hedley.hpp",
                 SourceRole::Reference,
             ),
+            (
+                "test/googletest-1.13.0/googletest/test/gtest_unittest.cc",
+                SourceRole::Reference,
+            ),
+            ("src/lua-5.4/lapi.c", SourceRole::Reference),
+            ("src/utf-8/decode.c", SourceRole::Production),
+            ("pkg/api-v2/client.go", SourceRole::Production),
+            ("lib/googletest-1.13.0.cc", SourceRole::Production),
             (
                 "maven-tests/src/main/java/SampleHttpClient.java",
                 SourceRole::Test,

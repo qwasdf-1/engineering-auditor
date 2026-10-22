@@ -718,12 +718,22 @@ test or a test class), Jest/Vitest/Mocha `it.skip`, `xit`, `test.skip`,
 `@Disabled`/`@Ignore` (on a test or a test class, in Java or Kotlin) or
 TestNG `@Test(enabled = false)`, and C# xUnit `[Fact(Skip = "")]`/
 `[Theory(Skip = "")]` and NUnit or MSTest `[Ignore]` (on a test or a
-fixture class).
+fixture class). In C and C++ test files: GoogleTest `TEST`/`TEST_F`/
+`TEST_P`/`TYPED_TEST` with a `DISABLED_` suite or test name, `GTEST_SKIP()`,
+CppUTest and Unity fixture `IGNORE_TEST`, Unity `TEST_IGNORE()`, Catch2
+`TEST_CASE` (and its variants) hidden by a `[.]` or `[!hide]` tag, Catch2
+`SKIP()`, and doctest `* doctest::skip()` on a test case or a
+`TEST_SUITE`. GoogleTest tests are named `Suite.Name`. C and C++ test files
+are read as parsed, since error recovery would quarantine every Catch2 and
+doctest test.
 
 A skip states its reason when the mark carries one (`#[ignore = ".."]`,
-`skip(reason=..)`, `@Disabled("..")`, `t.Skip("..")`), when a Go skip runs
-under a condition (`if testing.Short() { t.Skip() }`), or when a comment
-gives it. A plain comment beside the mark counts: after it on the same line,
+`skip(reason=..)`, `@Disabled("..")`, `t.Skip("..")`, `SKIP("..")`,
+`TEST_IGNORE_MESSAGE("..")`, `GTEST_SKIP() << ".."`, a doctest
+`doctest::description("..")`), when a Go, GoogleTest, Catch2, or Unity skip
+runs under a condition (`if testing.Short() { t.Skip() }`, an `#ifdef`, a
+computed `doctest::skip(cond)`), when a hidden Catch2 test carries another
+tag (`[.slow]` is shorthand for `[.][slow]`), or when a comment gives it. A plain comment beside the mark counts: after it on the same line,
 inside the attribute or annotation block, or ending on the line above. A doc
 comment above the test, a comment opening the test body, or a Python
 docstring describes the test, so it counts only when it speaks of the skip
@@ -736,8 +746,7 @@ the enclosing class counts only when it speaks of the skip. Lint directives
 `skipIf`, `#[cfg_attr(.., ignore)]`), expected failures (`xfail`), and
 placeholders (`it.todo`) are not reported.
 
-Language contract: Tier 1, Kotlin, and C#; GoogleTest's `DISABLED_` prefix
-and Catch2's hidden tags are deferred for C and C++ (see
+Language contract: Tier 1 and Tier 2 (see
 [`language-support.md`](./language-support.md)).
 
 ---

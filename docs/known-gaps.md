@@ -53,8 +53,7 @@ What Engineering Auditor does not do, or does only partly, as of 1.4.0.
   and optimization cells, C# supports 31, C++ 24, and C 10; the rest are
   unsupported (each with its reason) or not applicable, and the supported
   ones have no corpus precision record yet. The 1.4.0 systems and logging
-  detectors are Tier 1 only, and C and C++ test skips (GoogleTest,
-  Catch2) are not read. Ruby, Julia, and Shell get
+  detectors are Tier 1 only. Ruby, Julia, and Shell get
   structural metrics only. NPath complexity is unavailable for Kotlin, Ruby,
   Julia, and Shell, and Halstead metrics for Kotlin and Shell.
 

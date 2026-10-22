@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `skipped_test_without_reason` reads C and C++ test files: GoogleTest
+  `DISABLED_` suites and tests and `GTEST_SKIP()`, CppUTest and Unity
+  fixture `IGNORE_TEST`, Unity `TEST_IGNORE()`, Catch2 tests hidden by a
+  bare `[.]`/`[!hide]` tag and `SKIP()`, and doctest `doctest::skip()`
+  test cases and suites. A message, a condition, another Catch2 tag, or a
+  doctest description states the reason. Of 12 corpus findings, 7 are
+  corroborated true positives and 5 false positives (yaml-cpp tests whose
+  bodies explain the skip in forms the rule does not read); the rule is
+  now 45/7 (87%) overall, below the bar, and stays `full`.
+- A directory named for a release of another project
+  (`test/googletest-1.13.0/`) is a vendored copy, with the reference role
+  of a `third_party/` tree.
+
 ## 1.4.0 - Systems, Logging, And Test-Quality Detectors
 
 Seven detectors join the catalog, now 121. `eager_log_formatting` gates:

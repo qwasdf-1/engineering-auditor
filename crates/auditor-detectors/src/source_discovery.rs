@@ -9,7 +9,8 @@ use crate::util;
 #[path = "source_classification.rs"]
 mod classification;
 use classification::{
-    header_is_cpp, is_generated_output, is_test_class_file, is_test_project, layout_components,
+    header_is_cpp, is_generated_output, is_reference_path, is_test_class_file, is_test_project,
+    layout_components,
 };
 
 const SKIP_DIR_NAMES: &[&str] = &[
@@ -38,15 +39,6 @@ const EXCLUDED_PATH_PREFIXES: &[&str] = &[
     "docs/external_repo_research/",
 ];
 
-const REFERENCE_COMPONENTS: &[&str] = &[
-    "references",
-    "reference",
-    "vendor",
-    "third_party",
-    "thirdparty",
-    "third-party",
-    "3rdparty",
-];
 /// `single_include/` and `amalgamation/` hold one-file builds generated from
 /// the multi-file sources beside them (nlohmann/json, Catch2, SQLite).
 const GENERATED_COMPONENTS: &[&str] = &[
@@ -543,10 +535,7 @@ fn ordered_source_roles<'a>(
     // directory; `examples` and `test` packages do mean what they say.
     let layout = layout_components(components);
     [
-        (
-            SourceRole::Reference,
-            has_component(components, REFERENCE_COMPONENTS),
-        ),
+        (SourceRole::Reference, is_reference_path(components)),
         (
             SourceRole::Generated,
             has_component(components, GENERATED_COMPONENTS) || is_generated_name(name, stem),

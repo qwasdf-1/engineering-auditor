@@ -9,12 +9,16 @@ use auditor_ast::{AstNode, AstTree};
 use crate::ast_scan::{self, AstScan};
 use crate::{AuditedFile, Language};
 
+#[path = "testing_scope_c_family.rs"]
+mod c_family;
 #[path = "testing_scope_evidence.rs"]
 mod evidence;
 #[path = "testing_scope_frameworks.rs"]
 mod frameworks;
 #[path = "testing_scope_skips.rs"]
 mod skips;
+#[path = "testing_scope_tier_two.rs"]
+mod tier_two;
 pub(crate) use evidence::{asserts, exempt_by_name, EvidenceScope};
 pub(crate) use frameworks::test_cases;
 pub(crate) use skips::{comments, explained_by_comment, skipped_groups, SkipMark};
@@ -41,18 +45,30 @@ pub(crate) fn visit_test_scope(
 }
 
 /// Languages whose test declarations and skip marks are modelled: the
-/// Tier-1 frameworks, Kotlin JUnit, and C# xUnit, NUnit, and MSTest. Only
-/// the skip rule reads the Kotlin and C# tests so far.
+/// Tier-1 frameworks, Kotlin JUnit, C# xUnit, NUnit, and MSTest, and the C
+/// and C++ GoogleTest, Catch2, doctest, CppUTest, and Unity macros. Only the
+/// skip rule reads the Tier-2 tests so far.
 pub(crate) fn models_skips(language: &Language) -> bool {
-    models_tests(language) || matches!(language, Language::Kotlin | Language::CSharp)
+    models_tests(language)
+        || matches!(
+            language,
+            Language::Kotlin | Language::CSharp | Language::C | Language::Cpp
+        )
 }
 
-/// Every test-scope file whose skip marks are modelled, parsed.
+/// Every test-scope file whose skip marks are modelled, parsed. C and C++
+/// files are read as parsed: recovery quarantines every Catch2 and doctest
+/// test, whose macro form is not C++ syntax.
 pub(crate) fn visit_skip_scope(
     scan: AstScan<'_, '_>,
     mut visit: impl FnMut(&AuditedFile, &AstTree),
 ) {
-    ast_scan::visit_ast_files(scan, models_skips, |file, tree, _| visit(file, tree));
+    ast_scan::visit_trees(
+        scan,
+        models_skips,
+        |language| matches!(language, Language::C | Language::Cpp),
+        |file, tree, _| visit(file, tree),
+    );
 }
 
 /// One test function a framework runs.

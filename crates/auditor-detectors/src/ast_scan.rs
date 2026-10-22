@@ -78,6 +78,20 @@ impl<'files, 'ast> AstScan<'files, 'ast> {
 pub(crate) fn visit_ast_files(
     scan: AstScan<'_, '_>,
     supports: impl Fn(&Language) -> bool,
+    visit: impl FnMut(&AuditedFile, &AstTree, AstLang),
+) {
+    visit_trees(scan, supports, |_| false, visit);
+}
+
+/// [`visit_ast_files`], except that files of the languages `as_parsed`
+/// selects are visited as tree-sitter parsed them, syntax errors and all.
+/// That suits a rule that reads only declarations whose shape survives a
+/// local error: a Catch2 `TEST_CASE("..") { .. }` reads as a statement
+/// missing its `;` before a block, which recovery quarantines.
+pub(crate) fn visit_trees(
+    scan: AstScan<'_, '_>,
+    supports: impl Fn(&Language) -> bool,
+    as_parsed: impl Fn(&Language) -> bool,
     mut visit: impl FnMut(&AuditedFile, &AstTree, AstLang),
 ) {
     if scan.method == AnalysisMethod::Token {
@@ -95,7 +109,12 @@ pub(crate) fn visit_ast_files(
         };
         // A tree with syntax errors is visited as recovered, without the
         // declarations holding them, or not at all.
-        let Some(tree) = tree.error_free() else {
+        let tree = if as_parsed(&file.language) {
+            Some(tree)
+        } else {
+            tree.error_free()
+        };
+        let Some(tree) = tree else {
             continue;
         };
         visit(file, tree, language);

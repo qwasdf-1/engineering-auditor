@@ -26,7 +26,7 @@ pub(crate) struct SkippedGroup<'t> {
     pub(crate) mark: SkipMark<'t>,
 }
 
-fn row(node: AstNode<'_>) -> usize {
+pub(super) fn row(node: AstNode<'_>) -> usize {
     node.start_position().0
 }
 
@@ -113,7 +113,7 @@ pub(super) fn kotlin_skip_mark<'t>(
 ) -> Option<SkipMark<'t>> {
     let annotation = annotations.iter().copied().find(|annotation| {
         matches!(
-            super::frameworks::kotlin_annotation_name(*annotation),
+            super::tier_two::kotlin_annotation_name(*annotation),
             "Disabled" | "Ignore"
         )
     })?;
@@ -135,7 +135,7 @@ pub(super) fn csharp_skip_mark<'t>(
         let arguments = attribute
             .named_children()
             .find(|child| child.kind() == "attribute_argument_list");
-        let stated = match super::frameworks::csharp_attribute_name(attribute) {
+        let stated = match super::tier_two::csharp_attribute_name(attribute) {
             "Ignore" => arguments.is_some_and(|arguments| states_reason(arguments.text())),
             "Fact" | "Theory" => {
                 let skip = arguments?.named_children().find(|argument| {
@@ -182,7 +182,7 @@ pub(super) fn js_skip_mark(call: AstNode<'_>) -> Option<SkipMark<'_>> {
 }
 
 /// Whether `node` runs under a condition inside `body`.
-fn conditional(node: AstNode<'_>, body: AstNode<'_>) -> bool {
+pub(super) fn conditional(node: AstNode<'_>, body: AstNode<'_>) -> bool {
     std::iter::successors(node.parent(), |parent| parent.parent())
         .take_while(|ancestor| ancestor.start_byte() > body.start_byte())
         .any(|ancestor| {
@@ -195,12 +195,19 @@ fn conditional(node: AstNode<'_>, body: AstNode<'_>) -> bool {
                     | "communication_case"
                     | "expression_case"
                     | "type_case"
+                    | "switch_statement"
+                    | "case_statement"
+                    | "conditional_expression"
+                    | "preproc_if"
+                    | "preproc_ifdef"
+                    | "preproc_elif"
+                    | "preproc_else"
             )
         })
 }
 
 /// Arguments that say something: not empty and not only an empty string.
-fn states_reason(arguments: &str) -> bool {
+pub(super) fn states_reason(arguments: &str) -> bool {
     let inner = compact(arguments);
     let inner = inner
         .trim_start_matches('(')
@@ -226,7 +233,7 @@ pub(crate) fn skipped_groups<'t>(root: AstNode<'t>, file: &AuditedFile) -> Vec<S
         Language::Kotlin => nodes_of_kind(root, &["class_declaration"])
             .into_iter()
             .filter_map(|class| {
-                let annotations = super::frameworks::kotlin_annotations(class);
+                let annotations = super::tier_two::kotlin_annotations(class);
                 Some(SkippedGroup {
                     name: class
                         .named_children()
@@ -241,7 +248,7 @@ pub(crate) fn skipped_groups<'t>(root: AstNode<'t>, file: &AuditedFile) -> Vec<S
         Language::CSharp => nodes_of_kind(root, &["class_declaration"])
             .into_iter()
             .filter_map(|class| {
-                let attributes = super::frameworks::csharp_attributes(class);
+                let attributes = super::tier_two::csharp_attributes(class);
                 let mark = csharp_skip_mark(class, &attributes)?;
                 Some(SkippedGroup {
                     name: class.child_by_field_name("name")?.text().to_string(),
@@ -288,6 +295,9 @@ pub(crate) fn skipped_groups<'t>(root: AstNode<'t>, file: &AuditedFile) -> Vec<S
                     })
                 })
                 .collect()
+        }
+        Language::C | Language::Cpp if file.role == SourceRole::Test => {
+            super::c_family::c_family_groups(root)
         }
         _ => Vec::new(),
     }

@@ -105,7 +105,7 @@ Structure, complexity, duplication, and maintainability.
 | `ruby_double_bang` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | unsupported | unsupported |
 | `section_divider_comment` | partial | partial | partial | partial | partial | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `sibling_call_redundancy` | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `skipped_test_without_reason` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `skipped_test_without_reason` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `source_duplicate_detection` | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `stale_link_reference` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | exact_lexical | unsupported |
 | `stale_path_reference` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | exact_lexical | unsupported |
@@ -188,7 +188,7 @@ Markdown and structured-data cells are excluded from these source-language total
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
 | L1 | 255 | 10 | 0 | 124 | 144 |
-| L2 | 137 | 17 | 53 | 177 | 110 |
+| L2 | 139 | 17 | 53 | 175 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 96 | 0 | 2 | 92 | 5 |
 | L5 | 89 | 1 | 0 | 56 | 36 |
@@ -280,7 +280,6 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Collections are arrays and pointers (or STL containers passed by reference): a mutation through a non-`const` pointer or reference is declared in the signature, and the rule needs `const`-qualification facts to tell a surprising write from a designed output buffer. | 2 | 1 | C, C++ |
 | Go mutates slices and maps through indexing and `append`, not method calls; the rule needs index-write facts for slice and map parameters. | 1 | 1 | Go |
 | Go structure facts record no string literals and model `switch` cases as plain branches, so a sentinel comparison has no evidence to read. | 1 | 1 | Go |
-| GoogleTest's `DISABLED_` prefix and `GTEST_SKIP()`, and Catch2's hidden `[.]` tags, are not modelled yet. | 2 | 1 | C, C++ |
 | Gradle build scripts and MSBuild project files are not parsed yet. | 2 | 1 | C#, Kotlin |
 | History-dependent: the depth-1 ecosystem corpus has no commit history, so the cell has no precision sample yet. | 8 | 1 | C, C++, C#, Go, Java, JavaScript, Kotlin, TypeScript |
 | Kotlin suspends implicitly: a suspend call in a loop has no `await` marker, so the rule needs suspend-function resolution to find sequential awaits. | 1 | 1 | Kotlin |
