@@ -827,7 +827,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "sql_injection",
         "correctness",
         High,
-        Full,
+        Gating,
         "L1",
         SqlInjection
     ),

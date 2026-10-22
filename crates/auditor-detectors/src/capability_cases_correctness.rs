@@ -311,7 +311,7 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         ),
         CapabilityCase::new(
             "sql_injection",
-            ScanProfile::Full,
+            ScanProfile::Gating,
             "src/db.go",
             "query, err := db.Query(fmt.Sprintf(\"SELECT * FROM users WHERE id = %s\", userID))\n",
             "src/db.py",

@@ -38,6 +38,14 @@
 
 ### Changed
 
+- `sql_injection` is promoted to the `gating` profile (55 gating, 69
+  full-only), so the default gate now reports SQL built from runtime values
+  in Rust, Python, JavaScript, TypeScript, Go, Java, Kotlin, and C#. It was
+  demoted for Dapper.Rainbow table names; the identifier and literal-bound
+  rules since removed all 17 corpus findings, all false positives, and none
+  is live. A gate against an earlier baseline can report new
+  `sql_injection` findings.
+
 ### Changed
 
 - `skipped_test_without_reason` reads C and C++ test files: GoogleTest

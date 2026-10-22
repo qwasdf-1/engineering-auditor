@@ -62,7 +62,6 @@ best-case precision is under 90%.
 | `magic_literal_cluster` | below_bar (57/21) | Scoped to `full` in Java, Python, and TypeScript, then below the bar overall once the strict recount resolved its unverified labels; demoted everywhere (operator decision, 2026-10-18) |
 | `console_output_in_production` | below_bar (43/21) | Residual docs-site and root build scripts (`www/`, `mm.mjs`) print by design; the Go form added in Task 10 is unaffected but the detector gates as one |
 | `insecure_cryptography` | insufficient_sample (0/3) | SHA-1 where collision resistance is not relied on (HMAC signing, a digest-auth nonce); no true positive on the corpus (operator rule, 2026-10-18) |
-| `sql_injection` | insufficient_sample (0/2) | Dapper.Rainbow builds table names from type metadata; no true positive on the corpus |
 | `nested_quadratic_iteration` | insufficient_sample (0/2) | Inner scans bounded by their segment, pairwise checks over small lists; no true positive |
 | `sibling_call_redundancy` | insufficient_sample (3/3) | Shared helper callees are composition, not redundant work |
 | `resource_not_closed` | insufficient_sample (2/1) | fmt's release script under `support/`, a path no role rule reads as tooling |
@@ -154,6 +153,7 @@ only with no false positive here.
 | `halstead_information_density` | Precision gate (2026-10-18, operator): 138/4; production files only. |
 | `class_structure_metrics` | Precision gate (2026-10-18, operator): 133/5; production files only; Python stays `full`. |
 | `source_duplicate_detection` | Precision gate (2026-10-18, operator): 169/9 after the extraction-worthiness conventions. |
+| `sql_injection` | Insufficient-sample gate (2026-10-22, operator): demoted at 0/2 for Dapper.Rainbow table names; the name-position and literal-bound rules since removed all 17 corpus findings, all false positives, so none is live. Positive and adversarial-negative capability cases in all eight claimed languages; C and C++ stay deferred. |
 | `too_many_returns` | Precision gate (2026-10-18, operator): 128/0; production files only. |
 | `too_many_statements` | Precision gate (2026-10-18, operator): 97/2; production files only. |
 
