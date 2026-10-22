@@ -574,10 +574,7 @@ fn run_language_owner(
             &files_for_language(context.files, Language::Go),
             context.cache,
         ),
-        DetectorOwner::GoErrcheck => golang::go_errcheck_findings(
-            &files_for_language(context.files, Language::Go),
-            context.cache,
-        ),
+        DetectorOwner::GoErrcheck => go_errcheck::go_errcheck_findings(context.ast_scan()),
         DetectorOwner::UnusedAssignment => golang::unused_assignment_findings(context.ast_scan()),
         DetectorOwner::GoRepeatedStringLiteral => golang::go_repeated_string_literal_findings(
             context.root,

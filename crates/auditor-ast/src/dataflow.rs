@@ -364,6 +364,14 @@ impl<'a> FunctionFlow<'a> {
         tracer.origins
     }
 
+    /// Whether `expression` has origins and every one passes `accept`,
+    /// seeing through no call (a constant, or a value only a known
+    /// constructor makes).
+    pub fn only_from(&self, expression: AstNode<'a>, accept: impl Fn(&Origin<'a>) -> bool) -> bool {
+        let origins = self.origins(expression, &|_| CallFlow::Opaque);
+        !origins.is_empty() && origins.iter().all(accept)
+    }
+
     /// Where `expression`'s value may go, through the calls `policy` sees
     /// through.
     pub fn destinations(

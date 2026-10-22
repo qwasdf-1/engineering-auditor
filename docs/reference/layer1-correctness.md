@@ -60,8 +60,8 @@ are file-local or bounded intraprocedural checks.
 | `require_atomic_updates` | full | JavaScript, TypeScript | exact lexical compound-update/await contract |
 | `dead_code` | full | Rust | private AST definitions plus semantic/attribute references |
 | `go_log_fatal` | gating | Go | exact lexical `log.Fatal` contract |
-| `go_errcheck` | gating | Go | exact lexical ignored-error contract; returned, assigned, or tested results are used |
-| `discarded_fallible_result` | full | Rust, Python, JavaScript, TypeScript, Go, Java | AST discard sites: Rust `let _ =`, `_ =`, and `.ok();` on `write_all`/`flush`/`sync_all`/`sync_data`/`commit`/`persist` and `fs::write`/`rename`/`copy`; Go blank assignments of `Sync`/`Commit` and `os.WriteFile`/`os.Rename` (bare or blank); Java statements dropping the boolean of `File` `mkdir(s)`/`renameTo`/`createNewFile`/`set*` and of `delete()` on a `File`; JS/TS non-top-level statements calling a same-file `async` function or `this` method, or `.then(onFulfilled)` alone; Python statements calling a same-file `async def` (or `self`/`cls` method) or `asyncio.sleep`, and dropped `asyncio.create_task`/`ensure_future` results |
+| `go_errcheck` | gating | Go | AST call statements, `defer`, and `go` that discard a known error result: resolved standard-library functions (`os.Remove`/`Rename`/`WriteFile`/`Mkdir*`/`Chmod`/`Setenv`/.., `io.Copy*`/`WriteString`/`ReadFull`, `filepath.Walk*`, `json.Unmarshal`, `http.ListenAndServe*`), `Run`/`Start`/`Wait` on an `exec.Command` value (chained or through a local, via the data-flow layer), and `Close()`/`Write(..)`/`Remove(..)` methods; assigned, returned, or tested results are used |
+| `discarded_fallible_result` | full | Rust, Python, JavaScript, TypeScript, Go, Java | AST discard sites: Rust `let _ =`, `_ =`, and `.ok();` on `write_all`/`flush`/`sync_all`/`sync_data`/`commit`/`persist` and `fs::write`/`rename`/`copy`; Go blank assignments of `Sync`/`Commit` and `os.WriteFile`/`os.Rename` (bare calls are `go_errcheck`'s); Java statements dropping the boolean of `File` `mkdir(s)`/`renameTo`/`createNewFile`/`set*` and of `delete()` on a `File`; JS/TS non-top-level statements calling a same-file `async` function or `this` method, or `.then(onFulfilled)` alone; Python statements calling a same-file `async def` (or `self`/`cls` method) or `asyncio.sleep`, and dropped `asyncio.create_task`/`ensure_future` results |
 | `float_equality_comparison` | full | Rust, Python, JavaScript, TypeScript, Go, Java, Kotlin, C#, C, C++ | `==`/`!=` (`===`/`!==`) between a float literal inexact in binary (`0.1`, not `0.5`; Kotlin and C# reals and C/C++ number literals with their `f`/`L` suffixes, not a C# `m` `decimal`) and float arithmetic: an arithmetic expression, or a local whose reaching value (through the data-flow layer) is one or a `+=` accumulation; production code, outside Rust `#[cfg(test)]` modules |
 | `mutable_default_argument` | full | Python | a parameter default that is a mutable literal, comprehension, or constructor (`[]`, `{}`, `set()`, `defaultdict(..)`), reached through the data-flow layer by a mutating method call, an item store or delete, an in-place `+=`/`\|=`, a store into an attribute or item, or a `return`/`yield` |
 | `unused_assignment` | gating | Rust, Python, JavaScript, TypeScript, Go, Java, Kotlin, C#, C, C++ | statement-list local def-use over AST assignments; Python blocks and Rust `let`/assignment statements, with Rust format-string captures (`{name}`) counted as reads and attributed (`#[cfg]`) statements skipped; JS/TS and Java declarations and plain `=` assignments; only function locals are judged (a field, package variable, or captured variable may be read by a call) |
@@ -81,11 +81,18 @@ are file-local or bounded intraprocedural checks.
   bare-name narrowing assert (`assert lexer  # for mypy`) looks like a
   precondition (`assert values`) without type information and is still
   reported.
-- `go_errcheck`: a call whose result is returned, assigned, or tested in an
-  `if` is not ignoring its error. Directories with a leading `_`, such as
-  `_examples/`, take the role of their name (Go's toolchain skips them). Known
-  residual: the check is lexical, so a custom method named `Write` or `Close`
-  that returns no error (chi's `LogEntry.Write`) is still reported.
+- `go_errcheck`: errcheck's contract without type information. Only a call
+  statement, `defer`, or `go` discards a result; one that is passed on,
+  assigned (`_ =` included, as errcheck's default), returned, or tested is
+  used. A call counts only when its error is known from the API table, an
+  `exec.Command` origin, or the method name; errcheck's default exclusions
+  apply to `Write` into a local `bytes.Buffer`, `strings.Builder`, or hash
+  (`sha256.New()`, `hmac.New(..)`), and a method the file declares only
+  without results (chi's `LogEntry.Write`) is not reported. Directories with a
+  leading `_`, such as `_examples/`, take the role of their name (Go's
+  toolchain skips them). Known residuals: `fmt.Fprint*` (errcheck excludes it
+  only for some writers, which needs the writer's type), and methods on values
+  whose type is unknown other than `Close`, `Write`, and `Remove`.
 - `discarded_fallible_result`: the result must be the only failure signal
   and the discard explicit, so it extends `go_errcheck` (which accepts
   `_ =`) and the Rust compiler's `unused_must_use` (which accepts `let _`)

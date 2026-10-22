@@ -41,6 +41,17 @@
 - A directory named for a release of another project
   (`test/googletest-1.13.0/`) is a vendored copy, with the reference role
   of a `third_party/` tree.
+- `go_errcheck` reads Go syntax trees instead of line text. A call statement,
+  `defer`, or `go` discards its result; a result passed on, assigned,
+  returned, or tested is used, so a name containing `err` (`stderr.Close()`)
+  no longer hides a call. Resolved standard-library functions that return an
+  error (`os.Remove`, `os.Rename`, `os.WriteFile`, `io.Copy`,
+  `filepath.Walk`, `json.Unmarshal`, `http.ListenAndServe`, ..) and
+  `Run`/`Start`/`Wait` on an `exec.Command` value are reported alongside the
+  `Close`, `Write`, and `Remove` methods, and writes into a local hash join
+  errcheck's buffer and builder exclusions. Bare Go `os.WriteFile` and
+  `os.Rename` calls move from `discarded_fallible_result` to `go_errcheck`;
+  the former keeps blank assignments.
 
 ## 1.4.0 - Systems, Logging, And Test-Quality Detectors
 

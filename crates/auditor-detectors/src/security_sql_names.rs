@@ -12,7 +12,7 @@
 //! (inside `'..'`, after `=`, `LIKE`, `IN`, `LIMIT`, or `ORDER BY`), or any
 //! slot taken from the request, keeps a query an injection site.
 
-use auditor_ast::{Assigned, AstNode, CallFlow, FunctionFlow, Origin};
+use auditor_ast::{Assigned, AstNode, FunctionFlow, Origin};
 
 use crate::dataflow_sources::{callee_name, from_request};
 use crate::security_sql_templates::{
@@ -266,11 +266,7 @@ fn is_constant(node: AstNode<'_>) -> bool {
     if !matches!(node.kind(), "identifier" | "simple_identifier") {
         return false;
     }
-    let origins = FunctionFlow::enclosing(node).origins(node, &|_| CallFlow::Opaque);
-    !origins.is_empty()
-        && origins
-            .iter()
-            .all(|origin| matches!(origin, Origin::Literal(_)))
+    FunctionFlow::enclosing(node).only_from(node, |origin| matches!(origin, Origin::Literal(_)))
 }
 
 /// Whether the slot at byte `at` of `skeleton` shapes the query rather

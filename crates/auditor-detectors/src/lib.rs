@@ -41,6 +41,7 @@ mod errorprone_language_rules;
 mod finding_anchor;
 mod finding_via;
 mod go_api_rules;
+mod go_errcheck;
 mod golang;
 mod java;
 mod java_api_identity;

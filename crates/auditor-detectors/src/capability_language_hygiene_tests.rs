@@ -322,7 +322,7 @@ import (
 func Save(f *os.File, tx *sql.Tx, data []byte) {
 	_ = f.Sync()
 	_ = tx.Commit()
-	os.Rename("a", "b")
+	_ = os.Rename("a", "b")
 	_ = os.WriteFile("p", data, 0o644)
 }
 "#;

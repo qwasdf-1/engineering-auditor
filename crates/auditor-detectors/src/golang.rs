@@ -38,113 +38,6 @@ pub(crate) fn go_log_fatal_findings(
     findings
 }
 
-/// golangci-lint inspired: detect ignored error returns
-pub(crate) fn go_errcheck_findings(
-    files: &[&AuditedFile],
-    cache: &util::FileCache,
-) -> Vec<Finding> {
-    let mut findings = Vec::new();
-    for file in files {
-        let rel = util::path_slash(&file.relative);
-        let text = cache.text(file);
-        let lines = text.lines().collect::<Vec<_>>();
-        for (line_number, line) in lines.iter().enumerate() {
-            let code = util::strip_comments(line).trim().to_string();
-            // Check for common error-returning calls without assignment
-            // Detects patterns like: someCall() on a line by itself where the
-            // first result is an error type (identified by common patterns)
-            let call = [".Write(", ".Close()", ".Remove("]
-                .iter()
-                .filter_map(|pattern| code.find(pattern).map(|index| (index, *pattern)))
-                .min()
-                .filter(|(index, pattern)| {
-                    !errcheck_excluded(&lines[..line_number], &code[..*index], pattern)
-                        && !declared_without_result(&lines, pattern)
-                })
-                .map(|(index, _)| index);
-            // The result is used when the call is returned, assigned, or tested.
-            let result_used = call.is_some_and(|index| {
-                let prefix = &code[..index];
-                prefix.starts_with("return ") || prefix.starts_with("if ") || prefix.contains('=')
-            });
-            if call.is_some() && !result_used && !code.contains("err") && !code.contains("error") {
-                let trimmed = code.trim();
-                if !trimmed.starts_with("//") && !trimmed.starts_with("/*") {
-                    findings.push(
-                        auditor_core::finding!(
-                            "go_errcheck",
-                            "correctness",
-                            "Ignored error return value",
-                            format!("Ignored error return from call at line {}", line_number + 1),
-                            Severity::Medium,
-                            Confidence::Low,
-                            &rel,
-                            Some(line_number + 1),
-                        )
-                        .with_recommendation("Check the error return value explicitly.")
-                        .with_evidence("pattern", line.trim()),
-                    );
-                }
-            }
-        }
-    }
-    findings
-}
-
-/// errcheck's default exclusions: writes to a `bytes.Buffer` or
-/// `strings.Builder` cannot fail. `receiver` is the call text before the
-/// method; only a plain local whose declaration an earlier line shows is
-/// resolved.
-fn errcheck_excluded(earlier: &[&str], receiver: &str, pattern: &str) -> bool {
-    const INFALLIBLE: &[&str] = &["bytes.Buffer", "strings.Builder", "bytes.NewBuffer"];
-    let name_start = receiver
-        .rfind(|c: char| !(c.is_alphanumeric() || c == '_'))
-        .map_or(0, |index| index + 1);
-    let name = &receiver[name_start..];
-    if pattern != ".Write(" || name.is_empty() || receiver[..name_start].ends_with('.') {
-        return false;
-    }
-    earlier.iter().rev().any(|line| {
-        let code = util::strip_comments(line);
-        let declares = code
-            .split(|c: char| !(c.is_alphanumeric() || c == '_'))
-            .any(|word| word == name)
-            && (code.contains(&format!("var {name} "))
-                || code.contains(&format!("{name} :="))
-                || code.contains(&format!("{name} *")));
-        declares && INFALLIBLE.iter().any(|kind| code.contains(kind))
-    })
-}
-
-/// A method this file declares only without results (`Write(status int)` in
-/// an interface, as chi's `LogEntry`): a call to it ignores no error.
-fn declared_without_result(lines: &[&str], pattern: &str) -> bool {
-    let method = pattern.trim_start_matches('.').trim_end_matches(['(', ')']);
-    let mut declarations = lines.iter().filter_map(|line| {
-        let code = util::strip_comments(line).trim().to_string();
-        let signature = code.strip_prefix("func ").map_or(code.as_str(), |rest| {
-            rest.strip_prefix('(')
-                .and_then(|receiver| receiver.split_once(") "))
-                .map_or(rest, |(_, tail)| tail)
-        });
-        let after_name = signature.strip_prefix(method)?.strip_prefix('(')?;
-        // Declarations, not calls: every parameter carries a type.
-        (code.starts_with("func ") || !code.contains('.') || after_name.contains(' ')).then(
-            || {
-                after_name
-                    .rsplit_once(')')
-                    .map(|(_, results)| results.trim().to_string())
-            },
-        )?
-    });
-    let mut any = false;
-    let without = declarations.all(|results| {
-        any = true;
-        results.is_empty() || results == "{"
-    });
-    any && without
-}
-
 /// golangci-lint inspired: detect repeated string literals that should be constants
 pub(crate) fn go_repeated_string_literal_findings(
     _root: &std::path::Path,
@@ -328,12 +221,6 @@ mod tests {
         findings
     }
 
-    fn errcheck(name: &str, text: &str) -> Vec<Finding> {
-        scan_go(name, text, |_, file, cache| {
-            go_errcheck_findings(&[file], cache)
-        })
-    }
-
     fn unused_assignments(name: &str, text: &str) -> Vec<Finding> {
         scan_go(name, text, |_, file, cache| {
             let mut repo_ast = auditor_ast::RepoAst::new();
@@ -354,33 +241,6 @@ mod tests {
             |_, file, cache| go_log_fatal_findings(&[file], cache),
         );
         assert!(findings.iter().any(|f| f.detector == "go_log_fatal"));
-    }
-
-    #[test]
-    fn go_errcheck_ignored_return() {
-        let findings = errcheck(
-            "goerr",
-            "package main\nfunc main() {\n    f.Write(data)\n}\n",
-        );
-        assert!(findings.iter().any(|f| f.detector == "go_errcheck"));
-    }
-
-    #[test]
-    fn go_errcheck_skips_infallible_buffers_and_resultless_methods() {
-        let findings = errcheck(
-            "goerrskip",
-            "package main\nimport (\n    \"bytes\"\n    \"net/http\"\n)\ntype LogEntry interface {\n    Write(status int, header http.Header)\n}\nfunc main(entry LogEntry) {\n    var buf bytes.Buffer\n    buf.Write(data)\n    entry.Write(200, nil)\n}\n",
-        );
-        assert!(findings.is_empty(), "{findings:?}");
-    }
-
-    #[test]
-    fn go_errcheck_still_reports_fallible_writers() {
-        let findings = errcheck(
-            "goerrkeep",
-            "package main\nimport \"os\"\nfunc main(buf *os.File) {\n    var other bytes.Buffer\n    buf.Write(data)\n    s.buf.Write(data)\n}\n",
-        );
-        assert_eq!(findings.len(), 2, "{findings:?}");
     }
 
     #[test]

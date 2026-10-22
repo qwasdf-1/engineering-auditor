@@ -265,30 +265,23 @@ fn inside_rust_drop(node: AstNode<'_>) -> bool {
     })
 }
 
+/// Blank assignments (`_ = f.Sync()`) of a durability call; bare call
+/// statements stay with `go_errcheck`.
 fn go_sites(root: AstNode<'_>) -> Vec<Site<'_>> {
     let mut sites = Vec::new();
-    for statement in
-        ast_scan::nodes_of_kind(root, &["assignment_statement", "expression_statement"])
-    {
-        let (call, blank) = if statement.kind() == "assignment_statement" {
-            let left = statement.child_by_field_name("left");
-            let right = statement.child_by_field_name("right");
-            let blank =
-                left.is_some_and(|left| left.named_children().all(|name| name.text() == "_"));
-            let call = right
-                .filter(|right| right.named_child_count() == 1)
-                .and_then(|right| right.named_child(0));
-            (call, blank)
-        } else {
-            (statement.named_child(0), false)
-        };
-        let Some(call) = call.filter(|call| call.kind() == "call_expression") else {
+    for statement in ast_scan::nodes_of_kind(root, &["assignment_statement"]) {
+        let blank = statement
+            .child_by_field_name("left")
+            .is_some_and(|left| left.named_children().all(|name| name.text() == "_"));
+        let call = statement
+            .child_by_field_name("right")
+            .filter(|right| right.named_child_count() == 1)
+            .and_then(|right| right.named_child(0))
+            .filter(|call| call.kind() == "call_expression");
+        let Some(call) = call.filter(|_| blank) else {
             continue;
         };
-        if statement.kind() == "assignment_statement" && !blank {
-            continue;
-        }
-        if let Some(api) = go_durable(call, blank) {
+        if let Some(api) = go_durable(call) {
             sites.push(site(call, api, Discard::Failure));
         }
     }
@@ -296,8 +289,8 @@ fn go_sites(root: AstNode<'_>) -> Vec<Site<'_>> {
 }
 
 /// `os.WriteFile` and `os.Rename` return only an error; `Sync` and `Commit`
-/// are counted only when a blank assignment shows they return a value.
-fn go_durable(call: AstNode<'_>, blank: bool) -> Option<String> {
+/// count because the blank assignment shows they return a value.
+fn go_durable(call: AstNode<'_>) -> Option<String> {
     let function = call.child_by_field_name("function")?;
     if function.kind() != "selector_expression" {
         return None;
@@ -313,7 +306,7 @@ fn go_durable(call: AstNode<'_>, blank: bool) -> Option<String> {
     let console = ["log", "Log", "Stdout", "Stderr"]
         .iter()
         .any(|marker| operand.contains(marker));
-    let method = blank && arguments == 0 && matches!(field, "Sync" | "Commit") && !console;
+    let method = arguments == 0 && matches!(field, "Sync" | "Commit") && !console;
     (os_function || method).then(|| format!("{}.{field}", short(operand)))
 }
 
