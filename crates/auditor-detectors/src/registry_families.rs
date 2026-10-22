@@ -73,6 +73,15 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
     )
     .with_roles(RoleApplicability::Production),
     spec!(
+        "pass_through_wrapper",
+        "structural",
+        Low,
+        Full,
+        "L2",
+        PassThroughWrapper
+    )
+    .with_roles(RoleApplicability::Production),
+    spec!(
         "eager_log_formatting",
         "optimization",
         Low,

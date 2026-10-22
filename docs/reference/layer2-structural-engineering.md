@@ -751,6 +751,51 @@ Language contract: Tier 1 and Tier 2 (see
 
 ---
 
+## `pass_through_wrapper` (full-only)
+
+Reports a private function whose whole body calls one other function with
+its own parameters, unchanged and in order (`return f(a, b)`, a tail
+expression, through an `await`; spread `*args`/`**kwargs`, `...rest`, and
+`args...` count as passed on). It adds a name and a call and nothing else,
+and its callers, all in the same module, could call the target directly.
+
+Read: Rust free and associated functions without `pub` (or with
+`pub(crate)`/`pub(super)`), module-level undecorated Python functions named
+`_x`, top-level JavaScript/TypeScript functions and `const f = (..) => ..`
+arrows that are not exported (by `export`, `module.exports`, or
+`exports.x`), Go functions with a lowercase name, and Java
+static methods that are not `public` or `protected`. The target is a plain
+function name or one qualified by an imported module or package, a Rust
+path, a Java type name, or a JavaScript global namespace (`Array`, `JSON`,
+`Math`, `console`, ..).
+
+Not reported:
+
+- a public or exported function: API, such as a facade over internals, a
+  convenience name, or an overload, which callers outside the module cannot
+  replace;
+- a function that adds, drops, changes, or reorders an argument, or takes
+  no parameters (an accessor or hook);
+- a method with a receiver (delegation, often required by an interface), a
+  Rust trait implementation or default method, and a Java overload set;
+- a data object's method (`PATTERN.test(s)`, `MAP.get(k)`,
+  `utils.LINEBREAK.test(s)`): the object is bound by the wrapper, not
+  supplied by the caller; and a constructor (`Self(x)`, a capitalized
+  Python call);
+- a Python decorator or a Java annotation, a Rust `#[cfg(..)]`,
+  `#[no_mangle]`, or `extern` function, a Go build-constrained file or
+  `//go:linkname`/`//export` function, and a conditional Python definition
+  (under `try` or `if`);
+- explicit type arguments (`parse::<T>(s)`, `decode<T>(s)`) and a TypeScript
+  type predicate (`value is T`), which add a type;
+- a function whose comment or docstring, or its class's or impl's, gives the
+  indirection a purpose: deprecated, an alias, compatibility, legacy, a test
+  seam (bridge, mock, testing, seam), a deferred lookup (lazy, runtime), or
+  a hook.
+
+Language contract: Tier 1 (see
+[`language-support.md`](./language-support.md)).
+
 ## Graph Analysis Support Detectors
 
 ### `tooling_overlap` (gating, `--features graph-analysis`)

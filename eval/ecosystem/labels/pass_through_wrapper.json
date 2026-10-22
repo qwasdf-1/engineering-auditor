@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "detector": "pass_through_wrapper",
+  "labels": [
+    {
+      "id": "EA-942d76ae1825ffaf",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/JavaVersion.java",
+      "message": "`getJavaVersion` at line 329 only passes its parameters on to `get`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 329,
+      "verdict": "true_positive",
+      "reason": "Package-private getJavaVersion(versionStr) only returns get(versionStr) in the same enum; two internal names for one lookup, and callers could call get directly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Package-private static that just calls JavaVersion.get; no callers found in main code, so the indirection serves no purpose."
+        }
+      ]
+    },
+    {
+      "id": "EA-0c8f30af62bf7bb9",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/Range.java",
+      "message": "`hash` at line 124 only passes its parameters on to `Objects.hash`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 124,
+      "verdict": "true_positive",
+      "reason": "A private hash(a, b) that only returns Objects.hash(a, b); it adds nothing over the JDK call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private static hash() only forwards to Objects.hash; two internal callers could call it directly."
+        }
+      ]
+    },
+    {
+      "id": "EA-fbf1335afd671038",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/math/Fraction.java",
+      "message": "`hash` at line 418 only passes its parameters on to `Objects.hash`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 418,
+      "verdict": "true_positive",
+      "reason": "A private hash(a, b) that only returns Objects.hash(a, b); it adds nothing over the JDK call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private static hash() only forwards to Objects.hash; callers could call it directly."
+        }
+      ]
+    },
+    {
+      "id": "EA-02db436395f68f80",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "message": "`equal` at line 166 only passes its parameters on to `Objects.equals`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 166,
+      "verdict": "true_positive",
+      "reason": "A private equal(a, b) that only returns Objects.equals(a, b), a leftover from before java.util.Objects; it adds nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private equal() only forwards to Objects.equals; leftover legacy helper with no added behavior."
+        }
+      ]
+    },
+    {
+      "id": "EA-b476e61f5b065d1e",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/LinkedTreeMap.java",
+      "message": "`equal` at line 236 only passes its parameters on to `Objects.equals`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 236,
+      "verdict": "true_positive",
+      "reason": "A private equal(a, b) that only returns Objects.equals(a, b); it adds nothing over the JDK call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private equal() only forwards to Objects.equals; no added behavior."
+        }
+      ]
+    },
+    {
+      "id": "EA-ce4e1a93c1cfd3d3",
+      "repository": "jsoup",
+      "language": "java",
+      "path": "src/main/java/org/jsoup/parser/ParseSettings.java",
+      "message": "`normalName` at line 85 only passes its parameters on to `normalize`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 85,
+      "verdict": "false_positive",
+      "reason": "The separate name is a domain concept: the code base has Tag.normalName, and this is its one definition for four call sites, while Normalizer.normalize is a general helper; revised after the arbiter's review.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "false_positive",
+          "reason": "ParseSettings.normalName is the one documented place that defines a Tag's normal name, a first-class concept with its own Tag.normalName field and accessor. Tag (3 sites) and TagSet (1 site) call it. Inlining the generic internal Normalizer.normalize at those sites would scatter that rule and tie it to a helper also used for unrelated strings such as the encoding attribute and CSS queries."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Package-private; forwards to the statically imported Normalizer.normalize but gives a documented domain name used by TagSet, so it is a mild semantic alias."
+        }
+      ]
+    },
+    {
+      "id": "EA-2aa0d88f5659fe72",
+      "repository": "axios",
+      "language": "javascript",
+      "path": "sandbox/client.js",
+      "message": "`handleSuccess` at line 9 only passes its parameters on to `console.log`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 9,
+      "verdict": "false_positive",
+      "reason": "A sandbox demo's named success handler, paired with handleFailure for the GET and POST examples; replacing it with console.log would not improve the demo (borderline); revised after the arbiter's review.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "false_positive",
+          "reason": "In this throwaway sandbox demo, handleSuccess is the named success callback deliberately paired with handleFailure in `.then(handleSuccess).catch(handleFailure)` for both requests. The symmetric handler pair is the evident demo intent, and swapping in a bare console.log would make the demo less clear, not better."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Sandbox demo callback paired with handleFailure; technically a pure forward to console.log but a named handler is the evident demo intent."
+        }
+      ]
+    },
+    {
+      "id": "EA-2532aed5d8182ba0",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/linter/esquery.js",
+      "message": "`matches` at line 443 only passes its parameters on to `esquery.matches`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 443,
+      "verdict": "false_positive",
+      "reason": "matches is exported through module.exports, so it is the module's API, not a private wrapper; the rule now reads CommonJS exports and no longer reports it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "matches is exported via module.exports, so it is public API of the module (and has JSDoc)."
+        }
+      ]
+    },
+    {
+      "id": "EA-cdb450fbd46432e6",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/server.js",
+      "message": "`restartMonitor` at line 1930 only passes its parameters on to `startMonitor`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "a6-a",
+      "line": 1930,
+      "verdict": "true_positive",
+      "reason": "restartMonitor(userID, monitorID) only awaits startMonitor with the same arguments; the extra name adds nothing (and suggests a stop that does not happen).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private function that only awaits startMonitor with the same args; callers could call startMonitor directly."
+        }
+      ]
+    },
+    {
+      "id": "EA-9c519cf7e1ccc32e",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/proto/h1/role.rs",
+      "message": "`can_have_body` at line 524 only passes its parameters on to `Server::can_chunked`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "t29-a",
+      "line": 524,
+      "verdict": "false_positive",
+      "reason": "can_have_body is one of a family of distinct HTTP checks (can_chunked, can_have_content_length); body-allowed and chunked-allowed answer alike today but are separate questions; revised after the arbiter's review.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "false_positive",
+          "reason": "can_have_body belongs to a family of separate HTTP predicates (can_have_body, can_chunked, can_have_content_length, can_have_implicit_zero_content_length). Whether a response may have a body and whether chunked transfer coding may be used are different questions that happen to agree today. can_chunked drives the transfer-encoding/trailer decisions, while can_have_body drives the 'force body to 0' rule, so calling can_chunked there would misstate the reason and couple two concepts that may diverge."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Pure forward to can_chunked, but it names a distinct concept (body allowed) used at a separate call site, plausibly a semantic alias that may diverge."
+        }
+      ]
+    },
+    {
+      "id": "EA-2ac3dcf67f6fb65a",
+      "repository": "lychee",
+      "language": "rust",
+      "path": "lychee-bin/src/config/mod.rs",
+      "message": "`load_from_file` at line 716 only passes its parameters on to `loaders::load_from_file`, unchanged; it adds a name and a call and nothing else",
+      "status": "corroborated",
+      "sampled_from": "a6-a",
+      "line": 716,
+      "verdict": "true_positive",
+      "reason": "A private associated load_from_file(path) that only calls loaders::load_from_file(path); same name, same arguments.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private associated fn that only forwards path to loaders::load_from_file with no added behavior; the single caller could call it directly."
+        }
+      ]
+    },
+    {
+      "id": "EA-273c2569563e5587",
+      "repository": "lychee",
+      "language": "rust",
+      "path": "lychee-bin/src/formatters/stats/mod.rs",
+      "message": "`sort_stat_map` at line 82 only passes its parameters on to `sort_stats_iter`, unchanged; it adds a name and a call and nothing else",
+      "status": "pre_label",
+      "sampled_from": "a6-a",
+      "line": 82,
+      "verdict": "true_positive",
+      "reason": "sort_stat_map only forwards the map to sort_stats_iter, which already accepts any IntoIterator including &HashMap; the narrower signature adds nothing its two callers need.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "true_positive",
+          "reason": "sort_stats_iter already accepts &HashMap<InputSource, HashSet<T>> through IntoIterator (the doc comment says so, and detailed.rs/compact.rs call it directly). So the markdown caller and the test could call it unchanged. The narrower signature adds no inference help, check or conversion, just a second name for the same operation."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Documented wrapper that narrows the generic sort_stats_iter to a concrete HashMap<InputSource, HashSet<T>> signature and is used by markdown formatter and tests."
+        }
+      ]
+    }
+  ]
+}

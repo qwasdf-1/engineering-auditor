@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Added
+
+- `pass_through_wrapper` (full-only, Tier 1, L2) reports a private
+  function whose whole body calls one other function with its own
+  parameters, unchanged and in order: non-`pub` Rust functions, `_x`
+  Python module functions, unexported JS/TS functions and arrows, lowercase
+  Go functions, and non-public Java static methods. Public API, methods,
+  trait implementations, overloads, data objects' methods, constructors,
+  decorated or annotated functions, platform shims, type arguments and
+  type guards, and wrappers documented as aliases, test seams, lazy
+  lookups, or hooks are not reported. Of 11 corpus findings, 7 are
+  corroborated true positives, 3 false positives, and 1 disputed (70%,
+  below the bar). The application slice measures it too. Catalog: 122
+  detectors (53 gating, 69 full-only).
+
 ### Changed
 
 - `skipped_test_without_reason` reads C and C++ test files: GoogleTest

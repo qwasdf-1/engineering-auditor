@@ -125,6 +125,7 @@ pub(crate) enum DetectorOwner {
     EagerLogFormatting,
     UnboundedConcurrency,
     UnboundedChannelOrQueue,
+    PassThroughWrapper,
     QuadraticFrontRemoval,
     CatastrophicBacktrackingRegex,
     UnusedDeclaredDependency,

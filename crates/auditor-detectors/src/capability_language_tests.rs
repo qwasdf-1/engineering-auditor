@@ -52,6 +52,10 @@ pub(crate) use l3_rules::l3_rule_capability_files;
 mod retry;
 pub(crate) use retry::retry_capability_files;
 
+#[path = "capability_language_pass_through_tests.rs"]
+mod pass_through;
+pub(crate) use pass_through::pass_through_capability_files;
+
 #[path = "capability_language_unbounded_tests.rs"]
 mod unbounded;
 pub(crate) use unbounded::unbounded_capability_files;
@@ -341,6 +345,12 @@ pub(super) fn retarget_case(case: &CapabilityCase, language: &str) -> Capability
         variant.positive = files;
     }
     if let Some(files) = retry_capability_files(case.id, language, false) {
+        variant.negative = files;
+    }
+    if let Some(files) = pass_through_capability_files(case.id, language, true) {
+        variant.positive = files;
+    }
+    if let Some(files) = pass_through_capability_files(case.id, language, false) {
         variant.negative = files;
     }
     if let Some(files) = unbounded_capability_files(case.id, language, true) {

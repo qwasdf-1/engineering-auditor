@@ -393,6 +393,11 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         "The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet.",
     ),
     deferred(
+        &["pass_through_wrapper"],
+        TIER_TWO,
+        "The Tier-2 function forms (Kotlin top-level and expression-bodied functions, C# static methods, C and C++ free functions with their macro wrappers) are not read yet.",
+    ),
+    deferred(
         &["retry_without_backoff"],
         TIER_TWO,
         "The Tier-2 retry shapes (Kotlin `runCatching` and `repeat`, C# `catch` filters, C and C++ return-code loops) and their wait calls are not modelled yet.",

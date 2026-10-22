@@ -186,6 +186,9 @@ fn run_structural_owner(
         DetectorOwner::EagerLogFormatting => {
             eager_log::eager_log_formatting_findings(context.ast_scan())
         }
+        DetectorOwner::PassThroughWrapper => {
+            pass_through::pass_through_wrapper_findings(context.ast_scan())
+        }
         DetectorOwner::RetryWithoutBackoff => {
             retry_backoff::retry_without_backoff_findings(context.ast_scan())
         }

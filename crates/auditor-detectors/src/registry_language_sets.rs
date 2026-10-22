@@ -240,6 +240,8 @@ pub(super) const RETRY_BACKOFF_IDS: &[&str] = &["retry_without_backoff"];
 pub(super) const EAGER_LOG_IDS: &[&str] = &["eager_log_formatting"];
 pub(super) const UNBOUNDED_CONCURRENCY_IDS: &[&str] = &["unbounded_concurrency"];
 pub(super) const UNBOUNDED_QUEUE_IDS: &[&str] = &["unbounded_channel_or_queue"];
+/// Free functions that only pass their parameters on to another function.
+pub(super) const PASS_THROUGH_IDS: &[&str] = &["pass_through_wrapper"];
 /// Front removal from an array-backed sequence in a loop.
 pub(super) const FRONT_REMOVAL_IDS: &[&str] = &["quadratic_front_removal"];
 /// Regex literals read by a backtracking engine.

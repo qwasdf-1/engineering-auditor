@@ -102,6 +102,7 @@ Structure, complexity, duplication, and maintainability.
 | `npath_complexity` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `orphan_symbol` | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `out_parameter` | not_applicable | unsupported | unsupported | unsupported | not_applicable | semantic | unsupported | unsupported | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `pass_through_wrapper` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `ruby_double_bang` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | unsupported | unsupported |
 | `section_divider_comment` | partial | partial | partial | partial | partial | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `sibling_call_redundancy` | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
@@ -188,7 +189,7 @@ Markdown and structured-data cells are excluded from these source-language total
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
 | L1 | 255 | 10 | 0 | 124 | 144 |
-| L2 | 139 | 17 | 53 | 175 | 110 |
+| L2 | 145 | 17 | 53 | 182 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 96 | 0 | 2 | 92 | 5 |
 | L5 | 89 | 1 | 0 | 56 | 36 |
@@ -299,7 +300,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Needs the receiver-method call shape: shared callees here are mostly methods on different receivers. | 3 | 1 | Go, JavaScript, TypeScript |
 | Needs type-member ownership: methods attached to a type through `impl` blocks or receivers. | 2 | 1 | Go, Rust |
 | No corpus evidence: the probe over the Kotlin and C# repositories produced no finding, so the cell has no precision sample. | 2 | 1 | C#, Kotlin |
-| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 202 | 68 | Julia, Ruby, Shell |
+| No grammar-backed capability and adversarial negative boundary has been qualified for this detector-language pair. | 205 | 69 | Julia, Ruby, Shell |
 | No qualified language-specific API identity and dataflow boundary exists for this security capability. | 18 | 6 | Julia, Ruby, Shell |
 | Qualified on Python only; the Tier-1 extensions were reviewed and deferred (type names in lexical spans, conventional short names, shared receiver callees), and the Tier-2 grammars share those blockers. | 16 | 4 | C, C++, C#, Kotlin |
 | Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile. | 1 | 1 | Go |
@@ -308,6 +309,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | The Tier-2 constructors (Kotlin `Channel(UNLIMITED)`, C# `Channel.CreateUnbounded` and `BlockingCollection` without a bound, C++ queue wrappers) are not in the constructor table yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 fan-out forms (Kotlin `launch`/`async` in a loop, C# `Task.Run` and `Task.WhenAll` over a `Select`, C and C++ thread creation in a loop) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
+| The Tier-2 function forms (Kotlin top-level and expression-bodied functions, C# static methods, C and C++ free functions with their macro wrappers) are not read yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 retry shapes (Kotlin `runCatching` and `repeat`, C# `catch` filters, C and C++ return-code loops) and their wait calls are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet. | 2 | 1 | C, Kotlin |

@@ -79,6 +79,7 @@ use scan_indexes::RemainingIndexUsers;
 mod eager_log;
 mod float_equality;
 mod mutable_defaults;
+mod pass_through;
 mod retry_backoff;
 mod security;
 mod security_api_rules;
