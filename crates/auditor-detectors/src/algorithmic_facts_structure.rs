@@ -71,7 +71,9 @@ pub(super) fn aliases_for(file: &StructureFile, owner: u32) -> BTreeMap<String, 
         .iter()
         .filter(|assignment| assignment.owner == Some(owner))
     {
-        let Some(target) = root_identifier(&assignment.target) else {
+        // A store into a member (`cmd.Parameters["@id"].Value = id`) leaves
+        // the object itself unaliased.
+        let Some(target) = exact_identifier(&assignment.target) else {
             continue;
         };
         let Some(source) = assignment.value.as_deref().and_then(exact_identifier) else {

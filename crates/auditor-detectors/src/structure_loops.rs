@@ -1,5 +1,5 @@
 //! Loop facts in the structure index: each loop's variable, iterable, and
-//! the counters its header assigns.
+//! the counters its header assigns, and Python comprehension clauses.
 
 use super::*;
 
@@ -47,6 +47,41 @@ pub(super) fn collect_loops(
             iterable_span: loop_fact.iterable,
             span: loop_fact.span,
             control_region: loop_fact.control_region,
+        })
+        .collect()
+}
+
+/// Python expressions whose `for` clauses repeat their element expression.
+const COMPREHENSIONS: &[&str] = &[
+    "list_comprehension",
+    "set_comprehension",
+    "dictionary_comprehension",
+    "generator_expression",
+];
+
+pub(super) fn collect_comprehensions(
+    file: &crate::AuditedFile,
+    tree: &auditor_ast::AstTree,
+) -> Vec<StructureComprehension> {
+    if file.language != Language::Python {
+        return Vec::new();
+    }
+    ast_scan::nodes_of_kind(tree.root_node(), &["for_in_clause"])
+        .into_iter()
+        .filter_map(|clause| {
+            let comprehension = clause
+                .parent()
+                .filter(|parent| COMPREHENSIONS.contains(&parent.kind()))?;
+            Some(StructureComprehension {
+                binding: clause
+                    .child_by_field_name("left")
+                    .map(|left| util::identifiers(left.text()))
+                    .unwrap_or_default(),
+                iterable: clause
+                    .child_by_field_name("right")
+                    .map(|right| bounded_expression(right.text())),
+                span: SourceSpan::from_node(comprehension),
+            })
         })
         .collect()
 }

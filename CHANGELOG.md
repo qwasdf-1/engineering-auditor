@@ -45,6 +45,15 @@
   rules since removed all 17 corpus findings, all false positives, and none
   is live. A gate against an earlier baseline can report new
   `sql_injection` findings.
+- `n_plus_one_query_in_loop` reads Python comprehensions as loops
+  (`[conn.execute("SELECT ..", (u.id,)) for u in users]`, dict and set
+  comprehensions, generator expressions), directly and through helpers;
+  a query in the first iterable runs once and is not reported. C# ADO.NET
+  reads (`ExecuteReader`, `ExecuteScalar`) are queries when the function
+  gives their command a `SELECT` literal, with the values bound to its
+  parameters as their inputs. A store into a member
+  (`cmd.Parameters["@id"].Value = id`) no longer makes the object an alias
+  of the stored value.
 
 ### Changed
 

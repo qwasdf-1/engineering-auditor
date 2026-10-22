@@ -277,6 +277,43 @@ pub(super) fn dependent_loop_binding<'a>(
     Some((loop_fact, binding))
 }
 
+/// The loop or Python comprehension that repeats `call` once per item, and
+/// the binding of it that `arguments` name: the innermost comprehension
+/// clause around the call whose binding they name, else the nearest loop.
+/// A walk over batches repeats nothing per item.
+pub(super) fn per_item_scope(
+    file: &StructureFile,
+    owner: u32,
+    call: &StructureCall,
+    arguments: &str,
+) -> Option<(SourceSpan, String)> {
+    let loop_fact = nearest_loop(file, owner, call.control_region);
+    let after = loop_fact.map_or(0, |loop_fact| loop_fact.span.start_byte);
+    let mut clauses = file
+        .comprehensions
+        .iter()
+        .filter(|clause| {
+            clause.span.start_byte >= after
+                && clause.span.start_byte <= call.span.start_byte
+                && call.span.end_byte <= clause.span.end_byte
+        })
+        .collect::<Vec<_>>();
+    clauses.sort_by_key(|clause| std::cmp::Reverse(clause.span.start_byte));
+    clauses
+        .into_iter()
+        .find_map(|clause| {
+            let binding = clause
+                .binding
+                .iter()
+                .find(|binding| contains_identifier(arguments, binding))?;
+            (!clause.walks_batches()).then(|| (clause.span, binding.clone()))
+        })
+        .or_else(|| {
+            let (loop_fact, binding) = dependent_loop_binding(file, owner, call, arguments)?;
+            (!loop_fact.walks_batches()).then_some((loop_fact.span, binding))
+        })
+}
+
 pub(super) fn assignment_root(assignment: &StructureAssignment) -> Option<String> {
     root_identifier(&assignment.target)
 }

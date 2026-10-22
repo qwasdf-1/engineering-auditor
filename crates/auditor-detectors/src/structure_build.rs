@@ -33,6 +33,7 @@ pub(super) fn build_structure_file(
         literals: collect_literals(tree, &facts, &symbols),
         controls: collect_controls(file, tree, &facts, &symbols),
         loops,
+        comprehensions: super::loops::collect_comprehensions(file, tree),
         subscripts: super::operands::collect_subscripts(file, tree, &symbols),
         memberships: super::operands::collect_memberships(file, tree, &symbols),
         go_module: None,

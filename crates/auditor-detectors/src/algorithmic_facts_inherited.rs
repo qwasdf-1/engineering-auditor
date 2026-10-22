@@ -119,14 +119,13 @@ fn repeated(
         }
         Operation::Query { receiver, method } => {
             let arguments = bound_arguments(site, &carried.params)?;
-            let (loop_fact, binding) = dependent_loop_binding(file, owner, call, &arguments)
-                .filter(|(loop_fact, _)| !loop_fact.walks_batches())?;
+            let (loop_span, binding) = per_item_scope(file, owner, call, &arguments)?;
             Some(AlgorithmicFactKind::QueryInLoop {
                 receiver: receiver.clone(),
                 method: method.clone(),
                 binding,
                 arguments,
-                loop_span: loop_fact.span,
+                loop_span,
                 call_span: call.span,
             })
         }
@@ -190,8 +189,9 @@ fn own_operation(
             return None;
         };
         (Operation::Sort, vec![position])
-    } else if is_store_query(file, owner, &shape) {
-        let params = scope.positions(&shape.arguments);
+    } else {
+        let arguments = store_query_inputs(file, owner, &shape)?;
+        let params = scope.positions(&arguments);
         if params.is_empty() {
             return None;
         }
@@ -200,8 +200,6 @@ fn own_operation(
             method: shape.method,
         };
         (operation, params)
-    } else {
-        return None;
     };
     Some(Carried {
         operation,

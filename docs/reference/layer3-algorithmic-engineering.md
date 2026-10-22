@@ -186,7 +186,13 @@ when the record is missing (`getOrCreateById`). A SQL runner (DB-API
 `execute`, JDBC `executeQuery`) is a read query whatever its receiver is
 called when its first argument is a string literal starting with `SELECT`
 (`cur.execute("SELECT .. WHERE uid = ?", (user.id,))`): the SQL proves the
-store. `executemany` and statements other than `SELECT` are not. A receiver
+store. `executemany` and statements other than `SELECT` are not. A C#
+ADO.NET read (`ExecuteReader`, `ExecuteScalar`, and their `Async` forms) is a
+read query when the function gives its command a `SELECT` literal
+(`new SqlCommand("SELECT ..", conn)` or `cmd.CommandText = "SELECT .."`);
+its arguments are then the command's text and every value bound through the
+command (`cmd.Parameters.AddWithValue("@id", id)`,
+`cmd.Parameters["@id"].Value = id`). A receiver
 is proven when its name reads as a store (`repo`, `repository`, `database`,
 `connection`, `session`) or contains the word `db` or `conn` (`db`, `userDb`,
 `db_conn`, but not `feedback` or `dbg`); when it is declared with a store
@@ -195,7 +201,10 @@ persistence or entity manager, Go `sql.DB`/`Tx`/`Conn`) as a parameter or
 local of the function, including
 a Java try-with-resources local or a `var` bound to `new` of such a type, or
 as a Java field; or when it is a JavaScript module-level binding imported
-from a module whose export queries directly (`redbean-node`, `knex`). Write methods,
+from a module whose export queries directly (`redbean-node`, `knex`). A Python comprehension
+repeats its element per item like a loop
+(`[conn.execute("SELECT ..", (u.id,)) for u in users]`), and so does each
+later `for` clause's iterable; the first iterable runs once. Write methods,
 batch APIs, preloading/eager-loading calls, and queries independent of the loop
 are semantic negatives, and so is a query in a loop that walks batches, pages,
 or windows (see `per_item_external_io`).

@@ -279,3 +279,92 @@ def each(cur, users):
         ["Function `each` calls `cur.execute` with loop-derived `user`, through `load`."]
     );
 }
+
+#[test]
+fn python_comprehensions_repeat_their_element_per_item() {
+    let source = "\
+def listed(users, conn):
+    return [conn.execute(\"SELECT * FROM t WHERE id=?\", (u.id,)) for u in users]
+
+
+def keyed(users, db):
+    return {u.id: db.execute(\"SELECT * FROM t WHERE id=?\", (u.id,)).fetchone() for u in users}
+
+
+def nested(groups, conn):
+    return [conn.execute(\"SELECT * FROM t WHERE g=?\", (g,)) for gs in groups for g in gs]
+
+
+def iterable_runs_once(conn, uid):
+    return [row for row in conn.execute(\"SELECT * FROM t WHERE id=?\", (uid,))]
+
+
+def walks_chunks(conn, ids):
+    return [conn.execute(\"SELECT * FROM t WHERE id IN ?\", (chunk,)) for chunk in chunked(ids, 100)]
+
+
+def lookup(conn, uid):
+    return conn.execute(\"SELECT * FROM t WHERE id=?\", (uid,)).fetchone()
+
+
+def through_helper(users, conn):
+    return [lookup(conn, u.id) for u in users]
+";
+    assert_eq!(
+        messages("python-comprehensions", "app/rows.py", source),
+        [
+            "Function `listed` calls `conn.execute` with loop-derived `u`.",
+            "Function `keyed` calls `db.execute` with loop-derived `u`.",
+            "Function `nested` calls `conn.execute` with loop-derived `g`.",
+            "Function `through_helper` calls `conn.execute` with loop-derived `u`, through `lookup`.",
+        ]
+    );
+}
+
+#[test]
+fn ado_net_command_reads_bind_their_parameters() {
+    let source = "\
+using System.Data.SqlClient;
+
+class Repo {
+    void Constructed(SqlConnection c, int[] ids) {
+        foreach (var id in ids) {
+            using var cmd = new SqlCommand(\"SELECT * FROM t WHERE id=@id\", c);
+            cmd.Parameters.AddWithValue(\"@id\", id);
+            using var reader = cmd.ExecuteReader();
+        }
+    }
+
+    void Prepared(SqlConnection c, int[] ids) {
+        var cmd = c.CreateCommand();
+        cmd.CommandText = \"SELECT name FROM t WHERE id=@id\";
+        foreach (var id in ids) {
+            cmd.Parameters[\"@id\"].Value = id;
+            cmd.ExecuteScalar();
+        }
+    }
+
+    void Deletes(SqlConnection c, int[] ids) {
+        foreach (var id in ids) {
+            var cmd = new SqlCommand(\"DELETE FROM t WHERE id=@id\", c);
+            cmd.Parameters.AddWithValue(\"@id\", id);
+            cmd.ExecuteReader();
+        }
+    }
+
+    void Invariant(SqlConnection c, int[] ids) {
+        foreach (var id in ids) {
+            var cmd = new SqlCommand(\"SELECT count(*) FROM t\", c);
+            Consume(id, cmd.ExecuteScalar());
+        }
+    }
+}
+";
+    assert_eq!(
+        messages("ado-net", "src/Repo.cs", source),
+        [
+            "Function `Constructed` calls `cmd.ExecuteReader` with loop-derived `id`.",
+            "Function `Prepared` calls `cmd.ExecuteScalar` with loop-derived `id`.",
+        ]
+    );
+}

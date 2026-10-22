@@ -203,6 +203,16 @@ pub(crate) struct StructureLoop {
     pub(crate) control_region: u32,
 }
 
+/// A Python comprehension's `for` clause (`for user in users` in
+/// `[load(user) for user in users]`): its element expression runs once per
+/// item. `span` covers the whole comprehension.
+#[derive(Clone, Debug)]
+pub(crate) struct StructureComprehension {
+    pub(crate) binding: Vec<String>,
+    pub(crate) iterable: Option<String>,
+    pub(crate) span: SourceSpan,
+}
+
 #[derive(Clone, Copy, Debug, Default)]
 pub(crate) struct StructureFunctionMetrics {
     pub(crate) locals: usize,
@@ -226,6 +236,7 @@ pub(crate) struct StructureFile {
     pub(crate) literals: Vec<StructureLiteral>,
     pub(crate) controls: Vec<StructureControl>,
     pub(crate) loops: Vec<StructureLoop>,
+    pub(crate) comprehensions: Vec<StructureComprehension>,
     pub(crate) subscripts: Vec<StructureSubscript>,
     pub(crate) memberships: Vec<StructureMembership>,
     pub(crate) function_metrics: BTreeMap<u32, StructureFunctionMetrics>,

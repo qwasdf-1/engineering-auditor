@@ -3,8 +3,9 @@
 
 use auditor_ast::SymbolKind;
 
-use super::CallShape;
+use super::{root_identifier, CallShape};
 use crate::structure_index::{StructureFile, StructureSymbol};
+use crate::Language;
 
 /// Receiver names that read as a data store.
 const STORE_NAMES: &[&str] = &["repo", "repository", "database", "connection", "session"];
@@ -16,6 +17,14 @@ const STORE_WORDS: &[&str] = &["db", "conn"];
 /// Methods that run the SQL text they are given: DB-API `execute` and JDBC
 /// `executeQuery`. Batch forms (`executemany`) are the fix, not the problem.
 const SQL_RUNNERS: &[&str] = &["execute", "execute_query"];
+
+/// ADO.NET command methods that run a read (`cmd.ExecuteReader()`).
+const COMMAND_READS: &[&str] = &[
+    "ExecuteReader",
+    "ExecuteReaderAsync",
+    "ExecuteScalar",
+    "ExecuteScalarAsync",
+];
 
 /// Declared types that name a data store, lowercased.
 const STORE_TYPES: &[&str] = &[
@@ -63,14 +72,88 @@ fn snake_case(name: &str) -> String {
 /// `shape` reads from a data store in `owner`: a query method on a proven
 /// store, or a SQL runner given a `SELECT` literal, whose text proves the
 /// store whatever the receiver is called (`cur.execute("SELECT ..", ..)`).
-pub(super) fn is_store_query(file: &StructureFile, owner: u32, shape: &CallShape) -> bool {
+fn is_store_query(file: &StructureFile, owner: u32, shape: &CallShape) -> bool {
     is_read_query(&shape.method) && query_receiver_is_proven(file, owner, &shape.root)
         || runs_select(shape)
 }
 
 /// A call that may be a store query, before its receiver is checked.
 pub(super) fn may_be_store_query(shape: &CallShape) -> bool {
-    is_read_query(&shape.method) || runs_select(shape)
+    is_read_query(&shape.method)
+        || runs_select(shape)
+        || COMMAND_READS.contains(&shape.method.as_str())
+}
+
+/// The inputs of a store query in `owner`: its arguments, or for an ADO.NET
+/// command read, the command's text and the values bound to its parameters.
+pub(super) fn store_query_inputs(
+    file: &StructureFile,
+    owner: u32,
+    shape: &CallShape,
+) -> Option<String> {
+    if is_store_query(file, owner, shape) {
+        return Some(shape.arguments.clone());
+    }
+    command_read_inputs(file, owner, shape)
+}
+
+/// `cmd.ExecuteReader()` on a command that `owner` gives a `SELECT` literal
+/// (`new SqlCommand("SELECT ..", conn)` or `cmd.CommandText = "SELECT .."`):
+/// the command's construction, its text, and every value bound through it
+/// (`cmd.Parameters.AddWithValue("@id", id)`,
+/// `cmd.Parameters["@id"].Value = id`).
+fn command_read_inputs(file: &StructureFile, owner: u32, shape: &CallShape) -> Option<String> {
+    if file.language != Language::CSharp || !COMMAND_READS.contains(&shape.method.as_str()) {
+        return None;
+    }
+    let command = shape.root.as_str();
+    let text = format!("{command}.CommandText");
+    let mut selects = false;
+    let mut inputs = Vec::new();
+    for assignment in file
+        .assignments
+        .iter()
+        .filter(|assignment| assignment.owner == Some(owner))
+    {
+        let (target, Some(value)) = (assignment.target.trim(), assignment.value.as_deref()) else {
+            continue;
+        };
+        if target == command {
+            let Some(arguments) = command_arguments(value) else {
+                continue;
+            };
+            selects |= starts_with_select_literal(arguments);
+            inputs.push(arguments);
+        } else if target == text {
+            selects |= starts_with_select_literal(value);
+            inputs.push(value);
+        } else if root_identifier(target).as_deref() == Some(command) {
+            inputs.push(value);
+        }
+    }
+    let bound = file.calls.iter().filter(|call| {
+        call.owner == Some(owner)
+            && call
+                .receiver
+                .as_deref()
+                .and_then(root_identifier)
+                .as_deref()
+                == Some(command)
+    });
+    inputs.extend(bound.filter_map(|call| call.arguments.as_deref()));
+    selects.then(|| inputs.join(", "))
+}
+
+/// The arguments of a command construction: `new SqlCommand(..)`,
+/// `new NpgsqlCommand(..)`.
+fn command_arguments(value: &str) -> Option<&str> {
+    let created = value.trim().strip_prefix("new ")?;
+    let open = created.find('(')?;
+    created[..open]
+        .trim_end()
+        .ends_with("Command")
+        .then(|| created[open + 1..].trim_end().strip_suffix(')'))
+        .flatten()
 }
 
 fn runs_select(shape: &CallShape) -> bool {

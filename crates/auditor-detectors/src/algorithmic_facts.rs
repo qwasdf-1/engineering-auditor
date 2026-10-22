@@ -644,13 +644,10 @@ fn collect_queries_in_loops(
         let Some(shape) = call_shape(call, aliases) else {
             continue;
         };
-        if !is_store_query(file, owner, &shape) {
+        let Some(arguments) = store_query_inputs(file, owner, &shape) else {
             continue;
-        }
-        let Some((loop_fact, binding)) =
-            dependent_loop_binding(file, owner, call, &shape.arguments)
-                .filter(|(loop_fact, _)| !loop_fact.walks_batches())
-        else {
+        };
+        let Some((loop_span, binding)) = per_item_scope(file, owner, call, &arguments) else {
             continue;
         };
         push_fact(
@@ -661,8 +658,8 @@ fn collect_queries_in_loops(
                 receiver: shape.root,
                 method: shape.method,
                 binding,
-                arguments: shape.arguments,
-                loop_span: loop_fact.span,
+                arguments,
+                loop_span,
                 call_span: call.span,
             },
             facts,
@@ -696,7 +693,7 @@ use cost_collectors::*;
 use dedupe::collect_deduplicating_appends;
 use effects::*;
 use front_removal::collect_front_removals;
-use queries::{is_store_query, may_be_store_query};
+use queries::{may_be_store_query, store_query_inputs};
 use semantics::*;
 use structure::*;
 
