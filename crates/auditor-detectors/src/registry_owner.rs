@@ -126,6 +126,7 @@ pub(crate) enum DetectorOwner {
     UnboundedConcurrency,
     UnboundedChannelOrQueue,
     PassThroughWrapper,
+    SingleImplementationAbstraction,
     QuadraticFrontRemoval,
     CatastrophicBacktrackingRegex,
     UnusedDeclaredDependency,

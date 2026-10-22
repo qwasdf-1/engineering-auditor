@@ -14,8 +14,18 @@
   type guards, and wrappers documented as aliases, test seams, lazy
   lookups, or hooks are not reported. Of 11 corpus findings, 7 are
   corroborated true positives, 3 false positives, and 1 disputed (70%,
-  below the bar). The application slice measures it too. Catalog: 122
-  detectors (53 gating, 69 full-only).
+  below the bar). The application slice measures it too.
+- `single_implementation_abstraction` (full-only, L2; Rust, Python,
+  TypeScript, Go, Java) reports a non-public trait, interface, ABC, or
+  abstract class (with an abstract member) that has exactly one
+  implementation in the repository, test code included, so a test fake
+  makes it a seam. Public abstractions, blanket and extension-trait
+  implementations, Java single-method and extended interfaces, Python
+  `Protocol`s, TypeScript interfaces, Go embedded interfaces, and
+  abstractions whose implementer is itself implemented are not reported.
+  JavaScript has no abstraction declaration. Of 2 corpus findings, 1 is a
+  corroborated true positive and 1 a false positive (insufficient sample).
+  Catalog: 123 detectors (53 gating, 70 full-only).
 
 ### Changed
 

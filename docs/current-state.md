@@ -22,7 +22,7 @@ and promotes `eager_log_formatting` to the gating profile.
 
 ## Scanning
 
-- **Catalog.** 122 detectors by default (53 gating, 69 full-only); the
+- **Catalog.** 123 detectors by default (53 gating, 70 full-only); the
   `graph-analysis` build feature adds seven. Each detector's languages and
   roles are declared in the catalog and enforced on every finding.
 - **Discovery.** Repository ignore files and `.eaignore` bound the scan;

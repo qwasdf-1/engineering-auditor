@@ -92,6 +92,7 @@ mod security_rules;
 mod security_sql;
 mod security_sql_names;
 mod security_sql_templates;
+mod single_implementation;
 mod source_cache;
 mod source_discovery;
 mod statement_shapes;

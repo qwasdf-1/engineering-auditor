@@ -796,6 +796,50 @@ Not reported:
 Language contract: Tier 1 (see
 [`language-support.md`](./language-support.md)).
 
+## `single_implementation_abstraction` (full-only)
+
+Reports a non-public abstraction with exactly one implementation anywhere
+in the repository. The abstraction is a second declaration to read and keep
+in step for a variation nothing uses; the implementation could stand alone
+until a second one exists.
+
+Read: Rust traits without `pub` (or with `pub(crate)`/`pub(super)`);
+Java interfaces with more than one abstract method and abstract classes that
+are not `public` or `protected` (a type declared in an interface is
+implicitly public); Python classes deriving from `ABC` or using
+`metaclass=ABCMeta`, named `_x`; unexported TypeScript abstract classes;
+and Go interfaces with a lowercase name made only of methods.
+
+Implementations are counted across every source role, so a test fake is a
+second implementation and the abstraction a test seam: Rust
+`impl Trait for Type`, Java `implements`/`extends` of classes, enums, and
+records and anonymous classes, Python subclasses, TypeScript `extends`, and
+Go types whose declared methods cover the interface's method names.
+
+Not reported:
+
+- a public abstraction: API that code outside the repository may
+  implement, which the repository cannot see;
+- an abstraction with no implementation (an extension point) or with two or
+  more;
+- an abstraction whose one implementer has implementations of its own (an
+  abstract base class between an interface and its subclasses);
+- an abstract class that declares no abstract member (a Java `abstract`
+  method, a TypeScript abstract member, a Python `@abstractmethod`): a base
+  for shared code, not a variation point;
+- a Rust trait with a blanket implementation (`impl<T: ..> Trait for T`),
+  or implemented only for a type the repository does not define (an
+  extension trait);
+- a Java interface with one abstract method, which lambdas implement
+  uncounted, and an interface another interface extends;
+- a Python `Protocol` and a TypeScript interface, which objects implement
+  without naming them; a Go interface that embeds another or declares a
+  type set, and one in a build-constrained file.
+
+Language contract: Rust, Python, TypeScript, Go, and Java; JavaScript
+declares no interface or abstract class (see
+[`language-support.md`](./language-support.md)).
+
 ## Graph Analysis Support Detectors
 
 ### `tooling_overlap` (gating, `--features graph-analysis`)

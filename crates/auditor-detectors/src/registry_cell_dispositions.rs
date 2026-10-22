@@ -392,6 +392,16 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         TIER_TWO,
         "The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet.",
     ),
+    not_applicable(
+        &["single_implementation_abstraction"],
+        &["javascript"],
+        "JavaScript declares no interface or abstract class; a base class is concrete and its subclasses override it by convention.",
+    ),
+    deferred(
+        &["single_implementation_abstraction"],
+        TIER_TWO,
+        "The Tier-2 abstraction forms (Kotlin and C# interfaces and abstract classes, C++ pure virtual classes) are not read yet.",
+    ),
     deferred(
         &["pass_through_wrapper"],
         TIER_TWO,

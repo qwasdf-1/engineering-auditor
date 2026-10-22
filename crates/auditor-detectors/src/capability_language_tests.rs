@@ -56,6 +56,10 @@ pub(crate) use retry::retry_capability_files;
 mod pass_through;
 pub(crate) use pass_through::pass_through_capability_files;
 
+#[path = "capability_language_single_implementation_tests.rs"]
+mod single_implementation;
+pub(crate) use single_implementation::single_implementation_capability_files;
+
 #[path = "capability_language_unbounded_tests.rs"]
 mod unbounded;
 pub(crate) use unbounded::unbounded_capability_files;
@@ -351,6 +355,12 @@ pub(super) fn retarget_case(case: &CapabilityCase, language: &str) -> Capability
         variant.positive = files;
     }
     if let Some(files) = pass_through_capability_files(case.id, language, false) {
+        variant.negative = files;
+    }
+    if let Some(files) = single_implementation_capability_files(case.id, language, true) {
+        variant.positive = files;
+    }
+    if let Some(files) = single_implementation_capability_files(case.id, language, false) {
         variant.negative = files;
     }
     if let Some(files) = unbounded_capability_files(case.id, language, true) {

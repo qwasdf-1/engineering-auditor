@@ -82,6 +82,16 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
     )
     .with_roles(RoleApplicability::Production),
     spec!(
+        "single_implementation_abstraction",
+        "structural",
+        Low,
+        Full,
+        "L2",
+        SingleImplementationAbstraction
+    )
+    .with_roles(RoleApplicability::Production)
+    .with_context_roles(RoleApplicability::TestEvolution),
+    spec!(
         "eager_log_formatting",
         "optimization",
         Low,

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "detector": "single_implementation_abstraction",
+  "labels": [
+    {
+      "id": "EA-699b1d21298e5962",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/time/AbstractFormatCache.java",
+      "message": "Abstract class `AbstractFormatCache` at line 38 has one implementation in the repository, `anonymous class at line 114`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "corroborated",
+      "sampled_from": "t30-a",
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "A package-private generic cache whose only implementation is one anonymous subclass in FastDateFormat supplying createInstance; the abstraction (and its TODO about going public) serves a variation nothing has.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "true_positive",
+          "reason": "The only subclass in main or test code is the static anonymous CACHE in FastDateFormat. It captures no state, and its createInstance just calls new FastDateFormat(pattern, timeZone, locale), so a concrete cache that builds FastDateFormat directly (or takes a factory function) would lose nothing; the class is package-private, tests use only its static members, and the 'Before making public' TODO marks the generality as speculative rather than a documented extension point."
+        },
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "unclear",
+          "reason": "Only FastDateFormat's anonymous subclass overrides createInstance, so it is single-implementation in fact, but it is a template-method cache with substantial shared logic and static helpers used by other classes and tests; folding it in is possible but arguable."
+        }
+      ]
+    },
+    {
+      "id": "EA-3952f432450220dc",
+      "repository": "gson",
+      "language": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "message": "Abstract class `BoundField` at line 428 has one implementation in the repository, `anonymous class at line 220`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "corroborated",
+      "sampled_from": "t30-a",
+      "line": 428,
+      "verdict": "false_positive",
+      "reason": "The one anonymous subclass in createBoundField captures many of that method's locals; the abstract class is the interface of a closure (Java's pre-lambda idiom), not a speculative variation point.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The sole implementation is an anonymous class that captures local context (accessor, typeAdapter, blockInaccessible, etc.) to implement write/readIntoArray/readIntoField, so BoundField is a closure-style callback interface; the abstraction has a real purpose."
+        }
+      ]
+    }
+  ]
+}

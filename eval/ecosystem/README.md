@@ -34,8 +34,9 @@ miniflux, Dependency-Track, Uptime Kuma, Hoppscotch), each naming the
 detectors it measures (`network_call_without_timeout` and the systems and
 logging detectors whose findings sit in applications:
 `eager_log_formatting`, `retry_without_backoff`, `unbounded_concurrency`,
-`unbounded_channel_or_queue`, and `pass_through_wrapper`, whose library
-sample is small because libraries keep few private forwarding functions).
+`unbounded_channel_or_queue`, and `pass_through_wrapper` and
+`single_implementation_abstraction`, whose library samples are small
+because libraries keep few private forwarding functions or abstractions).
 
 ```sh
 python3 tooling/ecosystem/run.py scan --slice applications --label apps-current

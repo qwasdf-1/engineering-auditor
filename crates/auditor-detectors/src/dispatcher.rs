@@ -551,6 +551,15 @@ fn run_language_owner(
     context: &mut DetectorContext<'_>,
 ) -> Option<Vec<Finding>> {
     Some(match owner {
+        DetectorOwner::SingleImplementationAbstraction => {
+            single_implementation::single_implementation_abstraction_findings(
+                context.files,
+                context.context_files,
+                context.method,
+                context.cache,
+                &mut context.repo_ast,
+            )
+        }
         DetectorOwner::DeadCode => dead_code::dead_code_findings_with_context(
             context.files,
             context.context_files,

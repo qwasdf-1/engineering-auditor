@@ -264,6 +264,17 @@ fn pass_through_files(positive: bool) -> Vec<(String, String)> {
         .expect("Python pass-through boundary")
 }
 
+/// The Python single-implementation boundary; the other languages retarget
+/// through the same fixtures.
+fn single_implementation_files(positive: bool) -> Vec<(String, String)> {
+    super::language_tests::single_implementation_capability_files(
+        "single_implementation_abstraction",
+        "python",
+        positive,
+    )
+    .expect("Python single-implementation boundary")
+}
+
 /// The Python eager-log boundary; the other languages retarget through the
 /// same fixtures.
 fn eager_log_files(positive: bool) -> Vec<(String, String)> {
@@ -294,6 +305,9 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         CapabilityCase::new("pass_through_wrapper", ScanProfile::Full, "", "", "", "")
             .positive_files(pass_through_files(true))
             .negative_files(pass_through_files(false)),
+        CapabilityCase::new("single_implementation_abstraction", ScanProfile::Full, "", "", "", "")
+            .positive_files(single_implementation_files(true))
+            .negative_files(single_implementation_files(false)),
         CapabilityCase::new("unbounded_concurrency", ScanProfile::Full, "", "", "", "")
             .positive_files(unbounded_files("unbounded_concurrency", true))
             .negative_files(unbounded_files("unbounded_concurrency", false)),

@@ -242,6 +242,9 @@ pub(super) const UNBOUNDED_CONCURRENCY_IDS: &[&str] = &["unbounded_concurrency"]
 pub(super) const UNBOUNDED_QUEUE_IDS: &[&str] = &["unbounded_channel_or_queue"];
 /// Free functions that only pass their parameters on to another function.
 pub(super) const PASS_THROUGH_IDS: &[&str] = &["pass_through_wrapper"];
+/// Declared abstractions (traits, interfaces, abstract classes) counted
+/// against the repository's implementations.
+pub(super) const SINGLE_IMPLEMENTATION_IDS: &[&str] = &["single_implementation_abstraction"];
 /// Front removal from an array-backed sequence in a loop.
 pub(super) const FRONT_REMOVAL_IDS: &[&str] = &["quadratic_front_removal"];
 /// Regex literals read by a backtracking engine.
