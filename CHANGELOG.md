@@ -54,6 +54,8 @@
   parameters as their inputs. A store into a member
   (`cmd.Parameters["@id"].Value = id`) no longer makes the object an alias
   of the stored value.
+- `scan --quiet` without `--output` reports `output=none`, not
+  `output=stdout`: it writes the report nowhere.
 
 ### Changed
 

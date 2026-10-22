@@ -63,11 +63,12 @@ pub(crate) fn run_scan_with_overrides(
     .map(|result| {
         if quiet {
             // --quiet: suppress stdout. Emit a single stderr line so an
-            // operator sees the finding total and where the artifact lives.
+            // operator sees the finding total and where the artifact lives;
+            // without --output the report is not written anywhere.
             let destination = output_path
                 .as_deref()
                 .map(|p| p.display().to_string())
-                .unwrap_or_else(|| "stdout".to_string());
+                .unwrap_or_else(|| "none".to_string());
             eprintln!(
                 "auditor: {} findings; format={}; output={}",
                 result.report.findings.len(),

@@ -80,7 +80,8 @@ run for each language.
 
 ## Performance
 
-Scans run on a single thread. On a 16-core Linux machine, a 50,000-line
+Parsing and indexing use all cores; detectors run one at a time. On a
+16-core Linux machine, a 50,000-line
 repository scans in about 1 to 3 seconds and a 540,000-line JavaScript
 repository in about 14 seconds with the gating profile, using up to about
 550 MB of memory.
