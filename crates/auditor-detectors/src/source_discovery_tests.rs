@@ -48,6 +48,43 @@ fn rust_modules_declared_under_cfg_test_are_test_code() {
 }
 
 #[test]
+fn a_tool_that_builds_its_own_image_is_production() {
+    let root = std::env::temp_dir().join(format!(
+        "ea-shipped-tool-{}-{}",
+        std::process::id(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    for (path, text) in [
+        ("extra/push/main.go", "package main\n"),
+        ("extra/push/Dockerfile", "FROM scratch\n"),
+        ("extra/release.js", "run()\n"),
+        ("extra/Dockerfile", "FROM scratch\n"),
+        ("hack/image/src/docker/Dockerfile", "FROM scratch\n"),
+        ("hack/image/src/main.go", "package main\n"),
+    ] {
+        let absolute = root.join(path);
+        fs::create_dir_all(absolute.parent().unwrap()).unwrap();
+        fs::write(absolute, text).unwrap();
+    }
+    let roles = discover_audited_files_with_filter(
+        &root,
+        SourceDiscoveryOptions::default(),
+        &ScopeFilter::default(),
+    )
+    .unwrap()
+    .into_iter()
+    .map(|file| (util::path_slash(&file.relative), file.role))
+    .collect::<BTreeMap<_, _>>();
+    assert_eq!(roles["extra/push/main.go"], SourceRole::Production);
+    assert_eq!(roles["extra/release.js"], SourceRole::Tooling);
+    assert_eq!(roles["hack/image/src/main.go"], SourceRole::Tooling);
+    fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
 fn source_roles_follow_stable_path_precedence() {
     let cases = [
         ("src/lib.rs", SourceRole::Production),

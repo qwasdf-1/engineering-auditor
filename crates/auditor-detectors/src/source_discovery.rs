@@ -336,14 +336,10 @@ pub(crate) fn discover_audited_files_with_filter(
             continue;
         }
         let path = entry.into_path();
-        if is_excluded_path(root, &path, options) {
+        let outside_scope =
+            path.starts_with(root) && !filter.matches(&util::relative_slash(root, &path));
+        if outside_scope || is_excluded_path(root, &path, options) {
             continue;
-        }
-        if path.starts_with(root) {
-            let rel = util::relative_slash(root, &path);
-            if !filter.matches(&rel) {
-                continue;
-            }
         }
         let bytes = fs::metadata(&path)?.len();
         files.extend(audited_file(root, path, bytes));
@@ -376,6 +372,7 @@ fn audited_file(root: &Path, path: PathBuf, bytes: u64) -> Option<AuditedFile> {
         SourceRole::Production if language != Language::Markdown && is_generated_output(&path) => {
             SourceRole::Generated
         }
+        SourceRole::Tooling if ships_container_image(root, &relative) => SourceRole::Production,
         role => role,
     };
     Some(AuditedFile {
@@ -385,6 +382,22 @@ fn audited_file(root: &Path, path: PathBuf, bytes: u64) -> Option<AuditedFile> {
         bytes,
         role,
     })
+}
+
+/// A program in a tooling directory that builds its own container image
+/// ships (uptime-kuma's `extra/uptime-kuma-push/`): a Dockerfile or
+/// Containerfile in its directory or an ancestor below the top level, whose
+/// own Dockerfile builds the repository, not the tool.
+fn ships_container_image(root: &Path, relative: &Path) -> bool {
+    relative
+        .ancestors()
+        .skip(1)
+        .take_while(|directory| directory.components().count() >= 2)
+        .any(|directory| {
+            ["Dockerfile", "Containerfile"]
+                .iter()
+                .any(|name| root.join(directory).join(name).is_file())
+        })
 }
 
 /// Bounded path filter applied during source discovery.

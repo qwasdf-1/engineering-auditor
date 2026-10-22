@@ -40,6 +40,12 @@
   the corpus applications query through ORMs, query managers, and typed
   `*sql.DB` stores the detector already read.
 
+- A program inside a tooling directory that builds its own container image
+  (a `Dockerfile` or `Containerfile` in its directory or an ancestor below
+  the top level) keeps the production role: it ships. This restores one
+  labelled `network_call_without_timeout` true positive, Uptime Kuma's Go
+  push client (`extra/uptime-kuma-push/`); no other corpus finding changes.
+
 ## 1.3.0 - C#, C++, And C Cost Detectors
 
 The algorithmic, systems, and optimization detectors now run on C# (31 of
