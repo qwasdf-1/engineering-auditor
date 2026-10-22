@@ -70,9 +70,9 @@ auditor gate --repo-root . --baseline auditor-baseline.json
 | 2. Structure | Complexity, size, duplication, naming, stale references, test quality | 22 / 16 |
 | 3. Algorithms | Quadratic loops, repeated sorts and lookups in loops, N+1 queries | 4 / 9 |
 | 4. Systems | Layering rules, coupling, blocking I/O in async code, missing timeouts and backoff, unbounded fan-out | 6 / 9 |
-| 5. Optimization | Preallocation, bulk operations, loop-invariant work, eager log formatting | 4 / 10 |
+| 5. Optimization | Preallocation, bulk operations, loop-invariant work, eager log formatting | 5 / 9 |
 
-The default `gating` profile runs the 52 detectors precise enough to fail a
+The default `gating` profile runs the 53 detectors precise enough to fail a
 build; `--profile full` runs all 121.
 `auditor catalog --profile full --format json` lists every detector, and
 [language support](docs/reference/language-support.md) shows which detectors

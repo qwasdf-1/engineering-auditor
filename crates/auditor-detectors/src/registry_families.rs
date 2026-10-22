@@ -76,7 +76,7 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
         "eager_log_formatting",
         "optimization",
         Low,
-        Full,
+        Gating,
         "L5",
         EagerLogFormatting
     )

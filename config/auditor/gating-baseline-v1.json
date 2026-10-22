@@ -1,5 +1,5 @@
 {
-  "analysis_contract_digest": "fnv1a64:f35d1091bf157e0e",
+  "analysis_contract_digest": "fnv1a64:1b942baab9262db2",
   "analysis_method": "auto",
   "entries": [
     {
@@ -162,7 +162,7 @@
       "identity": {
         "anchor": "symbol:run_structural_owner"
       },
-      "message": "Function `run_structural_owner` has 25 branch decision points.",
+      "message": "Function `run_structural_owner` has 30 branch decision points.",
       "path": "crates/auditor-detectors/src/dispatcher.rs",
       "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
       "title": "Function exceeds branch complexity budget"
@@ -206,7 +206,7 @@
       "identity": {
         "anchor": "symbol:run_correctness_owner"
       },
-      "message": "Function `run_correctness_owner` has 16 branch decision points.",
+      "message": "Function `run_correctness_owner` has 18 branch decision points.",
       "path": "crates/auditor-detectors/src/dispatcher.rs",
       "reason": "Source-reviewed legitimate maintained debt; no detector defect or false-positive mechanism accepted.",
       "title": "Function exceeds branch complexity budget"
@@ -358,7 +358,7 @@
       "detector": "churn_complexity_hotspot",
       "id": "EA-522ac207adaa1de0",
       "identity": {},
-      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=57, growth=+71 LOC).",
+      "message": "crates/auditor-detectors/src/systems_effects.rs is complex and growing (CCX=57, growth=+76 LOC).",
       "path": "crates/auditor-detectors/src/systems_effects.rs",
       "reason": "Reviewed 2026-10-18: growth is from the corpus-labelling detector fixes; the relative growth/complexity quartiles shift with each refactor commit. File complexity is owner-aligned. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"

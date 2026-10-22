@@ -56,6 +56,11 @@
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
+          "source": "model:claude-fable-5-1",
+          "verdict": "true_positive",
+          "reason": "normalizedSearches (lib/eslint/eslint-helpers.js:445-455) comes from the searches map that findFiles fills with one entry per directory argument or glob parent in the caller's patterns (lines 529-531, 588-618), not from config, so a shell-expanded list like `eslint packages/*` gives one search per directory. Promise.allSettled at line 457 then starts every globSearch directory walk (lines 364-368) at once with no limiter."
+        },
+        {
           "source": "model:claude-sonnet-5-5",
           "verdict": "false_positive",
           "reason": "normalizedSearches has one entry per config-derived base path group (not per file), a small set of glob searches."
@@ -315,6 +320,11 @@
       "reason": "Every active notification chain is dispatched concurrently through gather, so the number of configured services sets the concurrent network calls.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
+        {
+          "source": "model:claude-fable-5-1",
+          "verdict": "true_positive",
+          "reason": "`active` holds the pending escalation chains, one per OR tag in the caller's runtime tag filter that matches a configured service (apprise/apprise.py:841-904, apprise/dispatch.py:510-537). That set comes from input and is not fixed by the program, and asyncio.gather at apprise/apprise.py:1253-1261 runs all chains with their service dispatches together with no semaphore. The sync notify() twin sends the same chains through the bounded coordinator ThreadPoolExecutor instead (lines 1170-1179, 122-132)."
+        },
         {
           "source": "model:claude-sonnet-5-5",
           "verdict": "false_positive",

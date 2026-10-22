@@ -19,7 +19,7 @@ optimization detectors to C#, C++, and C.
 
 ## Scanning
 
-- **Catalog.** 121 detectors by default (52 gating, 69 full-only); the
+- **Catalog.** 121 detectors by default (53 gating, 68 full-only); the
   `graph-analysis` build feature adds seven. Each detector's languages and
   roles are declared in the catalog and enforced on every finding.
 - **Discovery.** Repository ignore files and `.eaignore` bound the scan;

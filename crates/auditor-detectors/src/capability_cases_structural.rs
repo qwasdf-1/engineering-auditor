@@ -290,7 +290,7 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         CapabilityCase::new("unbounded_channel_or_queue", ScanProfile::Full, "", "", "", "")
             .positive_files(unbounded_files("unbounded_channel_or_queue", true))
             .negative_files(unbounded_files("unbounded_channel_or_queue", false)),
-        CapabilityCase::new("eager_log_formatting", ScanProfile::Full, "", "", "", "")
+        CapabilityCase::new("eager_log_formatting", ScanProfile::Gating, "", "", "", "")
             .positive_files(eager_log_files(true))
             .negative_files(eager_log_files(false)),
         CapabilityCase::new("test_without_assertion", ScanProfile::Full, "", "", "", "")

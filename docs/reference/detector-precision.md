@@ -27,8 +27,8 @@ at least 22 clean labels, or about 40 with one false positive.
 > `too_many_returns`, `too_many_statements`), 9 are below it, and 59 lack a
 > sample that can decide the bound. 3,104 oracle-confirmed findings are
 > accepted through clean agreement audits. Every detector that meets the
-> bar gates except the full-only `eager_log_formatting`, measured on the
-> application slice with Python and Java samples only and not yet promoted. For most of the 58, every corpus finding is already labelled:
+> bar gates; `eager_log_formatting`, measured on the application slice,
+> was promoted from `full` on 2026-10-22. For most of the 58, every corpus finding is already labelled:
 > the corpus cannot decide them. Such a detector gates only with no live
 > false positive where it gates (operator decision, 2026-10-18; see
 > [Precision Gating](./detector-promotion.md#precision-gating)). Cheap
@@ -80,7 +80,10 @@ at least 22 clean labels, or about 40 with one false positive.
 > Miniflux) and 6 false positives on fan-outs that open nothing per item
 > or iterate a set fixed by the program (a tea.Batch, schema union
 > options, in-memory router lookups); two more are disputed (ESLint's
-> per-base-path glob searches, Apprise's per-chain dispatch). Its probe's
+> per-base-path glob searches, Apprise's per-chain dispatch), where the
+> Fable arbiter upholds the first labeller's true positives (both sets come
+> from the caller's arguments: paths given to `findFiles`, a tag filter)
+> pending operator confirmation. Its probe's
 > fan-outs bounded by a `Retrier` with `concurrency: 100` and by a
 > `.slice(0, budget)` are no longer reported. `unbounded_channel_or_queue`
 > has 5: 2 true positives (ripgrep's searcher-to-printer channel,
@@ -395,7 +398,7 @@ Gating bar: the 95% lower confidence bound of precision >= 85% over final or cor
 | `too_many_returns` | 128 | 0 | 0 | 100% | 63/0 | 398 | meets_bar | 12 / 116 | 0 | — | 63/63 | 81/96 |
 | `too_many_statements` | 97 | 2 | 0 | 98% | 11/0 | 0 | meets_bar | 1 / 98 | 0 | — | 11/11 | 87/88 |
 | `unbounded_channel_or_queue` | 2 | 3 | 0 | 40% | — | 0 | insufficient_sample | 0 / 5 | 0 | — | — | 5/5 |
-| `unbounded_concurrency` | 13 | 6 | 0 | 68% | — | 0 | below_bar | 0 / 19 | 2 | true_positive 2 | — | 19/21 |
+| `unbounded_concurrency` | 13 | 6 | 0 | 68% | — | 0 | below_bar | 0 / 19 | 2 | true_positive 2 | — | 21/23 |
 | `unhandled_termination_in_production` | 0 | 30 | 0 | 0% | — | 0 | below_bar | 18 / 12 | 0 | — | — | 29/56 |
 | `unreachable_code` | 3 | 0 | 0 | 100% | — | 0 | insufficient_sample | 2 / 1 | 0 | — | — | 1/3 |
 | `unsafe_deserialization` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | — | — | 4/4 |

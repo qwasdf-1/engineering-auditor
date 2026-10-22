@@ -35,14 +35,16 @@
   a different target each pass is not a retry. The corpus retries through
   policies or with waits, so the cells rest on their capability boundaries.
 
-- `eager_log_formatting` (full-only; Python, JavaScript, TypeScript, Go,
+- `eager_log_formatting` (gating; Python, JavaScript, TypeScript, Go,
   Java) reports a debug or trace log call whose message is formatted
   before the call (f-string, `%`, `.format`, template literal,
   `String.format`, `fmt.Sprintf`, concatenation), so the string is built
   even when the level is off. Enabled-level guards and `console` are not
   reported; Rust's logging macros are lazy, so its cell is not applicable.
   The corpus has 400 such calls (390 in apprise, 10 in dependency-track);
-  all 40 sampled are corroborated true positives, which meets the bar.
+  all 40 sampled are corroborated true positives, which meets the bar, so
+  it gates. The self-gating baseline is rekeyed to the new analysis
+  contract digest; no entry is added.
 
 - `float_equality_comparison` (full-only, Tier 1) reports `==`/`!=`
   between float arithmetic (an arithmetic expression, or a local whose
