@@ -76,6 +76,10 @@
       "type": "array",
       "items": { "$ref": "#/$defs/finding" }
     },
+    "suppressed_findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/suppressed_finding" }
+    },
     "evidence_graph": { "$ref": "evidence-graph.schema.json" }
   },
   "$defs": {
@@ -370,7 +374,20 @@
         "external_inputs": { "type": "integer", "minimum": 0 },
         "graph_complete": { "type": "boolean" },
         "syntax_recovered_files": { "type": "integer", "minimum": 0 },
-        "syntax_unparsed_files": { "type": "integer", "minimum": 0 }
+        "syntax_unparsed_files": { "type": "integer", "minimum": 0 },
+        "suppressed_findings": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "suppressed_finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "detector", "path", "line", "reason"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "detector": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 },
+        "reason": { "type": "string", "minLength": 1 }
       }
     },
     "external_input": {

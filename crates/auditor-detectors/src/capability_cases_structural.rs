@@ -425,6 +425,14 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         ),
         ]),
         CapabilityCase::new(
+            "invalid_suppression",
+            ScanProfile::Gating,
+            "src/lib.rs",
+            "fn work() {\n    // auditor-ignore[no_such_detector]: generated table\n    run();\n}\n",
+            "src/lib.rs",
+            "fn work() {\n    let note = \"// auditor-ignore[no_such_detector]: quoted, not a comment\";\n    run(note);\n}\n",
+        ),
+        CapabilityCase::new(
             "section_divider_comment",
             ScanProfile::Gating,
             "src/lib.rs",

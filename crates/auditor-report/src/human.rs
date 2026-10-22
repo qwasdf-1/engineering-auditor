@@ -188,6 +188,7 @@ fn coverage_section(report: &AuditReport) -> MarkdownSection {
             "Files skipped for syntax errors",
             coverage.syntax_unparsed_files,
         ),
+        ("Suppressed findings", coverage.suppressed_findings),
     ]));
     fields.extend([
         field("Evidence graph complete", coverage.graph_complete),

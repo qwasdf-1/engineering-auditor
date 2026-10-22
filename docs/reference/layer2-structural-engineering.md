@@ -123,6 +123,31 @@ Language contract: see [`language-support.md`](./language-support.md).
 
 ---
 
+## `invalid_suppression` (gating)
+
+Reports an inline suppression that does not do its job. A suppression is
+`auditor-ignore[detector, ..]: reason` in a comment (`//`, `#`, `--`, or
+`/*`) in a source file: on a finding's line, or alone on the line above it.
+Three problems are reported, each at the comment's line:
+
+- no reason after the colon (the suppression then suppresses nothing, so the
+  finding stays too);
+- a detector ID the catalog does not have;
+- a detector that matches no finding at that line, judged only where the
+  detector reports: a suppression of a full-only detector in a gating scan,
+  or of a detector that does not cover the file's language or role, is not
+  called unused.
+
+Algorithm: runs after every other detector, over each source file's lines
+with string literals removed, so a marker quoted in code is not a
+suppression. Markdown and data files are not read. Suppressed findings are
+listed in the report's `suppressed_findings` with their reasons
+([report contract](./report-contract.md)).
+
+Language contract: see [`language-support.md`](./language-support.md).
+
+---
+
 ## `magic_literal_cluster` (full-only)
 
 Flags functions with a high count of distinct non-trivial numeric literals

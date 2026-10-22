@@ -4,11 +4,12 @@ use std::path::Path;
 
 use auditor_core::{
     stable_digest, stable_digest_bytes, AnalysisFile, CapabilityExecution, DetectorContract,
-    Finding, RepositoryMapArtifact, Severity, SEMANTIC_CONTRACT_VERSION,
+    Finding, RepositoryMapArtifact, Severity, SuppressedFinding, SEMANTIC_CONTRACT_VERSION,
 };
 
 mod baseline;
 mod baseline_match;
+mod coverage;
 mod evidence_graph;
 mod evidence_support;
 mod graph_validation;
@@ -270,6 +271,8 @@ pub struct AnalysisCoverage {
     pub syntax_recovered_files: usize,
     /// Files whose syntax errors kept them out of structural analysis.
     pub syntax_unparsed_files: usize,
+    /// Findings inline `auditor-ignore` comments removed.
+    pub suppressed_findings: usize,
 }
 
 #[derive(Clone, Debug)]
@@ -296,6 +299,8 @@ pub struct AuditReport {
     pub external_inputs: Vec<ExternalInput>,
     pub baseline: BaselineDiff,
     pub findings: Vec<Finding>,
+    /// Findings inline `auditor-ignore` comments removed, with their reasons.
+    pub suppressed_findings: Vec<SuppressedFinding>,
     pub evidence_graph: EvidenceGraph,
 }
 
@@ -324,6 +329,7 @@ impl AuditReport {
             external_inputs: Vec::new(),
             baseline: BaselineDiff::none(),
             findings: Vec::new(),
+            suppressed_findings: Vec::new(),
             evidence_graph: EvidenceGraph::new(),
         }
     }
@@ -371,7 +377,7 @@ impl AuditReport {
         self.capability_executions
             .sort_by(|left, right| left.detector_id.cmp(&right.detector_id));
         sort_external_inputs(&mut self.external_inputs);
-        self.analysis_coverage = analysis_coverage(self);
+        self.analysis_coverage = coverage::analysis_coverage(self);
         self.analysis_contract_digest = analysis_contract_digest(self);
         self.refresh_graph();
     }
@@ -461,63 +467,6 @@ fn sort_external_inputs(inputs: &mut [ExternalInput]) {
     inputs.sort_by(|left, right| {
         (&left.kind, &left.source, &left.digest).cmp(&(&right.kind, &right.source, &right.digest))
     });
-}
-
-fn analysis_coverage(report: &AuditReport) -> AnalysisCoverage {
-    let mut modes = CapabilityCoverage::default();
-    for claim in report
-        .detectors
-        .iter()
-        .flat_map(|detector| &detector.language_support)
-    {
-        match claim.mode.as_str() {
-            "semantic" => modes.semantic += 1,
-            "exact_lexical" => modes.exact_lexical += 1,
-            "partial" => modes.partial += 1,
-            "unsupported" => modes.unsupported += 1,
-            "not_applicable" => modes.not_applicable += 1,
-            _ => {}
-        }
-    }
-    AnalysisCoverage {
-        requested_method: report.analysis_method.clone(),
-        files: report.files.len(),
-        source_files: report
-            .files
-            .iter()
-            .filter(|file| !matches!(file.catalog_language.as_str(), "markdown" | "structured"))
-            .count(),
-        detector_language_claims: report
-            .detectors
-            .iter()
-            .map(|detector| detector.language_support.len())
-            .sum(),
-        capability_modes: modes,
-        findings: report.findings.len(),
-        line_precise_findings: report
-            .findings
-            .iter()
-            .filter(|finding| finding.provenance.span_precision == "line")
-            .count(),
-        repository_findings: report
-            .findings
-            .iter()
-            .filter(|finding| finding.provenance.span_precision == "repository")
-            .count(),
-        exact_fact_spans: 0,
-        external_inputs: report.external_inputs.len(),
-        graph_complete: false,
-        syntax_recovered_files: syntax_count(report, "recovered"),
-        syntax_unparsed_files: syntax_count(report, "unparsed"),
-    }
-}
-
-fn syntax_count(report: &AuditReport, status: &str) -> usize {
-    report
-        .files
-        .iter()
-        .filter(|file| file.syntax.as_deref() == Some(status))
-        .count()
 }
 
 fn analysis_contract_digest(report: &AuditReport) -> String {

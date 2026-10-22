@@ -265,6 +265,17 @@ pub struct AnalysisFile {
     pub syntax: Option<String>,
 }
 
+/// A finding an inline `auditor-ignore[..]: reason` comment removed from a
+/// scan's findings, kept with the reason the comment gives.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SuppressedFinding {
+    pub id: String,
+    pub detector: String,
+    pub path: String,
+    pub line: usize,
+    pub reason: String,
+}
+
 #[derive(Clone, Debug)]
 pub struct Finding {
     pub id: String,

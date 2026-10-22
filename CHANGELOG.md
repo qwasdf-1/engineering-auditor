@@ -25,7 +25,18 @@
   abstractions whose implementer is itself implemented are not reported.
   JavaScript has no abstraction declaration. Of 2 corpus findings, 1 is a
   corroborated true positive and 1 a false positive (insufficient sample).
-  Catalog: 123 detectors (53 gating, 70 full-only).
+- Inline suppressions. `auditor-ignore[detector, ..]: reason` in a comment on
+  a finding's line, or alone on the line above it, removes that finding;
+  the report lists each one with its reason under the optional
+  `suppressed_findings` and counts them in
+  `analysis_coverage.suppressed_findings` (both omitted when nothing was
+  suppressed). The new gating `invalid_suppression` reports a suppression
+  with no reason (which suppresses nothing), one naming an unknown
+  detector, and one that matches no finding where its detector reports.
+  Markers in string literals and in Markdown or data files are ignored.
+  Catalog: 124 detectors (54 gating, 70 full-only).
+
+### Changed
 
 ### Changed
 

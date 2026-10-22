@@ -1,4 +1,4 @@
-use auditor_core::{EvidenceValue, Finding};
+use auditor_core::{EvidenceValue, Finding, SuppressedFinding};
 use serde_json::{json, Map, Value};
 
 use crate::{AuditReport, DetectorReport, EvidenceGraph, ExternalInput, FileReport};
@@ -8,7 +8,7 @@ pub(super) fn report_to_json(report: &AuditReport) -> String {
 }
 
 fn report_value(report: &AuditReport) -> Value {
-    json!({
+    let mut value = json!({
         "analysis_contract_digest": report.analysis_contract_digest,
         "analysis_coverage": coverage_value(report),
         "analysis_method": report.analysis_method,
@@ -64,6 +64,27 @@ fn report_value(report: &AuditReport) -> Value {
             "count": count,
             "role": role,
         })).collect::<Vec<_>>(),
+    });
+    // Present only when a comment suppressed something, so reports without
+    // suppressions are unchanged.
+    if !report.suppressed_findings.is_empty() {
+        value["suppressed_findings"] = report
+            .suppressed_findings
+            .iter()
+            .map(suppressed_value)
+            .collect::<Vec<_>>()
+            .into();
+    }
+    value
+}
+
+fn suppressed_value(suppressed: &SuppressedFinding) -> Value {
+    json!({
+        "detector": suppressed.detector,
+        "id": suppressed.id,
+        "line": suppressed.line,
+        "path": suppressed.path,
+        "reason": suppressed.reason,
     })
 }
 
@@ -136,6 +157,7 @@ fn coverage_value(report: &AuditReport) -> Value {
     for (key, count) in [
         ("syntax_recovered_files", coverage.syntax_recovered_files),
         ("syntax_unparsed_files", coverage.syntax_unparsed_files),
+        ("suppressed_findings", coverage.suppressed_findings),
     ] {
         if count > 0 {
             value[key] = json!(count);

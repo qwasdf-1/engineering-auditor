@@ -59,6 +59,14 @@ it. Lexical and complexity owners read every parsed file either way.
 `analysis_coverage` counts them as `syntax_recovered_files` and
 `syntax_unparsed_files`. All three fields are omitted when zero or absent.
 
+A finding an inline `auditor-ignore[detector]: reason` comment suppresses is
+removed from `findings` (so the baseline and gate never see it) and listed in
+the top-level `suppressed_findings`, one object per finding with its `id`,
+`detector`, `path`, `line`, and the comment's `reason`;
+`analysis_coverage.suppressed_findings` counts them. Both are omitted when
+nothing was suppressed. Invalid suppressions are `invalid_suppression`
+findings.
+
 Analysis-affecting inputs, including an authoritative repository graph or
 co-edit journal, are content-digested into analysis identity. Baseline policy,
 repository-map publication, review policy, prompts, provider calls, and review

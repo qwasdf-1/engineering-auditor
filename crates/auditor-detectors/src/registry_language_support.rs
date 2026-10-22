@@ -69,7 +69,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         ),
     ),
     rule(
-        &["large_file"],
+        &["large_file", "invalid_suppression"],
         SupportPolicy::AllSource(LanguageSupportMode::ExactLexical),
     ),
     rule(

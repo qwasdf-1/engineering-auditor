@@ -76,6 +76,7 @@ mod rust_api_rules;
 mod rust_test_modules;
 mod scan_filters;
 mod scan_indexes;
+mod suppressions;
 use scan_indexes::RemainingIndexUsers;
 mod eager_log;
 mod float_equality;
@@ -252,6 +253,8 @@ pub struct DetectorLanguageSupport {
 pub struct RepositoryAnalysis {
     pub files: Vec<AnalysisFile>,
     pub findings: Vec<Finding>,
+    /// Findings inline `auditor-ignore` comments removed, with their reasons.
+    pub suppressed: Vec<auditor_core::SuppressedFinding>,
     pub detectors: Vec<DetectorContract>,
     pub capability_executions: Vec<CapabilityExecution>,
     pub repository_map: Option<RepositoryMapArtifact>,
@@ -424,6 +427,21 @@ impl<'a> ScanRun<'a> {
                 started.elapsed().as_millis()
             );
         }
+        self.admit(active_spec, owner_findings)?;
+        RemainingIndexUsers::release(
+            active_spec.owner,
+            &mut self.context,
+            &mut self.remaining_index_users,
+        );
+        Ok(())
+    }
+
+    /// Validates and anchors `owner_findings` of `active_spec` into the run.
+    fn admit(
+        &mut self,
+        active_spec: &registry::DetectorSpec,
+        owner_findings: Vec<Finding>,
+    ) -> std::io::Result<()> {
         let mut validated = Vec::with_capacity(owner_findings.len());
         for finding in owner_findings {
             if let Some(finding) = self.validate_finding(active_spec, finding)? {
@@ -436,12 +454,37 @@ impl<'a> ScanRun<'a> {
             self.context.cache,
             self.context.method,
         ));
-        RemainingIndexUsers::release(
-            active_spec.owner,
-            &mut self.context,
-            &mut self.remaining_index_users,
-        );
         Ok(())
+    }
+
+    /// Removes the findings inline suppressions name, after every owner ran,
+    /// and reports the invalid suppressions when `invalid_suppression` is
+    /// active.
+    fn apply_suppressions(
+        &mut self,
+        profile: ScanProfile,
+    ) -> std::io::Result<Vec<auditor_core::SuppressedFinding>> {
+        let outcome = suppressions::apply(
+            &mut self.findings,
+            self.role_views.all,
+            self.context.cache,
+            |detector, file| {
+                self.active_ids.contains(detector)
+                    && registry::detector_spec(detector).is_some_and(|spec| {
+                        spec.reports_in(profile, file.language.as_str())
+                            && spec.emits_role(file.role.as_str())
+                    })
+            },
+        );
+        if let Some(spec) = registry::detector_spec("invalid_suppression")
+            .filter(|spec| self.active_ids.contains(spec.id))
+        {
+            self.admit(
+                spec,
+                suppressions::invalid_suppression_findings(outcome.invalid),
+            )?;
+        }
+        Ok(outcome.suppressed)
     }
 
     fn validate_finding(
@@ -673,6 +716,7 @@ fn analyze_repository_run(
     for active_spec in &active_specs {
         run.execute(active_spec)?;
     }
+    let suppressed = run.apply_suppressions(profile)?;
     let repository_map = request
         .repository_map_output
         .as_deref()
@@ -692,6 +736,7 @@ fn analyze_repository_run(
     let analysis = RepositoryAnalysis {
         files: analysis_files,
         findings,
+        suppressed,
         detectors: definitions
             .into_iter()
             .map(DetectorDefinition::into_contract)

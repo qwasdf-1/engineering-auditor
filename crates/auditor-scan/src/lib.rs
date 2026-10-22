@@ -99,6 +99,7 @@ pub fn run_scan(request: ScanRequest, provider: &dyn GraphProvider) -> Result<Sc
             repository_analysis.findings,
             method.as_str(),
         );
+        report.suppressed_findings = repository_analysis.suppressed;
         if let Some(repository_map) = repository_analysis.repository_map {
             report.repository_map = RepositoryMapReference::available(repository_map);
         }

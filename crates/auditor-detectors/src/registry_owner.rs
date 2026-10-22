@@ -12,6 +12,7 @@ pub(crate) enum DetectorOwner {
     FunctionComplexity,
     TooManyParameters,
     SectionDividerComment,
+    InvalidSuppression,
     MagicLiteralCluster,
     IdentifierVerbosity,
     IdentifierTersity,

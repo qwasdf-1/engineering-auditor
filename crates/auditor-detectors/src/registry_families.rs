@@ -1,7 +1,7 @@
 //! Catalog entries of the detector families added for v1.0: the
 //! test-quality family, which emits in test code, network timeouts, and
-//! the Layer 3 front-removal and regex-backtracking rules, and dependency
-//! and error hygiene.
+//! the Layer 3 front-removal and regex-backtracking rules, dependency and
+//! error hygiene, and inline-suppression hygiene.
 
 use auditor_core::Severity;
 
@@ -155,4 +155,13 @@ pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
         FloatEqualityComparison
     )
     .with_roles(RoleApplicability::Production),
+    spec!(
+        "invalid_suppression",
+        "lexical",
+        Low,
+        Gating,
+        "L2",
+        InvalidSuppression
+    )
+    .with_roles(RoleApplicability::All),
 ];

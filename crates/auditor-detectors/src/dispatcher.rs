@@ -42,6 +42,9 @@ fn run_foundation_owner(
         DetectorOwner::StaleSectionAnchor => {
             markdown::stale_section_anchor_findings(context.root, context.files, context.cache)
         }
+        // Suppressions need every other owner's findings: `ScanRun` applies
+        // them after the last owner and reports the invalid ones itself.
+        DetectorOwner::InvalidSuppression => Vec::new(),
         DetectorOwner::SectionDividerComment => {
             lexical::section_divider_comment_findings(context.files, context.cache)
         }

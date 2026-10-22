@@ -190,7 +190,33 @@ pub fn parse_report_for_digest(report_json: &str) -> Result<crate::AuditReport, 
     report.external_inputs = parse_external_inputs(object)?;
     report.baseline = parse_baseline_diff(object);
     report.findings = parse_findings_for_digest(object)?;
+    report.suppressed_findings = parse_suppressed_findings(object);
     Ok(report)
+}
+
+/// The optional `suppressed_findings` list; absent when nothing was
+/// suppressed.
+fn parse_suppressed_findings(object: &Map<String, Value>) -> Vec<auditor_core::SuppressedFinding> {
+    let text = |entry: &Value, key: &str| {
+        entry
+            .get(key)
+            .and_then(Value::as_str)
+            .unwrap_or_default()
+            .to_string()
+    };
+    object
+        .get("suppressed_findings")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .map(|entry| auditor_core::SuppressedFinding {
+            id: text(entry, "id"),
+            detector: text(entry, "detector"),
+            path: text(entry, "path"),
+            line: entry.get("line").and_then(Value::as_u64).unwrap_or(0) as usize,
+            reason: text(entry, "reason"),
+        })
+        .collect()
 }
 
 fn repo_root_into(slot: &mut String, object: &Map<String, Value>) {
@@ -251,6 +277,7 @@ fn parse_analysis_coverage(object: &Map<String, Value>) -> Result<crate::Analysi
             .ok_or_else(|| "analysis_coverage requires boolean graph_complete".to_string())?,
         syntax_recovered_files: optional_count(coverage, "syntax_recovered_files"),
         syntax_unparsed_files: optional_count(coverage, "syntax_unparsed_files"),
+        suppressed_findings: optional_count(coverage, "suppressed_findings"),
     })
 }
 

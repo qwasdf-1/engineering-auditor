@@ -261,6 +261,32 @@ Prefer a baseline entry with a reason over an exclusion when the finding is
 real but accepted; use an exclusion when a detector does not fit a directory
 at all.
 
+## Inline suppressions
+
+To accept one finding where it stands, put a comment on its line, or alone on
+the line above it, naming the detector and saying why:
+
+```python
+# auditor-ignore[shell_execution]: admin tool; cmd comes from a fixed table
+subprocess.call(cmd, shell=True)
+```
+
+```go
+defer f.Close() // auditor-ignore[go_errcheck]: read-only file
+```
+
+Several detectors can share one comment
+(`auditor-ignore[shell_execution, eval_in_production]: ..`). The report lists
+every suppressed finding with its reason under `suppressed_findings`, and the
+human report counts them. A suppression keeps working when the code around
+it moves, but unlike a baseline entry it lives in the source, next to the
+code it excuses.
+
+`invalid_suppression` (gating) reports a suppression with no reason, which
+suppresses nothing; one naming an unknown detector; and one that no longer
+matches a finding, so a stale suppression fails the gate instead of lingering.
+Markers inside string literals and in Markdown or data files are ignored.
+
 ## Opting into AI review
 
 Layer 6 is an optional, experimental review that sends a bounded package of

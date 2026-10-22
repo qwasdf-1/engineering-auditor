@@ -95,6 +95,7 @@ Structure, complexity, duplication, and maintainability.
 | `identifier_stutter` | semantic | not_applicable | not_applicable | not_applicable | semantic | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `identifier_tersity` | unsupported | partial | unsupported | unsupported | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `identifier_verbosity` | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `invalid_suppression` | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | unsupported | unsupported |
 | `kt_require_check_misuse` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `large_file` | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | exact_lexical | unsupported | unsupported |
 | `magic_literal_cluster` | partial | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
@@ -190,7 +191,7 @@ Markdown and structured-data cells are excluded from these source-language total
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
 | L1 | 255 | 10 | 0 | 124 | 144 |
-| L2 | 150 | 17 | 53 | 189 | 111 |
+| L2 | 150 | 30 | 53 | 189 | 111 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 96 | 0 | 2 | 92 | 5 |
 | L5 | 89 | 1 | 0 | 56 | 36 |
