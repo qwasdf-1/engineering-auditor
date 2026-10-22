@@ -323,13 +323,14 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         "Reviewed and rejected: every corpus `panic` was an API-contract guard, the convention that demoted the Rust cell to the full profile.",
     ),
     deferred(
-        &[
-            "test_without_assertion",
-            "tautological_assertion",
-            "skipped_test_without_reason",
-        ],
+        &["test_without_assertion", "tautological_assertion"],
         TIER_TWO,
-        "The test-scope facts model the Tier-1 frameworks; the Tier-2 forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet.",
+        "The test-scope facts model the Tier-1 frameworks; the Tier-2 assertion forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet.",
+    ),
+    deferred(
+        &["skipped_test_without_reason"],
+        C_CPP,
+        "GoogleTest's `DISABLED_` prefix and `GTEST_SKIP()`, and Catch2's hidden `[.]` tags, are not modelled yet.",
     ),
     not_applicable(
         &["quadratic_front_removal"],
@@ -350,11 +351,6 @@ pub(crate) const CELL_DISPOSITIONS: &[CellDisposition] = &[
         &["catastrophic_backtracking_regex"],
         &["kotlin", "c"],
         "The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet.",
-    ),
-    deferred(
-        &["float_equality_comparison"],
-        TIER_TWO,
-        "The Tier-2 float literal and comparison forms (Kotlin `Double`/`Float`, C# `double`/`float`/`decimal`, C and C++ suffixes) are not modelled yet.",
     ),
     deferred(
         &["discarded_fallible_result"],

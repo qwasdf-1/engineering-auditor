@@ -16,7 +16,7 @@
 use auditor_ast::AstNode;
 use auditor_core::{Confidence, Finding, Severity};
 
-use crate::ast_scan::{self, descendants, nodes_of_kind, AstScan};
+use crate::ast_scan::{self, descendants, AstScan};
 use crate::{util, Language};
 
 fn supported(language: &Language) -> bool {
@@ -31,22 +31,18 @@ fn supported(language: &Language) -> bool {
 }
 
 pub(crate) fn eager_log_formatting_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
-    let mut findings = Vec::new();
-    ast_scan::visit_ast_files(scan, supported, |file, tree, _| {
-        let relative = util::path_slash(&file.relative);
-        let kinds: &[&str] = match file.language {
-            Language::Python => &["call"],
-            Language::Java => &["method_invocation"],
-            _ => &["call_expression"],
-        };
-        findings.extend(
-            nodes_of_kind(tree.root_node(), kinds)
-                .into_iter()
-                .filter_map(|call| eager_debug_log(call, &file.language))
-                .map(|(call, method, message)| finding(call, method, message, &relative)),
-        );
-    });
-    findings
+    ast_scan::kind_findings(scan, supported, call_kinds, |call, language, relative| {
+        let (call, method, message) = eager_debug_log(call, language)?;
+        Some(finding(call, method, message, relative))
+    })
+}
+
+fn call_kinds(language: &Language) -> &'static [&'static str] {
+    match language {
+        Language::Python => &["call"],
+        Language::Java => &["method_invocation"],
+        _ => &["call_expression"],
+    }
 }
 
 /// The call, its level method, and its message, when `call` logs at debug

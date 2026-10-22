@@ -102,6 +102,27 @@ pub(crate) fn visit_ast_files(
     }
 }
 
+/// Findings on the nodes of the kinds `kinds` names for each parsed file's
+/// language, where `finding` judges a node (with the file's language and
+/// relative path) to be one.
+pub(crate) fn kind_findings(
+    scan: AstScan<'_, '_>,
+    supports: impl Fn(&Language) -> bool,
+    kinds: impl Fn(&Language) -> &'static [&'static str],
+    finding: impl Fn(auditor_ast::AstNode<'_>, &Language, &str) -> Option<auditor_core::Finding>,
+) -> Vec<auditor_core::Finding> {
+    let mut findings = Vec::new();
+    visit_ast_files(scan, supports, |file, tree, _| {
+        let relative = util::path_slash(&file.relative);
+        findings.extend(
+            nodes_of_kind(tree.root_node(), kinds(&file.language))
+                .into_iter()
+                .filter_map(|node| finding(node, &file.language, &relative)),
+        );
+    });
+    findings
+}
+
 /// Findings at the sites `sites` picks in each parsed file, one per
 /// `(node, api)` pair, built by `finding` with the file's relative path.
 pub(crate) fn site_findings(

@@ -40,6 +40,21 @@ pub(crate) fn visit_test_scope(
     ast_scan::visit_ast_files(scan, models_tests, |file, tree, _| visit(file, tree));
 }
 
+/// Languages whose test declarations and skip marks are modelled: the
+/// Tier-1 frameworks, Kotlin JUnit, and C# xUnit, NUnit, and MSTest. Only
+/// the skip rule reads the Kotlin and C# tests so far.
+pub(crate) fn models_skips(language: &Language) -> bool {
+    models_tests(language) || matches!(language, Language::Kotlin | Language::CSharp)
+}
+
+/// Every test-scope file whose skip marks are modelled, parsed.
+pub(crate) fn visit_skip_scope(
+    scan: AstScan<'_, '_>,
+    mut visit: impl FnMut(&AuditedFile, &AstTree),
+) {
+    ast_scan::visit_ast_files(scan, models_skips, |file, tree, _| visit(file, tree));
+}
+
 /// One test function a framework runs.
 pub(crate) struct TestCase<'t> {
     pub(crate) name: String,

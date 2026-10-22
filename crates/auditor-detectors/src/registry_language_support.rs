@@ -388,7 +388,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
             "cpp",
         ]),
     ),
-    rule(FLOAT_EQUALITY_IDS, semantic(TIER_ONE)),
+    rule(FLOAT_EQUALITY_IDS, semantic(TIERED)),
     rule(DISCARDED_RESULT_IDS, semantic(TIER_ONE)),
     rule(UNUSED_DEPENDENCY_IDS, semantic(TIER_ONE)),
     rule(NETWORK_TIMEOUT_IDS, semantic(TIER_ONE)),
@@ -400,6 +400,7 @@ const SUPPORT_RULES: &[PolicyRule] = &[
         semantic(&["python", "javascript", "typescript", "go", "java"]),
     ),
     rule(TEST_QUALITY_IDS, semantic(TIER_ONE)),
+    rule(SKIPPED_TEST_IDS, semantic(TIER_ONE_KOTLIN_CSHARP)),
     rule(
         GO_IDS,
         selected(

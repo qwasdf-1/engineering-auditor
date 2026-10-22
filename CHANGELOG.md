@@ -46,13 +46,15 @@
   it gates. The self-gating baseline is rekeyed to the new analysis
   contract digest; no entry is added.
 
-- `float_equality_comparison` (full-only, Tier 1) reports `==`/`!=`
+- `float_equality_comparison` (full-only, Tier 1 and Tier 2) reports `==`/`!=`
   between float arithmetic (an arithmetic expression, or a local whose
   reaching value is one or a `+=` accumulation) and a literal binary
   floating point cannot represent exactly (`0.1`, not `0.5`). Values
   parsed or assigned from the same literal compare equal and are not
-  reported. The corpus libraries have no such comparison in production
-  code, so the cells rest on their capability boundaries.
+  reported. Kotlin and C# reals and C/C++ number literals are read with
+  their `f`/`L` suffixes; a C# `m` literal is an exact `decimal`. The
+  corpus libraries have no such comparison in production code, so the
+  cells rest on their capability boundaries.
 
 - `mutable_default_argument` (full-only, Python) reports a parameter whose
   mutable default (`[]`, `{}`, `set()`, `defaultdict(..)`) the function
@@ -62,13 +64,19 @@
   reported separately. The corpus libraries have no such default
   (they lint for it), so the cell rests on its capability boundary.
 
-- `skipped_test_without_reason` (full-only, Tier 1) reports a test or a
+- `skipped_test_without_reason` (full-only; Tier 1, Kotlin, C#) reports a test or a
   test group disabled with no reason in the mark (`#[ignore = ".."]`,
   `@Disabled("..")`, `skip(reason=..)`, `t.Skip("..")`), no condition
   around a Go skip, and no comment giving one. On the corpus it reports 10
   skips (9 JUnit, 1 Vitest), all pre-labelled true positives; 20 more
   carry their reason in a comment, a doc comment, or the class doc and are
-  not reported.
+  not reported. Kotlin reads JUnit `@Disabled`/`@Ignore`, and C# xUnit
+  `Skip = ""` and NUnit or MSTest `[Ignore]`, on tests and test classes;
+  the Kotlin corpus repositories add 53 findings (okhttp, koin, moshi), 27
+  of 29 sampled corroborated true positives. A comment anywhere in the
+  test body that names the skip ("ignored for now, run manually") now
+  gives its reason.
+  GoogleTest and Catch2 skips (C, C++) remain deferred.
 
 ### Changed
 

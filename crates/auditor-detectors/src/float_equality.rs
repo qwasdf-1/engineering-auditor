@@ -7,13 +7,15 @@
 //! value is one (or a `+=` accumulation), found through the data-flow
 //! layer. A value parsed or assigned from the same literal text compares
 //! equal and is not reported, nor is a literal exact in binary (`0.0`,
-//! `0.5`, `1.0`), a common deliberate sentinel.
+//! `0.5`, `1.0`), a common deliberate sentinel. Kotlin and C# reals and C
+//! and C++ number literals are read with their suffixes (`0.1f`, `0.1L`);
+//! a C# `m` literal is a base-10 `decimal`, exact, and not a float.
 
 use auditor_ast::{AstNode, BindingKind, FunctionFlow};
 use auditor_core::{Confidence, Finding, Severity};
 
-use crate::ast_scan::{self, nodes_of_kind, AstScan};
-use crate::{util, Language};
+use crate::ast_scan::{self, AstScan};
+use crate::Language;
 
 fn supported(language: &Language) -> bool {
     matches!(
@@ -24,27 +26,34 @@ fn supported(language: &Language) -> bool {
             | Language::TypeScript
             | Language::Go
             | Language::Java
+            | Language::Kotlin
+            | Language::CSharp
+            | Language::C
+            | Language::Cpp
     )
 }
 
 pub(crate) fn float_equality_comparison_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
-    let mut findings = Vec::new();
-    ast_scan::visit_ast_files(scan, supported, |file, tree, _| {
-        let relative = util::path_slash(&file.relative);
-        let kinds: &[&str] = match file.language {
-            Language::Python => &["comparison_operator"],
-            _ => &["binary_expression"],
-        };
-        let rust = file.language == Language::Rust;
-        findings.extend(
-            nodes_of_kind(tree.root_node(), kinds)
-                .into_iter()
-                .filter(|comparison| !(rust && ast_scan::is_inside_rust_test(*comparison)))
-                .filter_map(|comparison| inexact_comparison(comparison, &file.language))
-                .map(|(comparison, literal)| finding(comparison, literal, &relative)),
-        );
-    });
-    findings
+    ast_scan::kind_findings(
+        scan,
+        supported,
+        comparison_kinds,
+        |node, language, relative| {
+            if *language == Language::Rust && ast_scan::is_inside_rust_test(node) {
+                return None;
+            }
+            let (comparison, literal) = inexact_comparison(node, language)?;
+            Some(finding(comparison, literal, relative))
+        },
+    )
+}
+
+fn comparison_kinds(language: &Language) -> &'static [&'static str] {
+    match language {
+        Language::Python => &["comparison_operator"],
+        Language::Kotlin => &["equality_expression"],
+        _ => &["binary_expression"],
+    }
 }
 
 /// The comparison and its literal, when `node` tests a computed value for
@@ -54,7 +63,8 @@ fn inexact_comparison<'a>(
     language: &Language,
 ) -> Option<(AstNode<'a>, AstNode<'a>)> {
     let (left, operator, right) = match language {
-        Language::Python => {
+        // Python comparisons and Kotlin equality expressions have no fields.
+        Language::Python | Language::Kotlin => {
             if node.named_child_count() != 2 {
                 return None;
             }
@@ -91,7 +101,7 @@ fn computed(operand: AstNode<'_>) -> bool {
     if arithmetic(operand) {
         return true;
     }
-    if operand.kind() != "identifier" {
+    if !matches!(operand.kind(), "identifier" | "simple_identifier") {
         return false;
     }
     FunctionFlow::enclosing(operand)
@@ -108,6 +118,10 @@ fn arithmetic(node: AstNode<'_>) -> bool {
         "binary_expression" | "binary_operator" => node
             .child_by_field_name("operator")
             .is_some_and(|operator| matches!(operator.kind(), "+" | "-" | "*" | "/")),
+        // Kotlin's arithmetic expressions have no operator field.
+        "additive_expression" | "multiplicative_expression" => node
+            .child(1)
+            .is_some_and(|operator| matches!(operator.kind(), "+" | "-" | "*" | "/")),
         _ => false,
     }
 }
@@ -115,11 +129,22 @@ fn arithmetic(node: AstNode<'_>) -> bool {
 /// The float literal `node` is, through a unary minus or parentheses.
 fn float_literal<'a>(node: AstNode<'a>, language: &Language) -> Option<AstNode<'a>> {
     match node.kind() {
-        "unary_expression" | "unary_operator" | "parenthesized_expression" => float_literal(
+        "unary_expression"
+        | "unary_operator"
+        | "prefix_expression"
+        | "prefix_unary_expression"
+        | "parenthesized_expression" => float_literal(
             node.named_child(node.named_child_count().checked_sub(1)?)?,
             language,
         ),
         "float_literal" | "float" | "decimal_floating_point_literal" => Some(node),
+        // Kotlin and C# reals; a C# `m` literal is a base-10 `decimal`, exact.
+        "real_literal" => (!node.text().to_ascii_lowercase().ends_with('m')).then_some(node),
+        // C and C++ number literals that are decimal floats (`0.1`, `1e-1f`).
+        "number_literal" => {
+            let text = node.text().to_ascii_lowercase();
+            (!text.starts_with("0x") && (text.contains('.') || text.contains('e'))).then_some(node)
+        }
         "number" if matches!(language, Language::JavaScript | Language::TypeScript) => {
             let text = node.text().to_ascii_lowercase();
             let decimal =
@@ -133,7 +158,8 @@ fn float_literal<'a>(node: AstNode<'a>, language: &Language) -> Option<AstNode<'
 /// Whether a decimal float literal names a value binary floating point holds
 /// exactly: once the factors of 5 in its denominator cancel, the
 /// denominator must be a power of two and the significand must fit (53
-/// bits, or 24 for an `f32`/`f` literal). Unparsed forms count as exact.
+/// bits, or 24 for an `f32`/`f` literal; a C `l` suffix is read as a
+/// double). Unparsed forms count as exact.
 pub(crate) fn exact_in_binary(literal: &str) -> bool {
     let Some((numerator, scale, single)) = decimal_parts(literal) else {
         return true;
@@ -153,7 +179,7 @@ fn decimal_parts(literal: &str) -> Option<(u128, i32, bool)> {
     let body = lower
         .trim_end_matches("f32")
         .trim_end_matches("f64")
-        .trim_end_matches(['f', 'd']);
+        .trim_end_matches(['f', 'd', 'l']);
     let (mantissa, exponent) = match body.split_once('e') {
         Some((mantissa, exponent)) => (mantissa, exponent.parse::<i32>().ok()?),
         None => (body, 0),
@@ -232,6 +258,9 @@ mod tests {
         }
         for inexact in [
             "0.1",
+            "0.1F",
+            "0.1L",
+            "1.1e0",
             "0.3",
             "1.1",
             "2.675",

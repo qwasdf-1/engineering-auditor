@@ -17,7 +17,7 @@ pub(crate) fn skipped_test_without_reason_findings(
     repo_ast: &mut RepoAst,
 ) -> Vec<Finding> {
     let mut findings = Vec::new();
-    testing_scope::visit_test_scope(
+    testing_scope::visit_skip_scope(
         AstScan::test_scope(files, method, cache, repo_ast),
         |file, tree| {
             let relative = util::path_slash(&file.relative);

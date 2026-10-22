@@ -3,7 +3,10 @@
 
 use auditor_ast::AstNode;
 
-use super::skips::{go_skip_mark, java_skip_mark, js_skip_mark, python_skip_mark, rust_skip_mark};
+use super::skips::{
+    csharp_skip_mark, go_skip_mark, java_skip_mark, js_skip_mark, kotlin_skip_mark,
+    python_skip_mark, rust_skip_mark,
+};
 use super::{call_view, preorder, TestCase};
 use crate::ast_scan::{self, nodes_of_kind};
 use crate::{AuditedFile, Language, SourceRole};
@@ -16,6 +19,8 @@ pub(crate) fn test_cases<'t>(root: AstNode<'t>, file: &AuditedFile) -> Vec<TestC
     match language {
         Language::Rust => rust_tests(root),
         Language::Java => java_tests(root),
+        Language::Kotlin => kotlin_tests(root),
+        Language::CSharp => csharp_tests(root),
         Language::Go if role == SourceRole::Test => go_tests(root),
         Language::Python if role == SourceRole::Test && pytest_file(file) => python_tests(root),
         Language::JavaScript | Language::TypeScript if role == SourceRole::Test => {
@@ -278,11 +283,17 @@ fn go_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
 }
 
 pub(super) fn java_annotations(method: AstNode<'_>) -> Vec<AstNode<'_>> {
-    method
+    marks(method, "modifiers", &["annotation", "marker_annotation"])
+}
+
+/// The `kinds` children of a declaration's `container` children: the
+/// annotations in its modifiers, the attributes in its attribute lists.
+fn marks<'t>(declaration: AstNode<'t>, container: &str, kinds: &[&str]) -> Vec<AstNode<'t>> {
+    declaration
         .named_children()
-        .filter(|child| child.kind() == "modifiers")
-        .flat_map(|modifiers| modifiers.named_children())
-        .filter(|child| matches!(child.kind(), "annotation" | "marker_annotation"))
+        .filter(|child| child.kind() == container)
+        .flat_map(|container| container.named_children())
+        .filter(|child| kinds.contains(&child.kind()))
         .collect()
 }
 
@@ -325,6 +336,131 @@ fn java_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
             })
         })
         .collect()
+}
+
+/// A Kotlin declaration's annotations (`@Test`, `@Disabled("..")`).
+pub(super) fn kotlin_annotations(declaration: AstNode<'_>) -> Vec<AstNode<'_>> {
+    marks(declaration, "modifiers", &["annotation"])
+}
+
+/// A Kotlin annotation's simple name: `Disabled` of `@org.junit.Disabled("..")`.
+pub(super) fn kotlin_annotation_name(annotation: AstNode<'_>) -> &str {
+    annotation
+        .first_descendant_of_kind(&auditor_ast::AstNodeKind::from("user_type"))
+        .and_then(|user_type| {
+            user_type
+                .named_children()
+                .filter(|part| part.kind() == "type_identifier")
+                .last()
+        })
+        .map(|name| name.text())
+        .unwrap_or_default()
+}
+
+/// JUnit 4 and 5 and kotlin.test functions: `@Test`, `@ParameterizedTest`,
+/// `@RepeatedTest`.
+fn kotlin_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
+    nodes_of_kind(root, &["function_declaration"])
+        .into_iter()
+        .filter_map(|function| {
+            let annotations = kotlin_annotations(function);
+            let test = annotations.iter().copied().find(|annotation| {
+                matches!(
+                    kotlin_annotation_name(*annotation),
+                    "Test" | "ParameterizedTest" | "RepeatedTest"
+                )
+            })?;
+            let name = function
+                .named_children()
+                .find(|child| child.kind() == "simple_identifier")?;
+            let body = function
+                .named_children()
+                .find(|child| child.kind() == "function_body")?;
+            Some(declared_test(
+                name,
+                body,
+                kotlin_skip_mark(function, &annotations),
+                super::compact(test.text()).contains("expected="),
+            ))
+        })
+        .collect()
+}
+
+/// A C# declaration's attributes, without an `Attribute` suffix.
+pub(super) fn csharp_attributes(declaration: AstNode<'_>) -> Vec<AstNode<'_>> {
+    marks(declaration, "attribute_list", &["attribute"])
+}
+
+pub(super) fn csharp_attribute_name(attribute: AstNode<'_>) -> &str {
+    let name = attribute
+        .child_by_field_name("name")
+        .or_else(|| attribute.named_child(0))
+        .map(|name| name.text())
+        .unwrap_or_default();
+    let name = name.rsplit('.').next().unwrap_or(name);
+    name.strip_suffix("Attribute").unwrap_or(name)
+}
+
+/// xUnit `[Fact]`/`[Theory]`, NUnit `[Test]`/`[TestCase]`/`[TestCaseSource]`,
+/// and MSTest `[TestMethod]`/`[DataTestMethod]` methods.
+fn csharp_tests(root: AstNode<'_>) -> Vec<TestCase<'_>> {
+    nodes_of_kind(root, &["method_declaration"])
+        .into_iter()
+        .filter_map(|method| {
+            let attributes = csharp_attributes(method);
+            let names: Vec<&str> = attributes
+                .iter()
+                .map(|attribute| csharp_attribute_name(*attribute))
+                .collect();
+            let test = names.iter().any(|name| {
+                matches!(
+                    *name,
+                    "Fact"
+                        | "Theory"
+                        | "Test"
+                        | "TestCase"
+                        | "TestCaseSource"
+                        | "TestMethod"
+                        | "DataTestMethod"
+                )
+            });
+            if !test {
+                return None;
+            }
+            let name = method.child_by_field_name("name")?;
+            let body = method.child_by_field_name("body").or_else(|| {
+                method
+                    .named_children()
+                    .find(|child| child.kind() == "arrow_expression_clause")
+            })?;
+            Some(declared_test(
+                name,
+                body,
+                csharp_skip_mark(method, &attributes),
+                names.contains(&"ExpectedException"),
+            ))
+        })
+        .collect()
+}
+
+/// A test declared by an annotation or attribute: no per-test context, and
+/// skipped exactly when a skip mark disables it. A Kotlin backtick name is
+/// read without its backticks.
+fn declared_test<'t>(
+    name: AstNode<'t>,
+    body: AstNode<'t>,
+    skip: Option<super::SkipMark<'t>>,
+    expects_failure: bool,
+) -> TestCase<'t> {
+    TestCase {
+        name: name.text().trim_matches('`').to_string(),
+        line: line_of(name),
+        body,
+        context: Vec::new(),
+        skipped: skip.is_some(),
+        skip,
+        expects_failure,
+    }
 }
 
 /// A JUnit 3 test: a public, parameterless `test*` method of a `TestCase`.

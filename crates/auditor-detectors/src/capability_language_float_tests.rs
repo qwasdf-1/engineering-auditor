@@ -1,5 +1,5 @@
-//! `float_equality_comparison` capability boundaries for each Tier-1
-//! language. Positives compare computed floats (an arithmetic expression, a
+//! `float_equality_comparison` capability boundaries for each Tier-1 and
+//! Tier-2 language. Positives compare computed floats (an arithmetic expression, a
 //! local computed by arithmetic, a `+=` accumulation) with inexact
 //! literals; negatives hold the nearest forms that compare equal by
 //! construction or are exact: a parameter, a parsed value, an exact literal,
@@ -45,6 +45,23 @@ pub(crate) fn float_capability_files(
         ("java", false) => vec![
             ("src/main/java/Ratio.java", JAVA_SAFE),
             ("src/test/java/RatioTest.java", JAVA_COMPUTED),
+        ],
+        ("kotlin", true) => vec![("src/main/kotlin/Ratio.kt", KOTLIN_COMPUTED)],
+        ("kotlin", false) => vec![
+            ("src/main/kotlin/Ratio.kt", KOTLIN_SAFE),
+            ("src/test/kotlin/RatioTest.kt", KOTLIN_COMPUTED),
+        ],
+        ("csharp", true) => vec![("src/Ratio.cs", CSHARP_COMPUTED)],
+        ("csharp", false) => vec![
+            ("src/Ratio.cs", CSHARP_SAFE),
+            ("tests/RatioTests.cs", CSHARP_COMPUTED),
+        ],
+        ("c", true) => vec![("src/ratio.c", C_COMPUTED)],
+        ("c", false) => vec![("src/ratio.c", C_SAFE), ("tests/test_ratio.c", C_COMPUTED)],
+        ("cpp", true) => vec![("src/ratio.cpp", C_COMPUTED)],
+        ("cpp", false) => vec![
+            ("src/ratio.cpp", C_SAFE),
+            ("tests/ratio_test.cpp", C_COMPUTED),
         ],
         _ => return None,
     };
@@ -228,10 +245,81 @@ const JAVA_SAFE: &str = r#"class Ratio {
 "#;
 
 /// Each positive reports exactly these comparisons, and its negative none.
+const KOTLIN_COMPUTED: &str = r#"fun check(a: Double, b: Double, values: List<Double>): Int {
+    val total = a + b
+    if (total == 0.3) return 1
+    if (a * 3 == 0.9) return 2
+    var acc = 0.0
+    for (value in values) acc += value
+    if (acc != 0.6F) return 3
+    return 0
+}
+"#;
+
+const KOTLIN_SAFE: &str = r#"fun check(a: Double, raw: String): Int {
+    if (a == 0.1) return 1
+    val ratio = raw.toDouble()
+    if (ratio == 0.1) return 2
+    val half = a / 2
+    if (half == 0.5) return 3
+    return 0
+}
+"#;
+
+const CSHARP_COMPUTED: &str = r#"class Ratio {
+    int Check(double a, double b, double[] values) {
+        double total = a + b;
+        if (total == 0.3) return 1;
+        if (a * 3 == 0.9) return 2;
+        double acc = 0.0;
+        foreach (var value in values) acc += value;
+        if (acc != 0.6f) return 3;
+        return 0;
+    }
+}
+"#;
+
+const CSHARP_SAFE: &str = r#"class Ratio {
+    int Check(double a, decimal price, string raw) {
+        if (a == 0.1) return 1;
+        double ratio = double.Parse(raw);
+        if (ratio == 0.1) return 2;
+        decimal total = price + price;
+        if (total == 0.3m) return 3;
+        double half = a / 2;
+        if (half == 0.5) return 4;
+        return 0;
+    }
+}
+"#;
+
+const C_COMPUTED: &str = r#"int check(double a, double b, const double *values, int n) {
+    double total = a + b;
+    if (total == 0.3) return 1;
+    if (a * 3 == 0.9f) return 2;
+    double acc = 0.0;
+    for (int i = 0; i < n; i++) acc += values[i];
+    if (acc != 0.6L) return 3;
+    return 0;
+}
+"#;
+
+const C_SAFE: &str = r#"int check(double a, const char *raw) {
+    if (a == 0.1) return 1;
+    double ratio = atof(raw);
+    if (ratio == 0.1) return 2;
+    double half = a / 2;
+    if (half == 0.5) return 3;
+    if (half == 0x1.8p1) return 4;
+    return 0;
+}
+"#;
+
 #[test]
 fn float_boundaries_report_exactly_the_computed_comparisons() {
     let python = ["total == 0.3", "a * 3 == 0.9", "acc != 0.6"];
     let js = ["total === 0.3", "(a - b) == 0.7", "acc !== 0.6"];
+    let c_family = ["total == 0.3", "a * 3 == 0.9f", "acc != 0.6L"];
     let expected: &[(&str, &[&str])] = &[
         ("python", &python),
         ("javascript", &js),
@@ -239,6 +327,10 @@ fn float_boundaries_report_exactly_the_computed_comparisons() {
         ("rust", &["total == 0.3", "a * 3.0 == 0.9", "acc != 0.6"]),
         ("go", &["total == 0.3", "a*3 == 0.9", "acc != 0.6"]),
         ("java", &["total == 0.3", "a * 3 == 0.9", "acc != 0.6"]),
+        ("kotlin", &["total == 0.3", "a * 3 == 0.9", "acc != 0.6F"]),
+        ("csharp", &["total == 0.3", "a * 3 == 0.9", "acc != 0.6f"]),
+        ("c", &c_family),
+        ("cpp", &c_family),
     ];
     let mut failures = Vec::new();
     for (language, comparisons) in expected {

@@ -1,5 +1,5 @@
 //! `skipped_test_without_reason` capability boundaries for each Tier-1
-//! framework. Positives hold skips with no reason (beside a doc comment, a
+//! framework, Kotlin JUnit, and C# xUnit, NUnit, and MSTest. Positives hold skips with no reason (beside a doc comment, a
 //! lint directive, or a URL in the title, none of which is one); negatives
 //! hold every form of a stated reason: an argument, a comment, a condition.
 
@@ -32,12 +32,112 @@ pub(crate) fn skip_capability_files(
         ("go", false) => ("parser_test.go", GO_EXPLAINED),
         ("java", true) => (JAVA_PATH, JAVA_UNEXPLAINED),
         ("java", false) => (JAVA_PATH, JAVA_EXPLAINED),
+        ("kotlin", true) => (KOTLIN_PATH, KOTLIN_UNEXPLAINED),
+        ("kotlin", false) => (KOTLIN_PATH, KOTLIN_EXPLAINED),
+        ("csharp", true) => ("tests/ParserTests.cs", CSHARP_UNEXPLAINED),
+        ("csharp", false) => ("tests/ParserTests.cs", CSHARP_EXPLAINED),
         _ => return None,
     };
     Some(vec![(path.to_string(), source.to_string())])
 }
 
 const JAVA_PATH: &str = "src/test/java/ParserTest.java";
+const KOTLIN_PATH: &str = "src/test/kotlin/ParserTest.kt";
+
+const KOTLIN_UNEXPLAINED: &str = r#"import org.junit.Ignore
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
+
+class ParserTest {
+    @Test
+    @Disabled
+    fun parsesTabs() { assertEquals(1, parse("\t")) }
+
+    @Test
+    @Disabled("")
+    fun parsesSpaces() { assertEquals(1, parse(" ")) }
+
+    @Ignore
+    @Test
+    fun `parses newlines`() { assertEquals(1, parse("\n")) }
+}
+
+@Disabled
+class LegacyParserTest {
+    @Test
+    fun parses() { assertEquals(1, parse("a")) }
+}
+"#;
+
+const KOTLIN_EXPLAINED: &str = r#"import org.junit.Ignore
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
+
+class ParserTest {
+    @Test
+    @Disabled("tabs are not tokenized yet")
+    fun parsesTabs() { assertEquals(1, parse("\t")) }
+
+    @Test
+    @Ignore // flaky on Windows runners, see #41
+    fun parsesSpaces() { assertEquals(1, parse(" ")) }
+
+    @Test
+    fun parsesNewlines() { assertEquals(1, parse("\n")) }
+
+    @Test
+    @Disabled
+    fun parsesRemote() {
+        val source = fetch()
+        // Needs the remote fixture server; ignored for now, run manually.
+        assertEquals(1, parse(source))
+    }
+}
+
+@Disabled("the legacy parser is removed in 2.0")
+class LegacyParserTest {
+    @Test
+    fun parses() { assertEquals(1, parse("a")) }
+}
+"#;
+
+const CSHARP_UNEXPLAINED: &str = r#"using NUnit.Framework;
+using Xunit;
+
+public class ParserTests {
+    [Fact(Skip = "")]
+    public void ParsesTabs() { Assert.Equal(1, Parser.Parse("\t")); }
+
+    [TestMethod]
+    [Ignore]
+    public void ParsesSpaces() { Assert.AreEqual(1, Parser.Parse(" ")); }
+}
+
+[Ignore]
+public class LegacyParserTests {
+    [Test]
+    public void Parses() { Assert.AreEqual(1, Parser.Parse("a")); }
+}
+"#;
+
+const CSHARP_EXPLAINED: &str = r#"using NUnit.Framework;
+using Xunit;
+
+public class ParserTests {
+    [Fact(Skip = "tabs are not tokenized yet")]
+    public void ParsesTabs() { Assert.Equal(1, Parser.Parse("\t")); }
+
+    [Test, Ignore("flaky on Windows runners, see #41")]
+    public void ParsesSpaces() { Assert.AreEqual(1, Parser.Parse(" ")); }
+
+    [TestMethod]
+    [Ignore] // needs the staging database
+    public void ParsesNewlines() { Assert.AreEqual(1, Parser.Parse("\n")); }
+
+    [Fact]
+    public void ParsesWords() { Assert.Equal(1, Parser.Parse("a")); }
+}
+"#;
 
 const RUST_UNEXPLAINED: &str = r#"use parser::parse;
 
@@ -443,6 +543,19 @@ fn skip_boundaries_report_exactly_the_unexplained_skips() {
                 "LegacyParserTest",
                 "concurrentAccess",
             ],
+        ),
+        (
+            "kotlin",
+            &[
+                "parsesTabs",
+                "parsesSpaces",
+                "parses newlines",
+                "LegacyParserTest",
+            ],
+        ),
+        (
+            "csharp",
+            &["ParsesTabs", "ParsesSpaces", "LegacyParserTests"],
         ),
     ];
     let mut failures = Vec::new();

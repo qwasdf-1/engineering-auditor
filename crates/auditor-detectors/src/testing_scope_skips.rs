@@ -1,7 +1,7 @@
 //! Skip marks: the attribute, decorator, annotation, or call that disables
 //! a test or a group of tests, and whether a reason for it is written down.
 
-use auditor_ast::AstNode;
+use auditor_ast::{AstNode, AstNodeKind};
 
 use super::{call_view, compact, preorder};
 use crate::ast_scan::nodes_of_kind;
@@ -105,6 +105,57 @@ pub(super) fn java_skip_mark<'t>(
     })
 }
 
+/// A JUnit `@Disabled` or `@Ignore` among a Kotlin declaration's
+/// annotations.
+pub(super) fn kotlin_skip_mark<'t>(
+    declaration: AstNode<'t>,
+    annotations: &[AstNode<'t>],
+) -> Option<SkipMark<'t>> {
+    let annotation = annotations.iter().copied().find(|annotation| {
+        matches!(
+            super::frameworks::kotlin_annotation_name(*annotation),
+            "Disabled" | "Ignore"
+        )
+    })?;
+    let arguments = annotation.first_descendant_of_kind(&AstNodeKind::from("value_arguments"));
+    Some(SkipMark {
+        node: annotation,
+        block_row: row(declaration),
+        stated: arguments.is_some_and(|arguments| states_reason(arguments.text())),
+    })
+}
+
+/// An NUnit or MSTest `[Ignore]`, or an xUnit `[Fact(Skip = "..")]`/
+/// `[Theory(Skip = "..")]`, among a C# declaration's attributes.
+pub(super) fn csharp_skip_mark<'t>(
+    declaration: AstNode<'t>,
+    attributes: &[AstNode<'t>],
+) -> Option<SkipMark<'t>> {
+    attributes.iter().copied().find_map(|attribute| {
+        let arguments = attribute
+            .named_children()
+            .find(|child| child.kind() == "attribute_argument_list");
+        let stated = match super::frameworks::csharp_attribute_name(attribute) {
+            "Ignore" => arguments.is_some_and(|arguments| states_reason(arguments.text())),
+            "Fact" | "Theory" => {
+                let skip = arguments?.named_children().find(|argument| {
+                    argument
+                        .named_child(0)
+                        .is_some_and(|name| name.text() == "Skip")
+                })?;
+                let value = skip.named_child(1)?;
+                states_reason(value.text())
+            }
+            _ => return None,
+        };
+        Some(SkipMark {
+            node: attribute,
+            block_row: row(declaration),
+            stated,
+        })
+    })
+}
+
 /// The first `t.Skip`/`t.SkipNow` call in a Go test. One with arguments, or
 /// under a condition inside the test, states why it skips.
 pub(super) fn go_skip_mark<'t>(body: AstNode<'t>, context: &[String]) -> Option<SkipMark<'t>> {
@@ -172,6 +223,32 @@ pub(crate) fn skipped_groups<'t>(root: AstNode<'t>, file: &AuditedFile) -> Vec<S
                 })
             })
             .collect(),
+        Language::Kotlin => nodes_of_kind(root, &["class_declaration"])
+            .into_iter()
+            .filter_map(|class| {
+                let annotations = super::frameworks::kotlin_annotations(class);
+                Some(SkippedGroup {
+                    name: class
+                        .named_children()
+                        .find(|child| child.kind() == "type_identifier")?
+                        .text()
+                        .to_string(),
+                    mark: kotlin_skip_mark(class, &annotations)?,
+                })
+            })
+            .collect(),
+        // NUnit and MSTest ignore a whole fixture with a class `[Ignore]`.
+        Language::CSharp => nodes_of_kind(root, &["class_declaration"])
+            .into_iter()
+            .filter_map(|class| {
+                let attributes = super::frameworks::csharp_attributes(class);
+                let mark = csharp_skip_mark(class, &attributes)?;
+                Some(SkippedGroup {
+                    name: class.child_by_field_name("name")?.text().to_string(),
+                    mark,
+                })
+            })
+            .collect(),
         Language::Python if file.role == SourceRole::Test => {
             nodes_of_kind(root, &["decorated_definition"])
                 .into_iter()
@@ -218,7 +295,15 @@ pub(crate) fn skipped_groups<'t>(root: AstNode<'t>, file: &AuditedFile) -> Vec<S
 
 /// A file's comments, for [`explained_by_comment`].
 pub(crate) fn comments(root: AstNode<'_>) -> Vec<AstNode<'_>> {
-    nodes_of_kind(root, &["comment", "line_comment", "block_comment"])
+    nodes_of_kind(
+        root,
+        &[
+            "comment",
+            "line_comment",
+            "block_comment",
+            "multiline_comment",
+        ],
+    )
 }
 
 /// Whether a comment gives the reason for a skip.
@@ -227,8 +312,9 @@ pub(crate) fn comments(root: AstNode<'_>) -> Vec<AstNode<'_>> {
 /// declaration's attribute block, or ending on the row above the block)
 /// does. A doc comment above the block, or a comment opening the test's
 /// `body`, describes the test, so it counts only when it speaks of the skip
-/// or failure or points to an issue; a comment above the enclosing class
-/// only when it speaks of the skip. Tool directives (`eslint-disable`,
+/// or failure or points to an issue; a comment elsewhere in the body only
+/// when it names the skip (skip, disabled, ignored, manual); a comment above
+/// the enclosing class only when it speaks of the skip. Tool directives (`eslint-disable`,
 /// `noqa`) explain nothing.
 pub(crate) fn explained_by_comment(
     mark: &SkipMark<'_>,
@@ -250,8 +336,12 @@ pub(crate) fn explained_by_comment(
             .iter()
             .any(|prefix| comment.text().starts_with(prefix));
         let describes = opening.is_some_and(|opening| opening.start_byte() == comment.start_byte());
+        let inside = body.is_some_and(|body| {
+            comment.start_byte() > body.start_byte() && comment.end_byte() < body.end_byte()
+        });
         (beside && !doc)
             || ((beside || describes) && (mentions_skip(&text) || references_issue(comment.text())))
+            || (inside && names_skip(&text))
             || (class_row.is_some_and(|class_row| end + 1 == class_row) && mentions_skip(&text))
     }) || opening
         .filter(|opening| opening.kind() == "expression_statement")
@@ -316,6 +406,15 @@ fn mentions_skip(text: &str) -> bool {
     ]
     .iter()
     .any(|word| text.contains(word))
+}
+
+/// Words that name the skip itself, which make a comment anywhere in the
+/// test body its reason ("test ignored for now. Run manually."). The wider
+/// [`mentions_skip`] words (`todo`, `fail`, `bug`) are common in bodies.
+fn names_skip(text: &str) -> bool {
+    ["skip", "disabl", "ignor", "manual"]
+        .iter()
+        .any(|word| text.contains(word))
 }
 
 /// An issue link or key: `#123`, `LANG-1655`, a URL, the word "issue".

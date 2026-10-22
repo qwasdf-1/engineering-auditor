@@ -715,8 +715,10 @@ Reports a test, or a group of tests, disabled with no reason written down:
 Rust `#[ignore]`, pytest `@pytest.mark.skip` and `@unittest.skip` (on a
 test or a test class), Jest/Vitest/Mocha `it.skip`, `xit`, `test.skip`,
 `describe.skip`, and `xdescribe`, Go `t.Skip()` and `t.SkipNow()`, and JUnit
-`@Disabled`/`@Ignore` (on a test or a test class) or TestNG
-`@Test(enabled = false)`.
+`@Disabled`/`@Ignore` (on a test or a test class, in Java or Kotlin) or
+TestNG `@Test(enabled = false)`, and C# xUnit `[Fact(Skip = "")]`/
+`[Theory(Skip = "")]` and NUnit or MSTest `[Ignore]` (on a test or a
+fixture class).
 
 A skip states its reason when the mark carries one (`#[ignore = ".."]`,
 `skip(reason=..)`, `@Disabled("..")`, `t.Skip("..")`), when a Go skip runs
@@ -726,13 +728,16 @@ inside the attribute or annotation block, or ending on the line above. A doc
 comment above the test, a comment opening the test body, or a Python
 docstring describes the test, so it counts only when it speaks of the skip
 or a failure (skip, disabled, ignore, fails, flaky, broken, TODO, FIXME,
-manual) or points to an issue (`#123`, `LANG-1655`, a URL); a comment above
+manual) or points to an issue (`#123`, `LANG-1655`, a URL); a comment
+deeper in the body counts only when it names the skip (skip, disabled,
+ignored, manual: "test ignored for now. Run manually."); a comment above
 the enclosing class counts only when it speaks of the skip. Lint directives
 (`eslint-disable`, `noqa`) are not reasons. Conditional skips (`skipif`,
 `skipIf`, `#[cfg_attr(.., ignore)]`), expected failures (`xfail`), and
 placeholders (`it.todo`) are not reported.
 
-Language contract: Tier 1; the Tier-2 frameworks are deferred (see
+Language contract: Tier 1, Kotlin, and C#; GoogleTest's `DISABLED_` prefix
+and Catch2's hidden tags are deferred for C and C++ (see
 [`language-support.md`](./language-support.md)).
 
 ---

@@ -45,7 +45,7 @@ Correctness and security defects.
 | `eval_in_production` | not_applicable | semantic | semantic | semantic | not_applicable | semantic | semantic | semantic | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `exit_in_production` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `flask_debug_true` | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `float_equality_comparison` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `float_equality_comparison` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `go_errcheck` | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `go_log_fatal` | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported |
 | `hardcoded_credential` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported |
@@ -105,7 +105,7 @@ Structure, complexity, duplication, and maintainability.
 | `ruby_double_bang` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | exact_lexical | not_applicable | not_applicable | unsupported | unsupported |
 | `section_divider_comment` | partial | partial | partial | partial | partial | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `sibling_call_redundancy` | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
-| `skipped_test_without_reason` | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
+| `skipped_test_without_reason` | semantic | semantic | semantic | semantic | semantic | semantic | semantic | semantic | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `source_duplicate_detection` | partial | partial | partial | partial | partial | unsupported | unsupported | unsupported | partial | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 | `stale_link_reference` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | exact_lexical | unsupported |
 | `stale_path_reference` | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | not_applicable | unsupported | unsupported | unsupported | exact_lexical | unsupported |
@@ -187,8 +187,8 @@ Markdown and structured-data cells are excluded from these source-language total
 
 | Layer | Semantic | Exact lexical | Partial | Unsupported | Not applicable |
 |---|---:|---:|---:|---:|---:|
-| L1 | 251 | 10 | 0 | 128 | 144 |
-| L2 | 135 | 17 | 53 | 179 | 110 |
+| L1 | 255 | 10 | 0 | 124 | 144 |
+| L2 | 137 | 17 | 53 | 177 | 110 |
 | L3 | 96 | 0 | 0 | 62 | 11 |
 | L4 | 96 | 0 | 2 | 92 | 5 |
 | L5 | 89 | 1 | 0 | 56 | 36 |
@@ -280,6 +280,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | Collections are arrays and pointers (or STL containers passed by reference): a mutation through a non-`const` pointer or reference is declared in the signature, and the rule needs `const`-qualification facts to tell a surprising write from a designed output buffer. | 2 | 1 | C, C++ |
 | Go mutates slices and maps through indexing and `append`, not method calls; the rule needs index-write facts for slice and map parameters. | 1 | 1 | Go |
 | Go structure facts record no string literals and model `switch` cases as plain branches, so a sentinel comparison has no evidence to read. | 1 | 1 | Go |
+| GoogleTest's `DISABLED_` prefix and `GTEST_SKIP()`, and Catch2's hidden `[.]` tags, are not modelled yet. | 2 | 1 | C, C++ |
 | Gradle build scripts and MSBuild project files are not parsed yet. | 2 | 1 | C#, Kotlin |
 | History-dependent: the depth-1 ecosystem corpus has no commit history, so the cell has no precision sample yet. | 8 | 1 | C, C++, C#, Go, Java, JavaScript, Kotlin, TypeScript |
 | Kotlin suspends implicitly: a suspend call in a loop has no `await` marker, so the rule needs suspend-function resolution to find sequential awaits. | 1 | 1 | Kotlin |
@@ -308,7 +309,6 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | The Tier-2 constructors (Kotlin `Channel(UNLIMITED)`, C# `Channel.CreateUnbounded` and `BlockingCollection` without a bound, C++ queue wrappers) are not in the constructor table yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 discards (Kotlin `runCatching` results, C# unobserved `Task`s, C and C++ `warn_unused_result` returns) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 fan-out forms (Kotlin `launch`/`async` in a loop, C# `Task.Run` and `Task.WhenAll` over a `Select`, C and C++ thread creation in a loop) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
-| The Tier-2 float literal and comparison forms (Kotlin `Double`/`Float`, C# `double`/`float`/`decimal`, C and C++ suffixes) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 logger APIs (Kotlin lambda messages, C# `ILogger` templates and interpolated handlers, C and C++ logging macros) are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The Tier-2 retry shapes (Kotlin `runCatching` and `repeat`, C# `catch` filters, C and C++ return-code loops) and their wait calls are not modelled yet. | 4 | 1 | C, C++, C#, Kotlin |
 | The backtracking engines (Kotlin `Regex`, POSIX `regcomp`) take patterns through APIs the regex literal extraction does not model yet. | 2 | 1 | C, Kotlin |
@@ -316,7 +316,7 @@ Each unsupported catalog cell carries one of these executable limitation reasons
 | The frontend lacks a qualified collection, cardinality, mutation, or call-cost proof for this algorithmic capability. | 33 | 11 | Julia, Ruby, Shell |
 | The frontend lacks a qualified effect, lifecycle, or resolved-topology classifier for this systems capability. | 27 | 9 | Julia, Ruby, Shell |
 | The frontend lacks a qualified receiver type, alias, evaluation-order, or failure-behavior proof for this optimization. | 36 | 12 | Julia, Ruby, Shell |
-| The test-scope facts model the Tier-1 frameworks; the Tier-2 forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet. | 12 | 3 | C, C++, C#, Kotlin |
+| The test-scope facts model the Tier-1 frameworks; the Tier-2 assertion forms (Kotlin JUnit and MockK, C# xUnit, NUnit, and MSTest, GoogleTest and Catch2 macros) are not modelled yet. | 8 | 2 | C, C++, C#, Kotlin |
 | Untyped parameters: a collection cannot be told from an output sink or builder (a `StringBuilder`-like accumulator), which dominated the typed-language probe. | 1 | 1 | JavaScript |
 | libcurl's default is no timeout (`CURLOPT_TIMEOUT` 0), but the client API table does not model curl handles and their option calls yet. | 2 | 1 | C, C++ |
 ## Role Contracts

@@ -183,6 +183,606 @@
       ]
     },
     {
+      "id": "EA-5fb26bc892640b5d",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/test/java/org/koin/test/android/scope/ServiceExtTest.kt",
+      "message": "Test `GIVEN service WHEN create service scope THEN set scope` is skipped at line 61 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-d172aff70921a368",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/android/koin-android/src/test/java/org/koin/test/android/scope/ServiceExtTest.kt",
+      "message": "Test `GIVEN service WHEN destroy service scope THEN set scope as null` is skipped at line 95 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-72f130abc038f5a9",
+      "repository": "koin",
+      "language": "kotlin",
+      "path": "projects/core/koin-core/src/commonTest/kotlin/org/koin/core/ObjectScopeTest.kt",
+      "message": "Test `error for root linked scope ` is skipped at line 292 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 292,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-a75c43e1dcff3d2e",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "kotlin/tests/codegen-only/src/test/kotlin/com/squareup/moshi/kotlin/codegen/GeneratedAdaptersTest.kt",
+      "message": "Test `duplicatedValueParameter` is skipped at line 938 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 938,
+      "verdict": "false_positive",
+      "reason": "The KDoc right above the test explains the skip: generated adapters don't track enough state to detect duplicated values.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Doc comment on the line above says \"Generated adapters don't track enough state to detect duplicated values.\", which explains the @Ignore."
+        }
+      ]
+    },
+    {
+      "id": "EA-4c5f70b8a5384bae",
+      "repository": "moshi",
+      "language": "kotlin",
+      "path": "kotlin/tests/codegen-only/src/test/kotlin/com/squareup/moshi/kotlin/codegen/GeneratedAdaptersTest.kt",
+      "message": "Test `duplicatedValueProperty` is skipped at line 953 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 953,
+      "verdict": "false_positive",
+      "reason": "The KDoc right above the test explains the skip: generated adapters don't track enough state to detect duplicated values.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Doc comment on the line above says \"Generated adapters don't track enough state to detect duplicated values.\", which explains the @Ignore."
+        }
+      ]
+    },
+    {
+      "id": "EA-48f681e77f1191d1",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "android-test/src/androidTest/java/okhttp/android/test/OkHttpTest.kt",
+      "message": "Test `testSSLFeatures` is skipped at line 506 with no stated reason",
+      "status": "pre_label",
+      "sampled_from": "t27-a",
+      "line": 506,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Inside the test body a comment states \"TODO map to expected versions automatically, test ignored for now.  Run manually.\", giving the reason for the @Disabled."
+        }
+      ]
+    },
+    {
+      "id": "EA-d21d00c7109ccf6c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver-deprecated/src/test/java/okhttp3/mockwebserver/KotlinSourceModernTest.kt",
+      "message": "Test `mockResponse` is skipped at line 63 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-129cf425eb2e4394",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver-deprecated/src/test/java/okhttp3/mockwebserver/KotlinSourceModernTest.kt",
+      "message": "Test `mockWebServer` is skipped at line 111 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-afe19e59161c3b7a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver-deprecated/src/test/java/okhttp3/mockwebserver/KotlinSourceModernTest.kt",
+      "message": "Test `pushPromise` is skipped at line 143 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 143,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-6b29b85f0adf19b2",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "mockwebserver-deprecated/src/test/java/okhttp3/mockwebserver/KotlinSourceModernTest.kt",
+      "message": "Test `recordedRequest` is skipped at line 166 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 166,
+      "verdict": "true_positive",
+      "reason": "A bare @Ignore with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Ignore with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-5f3280a1b3f9f24a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/ConscryptTest.kt",
+      "message": "Test `testGoogle` is skipped at line 66 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-8ed5738e68d93b31",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/CorrettoTest.kt",
+      "message": "Test `testMozilla` is skipped at line 42 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-35685fabe490e55c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/CorrettoTest.kt",
+      "message": "Test `testGoogle` is skipped at line 55 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-26d3a9c2e544af05",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/JSSETest.kt",
+      "message": "Test `testFacebook` is skipped at line 137 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 137,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-f149426cc220f453",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `cacheControl` is skipped at line 92 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 92,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-0411830cdec78815",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `challenge` is skipped at line 108 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-7c7d5bd136eb7a6d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `cipherSuite` is skipped at line 117 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-3f2e6e5a8dd04cec",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `cookie` is skipped at line 131 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 131,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-b21968d874cc6a7c",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `formBody` is skipped at line 145 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-6823fb12d08412ed",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `handshake` is skipped at line 151 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 151,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-26876cf24d6e68dc",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `headers` is skipped at line 163 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 163,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-f4816303bd68fd62",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `httpLoggingInterceptor` is skipped at line 170 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-ab42615a57302c85",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `httpUrl` is skipped at line 176 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 176,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-dbb7367a743a41f5",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `mockResponse` is skipped at line 234 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 234,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-d7d6904ae4d7b37b",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `mockWebServer` is skipped at line 244 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 244,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-8895deb3a4a81b7a",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `multipartBody` is skipped at line 255 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 255,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-27965ede96ebca45",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/KotlinDeprecationErrorTest.kt",
+      "message": "Test `pushPromise` is skipped at line 303 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 303,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-91821cc777aff95d",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/OpenJSSETest.kt",
+      "message": "Test `testMozilla` is skipped at line 86 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 86,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-0b56a3b784ea26f9",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/TrailersTest.kt",
+      "message": "Test `trailersAndCacheHttp1` is skipped at line 163 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 163,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled with no argument and no comment beside it; nothing near the test says why it is disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare @Disabled with no argument and no explanatory comment near it or on the class."
+        }
+      ]
+    },
+    {
+      "id": "EA-7a5499e5602af27e",
+      "repository": "okhttp",
+      "language": "kotlin",
+      "path": "okhttp/src/jvmTest/kotlin/okhttp3/URLConnectionTest.kt",
+      "message": "Test `deflateCompression` is skipped at line 3756 with no stated reason",
+      "status": "corroborated",
+      "sampled_from": "t27-a",
+      "line": 3756,
+      "verdict": "true_positive",
+      "reason": "A bare @Disabled on a stub whose body is fail(\"TODO\"); that it is unimplemented must be inferred, and nothing near the skip says so.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "@Disabled has no argument or comment; the body is only fail(\"TODO\"), so the reason (unimplemented stub) must be inferred."
+        }
+      ]
+    },
+    {
       "id": "EA-9641ed19af4d5743",
       "repository": "hono",
       "language": "typescript",
