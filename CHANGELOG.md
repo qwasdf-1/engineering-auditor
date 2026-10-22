@@ -10,15 +10,22 @@
   `gather` over a comprehension and `create_task`/`Thread` in a loop,
   JS/TS `Promise.all` over a `.map`, Java `new Thread` in a loop and
   `newCachedThreadPool`. Literal collections, counted loops, worker and
-  handler sets, and functions holding a semaphore or limiter are not
-  reported. The corpus has 24 findings, not yet labelled.
+  handler sets, collections cut by `.slice(0, n)`/`.take(n)`, and
+  functions holding a semaphore, limiter, or `concurrency` setting are not
+  reported. Of 21 corpus findings, 13 are corroborated true positives, 6
+  false positives, and 2 disputed (68%, below the bar).
 
 - `unbounded_channel_or_queue` (full-only; Rust, Python, Java) reports a
   channel or work queue created without a capacity (`mpsc::channel`,
   `unbounded_channel`, `queue.Queue()`, `new LinkedBlockingQueue<>()`,
   `Executors.newFixedThreadPool`). Go channels always have a capacity and
-  JavaScript has no queue type, so those cells are not applicable. The
-  corpus has 5 findings, not yet labelled.
+  JavaScript has no queue type, so those cells are not applicable. Of 5
+  corpus findings, 2 are true positives; the 3 false positives are queues
+  the program bounds (one item per known task, demand signals).
+
+- The ecosystem corpus's application slice now also measures
+  `eager_log_formatting`, `retry_without_backoff`, `unbounded_concurrency`,
+  and `unbounded_channel_or_queue`, whose findings sit in applications.
 
 - `retry_without_backoff` (full-only, Tier 1) reports a loop that retries
   a failed operation at once: a counted loop, or an open loop naming its
@@ -34,7 +41,8 @@
   `String.format`, `fmt.Sprintf`, concatenation), so the string is built
   even when the level is off. Enabled-level guards and `console` are not
   reported; Rust's logging macros are lazy, so its cell is not applicable.
-  The corpus has 400 such calls (390 in apprise, 10 in dependency-track).
+  The corpus has 400 such calls (390 in apprise, 10 in dependency-track);
+  all 40 sampled are corroborated true positives, which meets the bar.
 
 - `float_equality_comparison` (full-only, Tier 1) reports `==`/`!=`
   between float arithmetic (an arithmetic expression, or a local whose

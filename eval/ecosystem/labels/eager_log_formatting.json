@@ -1,0 +1,806 @@
+{
+  "schema_version": 1,
+  "detector": "eager_log_formatting",
+  "labels": [
+    {
+      "id": "EA-3e1a697e6e67cbb8",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "alpine/alpine-server/src/main/java/alpine/server/auth/OidcAuthenticationService.java",
+      "message": "The `debug` call at line 251 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 251,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-49d4cb30c94660db",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "alpine/alpine-server/src/main/java/alpine/server/filters/ApiKeyUsageTracker.java",
+      "message": "The `debug` call at line 106 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd0d4f950a4870f3",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "alpine/alpine-server/src/main/java/alpine/server/filters/ApiKeyUsageTracker.java",
+      "message": "The `debug` call at line 130 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 130,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-8a4c01936d0232ff",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "alpine/alpine-server/src/main/java/alpine/server/filters/SessionUsageTracker.java",
+      "message": "The `debug` call at line 126 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 126,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-f72703f93cde0796",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "apiserver/src/main/java/org/dependencytrack/policy/cel/CelPolicyCompiler.java",
+      "message": "The `debug` call at line 103 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 103,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-768a72af3c67ce4b",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "apiserver/src/main/java/org/dependencytrack/resources/v1/ProjectResource.java",
+      "message": "The `debug` call at line 697 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 697,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-c57e69363270e0bb",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "apiserver/src/main/java/org/dependencytrack/resources/v1/ProjectResource.java",
+      "message": "The `debug` call at line 840 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 840,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-332f444e4c2eadb1",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "apiserver/src/main/java/org/dependencytrack/resources/v1/ProjectResource.java",
+      "message": "The `debug` call at line 1011 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1011,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-d54731931fc37708",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "apiserver/src/main/java/org/dependencytrack/tasks/ImportBomActivity.java",
+      "message": "The `debug` call at line 866 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 866,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-7167b54da2b988b6",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "plugin/runtime/src/main/java/org/dependencytrack/plugin/runtime/PluginManager.java",
+      "message": "The `debug` call at line 142 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 142,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-f5ee77e97b36960d",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/config/base.py",
+      "message": "The `debug` call at line 577 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 577,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-35cc8797931d5cb0",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/burstsms.py",
+      "message": "The `debug` call at line 312 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 312,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-5da05744974618be",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/dbus.py",
+      "message": "The `debug` call at line 389 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 389,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-07818c5c62b30e29",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/exotel.py",
+      "message": "The `debug` call at line 472 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 472,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-112e2d6c1dd97681",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/fcm/oauth.py",
+      "message": "The `debug` call at line 158 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-564b11e4d98dc768",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/fortysixelks.py",
+      "message": "The `debug` call at line 268 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 268,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-92ad80272d74b9fb",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/google_chat.py",
+      "message": "The `debug` call at line 504 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 504,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-04c4c71940ad55df",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/ifttt.py",
+      "message": "The `debug` call at line 260 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 260,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-0eea3a18a46474b1",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/jira.py",
+      "message": "The `debug` call at line 454 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 454,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-a1b71e7a64be5a12",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/lauther.py",
+      "message": "The `debug` call at line 306 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 306,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-2e345764a98e1721",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/matrix/base.py",
+      "message": "The `debug` call at line 3220 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 3220,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-f7f726930236df27",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/notica.py",
+      "message": "The `debug` call at line 229 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 229,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-74e503f7541df83b",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/office365.py",
+      "message": "The `debug` call at line 1006 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1006,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-3776d6ce213f48b0",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/one_signal.py",
+      "message": "The `debug` call at line 300 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 300,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-dd9ee2b7a6c103bb",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/pushbullet.py",
+      "message": "The `debug` call at line 438 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 438,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-711146bb8e04d2b3",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/pushdeer.py",
+      "message": "The `debug` call at line 141 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 141,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-22c1878d25fb81e9",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/pushed.py",
+      "message": "The `debug` call at line 283 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 283,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-e327e1eebc159680",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/pushover.py",
+      "message": "The `debug` call at line 924 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 924,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-16b39d464fdb7666",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/rsyslog.py",
+      "message": "The `debug` call at line 282 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 282,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac80fa7803256ad2",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/sfr.py",
+      "message": "The `debug` call at line 294 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 294,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-ccce0852c3b2ac0c",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/simplepush.py",
+      "message": "The `debug` call at line 846 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 846,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-87854324b142b51f",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/slack.py",
+      "message": "The `debug` call at line 1550 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1550,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-97fbede8bf852bfc",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/slack.py",
+      "message": "The `debug` call at line 1569 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1569,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-c6b733f1766642ae",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/smseagle.py",
+      "message": "The `debug` call at line 635 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 635,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-dfb14129562fad28",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/sparkpost.py",
+      "message": "The `debug` call at line 494 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 494,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-350322a1781bc9de",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/techuluspush.py",
+      "message": "The `debug` call at line 182 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 182,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-8cfa14e9c9760731",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/voipms.py",
+      "message": "The `debug` call at line 245 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 245,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-40c084bf9f5c1acb",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/plugins/workflows.py",
+      "message": "The `debug` call at line 492 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 492,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-af2e800c779b53d7",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/utils/pem.py",
+      "message": "The `debug` call at line 359 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 359,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    },
+    {
+      "id": "EA-947d83b73e1a35c9",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/utils/pgp.py",
+      "message": "The `debug` call at line 680 formats its message before the logger checks the level, so the string is built even when debug logging is off",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 680,
+      "verdict": "true_positive",
+      "reason": "The debug message is formatted eagerly (f-string/.format/.formatted) before the logger checks the level, so it is built even when debug is off.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The debug call formats its message eagerly (f-string/.format/.formatted) before the logger checks the level."
+        }
+      ]
+    }
+  ]
+}

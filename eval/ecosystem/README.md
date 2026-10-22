@@ -31,7 +31,10 @@ The library corpus has almost no outbound network code, so some detectors
 cannot be measured on it. `applications` in `manifest.json` pins one
 permissively licensed application per Tier-1 language (lychee, apprise,
 miniflux, Dependency-Track, Uptime Kuma, Hoppscotch), each naming the
-detectors it measures (today `network_call_without_timeout`).
+detectors it measures (`network_call_without_timeout` and the systems and
+logging detectors whose findings sit in applications:
+`eager_log_formatting`, `retry_without_backoff`, `unbounded_concurrency`,
+`unbounded_channel_or_queue`).
 
 ```sh
 python3 tooling/ecosystem/run.py scan --slice applications --label apps-current

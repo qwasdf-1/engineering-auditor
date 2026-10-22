@@ -232,12 +232,13 @@ threads together. Production files only. Tier 1.
   `Promise.all`/`allSettled` over a `.map(..)`; Java `new Thread(..)` in a
   loop and `Executors.newCachedThreadPool()`.
 - Bounded by construction: a literal collection or range, a counted loop,
-  and a collection named for workers, shards, partitions, cores, or
+  a collection cut to a length (`.slice(0, n)`, `.take(n)`, `.limit(n)`,
+  directly or through a local's reaching value), and a collection named for workers, shards, partitions, cores, or
   registered handlers, listeners, callbacks, hooks, plugins, or
   subscribers. A `.map` whose callback takes a promise, future, or task, or
   calls its item (`callback => callback(event)`), starts nothing new.
 - A limit anywhere in the enclosing function is a bound: a semaphore,
-  limiter, permit, or `p-limit` name, an errgroup `SetLimit`,
+  limiter, permit, `concurrency`, or `p-limit` name, an errgroup `SetLimit`,
   `buffer_unordered`, or a Go channel send before the `go` statement.
 
 ### `unbounded_channel_or_queue`

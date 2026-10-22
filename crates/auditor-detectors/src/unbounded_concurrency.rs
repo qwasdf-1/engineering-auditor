@@ -16,16 +16,18 @@
 //! - Java: `new Thread(..)` in a loop, and
 //!   `Executors.newCachedThreadPool()`, which adds a thread per waiting task.
 //!
-//! A loop over a literal collection, or over workers, shards, partitions, or
+//! A loop over a literal collection, a collection cut to a fixed length
+//! (`.slice(0, n)`, `.take(n)`, `.limit(n)`, directly or through a local), or over workers, shards, partitions, or
 //! registered handlers, listeners, callbacks, hooks, or plugins
 //! (`for _, worker := range workers`), is bounded by construction, and a
 //! `.map` whose callback takes a promise, future, or task, or calls its item
 //! (`callback => callback(event)`), starts nothing new. A limit in
-//! reach is a bound: a semaphore, limiter, or `p-limit` call, a Go send
+//! reach is a bound: a semaphore, limiter, `concurrency` setting, or
+//! `p-limit` call, a Go send
 //! before the `go` statement (`sem <- struct{}{}`), an errgroup `SetLimit`,
 //! or `buffer_unordered`, anywhere in the enclosing function.
 
-use auditor_ast::AstNode;
+use auditor_ast::{AstNode, FunctionFlow};
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::ast_scan::{self, descendants, nodes_of_kind, AstScan};
@@ -292,6 +294,9 @@ fn unbounded_collection(node: AstNode<'_>) -> bool {
     if node.kind() == "parenthesized_expression" {
         return node.named_child(0).is_some_and(unbounded_collection);
     }
+    if truncated(node) {
+        return false;
+    }
     let literal = matches!(
         node.kind(),
         "list"
@@ -354,6 +359,23 @@ fn unbounded_collection(node: AstNode<'_>) -> bool {
             .and_then(|function| function.child_by_field_name("value"))
             .is_some_and(|inner| !unbounded_collection(inner));
     !literal && !fixed && !chained
+}
+
+/// A collection cut to a length (`.slice(0, budget)`, `.take(n)`,
+/// `.limit(n)`), directly or in a local's reaching value.
+fn truncated(node: AstNode<'_>) -> bool {
+    let cuts = |value: AstNode<'_>| {
+        let text = value.text();
+        [".slice(0,", ".take(", ".limit("]
+            .iter()
+            .any(|cut| text.contains(cut))
+    };
+    cuts(node)
+        || (node.kind() == "identifier"
+            && FunctionFlow::enclosing(node)
+                .reaching(node)
+                .iter()
+                .any(|binding| binding.value.is_some_and(cuts)))
 }
 
 fn enclosing_loop(node: AstNode<'_>) -> Option<AstNode<'_>> {
@@ -421,7 +443,14 @@ fn limited(site: AstNode<'_>) -> bool {
             words.iter().any(|word| {
                 matches!(
                     word.as_str(),
-                    "semaphore" | "sem" | "limiter" | "limit" | "permit" | "permits" | "acquire"
+                    "semaphore"
+                        | "sem"
+                        | "limiter"
+                        | "limit"
+                        | "permit"
+                        | "permits"
+                        | "acquire"
+                        | "concurrency"
                 )
             }) || matches!(child.text(), "buffer_unordered" | "buffered" | "SetLimit")
         })

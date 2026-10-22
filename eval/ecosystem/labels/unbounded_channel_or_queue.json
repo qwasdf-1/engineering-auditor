@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "detector": "unbounded_channel_or_queue",
+  "labels": [
+    {
+      "id": "EA-e730bf2ce7d52084",
+      "repository": "commons-lang",
+      "language": "java",
+      "path": "src/main/java/org/apache/commons/lang3/concurrent/BackgroundInitializer.java",
+      "message": "`newFixedThreadPool` at line 225 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 225,
+      "verdict": "false_positive",
+      "reason": "The pool is sized to getTaskCount() and runs exactly that many tasks, so its work queue never holds a backlog.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "createExecutor builds a fixed pool sized to getTaskCount() and BackgroundInitializer submits only that bounded set of tasks, so no producer can outpace it."
+        }
+      ]
+    },
+    {
+      "id": "EA-ab714e9e2750303d",
+      "repository": "dependency-track",
+      "language": "java",
+      "path": "dex/engine/src/main/java/org/dependencytrack/dex/engine/DexEngineImpl.java",
+      "message": "`newSingleThreadExecutor` at line 220 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 220,
+      "verdict": "true_positive",
+      "reason": "A single-thread executor for completed-run event listeners queues events without bound when listeners fall behind the run rate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "newSingleThreadExecutor uses an unbounded queue and maybeNotifyEventListeners enqueues one task per listener per completed-runs event with no backpressure."
+        }
+      ]
+    },
+    {
+      "id": "EA-fd20763e16bc9520",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/concurrency.py",
+      "message": "`Queue` at line 225 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 225,
+      "verdict": "false_positive",
+      "reason": "The queue receives one done-callback per pending task, so it can never hold more items than the bounded task set.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The asyncio.Queue only receives done-callback results of the already-created, finite set of pending tasks and is drained by the same loop, so growth is bounded by task count."
+        }
+      ]
+    },
+    {
+      "id": "EA-fbb5169201775428",
+      "repository": "hyper",
+      "language": "rust",
+      "path": "src/client/dispatch.rs",
+      "message": "`unbounded_channel` at line 32 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "hyper pairs the unbounded channel with a want giver/taker, so the sender only sends when the receiver signals demand.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The unbounded mpsc channel is paired with want::new() giver/taker, documented in the file as the backpressure mechanism that gates sends on receiver readiness."
+        }
+      ]
+    },
+    {
+      "id": "EA-beb7bc8cf7f824b3",
+      "repository": "ripgrep",
+      "language": "rust",
+      "path": "crates/core/main.rs",
+      "message": "`channel` at line 283 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 283,
+      "verdict": "true_positive",
+      "reason": "Searcher threads send every matched haystack to one printer thread over an unbounded channel; a slow stdout lets the backlog grow.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "std mpsc::channel is unbounded and parallel walker threads tx.send haystacks to a single printing thread with no backpressure."
+        }
+      ]
+    }
+  ]
+}

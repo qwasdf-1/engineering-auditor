@@ -1,0 +1,486 @@
+{
+  "schema_version": 1,
+  "detector": "unbounded_concurrency",
+  "labels": [
+    {
+      "id": "EA-e9e8a07a5c43d64f",
+      "repository": "bubbletea",
+      "language": "go",
+      "path": "tea.go",
+      "message": "`go` at line 961 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 961,
+      "verdict": "false_positive",
+      "reason": "Executing a tea.Batch's commands concurrently is the API's contract; the batch is a program-composed list of commands, not input-sized work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The goroutines are spawned for the commands a developer passed to tea.Batch, a program-defined handler set rather than data-scaled input."
+        }
+      ]
+    },
+    {
+      "id": "EA-8a997015c9668a93",
+      "repository": "miniflux",
+      "language": "go",
+      "path": "internal/googlereader/handler.go",
+      "message": "`go` at line 313 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 313,
+      "verdict": "true_positive",
+      "reason": "One goroutine per entry in the request starts integration.SendEntry network calls with no limit on how many run at once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "A goroutine running integration.SendEntry (external network calls) is spawned per entry of the request-sized entries slice with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-5a939f38ac069371",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint-helpers.js",
+      "message": "`allSettled` at line 457 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "pre_label",
+      "sampled_from": "t25-b",
+      "line": 457,
+      "verdict": "true_positive",
+      "reason": "One globSearch directory walk per normalized CLI search, all started at once; the number of searches comes from user input.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "normalizedSearches has one entry per config-derived base path group (not per file), a small set of glob searches."
+        }
+      ]
+    },
+    {
+      "id": "EA-099c651656b4fb14",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint-helpers.js",
+      "message": "`all` at line 571 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 571,
+      "verdict": "true_positive",
+      "reason": "fsp.stat for every path given on the command line at once; thousands of paths open that many file operations together.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fsp.stat is started for every pattern at once and patterns can be thousands of shell-expanded file paths, with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-d36c81cd913593e8",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint.js",
+      "message": "`all` at line 624 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 624,
+      "verdict": "false_positive",
+      "reason": "Each lintFile reads through the shared Retrier configured with concurrency 100, which bounds the file reads.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Each lintFile call receives a Retrier created with concurrency: 100 (lintFilesWithoutMultithreading), which limits concurrent file I/O."
+        }
+      ]
+    },
+    {
+      "id": "EA-2c4ead2bb670adc7",
+      "repository": "eslint",
+      "language": "javascript",
+      "path": "lib/eslint/eslint.js",
+      "message": "`all` at line 811 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 811,
+      "verdict": "false_positive",
+      "reason": "The output writes go through a Retrier with concurrency: 100, which bounds how many run at once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Each write goes through retrier.retry on a Retrier configured with concurrency: 100, so concurrent writes are bounded."
+        }
+      ]
+    },
+    {
+      "id": "EA-ac5c4ff3ed3f7fd3",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/model/monitor.js",
+      "message": "`all` at line 1839 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1839,
+      "verdict": "true_positive",
+      "reason": "One isUnderMaintenance database query per monitor, all started at once; a large monitor list floods the connection pool.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all runs Monitor.isUnderMaintenance (DB queries) concurrently for every monitor in monitorData with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-15d3d5714bec43e2",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/model/monitor.js",
+      "message": "`all` at line 1842 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1842,
+      "verdict": "true_positive",
+      "reason": "One getAllChildrenIDs query per monitor started together, unbounded in the number of monitors.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all runs the recursive getAllChildrenIDs DB queries concurrently for every monitor with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-8bedc03061367056",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/model/monitor.js",
+      "message": "`all` at line 1843 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1843,
+      "verdict": "true_positive",
+      "reason": "One isActive query per monitor started together, unbounded in the number of monitors.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all runs Monitor.isActive (DB queries) concurrently for every monitor with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-6f5a169cfdcddf42",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/model/monitor.js",
+      "message": "`all` at line 1846 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1846,
+      "verdict": "true_positive",
+      "reason": "One isParentActive query per monitor started together, unbounded in the number of monitors.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all runs Monitor.isParentActive (DB queries) concurrently for every monitor with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-738ef91f9e2d1921",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/model/monitor.js",
+      "message": "`all` at line 1849 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1849,
+      "verdict": "true_positive",
+      "reason": "One getAllPath query per monitor started together, unbounded in the number of monitors.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all runs Monitor.getAllPath (DB queries) concurrently for every monitor with no limiter."
+        }
+      ]
+    },
+    {
+      "id": "EA-0aebcfc13bd6a2c8",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/notification-providers/360messenger.js",
+      "message": "`all` at line 70 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 70,
+      "verdict": "true_positive",
+      "reason": "One axios.post to the 360messenger API per recipient, all at once; a long recipient list fires that many concurrent requests.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all starts one axios.post per configured recipient or group id with no concurrency cap."
+        }
+      ]
+    },
+    {
+      "id": "EA-9d3dcb24fd8087d6",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/notification-providers/360messenger.js",
+      "message": "`all` at line 81 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "One axios.post per group ID, all at once, with no limit on concurrent requests to the API.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all starts one axios.post per configured recipient or group id with no concurrency cap."
+        }
+      ]
+    },
+    {
+      "id": "EA-77ba1a75883889ac",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/notification-providers/360messenger.js",
+      "message": "`all` at line 94 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 94,
+      "verdict": "true_positive",
+      "reason": "One axios.post per group ID, all at once, with no limit on concurrent requests to the API.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all starts one axios.post per configured recipient or group id with no concurrency cap."
+        }
+      ]
+    },
+    {
+      "id": "EA-f35a2d098db15106",
+      "repository": "uptime-kuma",
+      "language": "javascript",
+      "path": "server/notification-providers/360messenger.js",
+      "message": "`all` at line 107 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "One axios.post per recipient, all at once, with no limit on concurrent requests to the API.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Promise.all starts one axios.post per configured recipient or group id with no concurrency cap."
+        }
+      ]
+    },
+    {
+      "id": "EA-9818e8a36380957f",
+      "repository": "apprise",
+      "language": "python",
+      "path": "apprise/apprise.py",
+      "message": "`gather` at line 1253 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "pre_label",
+      "sampled_from": "a4-c",
+      "line": 1253,
+      "verdict": "true_positive",
+      "reason": "Every active notification chain is dispatched concurrently through gather, so the number of configured services sets the concurrent network calls.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The gathered items are escalation chains, one per OR tag in the tag expression (_build_tag_chains), a small user-specified set rather than per-service work."
+        }
+      ]
+    },
+    {
+      "id": "EA-9dbdf325d990aafc",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/utils/html.ts",
+      "message": "`all` at line 169 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 169,
+      "verdict": "false_positive",
+      "reason": "Resolves already-rendered HTML fragments in memory; no I/O or resource is opened per item.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Promise.all runs over the registered html template callbacks, a small fixed set of in-memory handlers with no I/O resource."
+        }
+      ]
+    },
+    {
+      "id": "EA-97fd8cca5f8fcda8",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-backend/src/team/team.service.ts",
+      "message": "`all` at line 321 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 321,
+      "verdict": "true_positive",
+      "reason": "One findUserById database lookup per team member, all started at once, unbounded in team size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "findUserById (a database lookup) is started concurrently for every team member with no limit, so team size sets the concurrency."
+        }
+      ]
+    },
+    {
+      "id": "EA-8fc07989242a5d65",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-backend/src/user-collection/user-collection.service.ts",
+      "message": "`all` at line 1354 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 1354,
+      "verdict": "true_positive",
+      "reason": "Recursively fetches every child collection concurrently, so collection-tree width sets the number of concurrent database queries.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fetchCollectionData recurses with Promise.all over all child collections, each issuing Prisma queries, so tree breadth sets concurrency with no limit."
+        }
+      ]
+    },
+    {
+      "id": "EA-54bc92740a2c1450",
+      "repository": "hoppscotch",
+      "language": "typescript",
+      "path": "packages/hoppscotch-common/src/services/ai-chat.service.ts",
+      "message": "`all` at line 4555 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "a4-c",
+      "line": 4555,
+      "verdict": "false_positive",
+      "reason": "next is sliced to the remaining budget before the fan-out, so the concurrency is bounded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The collection list is cut by .slice(0, budget) before Promise.all, so the number of concurrent expansions is explicitly capped."
+        }
+      ]
+    },
+    {
+      "id": "EA-4f10d68ba0906e8b",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/http/contentType.ts",
+      "message": "`all` at line 139 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 139,
+      "verdict": "false_positive",
+      "reason": "getProcedureAtPath is an in-memory router lookup per batched path; nothing per item holds a connection or handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getProcedureAtPath is an in-memory router lookup per batched path, not a connection or handle-holding operation."
+        }
+      ]
+    },
+    {
+      "id": "EA-acab5622e2a60bce",
+      "repository": "trpc",
+      "language": "typescript",
+      "path": "packages/server/src/unstable-core-do-not-import/stream/utils/mergeAsyncIterables.ts",
+      "message": "`all` at line 153 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "Cleanup destroys each merged iterator; their number is fixed by the sources merged, not by input size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Promise.all destroys the iterators of the merge itself, a set of sources the caller supplied, during cleanup."
+        }
+      ]
+    },
+    {
+      "id": "EA-b8b0f57e3b559d8b",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "`all` at line 2301 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 2301,
+      "verdict": "false_positive",
+      "reason": "Async schema validation of each array element in memory; the tasks are microtasks, not opened resources.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Promise.all over array elements is zod's in-memory async parsing idiom (def.type._parseAsync), not resource-opening work."
+        }
+      ]
+    },
+    {
+      "id": "EA-c33e8ed032a2cbf0",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v3/types.ts",
+      "message": "`all` at line 2979 starts one concurrent task per item of a collection, with no limit on how many run at once",
+      "status": "corroborated",
+      "sampled_from": "t25-b",
+      "line": 2979,
+      "verdict": "false_positive",
+      "reason": "Tries each option of a union schema; the options are fixed by the schema definition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Promise.all runs over the union's options, a fixed schema-defined set rather than data-scaled."
+        }
+      ]
+    }
+  ]
+}
