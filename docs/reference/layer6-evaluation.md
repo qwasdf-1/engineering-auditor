@@ -288,7 +288,7 @@ evidence.
 ## Qualification Record
 
 The dated record of what has and has not qualified, kept so a later run can
-be compared with it. As of 1.3.0 no route passes the free-route lifecycle
+be compared with it. As of 1.4.0 no route passes the free-route lifecycle
 matrix.
 
 ### Ensemble And Portfolio Promotion

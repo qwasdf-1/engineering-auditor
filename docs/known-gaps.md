@@ -1,6 +1,6 @@
 # Known Gaps
 
-What Engineering Auditor does not do, or does only partly, as of 1.3.0.
+What Engineering Auditor does not do, or does only partly, as of 1.4.0.
 
 ## Analysis Depth
 
@@ -49,10 +49,12 @@ What Engineering Auditor does not do, or does only partly, as of 1.3.0.
   `orphan_symbol` exclude what they cannot prove.
 - Support differs by language.
   [`reference/language-support.md`](reference/language-support.md) is the
-  authority for each detector and language. Of the 38 algorithmic, systems,
+  authority for each detector and language. Of the 42 algorithmic, systems,
   and optimization cells, C# supports 31, C++ 24, and C 10; the rest are
   unsupported (each with its reason) or not applicable, and the supported
-  ones have no corpus precision record yet. Ruby, Julia, and Shell get
+  ones have no corpus precision record yet. The 1.4.0 systems and logging
+  detectors are Tier 1 only, and C and C++ test skips (GoogleTest,
+  Catch2) are not read. Ruby, Julia, and Shell get
   structural metrics only. NPath complexity is unavailable for Kotlin, Ruby,
   Julia, and Shell, and Halstead metrics for Kotlin and Shell.
 

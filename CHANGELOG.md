@@ -1,6 +1,19 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 - Systems, Logging, And Test-Quality Detectors
+
+Seven detectors join the catalog, now 121. `eager_log_formatting` gates:
+all 40 sampled corpus findings are corroborated true positives. The other
+six run in the `full` profile: `retry_without_backoff`,
+`unbounded_concurrency`, `unbounded_channel_or_queue`,
+`float_equality_comparison`, `mutable_default_argument`, and
+`skipped_test_without_reason`. The float rule reaches Kotlin, C#, C, and
+C++, and the skip rule Kotlin and C#. The corpus's application slice now
+measures the systems and logging detectors. `n_plus_one_query_in_loop`
+reads DB-API and JDBC query runners, and a tool that builds its own
+container image keeps the production role. Stable surfaces are unchanged;
+the gating profile gains one detector, so a gate against a 1.3.0 baseline
+can report new `eager_log_formatting` findings.
 
 ### Added
 
@@ -79,6 +92,9 @@
   GoogleTest and Catch2 skips (C, C++) remain deferred.
 
 ### Changed
+
+- `eager_log_formatting` is promoted to the `gating` profile (53 gating
+  detectors, 68 full-only).
 
 - `n_plus_one_query_in_loop` reads a DB-API `execute` or JDBC
   `executeQuery` whose first argument is a `SELECT` literal as a read

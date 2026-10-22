@@ -1,6 +1,6 @@
 # Current State
 
-What Engineering Auditor does today, by area, as of 1.3.0. Limitations are
+What Engineering Auditor does today, by area, as of 1.4.0. Limitations are
 in [`known-gaps.md`](known-gaps.md).
 
 ## Release
@@ -15,7 +15,10 @@ public repository; it adds parallel parsing and the license notices and keeps
 every stable surface unchanged. 1.2.0 analyzes files with syntax errors after
 recovery, adds the data-flow layer below, and adds optional syntax-coverage
 fields to the report. 1.3.0 extends the algorithmic, systems, and
-optimization detectors to C#, C++, and C.
+optimization detectors to C#, C++, and C. 1.4.0 adds seven detectors
+(retries without backoff, unbounded fan-out and queues, eager debug-log
+formatting, float equality, mutable defaults, unexplained skipped tests)
+and promotes `eager_log_formatting` to the gating profile.
 
 ## Scanning
 
