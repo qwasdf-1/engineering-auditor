@@ -511,6 +511,7 @@ fn collect_controls(
                 .condition
                 .map(|span| bounded_expression(tree.text_for_span(span)))
                 .or_else(|| switch_subjects.get(&control.span.start_byte).cloned()),
+            condition_span: control.condition,
             parent: control.parent,
             depth: control_depth(&facts.control_regions, symbols, Some(index as u32)),
             kind: control.kind,

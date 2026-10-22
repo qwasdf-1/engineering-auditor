@@ -52,6 +52,14 @@
   errcheck's buffer and builder exclusions. Bare Go `os.WriteFile` and
   `os.Rename` calls move from `discarded_fallible_result` to `go_errcheck`;
   the former keeps blank assignments.
+- `hot_path_linear_membership` reports the deduplicating append: a loop that
+  appends its element to a list only when a negated membership test of that
+  list misses it (`if item not in out: out.append(item)`,
+  `if (!out.includes(item)) out.push(item)`, Go's
+  `if !slices.Contains(out, item) { out = append(out, item) }`), which scans
+  everything kept so far on every step. The test must be the `if`'s whole
+  condition and the guarded append the loop's only change to the list; a set
+  or an ordered set beside the list makes each check constant-time.
 
 ## 1.4.0 - Systems, Logging, And Test-Quality Detectors
 

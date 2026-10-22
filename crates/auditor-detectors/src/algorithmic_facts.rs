@@ -104,6 +104,9 @@ pub(crate) enum AlgorithmicFactKind {
         call_span: SourceSpan,
         collection_kind: CollectionKind,
         cardinality: Cardinality,
+        /// The append the membership test guards, when the loop grows the
+        /// searched collection with the element it missed (a deduplication).
+        appended: Option<SourceSpan>,
     },
     QueryInLoop {
         receiver: String,
@@ -189,6 +192,7 @@ fn collect_function_facts(
     collect_repeated_traversals(file, owner, function, &aliases, facts);
     collect_linear_membership(file, owner, function, &aliases, facts);
     collect_membership_tests(file, owner, function, &aliases, facts);
+    collect_deduplicating_appends(file, owner, function, &aliases, facts);
     collect_queries_in_loops(file, owner, function, &aliases, facts);
     collect_cost_facts(file, owner, function, &aliases, facts);
     collect_front_removals(file, owner, function, &aliases, facts);
@@ -561,6 +565,7 @@ fn collect_linear_membership(
                 call_span: call.span,
                 collection_kind,
                 cardinality,
+                appended: None,
             },
             facts,
         );
@@ -621,6 +626,7 @@ fn collect_membership_tests(
                 call_span: membership.span,
                 collection_kind,
                 cardinality,
+                appended: None,
             },
             facts,
         );
@@ -668,6 +674,8 @@ fn collect_queries_in_loops(
 mod collections;
 #[path = "algorithmic_facts_cost_collectors.rs"]
 mod cost_collectors;
+#[path = "algorithmic_facts_dedupe.rs"]
+mod dedupe;
 #[path = "algorithmic_facts_effects.rs"]
 mod effects;
 #[path = "algorithmic_facts_front_removal.rs"]
@@ -685,6 +693,7 @@ mod structure;
 
 use collections::*;
 use cost_collectors::*;
+use dedupe::collect_deduplicating_appends;
 use effects::*;
 use front_removal::collect_front_removals;
 use queries::{is_store_query, may_be_store_query};

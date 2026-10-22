@@ -267,26 +267,46 @@ pub(crate) fn hot_path_linear_membership_findings(index: &AlgorithmicIndex) -> V
             call_span,
             collection_kind,
             cardinality,
-        } => Some(
-            finding(
+            appended,
+        } => {
+            let (recommendation, message) = match appended {
+                None => (
+                    "Build a set or index once and reuse it through the loop.",
+                    membership_message(fact, needle, collection),
+                ),
+                Some(_) => (
+                    "Track the elements already kept in a set (beside the list, or as an insertion-ordered set such as `dict.fromkeys` or `LinkedHashSet`) so each check takes constant time.",
+                    format!(
+                        "Function `{}` appends loop-derived `{needle}` to linear collection `{collection}` only after scanning it for `{needle}`.",
+                        fact.function
+                    ),
+                ),
+            };
+            let finding = finding(
                 "hot_path_linear_membership",
                 "algorithmic",
                 fact,
                 FindingSpec::new(
                     "Loop performs repeated linear membership",
-                    "Build a set or index once and reuse it through the loop.",
+                    recommendation,
                     Severity::Low,
                     "O(m * n)",
                 ),
-                membership_message(fact, needle, collection),
+                message,
             )
             .with_evidence("cardinality", cardinality.evidence())
             .with_evidence("needle", needle.clone())
             .with_loop_evidence(loop_evidence(
                 ("collection", collection.clone(), collection_kind.as_str()),
                 (*loop_span, "lookup_span", *call_span),
-            )),
-        ),
+            ));
+            Some(match appended {
+                Some(span) => finding
+                    .with_evidence("pattern", "deduplicating_append")
+                    .with_evidence("append_line", span.start_line),
+                None => finding,
+            })
+        }
         _ => None,
     })
 }

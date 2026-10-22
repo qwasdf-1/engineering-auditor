@@ -16,40 +16,54 @@ pub(super) struct MutationScope<'a> {
 }
 
 pub(super) fn mutation_lines(file: &StructureFile, scope: MutationScope<'_>) -> Vec<usize> {
-    let mut lines = Vec::new();
-    for call in file
-        .calls
-        .iter()
-        .filter(|call| call.owner == Some(scope.owner))
-    {
-        let in_scope = scope.except != Some(call.span)
-            && scope
-                .region
-                .is_none_or(|region| region_within(file, call.control_region, region));
-        if in_scope && call_mutates(file, call, &scope) {
-            lines.push(call.line);
-        }
-    }
-    for assignment in file
-        .assignments
-        .iter()
-        .filter(|assignment| assignment.owner == Some(scope.owner))
-    {
-        if scope
-            .region
-            .is_some_and(|region| !region_within(file, assignment.control_region, region))
-        {
-            continue;
-        }
-        if collection_identity(&assignment.target, scope.aliases)
-            .is_some_and(|target| target == scope.root)
-        {
-            lines.push(assignment.line);
-        }
-    }
+    let mut lines = mutating_calls(file, &scope)
+        .into_iter()
+        .map(|call| call.line)
+        .chain(
+            rebinding_assignments(file, &scope)
+                .into_iter()
+                .map(|assignment| assignment.line),
+        )
+        .collect::<Vec<_>>();
     lines.sort_unstable();
     lines.dedup();
     lines
+}
+
+/// Calls in the scope that mutate its collection.
+pub(super) fn mutating_calls<'a>(
+    file: &'a StructureFile,
+    scope: &MutationScope<'_>,
+) -> Vec<&'a StructureCall> {
+    file.calls
+        .iter()
+        .filter(|call| call.owner == Some(scope.owner))
+        .filter(|call| {
+            scope.except != Some(call.span)
+                && scope
+                    .region
+                    .is_none_or(|region| region_within(file, call.control_region, region))
+                && call_mutates(file, call, scope)
+        })
+        .collect()
+}
+
+/// Assignments in the scope that rebind its collection.
+pub(super) fn rebinding_assignments<'a>(
+    file: &'a StructureFile,
+    scope: &MutationScope<'_>,
+) -> Vec<&'a StructureAssignment> {
+    file.assignments
+        .iter()
+        .filter(|assignment| assignment.owner == Some(scope.owner))
+        .filter(|assignment| {
+            scope
+                .region
+                .is_none_or(|region| region_within(file, assignment.control_region, region))
+                && collection_identity(&assignment.target, scope.aliases)
+                    .is_some_and(|target| target == scope.root)
+        })
+        .collect()
 }
 
 /// Calls in the scope that receive the collection itself as an argument and

@@ -155,6 +155,8 @@ pub(crate) struct StructureMembership {
     pub(crate) collection: String,
     pub(crate) span: SourceSpan,
     pub(crate) owner: Option<u32>,
+    /// `needle not in collection`.
+    pub(crate) negated: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -181,6 +183,7 @@ pub(crate) struct StructureControl {
     pub(crate) line: usize,
     pub(crate) span: SourceSpan,
     pub(crate) condition: Option<String>,
+    pub(crate) condition_span: Option<SourceSpan>,
     pub(crate) parent: Option<u32>,
     pub(crate) depth: usize,
     pub(crate) kind: ControlRegionKind,

@@ -144,15 +144,12 @@ pub fn alternate_language(lang: &AstLang) -> Option<TsLanguage> {
 pub fn function_node_kinds() -> &'static [&'static str] {
     static KINDS: std::sync::OnceLock<Vec<&'static str>> = std::sync::OnceLock::new();
     KINDS.get_or_init(|| {
-        let mut kinds: Vec<&'static str> = Vec::new();
-        for entry in GRAMMARS {
-            for &k in entry.function_nodes {
-                if !kinds.contains(&k) {
-                    kinds.push(k);
-                }
-            }
-        }
-        kinds
+        let mut seen = std::collections::BTreeSet::new();
+        GRAMMARS
+            .iter()
+            .flat_map(|entry| entry.function_nodes.iter().copied())
+            .filter(|kind| seen.insert(*kind))
+            .collect()
     })
 }
 

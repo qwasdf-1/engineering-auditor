@@ -156,8 +156,18 @@ inside a loop when the lookup needle depends on that loop. Local bounded
 collections, unknown collection shapes, invariant lookups, mutation, and
 set/map inputs are excluded.
 
+It also detects the deduplicating append, where the loop grows the searched
+list itself: the negated membership test (`item not in out`,
+`!out.contains(item)`, `!slices.Contains(out, item)`) is the whole condition
+of an `if`, and the loop's only change to the list is one append of the
+loop element (`append`/`push`/`add`/`Add`/`push_back`, or Go's
+`out = append(out, item)`) in that `if`'s consequence. Each check then scans
+everything kept so far. A compound condition, an append outside the guard or
+of another value, a second change to the list, and a set are not reported.
+
 Evidence includes collection shape and cardinality, the loop-derived needle,
-exact loop and lookup spans, zero mutation count, and the `O(m * n)` model.
+exact loop and lookup spans, and the `O(m * n)` model; a deduplicating append
+adds `pattern: deduplicating_append` and the append's line.
 
 Language contract: see [`language-support.md`](./language-support.md).
 

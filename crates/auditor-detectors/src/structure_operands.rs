@@ -145,6 +145,7 @@ pub(super) fn collect_memberships(
                 collection: compact_text(collection.text()),
                 owner: innermost_function(symbols, span),
                 span,
+                negated: operator == "not in",
             })
         })
         .collect()
