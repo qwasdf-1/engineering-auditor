@@ -183,6 +183,15 @@ class PrecisionTest(unittest.TestCase):
                       label_precision.precision_markdown(label_precision.precision({"d": entries})))
         self.assertEqual(label_precision.precision({"d": entries})["d"]["provisional_precision"], 1.0)
 
+    def test_a_split_measures_the_held_out_repositories_apart(self):
+        entries = [{"id": "EA-a", "repository": "alpha"}, {"id": "EA-b", "repository": "beta"}]
+        claims = {"EA-a": {"repository": "alpha"}, "EA-c": {"repository": "beta"}}
+        held, held_claims = label_precision.restrict({"d": entries}, claims, {"alpha"}, True)
+        rest, rest_claims = label_precision.restrict({"d": entries}, claims, {"alpha"}, False)
+        self.assertEqual(([e["id"] for e in held["d"]], sorted(held_claims)), (["EA-a"], ["EA-a"]))
+        self.assertEqual(([e["id"] for e in rest["d"]], sorted(rest_claims)), (["EA-b"], ["EA-c"]))
+        self.assertIsNone(label_precision.restrict({"d": entries}, None, {"alpha"}, True)[1])
+
     def test_standing_is_a_sound_lower_bound_over_unverified_labels(self):
         self.assertEqual(label_precision.standing(5, 0, 4)[1], "insufficient_sample")
         self.assertEqual(label_precision.standing(22, 0)[1], "meets_bar")          # lower bound 85.1%

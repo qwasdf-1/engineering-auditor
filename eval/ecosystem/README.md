@@ -58,6 +58,25 @@ never moves another detector's standing. Labels from both slices share each
 detector's label file; `precision` takes both scan labels so neither slice's
 labels read as stale.
 
+## Held-out repositories
+
+Sixteen repositories carry `"holdout": true`: one per library language and
+six applications, picked by the seeded hash in `tooling/ecosystem/run.py`
+(`HOLDOUT_SEED`), never by hand; `test_manifest.py` fails if the flags
+differ from the rule. A detector fix is designed from the other
+repositories' findings and labels only, and then measured on the held-out
+ones:
+
+```sh
+python3 tooling/ecosystem/labels.py precision --scan current apps-current --split holdout
+python3 tooling/ecosystem/labels.py precision --scan current apps-current --split development
+```
+
+The held-out repositories are labelled like the rest. The split took effect
+on 2026-10-23, after earlier rounds had already drawn fixes from some of
+them (Wexflow and nats-server among the applications), so it measures
+generalization for fixes from then on.
+
 ## Syntax coverage
 
 A scan's `summary.json` counts, per language, the files whose syntax tree

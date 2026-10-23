@@ -17,10 +17,11 @@ Commands:
                      run replaces the source's earlier checks, only for D if given
   confirm --labeller human:NAME [--detector D..] [--ids ID..]
                      accept reviewed pre-labels as final human verdicts
-  precision [--scan L] [--claims F] [--json F]
+  precision [--scan L] [--claims F] [--json F] [--split all|development|holdout]
                      print per-detector precision from final and corroborated
                      labels, plus the oracle-confirmed findings in F that a
-                     clean agreement audit accepts
+                     clean agreement audit accepts; --split measures on the
+                     held-out repositories or the rest
 
 The label files and their rules are in label_store.py, sampling and verdict
 recording in label_workflow.py, review excerpts in label_excerpt.py, and the
@@ -98,7 +99,10 @@ def precision_command(args, labels) -> str:
                                            for report in run.load_results(scan).values()
                                            for f in report["findings"]}
     claims = json.loads(args.claims.read_text(encoding="utf-8")) if args.claims else None
-    table = label_precision.precision(dict(label_store.selected(labels, args.detector)), live, claims)
+    chosen = dict(label_store.selected(labels, args.detector))
+    if args.split != "all":
+        chosen, claims = label_precision.restrict(chosen, claims, run.holdout_ids(), args.split == "holdout")
+    table = label_precision.precision(chosen, live, claims)
     if args.json:
         args.json.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
     return label_precision.precision_markdown(table).rstrip("\n")
@@ -128,6 +132,8 @@ def parser() -> argparse.ArgumentParser:
     measuring.add_argument("--scan", nargs="+",
                            help="exclude labels absent from these scans (the library scan and the application scan)")
     measuring.add_argument("--json", type=Path, help="also write the table here")
+    measuring.add_argument("--split", choices=["all", "development", "holdout"], default="all",
+                           help="measure on every repository, or only on the held-out ones or the rest")
     measuring.add_argument("--claims", type=Path,
                            help="oracles.py overlap --json snapshot; audited oracle agreement adds accepted findings")
     for command in (sampling, bundling, measuring):

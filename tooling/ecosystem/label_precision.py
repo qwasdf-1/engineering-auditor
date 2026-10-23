@@ -135,6 +135,14 @@ def detector_row(entries, live, confirmed=None) -> dict:
     }
 
 
+def restrict(labels, claims, repositories, keep) -> tuple:
+    """`labels` and `claims` limited to findings whose repository is in
+    `repositories` (`keep`) or outside it (not `keep`)."""
+    inside = lambda record: (record.get("repository") in repositories) == keep  # noqa: E731
+    return ({detector: [entry for entry in entries if inside(entry)] for detector, entries in labels.items()},
+            None if claims is None else {key: record for key, record in claims.items() if inside(record)})
+
+
 def precision(labels, live_ids=None, claims=None) -> dict:
     """Per-detector precision from final and corroborated labels.
 
