@@ -169,9 +169,9 @@ Evidence includes collection shape and cardinality, the loop-derived needle,
 exact loop and lookup spans, and the `O(m * n)` model; a deduplicating append
 adds `pattern: deduplicating_append` and the append's line.
 
-Go runs in the `full` profile only: the application slice holds its Go
-findings below the precision bar, most on replica and peer lists a cluster
-keeps small (see [`detector-precision.md`](./detector-precision.md)).
+Go runs in the `full` profile only: its Go findings on the application
+slice do not meet the precision bar (see
+[`detector-precision.md`](./detector-precision.md)).
 
 Language contract: see [`language-support.md`](./language-support.md).
 
