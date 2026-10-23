@@ -8,12 +8,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Factories/PropertyFactory.cs",
       "message": "Function `BuildEntities` calls `languageRepository.GetIsoCodeById` with loop-derived `propDto`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 45,
       "verdict": "false_positive",
       "reason": "LanguageRepository.GetIsoCodeById reads an in-memory id-to-code map populated once (EnsureCacheIsPopulated); no query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetIsoCodeById is served from an in-memory cache (EnsureCacheIsPopulated, _idCodeMap)"
+        }
+      ]
     },
     {
       "id": "EA-59500e545c332420",
@@ -21,12 +28,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/PublishableContentRepositoryBase.cs",
       "message": "Function `GetContentSchedule` calls `LanguageRepository.GetIsoCodeById` with loop-derived `scheduleDto`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 110,
       "verdict": "false_positive",
       "reason": "LanguageRepository.GetIsoCodeById reads an in-memory id-to-code map populated once (EnsureCacheIsPopulated); no query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetIsoCodeById is served from an in-memory cache"
+        }
+      ]
     },
     {
       "id": "EA-a38b773dffbab539",
@@ -34,12 +48,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/PublishableContentRepositoryBase.cs",
       "message": "Function `GetContentVariations` calls `LanguageRepository.GetIsoCodeById` with loop-derived `dto`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 486,
       "verdict": "false_positive",
       "reason": "LanguageRepository.GetIsoCodeById reads an in-memory id-to-code map populated once (EnsureCacheIsPopulated); no query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetIsoCodeById is served from an in-memory cache"
+        }
+      ]
     },
     {
       "id": "EA-6711df30e08f8c69",
@@ -47,12 +68,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/PublishableContentRepositoryBase.cs",
       "message": "Function `GetEntityVariations` calls `LanguageRepository.GetIsoCodeById` with loop-derived `dto`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 525,
       "verdict": "false_positive",
       "reason": "LanguageRepository.GetIsoCodeById reads an in-memory id-to-code map populated once (EnsureCacheIsPopulated); no query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetIsoCodeById is served from an in-memory cache"
+        }
+      ]
     },
     {
       "id": "EA-c2e9405925c4346a",
@@ -60,12 +88,19 @@
       "language": "go",
       "path": "modules/indexer/code/indexer.go",
       "message": "Function `Init` calls `repo_model.GetRepositoryByID` with loop-derived `indexerData`, through `index`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 132,
       "verdict": "true_positive",
       "reason": "Each queued indexer item loads its repository with GetRepositoryByID inside index(), one query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Queue handler loop calls index which loads repository by ID per item"
+        }
+      ]
     },
     {
       "id": "EA-d8923f29a13b9c90",
@@ -73,12 +108,19 @@
       "language": "go",
       "path": "routers/api/v1/org/org.go",
       "message": "Function `deleteOrgReposBackground` calls `repo_model.GetRepositoryByID` with loop-derived `repoID`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 532,
       "verdict": "true_positive",
       "reason": "Each repository id in the loop is loaded with its own GetRepositoryByID query.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetRepositoryByID per repoID inside loop; batchable"
+        }
+      ]
     },
     {
       "id": "EA-555b6e651a5be0b6",
@@ -86,12 +128,19 @@
       "language": "go",
       "path": "routers/api/v1/repo/issue_comment.go",
       "message": "Function `ListIssueCommentsAndTimeline` calls `repo_model.GetRepositoryByID` with loop-derived `comment`, through `isXRefCommentAccessible`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 204,
       "verdict": "true_positive",
       "reason": "isXRefCommentAccessible loads the referenced repository per cross-reference comment, one query per comment.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "isXRefCommentAccessible calls GetRepositoryByID per ref comment"
+        }
+      ]
     },
     {
       "id": "EA-2b70e3706954868a",
@@ -99,12 +148,19 @@
       "language": "go",
       "path": "routers/api/v1/repo/key.go",
       "message": "Function `ListDeployKeys` calls `repo_model.GetRepositoryByID` with loop-derived `i`, through `appendPrivateInformation`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 99,
       "verdict": "true_positive",
       "reason": "appendPrivateInformation loads each deploy key's repository with GetRepositoryByID, one query per key.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "appendPrivateInformation calls GetRepositoryByID per key when repo differs"
+        }
+      ]
     },
     {
       "id": "EA-eece4f4510e76dcb",
@@ -117,7 +173,14 @@
       "line": 212,
       "verdict": "true_positive",
       "reason": "The fork search queries GetRepositoriesByForkID per repository level by level, a query per visited repository.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Recursive fork-tree traversal; each level depends on previous results"
+        }
+      ]
     },
     {
       "id": "EA-3edacdfbe8b2f2e4",
@@ -125,12 +188,19 @@
       "language": "go",
       "path": "routers/web/repo/actions/actions.go",
       "message": "Function `prepareScopedWorkflows` calls `repo_model.GetRepositoryByID` with loop-derived `source`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 320,
       "verdict": "true_positive",
       "reason": "Each scoped workflow source loads its repository with GetRepositoryByID, one query per source.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetRepositoryByID per source in loop"
+        }
+      ]
     },
     {
       "id": "EA-5e006d674c7d969a",
@@ -138,12 +208,19 @@
       "language": "go",
       "path": "routers/web/shared/actions/scoped_workflows.go",
       "message": "Function `ScopedWorkflows` calls `repo_model.GetRepositoryByID` with loop-derived `src`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 129,
       "verdict": "true_positive",
       "reason": "Each workflow source loads its repository with GetRepositoryByID, one query per source.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetRepositoryByID per source in loop"
+        }
+      ]
     },
     {
       "id": "EA-c85a5a45a7a52da2",
@@ -151,12 +228,19 @@
       "language": "go",
       "path": "services/actions/approve.go",
       "message": "Function `ApproveRuns` calls `repo_model.GetRepositoryByID` with loop-derived `job`, through `expandInlineReusableCaller`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 126,
       "verdict": "true_positive",
       "reason": "expandInlineReusableCaller loads a repository per reusable job, one query per job.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expandReusableWorkflowCaller loads source repo per caller job"
+        }
+      ]
     },
     {
       "id": "EA-ef84bcc258eb901c",
@@ -164,12 +248,19 @@
       "language": "go",
       "path": "services/actions/job_emitter.go",
       "message": "Function `jobEmitterQueueHandler` calls `db.GetByID` with loop-derived `update`, through `checkJobsByRunID`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 58,
       "verdict": "true_positive",
       "reason": "checkJobsByRunID loads the run by id for each queued update, one query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Queue handler runs a GetByID run lookup per update"
+        }
+      ]
     },
     {
       "id": "EA-0195ed9d8d795ab6",
@@ -177,12 +268,19 @@
       "language": "go",
       "path": "services/actions/job_emitter.go",
       "message": "Function `checkJobsOfCurrentRunAttempt` calls `repo_model.GetRepositoryByID` with loop-derived `job`, through `expandReusableWorkflowCaller`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 315,
       "verdict": "true_positive",
       "reason": "expandReusableWorkflowCaller loads a repository per reusable caller job, one query per job.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "expandReusableWorkflowCaller loads source repo per caller job"
+        }
+      ]
     },
     {
       "id": "EA-dc2780c661a2fe97",
@@ -190,12 +288,19 @@
       "language": "go",
       "path": "services/convert/activity.go",
       "message": "Function `ToActivities` calls `repo_model.GetMirrorByRepoID` with loop-derived `ac`, through `ToActivity`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 49,
       "verdict": "true_positive",
       "reason": "ToActivity converts each action's repository, which loads its mirror per repository, one query per activity.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ToActivity -> ToRepo does GetMirrorByRepoID per mirror repo"
+        }
+      ]
     },
     {
       "id": "EA-3e6cea5264ef5eb0",
@@ -203,12 +308,19 @@
       "language": "go",
       "path": "services/convert/notification.go",
       "message": "Function `ToNotifications` calls `repo_model.GetMirrorByRepoID` with loop-derived `n`, through `ToNotificationThread`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 104,
       "verdict": "true_positive",
       "reason": "ToNotificationThread converts each notification's repository, loading its mirror per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ToNotificationThread -> ToRepo does GetMirrorByRepoID per mirror repo"
+        }
+      ]
     },
     {
       "id": "EA-e30e75eb3bf21d3f",
@@ -216,12 +328,19 @@
       "language": "go",
       "path": "services/convert/pull.go",
       "message": "Function `ToAPIPullRequests` calls `repo_model.GetMirrorByRepoID` with loop-derived `pr`, through `ToRepo`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 438,
       "verdict": "true_positive",
       "reason": "ToRepo for each pull request's head repository loads its mirror, one query per pull request.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ToRepo does GetMirrorByRepoID per head repo mirror per PR"
+        }
+      ]
     },
     {
       "id": "EA-e319bc7d2538e1a2",
@@ -229,12 +348,19 @@
       "language": "go",
       "path": "services/mirror/queue.go",
       "message": "Function `queueHandler` calls `db.GetByID` with loop-derived `req`, through `doMirrorSync`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 33,
       "verdict": "true_positive",
       "reason": "doMirrorSync loads the mirror by id for each queued request, one query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Mirror sync handler loads record via GetByID per request"
+        }
+      ]
     },
     {
       "id": "EA-782b66226943b61d",
@@ -247,7 +373,14 @@
       "line": 153,
       "verdict": "true_positive",
       "reason": "The visibility update recurses into each fork, querying its forks with GetRepositoriesByForkID per repository.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Recursive fork-tree traversal; inherent"
+        }
+      ]
     },
     {
       "id": "EA-3cfe59e3484e2000",
@@ -255,12 +388,19 @@
       "language": "go",
       "path": "services/org/org.go",
       "message": "Function `ChangeOrganizationVisibility` calls `repo_model.GetRepositoriesByForkID` with loop-derived `repo`, through `updateRepoForVisibilityChanged`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 180,
       "verdict": "true_positive",
       "reason": "Each organization repository recurses through updateRepoForVisibilityChanged, querying its forks per repository.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each org repo triggers a GetRepositoriesByForkID inside updateRepoForVisibilityChanged"
+        }
+      ]
     },
     {
       "id": "EA-03346ba008986b1d",
@@ -268,12 +408,19 @@
       "language": "go",
       "path": "services/org/user.go",
       "message": "Function `RemoveOrgUser` calls `repo_model.GetRepositoryByID` with loop-derived `repoID`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 70,
       "verdict": "true_positive",
       "reason": "Each repository id is loaded with its own GetRepositoryByID query.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetRepositoryByID per repoID inside loop"
+        }
+      ]
     },
     {
       "id": "EA-80431e798e4b0054",
@@ -281,12 +428,19 @@
       "language": "go",
       "path": "services/repository/license.go",
       "message": "Function `repoLicenseUpdater` calls `repo_model.GetRepositoryByID` with loop-derived `opts`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 74,
       "verdict": "true_positive",
       "reason": "Each queued license update loads its repository with GetRepositoryByID, one query per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetRepositoryByID per queued item"
+        }
+      ]
     },
     {
       "id": "EA-64d2ee43b5e3ce5f",
@@ -299,7 +453,14 @@
       "line": 194,
       "verdict": "true_positive",
       "reason": "setRepoVisibility recurses into each fork, querying its forks with GetRepositoriesByForkID per repository.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Recursive fork-tree traversal; inherent"
+        }
+      ]
     },
     {
       "id": "EA-b78343a168880570",
@@ -312,7 +473,14 @@
       "line": 316,
       "verdict": "true_positive",
       "reason": "updateRepository recurses into each fork, querying its forks per repository.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Fork query runs once before the loop; updateRepository does not query forks"
+        }
+      ]
     },
     {
       "id": "EA-40d7f07b49f0e015",
@@ -320,12 +488,19 @@
       "language": "go",
       "path": "services/user/block.go",
       "message": "Function `removeCollaborations` calls `repo_model.GetRepositoryByID` with loop-derived `collaboration`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 268,
       "verdict": "true_positive",
       "reason": "Each collaboration loads its repository with GetRepositoryByID, one query per collaboration.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetRepositoryByID per collaboration inside loop"
+        }
+      ]
     },
     {
       "id": "EA-a9cc0366f075a277",
@@ -333,12 +508,19 @@
       "language": "go",
       "path": "services/user/user.go",
       "message": "Function `DeleteInactiveUsers` calls `repo_model.GetUnlinkedAttachmentsByUserID` with loop-derived `u`, through `DeleteUser`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 319,
       "verdict": "true_positive",
       "reason": "DeleteUser runs per inactive user and queries the user's unlinked attachments, one set of queries per user.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DeleteUser performs per-user attachment query inside loop"
+        }
+      ]
     },
     {
       "id": "EA-ef7a8189e6e819d0",
@@ -351,7 +533,14 @@
       "line": 278,
       "verdict": "unclear",
       "reason": "findObjectById resolves an object path through DBeaver's navigator model; whether it reads remote metadata per id is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "findObjectById navigates in-memory registry/metadata, not a per-item SQL query"
+        }
+      ]
     },
     {
       "id": "EA-c6c095f17c12efa3",
@@ -364,7 +553,14 @@
       "line": 201,
       "verdict": "unclear",
       "reason": "findObjectById resolves an object path through DBeaver's navigator model; whether it reads remote metadata per id is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "findObjectById navigates in-memory registry/metadata, not a per-item SQL query"
+        }
+      ]
     },
     {
       "id": "EA-013d2a45b011d16a",
@@ -372,12 +568,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/preferences/PrefPageGlobalProjectNetworkProfiles.java",
       "message": "Function `resolveConnections` calls `DBWorkbench.getProjectById` with loop-derived `projectUsage`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 275,
       "verdict": "false_positive",
       "reason": "getProjectById looks up an open project in the in-memory workspace; no database is queried.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getProjectById is an in-memory workspace lookup, not a DB read"
+        }
+      ]
     },
     {
       "id": "EA-e2e8efaac6103b56",
@@ -385,12 +588,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/GroupAdapter.java",
       "message": "Function `getRoleMappingsStream` calls `keycloakSession.getRoleById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 238,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getRoleById returns managed or cached roles and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getRoleById on keycloakSession.roles() inside the cached GroupAdapter resolves each id through the Infinispan cache layer, not a per-iteration DB query."
+        }
+      ]
     },
     {
       "id": "EA-c19a9c6544c42f9d",
@@ -398,12 +608,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/GroupAdapter.java",
       "message": "Function `getSubGroupsStream` calls `keycloakSession.getGroupById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 274,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getGroupById returns cached groups and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getGroupById in GroupAdapter.getSubGroupsStream is served by the cache-session group provider by design, so it is a cache lookup rather than an N+1 database read."
+        }
+      ]
     },
     {
       "id": "EA-3e078da0e8432658",
@@ -411,12 +628,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
       "message": "Function `getRealmRolesStream` calls `session.getRoleById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 752,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getRoleById returns cached roles and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "session.roles().getRoleById in RealmCacheSession.getRealmRolesStream rebuilds a cached realm-role query from per-id cache entries; it is the cache layer itself."
+        }
+      ]
     },
     {
       "id": "EA-e9570b55926e3bda",
@@ -424,12 +648,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
       "message": "Function `getClientRolesStream` calls `session.getRoleById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 786,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getRoleById returns cached roles and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getClientRolesStream in RealmCacheSession resolves query.getRoles() ids through the cache provider, so the call is a cache-entry lookup, not a direct DB read."
+        }
+      ]
     },
     {
       "id": "EA-e970956ec9080684",
@@ -437,12 +668,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
       "message": "Function `getGroupsStream` calls `session.getGroupById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1066,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getGroupById returns cached groups and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getGroupById in RealmCacheSession.getGroupsStream hydrates a cached group-id query via the cache provider; no per-id SQL is implied by the loop."
+        }
+      ]
     },
     {
       "id": "EA-5d8b911823278816",
@@ -450,12 +688,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
       "message": "Function `getClientScopesStream` calls `session.getClientScopeById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1404,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getClientScopeById returns cached scopes and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getClientScopeById over query.getClientScopes() is the cache session assembling a cached query result, not a database query per iteration."
+        }
+      ]
     },
     {
       "id": "EA-ae82742d740b8746",
@@ -463,12 +708,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
       "message": "Function `getClientScopes` calls `session.getClientScopeById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1509,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getClientScopeById returns cached scopes and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getClientScopeById in getClientScopes of RealmCacheSession is a cache-backed lookup used to rebuild a cached query, so the N+1 rationale does not apply."
+        }
+      ]
     },
     {
       "id": "EA-96f147feb4f7c27c",
@@ -476,12 +728,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/UserAdapter.java",
       "message": "Function `getRoleMappingsStream` calls `keycloakSession.getRoleById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 438,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getRoleById returns cached roles and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "UserAdapter.getRoleMappingsStream resolves cached role ids via keycloakSession.roles(), the cache-wrapped provider, as part of the cache design."
+        }
+      ]
     },
     {
       "id": "EA-af672618fef507a3",
@@ -489,12 +748,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/UserAdapter.java",
       "message": "Function `getGroupsStream` calls `keycloakSession.getGroupById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 468,
       "verdict": "false_positive",
       "reason": "This is Keycloak's Infinispan cache layer: getGroupById returns cached groups and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getGroupById in UserAdapter.getGroupsStream loops over cached group ids and reads from the cache-wrapped group provider, not the database directly."
+        }
+      ]
     },
     {
       "id": "EA-399f7ac435b4631b",
@@ -502,12 +768,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/UserCacheManager.java",
       "message": "Function `fullUserInvalidation` calls `UserCacheSession.getUserByFederatedIdentityCacheKey` with loop-derived `socialLink`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 60,
       "verdict": "false_positive",
       "reason": "getUserByFederatedIdentityCacheKey only formats a cache key string for invalidation; it queries nothing.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop in UserCacheManager only builds string cache keys via getUserByFederatedIdentityCacheKey and adds them to invalidations; no query is issued."
+        }
+      ]
     },
     {
       "id": "EA-465918f831d09633",
@@ -515,12 +788,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/ResourceAdapter.java",
       "message": "Function `getScopes` calls `cacheSession.findById` with loop-derived `scopeId`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 179,
       "verdict": "false_positive",
       "reason": "Inside Keycloak's cache layer the scope store findById returns cached scopes and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ResourceAdapter.getScopes calls cacheSession.getScopeStore().findById, the cache-backed store, memoizing the result into the scopes field."
+        }
+      ]
     },
     {
       "id": "EA-ce5e8e89bcd21b9e",
@@ -528,12 +808,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheManager.java",
       "message": "Function `resourceUpdated` calls `StoreFactoryCacheSession.getResourceByUriCacheKey` with loop-derived `uri`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 98,
       "verdict": "false_positive",
       "reason": "getResourceByUriCacheKey only formats a cache key string for invalidation; it queries nothing.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 98 only calls getResourceByUriCacheKey to build a string key for the invalidations set; there is no data access."
+        }
+      ]
     },
     {
       "id": "EA-1c1687305a40d6f0",
@@ -541,12 +828,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheManager.java",
       "message": "Function `resourceUpdated` calls `StoreFactoryCacheSession.getResourceByScopeCacheKey` with loop-derived `scope`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 104,
       "verdict": "false_positive",
       "reason": "getResourceByScopeCacheKey only formats a cache key string for invalidation; it queries nothing.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getResourceByScopeCacheKey builds an invalidation key string; addInvalidations works on in-memory cache predicates, not a database read."
+        }
+      ]
     },
     {
       "id": "EA-0dabf0ed0c4afba0",
@@ -554,12 +848,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/idp/InfinispanIdentityProviderStorageProvider.java",
       "message": "Function `getByOrganization` calls `session.getById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 230,
       "verdict": "false_positive",
       "reason": "Inside Keycloak's cache layer identityProviders().getById returns cached providers and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "InfinispanIdentityProviderStorageProvider resolves cached idp ids with session.identityProviders().getById, the cache-wrapped provider that this class is part of."
+        }
+      ]
     },
     {
       "id": "EA-cd8e33f421feaf1e",
@@ -567,12 +868,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/idp/InfinispanIdentityProviderStorageProvider.java",
       "message": "Function `getForLogin` calls `session.getById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 275,
       "verdict": "false_positive",
       "reason": "Inside Keycloak's cache layer identityProviders().getById returns cached providers and reaches the store only on a miss.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getForLogin path rebuilds cached idp ids through session.identityProviders().getById, a cache-layer lookup rather than a per-id DB query."
+        }
+      ]
     },
     {
       "id": "EA-f272e0aad944ce42",
@@ -585,7 +893,14 @@
       "line": 1885,
       "verdict": "unclear",
       "reason": "session.groups().getGroupById goes through Keycloak's group cache during import; whether each id misses the cache is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "importOrganizationGroupMemberships calls session.groups().getGroupById(realm, groupId) once per memberRep group id, a genuine per-item read that could be batched."
+        }
+      ]
     },
     {
       "id": "EA-9bc6ce29e3a08ac2",
@@ -598,7 +913,14 @@
       "line": 159,
       "verdict": "unclear",
       "reason": "session.roles().getRoleById goes through Keycloak's role cache; whether each id misses the cache is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "deleteRoleMappings does realm.getRoleById and then session.roles().getRoleById per RoleDeleteRequest id in the loop, a per-item lookup."
+        }
+      ]
     },
     {
       "id": "EA-7b80f7f3cbc608e4",
@@ -611,7 +933,14 @@
       "line": 158,
       "verdict": "unclear",
       "reason": "session.users().getUserById per SCIM member goes through Keycloak's user cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "session.users().getUserById(realm, member.getValue()) is called per SCIM Member in the group-membership validation loop."
+        }
+      ]
     },
     {
       "id": "EA-1dbfa3a9d9aeedbe",
@@ -624,7 +953,14 @@
       "line": 175,
       "verdict": "unclear",
       "reason": "session.users().getUserById per SCIM member goes through Keycloak's user cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The second member loop in GroupCoreModelSchema again calls session.users().getUserById per Member value, a per-item user read."
+        }
+      ]
     },
     {
       "id": "EA-040ffd0fc0dc697a",
@@ -637,7 +973,14 @@
       "line": 180,
       "verdict": "unclear",
       "reason": "session.groups().getGroupById per SCIM membership goes through Keycloak's group cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "UserCoreModelSchema loops over GroupMembership values calling session.groups().getGroupById(realm, membership.getValue()) each time."
+        }
+      ]
     },
     {
       "id": "EA-b9d0346998562018",
@@ -650,7 +993,14 @@
       "line": 219,
       "verdict": "unclear",
       "reason": "session.groups().getGroupById per SCIM membership goes through Keycloak's group cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Line 219 issues getGroupById per GroupMembership in the add-membership path, a loop-derived id lookup."
+        }
+      ]
     },
     {
       "id": "EA-6a0092bc7dd8f7cd",
@@ -663,7 +1013,14 @@
       "line": 238,
       "verdict": "unclear",
       "reason": "session.groups().getGroupById per SCIM membership goes through Keycloak's group cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Line 238 calls getGroupById for each GroupMembership value in the replace/remove path, one read per element."
+        }
+      ]
     },
     {
       "id": "EA-9d3f25ba1a5e01be",
@@ -676,7 +1033,14 @@
       "line": 51,
       "verdict": "unclear",
       "reason": "getClientByClientId per parameter goes through Keycloak's client cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setClaim calls userSession.getRealm().getClientByClientId(parameterValue) per scope parameter, plus getServiceAccount per client, a per-item lookup."
+        }
+      ]
     },
     {
       "id": "EA-7c40999e80a3a0ee",
@@ -689,7 +1053,14 @@
       "line": 87,
       "verdict": "unclear",
       "reason": "getClientByClientId per parameter goes through Keycloak's client cache; whether each lookup reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "findAudienceByClientAttribute calls session.clients().getClientByClientId per audience string in the loop."
+        }
+      ]
     },
     {
       "id": "EA-14517ae5ee8fca75",
@@ -702,7 +1073,14 @@
       "line": 303,
       "verdict": "unclear",
       "reason": "The parent group lookup per group goes through Keycloak's group cache; whether it reaches the database is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getAllMemberships fetches the parent via session.groups().getGroupById(realm, group.getParentId()) for each group, recursing per ancestor."
+        }
+      ]
     },
     {
       "id": "EA-fad6b0cf924ed92d",
@@ -710,12 +1088,19 @@
       "language": "python",
       "path": "electrum/channel_db.py",
       "message": "Function `_db_save_node_addresses` calls `c.execute` with loop-derived `addr`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 661,
       "verdict": "true_positive",
       "reason": "Each node address is checked with its own SELECT on the address table before an INSERT, one query per address.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_db_save_node_addresses runs a SELECT on the address table with addr.pubkey/host/port for each node address before inserting."
+        }
+      ]
     },
     {
       "id": "EA-165a79957c15ec96",
@@ -728,7 +1113,14 @@
       "line": 34,
       "verdict": "true_positive",
       "reason": "The migration selects each dashboard's widgets with a separate SELECT per dashboard.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This is an Alembic migration (969126bd800f) run once for schema/data upgrade, a one-off tooling script outside the detector's runtime scope."
+        }
+      ]
     },
     {
       "id": "EA-343d9a6d6c6fb286",
@@ -736,12 +1128,19 @@
       "language": "rust",
       "path": "warpgate-db-migrations/src/m00075_hash_ticket_and_api_token_secrets.rs",
       "message": "Function `hashes_existing_secrets_and_renames_the_column` calls `db.query_one` with loop-derived `table`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 161,
       "verdict": "false_positive",
       "reason": "The loop runs over two constant table names to check their query plans; it is not data-dependent repetition.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop covers only the two literal tables [\"tickets\",\"api_tokens\"] and runs EXPLAIN QUERY PLAN in a migration test, so it is bounded and not loop-data-derived."
+        }
+      ]
     }
   ]
 }

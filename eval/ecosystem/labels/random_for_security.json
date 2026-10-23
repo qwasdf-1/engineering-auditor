@@ -88,12 +88,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Server/WexflowService.cs",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 3703, through `GenerateRandomNumber`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 3703,
       "verdict": "true_positive",
       "reason": "The reset password is \"wexflow\" plus GenerateRandomNumber(), a 4-digit value from new Random(), so a password reset issues a predictable, guessable password.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WexflowService password reset builds the new password as \"wexflow\"+GenerateRandomNumber(), where System.Random.Next(1000,9999) yields a guessable 4-digit credential."
+        }
+      ]
     },
     {
       "id": "EA-2ac90ea492e23d16",
@@ -121,12 +128,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/dialogs/connection/ConnectionWizard.java",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 162, through `getActiveDataSource`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 162,
       "verdict": "false_positive",
       "reason": "generateNewId uses new Random() only to make a temporary connection ID unique and avoid session conflicts; it is not a secret.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 162 in ConnectionWizard.testConnection calls getActiveDataSource() and contains no random generator."
+        }
+      ]
     },
     {
       "id": "EA-7d871bd0513a8c08",
@@ -154,12 +168,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/vault/DefaultVaultCharSecret.java",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 90",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 90,
       "verdict": "false_positive",
       "reason": "ThreadLocalRandom here overwrites a vault secret buffer on close; predictable fill values do not weaken a wipe.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DefaultVaultCharSecret.close overwrites the secret buffer with ThreadLocalRandom chars to wipe memory; random output is discarded, not a security token."
+        }
+      ]
     },
     {
       "id": "EA-c17d3fd6908596db",
@@ -167,12 +188,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/rest/ServiceREST.java",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 4132",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 4132,
       "verdict": "false_positive",
       "reason": "The CSRF token is drawn with new SecureRandom(), a cryptographically secure generator, so the predictable-random claim is wrong.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ServiceREST.getCSRFToken already uses RandomStringUtils.random(..., new SecureRandom()), a cryptographic source."
+        }
+      ]
     },
     {
       "id": "EA-a50a53f973daa826",
@@ -200,12 +228,19 @@
       "language": "javascript",
       "path": "app/src/main/res/raw/webviewcompat_complex_test_script.js",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 147",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 147,
       "verdict": "false_positive",
       "reason": "webviewcompat_complex_test_script.js is a raw test script resource; generating a session key there is test code outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generateSessionKey in webviewcompat_complex_test_script.js is a raw test script resource for Android WebView compat tests."
+        }
+      ]
     },
     {
       "id": "EA-e583de5c6e536812",
@@ -213,12 +248,19 @@
       "language": "javascript",
       "path": "app/src/main/res/raw/webviewcompat_large_test_script.js",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 86",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 86,
       "verdict": "false_positive",
       "reason": "webviewcompat_large_test_script.js is a raw test script resource; the session key is test code outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generateSessionKey in webviewcompat_large_test_script.js is a test script resource used for WebView benchmarking, not a real secret."
+        }
+      ]
     },
     {
       "id": "EA-8ff05af2ae6b872e",
@@ -286,12 +328,19 @@
       "language": "javascript",
       "path": "ghost/core/server/data/tinybird/scripts/docker-analytics-manager.js",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 465",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 465,
       "verdict": "false_positive",
       "reason": "docker-analytics-manager.js generates synthetic analytics events in a data script; a random user id is test data, not a secret.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "docker-analytics-manager.js picks a random userId for synthetic analytics events in a Tinybird dev seed script."
+        }
+      ]
     },
     {
       "id": "EA-342f0e187229d3c7",
@@ -299,12 +348,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/members/jobs/index.js",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 80, through `randomDailyCron`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 80,
       "verdict": "false_positive",
       "reason": "randomDailyCron picks a random time of day to spread a cleanup job; schedule jitter is not a security value.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "randomDailyCron picks a random cron time to spread the token-cleanup job; scheduling jitter, not a security value."
+        }
+      ]
     },
     {
       "id": "EA-0057c409866e7e0e",
@@ -312,12 +368,19 @@
       "language": "javascript",
       "path": "client/app/components/items-list/classes/ItemsSource.js",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 47",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 47,
       "verdict": "false_positive",
       "reason": "The fetch token only discards stale responses by comparing with the latest request; it is never sent or trusted as a secret.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "fetchToken in ItemsSource compares against _currentFetchToken to drop stale responses; a UI race guard, not a secret."
+        }
+      ]
     },
     {
       "id": "EA-fa0b628b15b31f16",
@@ -325,12 +388,19 @@
       "language": "javascript",
       "path": "client/app/pages/queries/hooks/useDataSourceSchema.js",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 24",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 24,
       "verdict": "false_positive",
       "reason": "The refresh token only drops stale schema responses in the client; it is not a security value.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "refreshToken in useDataSourceSchema is a stale-request marker compared via refreshSchemaTokenRef, not a security token."
+        }
+      ]
     },
     {
       "id": "EA-486540a71d9488a8",
@@ -358,12 +428,19 @@
       "language": "python",
       "path": "electrum/util.py",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 2447",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2447,
       "verdict": "false_positive",
       "reason": "random.randint picks a proof-of-work start nonce to spread mining across workers; the nonce is not secret.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "random.randint at util.py line 2447 picks a PoW nonce start range for mining workers; nonce search needs no unpredictability."
+        }
+      ]
     },
     {
       "id": "EA-c54c6602a037b216",
@@ -371,12 +448,19 @@
       "language": "python",
       "path": "electrum/wallet.py",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 199, through `get_locktime_for_new_transaction`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 199,
       "verdict": "false_positive",
       "reason": "The random locktime offset is deliberate anti-fingerprinting jitter for fee sniping, not a secret or key material.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "get_locktime_for_new_transaction uses random.randint only to jitter the transaction locktime for fee-sniping privacy, not secret key material."
+        }
+      ]
     },
     {
       "id": "EA-72cfdbe84481dfc2",
@@ -384,12 +468,19 @@
       "language": "python",
       "path": "redash/utils/__init__.py",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 70",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 70,
       "verdict": "false_positive",
       "reason": "random.SystemRandom reads os.urandom and is a cryptographically secure generator, so the predictable-random claim is wrong.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generate_token uses random.SystemRandom(), which is OS-backed and cryptographically secure."
+        }
+      ]
     },
     {
       "id": "EA-cceda0b077fb857a",

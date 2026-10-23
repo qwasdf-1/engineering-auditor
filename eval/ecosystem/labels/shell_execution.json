@@ -8,12 +8,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/bootstrap.go",
       "message": "Shell execution at line 94",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 94,
       "verdict": "false_positive",
       "reason": "cmd/authelia-scripts is Authelia's development script tool (the line is marked used only in development); tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "authelia-scripts bootstrap.go is a development build/bootstrap script, as its nolint comment says 'Used only in development'."
+        }
+      ]
     },
     {
       "id": "EA-deef1f91975a93ea",
@@ -21,12 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.standalone/src/org/jkiss/dbeaver/ui/app/standalone/update/VersionUpdateDialog.java",
       "message": "Shell execution at line 428",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 428,
       "verdict": "true_positive",
       "reason": "The Windows installer runs cmd.exe /C with the downloaded installer path concatenated into a shell command line.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WindowsInstaller runs cmd.exe /C start path && del path, a shell interpreting a command string in the shipped updater."
+        }
+      ]
     },
     {
       "id": "EA-bda858a9ffce8823",
@@ -34,12 +48,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.standalone/src/org/jkiss/dbeaver/ui/app/standalone/update/VersionUpdateDialog.java",
       "message": "Shell execution at line 439",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 439,
       "verdict": "true_positive",
       "reason": "The macOS installer runs /bin/sh -c with the installer path spliced into the command string.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MacintoshInstaller passes 'open -F -W path && rm path' to /bin/sh -c in the shipped update dialog."
+        }
+      ]
     },
     {
       "id": "EA-13e7733744adae92",
@@ -47,12 +68,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui/src/org/jkiss/dbeaver/ui/ShellUtils.java",
       "message": "Shell execution at line 138",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 138,
       "verdict": "true_positive",
       "reason": "ShellUtils runs /bin/sh -c with a command string built from a file path.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ShellUtils runs formShowInSystemExplorerCommand output through /bin/sh -c on Linux/Mac in shipped UI code."
+        }
+      ]
     },
     {
       "id": "EA-67ef2ef1c78592d2",
@@ -60,12 +88,19 @@
       "language": "java",
       "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/process/UnixUserGroupBuilder.java",
       "message": "Shell execution at line 285",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 285,
       "verdict": "true_positive",
       "reason": "The usersync enumerates users by running a configured command through bash -c.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "UnixUserGroupBuilder runs the configured user command via bash -c in the shipped ranger usersync."
+        }
+      ]
     },
     {
       "id": "EA-e421fd236d484a76",
@@ -73,12 +108,19 @@
       "language": "java",
       "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/process/UnixUserGroupBuilder.java",
       "message": "Shell execution at line 467",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 467,
       "verdict": "true_positive",
       "reason": "The group enumeration runs the configured allGroupsCmd through bash -c.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The group-listing path runs allGroupsCmd through bash -c in shipped ugsync code."
+        }
+      ]
     },
     {
       "id": "EA-b4a85a1c6f2f2c43",
@@ -146,12 +188,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 46",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 46,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "buildServer() in client/cypress/cypress.js runs a constant 'docker compose -p cypress build' for the e2e test harness, a dev/test script with no untrusted input."
+        }
+      ]
     },
     {
       "id": "EA-e73aee34d717b7d2",
@@ -159,12 +208,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 51",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 51,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "startServer() 'docker compose -p cypress up -d' is a fixed literal in the Cypress test runner script, not shipped product code."
+        }
+      ]
     },
     {
       "id": "EA-2c03db2103a0d654",
@@ -172,12 +228,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 52",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 52,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The 'docker compose -p cypress run server create_db' call is a constant string in the Cypress e2e driver, out of scope as test tooling."
+        }
+      ]
     },
     {
       "id": "EA-c2c324b8c69e391d",
@@ -185,12 +248,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 57",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 57,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stopServer() 'docker compose -p cypress down' is a hardcoded teardown command in the Cypress test harness."
+        }
+      ]
     },
     {
       "id": "EA-7e79820adc7bf260",
@@ -198,12 +268,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 70",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 70,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "runCypressCI() interpolates only shell variables like $CYPRESS_OPTIONS set from the CI environment in a test/CI runner script, not attacker data in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-74877af49d92f67d",
@@ -211,12 +288,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 92",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 92,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The 'run' case executes literal 'cypress run' from the CLI test wrapper, a dev script."
+        }
+      ]
     },
     {
       "id": "EA-af36097ca60a4e19",
@@ -224,12 +308,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 95",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 95,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The 'open' case executes literal 'cypress open' (interactive test runner) in a dev-only script."
+        }
+      ]
     },
     {
       "id": "EA-ae1b3f7887078c27",
@@ -237,12 +328,19 @@
       "language": "javascript",
       "path": "client/cypress/cypress.js",
       "message": "Shell execution at line 106",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 106,
       "verdict": "false_positive",
       "reason": "client/cypress/cypress.js is the Cypress end-to-end test runner script; test tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The 'all' case runs literal 'cypress run' between startServer and stopServer in the e2e wrapper, test tooling only."
+        }
+      ]
     },
     {
       "id": "EA-5fa6b801e5ea5477",
@@ -250,12 +348,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/build/copy-to-cms.js",
       "message": "Shell execution at line 22",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 22,
       "verdict": "false_positive",
       "reason": "devops/build/copy-to-cms.js is a build script; build tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "copy-to-cms.js is a build script under devops/build that runs a fixed 'npx postcss ... cssnano' minify command at build time."
+        }
+      ]
     },
     {
       "id": "EA-a3120938bdbbb853",
@@ -263,12 +368,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/example-runner/index.js",
       "message": "Shell execution at line 43",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 43,
       "verdict": "false_positive",
       "reason": "devops/example-runner is a development helper that starts the Vite dev server; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/example-runner/index.js is a developer example launcher running a fixed 'npm run dev', not shipped code."
+        }
+      ]
     },
     {
       "id": "EA-834f12b653e19dbd",
@@ -276,12 +388,19 @@
       "language": "python",
       "path": "docs/scripts/clirecording/clidirector.py",
       "message": "Shell execution at line 125",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 125,
       "verdict": "false_positive",
       "reason": "docs/scripts/clirecording is a documentation recording script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "docs/scripts/clirecording/clidirector.py is a documentation-recording helper; run_external executes commands authored by the doc script itself."
+        }
+      ]
     },
     {
       "id": "EA-c87c9805433294f1",
@@ -289,12 +408,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 53",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 53,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ranger-tools performance tool fetch_system_logs_from_server builds an scp command for a benchmark harness whose operator supplies host/password; tooling, not shipped Ranger service."
+        }
+      ]
     },
     {
       "id": "EA-2552e2c3b1e726be",
@@ -302,12 +428,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 70",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 70,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "fetch_secondary_system_logs_from_server in the ranger_performance_tool benchmark utility uses operator-supplied config for scp; out-of-scope perf tooling."
+        }
+      ]
     },
     {
       "id": "EA-844690e984813a56",
@@ -315,12 +448,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 87",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 87,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "fetch_access_logs_from_server in ranger-tools perf utility shells out to sshpass/scp with operator config values; benchmark tooling."
+        }
+      ]
     },
     {
       "id": "EA-ee58a6408d93357f",
@@ -328,12 +468,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 259",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 259,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The 'yes | rm {self.log_file}' command in ranger_performance_tool's log service cleanup is perf-tool code using configured paths, not shipped product."
+        }
+      ]
     },
     {
       "id": "EA-48ff89e036c4d80f",
@@ -341,12 +488,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 275",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 275,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "start_system_log_service in the ranger perf tool runs a vmstat command over ssh from operator config; benchmark tooling."
+        }
+      ]
     },
     {
       "id": "EA-0bc90cece8db0c7b",
@@ -354,12 +508,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 284",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 284,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "execute_secondary_system_log_command in ranger-tools builds a vmstat-over-ssh command from the tool's own config; performance harness."
+        }
+      ]
     },
     {
       "id": "EA-10c3ba97ad21fc83",
@@ -367,12 +528,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Shell execution at line 293",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 293,
       "verdict": "false_positive",
       "reason": "ranger-tools/ranger_performance_tool is a performance-testing tool, not shipped service code; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stop_system_log_service runs 'pkill -f vmstat' via command_prefix in the ranger perf tool; benchmark harness, no untrusted input."
+        }
+      ]
     },
     {
       "id": "EA-a6cdf0ecdad8671e",
@@ -380,12 +548,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/stress/stress-hbase-loadgenerator.py",
       "message": "Shell execution at line 28",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 28,
       "verdict": "false_positive",
       "reason": "ranger-tools/stress is a load-generation script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stress-hbase-loadgenerator.py runs the literal \"export HBASE_OPTS='-Xmx10g'\" in a stress-test script; constant string, test tooling."
+        }
+      ]
     },
     {
       "id": "EA-0740311e7a1de687",
@@ -393,12 +568,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/stress/stress-hbase-loadgenerator.py",
       "message": "Shell execution at line 37",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 37,
       "verdict": "false_positive",
       "reason": "ranger-tools/stress is a load-generation script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The kinit command in stress-hbase-loadgenerator.py takes keytab_path/user_name from the stress-test operator; load-test tooling."
+        }
+      ]
     },
     {
       "id": "EA-5814c2ee1979fc60",
@@ -406,12 +588,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/stress/stress-hbase-loadgenerator.py",
       "message": "Shell execution at line 92",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 92,
       "verdict": "false_positive",
       "reason": "ranger-tools/stress is a load-generation script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "subprocess.run(cmd, shell=True) at line 92 runs an LTT load command built by the stress-hbase-loadgenerator script itself; test tooling."
+        }
+      ]
     },
     {
       "id": "EA-dc8e09d36112ce4d",
@@ -424,7 +613,14 @@
       "line": 78,
       "verdict": "false_positive",
       "reason": "ranger_install.py is an installation script run by an administrator; install tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "run_cmd in security-admin ranger_install.py calls subprocess.call(cmd, shell=True) on a command string in a shipped installer script."
+        }
+      ]
     },
     {
       "id": "EA-929b110ffc8974f8",
@@ -482,12 +678,19 @@
       "language": "typescript",
       "path": "web/e2e/global-setup.ts",
       "message": "Shell execution at line 6",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 6,
       "verdict": "false_positive",
       "reason": "web/e2e/global-setup.ts is end-to-end test setup; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "web/e2e/global-setup.ts is Playwright test setup running the constant 'npm run e2e:build' in the webDir."
+        }
+      ]
     },
     {
       "id": "EA-f6643c1294035ecc",

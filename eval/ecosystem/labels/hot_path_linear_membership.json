@@ -13,7 +13,14 @@
       "line": 145,
       "verdict": "true_positive",
       "reason": "requiredDefaultMessages.Contains(validationResult.ErrorMessage) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "requiredDefaultMessages is a local two-element array literal (Missing, Empty), so Contains in the loop is a bounded literal scan."
+        }
+      ]
     },
     {
       "id": "EA-3b0c120e75a19deb",
@@ -26,7 +33,14 @@
       "line": 151,
       "verdict": "true_positive",
       "reason": "formatDefaultMessages.Contains(validationResult.ErrorMessage) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "formatDefaultMessages is a one-element local array literal (PatternMismatch); a linear Contains there is trivially bounded."
+        }
+      ]
     },
     {
       "id": "EA-60527d8f23e41fa0",
@@ -34,12 +48,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/ContentRepositoryBase.cs",
       "message": "Function `CheckDataIntegrity` checks loop-derived `node` against linear collection `rootIds`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 772,
       "verdict": "false_positive",
       "reason": "rootIds is a local three-element array literal; the contract excludes local bounded collections.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "rootIds is a three-element local array of Constants.System.Root/RecycleBin ids, a small bounded literal, so the Contains per node is not a hot-path concern."
+        }
+      ]
     },
     {
       "id": "EA-34c91e02efceb38c",
@@ -47,12 +68,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/PropertyEditors/MultiNodeTreePickerPropertyEditor.cs",
       "message": "Function `Validate` checks loop-derived `key` against linear collection `allowedTypes`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 443,
       "verdict": "true_positive",
       "reason": "allowedTypes.Contains(key.Value) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "allowedTypes is a Guid[] built from the configuration's Filter string of unknown size and Contains(key.Value) runs for each posted item, so lookup is O(n*m); a HashSet would fit."
+        }
+      ]
     },
     {
       "id": "EA-5d606a584a7eea9d",
@@ -60,12 +88,19 @@
       "language": "go",
       "path": "models/git/protected_branch.go",
       "message": "Function `updateTeamWhitelist` checks loop-derived `i` against linear collection `newWhitelist`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 562,
       "verdict": "true_positive",
       "reason": "slices.Contains(newWhitelist, ..) scans the slice for every team; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "slices.Contains(newWhitelist, teams[i].ID) scans the caller-supplied newWhitelist for each team in the repo's team list, an unbounded slice-in-loop lookup."
+        }
+      ]
     },
     {
       "id": "EA-2d73da1957d67065",
@@ -73,12 +108,19 @@
       "language": "go",
       "path": "modules/util/util.go",
       "message": "Function `DiffSlice` checks loop-derived `v` against linear collection `oldSet`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 308,
       "verdict": "false_positive",
       "reason": "oldSet is a container.Set, a hash set, so Contains is constant-time; the linear-collection claim is wrong.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "oldSet is a container.Set built by SetOf, so oldSet.Contains(v) is a map lookup, not a linear scan."
+        }
+      ]
     },
     {
       "id": "EA-d456d6b5538c89ee",
@@ -86,12 +128,19 @@
       "language": "go",
       "path": "modules/util/util.go",
       "message": "Function `DiffSlice` checks loop-derived `v` against linear collection `newSet`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 313,
       "verdict": "false_positive",
       "reason": "newSet is a container.Set, a hash set, so Contains is constant-time; the linear-collection claim is wrong.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "newSet is a container.Set (map-backed), so newSet.Contains(v) in DiffSlice is constant time and the finding misreads it as linear."
+        }
+      ]
     },
     {
       "id": "EA-93a8e54a2fbe3f96",
@@ -99,12 +148,19 @@
       "language": "go",
       "path": "routers/web/explore/code.go",
       "message": "Function `Code` appends loop-derived `result` to linear collection `loadRepoIDs` only after scanning it for `result`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 97,
       "verdict": "true_positive",
       "reason": "The loop appends each repository id to loadRepoIDs only after slices.Contains scans it, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "loadRepoIDs grows with a slices.Contains scan before each append over searchResults, a dedup-by-linear-scan that is quadratic for many results."
+        }
+      ]
     },
     {
       "id": "EA-3d5163bc7902e328",
@@ -112,12 +168,19 @@
       "language": "go",
       "path": "routers/web/user/code.go",
       "message": "Function `CodeSearch` appends loop-derived `result` to linear collection `loadRepoIDs` only after scanning it for `result`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 90,
       "verdict": "true_positive",
       "reason": "The loop appends each repository id to loadRepoIDs only after slices.Contains scans it, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CodeSearch repeats the same slices.Contains(loadRepoIDs, result.RepoID) dedupe-append over search results, so the list is scanned each iteration."
+        }
+      ]
     },
     {
       "id": "EA-74efb36af5be91a6",
@@ -125,12 +188,19 @@
       "language": "go",
       "path": "src/pkg/scan/export/filter_processor.go",
       "message": "Function `ProcessLabelFilter` checks loop-derived `label` against linear collection `labelIDs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 174,
       "verdict": "true_positive",
       "reason": "slices.Contains(labelIDs, ..) scans the slice for each artifact label; the code's own TODO names the map alternative.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "slices.Contains(labelIDs, label.ID) is scanned per artifact label of an arbitrary export artifact list; the TODO in the code itself admits it is a for^2 that a map would fix."
+        }
+      ]
     },
     {
       "id": "EA-920a15dfc29bdefa",
@@ -143,7 +213,14 @@
       "line": 3657,
       "verdict": "true_positive",
       "reason": "slices.Contains(retain, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "retain is the stream's replica peer list, bounded by the replication factor (at most a handful of peers) in remapConsumerAssignment, so a linear Contains is cheap."
+        }
+      ]
     },
     {
       "id": "EA-7e8a9e978ef4caf9",
@@ -156,7 +233,14 @@
       "line": 4994,
       "verdict": "true_positive",
       "reason": "slices.Contains(catchups, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "catchups holds the few peers currently catching up in a stream raft group; scan size is bounded by replica count in caughtUpPeers."
+        }
+      ]
     },
     {
       "id": "EA-ed17da531ab3a1f6",
@@ -169,7 +253,14 @@
       "line": 5050,
       "verdict": "true_positive",
       "reason": "slices.Contains(actualPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "actualPeers is the raft group's member list (replicas, single digits) iterated in extendPeerSet, so the linear lookup is bounded."
+        }
+      ]
     },
     {
       "id": "EA-65e2b563c98c14ec",
@@ -182,7 +273,14 @@
       "line": 5053,
       "verdict": "true_positive",
       "reason": "slices.Contains(hosted, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hosted lists the few peers hosting consumers within a replica group; Contains in extendPeerSet is a small bounded scan."
+        }
+      ]
     },
     {
       "id": "EA-c976616206382054",
@@ -195,7 +293,14 @@
       "line": 5053,
       "verdict": "true_positive",
       "reason": "slices.Contains(desiredPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "desiredPeers is the stream's target replica set (R<=5) so slices.Contains in extendPeerSet's loop is on a tiny list."
+        }
+      ]
     },
     {
       "id": "EA-eb4c495be0988661",
@@ -208,7 +313,14 @@
       "line": 10251,
       "verdict": "true_positive",
       "reason": "slices.Contains(peers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "peers is the short list of peers an operator is removing in reassignStreamPeers; basePeers is replica-bounded, so the loop is tiny."
+        }
+      ]
     },
     {
       "id": "EA-b99d7ab68b5d6667",
@@ -221,7 +333,14 @@
       "line": 11808,
       "verdict": "true_positive",
       "reason": "slices.Contains(members, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "members is the stream raft group membership list in stepDownCandidates, bounded by the replica count."
+        }
+      ]
     },
     {
       "id": "EA-cb0a0fd2f00ecd2f",
@@ -234,7 +353,14 @@
       "line": 11808,
       "verdict": "true_positive",
       "reason": "slices.Contains(desiredPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "desiredPeers in stepDownCandidates is a replica-bounded set (at most a few peers), so Contains is cheap."
+        }
+      ]
     },
     {
       "id": "EA-763e4342b1fe3e16",
@@ -247,7 +373,14 @@
       "line": 11821,
       "verdict": "true_positive",
       "reason": "slices.Contains(desired, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "desired in selectStepDownPreferred is the stream's replica peer list and current is the same size, so the scan is a handful of elements."
+        }
+      ]
     },
     {
       "id": "EA-ccc698e0a83a5c21",
@@ -260,7 +393,14 @@
       "line": 13445,
       "verdict": "true_positive",
       "reason": "slices.Contains(desiredPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "desiredPeers in holdForCatchup is the replica-bounded target peer set; the loop runs over the raft group's actual peers only."
+        }
+      ]
     },
     {
       "id": "EA-33bcab3207a6b861",
@@ -273,7 +413,14 @@
       "line": 13446,
       "verdict": "true_positive",
       "reason": "slices.Contains(catchups, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "catchups in holdForCatchup is the small set of peers still catching up within a replica group, bounded by group size."
+        }
+      ]
     },
     {
       "id": "EA-0da8da585427c753",
@@ -286,7 +433,14 @@
       "line": 1267,
       "verdict": "true_positive",
       "reason": "slices.Contains(peers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "peers in EvictPeers is the operator-supplied list of raft peers to evict, tied to a small cluster's voting membership, not an unbounded collection."
+        }
+      ]
     },
     {
       "id": "EA-a2f1ca41256563e4",
@@ -294,12 +448,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.mysql/src/org/jkiss/dbeaver/ext/mysql/model/plan/MySQLPlanClassic.java",
       "message": "Function `convertToPlanTree` checks loop-derived `node` against linear collection `parsed`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 146,
       "verdict": "true_positive",
       "reason": "parsed.Contains(node) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`parsed` accumulates every plan node in convertToPlanTree and `parsed.contains(node)` runs per srcNode, quadratic in plan size."
+        }
+      ]
     },
     {
       "id": "EA-e56bd44e3b57b897",
@@ -307,12 +468,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql.ui/src/org/jkiss/dbeaver/ext/postgresql/tools/fdw/PostgreFDWConfigWizardPageInput.java",
       "message": "Function `isFolderVisible` checks loop-derived `ds` against linear collection `dataSources`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 84,
       "verdict": "true_positive",
       "reason": "dataSources.Contains(ds.getDataSourceContainer()) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`dataSources.contains(ds.getDataSourceContainer())` in isFolderVisible scans the wizard's available data source list for each nested data source, with sizes set by the user's connections."
+        }
+      ]
     },
     {
       "id": "EA-6d5eda42230a091b",
@@ -325,7 +493,14 @@
       "line": 1010,
       "verdict": "true_positive",
       "reason": "searchPath.Contains(schema.getName()) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`searchPath` in PostgreDatabase.getDataType is the short PostgreSQL search_path of schema names (a handful), so the per-schema contains is effectively constant."
+        }
+      ]
     },
     {
       "id": "EA-6a3752ce3aba839b",
@@ -333,12 +508,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/DBUtils.java",
       "message": "Function `isIdentifyingAssociation` checks loop-derived `attr` against linear collection `constAttrs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1206,
       "verdict": "true_positive",
       "reason": "constAttrs.Contains(attr) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`constAttrs.contains(attr)` scans the referenced entity's attribute list for every own attribute of an association, with table width unbounded."
+        }
+      ]
     },
     {
       "id": "EA-2804c20b3b33f6ea",
@@ -346,12 +528,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/edit/AbstractCommandContext.java",
       "message": "Function `getFinalCommands` appends loop-derived `cmdInfo` to linear collection `cmdCopy` only after scanning it for `cmdInfo`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 327,
       "verdict": "true_positive",
       "reason": "The loop adds each merged command to cmdCopy only after cmdCopy.contains scans it, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Dedup-append `cmdCopy.contains(cmdInfo.command)` in getFinalCommands rescans the growing command list for every queued command across all queues."
+        }
+      ]
     },
     {
       "id": "EA-aefc543286bea25c",
@@ -364,7 +553,14 @@
       "line": 59,
       "verdict": "true_positive",
       "reason": "recentDrivers.Contains(driver) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`recentDrivers` is built by DriverUtils.getRecentDrivers(allDrivers, 10), capped at 10 entries, so the contains is bounded."
+        }
+      ]
     },
     {
       "id": "EA-15c263ccb296828e",
@@ -372,12 +568,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.erd/src/org/jkiss/dbeaver/ui/editors/erd/editor/ERDHighlightingManager.java",
       "message": "Function `getEntityAttributes` checks loop-derived `attrPart` against linear collection `columns`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 288,
       "verdict": "true_positive",
       "reason": "columns.Contains(attribute) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`columns.contains(attribute)` in ERDHighlightingManager.getEntityAttributes scans the ERD column list for each child AttributePart of an entity."
+        }
+      ]
     },
     {
       "id": "EA-1283e8cabe3015a3",
@@ -385,12 +588,19 @@
       "language": "java",
       "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/security/impl/oidc/OidcAuthenticator.java",
       "message": "Function `determineUserType` checks loop-derived `group` against linear collection `adminGroups`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 388,
       "verdict": "true_positive",
       "reason": "adminGroups.Contains(group) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`adminGroups.contains(group)` in OidcAuthenticator.determineUserType scans the configured admin-group list for each group claim from the token, with neither list bounded by code."
+        }
+      ]
     },
     {
       "id": "EA-a608f3c0d6a903d9",
@@ -398,12 +608,19 @@
       "language": "java",
       "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/WorkflowLineageServiceImpl.java",
       "message": "Function `getWorkFlowRelations` checks loop-derived `workflowTaskLineage` against linear collection `workflowDefinitionCodes`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 162,
       "verdict": "true_positive",
       "reason": "workflowDefinitionCodes.Contains(code) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`workflowDefinitionCodes` is a distinct-collected list built from the lineage query and is scanned per lineage row in getWorkFlowRelations."
+        }
+      ]
     },
     {
       "id": "EA-448cb0f9969d21d2",
@@ -411,12 +628,19 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/saml/v2/util/AssertionUtil.java",
       "message": "Function `getRoles` checks loop-derived `attr` against linear collection `roleKeys`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 534,
       "verdict": "true_positive",
       "reason": "roleKeys.Contains(attr.getAttributeName()) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`roleKeys.contains(attr.getAttributeName())` in AssertionUtil.getRoles scans the caller-supplied role key list for every SAML attribute of every statement."
+        }
+      ]
     },
     {
       "id": "EA-12c872b90aa4ff3b",
@@ -424,12 +648,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/authentication/authenticators/x509/CertificateValidator.java",
       "message": "Function `validateExtendedKeyUsage` checks loop-derived `eku` against linear collection `ekuList`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 599,
       "verdict": "true_positive",
       "reason": "ekuList.Contains(eku) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ekuList` is a LinkedList built from certificate EKU data and scanned with contains for each expected EKU, with no size bound."
+        }
+      ]
     },
     {
       "id": "EA-c1c2e75f7e886cdf",
@@ -437,12 +668,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/authentication/authenticators/x509/CertificateValidator.java",
       "message": "Function `validatePolicy` checks loop-derived `policy` against linear collection `policyList`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 632,
       "verdict": "true_positive",
       "reason": "policyList.Contains(policy) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`policyList.contains(policy.toLowerCase())` scans the certificate policy list per expected policy in validatePolicy mode ALL."
+        }
+      ]
     },
     {
       "id": "EA-3cc4e9f3d0aac3f0",
@@ -455,7 +693,14 @@
       "line": 371,
       "verdict": "true_positive",
       "reason": "defaultRolesArray.Contains(rel) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`defaultRolesArray` is Arrays.asList(String.valueOf(defaultRoles)), a single-element list, so contains in updateDefaultRoles is O(1)."
+        }
+      ]
     },
     {
       "id": "EA-21a36b24b66754b9",
@@ -463,12 +708,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/clientregistration/policy/impl/ClientScopesClientRegistrationPolicy.java",
       "message": "Function `checkClientScopesAllowed` checks loop-derived `requested` against linear collection `allowedScopes`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 115,
       "verdict": "true_positive",
       "reason": "allowedScopes.Contains(requested) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`allowedScopes.contains(requested)` scans the realm's allowed client scope list for each requested scope in checkClientScopesAllowed."
+        }
+      ]
     },
     {
       "id": "EA-3f62bfa7e5edd636",
@@ -481,7 +733,14 @@
       "line": 428,
       "verdict": "true_positive",
       "reason": "expectedScopes.Contains(scope) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`expectedScopes` in GroupPermissions.hasPermission is Arrays.asList of the varargs `scopes`, a couple of literal scope names from callers."
+        }
+      ]
     },
     {
       "id": "EA-44fcdef02978a4fb",
@@ -489,12 +748,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/userprofile/config/UPConfigUtils.java",
       "message": "Function `validateRootAttributes` checks loop-derived `name` against linear collection `attributeNames`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 258,
       "verdict": "false_positive",
       "reason": "The loop runs over a two-element constant list (USERNAME, EMAIL); two scans of attributeNames are constant work.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop in validateRootAttributes iterates a fixed two-element list (USERNAME, EMAIL), so `attributeNames.contains(name)` runs only twice."
+        }
+      ]
     },
     {
       "id": "EA-144947903b1d9666",
@@ -502,12 +768,19 @@
       "language": "java",
       "path": "hive-agent/src/main/java/org/apache/ranger/services/hive/client/HiveClient.java",
       "message": "Function `getDBListFromHM` checks loop-derived `dbName` against linear collection `dbList`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 278,
       "verdict": "true_positive",
       "reason": "dbList.Contains(dbName) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`dbList.contains(dbName)` in HiveClient.getDBListFromHM scans the already-collected database list for every database returned by the metastore."
+        }
+      ]
     },
     {
       "id": "EA-b6031b254e68c2fc",
@@ -515,12 +788,19 @@
       "language": "java",
       "path": "plugin-kms/src/main/java/org/apache/ranger/services/kms/client/KMSClient.java",
       "message": "Function `getKeyList` checks loop-derived `key` against linear collection `existingKeyList`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 223,
       "verdict": "true_positive",
       "reason": "existingKeyList.Contains(key) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`existingKeyList.contains(key)` in KMSClient.getKeyList scans the caller-provided key list for every key returned by the KMS server."
+        }
+      ]
     },
     {
       "id": "EA-1045e95c507e4e67",
@@ -528,12 +808,19 @@
       "language": "java",
       "path": "plugin-solr/src/main/java/org/apache/ranger/services/solr/client/ServiceSolrClient.java",
       "message": "Function `getCollectionList` checks loop-derived `responseCollection` against linear collection `ignoreCollectionList`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 389,
       "verdict": "true_positive",
       "reason": "ignoreCollectionList.Contains(responseCollection) scans the list once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ignoreCollectionList.contains(responseCollection)` scans the ignore list per Solr collection returned by the cluster."
+        }
+      ]
     },
     {
       "id": "EA-2145932af0fea381",
@@ -541,12 +828,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/common/SearchUtil.java",
       "message": "Function `buildWhereClause` appends loop-derived `table` to linear collection `joinTableList` only after scanning it for `table`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 558,
       "verdict": "true_positive",
       "reason": "The loop adds each join table to joinTableList only after contains scans it, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Dedup-append of `table` into `joinTableList` in SearchUtil.buildWhereClause rescans the list for every search field's join table."
+        }
+      ]
     },
     {
       "id": "EA-fb215210d6e4a816",
@@ -554,12 +848,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/common/ServiceUtil.java",
       "message": "Function `mapPermMapToPermObj` appends loop-derived `permMap` to linear collection `groupList` only after scanning it for `permMap`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 986,
       "verdict": "true_positive",
       "reason": "The loop appends to groupList only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`groupList.contains(permMap.getGroupName())` dedup-append in ServiceUtil.mapPermMapToPermObj grows with the number of permission maps per object."
+        }
+      ]
     },
     {
       "id": "EA-01d2ff7a82f0a376",
@@ -572,7 +873,14 @@
       "line": 163,
       "verdict": "true_positive",
       "reason": "resources is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "checkResourcePresent in a one-off Presto patch compares service-def resource names, a tiny list of a few resource definitions."
+        }
+      ]
     },
     {
       "id": "EA-b0910fdc817b932e",
@@ -580,12 +888,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/service/XPolicyService.java",
       "message": "Function `mapPermMapToPermObj` appends loop-derived `permMap` to linear collection `userList` only after scanning it for `permMap`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 446,
       "verdict": "true_positive",
       "reason": "The loop appends to userList only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`userList.contains(permMap.getUserName())` dedup-append in XPolicyService.mapPermMapToPermObj rescans a list that grows with policy permission maps."
+        }
+      ]
     },
     {
       "id": "EA-3e39b83087e0ad71",
@@ -593,12 +908,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/model/HistoryReference.java",
       "message": "Function `setTags` checks loop-derived `tag` against linear collection `tags`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 812,
       "verdict": "true_positive",
       "reason": "this.tags is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`this.tags.contains(tag)` in HistoryReference.setTags scans the existing tag list for each new tag, with no bound on tags per message."
+        }
+      ]
     },
     {
       "id": "EA-f4138bed797334cb",
@@ -606,12 +928,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/model/HistoryReference.java",
       "message": "Function `setTags` checks loop-derived `tag` against linear collection `tags`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 818,
       "verdict": "true_positive",
       "reason": "tags is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`tags.contains(tag)` in the second loop of HistoryReference.setTags scans the new tag list for each existing tag."
+        }
+      ]
     },
     {
       "id": "EA-316237c4efcd637a",
@@ -619,12 +948,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/control/AddOn.java",
       "message": "Function `getLoadedExtensionsWithDeps` checks loop-derived `extension` against linear collection `classnames`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 881,
       "verdict": "true_positive",
       "reason": "classnames is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`classnames.contains(extension.getClass().getCanonicalName())` scans the add-on's extension class-name list for each loaded extension."
+        }
+      ]
     },
     {
       "id": "EA-280fbfa625a950bb",
@@ -632,12 +968,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnLoader.java",
       "message": "Function `loadAddOnsRunState` checks loop-derived `savedExtension` against linear collection `currentExtensions`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1363,
       "verdict": "true_positive",
       "reason": "currentExtensions is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`currentExtensions.contains(savedExtension)` in loadAddOnsRunState scans the add-on's extension list for each saved extension string per add-on."
+        }
+      ]
     },
     {
       "id": "EA-168c0772b3743489",
@@ -645,12 +988,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/params/ExtensionParams.java",
       "message": "Function `onHttpResponseReceive` checks loop-derived `hdrField` against linear collection `setCookieHeaders`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 426,
       "verdict": "false_positive",
       "reason": "setCookieHeaders is a local two-element Arrays.asList literal; the contract excludes local bounded collections.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`setCookieHeaders` is a literal two-element list (Set-Cookie, Set-Cookie2), so contains per header field is constant."
+        }
+      ]
     },
     {
       "id": "EA-94f8e851c9200b96",
@@ -658,12 +1008,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/script/ExtensionScript.java",
       "message": "Function `getScriptingEngines` checks loop-derived `sew` against linear collection `engines`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 275,
       "verdict": "true_positive",
       "reason": "engines is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`engines.contains(sew.getFactory())` scans the JSR-223 engine factory list for each visible script engine wrapper."
+        }
+      ]
     },
     {
       "id": "EA-038dc6cf2f032097",
@@ -671,12 +1028,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/view/TabbedPanel2.java",
       "message": "Function `setVisiblePanels` checks loop-derived `component` against linear collection `panels`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 828,
       "verdict": "true_positive",
       "reason": "panels is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`panels.contains(component)` in TabbedPanel2.setVisiblePanels scans the supplied panel list for every component in fullTabList."
+        }
+      ]
     },
     {
       "id": "EA-0482fbd95899de43",
@@ -709,7 +1073,14 @@
       "line": 98,
       "verdict": "true_positive",
       "reason": "publicAttrs is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`publicAttrs` is a local literal array of public user fields in users.js, so includes per changed attribute is bounded."
+        }
+      ]
     },
     {
       "id": "EA-1f8724357d93188d",
@@ -717,12 +1088,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/members/members-api/services/member-bread-service.js",
       "message": "Function `attachSubscriptionsToMember` checks loop-derived `product` against linear collection `subscriptionProducts`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 165,
       "verdict": "true_positive",
       "reason": "subscriptionProducts is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`subscriptionProducts.includes(product.id)` scans a per-member product id array for each product in member.products."
+        }
+      ]
     },
     {
       "id": "EA-dea4b5717166063b",
@@ -735,7 +1113,14 @@
       "line": 89,
       "verdict": "true_positive",
       "reason": "results (a List[QrCodeResult]) is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`results` in validate_results holds the few QR codes detected in a single camera frame, so `result in results` is tiny."
+        }
+      ]
     },
     {
       "id": "EA-5f151af4ea6a0a95",
@@ -743,12 +1128,19 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Function `get_sub_labels` appends loop-derived `part` to linear collection `sub_labels` only after scanning it for `part`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1387,
       "verdict": "true_positive",
       "reason": "The loop appends to sub_labels only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Dedup-append `part.strip() not in sub_labels` in get_sub_labels rescans a list built from all distinct sub labels in the database."
+        }
+      ]
     },
     {
       "id": "EA-7c3b419a94020889",
@@ -756,12 +1148,19 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Function `get_recognized_license_plates` appends loop-derived `part` to linear collection `recognized_license_plates` only after scanning it for `part`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1476,
       "verdict": "true_positive",
       "reason": "The loop appends to recognized_license_plates only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`part.strip() not in recognized_license_plates` rescans a list of all recognized plates before appending each split part."
+        }
+      ]
     },
     {
       "id": "EA-1e98ea7fa1ca9d4f",
@@ -769,12 +1168,19 @@
       "language": "python",
       "path": "frigate/data_processing/post/review_descriptions.py",
       "message": "Function `run_analysis` checks loop-derived `label` against linear collection `labelmap_objects`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 581,
       "verdict": "true_positive",
       "reason": "labelmap_objects is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`label in labelmap_objects` is a list[str] membership against the detector label map for each tracked object label."
+        }
+      ]
     },
     {
       "id": "EA-db6a2fefe0001b2c",
@@ -782,12 +1188,19 @@
       "language": "python",
       "path": "frigate/data_processing/post/review_descriptions.py",
       "message": "Function `run_analysis` checks loop-derived `label` against linear collection `attribute_labels`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 584,
       "verdict": "true_positive",
       "reason": "attribute_labels is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`label in attribute_labels` is a list[str] membership repeated for each object label inside run_analysis."
+        }
+      ]
     },
     {
       "id": "EA-2e8bab5dc232c284",
@@ -795,12 +1208,19 @@
       "language": "python",
       "path": "frigate/review/maintainer.py",
       "message": "Function `check_if_new_segment` appends loop-derived `zone` to linear collection `zones` only after scanning it for `zone`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 624,
       "verdict": "true_positive",
       "reason": "The loop appends to zones only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`zone not in zones` dedup-append in check_if_new_segment rescans the zones list for each current zone of every object."
+        }
+      ]
     },
     {
       "id": "EA-ad17135875d5b54d",
@@ -808,12 +1228,19 @@
       "language": "python",
       "path": "mitmproxy/addons/serverplayback.py",
       "message": "Function `_hash` checks loop-derived `p` against linear collection `ignore_params`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 211,
       "verdict": "true_positive",
       "reason": "ignore_params is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`p[0] not in ignore_params` scans the server_replay_ignore_params option list for every query parameter when hashing a flow."
+        }
+      ]
     },
     {
       "id": "EA-8d065299b16b33f4",
@@ -821,12 +1248,19 @@
       "language": "python",
       "path": "redash/query_runner/influx_db.py",
       "message": "Function `_transform_result` appends loop-derived `column` to linear collection `column_names` only after scanning it for `column`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 40,
       "verdict": "true_positive",
       "reason": "The loop appends to column_names only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`column not in column_names` dedup-append in _transform_result rescans the growing column list for every column of every series."
+        }
+      ]
     },
     {
       "id": "EA-346f4f8d9cf5bea2",
@@ -834,12 +1268,19 @@
       "language": "python",
       "path": "redash/query_runner/influx_db.py",
       "message": "Function `_transform_result` appends loop-derived `key` to linear collection `column_names` only after scanning it for `key`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 44,
       "verdict": "true_positive",
       "reason": "The loop appends to column_names only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`key not in column_names` dedup-append rescans the column list for each tag key of every series in the Influx result."
+        }
+      ]
     },
     {
       "id": "EA-7382ad26d052ace9",
@@ -847,12 +1288,19 @@
       "language": "python",
       "path": "zerver/data_import/import_util.py",
       "message": "Function `build_usermessages` checks loop-derived `user_id` against linear collection `mentioned_user_ids`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 437,
       "verdict": "true_positive",
       "reason": "mentioned_user_ids (a list[int]) is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`user_id in mentioned_user_ids` is a list[int] membership per imported user id in build_usermessages, run for every message."
+        }
+      ]
     },
     {
       "id": "EA-5c33dc9b76d630fd",
@@ -860,12 +1308,19 @@
       "language": "python",
       "path": "zerver/lib/export.py",
       "message": "Function `make_raw` checks loop-derived `field` against linear collection `exclude`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 528,
       "verdict": "true_positive",
       "reason": "exclude is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`field.name in exclude` tests the list[Field] exclude parameter for each many-to-many field of every exported row in make_raw."
+        }
+      ]
     },
     {
       "id": "EA-7f72d74fd4a9e707",
@@ -878,7 +1333,14 @@
       "line": 346,
       "verdict": "true_positive",
       "reason": "include is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generate_curl_example is docs-build markdown extension code, where `include` is a short per-call parameter name list."
+        }
+      ]
     },
     {
       "id": "EA-3558bbd5486d6119",
@@ -891,7 +1353,14 @@
       "line": 349,
       "verdict": "true_positive",
       "reason": "exclude is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generate_curl_example is docs-build markdown extension code, where `exclude` is a short per-call parameter name list."
+        }
+      ]
     },
     {
       "id": "EA-fe0b7af0f1a173dc",
@@ -904,7 +1373,14 @@
       "line": 407,
       "verdict": "true_positive",
       "reason": "required (the schema's list) is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`key in required` in get_openapi_parameters runs over OpenAPI spec schema properties for docs and tests, small spec lists."
+        }
+      ]
     },
     {
       "id": "EA-6244afd13147b36b",
@@ -912,12 +1388,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/panel.rs",
       "message": "Function `tree_order` checks loop-derived `i` against linear collection `seen`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 309,
       "verdict": "true_positive",
       "reason": "seen (a Vec<usize>) is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`seen.contains(&i)` on a Vec<usize> in tree_order scans all seen indices for each child session index."
+        }
+      ]
     },
     {
       "id": "EA-5f6645cf6fdc1f5e",
@@ -925,12 +1408,19 @@
       "language": "rust",
       "path": "warpgate-core/src/config_providers/db.rs",
       "message": "Function `apply_sso_role_mappings` checks loop-derived `role_name` against linear collection `assigned_role_names`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 857,
       "verdict": "true_positive",
       "reason": "assigned_role_names (a Vec<String>) is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`assigned_role_names.contains(&role_name)` is a Vec scan per role in apply_sso_role_mappings, alongside a DB query per role."
+        }
+      ]
     },
     {
       "id": "EA-28a426e03f3f2012",
@@ -938,12 +1428,19 @@
       "language": "rust",
       "path": "warpgate-core/src/config_providers/db.rs",
       "message": "Function `apply_sso_admin_role_mappings` checks loop-derived `role_name` against linear collection `assigned_admin_role_names`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 920,
       "verdict": "true_positive",
       "reason": "assigned_admin_role_names (a Vec) is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`assigned_admin_role_names.contains(&role_name)` is a Vec scan per admin role in apply_sso_admin_role_mappings."
+        }
+      ]
     },
     {
       "id": "EA-c22b47697b675377",
@@ -951,12 +1448,19 @@
       "language": "rust",
       "path": "warpgate-tls/src/cert.rs",
       "message": "Function `sni_names` appends loop-derived `name` to linear collection `unique_names` only after scanning it for `name`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 135,
       "verdict": "true_positive",
       "reason": "The loop appends to unique_names only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Dedup-append `unique_names.contains(&name)` in sni_names rescans a Vec of certificate SAN names for every name."
+        }
+      ]
     },
     {
       "id": "EA-47ee85e2236c69f4",
@@ -969,7 +1473,14 @@
       "line": 148,
       "verdict": "true_positive",
       "reason": "allowedFields is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`allowedFields` is a local literal array of preference field names in detail-modal.tsx, so includes is bounded."
+        }
+      ]
     },
     {
       "id": "EA-baf20a87e773204b",
@@ -977,12 +1488,19 @@
       "language": "typescript",
       "path": "web/src/components/config-form/section-configs/objects.ts",
       "message": "Function `` checks loop-derived `attr` against linear collection `track`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 48,
       "verdict": "true_positive",
       "reason": "track is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`track.includes(attr)` scans the camera's configured tracked-object list for each attribute label."
+        }
+      ]
     },
     {
       "id": "EA-768521a897dd13ae",
@@ -995,7 +1513,14 @@
       "line": 68,
       "verdict": "true_positive",
       "reason": "The loop appends to base only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`base` in parseRecipientFilter only receives items matching BASE_SEGMENTS (free/paid), so it holds at most a couple of entries."
+        }
+      ]
     },
     {
       "id": "EA-1227667a94f7dae1",
@@ -1003,12 +1528,19 @@
       "language": "typescript",
       "path": "apps/admin-x-framework/src/utils/recipient-filter.ts",
       "message": "Function `parseRecipientFilter` appends loop-derived `item` to linear collection `specific` only after scanning it for `item`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 72,
       "verdict": "true_positive",
       "reason": "The loop appends to specific only after scanning it for the same value, a quadratic deduplication a set would avoid.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`specific.includes(item)` dedup-append in parseRecipientFilter rescans an array growing with every specific segment in the filter."
+        }
+      ]
     },
     {
       "id": "EA-825f0aff6a259508",
@@ -1021,7 +1553,14 @@
       "line": 233,
       "verdict": "true_positive",
       "reason": "skip is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`skip` is a small caller-given list of settings field keys, and the loop is over the fixed VALIDATED_SETTINGS_FIELD_KEYS constant."
+        }
+      ]
     },
     {
       "id": "EA-40141c14c74fd048",
@@ -1029,12 +1568,19 @@
       "language": "typescript",
       "path": "tools/gx/lib/dev-stack.ts",
       "message": "Function `listeners` checks loop-derived `port` against linear collection `ports`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 361,
       "verdict": "false_positive",
       "reason": "tools/gx is a developer tool; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`ports.includes(port)` in tools/gx dev-stack.ts is a developer tooling script with a handful of dev ports."
+        }
+      ]
     },
     {
       "id": "EA-79ddb9f4ae5cdb2a",
@@ -1042,12 +1588,19 @@
       "language": "typescript",
       "path": "web_src/js/features/repo-issue-sidebar-combolist.ts",
       "message": "Function `sendRequestToBackend` checks loop-derived `value` against linear collection `changedValues`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 104,
       "verdict": "true_positive",
       "reason": "changedValues is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`changedValues.includes(value)` in sendRequestToBackend scans the selected values for each initial value, with unbounded labels or assignees."
+        }
+      ]
     },
     {
       "id": "EA-34266e8399c9504b",
@@ -1060,7 +1613,14 @@
       "line": 76,
       "verdict": "true_positive",
       "reason": "ignored_inputs is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`ignored_inputs` is a short literal list of form field names, checked against a billing form's handful of inputs."
+        }
+      ]
     },
     {
       "id": "EA-80452ce354dce714",
@@ -1068,12 +1628,19 @@
       "language": "typescript",
       "path": "web/src/inbox_ui.ts",
       "message": "Function `insert_dms` checks loop-derived `key` against linear collection `keys_to_insert`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 540,
       "verdict": "true_positive",
       "reason": "keys_to_insert is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keys_to_insert.includes(key)` scans the list of new DM keys for each sorted key in the inbox, which can hold thousands."
+        }
+      ]
     },
     {
       "id": "EA-5dcacabc6aeb0c94",
@@ -1081,12 +1648,19 @@
       "language": "typescript",
       "path": "web/src/inbox_ui.ts",
       "message": "Function `insert_topics` checks loop-derived `key` against linear collection `keys`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 769,
       "verdict": "true_positive",
       "reason": "keys is a list scanned once per loop item; a set would make each check constant-time.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keys.includes(key)` in insert_topics scans the new topic keys per sorted inbox key across all streams."
+        }
+      ]
     }
   ]
 }

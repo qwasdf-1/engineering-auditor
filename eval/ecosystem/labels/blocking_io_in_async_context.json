@@ -13,7 +13,14 @@
       "line": 156,
       "verdict": "unclear",
       "reason": "AcquireLockAsync awaits WaitForExistingAsync; whether that helper blocks on file I/O is not visible in the excerpt.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "AcquireLockAsync awaits WaitForExistingAsync, which calls Thread.Sleep (polling interval and 1000 ms) on the async path."
+        }
+      ]
     },
     {
       "id": "EA-8c4d5f33014d6d0b",
@@ -21,12 +28,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/WexflowEngine.cs",
       "message": "Function `SaveWorkflowFromFile` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 518,
       "verdict": "true_positive",
       "reason": "SaveWorkflowFromFile calls File.ReadAllText synchronously inside an async method before its first await.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "File.ReadAllText(filePath) is a synchronous read inside async SaveWorkflowFromFile before the first await."
+        }
+      ]
     },
     {
       "id": "EA-ea4d998f8b0d6054",
@@ -34,12 +48,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/WexflowEngine.cs",
       "message": "Function `Run` executes blocking file I/O from an async function, through `SaveWorkflowFromFile`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 737,
       "verdict": "true_positive",
       "reason": "Run calls SaveWorkflowFromFile per hot-folder file, whose synchronous File.ReadAllText runs on the calling thread.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Run's foreach calls SaveWorkflowFromFile, whose File.ReadAllText runs synchronously on Run's thread before any await."
+        }
+      ]
     },
     {
       "id": "EA-3eb7e8e89bf0a298",
@@ -52,7 +73,14 @@
       "line": 1072,
       "verdict": "true_positive",
       "reason": "StartAsync blocks on StartInternalAsync with GetAwaiter().GetResult(), synchronously waiting on async work.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 1072 is inside a dedicated new Thread lambda where GetAwaiter().GetResult() deliberately bridges, so no executor thread is blocked."
+        }
+      ]
     },
     {
       "id": "EA-92f044a02eb563ad",
@@ -60,12 +88,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/Workflow.cs",
       "message": "Function `StartInternalAsync` executes blocking file I/O from an async function, through `RunSequentialTasksAsync`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1207,
       "verdict": "true_positive",
       "reason": "StartInternalAsync awaits RunSequentialTasksAsync, whose task retries call Thread.Sleep on the async path.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "StartInternalAsync awaits RunSequentialTasksAsync, which reaches the Thread.Sleep(RetryTimeout) in RunTaskAsync."
+        }
+      ]
     },
     {
       "id": "EA-596d4b0362d19398",
@@ -73,12 +108,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/Workflow.cs",
       "message": "Function `RunTaskAsync` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1514,
       "verdict": "true_positive",
       "reason": "RunTaskAsync waits between retries with Thread.Sleep, blocking the thread inside an async method.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RunTaskAsync calls Thread.Sleep(RetryTimeout) in its retry loop between awaited RunAsync calls."
+        }
+      ]
     },
     {
       "id": "EA-f46bd6ada06c4dda",
@@ -86,12 +128,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/Workflow.cs",
       "message": "Function `RunSequentialTasksAsync` executes blocking file I/O from an async function, through `RunTaskAsync`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1541,
       "verdict": "true_positive",
       "reason": "RunSequentialTasksAsync runs each task through RunTaskAsync, which blocks with Thread.Sleep between retries.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RunSequentialTasksAsync awaits RunTaskAsync, which contains the blocking Thread.Sleep(RetryTimeout)."
+        }
+      ]
     },
     {
       "id": "EA-b84634325244a12b",
@@ -104,7 +153,14 @@
       "line": 44,
       "verdict": "unclear",
       "reason": "RunAsync loops over record ids; which call blocks inside the loop is not visible in the excerpt.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ApprovalWorkflowsCreator.RunAsync calls Thread.Sleep(5 * 1000) inside its per-record loop."
+        }
+      ]
     },
     {
       "id": "EA-46c68f3c4c229703",
@@ -112,12 +168,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.FileSystemWatcher/FileSystemWatcher.cs",
       "message": "Function `RunAsync` executes blocking file I/O from an async function, through `InitFileSystemWatcher`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 62,
       "verdict": "true_positive",
       "reason": "RunAsync awaits InitFileSystemWatcher, which polls a locked file with Thread.Sleep(1000).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RunAsync awaits InitFileSystemWatcher, which spins Thread.Sleep(1000) while a file is locked."
+        }
+      ]
     },
     {
       "id": "EA-3d0196b1f80259c9",
@@ -125,12 +188,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.FileSystemWatcher/FileSystemWatcher.cs",
       "message": "Function `InitFileSystemWatcher` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 112,
       "verdict": "true_positive",
       "reason": "InitFileSystemWatcher polls a locked file with Thread.Sleep(1000) inside an async method.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "InitFileSystemWatcher is async yet loops Thread.Sleep(1000) while IsFileLocked(file)."
+        }
+      ]
     },
     {
       "id": "EA-24e068a5c9aba1ca",
@@ -138,12 +208,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core/WexflowEngine.cs",
       "message": "Function `SaveWorkflowFromFile` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 533,
       "verdict": "true_positive",
       "reason": "SaveWorkflowFromFile calls File.ReadAllText synchronously inside an async method before its first await.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "File.ReadAllText(filePath) is a synchronous read inside async SaveWorkflowFromFile (netcore copy)."
+        }
+      ]
     },
     {
       "id": "EA-266a4ad63d169eeb",
@@ -151,12 +228,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core/WexflowEngine.cs",
       "message": "Function `Run` executes blocking file I/O from an async function, through `SaveWorkflowFromFile`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 752,
       "verdict": "true_positive",
       "reason": "Run calls SaveWorkflowFromFile per hot-folder file, whose synchronous File.ReadAllText runs on the calling thread.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Run's foreach calls SaveWorkflowFromFile, whose File.ReadAllText runs synchronously before any await (netcore copy)."
+        }
+      ]
     },
     {
       "id": "EA-961001530e6de089",
@@ -164,12 +248,19 @@
       "language": "javascript",
       "path": "packages/ci-actions/bin/release-notes-check.mjs",
       "message": "Function `` executes blocking file I/O from an async function, through `validateFile`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 95,
       "verdict": "false_positive",
       "reason": "packages/ci-actions/bin/release-notes-check.mjs is a CI script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "packages/ci-actions release-notes-check.mjs is a CI script; fs.readFileSync/existsSync in its one-shot IIFE is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-4abcf02b85d7ed1c",
@@ -182,7 +273,14 @@
       "line": 225,
       "verdict": "unclear",
       "reason": "renderGiftPreviewImage calls buildSvg; whether buildSvg reads files synchronously is not visible in the excerpt.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "buildSvg calls getGiftCardOrbImageHref, whose fs.readFileSync(GIFT_CARD_ORB_PATH) runs on first request inside async renderGiftPreviewImage."
+        }
+      ]
     },
     {
       "id": "EA-930c4886e74ff235",
@@ -190,12 +288,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/icons/index.js",
       "message": "Function `` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 62,
       "verdict": "false_positive",
       "reason": "devops/icons is a build script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Umbraco.Web.UI.Client devops/icons/index.js is a build-time icon generator script, not shipped runtime."
+        }
+      ]
     },
     {
       "id": "EA-42e3cff084374a4e",
@@ -203,12 +308,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/localization/generate-known-keys.js",
       "message": "Function `main` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 156,
       "verdict": "false_positive",
       "reason": "devops/localization is a code-generation script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/localization/generate-known-keys.js is a build-time codegen script."
+        }
+      ]
     },
     {
       "id": "EA-b90615e48bf914a8",
@@ -216,12 +328,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/localization/generate-known-keys.js",
       "message": "Function `main` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 227,
       "verdict": "false_positive",
       "reason": "devops/localization is a code-generation script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/localization/generate-known-keys.js is a build-time codegen script writing output files."
+        }
+      ]
     },
     {
       "id": "EA-f20f382d44c6f0c9",
@@ -229,12 +348,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/localization/unused-language-keys.js",
       "message": "Function `` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 36,
       "verdict": "false_positive",
       "reason": "devops/localization is a maintenance script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/localization/unused-language-keys.js is a dev tooling script."
+        }
+      ]
     },
     {
       "id": "EA-d39f79db11c4cbb5",
@@ -242,12 +368,19 @@
       "language": "python",
       "path": "changedetectionio/browser_steps/browser_steps.py",
       "message": "Function `get_current_state` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 510,
       "verdict": "true_positive",
       "reason": "get_current_state reads the scraper script with a synchronous read_text inside an async method.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "importlib.resources ... .read_text(encoding='utf-8') is a synchronous file read inside async get_current_state."
+        }
+      ]
     },
     {
       "id": "EA-0d054a6263fa35ca",
@@ -255,12 +388,19 @@
       "language": "python",
       "path": "mitmproxy/proxy/mode_servers.py",
       "message": "Function `_start` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 354,
       "verdict": "true_positive",
       "reason": "_start writes the WireGuard configuration with a synchronous write_text inside an async method.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "conf_path.write_text(...) is a synchronous Path write inside async _start."
+        }
+      ]
     },
     {
       "id": "EA-0b6f57e34eae76b9",
@@ -268,12 +408,19 @@
       "language": "python",
       "path": "web/gen/tflow_js.py",
       "message": "Function `make` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 25,
       "verdict": "false_positive",
       "reason": "web/gen/tflow_js.py generates test fixtures for the web build; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "web/gen/tflow_js.py is a code-generation script reading a test cert fixture."
+        }
+      ]
     },
     {
       "id": "EA-898f10a6a85f3624",
@@ -281,12 +428,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/skills/walker.rs",
       "message": "Function `discovers_project_skills` executes blocking file I/O from an async function, through `setup_skill`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 128,
       "verdict": "false_positive",
       "reason": "discovers_project_skills is a #[tokio::test] test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test function (#[tokio::test]) writing a tempdir fixture with std::fs::write."
+        }
+      ]
     },
     {
       "id": "EA-e6630508bef405e5",
@@ -294,12 +448,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/fs/tree_watcher/poller.rs",
       "message": "Function `a_new_directory_yields_the_files_already_in_it` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 310,
       "verdict": "false_positive",
       "reason": "a_new_directory_yields_the_files_already_in_it is a test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test function (#[tokio::test]) creating fixtures with std::fs::write."
+        }
+      ]
     },
     {
       "id": "EA-c9994d7e1cb82f42",
@@ -307,12 +468,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/ccode/session.rs",
       "message": "Function `messages_streams_each_turn_of_a_session_file` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1458,
       "verdict": "false_positive",
       "reason": "messages_streams_each_turn_of_a_session_file is a test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test function writing a session fixture file with std::fs::write."
+        }
+      ]
     },
     {
       "id": "EA-acf1ba77c539e0ef",
@@ -320,12 +488,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/codex/rehydrate.rs",
       "message": "Function `usage_recaptures_with_its_counts_and_turn` executes blocking file I/O from an async function, through `own_id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1101,
       "verdict": "false_positive",
       "reason": "usage_recaptures_with_its_counts_and_turn is a #[tokio::test] test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test function reading a fixture via own_id/fixture helpers."
+        }
+      ]
     },
     {
       "id": "EA-ecd182bad62093ef",
@@ -333,12 +508,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/codex/rehydrate.rs",
       "message": "Function `notes_join_the_message_before_them_or_take_the_calls_id` executes blocking file I/O from an async function, through `assert_the_api_takes`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1411,
       "verdict": "false_positive",
       "reason": "notes_join_the_message_before_them_or_take_the_calls_id is a test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test function calling assert_the_api_takes helper reading fixture files."
+        }
+      ]
     },
     {
       "id": "EA-082dd50e270e1f81",
@@ -346,12 +528,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/pi/session.rs",
       "message": "Function `existing_skips_a_file_whose_header_is_not_written_yet` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1780,
       "verdict": "false_positive",
       "reason": "existing_skips_a_file_whose_header_is_not_written_yet is a #[tokio::test] test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test function writing fixture files in a tempdir."
+        }
+      ]
     },
     {
       "id": "EA-b964066cf6200b40",
@@ -359,12 +548,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/sync/ccode.rs",
       "message": "Function `append` executes blocking file I/O from an async function, through `append_to`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 85,
       "verdict": "false_positive",
       "reason": "append_to runs inside blocking(move || ..), which moves the file work off the async executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "std::fs::read inside append_to runs in the blocking(move || ...) closure, i.e. offloaded to the blocking pool."
+        }
+      ]
     },
     {
       "id": "EA-67359a2e7e34f444",
@@ -372,12 +568,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/sync/codex.rs",
       "message": "Function `append` executes blocking file I/O from an async function, through `append_in`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 96,
       "verdict": "false_positive",
       "reason": "append_in runs inside blocking(move || ..), which moves the file work off the async executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "std::fs::read inside append_in runs in the blocking(move || ...) closure, i.e. offloaded to the blocking pool."
+        }
+      ]
     },
     {
       "id": "EA-58a2a7b40e75e8cd",
@@ -385,12 +588,19 @@
       "language": "rust",
       "path": "crates/atuin-dotfiles/src/shell/bash.rs",
       "message": "Function `cached_aliases` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 9,
       "verdict": "false_positive",
       "reason": "tokio::fs::read_to_string is asynchronous and awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "tokio::fs::read_to_string(path).await is async file I/O, not blocking."
+        }
+      ]
     },
     {
       "id": "EA-12d34bfbdf0fab72",
@@ -398,12 +608,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/client/kv.rs",
       "message": "Function `run` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 88,
       "verdict": "true_positive",
       "reason": "run reads stdin to the end with the synchronous io::stdin().read_to_string inside an async function.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "io::stdin().read_to_string is a synchronous std stdin read inside an async run()."
+        }
+      ]
     },
     {
       "id": "EA-8385c13dbe08d4a5",
@@ -411,12 +628,19 @@
       "language": "rust",
       "path": "src/config.rs",
       "message": "Function `parse` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1446,
       "verdict": "false_positive",
       "reason": "file.read_to_string(..).await is tokio's asynchronous read, awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "file is a tokio::fs::File and read_to_string(...).await comes from AsyncReadExt."
+        }
+      ]
     },
     {
       "id": "EA-6e3a47ec0fb59de9",
@@ -424,12 +648,19 @@
       "language": "rust",
       "path": "src/config.rs",
       "message": "Function `test_config` executes blocking file I/O from an async function, through `parse`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1506,
       "verdict": "false_positive",
       "reason": "test_config is a #[tokio::test] test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test (#[tokio::test] test_config) calling parse on pgcat.toml."
+        }
+      ]
     },
     {
       "id": "EA-e1ce6ada189e5b73",
@@ -437,12 +668,19 @@
       "language": "rust",
       "path": "src/config.rs",
       "message": "Function `test_serialize_configs` executes blocking file I/O from an async function, through `parse`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1579,
       "verdict": "false_positive",
       "reason": "test_serialize_configs is a #[tokio::test] test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test (#[tokio::test] test_serialize_configs) calling parse on pgcat.toml."
+        }
+      ]
     },
     {
       "id": "EA-cf5d54e6084fa09c",
@@ -450,12 +688,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `send_ready_for_query` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 124,
       "verdict": "false_positive",
       "reason": "write_all(stream, ..).await writes to an AsyncWrite stream asynchronously; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "write_all(stream, ..).await on a generic tokio AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-db579f3395a7fa53",
@@ -463,12 +708,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `ssl_request` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 174,
       "verdict": "false_positive",
       "reason": "stream.write_all(&bytes).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stream.write_all(&bytes).await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-932def674ce2c215",
@@ -476,12 +728,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `md5_password` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 283,
       "verdict": "false_positive",
       "reason": "write_all(stream, message).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "write_all(stream, message).await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-3f1cf18ef49816d4",
@@ -489,12 +748,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `error_response_terminal` executes blocking file I/O from an async function, through `write_all_half`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 367,
       "verdict": "false_positive",
       "reason": "write_all_half(stream, &res).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "write_all_half(stream, &res).await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-350d6167e9e3d95a",
@@ -502,12 +768,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `wrong_password` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 403,
       "verdict": "false_positive",
       "reason": "write_all(stream, res).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "write_all(stream, res).await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-0ba467f162557740",
@@ -515,12 +788,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `show_response` executes blocking file I/O from an async function, through `write_all_half`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 429,
       "verdict": "false_positive",
       "reason": "write_all_half(stream, &res).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "write_all_half(stream, &res).await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-f636f7b743fbe279",
@@ -528,12 +808,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Function `write_all_flush` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 623,
       "verdict": "false_positive",
       "reason": "stream.write_all(buf).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stream.write_all(buf).await and flush().await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-f3c503d21d9bf0af",
@@ -541,12 +828,19 @@
       "language": "rust",
       "path": "warpgate-common/src/helpers/net.rs",
       "message": "Function `accept` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 122,
       "verdict": "false_positive",
       "reason": "The TcpStream write_all(..).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test helper writing to a tokio TcpStream with write_all(..).await."
+        }
+      ]
     },
     {
       "id": "EA-37a42009533f8cdd",
@@ -554,12 +848,19 @@
       "language": "rust",
       "path": "warpgate-core/src/recordings/storage.rs",
       "message": "Function `write_all` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 53,
       "verdict": "false_positive",
       "reason": "The recording file's write_all(..).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "self.file() returns a tokio::fs::File and write_all(bytes).await is async."
+        }
+      ]
     },
     {
       "id": "EA-4840085083320047",
@@ -567,12 +868,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/mod.rs",
       "message": "Function `send_resize` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 334,
       "verdict": "false_positive",
       "reason": "framed.write_all(..).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "framed is a TokioFramed (ironrdp_tokio) and write_all(&frame).await is async."
+        }
+      ]
     },
     {
       "id": "EA-0166759ef68b9fe4",
@@ -580,12 +888,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/mod.rs",
       "message": "Function `handle_clipboard_out` executes blocking file I/O from an async function, through `send_clipboard`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 353,
       "verdict": "false_positive",
       "reason": "send_clipboard's framed.write_all(..).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "send_clipboard(...).await goes through TokioFramed write_all(..).await, which is async."
+        }
+      ]
     },
     {
       "id": "EA-7c090fb85ae356d7",
@@ -593,12 +908,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/mod.rs",
       "message": "Function `send_clipboard` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 399,
       "verdict": "false_positive",
       "reason": "framed.write_all(..).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TokioFramed framed.write_all(&frame).await is async."
+        }
+      ]
     },
     {
       "id": "EA-9fefa44ffffb7b76",
@@ -606,12 +928,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/mod.rs",
       "message": "Function `process_outputs` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 500,
       "verdict": "false_positive",
       "reason": "framed.write_all(frame).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "framed.write_all(frame).await on a TokioFramed is async."
+        }
+      ]
     },
     {
       "id": "EA-ee868845854f4111",
@@ -619,12 +948,19 @@
       "language": "rust",
       "path": "warpgate-protocol-vnc/src/server/protocol.rs",
       "message": "Function `write_raw_rect` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 199,
       "verdict": "false_positive",
       "reason": "stream.write_all(&msg).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stream.write_all(&msg).await on an AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-a0c7d6b01aa9613b",
@@ -632,12 +968,19 @@
       "language": "rust",
       "path": "warpgate-protocol-vnc/src/server/rfb.rs",
       "message": "Function `server_vencrypt_sub_negotiate` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 112,
       "verdict": "false_positive",
       "reason": "stream.write_all(&VENCRYPT_VERSION).await is an asynchronous AsyncWrite write that is awaited; it does not block the executor.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stream.write_all(&VENCRYPT_VERSION).await on an AsyncRead+AsyncWrite stream."
+        }
+      ]
     },
     {
       "id": "EA-fce35a539595e955",
@@ -645,12 +988,19 @@
       "language": "rust",
       "path": "warpgate-tls/src/maybe_tls_stream.rs",
       "message": "Function `prefixed_stream_replays_prefix_before_inner_data` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 232,
       "verdict": "false_positive",
       "reason": "prefixed_stream_replays_prefix_before_inner_data is a #[tokio::test] test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test writing to a tokio::io::duplex stream with write_all(..).await."
+        }
+      ]
     },
     {
       "id": "EA-11372e1aada0f2d6",
@@ -658,12 +1008,19 @@
       "language": "rust",
       "path": "warpgate-tls/src/maybe_tls_stream.rs",
       "message": "Function `prefixed_stream_writes_pass_through` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 259,
       "verdict": "false_positive",
       "reason": "prefixed_stream_writes_pass_through is a test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test writing to a PrefixedStream over a tokio duplex with write_all(..).await."
+        }
+      ]
     },
     {
       "id": "EA-a50d2bc0048da756",
@@ -671,12 +1028,19 @@
       "language": "typescript",
       "path": "packages/cli/src/config.ts",
       "message": "Function `resolveConfig` executes blocking file I/O from an async function, through `readFileEnv`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 180,
       "verdict": "true_positive",
       "reason": "resolveConfig reads the password file synchronously through readFileEnv inside an async function.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "readFileEnv does a synchronous readFileSync of the password file called from async resolveConfig."
+        }
+      ]
     },
     {
       "id": "EA-f818c7722cdea258",
@@ -684,12 +1048,19 @@
       "language": "typescript",
       "path": "packages/cli/src/connection.ts",
       "message": "Function `withConnection` executes blocking file I/O from an async function, through `resolveConfig`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 45,
       "verdict": "true_positive",
       "reason": "withConnection awaits resolveConfig, whose readFileEnv reads a file synchronously.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "withConnection awaits resolveConfig, which reaches synchronous readFileSync in readFileEnv."
+        }
+      ]
     },
     {
       "id": "EA-1275fcc26ea1dfe1",
@@ -697,12 +1068,19 @@
       "language": "typescript",
       "path": "packages/cli/src/lock.ts",
       "message": "Function `acquireShared` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 140,
       "verdict": "true_positive",
       "reason": "acquireShared creates its marker file with writeFileSync inside an async function.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "acquireShared (async) calls writeFileSync(markerPath, '') to create the reader marker."
+        }
+      ]
     },
     {
       "id": "EA-dccad8ef9ca4da98",
@@ -710,12 +1088,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/index.ts",
       "message": "Function `loadGlobalPrefs` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 166,
       "verdict": "true_positive",
       "reason": "loadGlobalPrefs reads the preferences file with fs.readFileSync inside an async function in the Electron main process.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "loadGlobalPrefs is async but uses fs.readFileSync on global-store.json."
+        }
+      ]
     },
     {
       "id": "EA-58671cbc309c2b56",
@@ -723,12 +1108,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/index.ts",
       "message": "Function `createBackgroundProcess` executes blocking file I/O from an async function, through `loadGlobalPrefs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 224,
       "verdict": "true_positive",
       "reason": "createBackgroundProcess awaits loadGlobalPrefs, which reads its file with fs.readFileSync.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "createBackgroundProcess awaits loadGlobalPrefs, which does fs.readFileSync on the main process."
+        }
+      ]
     },
     {
       "id": "EA-d1ce141ac3d47b6f",
@@ -736,12 +1128,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/index.ts",
       "message": "Function `startSyncServer` executes blocking file I/O from an async function, through `loadGlobalPrefs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 314,
       "verdict": "true_positive",
       "reason": "startSyncServer awaits loadGlobalPrefs, which reads its file with fs.readFileSync.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "startSyncServer awaits loadGlobalPrefs, which does fs.readFileSync."
+        }
+      ]
     },
     {
       "id": "EA-4b7864d15c26a77d",
@@ -749,12 +1148,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/index.ts",
       "message": "Function `createWindow` executes blocking file I/O from an async function, through `get`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 431,
       "verdict": "true_positive",
       "reason": "createWindow awaits getWindowState, whose loadState reads window.json with fs.readFileSync.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "createWindow awaits getWindowState -> loadState, which does fs.readFileSync of window.json."
+        }
+      ]
     },
     {
       "id": "EA-e83ced24c88dfef3",
@@ -762,12 +1168,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/index.ts",
       "message": "Function `` executes blocking file I/O from an async function, through `loadGlobalPrefs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 548,
       "verdict": "true_positive",
       "reason": "The ready handler awaits loadGlobalPrefs, which reads its file with fs.readFileSync.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "app ready handler awaits loadGlobalPrefs, which does fs.readFileSync."
+        }
+      ]
     },
     {
       "id": "EA-e68eb38916201514",
@@ -775,12 +1188,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/window-state.ts",
       "message": "Function `loadState` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 25,
       "verdict": "true_positive",
       "reason": "loadState reads window.json with fs.readFileSync inside an async function.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "async loadState uses fs.readFileSync(window.json)."
+        }
+      ]
     },
     {
       "id": "EA-0fae0d97e58ed78e",
@@ -788,12 +1208,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/window-state.ts",
       "message": "Function `saveState` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 51,
       "verdict": "true_positive",
       "reason": "saveState writes window.json with fs.writeFileSync inside an async function.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "async saveState uses fs.writeFileSync for window.json."
+        }
+      ]
     },
     {
       "id": "EA-d1e7802606e54f05",
@@ -801,12 +1228,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/window-state.ts",
       "message": "Function `get` executes blocking file I/O from an async function, through `loadState`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 154,
       "verdict": "true_positive",
       "reason": "get awaits loadState, which reads window.json with fs.readFileSync.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get awaits loadState, which does fs.readFileSync of window.json."
+        }
+      ]
     },
     {
       "id": "EA-773f87d931598ce7",
@@ -814,12 +1248,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/mocks/setup.ts",
       "message": "Function `` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 142,
       "verdict": "false_positive",
       "reason": "src/mocks/setup.ts is test setup; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Mock setup for tests (mocks/setup.ts); outside production scope"
+        }
+      ]
     },
     {
       "id": "EA-757d566e10ac01c1",
@@ -827,12 +1268,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/migrate/cli.ts",
       "message": "Function `` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 73,
       "verdict": "false_positive",
       "reason": "migrate/cli.ts is a developer migration CLI; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "One-shot migration CLI script reading init.sql; tooling, not request path"
+        }
+      ]
     },
     {
       "id": "EA-ae2c2cd57cd0532a",
@@ -840,12 +1288,19 @@
       "language": "typescript",
       "path": "packages/sync-server/src/app.ts",
       "message": "Function `run` executes blocking file I/O from an async function, through `parseHTTPSConfig`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 223,
       "verdict": "true_positive",
       "reason": "run calls parseHTTPSConfig, which reads the key and certificate files synchronously, inside the async startup function.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "run() calls readFileSync via parseHTTPSConfig on the async executor thread, though only at startup"
+        }
+      ]
     },
     {
       "id": "EA-89094fcdaab4e5c6",
@@ -853,12 +1308,19 @@
       "language": "typescript",
       "path": "internal/templates/src/index.tsx",
       "message": "Function `doRender` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 37,
       "verdict": "false_positive",
       "reason": "internal/templates/src renders the notification templates into embed files at build time; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Build-time template generator script, not shipped runtime"
+        }
+      ]
     },
     {
       "id": "EA-b2452391e27d00d4",
@@ -866,12 +1328,19 @@
       "language": "typescript",
       "path": "web/e2e/helpers/api-mocker.ts",
       "message": "Function `install` executes blocking file I/O from an async function, through `loadMockJson`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 58,
       "verdict": "false_positive",
       "reason": "web/e2e/helpers is end-to-end test code; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Playwright e2e helper; test code"
+        }
+      ]
     },
     {
       "id": "EA-53eaff8e5e0cdf83",
@@ -879,12 +1348,19 @@
       "language": "typescript",
       "path": "e2e/helpers/pages/admin/members/members-list-page.ts",
       "message": "Function `exportMembers` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 275,
       "verdict": "false_positive",
       "reason": "e2e/helpers is end-to-end test code; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "E2E test helper reading a downloaded export; test code"
+        }
+      ]
     },
     {
       "id": "EA-c41c41111fb60a17",
@@ -924,6 +1400,11 @@
       "reason": "Async function performs fs.readFileSync; claim is accurate.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Build script for generating entrypoints; tooling"
+        },
         {
           "source": "model:opencode/step-5-preview-free",
           "verdict": "false_positive",
@@ -969,6 +1450,11 @@
       "reason": "Async `main` reads files synchronously in a loop.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Docs-checking script under www/scripts; tooling"
+        },
         {
           "source": "model:opencode/step-5-preview-free",
           "verdict": "false_positive",
@@ -1029,6 +1515,11 @@
       "reason": "Async `main` calls fs.writeFileSync.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Issue-triage CLI script; tooling"
+        },
         {
           "source": "model:opencode/step-5-preview-free",
           "verdict": "false_positive",

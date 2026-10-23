@@ -8,12 +8,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Tasks.Http/Http.cs",
       "message": "Function `Run` performs an external network operation for each loop item, through `DownloadFile`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 32,
       "verdict": "false_positive",
       "reason": "The Http task's purpose is to download each listed URL; each item is a separate resource with no batch form.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Downloads distinct URLs with no batch API; not combinable per-item I/O"
+        }
+      ]
     },
     {
       "id": "EA-a177bdf6534e8fb2",
@@ -21,12 +28,19 @@
       "language": "go",
       "path": "cmd/authelia-gen/cmd_misc_contributors.go",
       "message": "Function `getContributorAvatars` performs an external network operation for each loop item, through `getContributorAvatar`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 209,
       "verdict": "false_positive",
       "reason": "cmd/authelia-gen is a code-generation tool, and the fetches run in an errgroup with a concurrency limit.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Dev doc-generation tool (authelia-gen) with bounded concurrency via errgroup"
+        }
+      ]
     },
     {
       "id": "EA-6628ca0f6e9637c0",
@@ -34,12 +48,19 @@
       "language": "go",
       "path": "services/mailer/incoming/incoming.go",
       "message": "Function `Init` performs an external network operation for each loop item, through `processIncomingEmails`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 36,
       "verdict": "false_positive",
       "reason": "The outer loop restarts the IMAP processing after errors; it is a service loop, not repetition over data items.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Long-running IMAP processing loop, not a per-item fetch"
+        }
+      ]
     },
     {
       "id": "EA-2eb47eb3509d3530",
@@ -47,12 +68,19 @@
       "language": "go",
       "path": "services/mailer/incoming/incoming.go",
       "message": "Function `processIncomingEmails` performs an external network operation for each loop item, through `processMessages`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 87,
       "verdict": "false_positive",
       "reason": "The loop processes messages and waits with IMAP IDLE; it is an event loop, not per-item round trips that could batch.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "IMAP IDLE processing loop, not per-item I/O"
+        }
+      ]
     },
     {
       "id": "EA-5c714e0e40fc7a27",
@@ -60,12 +88,19 @@
       "language": "go",
       "path": "src/controller/quota/controller.go",
       "message": "Function `flushQuota` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 129,
       "verdict": "true_positive",
       "reason": "flushQuota fetches each quota key from the Redis cache with a separate round trip while iterating keys; the reads could be pipelined.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Loops redis keys and does cache.Fetch per key; could be batched"
+        }
+      ]
     },
     {
       "id": "EA-14c6cbd4fd6bacbc",
@@ -73,12 +108,19 @@
       "language": "go",
       "path": "src/jobservice/job/impl/scandataexport/scan_data_export.go",
       "message": "Function `writeCsvFile` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 265,
       "verdict": "false_positive",
       "reason": "The loop pages through the export table; one request per page is pagination, the batched form.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Loop is page-number pagination of a DB export, not per item"
+        }
+      ]
     },
     {
       "id": "EA-91455155a23b2e28",
@@ -86,12 +128,19 @@
       "language": "go",
       "path": "server/server.go",
       "message": "Function `Start` performs an external network operation for each loop item, through `fetchAccount`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2443,
       "verdict": "false_positive",
       "reason": "The ticker loop periodically refreshes accounts; it is a service loop, not repetition over data items.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Retry/poll ticker until system account is fetched"
+        }
+      ]
     },
     {
       "id": "EA-f591635aa5b97524",
@@ -99,12 +148,19 @@
       "language": "go",
       "path": "cmd/rqlite/main.go",
       "message": "Function `main` performs an external network operation for each loop item, through `extensions`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 192,
       "verdict": "false_positive",
       "reason": "The REPL loop reads one command per prompt; it is interactive, not per-item batching.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Interactive REPL prompt loop, each iteration is a user command"
+        }
+      ]
     },
     {
       "id": "EA-cadcf7986a7f9e1f",
@@ -112,12 +168,19 @@
       "language": "go",
       "path": "http/preflight.go",
       "message": "Function `AnyServingHTTP` performs an external network operation for each loop item, through `IsServingHTTP`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 17,
       "verdict": "false_positive",
       "reason": "AnyServingHTTP stops at the first address that serves; probing candidates one by one is the purpose.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Probes addresses sequentially with early exit; no batch alternative"
+        }
+      ]
     },
     {
       "id": "EA-67d5d535c9807239",
@@ -125,12 +188,19 @@
       "language": "go",
       "path": "http/preflight.go",
       "message": "Function `IsServingHTTP` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 40,
       "verdict": "false_positive",
       "reason": "The loop tries the http and https schemes of one address; two probes are fixed work.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Two-element literal loop trying http then https; bounded fallback"
+        }
+      ]
     },
     {
       "id": "EA-685f5da592216511",
@@ -138,12 +208,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.clickhouse/src/org/jkiss/dbeaver/ext/clickhouse/model/auth/ClickhouseJWTProvider.java",
       "message": "Function `pollForToken` performs an external network operation for each loop item, through `sendFormIgnoringStatus`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 278,
       "verdict": "false_positive",
       "reason": "pollForToken polls the device-code endpoint at the required interval until a token arrives; polling is the protocol.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "OAuth device-flow polling loop with sleep"
+        }
+      ]
     },
     {
       "id": "EA-931b28b2a9484a3f",
@@ -151,12 +228,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/engine/copilot/CopilotClientBase.java",
       "message": "Function `requestAccessToken` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 170,
       "verdict": "false_positive",
       "reason": "requestAccessToken polls the device-code endpoint until authorization; polling is the protocol.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "OAuth device-flow polling loop with sleep"
+        }
+      ]
     },
     {
       "id": "EA-7a7f2d5eee965c9d",
@@ -164,12 +248,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/engine/openai/OpenAIAccountAuthenticator.java",
       "message": "Function `completeDeviceAuthorization` performs an external network operation for each loop item, through `pollDeviceAuthorization`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 152,
       "verdict": "false_positive",
       "reason": "The device authorization loop polls until a deadline; polling is the protocol.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Device authorization polling loop"
+        }
+      ]
     },
     {
       "id": "EA-4f0afa50c83da114",
@@ -177,12 +268,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.sql/src/org/jkiss/dbeaver/ui/editors/sql/templates/SQLTemplateStore.java",
       "message": "Function `readContributedTemplates` performs an external network operation for each loop item, through `readIncludedTemplates`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 130,
       "verdict": "false_positive",
       "reason": "readIncludedTemplates reads template resources from plugin bundles; this is local resource loading, not network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "openStream on bundle resources (local), not network"
+        }
+      ]
     },
     {
       "id": "EA-710fc21a132bc7f4",
@@ -190,12 +288,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-remoteshell/src/main/java/org/apache/dolphinscheduler/plugin/task/remoteshell/RemoteExecutor.java",
       "message": "Function `track` performs an external network operation for each loop item, through `runRemoteAndProcessLines`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 114,
       "verdict": "false_positive",
       "reason": "track polls the remote task's log lines until it ends; tailing is the purpose.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Polling loop with sleep for remote task tracking"
+        }
+      ]
     },
     {
       "id": "EA-4fc1beaa8312f982",
@@ -203,12 +308,19 @@
       "language": "java",
       "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
       "message": "Function `loadFactories` performs an external network operation for each loop item, through `loadDeployedScriptProviders`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1081,
       "verdict": "false_positive",
       "reason": "loadDeployedScriptProviders reads script descriptors from deployed jars at build time; local resources, not network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "url.openStream on classpath resources, not network"
+        }
+      ]
     },
     {
       "id": "EA-ee4363f0b69a9053",
@@ -216,12 +328,19 @@
       "language": "java",
       "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
       "message": "Function `loadDeployedScriptProviders` performs an external network operation for each loop item, through `getScriptProviderDescriptorsFromClassPath`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1133,
       "verdict": "false_positive",
       "reason": "The descriptors are classpath resources read from jar URLs; local resources, not network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "url.openStream on classpath resources, not network"
+        }
+      ]
     },
     {
       "id": "EA-37ed583b6e009a80",
@@ -229,12 +348,19 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/compatibility/DatabaseCompatibilityMetadataProvider.java",
       "message": "Function `addUnsupportedDatabaseChanges` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 82,
       "verdict": "false_positive",
       "reason": "The migration metadata are classpath resources opened through URL.openStream; local resources, not network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "url.openStream on classpath JSON resources, not network"
+        }
+      ]
     },
     {
       "id": "EA-c0c2d9e61f0d7a44",
@@ -242,12 +368,19 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/httpclient/VertxHttpClientProvider.java",
       "message": "Function `advance` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 383,
       "verdict": "false_positive",
       "reason": "advance pulls chunks of one streaming response; reading a stream chunk by chunk is not per-item round trips.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Response flow-control loop reading chunks, not per-item I/O"
+        }
+      ]
     },
     {
       "id": "EA-9fd1b374caf5f01d",
@@ -255,12 +388,19 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/util/JAXBUtil.java",
       "message": "Function `getValidatingUnmarshaller` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 177,
       "verdict": "false_positive",
       "reason": "The schema URLs come from SecurityActions.loadResource on the classpath; local resources, not network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Opens classpath schema resources, not network"
+        }
+      ]
     },
     {
       "id": "EA-0b638df7ef4e843f",
@@ -268,12 +408,19 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/util/JAXPValidationUtil.java",
       "message": "Function `sources` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 168,
       "verdict": "false_positive",
       "reason": "The schema URLs come from SecurityActions.loadResource on the classpath; local resources, not network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Opens classpath schema resources, not network"
+        }
+      ]
     },
     {
       "id": "EA-6925f90e57b673a3",
@@ -281,12 +428,19 @@
       "language": "java",
       "path": "test-framework/conformance-runner/src/main/java/org/keycloak/testframework/conformance/runner/ConformanceApiClient.java",
       "message": "Function `send` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 256,
       "verdict": "false_positive",
       "reason": "ConformanceApiClient is in Keycloak's test framework, and the loop retries one request.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Retry loop inside test-framework client"
+        }
+      ]
     },
     {
       "id": "EA-b9dc5eb335350ca2",
@@ -294,12 +448,19 @@
       "language": "java",
       "path": "ranger-tools/src/main/java/org/apache/ranger/policyengine/CommandLineParser.java",
       "message": "Function `validateRequestFiles` performs an external network operation for each loop item, through `getInputFileURL`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 217,
       "verdict": "false_positive",
       "reason": "ranger-tools/policyengine is a command-line evaluation tool; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Opens local file URLs in a CLI tool; not network"
+        }
+      ]
     },
     {
       "id": "EA-8340a0d6af224afc",
@@ -307,12 +468,19 @@
       "language": "java",
       "path": "ranger-tools/src/main/java/org/apache/ranger/sizing/RangerMemSizing.java",
       "message": "Function `evaluateRequests` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 433,
       "verdict": "false_positive",
       "reason": "ranger-tools/sizing is a sizing tool; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Benchmark/sizing tool worker loop; requests.get is a list lookup"
+        }
+      ]
     },
     {
       "id": "EA-7af4fa068f7ef5d9",
@@ -320,12 +488,19 @@
       "language": "java",
       "path": "tagsync/src/main/java/org/apache/ranger/tagsync/source/file/FileTagSource.java",
       "message": "Function `run` performs an external network operation for each loop item, through `synchUp`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 213,
       "verdict": "false_positive",
       "reason": "FileTagSource.run is the tag-sync service loop; it is not repetition over data items.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Polling loop with sleep on a local file URL"
+        }
+      ]
     },
     {
       "id": "EA-c1234b2b2b9fdb3a",
@@ -333,12 +508,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnInstaller.java",
       "message": "Function `installAddOnFiles` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 665,
       "verdict": "false_positive",
       "reason": "installAddOnFiles extracts files from a local add-on archive; no network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "findResource/openStream on add-on classloader files, local not network"
+        }
+      ]
     },
     {
       "id": "EA-b338b67005fe757c",
@@ -346,12 +528,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnLoader.java",
       "message": "Function `loadAllAddOns` performs an external network operation for each loop item, through `updateAddOnFiles`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 258,
       "verdict": "false_positive",
       "reason": "loadAllAddOns installs and loads local add-ons; no network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Local add-on file installation, not network"
+        }
+      ]
     },
     {
       "id": "EA-269bea3878fb43a2",
@@ -359,12 +548,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnLoader.java",
       "message": "Function `checkAndInstallAddOnsNotInstalled` performs an external network operation for each loop item, through `addAddOnImpl`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 567,
       "verdict": "false_positive",
       "reason": "checkAndInstallAddOnsNotInstalled installs local add-ons; no network I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Local add-on file installation, not network"
+        }
+      ]
     },
     {
       "id": "EA-9f49cdc01ca1dafa",
@@ -372,12 +568,19 @@
       "language": "javascript",
       "path": ".github/actions/handle-feature-requests.js",
       "message": "Function `` performs an external network operation for each loop item, through `makeAPIRequest`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 75,
       "verdict": "false_positive",
       "reason": ".github/actions/handle-feature-requests.js is a CI script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GitHub Actions CI script; tooling"
+        }
+      ]
     },
     {
       "id": "EA-8cf94804265e1f45",
@@ -385,12 +588,19 @@
       "language": "javascript",
       "path": "packages/sync-server/src/app-simplefin/app-simplefin.js",
       "message": "Function `getAccounts` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 444,
       "verdict": "false_positive",
       "reason": "The loop follows HTTP redirects of one request up to MAX_REDIRECTS; it is not repetition over data items.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Redirect-following loop for one request, not per item"
+        }
+      ]
     },
     {
       "id": "EA-3c31390a2f2ad9c8",
@@ -398,12 +608,19 @@
       "language": "javascript",
       "path": "ghost/core/server/data/tinybird/scripts/docker-analytics-manager.js",
       "message": "Function `deleteSiteRows` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 765,
       "verdict": "false_positive",
       "reason": "data/tinybird/scripts is a development data script polling a job; tooling and polling are outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Dev docker analytics script polling a job status"
+        }
+      ]
     },
     {
       "id": "EA-a7e5616218430f2f",
@@ -416,7 +633,14 @@
       "line": 2677,
       "verdict": "false_positive",
       "reason": "subscription.related('stripePrice').fetch() loads a related row from Ghost's database, not an external network service.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Fetches stripePrice per active subscription in a loop; batchable"
+        }
+      ]
     },
     {
       "id": "EA-d622fae2ae10afef",
@@ -424,12 +648,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/index-DA3bdZbQ.js",
       "message": "Function `onOpen` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 9,
       "verdict": "false_positive",
       "reason": "tools/web/static/index-*.js is a built web bundle; generated code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Minified built bundle"
+        }
+      ]
     },
     {
       "id": "EA-a51d47721b4055ba",
@@ -437,12 +668,19 @@
       "language": "python",
       "path": "frigate/api/auth.py",
       "message": "Function `deny_response_for_go2rtc_stream` performs an external network operation for each loop item, through `_is_existing_go2rtc_stream`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1225,
       "verdict": "true_positive",
       "reason": "Each go2rtc source is checked with its own HTTP request to go2rtc; one request listing the streams would serve all.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each src triggers a separate requests.get of the full go2rtc streams list; could be fetched once"
+        }
+      ]
     },
     {
       "id": "EA-c5f8cc55a40becfd",
@@ -450,12 +688,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "Function `call_ranger_installed` performs an external network operation for each loop item, through `call_ambari_api`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 316,
       "verdict": "false_positive",
       "reason": "migration-util/../import_ranger_to_ambari.py is a migration script polling an install request; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Polling loop in one-off migration script"
+        }
+      ]
     },
     {
       "id": "EA-718ac95f1c19da94",
@@ -463,12 +708,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `call_ranger_installed` performs an external network operation for each loop item, through `call_ambari_api`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 635,
       "verdict": "false_positive",
       "reason": "migration-util/../import_ranger_to_ambari.py is a migration script polling an install request; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Polling loop in one-off migration script"
+        }
+      ]
     },
     {
       "id": "EA-7b17de3b2b4c838e",
@@ -476,12 +728,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `call_ranger_kms_installed` performs an external network operation for each loop item, through `call_ambari_api`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 686,
       "verdict": "false_positive",
       "reason": "migration-util/../import_ranger_to_ambari.py is a migration script polling an install request; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Polling loop in one-off migration script"
+        }
+      ]
     },
     {
       "id": "EA-82f2bd091a8e5b26",
@@ -489,12 +748,19 @@
       "language": "python",
       "path": "redash/tasks/general.py",
       "message": "Function `record_event` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 19,
       "verdict": "false_positive",
       "reason": "Each configured webhook receives the event; a broadcast to distinct endpoints has no batch form.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Distinct configured webhook endpoints; cannot be batched"
+        }
+      ]
     },
     {
       "id": "EA-490f883d850f9f33",
@@ -502,12 +768,19 @@
       "language": "python",
       "path": "redash/tasks/queries/execution.py",
       "message": "Function `enqueue_query` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 38,
       "verdict": "false_positive",
       "reason": "The loop retries a Redis pipeline transaction up to five times on a watch conflict; it is a retry, not per-item I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Bounded optimistic-lock retry loop"
+        }
+      ]
     },
     {
       "id": "EA-170fdacabb0f9b55",
@@ -520,7 +793,14 @@
       "line": 88,
       "verdict": "true_positive",
       "reason": "refresh_queries enqueues each outdated query with its own Redis pipeline round trips; the enqueues could be batched in one pipeline.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Per-scheduled-query enqueue; each is inherently its own job"
+        }
+      ]
     },
     {
       "id": "EA-fe168389ae913e8d",
@@ -528,12 +808,19 @@
       "language": "python",
       "path": "scripts/lib/puppet_cache.py",
       "message": "Function `do_puppet_module_install` performs an external network operation for each loop item, through `install_puppet_module`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 58,
       "verdict": "false_positive",
       "reason": "scripts/lib/puppet_cache.py is a provisioning script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Provisioning script downloading distinct module artifacts; no batch API"
+        }
+      ]
     },
     {
       "id": "EA-f757f9d0b7049f76",
@@ -541,12 +828,19 @@
       "language": "python",
       "path": "zerver/data_import/microsoft_teams.py",
       "message": "Function `get_microsoft_graph_api_data` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 242,
       "verdict": "false_positive",
       "reason": "The loop follows Microsoft Graph @odata.nextLink pages; pagination is the batched form.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Pagination loop over Graph API pages"
+        }
+      ]
     },
     {
       "id": "EA-ec1db63f80c1515c",
@@ -559,7 +853,14 @@
       "line": 1449,
       "verdict": "unclear",
       "reason": "The message loop calls get_slack_api_data for integration bot messages; whether every message triggers a request is not visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Bot lookups are deduplicated via integration_bot_users cache"
+        }
+      ]
     },
     {
       "id": "EA-78e1bd3ab46d078a",
@@ -567,12 +868,19 @@
       "language": "python",
       "path": "zerver/data_import/slack.py",
       "message": "Function `fetch_shared_channel_users` performs an external network operation for each loop item, through `get_slack_api_data`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1477,
       "verdict": "true_positive",
       "reason": "Each mirror dummy user is fetched with its own users.info API call; users.list returns them in pages.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "users.info called per mirror dummy user id in a loop; could be combined"
+        }
+      ]
     },
     {
       "id": "EA-7de56f7a140e9032",
@@ -580,12 +888,19 @@
       "language": "python",
       "path": "zerver/data_import/slack.py",
       "message": "Function `get_slack_api_data` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1778,
       "verdict": "false_positive",
       "reason": "The loop follows Slack API pagination cursors; pagination is the batched form.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Cursor pagination loop"
+        }
+      ]
     },
     {
       "id": "EA-261c737d8a46c954",
@@ -598,7 +913,14 @@
       "line": 253,
       "verdict": "true_positive",
       "reason": "clear_history deletes each rate-limit key with a separate Redis DELETE; one DELETE accepts every key.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Loop over two fixed keys (gcra and block); small constant"
+        }
+      ]
     },
     {
       "id": "EA-2d59464d82525f04",
@@ -606,12 +928,19 @@
       "language": "python",
       "path": "zerver/management/commands/convert_microsoft_teams_data.py",
       "message": "Function `handle` performs an external network operation for each loop item, through `do_convert_directory`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 60,
       "verdict": "false_positive",
       "reason": "handle converts each given export path; per-input heavy work, not batchable round trips.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Loop is over CLI paths; network calls occur once inside converter"
+        }
+      ]
     },
     {
       "id": "EA-97ca03eb7efab313",
@@ -619,12 +948,19 @@
       "language": "python",
       "path": "zerver/management/commands/convert_slack_data.py",
       "message": "Function `handle` performs an external network operation for each loop item, through `do_convert_directory`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 64,
       "verdict": "false_positive",
       "reason": "handle converts each given export path; per-input heavy work, not batchable round trips.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Loop is over CLI paths; token check occurs once in converter"
+        }
+      ]
     },
     {
       "id": "EA-1900080759dc601a",
@@ -632,12 +968,19 @@
       "language": "python",
       "path": "zerver/management/commands/email_mirror.py",
       "message": "Function `get_imap_messages` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 67,
       "verdict": "true_positive",
       "reason": "Each message id is fetched with a separate IMAP FETCH; one FETCH accepts a message set.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "IMAP fetch issued per message id in a loop"
+        }
+      ]
     },
     {
       "id": "EA-d77e5390f1bf948b",
@@ -645,12 +988,19 @@
       "language": "python",
       "path": "zerver/migrations/0260_missed_message_addresses_from_redis_to_db.py",
       "message": "Function `move_missed_message_addresses_to_database` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 28,
       "verdict": "true_positive",
       "reason": "The migration issues several Redis commands per missed-message key; they could be pipelined.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "redis hincrby/hmget/delete issued per key in a loop"
+        }
+      ]
     },
     {
       "id": "EA-74470824146a0d16",
@@ -658,12 +1008,19 @@
       "language": "python",
       "path": "zerver/views/development/integrations.py",
       "message": "Function `send_all_webhook_fixture_messages` performs an external network operation for each loop item, through `send_webhook_fixture_message`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 142,
       "verdict": "false_positive",
       "reason": "views/development serves development-only fixture tools; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Dev-only view using Django in-process test client, not network"
+        }
+      ]
     },
     {
       "id": "EA-b01eb847306cf186",
@@ -671,12 +1028,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/mod.rs",
       "message": "Function `run` performs an external network operation for each loop item, through `request_details`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 902,
       "verdict": "false_positive",
       "reason": "The render loop of the resume TUI redraws frames; it is a UI loop, not per-item round trips.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "UI event loop, not a per-item request"
+        }
+      ]
     },
     {
       "id": "EA-f2d22c4dbfd24c4e",
@@ -684,12 +1048,19 @@
       "language": "rust",
       "path": "crates/atuin-domain/src/caps/middleware.rs",
       "message": "Function `concurrent_burst_fetches_capabilities_once` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 326,
       "verdict": "false_positive",
       "reason": "concurrent_burst_fetches_capabilities_once is a test; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Test code"
+        }
+      ]
     },
     {
       "id": "EA-c97b97addd3999ab",
@@ -727,7 +1098,14 @@
       "line": 603,
       "verdict": "true_positive",
       "reason": "embedThemeFonts fetches each font with its own request, sequentially by design to enforce a size budget.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sequential fetch is deliberate for a running size budget; distinct font files"
+        }
+      ]
     },
     {
       "id": "EA-c7bce9d556158357",
@@ -735,12 +1113,19 @@
       "language": "typescript",
       "path": "apps/admin/vite-backend-proxy.ts",
       "message": "Function `resolveGhostSiteUrl` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 11,
       "verdict": "false_positive",
       "reason": "vite-backend-proxy.ts is development tooling retrying one request; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Retry loop for startup readiness"
+        }
+      ]
     },
     {
       "id": "EA-43e35de890d4d13b",
@@ -748,12 +1133,19 @@
       "language": "typescript",
       "path": "e2e/helpers/services/mailgun/fake-mailgun-server.ts",
       "message": "Function `forwardToMailPit` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 167,
       "verdict": "false_positive",
       "reason": "fake-mailgun-server.ts is end-to-end test infrastructure; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "E2E fake mailgun helper; test code"
+        }
+      ]
     },
     {
       "id": "EA-cd84a2ab18652c41",
@@ -761,12 +1153,19 @@
       "language": "typescript",
       "path": "ghost/core/server/services/automations/automation-member-search.ts",
       "message": "Function `browseMemberSearch` performs an external network operation for each loop item, through `fetchCandidates`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 163,
       "verdict": "false_positive",
       "reason": "The loop fetches bounded batches of search candidates; batching is the fix, not the problem.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Batched pagination loop in Tinybird scan"
+        }
+      ]
     },
     {
       "id": "EA-3b253e620c48d662",
@@ -774,12 +1173,19 @@
       "language": "typescript",
       "path": "tools/scripts/release/release.ts",
       "message": "Function `waitForChecks` performs an external network operation for each loop item, through `fetchRequiredCheck`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 260,
       "verdict": "false_positive",
       "reason": "tools/scripts/release is a release script polling CI checks; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Polling loop in release tooling script"
+        }
+      ]
     },
     {
       "id": "EA-a16871531fbee122",
@@ -787,12 +1193,19 @@
       "language": "typescript",
       "path": "tools/ci-tools.ts",
       "message": "Function `fetchNames` performs an external network operation for each loop item, through `request`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 125,
       "verdict": "false_positive",
       "reason": "tools/ci-tools.ts is a CI script paging through labels; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Pagination loop in CI tooling"
+        }
+      ]
     },
     {
       "id": "EA-79ee6822766b53ce",
@@ -800,12 +1213,19 @@
       "language": "typescript",
       "path": "tools/ci-tools.ts",
       "message": "Function `setPrLabels` performs an external network operation for each loop item, through `request`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 154,
       "verdict": "false_positive",
       "reason": "tools/ci-tools.ts is a CI script; tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "CI tooling script; no batch delete API"
+        }
+      ]
     },
     {
       "id": "EA-9b6459fe4ddc3ea5",
@@ -833,12 +1253,19 @@
       "language": "typescript",
       "path": "web/src/js/backends/websocket.tsx",
       "message": "Function `onOpen` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 77,
       "verdict": "false_positive",
       "reason": "onOpen sends queued messages over one open WebSocket; sending frames on an open socket is not a round trip per item.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sends queued websocket messages; no round trip"
+        }
+      ]
     },
     {
       "id": "EA-9029527608fb6d4c",
@@ -916,12 +1343,19 @@
       "language": "typescript",
       "path": "web/src/emojisets.ts",
       "message": "Function `fetch_emojiset` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 34,
       "verdict": "false_positive",
       "reason": "fetch_emojiset retries one fetch up to three times; it is a retry, not per-item I/O.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Retry loop for one resource"
+        }
+      ]
     }
   ]
 }

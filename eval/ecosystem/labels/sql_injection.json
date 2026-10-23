@@ -48,12 +48,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Persistence.EFCore/Locking/SqlServerEFCoreDistributedLockingMechanism.cs",
       "message": "SQL query with string construction at line 193",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 193,
       "verdict": "false_positive",
       "reason": "The interpolated values are an integer timeout in milliseconds and a lock id constant; no text value reaches the SQL.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The interpolated `(int)_timeout.TotalMilliseconds` and int `LockId` are numbers, so no string value reaches the SQL."
+        }
+      ]
     },
     {
       "id": "EA-e9c30ff13c21d002",
@@ -61,12 +68,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Persistence.SqlServer/Services/SqlServerDatabaseCreator.cs",
       "message": "SQL query with string construction at line 51",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 51,
       "verdict": "true_positive",
       "reason": "The database name is spliced into a quoted string literal and a bracketed identifier of the CREATE DATABASE command without parameters or escaping.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`database` in `WHERE name = '{database}'` is a runtime string from the connection settings placed unescaped into SQL text in value position."
+        }
+      ]
     },
     {
       "id": "EA-496dd53d1c418b43",
@@ -74,12 +88,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Migrations/Upgrade/V_17_0_0/MigrateCheckboxListDataTypesAndPropertyData.cs",
       "message": "SQL query with string construction at line 50",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 50,
       "verdict": "false_positive",
       "reason": "The only interpolation is the CheckBoxList editor alias constant.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The only interpolation is the constant Constants.PropertyEditors.Aliases.CheckBoxList in a migration, with no runtime value."
+        }
+      ]
     },
     {
       "id": "EA-b9c868a41c917179",
@@ -87,12 +108,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Migrations/Upgrade/V_17_4_0/FixLabelDataTypeDbTypeFromConfiguration.cs",
       "message": "SQL query with string construction at line 87",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 87,
       "verdict": "false_positive",
       "reason": "The query interpolates quoted column names and editor-alias and storage-type constants only.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Interpolations are column names from syntax.GetQuotedColumnName and constants Aliases.Label and nameof(ValueStorageType.Ntext), identifiers and constants."
+        }
+      ]
     },
     {
       "id": "EA-a70d34152eb03b3b",
@@ -100,12 +128,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Migrations/Upgrade/V_18_0_0/MigrateSingleBlockList.cs",
       "message": "SQL query with string construction at line 272",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 272,
       "verdict": "false_positive",
       "reason": "The editor alias is a constant and the data type ids are passed as a parameter (@0).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "updateSql interpolates only the constant SingleBlock alias; the ids are bound through the `@0` parameter."
+        }
+      ]
     },
     {
       "id": "EA-1d49618abf68f5ef",
@@ -113,12 +148,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/ContentRepositoryBase.cs",
       "message": "SQL query with string construction at line 1331",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1331,
       "verdict": "false_positive",
       "reason": "Only quoted table and column names are interpolated; the ids and values are bound as @-parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The interpolated nodeTable, sortOrderColumn and idColumn are identifiers, and all values are bound through `@i` placeholders in args."
+        }
+      ]
     },
     {
       "id": "EA-fb1b4d11601505fc",
@@ -126,12 +168,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/TagRepository.cs",
       "message": "SQL query with string construction at line 179",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 179,
       "verdict": "true_positive",
       "reason": "sql2 joins the tag set built by GetTagSet, which splices each user tag's text into the SQL with hand escaping (SqlSyntax.EscapeString) instead of parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`GetTagSet(tags)` embeds user-entered tag text and group into the SQL as `SELECT N'...'` literals in the Insert statement, not bound parameters."
+        }
+      ]
     },
     {
       "id": "EA-0019df4f491d2388",
@@ -139,12 +188,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/TagRepository.cs",
       "message": "SQL query with string construction at line 197",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 197,
       "verdict": "true_positive",
       "reason": "deleteSql joins the tag set built by GetTagSet, which splices user tag text into the SQL with hand escaping instead of parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The delete statement in TagRepository.Remove interpolates `tagSetSql` built from tag text literals, so tag values are in SQL text unparameterised."
+        }
+      ]
     },
     {
       "id": "EA-485bef83b0aae057",
@@ -152,12 +208,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/UserRepository.cs",
       "message": "SQL query with string construction at line 1422",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1422,
       "verdict": "false_positive",
       "reason": "The IN list holds Guid values formatted with ToString(), which cannot carry SQL; the code comments on exactly that.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`userKeysForInClause` is joined from Guid.ToString() values, which cannot contain quotes, as the code comment notes."
+        }
+      ]
     },
     {
       "id": "EA-b9d2bdb994f37721",
@@ -165,12 +228,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Runtime/SqlMainDomLock.cs",
       "message": "SQL query with string construction at line 461",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 461,
       "verdict": "false_positive",
       "reason": "UpdatedSuffix is a constant and the key is bound as @key.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`UpdatedSuffix` is a constant string, and the real key is bound via `@key`."
+        }
+      ]
     },
     {
       "id": "EA-43a658a6a1449b83",
@@ -178,12 +248,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 260",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 260,
       "verdict": "false_positive",
       "reason": "The only value is int.Parse(workflowDbId), an integer, beside table and column constants.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`int.Parse(workflowDbId)` is the only runtime value, converted to a number before concatenation."
+        }
+      ]
     },
     {
       "id": "EA-6bb910b5f7e39bd8",
@@ -191,12 +268,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 1144",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1144,
       "verdict": "true_positive",
       "reason": "The username is concatenated into a quoted literal with hand escaping (Replace of quotes and backslashes) instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`username` is concatenated into the WHERE clause with only quote and backslash replacement instead of a bound MySqlParameter."
+        }
+      ]
     },
     {
       "id": "EA-b4035435ab2bb621",
@@ -204,12 +288,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 2030",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2030,
       "verdict": "true_positive",
       "reason": "The search keyword is concatenated into LIKE literals with hand quote escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keyword` is concatenated into LIKE patterns with only a quote Replace in the MariaDB record search, not bound."
+        }
+      ]
     },
     {
       "id": "EA-7be98b46cc93bcb3",
@@ -217,12 +308,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 2624",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2624,
       "verdict": "false_positive",
       "reason": "The only value is int.Parse(recordId), an integer, beside table and column constants and a literal 1.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`int.Parse(recordId)` is the only runtime value, converted to a number before concatenation."
+        }
+      ]
     },
     {
       "id": "EA-a7fadc3bb5be381f",
@@ -230,12 +328,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 802",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 802,
       "verdict": "true_positive",
       "reason": "The search keyword is concatenated into LIKE literals with hand escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keyword` is concatenated into LIKE '%...%' predicates with manual quote escaping in the history search, not parameterised."
+        }
+      ]
     },
     {
       "id": "EA-355d5692fc5cba93",
@@ -243,12 +348,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 1423",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1423,
       "verdict": "false_positive",
       "reason": "statusCountColumnName is a column-name constant the Increment methods pass in; it shapes the statement, it is not a value.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`statusCountColumnName` is a column identifier passed from COLUMN_NAME_* constants, so it is an identifier."
+        }
+      ]
     },
     {
       "id": "EA-3b7bc3593c524e21",
@@ -256,12 +368,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 1667",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1667,
       "verdict": "true_positive",
       "reason": "The new password and the username are concatenated into quoted literals with hand escaping instead of parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`password` and `username` strings are concatenated into the UPDATE with manual escaping instead of command parameters."
+        }
+      ]
     },
     {
       "id": "EA-3076d3f91e243386",
@@ -269,12 +388,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.SQLServer/Helper.cs",
       "message": "SQL query with string construction at line 21",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 21,
       "verdict": "true_positive",
       "reason": "databaseName is concatenated unescaped into the sysdatabases lookup literal (and into CREATE DATABASE).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`databaseName` goes unescaped into `WHERE name = N'...'` in SQL text, from caller-supplied settings."
+        }
+      ]
     },
     {
       "id": "EA-7684103e56ca70b6",
@@ -282,12 +408,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 322",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 322,
       "verdict": "true_positive",
       "reason": "The search keyword is concatenated into a LIKE literal with hand escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keyword` is concatenated into a LIKE predicate in the netcore MariaDB user search with manual escaping only."
+        }
+      ]
     },
     {
       "id": "EA-64b8c4aed630affb",
@@ -295,12 +428,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 536",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 536,
       "verdict": "true_positive",
       "reason": "The search keyword is concatenated into LIKE literals with hand escaping, beside formatted dates, instead of parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keyword` is concatenated twice into LIKE predicates in the entry count query with manual escaping, no parameter."
+        }
+      ]
     },
     {
       "id": "EA-e45dbe5df81c2cc6",
@@ -308,12 +448,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 1424",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1424,
       "verdict": "false_positive",
       "reason": "statusCountColumnName is a column-name constant passed by the Increment methods; it shapes the statement.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The identical status-count UPDATE interpolates only `statusCountColumnName`, a column identifier from constants."
+        }
+      ]
     },
     {
       "id": "EA-918a0c6cf374c0b4",
@@ -321,12 +468,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 1816",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1816,
       "verdict": "false_positive",
       "reason": "The query holds only column constants and UserProfile enum values cast to int.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The query interpolates only `(int)UserProfile` enum casts and constant column names, so no runtime string value is present."
+        }
+      ]
     },
     {
       "id": "EA-67fe669878c6978c",
@@ -334,12 +488,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 2243",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2243,
       "verdict": "true_positive",
       "reason": "The version file path is concatenated into a quoted literal with hand escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`version.FilePath` is concatenated into the UPDATE with manual quote escaping rather than a bound parameter."
+        }
+      ]
     },
     {
       "id": "EA-b48cb54580c7cb2f",
@@ -347,12 +508,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 1968",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1968,
       "verdict": "false_positive",
       "reason": "The only value is int.Parse(id), an integer.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`int.Parse(id)` is the only runtime value in the WHERE, converted to a number."
+        }
+      ]
     },
     {
       "id": "EA-62e681ce67dc8b28",
@@ -360,12 +528,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 2029",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2029,
       "verdict": "true_positive",
       "reason": "The search keyword is concatenated into LIKE literals with hand quote escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keyword` is concatenated into LIKE predicates in the MySQL record search with manual quote escaping, not parameterised."
+        }
+      ]
     },
     {
       "id": "EA-9cde3c7d273c602b",
@@ -373,12 +548,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 548",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 548,
       "verdict": "true_positive",
       "reason": "The search keyword is concatenated into LIKE literals with hand quote escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keyword` is concatenated into the entry count LIKE predicates with a quote Replace instead of a SqlParameter."
+        }
+      ]
     },
     {
       "id": "EA-609ec8d79cb2b4f6",
@@ -386,12 +568,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 1159",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1159,
       "verdict": "true_positive",
       "reason": "The username is concatenated into a quoted literal with hand quote escaping instead of a parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`username` goes into `WHERE ... = '...'` with only a quote Replace instead of a parameter."
+        }
+      ]
     },
     {
       "id": "EA-cd99db9bfc049364",
@@ -399,12 +588,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 1554",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1554,
       "verdict": "true_positive",
       "reason": "History entry name, description, and logs are concatenated into VALUES literals with hand quote escaping instead of parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`entry.Name`, `entry.Description` and `entry.Logs` strings are concatenated into the INSERT VALUES with manual escaping, not parameters."
+        }
+      ]
     },
     {
       "id": "EA-74ecc9dc6e86ca99",
@@ -412,12 +608,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 2433",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2433,
       "verdict": "true_positive",
       "reason": "The notification ids, strings from the caller, are appended unescaped into the IN list.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`notificationIds` strings are appended raw into the `IN (...)` list with no escaping, so any id string is injected into the SQL."
+        }
+      ]
     },
     {
       "id": "EA-0d83dca440c518b1",
@@ -425,12 +628,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 2684",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 2684,
       "verdict": "false_positive",
       "reason": "The only value is int.Parse(recordId), an integer.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`int.Parse(recordId)` is the only runtime value in the WHERE, converted to a number."
+        }
+      ]
     },
     {
       "id": "EA-da37292c1b7fd188",
@@ -438,12 +648,19 @@
       "language": "go",
       "path": "modelmigration/base/db.go",
       "message": "SQL query with string construction at line 276",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 276,
       "verdict": "false_positive",
       "reason": "The sequence name comes from the database's own sequence list and the values are integers and a boolean; nothing supplied by a user reaches the SQL.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`newSequenceName` is a database sequence name used inside setval; it is an object name, and LastValue/IsCalled are number and bool."
+        }
+      ]
     },
     {
       "id": "EA-d514b66c57f39eef",
@@ -451,12 +668,19 @@
       "language": "go",
       "path": "modelmigration/base/db.go",
       "message": "SQL query with string construction at line 282",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 282,
       "verdict": "false_positive",
       "reason": "The sequence and table names come from the schema during a migration; they name objects, not user values.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`newSequenceName` and `tableName` are table and sequence identifiers in the migration helper, not data values."
+        }
+      ]
     },
     {
       "id": "EA-2309f71a65aad846",
@@ -464,12 +688,19 @@
       "language": "go",
       "path": "modelmigration/base/db.go",
       "message": "SQL query with string construction at line 288",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 288,
       "verdict": "false_positive",
       "reason": "The sequence name comes from the database's own sequence list and the values are an integer and a boolean.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The setval call formats a sequence name (object name) plus an int64 and a bool, with no string data value."
+        }
+      ]
     },
     {
       "id": "EA-b80a86a336438102",
@@ -477,12 +708,19 @@
       "language": "go",
       "path": "modelmigration/base/db.go",
       "message": "SQL query with string construction at line 348",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 348,
       "verdict": "false_positive",
       "reason": "tableName is a schema table name passed by the migration, used to look up its own CREATE statement in sqlite_master.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`tableName` is a developer-supplied table name literal from migration code passed to sqlite_master lookup, not user data."
+        }
+      ]
     },
     {
       "id": "EA-94890b8d319b2b08",
@@ -490,12 +728,19 @@
       "language": "go",
       "path": "modelmigration/v1_14/v175.go",
       "message": "SQL query with string construction at line 46",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 46,
       "verdict": "false_positive",
       "reason": "The sequence and table names are derived from the database's sequence list during a migration; they name objects.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "v175.go formats sequence and table names (identifiers) in a one-off Gitea migration."
+        }
+      ]
     },
     {
       "id": "EA-712d360dd4587ff5",
@@ -503,12 +748,19 @@
       "language": "go",
       "path": "modelmigration/v1_22/v283.go",
       "message": "SQL query with string construction at line 29",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 29,
       "verdict": "false_positive",
       "reason": "The only formatted value is the integer count Cnt-1; the ids are bound as ? parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`issueUser.Cnt-1` is an integer interpolated into `top %d`, and the ids are bound with `?`."
+        }
+      ]
     },
     {
       "id": "EA-076e6b72e0fc2aff",
@@ -516,12 +768,19 @@
       "language": "go",
       "path": "modelmigration/v1_22/v294.go",
       "message": "SQL query with string construction at line 33",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 33,
       "verdict": "false_positive",
       "reason": "The only formatted value is the integer count Cnt-1; the ids are bound as ? parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`r.Cnt-1` is an integer interpolated into `top %d` in v294, and issue and project ids are bound with `?`."
+        }
+      ]
     },
     {
       "id": "EA-47c17791202f3c89",
@@ -529,12 +788,19 @@
       "language": "go",
       "path": "modelmigration/v1_26/v329.go",
       "message": "SQL query with string construction at line 49",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 49,
       "verdict": "false_positive",
       "reason": "The only formatted value is the integer count Cnt-1; the ids are bound as ? parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`r.Cnt-1` is an integer interpolated into `top %d` in v329, and user and badge ids are bound with `?`."
+        }
+      ]
     },
     {
       "id": "EA-e3fb5a4820b69e1d",
@@ -542,12 +808,19 @@
       "language": "go",
       "path": "models/db/sequence.go",
       "message": "SQL query with string construction at line 64",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 64,
       "verdict": "false_positive",
       "reason": "The sequence and table names are derived from the database's sequence list; they name objects.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`newSequenceName` and `tableName` in models/db/sequence.go are derived sequence and table identifiers, not data values."
+        }
+      ]
     },
     {
       "id": "EA-c446dc96a0d1108a",
@@ -555,12 +828,19 @@
       "language": "go",
       "path": "src/pkg/p2p/preheat/dao/instance/dao.go",
       "message": "SQL query with string construction at line 115",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 115,
       "verdict": "false_positive",
       "reason": "instance.TableName() returns the model's table name and the id is bound as ?; the formatting shapes the statement only.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`instance.TableName()` is a fixed model table identifier, and the id is bound with `?`."
+        }
+      ]
     },
     {
       "id": "EA-3aed4698db72ab27",
@@ -568,12 +848,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.clickhouse/src/org/jkiss/dbeaver/ext/clickhouse/model/ClickhouseDataTypeCache.java",
       "message": "SQL query with string construction at line 208",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 208,
       "verdict": "false_positive",
       "reason": "The UNION rows come from a static List.of of known ClickHouse type entries in the source; no runtime input reaches the SQL.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Only interpolated value is the name of hard-coded knownTypeEntries records (ClickHouse type constants), not runtime input."
+        }
+      ]
     },
     {
       "id": "EA-9f82333a3cfdefd3",
@@ -581,12 +868,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.exasol/src/org/jkiss/dbeaver/ext/exasol/model/ExasolView.java",
       "message": "SQL query with string construction at line 110",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 110,
       "verdict": "false_positive",
       "reason": "The schema and view names are catalog object names escaped with ExasolUtils.quoteString, not user-supplied values.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Both interpolated values pass through ExasolUtils.quoteString, which escapes the literal before it is placed in the SELECT."
+        }
+      ]
     },
     {
       "id": "EA-cfdfb0f5ac0b1d65",
@@ -594,12 +888,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.greenplum/src/org/jkiss/dbeaver/ext/greenplum/model/GreenplumUtils.java",
       "message": "SQL query with string construction at line 51",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 51,
       "verdict": "false_positive",
       "reason": "table.getObjectId() is a numeric object id.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated value is table.getObjectId(), a numeric OID, so no string injection is possible."
+        }
+      ]
     },
     {
       "id": "EA-f275229ac4413a40",
@@ -607,12 +908,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.greenplum/src/org/jkiss/dbeaver/ext/greenplum/model/GreenplumUtils.java",
       "message": "SQL query with string construction at line 59",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 59,
       "verdict": "false_positive",
       "reason": "table.getObjectId() is a numeric object id.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated value is table.getObjectId(), a numeric OID, appended after localoid=."
+        }
+      ]
     },
     {
       "id": "EA-7d263786d5d8a31f",
@@ -620,12 +928,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.greenplum/src/org/jkiss/dbeaver/ext/greenplum/model/GreenplumUtils.java",
       "message": "SQL query with string construction at line 103",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 103,
       "verdict": "false_positive",
       "reason": "table.getObjectId() is a numeric object id.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated value is table.getObjectId(), a numeric OID, in the policytype query."
+        }
+      ]
     },
     {
       "id": "EA-51b0f6170934d24e",
@@ -638,7 +953,14 @@
       "line": 119,
       "verdict": "false_positive",
       "reason": "The fully qualified table name is DBeaver's quoted DDL identifier for a catalog object, cast with ::regclass.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "table.getFullyQualifiedName(...) is a name string concatenated inside a '...'::regclass literal with no escaping."
+        }
+      ]
     },
     {
       "id": "EA-43831f952ed41d46",
@@ -646,12 +968,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.hana/src/org/jkiss/dbeaver/ext/hana/model/HANAStructureAssistant.java",
       "message": "SQL query with string construction at line 167",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 167,
       "verdict": "false_positive",
       "reason": "Only a computed integer LIMIT is concatenated; the search mask and schema name are bound with setString.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated objectTypeClause comes from enum type names; the user mask and schema are bound with setString."
+        }
+      ]
     },
     {
       "id": "EA-b0e8fce9d2cd3bfa",
@@ -664,7 +993,14 @@
       "line": 144,
       "verdict": "unclear",
       "reason": "databaseName, a catalog name, is formatted unescaped into a LIKE literal; whether a quote in a database name can occur here is not visible in the excerpt.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "databaseName (parent object name) is formatted unescaped into a like '%s' literal of the information_schema query."
+        }
+      ]
     },
     {
       "id": "EA-9f3a451368522d69",
@@ -672,12 +1008,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.mssql/src/org/jkiss/dbeaver/ext/mssql/model/SQLServerSchema.java",
       "message": "SQL query with string construction at line 915",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 915,
       "verdict": "false_positive",
       "reason": "Only a table-name prefix and constant fragments are concatenated; the schema id and name are bound as parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated parts are table-name and class-id constants; schema id and object name are bound with setLong/setString."
+        }
+      ]
     },
     {
       "id": "EA-67102c0f3c88160a",
@@ -685,12 +1028,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleDependency.java",
       "message": "SQL query with string construction at line 57",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 57,
       "verdict": "false_positive",
       "reason": "Only a catalog hint and a view prefix are concatenated; owner and name are bound with setString.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Interpolated parts are catalog hint/view prefix helpers; owner and name are bound via ? placeholders."
+        }
+      ]
     },
     {
       "id": "EA-21c073a5e17c0fe0",
@@ -698,12 +1048,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleSchema.java",
       "message": "SQL query with string construction at line 1633",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1633,
       "verdict": "false_positive",
       "reason": "Only catalog hints, view prefixes, and constant fragments are concatenated; owner and table name are bound as parameters.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Interpolated parts are catalog hint/view prefix helpers; owner and table name are bound via ?."
+        }
+      ]
     },
     {
       "id": "EA-7083366b43b23da7",
@@ -711,12 +1068,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleUtils.java",
       "message": "SQL query with string construction at line 241",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 241,
       "verdict": "false_positive",
       "reason": "dependentObjectType.name() is an enum constant; object and schema names are bound with setString.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "dependentObjectType.name() is an enum constant; object and schema names are bound with setString."
+        }
+      ]
     },
     {
       "id": "EA-e3dcba8b87743835",
@@ -724,12 +1088,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreTableReal.java",
       "message": "SQL query with string construction at line 296",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 296,
       "verdict": "false_positive",
       "reason": "owner.getObjectId() is a numeric object id.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated owner.getObjectId() is a numeric OID."
+        }
+      ]
     },
     {
       "id": "EA-b59f70df1b3e8c13",
@@ -742,7 +1113,14 @@
       "line": 77,
       "verdict": "false_positive",
       "reason": "The value is DBeaver's quoted fully qualified DDL name of a catalog object, not user-supplied text.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sourceObject.getFullyQualifiedName(DDL) is concatenated into the GET_DDL('..') string literal unescaped."
+        }
+      ]
     },
     {
       "id": "EA-5d279be5a8c7e112",
@@ -755,7 +1133,14 @@
       "line": 122,
       "verdict": "false_positive",
       "reason": "The procedure type is an enum and the signature is the catalog procedure's own signature.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getProcedureSignature(...) text is concatenated into the GET_DDL string literal unescaped."
+        }
+      ]
     },
     {
       "id": "EA-a179211e4b16d984",
@@ -768,7 +1153,14 @@
       "line": 56,
       "verdict": "false_positive",
       "reason": "objectName is the catalog object's qualified name, not user-supplied text.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "objectName (qualified object name) is concatenated into the EXPORT_OBJECTS('', '...') literal unescaped."
+        }
+      ]
     },
     {
       "id": "EA-823c416396627aac",
@@ -776,12 +1168,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.vertica/src/org/jkiss/dbeaver/ext/vertica/model/VerticaStructureAssistant.java",
       "message": "SQL query with string construction at line 144",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 144,
       "verdict": "false_positive",
       "reason": "Only the object-type IN list of constants and an integer LIMIT are concatenated; the mask and schema are bound with setString.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "objectTypeClause is built from fixed 'TABLE'/'VIEW' literals; mask, comment and schema values are bound with setString."
+        }
+      ]
     },
     {
       "id": "EA-0b8fc0a2bf7ad609",
@@ -789,12 +1188,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.devtools/src/org/jkiss/dbeaver/ui/app/devtools/tools/LockGenerator.java",
       "message": "SQL query with string construction at line 171",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 171,
       "verdict": "false_positive",
       "reason": "LockGenerator is a developer tool in ui.app.devtools, and the comment prefix holds only formatted integers.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devtools LockGenerator; only ints (pid, field values) go into a SQL comment prefix and the value is bound with setInt."
+        }
+      ]
     },
     {
       "id": "EA-f02c0cfe59c232c3",
@@ -802,12 +1208,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.devtools/src/org/jkiss/dbeaver/ui/app/devtools/tools/LockGenerator.java",
       "message": "SQL query with string construction at line 177",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 177,
       "verdict": "false_positive",
       "reason": "LockGenerator is a developer tool in ui.app.devtools, and the comment prefix holds only formatted integers.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devtools LockGenerator; prefix holds only formatted ints in a comment and fieldVal is bound with setInt."
+        }
+      ]
     },
     {
       "id": "EA-1f92abf1a1912e61",
@@ -815,12 +1228,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.devtools/src/org/jkiss/dbeaver/ui/app/devtools/tools/LockGeneratorOracle.java",
       "message": "SQL query with string construction at line 157",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 157,
       "verdict": "false_positive",
       "reason": "LockGeneratorOracle is a developer tool in ui.app.devtools, and the comment prefix holds only formatted integers.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devtools LockGeneratorOracle; prefix holds only formatted ints in a comment and sublock is bound with setInt."
+        }
+      ]
     },
     {
       "id": "EA-10f7b7985a1a1bfb",
@@ -828,12 +1248,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.devtools/src/org/jkiss/dbeaver/ui/app/devtools/tools/LockGeneratorOracle.java",
       "message": "SQL query with string construction at line 163",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 163,
       "verdict": "false_positive",
       "reason": "LockGeneratorOracle is a developer tool in ui.app.devtools, and the comment prefix holds only formatted integers.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devtools LockGeneratorOracle; prefix holds only formatted ints in a comment and fieldVal is bound with setInt."
+        }
+      ]
     },
     {
       "id": "EA-d846320040f49d76",
@@ -841,12 +1268,19 @@
       "language": "java",
       "path": "model/jpa/src/main/java/org/keycloak/connections/jpa/updater/liquibase/custom/JpaUpdate1_2_0_CR1.java",
       "message": "SQL query with string construction at line 39",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 39,
       "verdict": "false_positive",
       "reason": "Only Liquibase-corrected table names and the database's boolean literal are concatenated.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Concatenated trueValue is the database's boolean literal from DataTypeFactory and getTableName is a table identifier, not user input."
+        }
+      ]
     },
     {
       "id": "EA-a41f6a16bf82b687",
@@ -859,7 +1293,14 @@
       "line": 51,
       "verdict": "false_positive",
       "reason": "schemaName is the default schema name escaped with database.escapeObjectName.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "schemaName from database.getDefaultSchemaName() is concatenated into a SCHEMA_NAME = '...' value literal instead of being bound."
+        }
+      ]
     },
     {
       "id": "EA-05ceb17182221d20",
@@ -867,12 +1308,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/common/db/BaseDao.java",
       "message": "SQL query with string construction at line 314",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 314,
       "verdict": "false_positive",
       "reason": "seqName is an entity sequence name and nextValue a number.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "seqName is a constant such as X_SERVICE_DEF_SEQ from callers and nextValue is a long."
+        }
+      ]
     },
     {
       "id": "EA-11cf58f03ac811b8",
@@ -880,12 +1328,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/common/db/BaseDao.java",
       "message": "SQL query with string construction at line 358",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 358,
       "verdict": "false_positive",
       "reason": "The table and column names come from entity annotations and oldID is a numeric id.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "oldID is a long, tableName comes from the @Table annotation, and paramName is a column constant like added_by_id."
+        }
+      ]
     },
     {
       "id": "EA-023654863fefbbdc",
@@ -893,12 +1348,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/db/XXModuleDefDao.java",
       "message": "SQL query with string construction at line 110",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 110,
       "verdict": "false_positive",
       "reason": "userId is a Long parameter.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Only userId, a Long, is concatenated into the native query."
+        }
+      ]
     },
     {
       "id": "EA-fa06791c4e8d1b1f",
@@ -906,12 +1368,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/db/paros/ParosTableHistory.java",
       "message": "SQL query with string construction at line 771",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 771,
       "verdict": "false_positive",
       "reason": "sessionId is a long and SESSIONID a column constant.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Only sessionId, a long, is concatenated into the DELETE."
+        }
+      ]
     },
     {
       "id": "EA-fd2125c2a31dc6fa",
@@ -919,12 +1388,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/db/paros/ParosTableHistory.java",
       "message": "SQL query with string construction at line 782",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 782,
       "verdict": "false_positive",
       "reason": "sessionId and historyType are numbers and the column names constants.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Only long sessionId and int historyType are concatenated."
+        }
+      ]
     },
     {
       "id": "EA-48843acb08bb1c8d",
@@ -932,12 +1408,19 @@
       "language": "javascript",
       "path": "ghost/core/server/data/migrations/versions/5.59/2023-08-07-11-17-05-add-posts-published-at-index.js",
       "message": "SQL query with string construction at line 12",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 12,
       "verdict": "false_positive",
       "reason": "INDEX_NAME is a module constant.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "INDEX_NAME is a module-level string constant interpolated into the sqlite_master check."
+        }
+      ]
     },
     {
       "id": "EA-5993a9069e40d43a",
@@ -945,12 +1428,19 @@
       "language": "javascript",
       "path": "ghost/core/server/data/migrations/versions/5.59/2023-08-07-11-17-05-add-posts-published-at-index.js",
       "message": "SQL query with string construction at line 38",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 38,
       "verdict": "false_positive",
       "reason": "INDEX_NAME is a module constant.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "INDEX_NAME is a module-level string constant interpolated into the sqlite_master check."
+        }
+      ]
     },
     {
       "id": "EA-8b9ff97e55696f39",
@@ -958,12 +1448,19 @@
       "language": "javascript",
       "path": "ghost/core/server/data/migrations/versions/6.37/2026-05-04-07-51-14-add-members-created-at-id-index.js",
       "message": "SQL query with string construction at line 9",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 9,
       "verdict": "false_positive",
       "reason": "INDEX_NAME is a module constant.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "INDEX_NAME is a module-level string constant interpolated into the index existence check."
+        }
+      ]
     },
     {
       "id": "EA-1c11c5145bd015f2",
@@ -971,12 +1468,19 @@
       "language": "javascript",
       "path": "ghost/core/server/models/comment.js",
       "message": "SQL query with string construction at line 25",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 25,
       "verdict": "false_positive",
       "reason": "The interpolations are generated ? placeholder lists and a filter whose values are passed as bindings.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Interpolated statusPlaceholders and scopeFilter.sql are '?' lists; all values travel in bindings."
+        }
+      ]
     },
     {
       "id": "EA-39d46f0c807b6d6d",
@@ -984,12 +1488,19 @@
       "language": "javascript",
       "path": "ghost/core/server/models/comment.js",
       "message": "SQL query with string construction at line 402",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 402,
       "verdict": "false_positive",
       "reason": "The interpolated statusPlaceholders is a generated list of ? placeholders.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "statusPlaceholders is a join of '?' markers and the statuses are passed as bindings."
+        }
+      ]
     },
     {
       "id": "EA-6f59440b88b35a54",
@@ -997,12 +1508,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/newsletter-email-event-storage.js",
       "message": "SQL query with string construction at line 364",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 364,
       "verdict": "true_positive",
       "reason": "caseClauses interpolate each recipient id and event timestamp into quoted literals (WHEN '${id}' THEN '${timestamp}') instead of binding them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "caseClauses embeds `WHEN '${id}' THEN '${timestamp}'` with the event emailRecipientId interpolated into the SQL string rather than bound."
+        }
+      ]
     },
     {
       "id": "EA-1222752e81f08d65",
@@ -1010,12 +1528,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/newsletter-email-event-storage.js",
       "message": "SQL query with string construction at line 393",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 393,
       "verdict": "true_positive",
       "reason": "caseClauses interpolate each recipient id and event timestamp into quoted literals instead of binding them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "caseClauses embeds the pending-map recipient id and timestamp via '${id}' string interpolation in the CASE SQL."
+        }
+      ]
     },
     {
       "id": "EA-b41190a6f682962d",
@@ -1023,12 +1548,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/newsletter-email-event-storage.js",
       "message": "SQL query with string construction at line 422",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 422,
       "verdict": "true_positive",
       "reason": "caseClauses interpolate each recipient id and event timestamp into quoted literals instead of binding them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "caseClauses embeds the pending-map recipient id and timestamp via '${id}' string interpolation in the CASE SQL."
+        }
+      ]
     },
     {
       "id": "EA-d4294ca7c7eb1711",
@@ -1036,12 +1568,19 @@
       "language": "typescript",
       "path": "ghost/core/server/services/email-analytics/lib/queries.ts",
       "message": "SQL query with string construction at line 418",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 418,
       "verdict": "false_positive",
       "reason": "The CASE clauses are WHEN ? THEN ? with values pushed into bindings, and the id list is ? placeholders.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "CASE clauses are built from 'WHEN ? THEN ?' placeholders with all values in the bindings array."
+        }
+      ]
     },
     {
       "id": "EA-3132943fa83201ad",
@@ -1049,12 +1588,19 @@
       "language": "typescript",
       "path": "tools/gx/multi-sub-scenarios.ts",
       "message": "SQL query with string construction at line 317",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 317,
       "verdict": "false_positive",
       "reason": "tools/gx is a developer scenario tool, and the id list is generated ? placeholders.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "gx dev tool; the IN list is built from '?' placeholders with memberIds passed as bindings."
+        }
+      ]
     }
   ]
 }

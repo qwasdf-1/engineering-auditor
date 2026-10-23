@@ -8,12 +8,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/StringExtensions.Encoding.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 321",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 321,
       "verdict": "false_positive",
       "reason": "A name-to-algorithm lookup table; SHA1 is one option and no security use happens at this site.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "CreateHashAlgorithm maps the name \"SHA1\"/\"SHA-1\" to SHA1.Create() as one entry in a generic name-to-algorithm dispatch table; no security use is fixed here."
+        }
+      ]
     },
     {
       "id": "EA-c2fc658d28908794",
@@ -21,12 +28,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/StringExtensions.Encoding.cs",
       "message": "Weak crypto algorithm `MD5` at line 325",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 325,
       "verdict": "false_positive",
       "reason": "A name-to-algorithm lookup table; MD5 is one option and no security use happens at this site.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The \"MD5\" case in CreateHashAlgorithm is one option in a caller-selected name-to-algorithm table, not a security-reliant use."
+        }
+      ]
     },
     {
       "id": "EA-4842e38e3716f288",
@@ -34,12 +48,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/StringExtensions.Encoding.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 326",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 326,
       "verdict": "false_positive",
       "reason": "A name-to-algorithm lookup table; HMACSHA1 is one option, and HMAC-SHA1 does not rely on collision resistance.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "HMACSHA1 entry in the CreateHashAlgorithm switch is HMAC, which does not rely on collision resistance, and is only a dispatch option."
+        }
+      ]
     },
     {
       "id": "EA-f3cd8fa6b56cb7a2",
@@ -47,12 +68,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/StringExtensions.Parsing.cs",
       "message": "Weak crypto algorithm `MD5` at line 225",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 225,
       "verdict": "false_positive",
       "reason": "MD5 and SHA-1 here build RFC 4122 name-based (version 3 and 5) GUIDs, which the standard mandates.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MD5/SHA1 here implement RFC 4122 name-based UUID v3/v5 (version == 3 ? MD5 : SHA1), mandated by the UUID standard."
+        }
+      ]
     },
     {
       "id": "EA-e7014e866a777900",
@@ -60,12 +88,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/HashGenerator.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 152",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 152,
       "verdict": "false_positive",
       "reason": "HashGenerator hashes values for cache keys; collision resistance against attackers is not relied on.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "HashGenerator.GenerateHash uses MD5 (SHA1 in FIPS mode) to produce a cache/change-detection hash of added objects, not a security control."
+        }
+      ]
     },
     {
       "id": "EA-1d7acd2053d6e536",
@@ -73,12 +108,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/IO/FileSystemExtensions.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 26",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 26,
       "verdict": "false_positive",
       "reason": "The file hash detects content changes; it is not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetStreamHash SHA1 fingerprints a package stream (used by PackageMigrationResource) for identity/change detection, not against an adversary."
+        }
+      ]
     },
     {
       "id": "EA-c4651086d16aa87e",
@@ -91,7 +133,14 @@
       "line": 84,
       "verdict": "true_positive",
       "reason": "Legacy password verification keys HMACSHA1 with the password itself, a weak password hash.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "VerifyLegacyHashedPassword uses HMACSHA1 only to verify old stored hashes for backward compatibility, and HMAC is exempt under the collision-resistance rule."
+        }
+      ]
     },
     {
       "id": "EA-b250cc0e0d817f04",
@@ -104,7 +153,14 @@
       "line": 233,
       "verdict": "true_positive",
       "reason": "The legacy password hasher can select HMACSHA1 for stored password hashes.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetHashAlgorithm's \"HMACSHA1\" case is HMAC, which does not rely on collision resistance."
+        }
+      ]
     },
     {
       "id": "EA-99656707eb78575c",
@@ -112,12 +168,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 234",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 234,
       "verdict": "true_positive",
       "reason": "The legacy password hasher can select unsalted SHA1 for stored password hashes.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetHashAlgorithm's \"SHA1\" case selects an unkeyed SHA-1 for hashing user passwords in LegacyPasswordSecurity, where security depends on the hash."
+        }
+      ]
     },
     {
       "id": "EA-e7181f99ea25f615",
@@ -125,12 +188,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
       "message": "Weak crypto algorithm `MD5` at line 238",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 238,
       "verdict": "true_positive",
       "reason": "The legacy password hasher can select MD5 for stored password hashes.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetHashAlgorithm's \"MD5\" case lets LegacyPasswordSecurity hash user passwords with MD5, a security-relying use of a broken hash."
+        }
+      ]
     },
     {
       "id": "EA-bab16f73468247e6",
@@ -138,12 +208,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db/Db.cs",
       "message": "Weak crypto algorithm `MD5` at line 141",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 141,
       "verdict": "false_positive",
       "reason": "GetMd5 has no callers in this release; passwords use PasswordHasher, so no security use is visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Db.GetMd5 in the net Wexflow.Core.Db is an unused static helper with no callers; passwords were migrated to PBKDF2, so no security reliance."
+        }
+      ]
     },
     {
       "id": "EA-e28ab651228f8d19",
@@ -151,12 +228,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.Md5/Md5.cs",
       "message": "Weak crypto algorithm `MD5` at line 118",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 118,
       "verdict": "false_positive",
       "reason": "The Md5 workflow task computes file checksums for users; a checksum is not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Md5 task GetMd5 computes a file MD5 checksum as the task's advertised feature (output to XML), not a security control."
+        }
+      ]
     },
     {
       "id": "EA-67fd532a72b254fd",
@@ -164,12 +248,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.Sha1/Sha1.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 118",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 118,
       "verdict": "false_positive",
       "reason": "The Sha1 workflow task computes file checksums for users; a checksum is not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sha1 task GetSha1 produces a user-requested file SHA-1 checksum as the task's purpose, not a security mechanism."
+        }
+      ]
     },
     {
       "id": "EA-5dcfa524b1944e51",
@@ -177,12 +268,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db/Db.cs",
       "message": "Weak crypto algorithm `MD5` at line 141",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 141,
       "verdict": "false_positive",
       "reason": "GetMd5 has no callers in this release; passwords use PasswordHasher, so no security use is visible.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore Db.GetMd5 is the same unused static helper with no callers; no security use."
+        }
+      ]
     },
     {
       "id": "EA-a09d81983edfb4a2",
@@ -190,12 +288,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Tasks.Md5/Md5.cs",
       "message": "Weak crypto algorithm `MD5` at line 91",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 91,
       "verdict": "false_positive",
       "reason": "The Md5 workflow task computes file checksums for users; a checksum is not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore Md5 task GetMd5 (CA5351 suppressed) is a file-checksum feature requested by workflows, not security-reliant."
+        }
+      ]
     },
     {
       "id": "EA-4c117a556da360da",
@@ -203,12 +308,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Tasks.Sha1/Sha1.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 91",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 91,
       "verdict": "false_positive",
       "reason": "The Sha1 workflow task computes file checksums for users; a checksum is not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore Sha1 task GetSha1 (CA5350 suppressed) is a user-facing file checksum feature."
+        }
+      ]
     },
     {
       "id": "EA-b433caf6d687cb88",
@@ -216,12 +328,19 @@
       "language": "go",
       "path": "internal/server/asset.go",
       "message": "Weak crypto algorithm `SHA-1` at line 485",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 485,
       "verdict": "false_positive",
       "reason": "SHA-1 generates an ETag for collision avoidance, as the comment says; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generateEtag uses sha1 for HTTP ETag collision avoidance, with an explicit nolint note that it is not for security."
+        }
+      ]
     },
     {
       "id": "EA-bcf1a398b9e015f6",
@@ -229,12 +348,19 @@
       "language": "go",
       "path": "modelmigration/v1_10/v88.go",
       "message": "Weak crypto algorithm `SHA-1` at line 15",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 15,
       "verdict": "false_positive",
       "reason": "SHA-1 hashes a commit status context into a fixed-length key for storage; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hashContext in v1_10/v88.go computes a SHA1 of a commit-status context as a dedupe key in a migration, no adversarial reliance."
+        }
+      ]
     },
     {
       "id": "EA-22d56f307d2736da",
@@ -242,12 +368,19 @@
       "language": "go",
       "path": "modelmigration/v1_11/v115.go",
       "message": "Weak crypto algorithm `MD5` at line 148",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 148,
       "verdict": "false_positive",
       "reason": "MD5 derives an avatar file name; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "v115.go migrates avatar filenames with md5 of userID and image data, a naming scheme (Gravatar-style), not security."
+        }
+      ]
     },
     {
       "id": "EA-188915602ed5407d",
@@ -255,12 +388,19 @@
       "language": "go",
       "path": "models/auth/twofactor.go",
       "message": "Weak crypto algorithm `MD5` at line 94",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 94,
       "verdict": "false_positive",
       "reason": "MD5 of the server SecretKey derives the 2FA encryption key; a single-hash derivation does not rely on MD5 collision resistance (operator rule for weak hashes).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getEncryptionKey derives an AES key from setting.SecretKey via a single md5.Sum; single-hash key derivation does not rely on collision resistance."
+        }
+      ]
     },
     {
       "id": "EA-8891070ef095329d",
@@ -268,12 +408,19 @@
       "language": "go",
       "path": "models/git/commit_status.go",
       "message": "Weak crypto algorithm `SHA-1` at line 551",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 551,
       "verdict": "false_positive",
       "reason": "SHA-1 is required by the Have I Been Pwned k-anonymity range API.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "HashCommitStatusContext uses sha1 to dedupe commit status contexts, a non-security identifier."
+        }
+      ]
     },
     {
       "id": "EA-352a47e0ac48c0b0",
@@ -281,12 +428,19 @@
       "language": "go",
       "path": "modules/auth/password/pwn/pwn.go",
       "message": "Weak crypto algorithm `SHA-1` at line 44",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 44,
       "verdict": "false_positive",
       "reason": "SHA-1 computes Git object IDs, the format Git mandates.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "pwn.CheckPassword uses SHA-1 because the HaveIBeenPwned range API mandates SHA-1 prefixes; it is protocol-mandated."
+        }
+      ]
     },
     {
       "id": "EA-bfa86ebbd7d3a483",
@@ -294,12 +448,19 @@
       "language": "go",
       "path": "modules/git/object_format.go",
       "message": "Weak crypto algorithm `SHA-1` at line 47",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 47,
       "verdict": "false_positive",
       "reason": "SHA-1 hashes a file path into a web UI anchor; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sha1ObjectFormatImpl.ComputeHash computes Git object IDs, where SHA-1 is mandated by the git object format."
+        }
+      ]
     },
     {
       "id": "EA-aee6f262e42ac0d8",
@@ -307,12 +468,19 @@
       "language": "go",
       "path": "modules/git/utils.go",
       "message": "Weak crypto algorithm `SHA-1` at line 43",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 43,
       "verdict": "false_positive",
       "reason": "Alpine package indexes are defined over SHA-1 digests of the gzip streams; the format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "HashFilePathForWebUI uses sha1 to produce a stable DOM/anchor id from a file path, no security purpose."
+        }
+      ]
     },
     {
       "id": "EA-a0145cabb3893ef2",
@@ -320,12 +488,19 @@
       "language": "go",
       "path": "modules/packages/alpine/metadata.go",
       "message": "Weak crypto algorithm `SHA-1` at line 82",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 82,
       "verdict": "false_positive",
       "reason": "Alpine package indexes are defined over SHA-1 digests of the gzip streams; the format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "alpine ParsePackage hashes the control stream with sha1 because the Alpine APK format defines Q1 SHA-1 checksums."
+        }
+      ]
     },
     {
       "id": "EA-3eff461556be1f70",
@@ -333,12 +508,19 @@
       "language": "go",
       "path": "modules/packages/alpine/metadata.go",
       "message": "Weak crypto algorithm `SHA-1` at line 122",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 122,
       "verdict": "false_positive",
       "reason": "The multi-hasher computes the MD5 checksum package registries publish beside SHA-256 and SHA-512.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The second sha1.New() at line 122 resets the same Alpine APK Q1 checksum hasher per stream, a format-mandated checksum."
+        }
+      ]
     },
     {
       "id": "EA-003338dccc568387",
@@ -346,12 +528,19 @@
       "language": "go",
       "path": "modules/packages/multi_hasher.go",
       "message": "Weak crypto algorithm `MD5` at line 43",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 43,
       "verdict": "false_positive",
       "reason": "The multi-hasher computes the SHA-1 checksum package registries publish beside SHA-256 and SHA-512.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "NewMultiHasher's md5 computes package checksum digests the registries (npm, Maven, etc.) require, not security reliance."
+        }
+      ]
     },
     {
       "id": "EA-77eb6fb35ff0433a",
@@ -359,12 +548,19 @@
       "language": "go",
       "path": "modules/packages/multi_hasher.go",
       "message": "Weak crypto algorithm `SHA-1` at line 44",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 44,
       "verdict": "false_positive",
       "reason": "npm's legacy integrity field is a SHA-1 digest; the registry format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "NewMultiHasher's sha1 computes the SHA-1 checksum digest that package registry protocols require."
+        }
+      ]
     },
     {
       "id": "EA-002b8f3ff476a864",
@@ -372,12 +568,19 @@
       "language": "go",
       "path": "modules/packages/npm/creator.go",
       "message": "Weak crypto algorithm `SHA-1` at line 378",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 378,
       "verdict": "false_positive",
       "reason": "MD5 of the artifact name makes an upload URL path segment; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "npm creator verifies the sha1 integrity field because the npm package format mandates sha1 integrity values (sha512 also supported)."
+        }
+      ]
     },
     {
       "id": "EA-a1d33eb5ee416e2a",
@@ -385,12 +588,19 @@
       "language": "go",
       "path": "routers/api/actions/artifacts.go",
       "message": "Weak crypto algorithm `MD5` at line 237",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 237,
       "verdict": "false_positive",
       "reason": "MD5 of the artifact name makes a download URL path segment; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "artifactHash md5 of req.Name builds the upload URL path segment required by the Actions artifact protocol, an identifier not a security value."
+        }
+      ]
     },
     {
       "id": "EA-b0bc663d5472bdc4",
@@ -398,12 +608,19 @@
       "language": "go",
       "path": "routers/api/actions/artifacts.go",
       "message": "Weak crypto algorithm `MD5` at line 368",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 368,
       "verdict": "false_positive",
       "reason": "The MD5 verifies a chunk against the client-supplied Content-MD5 for transfer integrity; not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "listArtifacts md5 of art.ArtifactName produces the same protocol-defined URL identifier, no security reliance."
+        }
+      ]
     },
     {
       "id": "EA-edc08f9819218a9c",
@@ -411,12 +628,19 @@
       "language": "go",
       "path": "routers/api/actions/artifacts_chunks.go",
       "message": "Weak crypto algorithm `MD5` at line 93",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 93,
       "verdict": "false_positive",
       "reason": "MD5 of the artifact name is compared with the URL path segment it generated; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "artifacts_chunks md5.New is used only when checkMd5 is set to verify the Content-MD5 integrity header of an uploaded chunk, a protocol integrity check."
+        }
+      ]
     },
     {
       "id": "EA-f249174887b9d771",
@@ -424,12 +648,19 @@
       "language": "go",
       "path": "routers/api/actions/artifacts_utils.go",
       "message": "Weak crypto algorithm `MD5` at line 72",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 72,
       "verdict": "false_positive",
       "reason": "Chef's signing protocol hashes the user id with SHA-1 into the canonical string; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "validateArtifactHash compares a path param to md5 of artifactName, the protocol's artifact URL id, not an auth secret."
+        }
+      ]
     },
     {
       "id": "EA-2b256613d02ec044",
@@ -437,12 +668,19 @@
       "language": "go",
       "path": "routers/api/packages/chef/auth.go",
       "message": "Weak crypto algorithm `SHA-1` at line 210",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 210,
       "verdict": "false_positive",
       "reason": "Chef's signing protocol hashes the request path with SHA-1 into the canonical string; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chef buildCheckData hashes X-Ops-Userid with SHA-1 because the Chef server signing protocol (versions other than 1.0/1.3) mandates it."
+        }
+      ]
     },
     {
       "id": "EA-97286a3642f3355d",
@@ -455,7 +693,14 @@
       "line": 227,
       "verdict": "true_positive",
       "reason": "For Chef protocol versions other than SHA-256 the request signature is verified over a SHA-1 digest, which relies on SHA-1 collision resistance.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chef buildCheckData hashes the request path with SHA-1 as required by the Chef signing protocol v1.0 canonical string."
+        }
+      ]
     },
     {
       "id": "EA-fa9d35d1c3f36d00",
@@ -463,12 +708,19 @@
       "language": "go",
       "path": "routers/api/packages/chef/auth.go",
       "message": "Weak crypto algorithm `SHA-1` at line 246",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 246,
       "verdict": "false_positive",
       "reason": "Maven metadata publishes .md5 checksum files; the repository layout mandates them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "verifyDataNew uses sha1.New() only when the Chef client's signed request declares sha1 (X-Ops-Sign version 1.0), a protocol-mandated algorithm passed into rsa.VerifyPKCS1v15."
+        }
+      ]
     },
     {
       "id": "EA-1669ad394f9b579c",
@@ -476,12 +728,19 @@
       "language": "go",
       "path": "routers/api/packages/maven/maven.go",
       "message": "Weak crypto algorithm `MD5` at line 130",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 130,
       "verdict": "false_positive",
       "reason": "Maven metadata publishes .sha1 checksum files; the repository layout mandates them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The .md5 branch in maven.go serves the checksum file clients request for Maven metadata; the Maven repository layout mandates MD5 sidecars and it protects no secret."
+        }
+      ]
     },
     {
       "id": "EA-1cd199850afbee04",
@@ -489,12 +748,19 @@
       "language": "go",
       "path": "routers/api/packages/maven/maven.go",
       "message": "Weak crypto algorithm `SHA-1` at line 133",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 133,
       "verdict": "false_positive",
       "reason": "The RubyGems compact index lists an MD5 checksum per gem; the index format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The .sha1 case of the same checksum switch answers Maven's standard maven-metadata.xml.sha1 sidecar request, a format-mandated integrity file, not a security control."
+        }
+      ]
     },
     {
       "id": "EA-8a7179925e07454a",
@@ -502,12 +768,19 @@
       "language": "go",
       "path": "routers/api/packages/rubygems/rubygems.go",
       "message": "Weak crypto algorithm `MD5` at line 362",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 362,
       "verdict": "false_positive",
       "reason": "The Alpine index signature is defined over the SHA-1 digest of the index stream; the format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "md5.Sum appended to each line of the RubyGems compact-index /info response is the MD5 digest the compact index format specifies for clients' caching, not a security decision."
+        }
+      ]
     },
     {
       "id": "EA-6f4d8452f67e1e88",
@@ -515,12 +788,19 @@
       "language": "go",
       "path": "services/packages/alpine/repository.go",
       "message": "Weak crypto algorithm `SHA-1` at line 257",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 257,
       "verdict": "false_positive",
       "reason": "The Alpine index signature is defined over the SHA-1 digest of the index stream; the format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sha1.New() hashes the gzipped APKINDEX and the digest is fed to rsa.SignPKCS1v15 with crypto.SHA1 because the Alpine APK signature format requires it."
+        }
+      ]
     },
     {
       "id": "EA-ee3e674dc3d5a11c",
@@ -528,12 +808,19 @@
       "language": "go",
       "path": "services/packages/debian/repository.go",
       "message": "Weak crypto algorithm `MD5` at line 346",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 346,
       "verdict": "false_positive",
       "reason": "Debian Release files list MD5Sum entries; the repository format mandates them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The MD5Sum: section of the Debian Release file is required by the apt repository format, filled from the blob's precomputed hashes, so the algorithm is externally mandated."
+        }
+      ]
     },
     {
       "id": "EA-6cd41e8ddcd943bb",
@@ -541,12 +828,19 @@
       "language": "go",
       "path": "services/packages/debian/repository.go",
       "message": "Weak crypto algorithm `SHA-1` at line 348",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 348,
       "verdict": "false_positive",
       "reason": "Debian Release files list SHA1 entries; the repository format mandates them.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The SHA1: section of the Debian Release file is mandated by apt's Release format alongside the SHA256/SHA512 sections that are also emitted."
+        }
+      ]
     },
     {
       "id": "EA-87d4fbb62eb39fb6",
@@ -554,12 +848,19 @@
       "language": "go",
       "path": "services/webhook/matrix.go",
       "message": "Weak crypto algorithm `SHA-1` at line 285",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 285,
       "verdict": "false_positive",
       "reason": "SHA-1 of the payload makes an idempotent Matrix transaction id; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getMatrixTxnID hashes the webhook payload with sha1 to produce an idempotency transaction ID for Matrix; collision resistance is not a security property here."
+        }
+      ]
     },
     {
       "id": "EA-85011cc3365136fa",
@@ -567,12 +868,19 @@
       "language": "go",
       "path": "server/websocket.go",
       "message": "Weak crypto algorithm `SHA-1` at line 113",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 113,
       "verdict": "false_positive",
       "reason": "RFC 6455 defines the WebSocket accept key as SHA-1 of the key and GUID.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "wsAcceptKey computes SHA-1 over key+wsGUID as required by RFC 6455 for Sec-WebSocket-Accept, and is already wrapped in fips140.WithoutEnforcement."
+        }
+      ]
     },
     {
       "id": "EA-0a2422c169c13b86",
@@ -580,12 +888,19 @@
       "language": "go",
       "path": "internal/rsum/md5.go",
       "message": "Weak crypto algorithm `MD5` at line 18",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 18,
       "verdict": "false_positive",
       "reason": "MD5 of a file is a checksum for comparing copies; not a security control.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "rsum.MD5 computes a file checksum of the database/WAL for rqlite consistency comparison (DBSum/WALSum), with no adversary relying on collision resistance."
+        }
+      ]
     },
     {
       "id": "EA-db30b7965462c669",
@@ -593,12 +908,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/app/BaseWorkspaceImpl.java",
       "message": "Weak crypto algorithm `MD5` at line 281",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 281,
       "verdict": "false_positive",
       "reason": "MD5 of the hardware address derives a workspace identifier; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MD5 of the NIC hardware address is folded into a base-36 machine identifier in BaseWorkspaceImpl; it is an identifier derivation, not a security guarantee."
+        }
+      ]
     },
     {
       "id": "EA-753b4ae6bf3a6c33",
@@ -606,12 +928,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.config.migration/src/org/jkiss/dbeaver/ui/config/migration/wizards/navicat/NavicatEncrypt.java",
       "message": "Weak crypto algorithm `SHA-1` at line 44",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 44,
       "verdict": "false_positive",
       "reason": "The Navicat importer reproduces Navicat's own SHA-1 key derivation to read its stored passwords; the third-party format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "NavicatEncrypt.initKey derives the Blowfish key via SHA1 of NAVICAT_CODE to decrypt Navicat's stored passwords for migration, a compatibility requirement of Navicat's format."
+        }
+      ]
     },
     {
       "id": "EA-bbde9d3e9f5caf69",
@@ -619,12 +948,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.config.migration/src/org/jkiss/dbeaver/ui/config/migration/wizards/navicat/NavicatEncrypt.java",
       "message": "Weak crypto algorithm `Blowfish` at line 58",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 58,
       "verdict": "false_positive",
       "reason": "The Navicat importer must use Blowfish/ECB to decrypt Navicat's stored passwords; the third-party format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Cipher 'Blowfish/ECB/NoPadding' in initChiperEncrypt is dictated by Navicat's proprietary password encryption (comment 'Must use NoPadding') for import compatibility."
+        }
+      ]
     },
     {
       "id": "EA-1d8a5d4373ab6e10",
@@ -632,12 +968,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.config.migration/src/org/jkiss/dbeaver/ui/config/migration/wizards/navicat/NavicatEncrypt.java",
       "message": "Weak crypto algorithm `Blowfish` at line 70",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 70,
       "verdict": "false_positive",
       "reason": "The Navicat importer must use Blowfish/ECB to decrypt Navicat's stored passwords; the third-party format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The Blowfish/ECB decrypt cipher in initChiperDecrypt exists to read Navicat's legacy encrypted passwords in a migration wizard, so the algorithm is externally imposed."
+        }
+      ]
     },
     {
       "id": "EA-10cd2f97586a3895",
@@ -645,12 +988,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/dialogs/connection/EditConnectionWizard.java",
       "message": "Weak crypto algorithm `MD5` at line 348",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 348,
       "verdict": "true_positive",
       "reason": "The connection lock password is checked against an unsalted MD5 hash of the password.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "checkLockPassword hashes the user-entered connection lock password with MD5 and compares to dataSource.getLockPasswordHash(), an unsalted weak hash protecting a password."
+        }
+      ]
     },
     {
       "id": "EA-4848b5ffb3cd71fc",
@@ -658,12 +1008,19 @@
       "language": "java",
       "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/utils/EncryptionUtils.java",
       "message": "Weak crypto algorithm `MD5` at line 34",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 34,
       "verdict": "true_positive",
       "reason": "getMd5 is the hash DolphinScheduler stores user passwords with (UsersServiceImpl) and derives access tokens from: unsalted MD5.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "EncryptionUtils.getMd5 is used by UsersServiceImpl (setUserPassword) to store user passwords and by AccessTokenServiceImpl to mint tokens, so security relies on MD5."
+        }
+      ]
     },
     {
       "id": "EA-f2caba77d1e467e6",
@@ -671,12 +1028,19 @@
       "language": "java",
       "path": "distribution/downloads/src/main/java/CopyDependencies.java",
       "message": "Weak crypto algorithm `MD5` at line 92",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 92,
       "verdict": "false_positive",
       "reason": "CopyDependencies is a distribution build tool writing .md5 checksum files; build tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generateChecksums in the keycloak downloads CopyDependencies build tool writes .md5 sidecar files for Maven-style artifacts; it is a build helper, not security logic."
+        }
+      ]
     },
     {
       "id": "EA-ed99950b729825bf",
@@ -684,12 +1048,19 @@
       "language": "java",
       "path": "distribution/downloads/src/main/java/CopyDependencies.java",
       "message": "Weak crypto algorithm `SHA-1` at line 93",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 93,
       "verdict": "false_positive",
       "reason": "CopyDependencies is a distribution build tool writing .sha1 checksum files; build tooling is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The SHA-1 digest in CopyDependencies.generateChecksums produces a .sha1 sidecar file for the downloads repository layout, in a build-time tool."
+        }
+      ]
     },
     {
       "id": "EA-c61de1b8b3b66da6",
@@ -697,12 +1068,19 @@
       "language": "java",
       "path": "server-spi-private/src/main/java/org/keycloak/protocol/saml/util/ArtifactBindingUtils.java",
       "message": "Weak crypto algorithm `SHA-1` at line 48",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 48,
       "verdict": "false_positive",
       "reason": "The SAML artifact binding source id is defined as the SHA-1 of the entity id by the SAML specification.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "computeArtifactBindingIdentifier uses SHA-1 because the SAML 2.0 Artifact Binding spec defines SourceID as the SHA-1 of the issuer entity ID."
+        }
+      ]
     },
     {
       "id": "EA-83649f4b56abd7c4",
@@ -710,12 +1088,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/cache/ComputedKey.java",
       "message": "Weak crypto algorithm `MD5` at line 34",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 34,
       "verdict": "false_positive",
       "reason": "ComputedKey hashes values into cache keys; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ComputedKey.getMessageDigest uses MD5 to build a cache lookup key from realm/type/attributes; keys are not attacker-chosen secrets and no security decision rests on it."
+        }
+      ]
     },
     {
       "id": "EA-e97106be264444d7",
@@ -723,12 +1108,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/RangerKeyStore.java",
       "message": "Weak crypto algorithm `SHA-1` at line 965",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 965,
       "verdict": "false_positive",
       "reason": "The keystore integrity check is a password-keyed digest; a keyed digest does not rely on SHA-1 collision resistance (operator rule for weak hashes).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getKeyedMessageDigest mirrors the JKS keystore integrity digest (SHA over password bytes plus 'Mighty Aphrodite' whitener), a format-defined algorithm copied from the JDK keystore."
+        }
+      ]
     },
     {
       "id": "EA-9b4b237bcface0dd",
@@ -736,12 +1128,19 @@
       "language": "java",
       "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
       "message": "Weak crypto algorithm `MD5` at line 279",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 279,
       "verdict": "false_positive",
       "reason": "MD5 formats a certificate fingerprint for display; not a security decision.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DigestUtils.md5Hex builds a colon-separated MD5 certificate fingerprint for display in SSLContextManager's keystore listing, not for trust validation."
+        }
+      ]
     },
     {
       "id": "EA-3fe37486602a6cbe",
@@ -749,12 +1148,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `DES` at line 565",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 565,
       "verdict": "false_positive",
       "reason": "NTLM's LM session key is defined with DES; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ZapNTLMEngineImpl getNTLM2SessionResponse-style LM session key at line 565 uses DES/ECB because the NTLM protocol mandates DES for the LM session key."
+        }
+      ]
     },
     {
       "id": "EA-c552ce51f5dfec39",
@@ -762,12 +1168,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `DES` at line 568",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 568,
       "verdict": "false_positive",
       "reason": "NTLM's LM session key is defined with DES; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The second DES/ECB cipher at line 568 encrypts the high key part of the NTLM LMUser session key, as the NTLM specification dictates."
+        }
+      ]
     },
     {
       "id": "EA-f17fdeabfc435f20",
@@ -775,12 +1188,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `RC4` at line 594",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 594,
       "verdict": "false_positive",
       "reason": "NTLM session key exchange is defined with RC4; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "RC4 in ZapNTLMEngineImpl.RC4 implements the NTLM2 session key exchange step where the protocol requires RC4."
+        }
+      ]
     },
     {
       "id": "EA-a6b90908856a38b9",
@@ -788,12 +1208,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `DES` at line 647",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 647,
       "verdict": "false_positive",
       "reason": "The LM hash is defined with DES over the KGS!@#$% constant; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DES in the LM hash computation encrypts the 'KGS!@#$%' magic constant exactly as the LM hash algorithm specifies, needed for NTLM compatibility."
+        }
+      ]
     },
     {
       "id": "EA-7b225a36947ccf2c",
@@ -801,12 +1228,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `DES` at line 737",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 737,
       "verdict": "false_positive",
       "reason": "The NTLM response is defined with DES; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DES/ECB at line 737 builds the 21-byte-key three-part LM/NTLM response, which NTLM mandates, so it's a protocol implementation."
+        }
+      ]
     },
     {
       "id": "EA-ab996c92a28cd492",
@@ -814,12 +1248,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `RC4` at line 844",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 844,
       "verdict": "false_positive",
       "reason": "NTLM sealing is defined with RC4; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "RC4 in the NTLM sealing cipher (initCipher with sealingKey) is the message confidentiality algorithm NTLM defines, so it's protocol-mandated."
+        }
+      ]
     },
     {
       "id": "EA-8bb88782654b1470",
@@ -827,12 +1268,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
       "message": "Weak crypto algorithm `MD5` at line 1860",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1860,
       "verdict": "false_positive",
       "reason": "NTLMv2 and its HMAC-MD5 are defined with MD5; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getMD5 in ZapNTLMEngineImpl supplies MD5 to the NTLMv2 response and session security computations required by the NTLM protocol."
+        }
+      ]
     },
     {
       "id": "EA-97d5dd2700585d11",
@@ -840,12 +1288,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/services/asset-hash/index.js",
       "message": "Weak crypto algorithm `MD5` at line 81",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 81,
       "verdict": "false_positive",
       "reason": "MD5 of the current time is a cache-busting asset hash; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getGlobalHash md5s Date.now() to make a 10-character cache-busting asset hash fallback, not a security value."
+        }
+      ]
     },
     {
       "id": "EA-4e5db110be5f64e3",
@@ -853,12 +1308,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/services/rss/cache.js",
       "message": "Weak crypto algorithm `MD5` at line 10",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 10,
       "verdict": "false_positive",
       "reason": "MD5 of the feed data detects whether the cached RSS must be rebuilt; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getXML hashes JSON.stringify(data) with md5 only to detect whether the RSS feed cache needs regenerating."
+        }
+      ]
     },
     {
       "id": "EA-f8c4af40e6d266c3",
@@ -866,12 +1328,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/web/routers/serve-favicon.js",
       "message": "Weak crypto algorithm `MD5` at line 14",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 14,
       "verdict": "false_positive",
       "reason": "MD5 produces the favicon ETag; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The favicon ETag is an md5 hex of the file buffer in buildContentResponse, a cache validator with no security role."
+        }
+      ]
     },
     {
       "id": "EA-de82cf8e60f6b7ed",
@@ -879,12 +1348,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/web/routers/serve-public-file.js",
       "message": "Weak crypto algorithm `MD5` at line 96",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 96,
       "verdict": "false_positive",
       "reason": "MD5 produces a public file's ETag; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "serve-public-file computes an md5 ETag over the string body for HTTP caching; no secrecy or collision resistance is required."
+        }
+      ]
     },
     {
       "id": "EA-4c893d8cbd845e01",
@@ -892,12 +1368,19 @@
       "language": "javascript",
       "path": "ghost/core/server/lib/image/gravatar.js",
       "message": "Weak crypto algorithm `MD5` at line 21",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 21,
       "verdict": "false_positive",
       "reason": "Gravatar's API identifies an avatar by the MD5 of the email address.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Gravatar requires the lowercase trimmed email to be MD5-hashed in the URL, so the algorithm is dictated by the external service."
+        }
+      ]
     },
     {
       "id": "EA-31036940b2614c3e",
@@ -905,12 +1388,19 @@
       "language": "javascript",
       "path": "ghost/core/server/web/admin/controller.js",
       "message": "Weak crypto algorithm `MD5` at line 35",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 35,
       "verdict": "false_positive",
       "reason": "MD5 of the admin template produces its ETag; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The admin controller md5s the template file buffer to create an ETag header, replacing the sendFile default; purely cache validation."
+        }
+      ]
     },
     {
       "id": "EA-6388317c234a5a9f",
@@ -918,12 +1408,19 @@
       "language": "python",
       "path": "changedetectionio/blueprint/browser_steps/__init__.py",
       "message": "Weak crypto algorithm `MD5` at line 436",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 436,
       "verdict": "false_positive",
       "reason": "MD5 of the response body produces an ETag; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "etag_hash of the JSON response body is an md5 used for Response.set_etag, a cache validator rather than a security feature."
+        }
+      ]
     },
     {
       "id": "EA-e88f9164954195aa",
@@ -931,12 +1428,19 @@
       "language": "python",
       "path": "changedetectionio/content_fetchers/requests.py",
       "message": "Weak crypto algorithm `MD5` at line 198",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 198,
       "verdict": "false_positive",
       "reason": "MD5 of binary content is a change-detection checksum; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hashlib.md5(r.content) in the requests fetcher stands in for binary content as a change-detection checksum, not a security measure."
+        }
+      ]
     },
     {
       "id": "EA-4664176d8f4732d2",
@@ -944,12 +1448,19 @@
       "language": "python",
       "path": "changedetectionio/llm/evaluator.py",
       "message": "Weak crypto algorithm `MD5` at line 684",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 684,
       "verdict": "false_positive",
       "reason": "MD5 builds a cache key for LLM summaries; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "compute_summary_cache_key md5s diff text and prompt and truncates to 16 hex chars to name a local summary cache file; no adversary model."
+        }
+      ]
     },
     {
       "id": "EA-86722689a2a817b5",
@@ -957,12 +1468,19 @@
       "language": "python",
       "path": "changedetectionio/processors/__init__.py",
       "message": "Weak crypto algorithm `MD5` at line 369",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 369,
       "verdict": "false_positive",
       "reason": "MD5 of the processor name picks a display colour hue; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hashlib.md5(processor_name) is used to deterministically derive a hue/saturation for a badge colour, wholly non-security."
+        }
+      ]
     },
     {
       "id": "EA-6aa7d8af02c093e2",
@@ -970,12 +1488,19 @@
       "language": "python",
       "path": "changedetectionio/processors/base.py",
       "message": "Weak crypto algorithm `MD5` at line 423",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 423,
       "verdict": "false_positive",
       "reason": "MD5 of a placeholder string in a base processor stub; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The placeholder base processor stores md5('xxxxx') as previous_md5 in a dummy run_changedetection stub; nothing relies on its strength."
+        }
+      ]
     },
     {
       "id": "EA-8c3f867298f4bbc3",
@@ -983,12 +1508,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/processor.py",
       "message": "Weak crypto algorithm `MD5` at line 52",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 52,
       "verdict": "false_positive",
       "reason": "MD5 of the screenshot skips an unchanged image comparison; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "current_md5 of the screenshot is a quick equality check to skip the SSIM comparison when the image is unchanged, i.e. change detection."
+        }
+      ]
     },
     {
       "id": "EA-454dc1c6ea4e1ee5",
@@ -996,12 +1528,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/processor.py",
       "message": "Weak crypto algorithm `MD5` at line 154",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 154,
       "verdict": "false_positive",
       "reason": "MD5 of the screenshot records change state; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "previous_md5 baseline for the first screenshot is the same change-detection checksum, stored to compare later screenshots."
+        }
+      ]
     },
     {
       "id": "EA-db565dd0c6dc7998",
@@ -1009,12 +1548,19 @@
       "language": "python",
       "path": "changedetectionio/processors/restock_diff/plugins/llm_restock.py",
       "message": "Weak crypto algorithm `MD5` at line 284",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 284,
       "verdict": "false_positive",
       "reason": "MD5 builds an LLM cache key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "cache_key md5s model plus prompt to avoid repeating a billed LLM call; it is a memoization key, not a security control."
+        }
+      ]
     },
     {
       "id": "EA-c4297913c7513255",
@@ -1022,12 +1568,19 @@
       "language": "python",
       "path": "changedetectionio/processors/restock_diff/processor.py",
       "message": "Weak crypto algorithm `MD5` at line 621",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 621,
       "verdict": "false_positive",
       "reason": "MD5 of the snapshot detects restock changes; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "fetched_md5 over the 'In Stock/Price' snapshot string is a change-detection fingerprint stored as previous_md5."
+        }
+      ]
     },
     {
       "id": "EA-4215053fdbbe006c",
@@ -1035,12 +1588,19 @@
       "language": "python",
       "path": "changedetectionio/processors/text_json_diff/processor.py",
       "message": "Weak crypto algorithm `MD5` at line 130",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 130,
       "verdict": "false_positive",
       "reason": "MD5 of the filter configuration detects configuration changes; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The processor config hash (md5 over json.dumps(config, sort_keys=True)) detects filter-config changes for cache invalidation."
+        }
+      ]
     },
     {
       "id": "EA-0e8e5a86fbafd4aa",
@@ -1048,12 +1608,19 @@
       "language": "python",
       "path": "changedetectionio/processors/text_json_diff/processor.py",
       "message": "Weak crypto algorithm `MD5` at line 315",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 315,
       "verdict": "false_positive",
       "reason": "MD5 of the document is a change-detection checksum shown to users; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hashlib.md5(raw_content) is printed as a 'Document checksum' in injected HTML metadata for display, with no security reliance."
+        }
+      ]
     },
     {
       "id": "EA-0a5c41fd8e5851a5",
@@ -1061,12 +1628,19 @@
       "language": "python",
       "path": "changedetectionio/processors/text_json_diff/processor.py",
       "message": "Weak crypto algorithm `MD5` at line 413",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 413,
       "verdict": "false_positive",
       "reason": "MD5 of the text is a change-detection checksum; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "calculate() computes an md5 checksum of page text for detecting content change, not authentication or integrity against an attacker."
+        }
+      ]
     },
     {
       "id": "EA-29207956adefb25e",
@@ -1074,12 +1648,19 @@
       "language": "python",
       "path": "electrum/plugins/labels/labels.py",
       "message": "Weak crypto algorithm `SHA-1` at line 225",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 225,
       "verdict": "false_positive",
       "reason": "SHA-1 of the master public key derives the label-sync key; a single-hash derivation does not rely on SHA-1 collision resistance (operator rule for weak hashes).",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Electrum's labels plugin derives the label sync password as sha1(mpk) hex and then an IV via sha256; single-hash key derivation for a sync protocol whose format requires it, no collision resistance used."
+        }
+      ]
     },
     {
       "id": "EA-c2738a4e048d8865",
@@ -1087,12 +1668,19 @@
       "language": "python",
       "path": "electrum/x509.py",
       "message": "Weak crypto algorithm `SHA-1` at line 302",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 302,
       "verdict": "false_positive",
       "reason": "SHA-1 formats a certificate fingerprint; not a security decision.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getFingerprint sha1 of the cert bytes is only the dict key for ca_list in load_ca_certs, an identifier, not a trust decision on collision resistance."
+        }
+      ]
     },
     {
       "id": "EA-af8b93df28f72d0f",
@@ -1120,12 +1708,19 @@
       "language": "python",
       "path": "frigate/detectors/detector_config.py",
       "message": "Weak crypto algorithm `MD5` at line 215",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 215,
       "verdict": "false_positive",
       "reason": "MD5 fingerprints the model file for caching; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "compute_model_hash md5(b'unknown') is a fallback model identifier for caching, not security."
+        }
+      ]
     },
     {
       "id": "EA-829091c426db90e6",
@@ -1133,12 +1728,19 @@
       "language": "python",
       "path": "frigate/detectors/detector_config.py",
       "message": "Weak crypto algorithm `MD5` at line 218",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 218,
       "verdict": "false_positive",
       "reason": "MD5 fingerprints the model file for caching; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "hashlib.md5() streams the model file to derive _model_hash, a version identifier for the detector model, not security."
+        }
+      ]
     },
     {
       "id": "EA-069091bdc589b807",
@@ -1166,12 +1768,19 @@
       "language": "python",
       "path": "mitmproxy/utils/htpasswd.py",
       "message": "Weak crypto algorithm `SHA-1` at line 77",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 77,
       "verdict": "false_positive",
       "reason": "Apache's {SHA} htpasswd entries are defined as base64 SHA-1; verifying that existing format requires it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "htpasswd verification of the Apache '{SHA}' scheme necessarily uses base64 SHA-1 to match existing entries, as the comment citing the Apache docs notes; the format is external."
+        }
+      ]
     },
     {
       "id": "EA-8fa1ea836c04b5ea",
@@ -1179,12 +1788,19 @@
       "language": "python",
       "path": "mitmproxy/utils/magisk.py",
       "message": "Weak crypto algorithm `MD5` at line 90",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 90,
       "verdict": "false_positive",
       "reason": "Android's certificate store names files by OpenSSL's MD5 subject_hash_old; the format mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "subject_hash_old deliberately mimics openssl -subject_hash_old (MD5 of the subject) to name Android system certificates, so MD5 is mandated."
+        }
+      ]
     },
     {
       "id": "EA-0131a07ed4c30bc2",
@@ -1192,12 +1808,19 @@
       "language": "python",
       "path": "redash/tasks/schedule.py",
       "message": "Weak crypto algorithm `SHA-1` at line 39",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 39,
       "verdict": "false_positive",
       "reason": "SHA-1 of the job metadata makes a stable scheduler job id; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "job_id sha1s the sorted JSON of schedule metadata to make a stable RQ job ID; a deduplication key, not security."
+        }
+      ]
     },
     {
       "id": "EA-2f96a7462d1cf461",
@@ -1205,12 +1828,19 @@
       "language": "python",
       "path": "scripts/lib/zulip_tools.py",
       "message": "Weak crypto algorithm `SHA-1` at line 386",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 386,
       "verdict": "false_positive",
       "reason": "scripts/lib is Zulip's tooling, and the SHA-1 is an emoji asset cache checksum.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generate_sha1sum_emoji hashes emoji build input files to detect when to rebuild in a provisioning script; no security role."
+        }
+      ]
     },
     {
       "id": "EA-61d85cc35f50b917",
@@ -1218,12 +1848,19 @@
       "language": "python",
       "path": "zerver/lib/avatar_hash.py",
       "message": "Weak crypto algorithm `MD5` at line 15",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 15,
       "verdict": "false_positive",
       "reason": "Gravatar's API identifies an avatar by the MD5 of the email address.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "get_gravatar-style avatar hash md5(email.lower()) is dictated by Gravatar's URL scheme, not chosen for security."
+        }
+      ]
     },
     {
       "id": "EA-95586f1a19c0ea68",
@@ -1231,12 +1868,19 @@
       "language": "python",
       "path": "zerver/lib/cache.py",
       "message": "Weak crypto algorithm `SHA-1` at line 476",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 476,
       "verdict": "false_positive",
       "reason": "SHA-1 of the URL makes a cache key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "preview_url_cache_key hashes a URL with sha1 to build a memcached key; collisions have no security meaning."
+        }
+      ]
     },
     {
       "id": "EA-957cdf2df74cda99",
@@ -1244,12 +1888,19 @@
       "language": "python",
       "path": "zerver/lib/cache.py",
       "message": "Weak crypto algorithm `SHA-1` at line 488",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 488,
       "verdict": "false_positive",
       "reason": "SHA-1 of the email makes a cache key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "user_profile_by_email_realm_id_cache_key uses sha1(email) only to keep a safe memcached key string."
+        }
+      ]
     },
     {
       "id": "EA-34fa5ff4d897e886",
@@ -1257,12 +1908,19 @@
       "language": "python",
       "path": "zerver/lib/cache.py",
       "message": "Weak crypto algorithm `SHA-1` at line 496",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 496,
       "verdict": "false_positive",
       "reason": "SHA-1 of the email makes a cache key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "user_profile_delivery_email_cache_key sha1s the delivery email as a cache key component, not a security digest."
+        }
+      ]
     },
     {
       "id": "EA-ec0a01719d7f5a34",
@@ -1270,12 +1928,19 @@
       "language": "python",
       "path": "zerver/lib/cache.py",
       "message": "Weak crypto algorithm `SHA-1` at line 500",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 500,
       "verdict": "false_positive",
       "reason": "SHA-1 of the email makes a cache key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bot_profile_cache_key sha1s the bot email to form a cache key; no integrity or authentication reliance."
+        }
+      ]
     },
     {
       "id": "EA-d881e68824cf3e2f",
@@ -1283,12 +1948,19 @@
       "language": "python",
       "path": "zerver/lib/logging_util.py",
       "message": "Weak crypto algorithm `SHA-1` at line 87",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 87,
       "verdict": "false_positive",
       "reason": "SHA-1 of the traceback makes a rate-limit dedup key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The logging filter sha1s the traceback text to key a rate-limit duplicate cache, a dedupe fingerprint rather than a security hash."
+        }
+      ]
     },
     {
       "id": "EA-b879940b5d4123f2",
@@ -1296,12 +1968,19 @@
       "language": "python",
       "path": "zerver/migrations/0544_copy_avatar_images.py",
       "message": "Weak crypto algorithm `SHA-1` at line 50",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 50,
       "verdict": "false_positive",
       "reason": "The salted SHA-1 recomputes old avatar file names during a migration; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "old_hash in migration 0544 reproduces the legacy SHA-1 avatar path (id+AVATAR_SALT) in order to locate and copy existing avatar files; legacy-compat, not new security."
+        }
+      ]
     },
     {
       "id": "EA-2fb53bfbde595f4e",
@@ -1309,12 +1988,19 @@
       "language": "python",
       "path": "zerver/migrations/0790_backfill_update_recipient_type_of_personal_messages_to_dm_group.py",
       "message": "Weak crypto algorithm `SHA-1` at line 31",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 31,
       "verdict": "false_positive",
       "reason": "SHA-1 of the sorted user ids makes a direct-message group key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The migration helper hashes the sorted user-id list with sha1 to compute a direct message group hash that must match recipients.py; a lookup key."
+        }
+      ]
     },
     {
       "id": "EA-ef2dcdc8a5dad8f2",
@@ -1322,12 +2008,19 @@
       "language": "python",
       "path": "zerver/migrations/0798_remove_userprofile_recipient_and_personal_recipients.py",
       "message": "Weak crypto algorithm `SHA-1` at line 33",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 33,
       "verdict": "false_positive",
       "reason": "SHA-1 of the sorted user ids makes a direct-message group key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This copy of the group-hash function in migration 0798 mirrors zerver/model/recipients.py for a lookup key, no security rationale."
+        }
+      ]
     },
     {
       "id": "EA-c6adcf3744083dfb",
@@ -1335,12 +2028,19 @@
       "language": "python",
       "path": "zerver/models/clients.py",
       "message": "Weak crypto algorithm `SHA-1` at line 70",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 70,
       "verdict": "false_positive",
       "reason": "SHA-1 of the client name makes a cache key; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "get_client_cache_key sha1s a client name to make a cache key; collisions are harmless to security."
+        }
+      ]
     },
     {
       "id": "EA-af4bed6a4af21ac5",
@@ -1368,12 +2068,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Weak crypto algorithm `MD5` at line 237",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 237,
       "verdict": "false_positive",
       "reason": "PostgreSQL md5 authentication defines the MD5 password exchange; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "md5_hash_password implements the PostgreSQL MD5 password authentication scheme (md5(password+user)), mandated by the server protocol pgcat proxies."
+        }
+      ]
     },
     {
       "id": "EA-76d0a54b30c55251",
@@ -1381,12 +2088,19 @@
       "language": "rust",
       "path": "src/messages.rs",
       "message": "Weak crypto algorithm `MD5` at line 250",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 250,
       "verdict": "false_positive",
       "reason": "PostgreSQL md5 authentication defines the second MD5 pass with the salt; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "md5_hash_second_pass builds 'md5'+md5(hash+salt), the PostgreSQL wire-protocol challenge response, so the algorithm is dictated by the protocol."
+        }
+      ]
     },
     {
       "id": "EA-097e341bb18ee955",
@@ -1394,12 +2108,19 @@
       "language": "rust",
       "path": "src/sharding.rs",
       "message": "Weak crypto algorithm `SHA-1` at line 65",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 65,
       "verdict": "false_positive",
       "reason": "SHA-1 of the key picks a shard, an example sharding function; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sha1 in the sharding function is used as a hash for shard selection (documented 'example of a hashing function'), not for security."
+        }
+      ]
     },
     {
       "id": "EA-680ace92e6d7b008",
@@ -1407,12 +2128,19 @@
       "language": "rust",
       "path": "warpgate-protocol-mysql/src/common.rs",
       "message": "Weak crypto algorithm `SHA-1` at line 10",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 10,
       "verdict": "false_positive",
       "reason": "mysql_native_password defines the SHA-1 scramble; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sha1::digest(password) is the first step of the MySQL mysql_native_password scramble required by the MySQL protocol that warpgate must speak."
+        }
+      ]
     },
     {
       "id": "EA-65e409ce39fa308b",
@@ -1420,12 +2148,19 @@
       "language": "rust",
       "path": "warpgate-protocol-mysql/src/common.rs",
       "message": "Weak crypto algorithm `SHA-1` at line 11",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 11,
       "verdict": "false_positive",
       "reason": "mysql_native_password defines the SHA-1 scramble; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sha1::digest(password_sha) is the double-SHA1 stage of the mandated mysql_native_password handshake."
+        }
+      ]
     },
     {
       "id": "EA-7e1c82ccb492fffb",
@@ -1433,12 +2168,19 @@
       "language": "rust",
       "path": "warpgate-protocol-mysql/src/common.rs",
       "message": "Weak crypto algorithm `SHA-1` at line 13",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 13,
       "verdict": "false_positive",
       "reason": "mysql_native_password defines the SHA-1 scramble; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Sha1::digest of challenge||password_sha_sha is the final stage of the MySQL native-password scramble, protocol-defined."
+        }
+      ]
     },
     {
       "id": "EA-923c69388d80ae6b",
@@ -1446,12 +2188,19 @@
       "language": "rust",
       "path": "warpgate-protocol-vnc/src/server/rfb.rs",
       "message": "Weak crypto algorithm `MD5` at line 228",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 228,
       "verdict": "false_positive",
       "reason": "The VNC authentication scheme Warpgate bridges defines this MD5 step; the protocol mandates it.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "md5_16 derives the AES key from the VNC server's data per the Apple Remote Desktop authentication protocol, which specifies MD5."
+        }
+      ]
     },
     {
       "id": "EA-5e62198a2b076478",
@@ -1459,12 +2208,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/update.ts",
       "message": "Weak crypto algorithm `MD5` at line 23",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 23,
       "verdict": "false_positive",
       "reason": "MD5 of the view definitions detects schema changes; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "createHash('md5') over the generated view SQL is a change-detection hash stored in __meta__ to decide whether views need rebuilding."
+        }
+      ]
     },
     {
       "id": "EA-fdf2125e9e04ce53",
@@ -1472,12 +2228,19 @@
       "language": "typescript",
       "path": "e2e/helpers/environment/constants.ts",
       "message": "Weak crypto algorithm `SHA-1` at line 17",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 17,
       "verdict": "false_positive",
       "reason": "e2e/helpers is end-to-end test setup; test code is outside the detector scope.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "createHash('sha1') of REPO_ROOT yields an 8-char worktree key for e2e container names in a test helper; non-security and test tooling."
+        }
+      ]
     },
     {
       "id": "EA-6768337f853dd575",
@@ -1485,12 +2248,19 @@
       "language": "typescript",
       "path": "ghost/core/server/services/remote-flags/resolve.ts",
       "message": "Weak crypto algorithm `MD5` at line 25",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 25,
       "verdict": "false_positive",
       "reason": "MD5 of the flag and site id picks a rollout bucket; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bucketFor md5s flag:siteUuid to pick a percentage bucket; its doc says md5 is just a fast uniform hash, not a security primitive."
+        }
+      ]
     },
     {
       "id": "EA-217b94b7b3c637e5",
@@ -1498,12 +2268,19 @@
       "language": "typescript",
       "path": "tools/gx/lib/dev-stack.ts",
       "message": "Weak crypto algorithm `SHA-1` at line 180",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 180,
       "verdict": "false_positive",
       "reason": "tools/gx is a developer tool hashing worktree paths into names; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "unusedE2eNames sha1s worktree roots to compare against e2e resource name keys in a dev tooling script; no security purpose."
+        }
+      ]
     },
     {
       "id": "EA-26c38da7cb09d152",
@@ -1511,12 +2288,19 @@
       "language": "typescript",
       "path": "tools/scripts/lib/ghost-dev-env.ts",
       "message": "Weak crypto algorithm `SHA-1` at line 26",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 26,
       "verdict": "false_positive",
       "reason": "tools/scripts is a developer script hashing the checkout path; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "checkoutHash sha1(checkoutRoot) allocates ports and names in a developer environment script, outside production scope and non-security."
+        }
+      ]
     },
     {
       "id": "EA-a65c60bc2c792fde",
@@ -1524,12 +2308,19 @@
       "language": "typescript",
       "path": "tools/scripts/lib/ghost-dev-env.ts",
       "message": "Weak crypto algorithm `SHA-1` at line 190",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 190,
       "verdict": "false_positive",
       "reason": "tools/scripts is a developer script hashing the checkout path; not a security use.",
-      "labeller": "model:claude-opus-5-5"
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "worktreeDatabases sha1s the worktree root to suffix dev database names in a dev script; no security reliance."
+        }
+      ]
     }
   ]
 }
