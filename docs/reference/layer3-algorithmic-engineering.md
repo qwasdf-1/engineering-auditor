@@ -173,8 +173,9 @@ Evidence includes collection shape and cardinality, the loop-derived needle,
 exact loop and lookup spans, and the `O(m * n)` model; a deduplicating append
 adds `pattern: deduplicating_append` and the append's line.
 
-Go runs in the `full` profile only: its Go findings on the application
-slice do not meet the precision bar (see
+Go, Java, Python, and TypeScript run in the `full` profile only: their
+findings on the application slice, most on lists a domain keeps small (raft
+peer sets, API-spec parameter lists), do not meet the precision bar (see
 [`detector-precision.md`](./detector-precision.md)).
 
 Language contract: see [`language-support.md`](./language-support.md).

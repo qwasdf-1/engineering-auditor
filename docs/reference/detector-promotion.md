@@ -66,6 +66,7 @@ best-case precision is under 90%.
 | `sibling_call_redundancy` | insufficient_sample (3/3) | Shared helper callees are composition, not redundant work |
 | `resource_not_closed` | insufficient_sample (2/1) | fmt's release script under `support/`, a path no role rule reads as tooling |
 | `identifier_tersity` | insufficient_sample (1/2) | Domain names (`r1, g1, b1`) and vendored docopt |
+| `hardcoded_credential` | below_bar (21/142) | The application slice: placeholder and documentation passwords, key and message-key names, and template literals in six languages, and false positives in C# and Rust too, so scoping cannot save it (2026-10-23) |
 
 ### Scoped to full in some languages
 
@@ -79,11 +80,15 @@ best-case precision is under 90%.
 | `duplicate_import` | TypeScript | Its one live false positive is zod's module-resolution test package; C, JavaScript, and Python hold none (2026-10-18) |
 | `unused_assignment` | C++ | All three false positives are yaml-cpp `util/` and `contrib/` code; the other languages hold none |
 | `stringly_typed_parameter` | Python, TypeScript | `mode` mirroring `open()` and a media-type value; JavaScript holds none |
+| `sql_injection` | C#, Go, Java | Below the bar or holding false positives on the application slice (2026-10-23): Umbraco and Wexflow constants and integer values the rule cannot type, Gitea migration sequence names, DBeaver catalog names reached through a ternary or a local; JavaScript holds none |
+| `hot_path_linear_membership` | Go, Java, Python, TypeScript | Lists a domain keeps small (raft peer sets capped by replica count, API-spec parameter lists, a camera frame's QR codes) that no static rule bounds; C#, JavaScript, and Rust hold none (2026-10-23) |
+| `shell_execution` | JavaScript, Python | Literal commands and an Action's own inputs; Java holds none (2026-10-23) |
+| `unsafe_deserialization` | Java, Python | Python's own-data pickles and Java streams of server-written data; JavaScript, TypeScript, Kotlin, and C# hold none (2026-10-23) |
 
 ### Gating detectors with a measured standing
 
 Gating detectors absent here produced no labelled corpus finding. TP/FP
-counts only final and corroborated labels on scans `t22-a` and `a1-b` (application slice), in the
+counts only final and corroborated labels on scans `l9-d` and `a9-d` (application slice), in the
 languages the detector gates in. An `insufficient_sample` detector gates
 only with no false positive here.
 
@@ -91,11 +96,10 @@ only with no false positive here.
 |---|---|---:|---:|---|---|
 | `architectural_layering` | insufficient_sample | 6/0 | 0 | — | — |
 | `assert_in_production` | meets_bar | 35/1 | 0 | python | — |
-| `bind_all_interfaces` | insufficient_sample | 0/0 | 0 | — | — |
 | `class_structure_metrics` | meets_bar | 107/2 | 0 | java | python |
-| `cognitive_complexity` | meets_bar | 217/1 | 512 | csharp, java, javascript, python, rust, typescript | c, cpp |
-| `debugger_in_production` | insufficient_sample | 0/0 | 0 | — | — |
+| `cognitive_complexity` | meets_bar | 217/1 | 506 | csharp, java, javascript, python, rust, typescript | c, cpp |
 | `duplicate_import` | insufficient_sample | 13/0 | 0 | — | typescript |
+| `eager_log_formatting` | meets_bar | 40/0 | 0 | python | — |
 | `empty_catch_block` | insufficient_sample | 18/0 | 0 | — | — |
 | `eval_in_production` | insufficient_sample | 5/0 | 0 | — | — |
 | `excessive_nesting_depth` | meets_bar | 41/1 | 0 | — | — |
@@ -103,10 +107,8 @@ only with no false positive here.
 | `function_complexity` | meets_bar | 183/2 | 654 | c, cpp, csharp, java, javascript, kotlin, python, rust, typescript | — |
 | `function_local_import` | meets_bar | 30/0 | 38 | python | — |
 | `go_errcheck` | meets_bar | 27/0 | 0 | go | — |
-| `go_log_fatal` | insufficient_sample | 0/0 | 0 | — | — |
-| `halstead_information_density` | meets_bar | 138/3 | 521 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
-| `hardcoded_credential` | insufficient_sample | 0/0 | 0 | — | — |
-| `hot_path_linear_membership` | insufficient_sample | 1/0 | 0 | — | — |
+| `halstead_information_density` | meets_bar | 138/3 | 519 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
+| `hot_path_linear_membership` | insufficient_sample | 7/0 | 0 | — | go, java, python, typescript |
 | `kt_non_null_assertion` | meets_bar | 30/0 | 0 | kotlin | — |
 | `large_file` | meets_bar | 123/4 | 0 | java | c |
 | `loop_invariant_regex_compilation` | insufficient_sample | 1/0 | 0 | — | — |
@@ -115,19 +117,18 @@ only with no false positive here.
 | `out_parameter` | meets_bar | 81/1 | 0 | java | — |
 | `package_coupling_metrics` | insufficient_sample | 2/0 | 0 | — | — |
 | `repeated_collection_traversal` | insufficient_sample | 1/0 | 0 | — | — |
-| `repeated_format_allocation` | insufficient_sample | 0/0 | 0 | — | — |
 | `section_divider_comment` | insufficient_sample | 4/0 | 0 | — | — |
-| `shell_execution` | insufficient_sample | 0/0 | 0 | — | — |
-| `source_duplicate_detection` | meets_bar | 169/9 | 36 | c, go, typescript | — |
+| `shell_execution` | insufficient_sample | 5/0 | 0 | — | javascript, python |
+| `source_duplicate_detection` | meets_bar | 163/9 | 36 | c, go, typescript | — |
+| `sql_injection` | insufficient_sample | 3/0 | 0 | — | csharp, go, java |
 | `stale_link_reference` | insufficient_sample | 6/0 | 0 | — | — |
 | `stale_section_anchor` | insufficient_sample | 14/0 | 0 | — | — |
 | `stringly_typed_parameter` | insufficient_sample | 1/0 | 0 | — | python, typescript |
 | `todo_unimplemented_in_production` | meets_bar | 143/2 | 0 | java, kotlin, rust | — |
 | `too_many_parameters` | meets_bar | 89/0 | 188 | csharp, java, kotlin, python | — |
-| `too_many_returns` | meets_bar | 128/0 | 399 | c, java, javascript, kotlin, python, typescript | — |
+| `too_many_returns` | meets_bar | 128/0 | 398 | c, java, javascript, kotlin, python, typescript | — |
 | `too_many_statements` | meets_bar | 97/2 | 0 | java | — |
 | `unreachable_code` | insufficient_sample | 3/0 | 0 | — | — |
-| `unsafe_deserialization` | insufficient_sample | 4/0 | 0 | — | — |
 | `unused_assignment` | insufficient_sample | 4/0 | 0 | — | cpp |
 
 ## Risk Classes

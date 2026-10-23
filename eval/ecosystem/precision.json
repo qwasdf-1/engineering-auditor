@@ -3,7 +3,7 @@
     "true_positive": 6,
     "false_positive": 0,
     "unclear": 0,
-    "stale": 5,
+    "stale": 6,
     "precision": 1.0,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -15,7 +15,9 @@
     "final": 0,
     "corroborated": 6,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 62
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -86,6 +88,38 @@
       }
     }
   },
+  "assignment_in_operand": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 32
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
   "bind_all_interfaces": {
     "true_positive": 0,
     "false_positive": 0,
@@ -102,7 +136,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 12
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -117,12 +153,12 @@
     "by_language": {}
   },
   "blocking_io_in_async_context": {
-    "true_positive": 1,
-    "false_positive": 2,
+    "true_positive": 27,
+    "false_positive": 40,
     "unclear": 0,
-    "stale": 4,
-    "precision": 0.3333333333333333,
-    "standing": "insufficient_sample",
+    "stale": 8,
+    "precision": 0.40298507462686567,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -130,14 +166,14 @@
     ],
     "accepted": 0,
     "final": 3,
-    "corroborated": 0,
+    "corroborated": 64,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        3,
-        4
+        67,
+        68
       ],
       "oracle": [
         0,
@@ -145,14 +181,137 @@
       ]
     },
     "by_language": {
-      "typescript": {
-        "false_positive": 2,
+      "csharp": {
+        "true_positive": 10,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "javascript": {
+        "false_positive": 5,
         "true_positive": 1,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
+      },
+      "python": {
+        "false_positive": 1,
+        "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "rust": {
+        "false_positive": 29,
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "typescript": {
+        "false_positive": 5,
+        "true_positive": 13,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
       }
     }
+  },
+  "bulk_collection_extension": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 5
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "cache_miss_opportunity": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 12
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "catastrophic_backtracking_regex": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 4
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
   },
   "class_structure_metrics": {
     "true_positive": 133,
@@ -479,7 +638,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 17
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -547,7 +708,9 @@
     "final": 1,
     "corroborated": 8,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 30
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -584,7 +747,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 30
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -614,7 +779,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 1
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -644,7 +811,9 @@
     "final": 1,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 105
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -852,7 +1021,9 @@
     "final": 2,
     "corroborated": 6,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 80
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -951,7 +1122,9 @@
     "final": 0,
     "corroborated": 5,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 22
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1062,7 +1235,7 @@
     "true_positive": 4,
     "false_positive": 0,
     "unclear": 0,
-    "stale": 6,
+    "stale": 7,
     "precision": 1.0,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -1074,7 +1247,9 @@
     "final": 0,
     "corroborated": 4,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 113
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1284,7 +1459,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 30
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1506,10 +1683,93 @@
     }
   },
   "hardcoded_credential": {
+    "true_positive": 21,
+    "false_positive": 142,
+    "unclear": 0,
+    "stale": 5,
+    "precision": 0.12883435582822086,
+    "standing": "below_bar",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 163,
+    "disputed": 0,
+    "provisional": {},
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        163,
+        163
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {
+      "csharp": {
+        "false_positive": 4,
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "go": {
+        "false_positive": 30,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "java": {
+        "false_positive": 26,
+        "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "javascript": {
+        "false_positive": 23,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "kotlin": {
+        "false_positive": 20,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "python": {
+        "false_positive": 8,
+        "true_positive": 17,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "rust": {
+        "false_positive": 1,
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "typescript": {
+        "false_positive": 30,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      }
+    }
+  },
+  "hardcoded_tmp_directory": {
     "true_positive": 0,
     "false_positive": 0,
     "unclear": 0,
-    "stale": 3,
+    "stale": 0,
     "precision": null,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -1521,7 +1781,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 48
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1536,12 +1798,12 @@
     "by_language": {}
   },
   "hot_path_linear_membership": {
-    "true_positive": 1,
-    "false_positive": 0,
+    "true_positive": 49,
+    "false_positive": 27,
     "unclear": 0,
-    "stale": 0,
-    "precision": 1.0,
-    "standing": "insufficient_sample",
+    "stale": 7,
+    "precision": 0.6447368421052632,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -1549,14 +1811,14 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 1,
+    "corroborated": 76,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        1,
-        1
+        76,
+        76
       ],
       "oracle": [
         0,
@@ -1564,8 +1826,48 @@
       ]
     },
     "by_language": {
-      "javascript": {
+      "csharp": {
         "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "go": {
+        "false_positive": 14,
+        "true_positive": 4,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "java": {
+        "false_positive": 6,
+        "true_positive": 23,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "javascript": {
+        "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "python": {
+        "false_positive": 4,
+        "true_positive": 10,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "rust": {
+        "true_positive": 4,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "typescript": {
+        "false_positive": 3,
+        "true_positive": 5,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
@@ -1619,7 +1921,7 @@
     "true_positive": 1,
     "false_positive": 1,
     "unclear": 0,
-    "stale": 2,
+    "stale": 4,
     "precision": 0.5,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -1631,7 +1933,9 @@
     "final": 1,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 28
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1653,12 +1957,12 @@
       }
     }
   },
-  "insecure_cryptography": {
+  "identifier_verbosity": {
     "true_positive": 0,
-    "false_positive": 3,
+    "false_positive": 0,
     "unclear": 0,
     "stale": 0,
-    "precision": 0.0,
+    "precision": null,
     "standing": "insufficient_sample",
     "unverified": 0,
     "audit": [
@@ -1666,15 +1970,47 @@
       0
     ],
     "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 30
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "insecure_cryptography": {
+    "true_positive": 4,
+    "false_positive": 108,
+    "unclear": 0,
+    "stale": 4,
+    "precision": 0.03571428571428571,
+    "standing": "below_bar",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
     "final": 2,
-    "corroborated": 1,
+    "corroborated": 110,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        1,
-        3
+        110,
+        112
       ],
       "oracle": [
         0,
@@ -1682,14 +2018,46 @@
       ]
     },
     "by_language": {
-      "python": {
-        "false_positive": 2,
+      "csharp": {
+        "false_positive": 11,
+        "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "go": {
+        "false_positive": 29,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "java": {
+        "false_positive": 17,
+        "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "javascript": {
+        "false_positive": 6,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
       },
+      "python": {
+        "false_positive": 32,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
       "rust": {
-        "false_positive": 1,
+        "false_positive": 8,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "typescript": {
+        "false_positive": 5,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
@@ -1712,7 +2080,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 29
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1742,7 +2112,9 @@
     "final": 0,
     "corroborated": 3,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 23
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1779,7 +2151,9 @@
     "final": 0,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 61
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -1963,6 +2337,70 @@
       }
     }
   },
+  "loop_artifact_rewrite": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 1
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "loop_carried_copy_accumulation": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 1
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
   "loop_invariant_regex_compilation": {
     "true_positive": 1,
     "false_positive": 0,
@@ -1979,7 +2417,9 @@
     "final": 1,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 16
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2072,6 +2512,38 @@
       }
     }
   },
+  "manual_collection_copy_loop": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 4
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
   "map_entry_opportunity": {
     "true_positive": 0,
     "false_positive": 1,
@@ -2088,7 +2560,9 @@
     "final": 0,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 8
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2102,6 +2576,101 @@
     },
     "by_language": {
       "python": {
+        "false_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      }
+    }
+  },
+  "mutable_default_argument": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 4
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "n_plus_one_query_in_loop": {
+    "true_positive": 33,
+    "false_positive": 22,
+    "unclear": 0,
+    "stale": 2,
+    "precision": 0.6,
+    "standing": "below_bar",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 4,
+    "corroborated": 51,
+    "disputed": 0,
+    "provisional": {},
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        51,
+        55
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {
+      "csharp": {
+        "false_positive": 4,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "go": {
+        "true_positive": 22,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "meets_bar"
+      },
+      "java": {
+        "false_positive": 16,
+        "true_positive": 10,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "python": {
+        "false_positive": 1,
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "rust": {
         "false_positive": 1,
         "unverified": 0,
         "accepted": 0,
@@ -2187,7 +2756,9 @@
     "final": 0,
     "corroborated": 3,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 37
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2215,12 +2786,12 @@
     }
   },
   "nested_quadratic_iteration": {
-    "true_positive": 0,
-    "false_positive": 2,
+    "true_positive": 8,
+    "false_positive": 26,
     "unclear": 0,
-    "stale": 3,
-    "precision": 0.0,
-    "standing": "insufficient_sample",
+    "stale": 6,
+    "precision": 0.23529411764705882,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -2228,14 +2799,14 @@
     ],
     "accepted": 0,
     "final": 1,
-    "corroborated": 1,
+    "corroborated": 33,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        1,
-        2
+        33,
+        34
       ],
       "oracle": [
         0,
@@ -2243,14 +2814,41 @@
       ]
     },
     "by_language": {
-      "go": {
+      "csharp": {
         "false_positive": 1,
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "go": {
+        "false_positive": 3,
+        "true_positive": 4,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
       },
       "java": {
-        "false_positive": 1,
+        "false_positive": 8,
+        "true_positive": 3,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "kotlin": {
+        "false_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "python": {
+        "false_positive": 8,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "typescript": {
+        "false_positive": 4,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
@@ -2476,7 +3074,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 10
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2544,7 +3144,9 @@
     "final": 0,
     "corroborated": 2,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 29
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2618,27 +3220,27 @@
     }
   },
   "per_item_external_io": {
-    "true_positive": 0,
-    "false_positive": 5,
+    "true_positive": 5,
+    "false_positive": 60,
     "unclear": 0,
-    "stale": 0,
-    "precision": 0.0,
-    "standing": "insufficient_sample",
+    "stale": 2,
+    "precision": 0.07692307692307693,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
       0
     ],
     "accepted": 0,
-    "final": 1,
-    "corroborated": 4,
+    "final": 2,
+    "corroborated": 63,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        7,
-        8
+        66,
+        68
       ],
       "oracle": [
         0,
@@ -2646,17 +3248,49 @@
       ]
     },
     "by_language": {
-      "rust": {
+      "csharp": {
         "false_positive": 1,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
       },
-      "typescript": {
-        "false_positive": 4,
+      "go": {
+        "false_positive": 8,
+        "true_positive": 1,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
+      },
+      "java": {
+        "false_positive": 17,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "javascript": {
+        "false_positive": 5,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "python": {
+        "false_positive": 14,
+        "true_positive": 4,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "rust": {
+        "false_positive": 3,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "typescript": {
+        "false_positive": 12,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
       }
     }
   },
@@ -2676,7 +3310,9 @@
     "final": 0,
     "corroborated": 4,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 19
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2704,12 +3340,12 @@
     }
   },
   "random_for_security": {
-    "true_positive": 0,
-    "false_positive": 1,
+    "true_positive": 1,
+    "false_positive": 13,
     "unclear": 0,
     "stale": 24,
-    "precision": 0.0,
-    "standing": "insufficient_sample",
+    "precision": 0.07142857142857142,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -2717,14 +3353,14 @@
     ],
     "accepted": 0,
     "final": 1,
-    "corroborated": 0,
+    "corroborated": 13,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        0,
-        1
+        13,
+        14
       ],
       "oracle": [
         0,
@@ -2737,8 +3373,64 @@
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
+      },
+      "csharp": {
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "java": {
+        "false_positive": 3,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "javascript": {
+        "false_positive": 6,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "python": {
+        "false_positive": 3,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
       }
     }
+  },
+  "range_for_each_iteration": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 4
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
   },
   "repeated_collection_traversal": {
     "true_positive": 1,
@@ -2756,7 +3448,9 @@
     "final": 1,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 24
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2793,7 +3487,9 @@
     "final": 0,
     "corroborated": 2,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 20
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2830,7 +3526,41 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 7
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "repeated_sort_in_loop": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 5
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2845,12 +3575,12 @@
     "by_language": {}
   },
   "request_no_cert_verify": {
-    "true_positive": 2,
-    "false_positive": 2,
+    "true_positive": 23,
+    "false_positive": 9,
     "unclear": 0,
-    "stale": 0,
-    "precision": 0.5,
-    "standing": "insufficient_sample",
+    "stale": 2,
+    "precision": 0.71875,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -2858,14 +3588,14 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 4,
+    "corroborated": 32,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        4,
-        4
+        32,
+        32
       ],
       "oracle": [
         0,
@@ -2873,9 +3603,47 @@
       ]
     },
     "by_language": {
+      "csharp": {
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "go": {
+        "false_positive": 4,
+        "true_positive": 3,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "java": {
+        "false_positive": 1,
+        "true_positive": 8,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "javascript": {
+        "false_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
       "kotlin": {
         "false_positive": 2,
         "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "python": {
+        "true_positive": 2,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "rust": {
+        "true_positive": 7,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
@@ -2898,7 +3666,9 @@
     "final": 0,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 6
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2923,7 +3693,7 @@
     "true_positive": 2,
     "false_positive": 0,
     "unclear": 0,
-    "stale": 2,
+    "stale": 3,
     "precision": 1.0,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -2935,7 +3705,9 @@
     "final": 1,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 20
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -2956,6 +3728,38 @@
       }
     }
   },
+  "retry_without_backoff": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 11
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
   "section_divider_comment": {
     "true_positive": 4,
     "false_positive": 0,
@@ -2972,7 +3776,9 @@
     "final": 0,
     "corroborated": 4,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 38
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3000,12 +3806,12 @@
     }
   },
   "shell_execution": {
-    "true_positive": 0,
-    "false_positive": 0,
+    "true_positive": 6,
+    "false_positive": 21,
     "unclear": 0,
-    "stale": 7,
-    "precision": null,
-    "standing": "insufficient_sample",
+    "stale": 9,
+    "precision": 0.2222222222222222,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -3013,21 +3819,41 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 0,
+    "corroborated": 27,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        0,
-        0
+        27,
+        27
       ],
       "oracle": [
         0,
         0
       ]
     },
-    "by_language": {}
+    "by_language": {
+      "java": {
+        "true_positive": 5,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "javascript": {
+        "false_positive": 10,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "python": {
+        "false_positive": 11,
+        "true_positive": 1,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      }
+    }
   },
   "sibling_call_redundancy": {
     "true_positive": 3,
@@ -3045,7 +3871,9 @@
     "final": 0,
     "corroborated": 6,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 30
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3083,7 +3911,9 @@
     "final": 0,
     "corroborated": 2,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 18
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3162,6 +3992,38 @@
       }
     }
   },
+  "sort_for_extremum": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 0,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 12
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
   "source_duplicate_detection": {
     "true_positive": 163,
     "false_positive": 9,
@@ -3234,10 +4096,66 @@
     }
   },
   "sql_injection": {
+    "true_positive": 17,
+    "false_positive": 34,
+    "unclear": 0,
+    "stale": 29,
+    "precision": 0.3333333333333333,
+    "standing": "below_bar",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 4,
+    "corroborated": 47,
+    "disputed": 0,
+    "provisional": {},
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        47,
+        51
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {
+      "csharp": {
+        "false_positive": 9,
+        "true_positive": 14,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "go": {
+        "false_positive": 7,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      },
+      "java": {
+        "false_positive": 18,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
+      },
+      "javascript": {
+        "true_positive": 3,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "insufficient_sample"
+      }
+    }
+  },
+  "ssh_no_host_key_verification": {
     "true_positive": 0,
     "false_positive": 0,
     "unclear": 0,
-    "stale": 2,
+    "stale": 0,
     "precision": null,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -3249,7 +4167,9 @@
     "final": 0,
     "corroborated": 0,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 3
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3279,7 +4199,9 @@
     "final": 0,
     "corroborated": 3,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 7
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3317,7 +4239,9 @@
     "final": 4,
     "corroborated": 2,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 30
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3391,7 +4315,9 @@
     "final": 2,
     "corroborated": 2,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 21
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -3988,11 +4914,43 @@
       }
     }
   },
+  "try_except_pass": {
+    "true_positive": 0,
+    "false_positive": 0,
+    "unclear": 0,
+    "stale": 2,
+    "precision": null,
+    "standing": "insufficient_sample",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 0,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 17
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
   "unbounded_channel_or_queue": {
     "true_positive": 2,
     "false_positive": 3,
     "unclear": 0,
-    "stale": 0,
+    "stale": 4,
     "precision": 0.4,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -4004,7 +4962,9 @@
     "final": 0,
     "corroborated": 5,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 85
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -4149,7 +5109,9 @@
     "final": 2,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 44
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -4171,12 +5133,12 @@
     }
   },
   "unsafe_deserialization": {
-    "true_positive": 4,
-    "false_positive": 0,
+    "true_positive": 8,
+    "false_positive": 11,
     "unclear": 0,
-    "stale": 0,
-    "precision": 1.0,
-    "standing": "insufficient_sample",
+    "stale": 3,
+    "precision": 0.42105263157894735,
+    "standing": "below_bar",
     "unverified": 0,
     "audit": [
       0,
@@ -4184,14 +5146,14 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 4,
+    "corroborated": 19,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        4,
-        4
+        19,
+        19
       ],
       "oracle": [
         0,
@@ -4200,16 +5162,18 @@
     },
     "by_language": {
       "java": {
-        "true_positive": 1,
+        "false_positive": 1,
+        "true_positive": 5,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
       },
       "python": {
+        "false_positive": 10,
         "true_positive": 3,
         "unverified": 0,
         "accepted": 0,
-        "standing": "insufficient_sample"
+        "standing": "below_bar"
       }
     }
   },
@@ -4255,7 +5219,7 @@
     "true_positive": 4,
     "false_positive": 3,
     "unclear": 0,
-    "stale": 10,
+    "stale": 18,
     "precision": 0.5714285714285714,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -4267,7 +5231,9 @@
     "final": 2,
     "corroborated": 5,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 119
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -4316,7 +5282,7 @@
     "true_positive": 1,
     "false_positive": 0,
     "unclear": 0,
-    "stale": 0,
+    "stale": 2,
     "precision": 1.0,
     "standing": "insufficient_sample",
     "unverified": 0,
@@ -4328,7 +5294,9 @@
     "final": 0,
     "corroborated": 1,
     "disputed": 0,
-    "provisional": {},
+    "provisional": {
+      "pending": 58
+    },
     "provisional_precision": null,
     "agreement": {
       "model": [
@@ -4349,12 +5317,12 @@
       }
     }
   },
-  "xml_xxe_vulnerable": {
+  "world_writable_file": {
     "true_positive": 0,
-    "false_positive": 3,
+    "false_positive": 0,
     "unclear": 0,
     "stale": 0,
-    "precision": 0.0,
+    "precision": null,
     "standing": "insufficient_sample",
     "unverified": 0,
     "audit": [
@@ -4363,14 +5331,46 @@
     ],
     "accepted": 0,
     "final": 0,
-    "corroborated": 3,
+    "corroborated": 0,
+    "disputed": 0,
+    "provisional": {
+      "pending": 49
+    },
+    "provisional_precision": null,
+    "agreement": {
+      "model": [
+        0,
+        0
+      ],
+      "oracle": [
+        0,
+        0
+      ]
+    },
+    "by_language": {}
+  },
+  "xml_xxe_vulnerable": {
+    "true_positive": 0,
+    "false_positive": 25,
+    "unclear": 0,
+    "stale": 0,
+    "precision": 0.0,
+    "standing": "below_bar",
+    "unverified": 0,
+    "audit": [
+      0,
+      0
+    ],
+    "accepted": 0,
+    "final": 1,
+    "corroborated": 24,
     "disputed": 0,
     "provisional": {},
     "provisional_precision": null,
     "agreement": {
       "model": [
-        3,
-        3
+        24,
+        24
       ],
       "oracle": [
         0,
@@ -4378,11 +5378,17 @@
       ]
     },
     "by_language": {
-      "python": {
-        "false_positive": 3,
+      "java": {
+        "false_positive": 6,
         "unverified": 0,
         "accepted": 0,
         "standing": "insufficient_sample"
+      },
+      "python": {
+        "false_positive": 19,
+        "unverified": 0,
+        "accepted": 0,
+        "standing": "below_bar"
       }
     }
   }

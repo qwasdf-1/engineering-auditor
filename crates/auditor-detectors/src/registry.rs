@@ -216,7 +216,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L3",
         HotPathLinearMembership
     )
-    .full_profile_in(&["go"]),
+    .full_profile_in(&["go", "java", "python", "typescript"]),
     spec!(
         "n_plus_one_query_in_loop",
         "algorithmic",
@@ -653,7 +653,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L1",
         UnsafeDeserialization
     )
-    .full_profile_in(&["python"]),
+    .full_profile_in(&["java", "python"]),
     spec!(
         "bind_all_interfaces",
         "correctness",
@@ -832,7 +832,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L1",
         SqlInjection
-    ),
+    )
+    .full_profile_in(&["csharp", "go", "java"]),
     spec!(
         "shell_execution",
         "correctness",
