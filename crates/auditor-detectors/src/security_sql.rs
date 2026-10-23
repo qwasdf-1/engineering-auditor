@@ -3,7 +3,8 @@ use auditor_core::{Confidence, Finding, Severity};
 use auditor_ast::{call_arguments, Assigned, FunctionFlow};
 
 use crate::ast_scan::{self, AstScan};
-use crate::security_sql_names::{assigned_structure_only, is_runtime_value, structure_only};
+use crate::security_sql_names::{assigned_structure_only, structure_only};
+use crate::security_sql_values::is_runtime_value;
 use crate::{util, Language};
 
 pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {

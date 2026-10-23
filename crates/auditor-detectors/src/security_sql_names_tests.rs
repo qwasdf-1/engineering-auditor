@@ -231,7 +231,9 @@ fn values_stay_values_beside_fragments() {
 #[test]
 fn numbers_and_placeholder_lists_cannot_carry_sql() {
     assert!(java(r#""SELECT * FROM t WHERE id = %d".formatted(id)"#));
-    assert!(java(r#""SELECT * FROM t WHERE id = " + Integer.parseInt(raw)"#));
+    assert!(java(
+        r#""SELECT * FROM t WHERE id = " + Integer.parseInt(raw)"#
+    ));
     let typed = "class A { void f(Handle h, long sessionId, String name) {\n  h.execute(\"DELETE FROM t WHERE s = \" + sessionId);\n  h.execute(\"DELETE FROM t WHERE n = \" + name);\n} }\n";
     assert!(structure_only_in(
         AstLang::Java,
@@ -271,6 +273,13 @@ fn numbers_and_placeholder_lists_cannot_carry_sql() {
         AstLang::JavaScript,
         js,
         "`SELECT * FROM t WHERE id IN (${ids.join(',')})`"
+    ));
+
+    let cases = "const ids = rows.map(([id]) => id);\nconst clauses = rows\n  .map(([id, at]) => {\n    return `WHEN '${id}' THEN '${at}'`;\n  })\n  .join(' ');\ndb.raw(`UPDATE t SET at = CASE id ${clauses} END WHERE id IN (${ids.map(() => '?').join(',')})`, ids);\n";
+    assert!(!structure_only_in(
+        AstLang::JavaScript,
+        cases,
+        "`UPDATE t SET at = CASE id ${clauses} END WHERE id IN (${ids.map(() => '?').join(',')})`"
     ));
 
     let go = "package db\nfunc f() {\n  db.Exec(fmt.Sprintf(\"DELETE FROM t LIMIT %d\", n))\n}\n";

@@ -11,8 +11,8 @@
       "status": "pre_label",
       "sampled_from": "a8-a",
       "line": 156,
-      "verdict": "unclear",
-      "reason": "AcquireLockAsync awaits WaitForExistingAsync; whether that helper blocks on file I/O is not visible in the excerpt.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): WaitForExistingAsync wraps its polling loop, including Thread.Sleep(1000), in Task.Run, so the sleep happens on a thread-pool worker and not on AcquireLockAsync's async continuation.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -68,11 +68,11 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/Workflow.cs",
       "message": "Function `StartAsync` executes blocking file I/O from an async function, through `StartInternalAsync`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1072,
-      "verdict": "true_positive",
-      "reason": "StartAsync blocks on StartInternalAsync with GetAwaiter().GetResult(), synchronously waiting on async work.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): Line 1072's GetAwaiter().GetResult() is inside the lambda of a dedicated `new Thread(...)` that is then started, so the sync bridge blocks that private thread and not StartAsync's executor.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -148,11 +148,11 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.ApprovalWorkflowsCreator/ApprovalWorkflowsCreator.cs",
       "message": "Function `RunAsync` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 44,
-      "verdict": "unclear",
-      "reason": "RunAsync loops over record ids; which call blocks inside the loop is not visible in the excerpt.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): ApprovalWorkflowsCreator.RunAsync calls Thread.Sleep(5 * 1000) directly inside its foreach over recordIds (line 81), between awaits, which blocks the async executor thread for 5 s per record.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -268,11 +268,11 @@
       "language": "javascript",
       "path": "ghost/core/server/web/gift-preview/image.js",
       "message": "Function `renderGiftPreviewImage` executes blocking file I/O from an async function, through `buildSvg`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 225,
-      "verdict": "unclear",
-      "reason": "renderGiftPreviewImage calls buildSvg; whether buildSvg reads files synchronously is not visible in the excerpt.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): buildSvg calls getGiftCardOrbImageHref, which runs fs.readFileSync(GIFT_CARD_ORB_PATH) on the event loop inside async renderGiftPreviewImage. It is memoized, so it blocks only on the first render, but this is shipped request-path server code.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1393,11 +1393,11 @@
       "language": "typescript",
       "path": "scripts/entrypoints.ts",
       "message": "Function `generateEntrypoints` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a159358",
       "line": 44,
-      "verdict": "true_positive",
-      "reason": "Async function performs fs.readFileSync; claim is accurate.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): scripts/entrypoints.ts is a package-build script that rewrites package.json entrypoints. It is build tooling and outside the detector's scope.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1443,11 +1443,11 @@
       "language": "typescript",
       "path": "www/scripts/check-twoslash.ts",
       "message": "Function `main` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a159358",
       "line": 204,
-      "verdict": "true_positive",
-      "reason": "Async `main` reads files synchronously in a loop.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): www/scripts/check-twoslash.ts is a docs-site CI check script that validates twoslash code blocks. It is dev tooling, not shipped code.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1508,11 +1508,11 @@
       "language": "typescript",
       "path": "scripts/triage-signal.ts",
       "message": "Function `main` executes blocking file I/O from an async function.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a159358",
       "line": 685,
-      "verdict": "true_positive",
-      "reason": "Async `main` calls fs.writeFileSync.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): scripts/triage-signal.ts is a one-shot issue-triage CLI that writes a report at the end of main. It is maintainer tooling, and the sync write blocks nothing concurrent.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

@@ -14,12 +14,14 @@
 //! (inside `'..'`, after `=`, `LIKE`, `IN`, `LIMIT`, or `ORDER BY`), or any
 //! slot taken from the request, keeps a query an injection site.
 
-use auditor_ast::{Assigned, AstNode, FunctionFlow, Origin};
+use auditor_ast::{Assigned, AstNode, FunctionFlow};
 
-use crate::dataflow_sources::{callee_name, from_request};
+use crate::dataflow_sources::from_request;
 use crate::security_sql_templates::{
-    concatenation, format_template, percent_template, placeholder_length, Format, STRING_KINDS,
+    concatenation, format_template, percent_template, placeholder_length, Format, CONTENT_KINDS,
+    INTERPOLATION_KINDS, STRING_KINDS,
 };
+use crate::security_sql_values::{is_fixed, mapped_template};
 
 /// Stands for one runtime value in the query's text.
 const SLOT: char = '\u{1}';
@@ -35,78 +37,11 @@ const VALUE_KEYWORDS: &[&str] = &[
     "like", "ilike", "regexp", "in", "limit", "offset", "by", "between", "top",
 ];
 
-/// Calls whose result cannot carry SQL: numbers converted to text and
-/// identifiers or literals quoted for SQL.
-const SAFE_CALLS: &[&str] = &[
-    "Itoa",
-    "FormatInt",
-    "FormatUint",
-    "FormatFloat",
-    "FormatBool",
-    "int",
-    "float",
-    "len",
-    "QuoteIdentifier",
-    "QuoteLiteral",
-    "quote_ident",
-    "quote_literal",
-    "quote_identifier",
-    "quoteIdentifier",
-    "escapeId",
-    "escapeIdentifier",
-    "escape_identifier",
-    "QuoteName",
-    "nameof",
-    "parseInt",
-    "parseLong",
-    "parseDouble",
-    "Atoi",
-    "ParseInt",
-    "ParseUint",
-    "ParseFloat",
-    "ToInt32",
-    "ToInt64",
-];
-
-/// Types whose `Parse` result is a number or a GUID, never SQL text.
-const PARSED_TYPES: &[&str] = &[
-    "int", "long", "short", "uint", "ulong", "decimal", "double", "Int32", "Int64", "Guid",
-];
-
-/// Declared types whose values render as a number, a boolean, or a GUID.
-const NUMERIC_TYPES: &[&str] = &[
-    "int", "long", "short", "byte", "uint", "ulong", "ushort", "double", "float", "decimal",
-    "bool", "boolean", "Integer", "Long", "Short", "Byte", "Double", "Float", "Boolean", "Guid",
-    "int32", "int64", "uint32", "uint64", "float64", "usize", "isize", "i32", "i64", "u32", "u64",
-];
-
-/// Calls that join a list into a query fragment.
-const JOIN_CALLS: &[&str] = &["join", "Join", "Repeat", "repeat"];
-
 /// Conversions of a `%` placeholder that only accept numbers.
 const NUMERIC_CONVERSIONS: &str = "dixXobeEfFgG";
 
 /// How many locals deep a query's text is read through.
 const MAX_INLINE_DEPTH: usize = 4;
-
-/// Children holding a string literal's text.
-const CONTENT_KINDS: &[&str] = &[
-    "string_fragment",
-    "multiline_string_fragment",
-    "string_content",
-    "string_literal_content",
-    "interpreted_string_literal_content",
-    "raw_string_literal_content",
-    "escape_sequence",
-];
-
-/// Children holding an interpolated value.
-const INTERPOLATION_KINDS: &[&str] = &[
-    "template_substitution",
-    "interpolation",
-    "interpolated_identifier",
-    "interpolated_expression",
-];
 
 /// The query's text with a [`SLOT`] per runtime value, and the
 /// expressions each slot may hold: the value itself, or a format call's
@@ -203,6 +138,8 @@ fn build<'a>(node: AstNode<'a>, format: Format, arguments: &[AstNode<'a>], out: 
             .for_each(|child| build(child, format, arguments, out));
     } else if is_fixed(node) {
         out.text.push('c');
+    } else if let Some(template) = mapped_template(node) {
+        build(template, format, arguments, out);
     } else if let Some(parts) = single_assignment(node).filter(|_| out.depth < MAX_INLINE_DEPTH) {
         out.depth += 1;
         parts
@@ -230,84 +167,6 @@ fn single_assignment(node: AstNode<'_>) -> Option<Vec<AstNode<'_>>> {
             Some(parts.iter().map(Assigned::node).collect())
         }
         _ => None,
-    }
-}
-
-/// A value that cannot carry SQL text: a literal, a constant, a number, or
-/// a generated placeholder list.
-fn is_fixed(node: AstNode<'_>) -> bool {
-    !is_runtime_value(node)
-        || is_constant(node)
-        || is_safe_call(node)
-        || is_numeric(node)
-        || is_placeholder_list(node)
-}
-
-fn is_call(node: AstNode<'_>) -> bool {
-    matches!(
-        node.kind(),
-        "call" | "call_expression" | "method_invocation" | "invocation_expression"
-    )
-}
-
-/// A call whose result is a number's text or a quoted identifier.
-fn is_safe_call(node: AstNode<'_>) -> bool {
-    if !is_call(node) {
-        return false;
-    }
-    let name = callee_name(node);
-    SAFE_CALLS.contains(&name)
-        || matches!(name, "Parse" | "parse")
-            && crate::dataflow_sources::callee_text(node)
-                .rsplit_once('.')
-                .is_some_and(|(owner, _)| PARSED_TYPES.contains(&owner))
-}
-
-/// A name every reaching binding declares with a numeric type (`long
-/// sessionId`, `int count = ..`).
-fn is_numeric(node: AstNode<'_>) -> bool {
-    if !matches!(node.kind(), "identifier" | "simple_identifier") {
-        return false;
-    }
-    let bindings = FunctionFlow::enclosing(node).reaching(node);
-    !bindings.is_empty()
-        && bindings.iter().all(|binding| {
-            let declared = binding.node.child_by_field_name("type").or_else(|| {
-                binding
-                    .node
-                    .parent()
-                    .and_then(|declaration| declaration.child_by_field_name("type"))
-            });
-            declared.is_some_and(|declared| {
-                NUMERIC_TYPES.contains(&declared.text().trim_end_matches('?'))
-            })
-        })
-}
-
-/// A list of bind placeholders joined into the query (`ids.map(() =>
-/// '?').join(',')`, `string.Join(", ", ids.Select((_, i) => $"@p{i}"))`,
-/// `strings.Repeat("?,", n)`): its only text is placeholders and separators.
-fn is_placeholder_list(node: AstNode<'_>) -> bool {
-    if !is_call(node) || !JOIN_CALLS.contains(&callee_name(node)) {
-        return false;
-    }
-    let mut texts = Vec::new();
-    literal_texts(node, &mut texts);
-    texts.iter().any(|text| text.contains(['?', '@']))
-        && texts.iter().all(|text| {
-            text.chars().all(|character| {
-                character.is_whitespace() || "?@$:,0123456789".contains(character)
-            }) || text.starts_with('@') && text[1..].chars().all(char::is_alphanumeric)
-        })
-}
-
-/// The literal text of every string in `node`, interpolations left out.
-fn literal_texts<'a>(node: AstNode<'a>, out: &mut Vec<&'a str>) {
-    if CONTENT_KINDS.contains(&node.kind()) {
-        out.push(node.text());
-    }
-    if !INTERPOLATION_KINDS.contains(&node.kind()) {
-        node.children().for_each(|child| literal_texts(child, out));
     }
 }
 
@@ -364,15 +223,6 @@ fn push_text<'a>(text: &str, format: Format, arguments: &[AstNode<'a>], out: &mu
     out.text.push_str(rest);
 }
 
-/// A name whose every reaching value is a literal (`final String filters =
-/// """..."""`, `clause = escape ? " ESCAPE '\\'" : ""`).
-fn is_constant(node: AstNode<'_>) -> bool {
-    if !matches!(node.kind(), "identifier" | "simple_identifier") {
-        return false;
-    }
-    FunctionFlow::enclosing(node).only_from(node, |origin| matches!(origin, Origin::Literal(_)))
-}
-
 /// Whether the slot at byte `at` of `skeleton` shapes the query rather
 /// than supplying a value: not inside `'..'` and not after a comparison or
 /// a keyword that takes a value. Names (quoted as identifiers, joined to a
@@ -413,25 +263,6 @@ fn is_structure_position(skeleton: &str, at: usize) -> bool {
         }
         _ => !VALUE_KEYWORDS.contains(&keyword.as_str()),
     }
-}
-
-/// An operand that is not a literal, a constant (`TABLE`, `Columns.ID`), or
-/// a nested concatenation.
-pub(crate) fn is_runtime_value(operand: auditor_ast::AstNode<'_>) -> bool {
-    if operand.kind().contains("string")
-        || operand.kind().ends_with("literal")
-        || matches!(
-            operand.kind(),
-            "binary_expression" | "parenthesized_expression" | "number"
-        )
-    {
-        return false;
-    }
-    let last = operand.text().rsplit('.').next().unwrap_or_default();
-    !(last.chars().any(char::is_alphabetic)
-        && last.chars().all(|character| {
-            character.is_ascii_uppercase() || character.is_ascii_digit() || character == '_'
-        }))
 }
 
 #[cfg(test)]

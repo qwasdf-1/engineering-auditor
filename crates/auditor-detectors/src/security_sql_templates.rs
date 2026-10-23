@@ -16,6 +16,25 @@ pub(crate) const STRING_KINDS: &[&str] = &[
     "verbatim_string_literal",
 ];
 
+/// Children holding a string literal's text.
+pub(crate) const CONTENT_KINDS: &[&str] = &[
+    "string_fragment",
+    "multiline_string_fragment",
+    "string_content",
+    "string_literal_content",
+    "interpreted_string_literal_content",
+    "raw_string_literal_content",
+    "escape_sequence",
+];
+
+/// Children holding an interpolated value.
+pub(crate) const INTERPOLATION_KINDS: &[&str] = &[
+    "template_substitution",
+    "interpolation",
+    "interpolated_identifier",
+    "interpolated_expression",
+];
+
 /// How a string's text marks the values a format call substitutes.
 #[derive(Clone, Copy, PartialEq)]
 pub(crate) enum Format {

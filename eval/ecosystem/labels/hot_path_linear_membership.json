@@ -8,11 +8,11 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/PropertyValidationService.cs",
       "message": "Function `ValidatePropertyValue` checks loop-derived `validationResult` against linear collection `requiredDefaultMessages`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 145,
-      "verdict": "true_positive",
-      "reason": "requiredDefaultMessages.Contains(validationResult.ErrorMessage) scans the list once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): requiredDefaultMessages is a local two-element array literal (`new[] { Missing, Empty }`) built at line 136, so each Contains scans a fixed two items. This is the excluded bounded-literal case.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -28,11 +28,11 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/PropertyValidationService.cs",
       "message": "Function `ValidatePropertyValue` checks loop-derived `validationResult` against linear collection `formatDefaultMessages`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 151,
-      "verdict": "true_positive",
-      "reason": "formatDefaultMessages.Contains(validationResult.ErrorMessage) scans the list once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): formatDefaultMessages is a local one-element array literal (`new[] { PatternMismatch }`), so the per-item Contains is a constant single comparison.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -208,11 +208,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `remapConsumerAssignment` checks loop-derived `p` against linear collection `retain`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 3657,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(retain, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): retain is copied from the consumer group's basePeers (its replica peers minus one), and JetStream caps replicas at a handful. Iterating streamPeers against it is constant-bounded work, not a scalable linear scan.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -228,11 +228,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `caughtUpPeers` checks loop-derived `p` against linear collection `catchups`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 4994,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(catchups, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): Both actual (raft group peers) and catchups (mset.catchupPeers(), the subset of those replicas currently catching up) are bounded by the stream's replica count, so the scan is trivially small.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -248,11 +248,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `extendPeerSet` checks loop-derived `peer` against linear collection `actualPeers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 5050,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(actualPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): current and actualPeers in extendPeerSet are raft-group peer lists of a single stream/consumer, bounded by the replica count, so the slices.Contains is over at most a few elements.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -268,11 +268,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `extendPeerSet` checks loop-derived `peer` against linear collection `hosted`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 5053,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(hosted, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): hosted is the peers still hosting a consumer of one stream group during migration; with StreamMaxReplicas = 5 (stream.go:816) both it and the looped current peers stay a handful.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -288,11 +288,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `extendPeerSet` checks loop-derived `peer` against linear collection `desiredPeers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 5053,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(desiredPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): desiredPeers in extendPeerSet is the stream's desired replica set, capped by StreamMaxReplicas = 5, so the per-peer Contains scans at most five entries.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -308,11 +308,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `reassignStreamPeers` checks loop-derived `v` against linear collection `peers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 10251,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(peers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): reassignStreamPeers loops over basePeers (sa.Group.Peers or Desired.Peers, replica-bounded at 5) checking the removed-peer list, often []string{peer} from remapStreamAssignment; both sides are tiny.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -328,11 +328,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `stepDownCandidates` checks loop-derived `p` against linear collection `members`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 11808,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(members, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): stepDownCandidates checks members (the stream's group membership) for each peer in actual, the raft group's peers; both are bounded by StreamMaxReplicas = 5.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -348,11 +348,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `stepDownCandidates` checks loop-derived `p` against linear collection `desiredPeers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 11808,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(desiredPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): desiredPeers in stepDownCandidates is the stream's target replica set (at most 5 by StreamMaxReplicas), looped against the group's few actual peers.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -368,11 +368,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `selectStepDownPreferred` checks loop-derived `p` against linear collection `desired`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 11821,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(desired, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): selectStepDownPreferred scans desired (desiredPeers or candidates from stepDownCandidates) for each peer in the raft group's current peers, all replica-bounded at 5.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -388,11 +388,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `holdForCatchup` checks loop-derived `p` against linear collection `desiredPeers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 13445,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(desiredPeers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): holdForCatchup loops over the stream raft group's actual peers checking the replica-bounded desiredPeers (StreamMaxReplicas = 5), so the scan stays a few elements.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -408,11 +408,11 @@
       "language": "go",
       "path": "server/jetstream_cluster.go",
       "message": "Function `holdForCatchup` checks loop-derived `p` against linear collection `catchups`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 13446,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(catchups, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): catchups is the keys of mset.catchups, the peers of one stream group still catching up, so it is bounded by the group's replica count of at most 5.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -428,11 +428,11 @@
       "language": "go",
       "path": "server/raft.go",
       "message": "Function `EvictPeers` checks loop-derived `peer` against linear collection `peers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1267,
-      "verdict": "true_positive",
-      "reason": "slices.Contains(peers, ..) scans the peer slice once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): EvictPeers only runs for managed (stream/consumer) raft groups (n.managed check), so voting and the evicted peers list are replica-bounded, and it only runs on a rare leaderless-recovery path.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -488,11 +488,11 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreDatabase.java",
       "message": "Function `getDataType` checks loop-derived `schema` against linear collection `searchPath`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1010,
-      "verdict": "true_positive",
-      "reason": "searchPath.Contains(schema.getName()) scans the list once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): searchPath comes from metaContext.computeSearchPath(), the connection's PostgreSQL search_path of a few schema names, so the cost is linear in the schema count, not quadratic.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -548,11 +548,11 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/actions/datasource/NewConnectionDriverSelectorContributor.java",
       "message": "Function `fillContributionItems` checks loop-derived `driver` against linear collection `recentDrivers`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 59,
-      "verdict": "true_positive",
-      "reason": "recentDrivers.Contains(driver) scans the list once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): recentDrivers is DriverUtils.getRecentDrivers(allDrivers, 10), which returns subList(0, total) when larger, so contains scans at most 10 entries.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -688,11 +688,11 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/clientregistration/AbstractClientRegistrationProvider.java",
       "message": "Function `updateDefaultRoles` checks loop-derived `rel` against linear collection `defaultRolesArray`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 371,
-      "verdict": "true_positive",
-      "reason": "defaultRolesArray.Contains(rel) scans the list once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): defaultRolesArray is Arrays.asList(String.valueOf(defaultRoles)) on a String[], which goes through valueOf(Object) and builds a one-element list, so contains is constant.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -728,11 +728,11 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/resources/admin/fgap/GroupPermissions.java",
       "message": "Function `hasPermission` checks loop-derived `scope` against linear collection `expectedScopes`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 428,
-      "verdict": "true_positive",
-      "reason": "expectedScopes.Contains(scope) scans the list once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): expectedScopes is Arrays.asList(scopes), and every caller in GroupPermissions passes one or two scope constants (e.g. VIEW_MEMBERS_SCOPE, MANAGE_MEMBERS_SCOPE).",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -868,11 +868,11 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/PatchForPrestoToSupportPresto333_J10038.java",
       "message": "Function `checkResourcePresent` checks loop-derived `resourceDef` against linear collection `resources`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 163,
-      "verdict": "true_positive",
-      "reason": "resources is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): resources is the static PRESTO_RESOURCES constant of five names, checked once against the Presto service def's resource defs in a one-time patch, so it is a bounded literal.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1068,11 +1068,11 @@
       "language": "javascript",
       "path": "ghost/core/server/api/endpoints/users.js",
       "message": "Function `shouldInvalidateCacheAfterChange` checks loop-derived `attr` against linear collection `publicAttrs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 98,
-      "verdict": "true_positive",
-      "reason": "publicAttrs is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): publicAttrs is a local array literal of 21 field names defined in shouldInvalidateCacheAfterChange (the evidence itself says known_bounded:21), which the detector scope excludes.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1108,11 +1108,11 @@
       "language": "python",
       "path": "electrum/gui/qt/qrreader/qtmultimedia/validator.py",
       "message": "Function `validate_results` checks loop-derived `result` against linear collection `results`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 89,
-      "verdict": "true_positive",
-      "reason": "results (a List[QrCodeResult]) is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): results is the List[QrCodeResult] decoded from a single camera frame, which in practice holds one or a few codes, so the membership check per tracked result is tiny.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1328,11 +1328,11 @@
       "language": "python",
       "path": "zerver/openapi/markdown_extension.py",
       "message": "Function `generate_curl_example` checks loop-derived `parameter` against linear collection `include`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 346,
-      "verdict": "true_positive",
-      "reason": "include is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): include is a short list of parameter names passed through the API-docs markdown macro, checked against one endpoint's handful of OpenAPI parameters, so the scan is bounded.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1348,11 +1348,11 @@
       "language": "python",
       "path": "zerver/openapi/markdown_extension.py",
       "message": "Function `generate_curl_example` checks loop-derived `parameter` against linear collection `exclude`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 349,
-      "verdict": "true_positive",
-      "reason": "exclude is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): exclude is a short list of parameter names from the API-docs markdown macro, checked against one endpoint's few OpenAPI parameters, so the scan is bounded.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1368,11 +1368,11 @@
       "language": "python",
       "path": "zerver/openapi/openapi.py",
       "message": "Function `get_openapi_parameters` checks loop-derived `key` against linear collection `required`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 407,
-      "verdict": "true_positive",
-      "reason": "required (the schema's list) is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): required is one OpenAPI request body's schema required list, iterated against that schema's own few properties while rendering docs, so both sides are small, fixed spec data.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1468,11 +1468,11 @@
       "language": "typescript",
       "path": "dolphinscheduler-ui/src/views/projects/task/components/node/detail-modal.tsx",
       "message": "Function `` checks loop-derived `item` against linear collection `allowedFields`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 148,
-      "verdict": "true_positive",
-      "reason": "allowedFields is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): allowedFields is a local array literal of 10 preference names (the evidence says known_bounded:10), so this is a bounded literal that the scope excludes.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1508,11 +1508,11 @@
       "language": "typescript",
       "path": "apps/admin-x-framework/src/utils/recipient-filter.ts",
       "message": "Function `parseRecipientFilter` appends loop-derived `item` to linear collection `base` only after scanning it for `item`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 68,
-      "verdict": "true_positive",
-      "reason": "The loop appends to base only after scanning it for the same value, a quadratic deduplication a set would avoid.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): base only receives items whose trimmed value is in BASE_SEGMENTS (the free/paid status segments), split from one recipient filter string, so the deduplicating scan covers a couple of entries.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1548,11 +1548,11 @@
       "language": "typescript",
       "path": "apps/admin/src/editor/session/settings-fields.ts",
       "message": "Function `invalidSettingsField` checks loop-derived `key` against linear collection `skip`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 233,
-      "verdict": "true_positive",
-      "reason": "skip is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The loop runs over the fixed VALIDATED_SETTINGS_FIELD_KEYS constant of about ten keys, and skip is a caller subset of those keys, so this is a small constant loop.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1608,11 +1608,11 @@
       "language": "typescript",
       "path": "web/src/billing/helpers.ts",
       "message": "Function `create_ajax_request` checks loop-derived `item` against linear collection `ignored_inputs`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 76,
-      "verdict": "true_positive",
-      "reason": "ignored_inputs is a list scanned once per loop item; a set would make each check constant-time.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): ignored_inputs defaults to [] and callers in billing.ts pass short literal lists, checked against one billing form's few serialized inputs.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

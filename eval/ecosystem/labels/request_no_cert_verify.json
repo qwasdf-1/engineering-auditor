@@ -88,11 +88,11 @@
       "language": "go",
       "path": "modules/private/internal.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 77",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 77,
-      "verdict": "true_positive",
-      "reason": "The internal API client to the local listener sets InsecureSkipVerify: true, so it accepts any certificate.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): InsecureSkipVerify is set only when internalAPIConnectionIsLocal is true (a unix socket, localhost, or a loopback/unspecified IP), so the connection never leaves the host and the network-MITM rationale does not apply; remote LOCAL_URLs get a verifying tls.Config{}.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

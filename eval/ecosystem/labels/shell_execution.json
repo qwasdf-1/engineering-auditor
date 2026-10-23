@@ -608,11 +608,11 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "Shell execution at line 78",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 78,
-      "verdict": "false_positive",
-      "reason": "ranger_install.py is an installation script run by an administrator; install tooling is outside the detector scope.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): run_cmd calls subprocess.call(cmd, shell=True) on a command string, and ranger_install.py ships in the admin distribution (distro/src/main/assembly/admin-web.xml) as the product's installer, so this is shipped code.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

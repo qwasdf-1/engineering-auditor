@@ -128,11 +128,11 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 84",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 84,
-      "verdict": "true_positive",
-      "reason": "Legacy password verification keys HMACSHA1 with the password itself, a weak password hash.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): This is HMACSHA1, which the operator rule exempts, and it only verifies pre-existing legacy-format password hashes, a format fixed by the stored data rather than chosen for new hashes.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -148,11 +148,11 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
       "message": "Weak crypto algorithm `SHA-1` at line 233",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 233,
-      "verdict": "true_positive",
-      "reason": "The legacy password hasher can select HMACSHA1 for stored password hashes.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The flagged case constructs HMACSHA1, which is exempt as HMAC; SupportHashAlgorithm also only admits the Umbraco8 algorithm name and SHA1, so this legacy branch is not used for new password storage.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -688,11 +688,11 @@
       "language": "go",
       "path": "routers/api/packages/chef/auth.go",
       "message": "Weak crypto algorithm `SHA-1` at line 227",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 227,
-      "verdict": "true_positive",
-      "reason": "For Chef protocol versions other than SHA-256 the request signature is verified over a SHA-1 digest, which relies on SHA-1 collision resistance.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): buildCheckData SHA-1 hashes the request path because Chef's v1.0/1.1 signing protocol defines the canonical string that way; this is an externally mandated format, which the operator rule excludes.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

@@ -991,8 +991,8 @@
       "status": "pre_label",
       "sampled_from": "a8-a",
       "line": 144,
-      "verdict": "unclear",
-      "reason": "databaseName, a catalog name, is formatted unescaped into a LIKE literal; whether a quote in a database name can occur here is not visible in the excerpt.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): databaseName is the name of the parent database object taken from the metadata model and used to match information_schema.tables. It is an object name, which the detector excludes, not an external runtime value.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

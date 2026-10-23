@@ -88,11 +88,11 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/social/twitter/TwitterIdentityProvider.java",
       "message": "Unsafe deserialization call at line 114",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 114,
-      "verdict": "true_positive",
-      "reason": "The Twitter request token is read back with an unfiltered ObjectInputStream.readObject from a Base64 auth note.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The only caller (line 238) deserializes authSession.getAuthNote(TWITTER_TOKEN), which line 126 wrote with base64EncodeRequestToken. The auth note lives in the server-side authentication session, so the client cannot supply the bytes.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

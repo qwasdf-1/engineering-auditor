@@ -10,7 +10,7 @@ use crate::ast_scan;
 use crate::csharp_api_identity::csharp_arguments;
 use crate::kotlin_api_identity::kotlin_arguments;
 use crate::security_sql::built_from_values;
-use crate::security_sql_names::is_runtime_value;
+use crate::security_sql_values::is_runtime_value;
 
 /// JDBC, JPA, and Spring `JdbcTemplate` methods that run their SQL argument.
 const JVM_SINKS: &[&str] = &[

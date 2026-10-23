@@ -788,11 +788,11 @@
       "language": "python",
       "path": "redash/tasks/queries/maintenance.py",
       "message": "Function `refresh_queries` performs an external network operation for each loop item, through `enqueue_query`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 88,
-      "verdict": "true_positive",
-      "reason": "refresh_queries enqueues each outdated query with its own Redis pipeline round trips; the enqueues could be batched in one pipeline.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): enqueue_query runs a WATCH/MULTI optimistic-lock transaction on each query's own lock key and checks or creates that query's job. The per-query atomic transaction cannot be swapped for one combined call without changing the locking semantics.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -848,11 +848,11 @@
       "language": "python",
       "path": "zerver/data_import/slack.py",
       "message": "Function `fetch_shared_channel_users` performs an external network operation for each loop item, through `get_slack_api_data`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1449,
-      "verdict": "unclear",
-      "reason": "The message loop calls get_slack_api_data for integration bot messages; whether every message triggers a request is not visible.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): bots.info is called only once per distinct bot_id because of the integration_bot_users skip, not once per message, and Slack's bots.info takes a single bot, so no batch call exists.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -908,11 +908,11 @@
       "language": "python",
       "path": "zerver/lib/rate_limiter.py",
       "message": "Function `clear_history` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 253,
-      "verdict": "true_positive",
-      "reason": "clear_history deletes each rate-limit key with a separate Redis DELETE; one DELETE accepts every key.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): get_keys returns a fixed two-element tuple (':gcra', ':block'), so the loop is a constant two deletes, not a loop over data items.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1093,11 +1093,11 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/style/customThemes.ts",
       "message": "Function `embedThemeFonts` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 603,
-      "verdict": "true_positive",
-      "reason": "embedThemeFonts fetches each font with its own request, sequentially by design to enforce a size budget.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): Each iteration fetches a different font file URL in sequence to enforce a running size budget. HTTP has no batch fetch for separate resources, so no combined call could replace the loop.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

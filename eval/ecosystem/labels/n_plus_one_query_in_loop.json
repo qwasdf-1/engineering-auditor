@@ -528,11 +528,11 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/AITextUtils.java",
       "message": "Function `loadCheckedEntitiesById` calls `DBUtils.findObjectById` with loop-derived `id`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 278,
-      "verdict": "unclear",
-      "reason": "findObjectById resolves an object path through DBeaver's navigator model; whether it reads remote metadata per id is not visible.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): DBUtils.findObjectById splits the id and walks the data source registry via DBSObjectContainer.getChild, which serves DBeaver's lazily loaded metadata cache; it is not a per-id SQL read query.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -548,11 +548,11 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.tasks.native/src/org/jkiss/dbeaver/tasks/nativetool/AbstractNativeToolSettings.java",
       "message": "Function `loadSettings` calls `DBUtils.findObjectById` with loop-derived `objectId`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 201,
-      "verdict": "unclear",
-      "reason": "findObjectById resolves an object path through DBeaver's navigator model; whether it reads remote metadata per id is not visible.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): Same DBUtils.findObjectById path: registry lookup plus cached getChild navigation over the metadata model, so a container's children load at most once rather than one query per objectId.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -888,11 +888,11 @@
       "language": "java",
       "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
       "message": "Function `importOrganizationGroupMemberships` calls `session.getGroupById` with loop-derived `groupId`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 1885,
-      "verdict": "unclear",
-      "reason": "session.groups().getGroupById goes through Keycloak's group cache during import; whether each id misses the cache is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Each group id from the imported MemberRepresentation goes through session.groups().getGroupById, which reads the database on a cache miss (RealmCacheSession delegates to the JPA provider), and GroupProvider.getGroupsStream(realm, Stream<String> ids) exists as a batch alternative.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -908,11 +908,11 @@
       "language": "java",
       "path": "rest/admin-ui-ext/src/main/java/org/keycloak/admin/ui/rest/RoleMappingDeleteResource.java",
       "message": "Function `deleteRoleMappings` calls `session.getRoleById` with loop-derived `roleRequest`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 159,
-      "verdict": "unclear",
-      "reason": "session.roles().getRoleById goes through Keycloak's role cache; whether each id misses the cache is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The fallback session.roles().getRoleById(realm, roleRequest.getRoleId()) runs once per request item and goes to the store on a cache miss; RoleProvider.getRolesStream(realm, Stream<String> ids, ...) could fetch them all at once.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -928,11 +928,11 @@
       "language": "java",
       "path": "scim/model/src/main/java/org/keycloak/scim/model/group/GroupCoreModelSchema.java",
       "message": "Function `getAttributeMappers` calls `session.getUserById` with loop-derived `member`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 158,
-      "verdict": "unclear",
-      "reason": "session.users().getUserById per SCIM member goes through Keycloak's user cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The SCIM remove-member loop calls session.users().getUserById once for each client-supplied Member value; the cache falls through to a database read for each id it does not hold.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -948,11 +948,11 @@
       "language": "java",
       "path": "scim/model/src/main/java/org/keycloak/scim/model/group/GroupCoreModelSchema.java",
       "message": "Function `getAttributeMappers` calls `session.getUserById` with loop-derived `member`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 175,
-      "verdict": "unclear",
-      "reason": "session.users().getUserById per SCIM member goes through Keycloak's user cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The SCIM add-member loop calls session.users().getUserById once for each client-supplied Member value, a typed per-item user read that hits the store on a cache miss.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -968,11 +968,11 @@
       "language": "java",
       "path": "scim/model/src/main/java/org/keycloak/scim/model/user/UserCoreModelSchema.java",
       "message": "Function `getAttributeMappers` calls `session.getGroupById` with loop-derived `membership`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 180,
-      "verdict": "unclear",
-      "reason": "session.groups().getGroupById per SCIM membership goes through Keycloak's group cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Per GroupMembership value, session.groups().getGroupById hits the store on a cache miss, and GroupProvider offers getGroupsStream(realm, ids) as a batch replacement.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -988,11 +988,11 @@
       "language": "java",
       "path": "scim/model/src/main/java/org/keycloak/scim/model/user/UserCoreModelSchema.java",
       "message": "Function `getAttributeMappers` calls `session.getGroupById` with loop-derived `membership`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 219,
-      "verdict": "unclear",
-      "reason": "session.groups().getGroupById per SCIM membership goes through Keycloak's group cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The membership-remove loop calls session.groups().getGroupById once per client-supplied GroupMembership id; it reads the database on a miss and getGroupsStream(realm, ids) could batch it.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1008,11 +1008,11 @@
       "language": "java",
       "path": "scim/model/src/main/java/org/keycloak/scim/model/user/UserCoreModelSchema.java",
       "message": "Function `getAttributeMappers` calls `session.getGroupById` with loop-derived `membership`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 238,
-      "verdict": "unclear",
-      "reason": "session.groups().getGroupById per SCIM membership goes through Keycloak's group cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The membership-add loop calls session.groups().getGroupById once per GroupMembership id; it reads the store on a cache miss and getGroupsStream(realm, ids) could batch it.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1028,11 +1028,11 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/protocol/oidc/mappers/ParameterizedScopeClientSubMapper.java",
       "message": "Function `setClaim` calls `userSession.getClientByClientId` with loop-derived `parameterValue`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 51,
-      "verdict": "unclear",
-      "reason": "getClientByClientId per parameter goes through Keycloak's client cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): setClaim resolves each requested parameter value with realm.getClientByClientId and then users().getServiceAccount, two store lookups per item that run on every token issuance.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1048,11 +1048,11 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/protocol/oidc/resourceindicators/ResourceIndicatorsPostProcessor.java",
       "message": "Function `findAudienceByClientAttribute` calls `session.getClientByClientId` with loop-derived `a`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 87,
-      "verdict": "unclear",
-      "reason": "getClientByClientId per parameter goes through Keycloak's client cache; whether each lookup reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): findAudienceByClientAttribute calls session.clients().getClientByClientId for each audience entry. The nearby comment ('fast path ... without DB lookups') admits these are DB lookups.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1068,11 +1068,11 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/utils/GroupUtils.java",
       "message": "Function `getAllMemberships` calls `session.getGroupById` with loop-derived `group`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 303,
-      "verdict": "unclear",
-      "reason": "The parent group lookup per group goes through Keycloak's group cache; whether it reaches the database is not visible.",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): For each group in the loop, getAllMemberships fetches the parent with session.groups().getGroupById(realm, group.getParentId()) and recurses, so it does one store read per group and ancestor.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {
@@ -1108,11 +1108,11 @@
       "language": "python",
       "path": "migrations/versions/969126bd800f_.py",
       "message": "Function `upgrade` calls `db.execute` with loop-derived `dashboard`.",
-      "status": "pre_label",
+      "status": "corroborated",
       "sampled_from": "a8-a",
       "line": 34,
-      "verdict": "true_positive",
-      "reason": "The migration selects each dashboard's widgets with a separate SELECT per dashboard.",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): This is an Alembic data migration (migrations/versions/969126bd800f_.py) that runs once during an upgrade. It is one-off tooling, not a repeated runtime path where the N+1 cost applies.",
       "labeller": "model:claude-opus-5-5",
       "checks": [
         {

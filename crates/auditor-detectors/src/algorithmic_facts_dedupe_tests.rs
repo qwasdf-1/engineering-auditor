@@ -14,12 +14,8 @@ fn messages(name: &str, relative: &str, source: &str) -> Vec<String> {
     let absolute = root.join(relative);
     std::fs::create_dir_all(absolute.parent().unwrap()).unwrap();
     std::fs::write(&absolute, source).unwrap();
-    let analysis = analyze_repository(
-        &root,
-        SourceDiscoveryOptions::default(),
-        ScanProfile::Full,
-    )
-    .unwrap();
+    let analysis =
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full).unwrap();
     let _ = std::fs::remove_dir_all(root);
     analysis
         .findings
