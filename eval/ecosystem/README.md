@@ -27,16 +27,26 @@ under `$EA_ECOSYSTEM_CACHE` if it is set.
 
 ## Application slice
 
-The library corpus has almost no outbound network code, so some detectors
-cannot be measured on it. `applications` in `manifest.json` pins one
-permissively licensed application per Tier-1 language (lychee, apprise,
-miniflux, Dependency-Track, Uptime Kuma, Hoppscotch), each naming the
-detectors it measures (`network_call_without_timeout` and the systems and
-logging detectors whose findings sit in applications:
-`eager_log_formatting`, `retry_without_backoff`, `unbounded_concurrency`,
-`unbounded_channel_or_queue`, and `pass_through_wrapper` and
-`single_implementation_abstraction`, whose library samples are small
-because libraries keep few private forwarding functions or abstractions).
+The library corpus has almost no outbound network code, SQL, request
+handlers, or credentials, so many detectors cannot be measured on it.
+`applications` in `manifest.json` pins permissively licensed applications,
+each naming the detectors it measures. The first six (lychee, apprise,
+miniflux, Dependency-Track, Uptime Kuma, Hoppscotch) measure
+`network_call_without_timeout` and the systems, logging, and structural
+detectors whose findings sit in applications.
+
+Twenty-four more measure the detectors whose labelled sample cannot yet
+decide the precision bound. They were chosen from 63 scanned candidates by
+how many findings they add for those detectors, at most ten per detector
+from one repository so no project dominates a sample, discounted by scan
+time; candidates under BUSL, Enterprise-Edition, proprietary, or GPL terms
+were excluded. They cover all eight claimed languages, among them Ranger,
+Keycloak, DBeaver, Dolphinscheduler, and ZAP (Java), Gitea, Authelia,
+Harbor, rqlite, and NATS (Go), Zulip, Redash, mitmproxy, Electrum, Frigate,
+and changedetection.io (Python), Ghost and Actual (TypeScript), Wexflow and
+Umbraco (C#), atuin, Warpgate, and PgCat (Rust), and DuckDuckGo's Android
+browser (Kotlin). Each names the undecided detectors it produced findings
+for.
 
 ```sh
 python3 tooling/ecosystem/run.py scan --slice applications --label apps-current
