@@ -3,6 +3,16 @@
   "detector": "repeated_format_allocation",
   "labels": [
     {
+      "id": "EA-efb5016349013554",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/packages/debian/repository.go",
+      "message": "Function `buildPackagesIndices` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 228
+    },
+    {
       "id": "EA-479158131fc29184",
       "repository": "commons-lang",
       "language": "java",
@@ -41,6 +51,66 @@
           "reason": "The String.format at line 172 is the argument to reportInvalid in the invalid-input branch, an error path that terminates the read, so the formatted string is not allocated on every loop iteration."
         }
       ]
+    },
+    {
+      "id": "EA-5cf7522afbf20661",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/comments/comments-service-emails.js",
+      "message": "Function `notifyPostAuthors` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 81
+    },
+    {
+      "id": "EA-0ef750b2f1b3f6cc",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/stats/members-stats-service.js",
+      "message": "Function `_generateCompleteRange` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 174
+    },
+    {
+      "id": "EA-43204d1c5b750a8e",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/stats/posts-stats-service.js",
+      "message": "Function `_fillMissingDates` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1156
+    },
+    {
+      "id": "EA-0c9d02f4b83388be",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/analytics/views/stats/growth/components/paid-subscription-change-chart.tsx",
+      "message": "Function `` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 87
+    },
+    {
+      "id": "EA-f8acc77de2350958",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/analytics/views/stats/growth/components/paid-subscription-change-chart.tsx",
+      "message": "Function `` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 111
+    },
+    {
+      "id": "EA-356346474bdd6c11",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/analytics/views/stats/growth/components/paid-subscription-change-chart.tsx",
+      "message": "Function `` formats loop-invariant data inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 134
     }
   ]
 }

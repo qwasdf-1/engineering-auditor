@@ -3,6 +3,96 @@
   "detector": "stringly_typed_parameter",
   "labels": [
     {
+      "id": "EA-d28dc0b974eefe04",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleDependencyType.java",
+      "message": "Function `getByType` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 29
+    },
+    {
+      "id": "EA-5cdd077116e17f49",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreDefaultPrivilege.java",
+      "message": "Function `setUnderKind` accepts sentinel-like string parameter `kind`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 49
+    },
+    {
+      "id": "EA-44376b5de180bad3",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-services/src/main/java/org/keycloak/services/resources/admin/UserStorageProviderResource.java",
+      "message": "Function `syncUsers` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 135
+    },
+    {
+      "id": "EA-b08b7c7e4399a021",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "rest/admin-ui-ext/src/main/java/org/keycloak/admin/ui/rest/AuthenticationManagementResource.java",
+      "message": "Function `listUsed` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 98
+    },
+    {
+      "id": "EA-1fab6d6c7c80234b",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "ssf/transmitter/src/main/java/org/keycloak/ssf/transmitter/subject/SubjectManagementService.java",
+      "message": "Function `resolveByAdminType` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 383
+    },
+    {
+      "id": "EA-d21e36e500de2e74",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestApplicationResourceProvider.java",
+      "message": "Function `post` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 172
+    },
+    {
+      "id": "EA-7a2ab8166fc308fc",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestApplicationResourceProvider.java",
+      "message": "Function `get` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 206
+    },
+    {
+      "id": "EA-6995e72198b06562",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestSamlApplicationResourceProvider.java",
+      "message": "Function `post` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 119
+    },
+    {
+      "id": "EA-dd4dff087d919642",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestSamlApplicationResourceProvider.java",
+      "message": "Function `get` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 148
+    },
+    {
       "id": "EA-96fce61aa9bb1436",
       "repository": "eslint",
       "language": "javascript",
@@ -21,6 +111,16 @@
           "reason": "`mode` is branched on against the literal sentinel strings `\"strict\"` and `\"minimum\"`, so the stringly-typed-parameter claim holds."
         }
       ]
+    },
+    {
+      "id": "EA-e157fca2fffbf929",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/oembed/oembed-service.js",
+      "message": "Function `fetchOembedDataFromUrl` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 785
     },
     {
       "id": "EA-cd655ff584d5e805",
@@ -63,6 +163,106 @@
       ]
     },
     {
+      "id": "EA-5aa6cfec43d93ebe",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/dev_ldap_directory.py",
+      "message": "Function `generate_dev_ldap_dir` accepts sentinel-like string parameter `mode`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-ba7639208117899c",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/events.py",
+      "message": "Function `apply_event` accepts sentinel-like string parameter `state`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1016
+    },
+    {
+      "id": "EA-9e2eda8ce65f57d4",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/webhooks/bitbucket/view.py",
+      "message": "Function `get_topic_based_on_type` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 155
+    },
+    {
+      "id": "EA-22e976d778123769",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/webhooks/bitbucketdatacenter/view.py",
+      "message": "Function `pr_handler` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 340
+    },
+    {
+      "id": "EA-53aaf7329c6fe12c",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/webhooks/gitlab/view.py",
+      "message": "Function `get_emoji_event_transformed_type` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 523
+    },
+    {
+      "id": "EA-84e091e267daadaa",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/webhooks/gitlab/view.py",
+      "message": "Function `get_emoji_event_topic_title` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 558
+    },
+    {
+      "id": "EA-6d6ff1186c1530b0",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/webhooks/sentry/view.py",
+      "message": "Function `handle_issue_payload` accepts sentinel-like string parameter `action`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 197
+    },
+    {
+      "id": "EA-34834217605956cd",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-client/src/hooks/useFormat.ts",
+      "message": "Function `` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 167
+    },
+    {
+      "id": "EA-4160238208111caf",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/server/aql/compiler.ts",
+      "message": "Function `val` accepts sentinel-like string parameter `type`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 343
+    },
+    {
+      "id": "EA-8601a78b8b9bed56",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/base/left-side-nav/replication/replication/replication.component.ts",
+      "message": "Function `getStatusStr` accepts sentinel-like string parameter `status`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 654
+    },
+    {
       "id": "EA-252d108d60de0a1f",
       "repository": "hono",
       "language": "typescript",
@@ -81,6 +281,16 @@
           "reason": "`type` in `getSpecificity` accepts arbitrary media types (e.g. `application/json`) and merely compares against wildcard strings; it is not a closed sentinel-valued parameter."
         }
       ]
+    },
+    {
+      "id": "EA-c4b9bb251e4dcc7c",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/settings_components.ts",
+      "message": "Function `change_save_button_state` accepts sentinel-like string parameter `state`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 571
     }
   ]
 }

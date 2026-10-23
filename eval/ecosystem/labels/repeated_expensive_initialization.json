@@ -3,6 +3,196 @@
   "detector": "repeated_expensive_initialization",
   "labels": [
     {
+      "id": "EA-dd5b14d7e7a493b0",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.ProcessLauncher/ProcessLauncher.cs",
+      "message": "Function `Run` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 54
+    },
+    {
+      "id": "EA-ef81b3acb15fda85",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.Xslt/Xslt.cs",
+      "message": "Function `TransformFiles` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 85
+    },
+    {
+      "id": "EA-4b9ea8314a3a87e9",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/configuration/validator/access_control.go",
+      "message": "Function `validateQuery` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 145
+    },
+    {
+      "id": "EA-397527be4bd6c0b8",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/kubernetes.go",
+      "message": "Function `WaitPodsReady` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 91
+    },
+    {
+      "id": "EA-c8f2ef4a6c59e442",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/cmd/swagger/genyaml.go",
+      "message": "Function `main` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 97
+    },
+    {
+      "id": "EA-c11de49ab59084f0",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/opts.go",
+      "message": "Function `parseTLS` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 5192
+    },
+    {
+      "id": "EA-c5c5ecad1810faaf",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.core/src/org/jkiss/dbeaver/tools/scripts/ScriptsImportWizard.java",
+      "message": "Function `importScripts` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 102
+    },
+    {
+      "id": "EA-64dc8b280af876ed",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-registry/dolphinscheduler-registry-plugins/dolphinscheduler-registry-jdbc/src/main/java/org/apache/dolphinscheduler/plugin/registry/jdbc/server/JdbcRegistryLockManager.java",
+      "message": "Function `acquireJdbcRegistryLock` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 57
+    },
+    {
+      "id": "EA-67a14f8735a4d097",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-registry/dolphinscheduler-registry-plugins/dolphinscheduler-registry-jdbc/src/main/java/org/apache/dolphinscheduler/plugin/registry/jdbc/server/JdbcRegistryLockManager.java",
+      "message": "Function `acquireJdbcRegistryLock` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 101
+    },
+    {
+      "id": "EA-573b710d3265ae9b",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/PropertyMapper.java",
+      "message": "Function `validateValues` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 650
+    },
+    {
+      "id": "EA-fbb87ed02a39e120",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "server-spi-private/src/main/java/org/keycloak/utils/ReservedCharValidator.java",
+      "message": "Function `validateSecurityHeaders` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 80
+    },
+    {
+      "id": "EA-ecb9b92791fd1496",
+      "repository": "ranger",
+      "language": "java",
+      "path": "jisql/src/main/java/org/apache/util/sql/MySQLPLRunner.java",
+      "message": "Function `runScript` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 132
+    },
+    {
+      "id": "EA-bddb7e686c7a462e",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/service/filter/RangerRESTAPIFilter.java",
+      "message": "Function `loadPathPatterns` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 155
+    },
+    {
+      "id": "EA-8d9258f1446349b1",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
+      "message": "Function `extractLineClasses` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 3565
+    },
+    {
+      "id": "EA-776b59af0d2b77e8",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "koenig/kg-simplemde/debug/simplemde.js",
+      "message": "Function `extractLineClasses` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 3565
+    },
+    {
+      "id": "EA-ac4f8cc226c26663",
+      "repository": "zaproxy",
+      "language": "python",
+      "path": "docker/zap_common.py",
+      "message": "Function `load_config` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 163
+    },
+    {
+      "id": "EA-af4337467a4bac37",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin/src/command/client/search/engines/db.rs",
+      "message": "Function `get_highlight_indices_fulltext` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 54
+    },
+    {
+      "id": "EA-3a284f72f56df59e",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/config.rs",
+      "message": "Function `validate` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 648
+    },
+    {
+      "id": "EA-301cfe997a66e621",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/pool.rs",
+      "message": "Function `from_config` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 297
+    },
+    {
       "id": "EA-afc934067e08079a",
       "repository": "hono",
       "language": "typescript",
@@ -96,6 +286,16 @@
           "reason": "new RegExp(pattern) is constructed inside the for (const pattern of patternKeys) loop, matching the finding."
         }
       ]
+    },
+    {
+      "id": "EA-10b52dc95bb0e8ef",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/typeahead.ts",
+      "message": "Function `triage_raw` constructs expensive reusable state inside a loop.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 335
     }
   ]
 }

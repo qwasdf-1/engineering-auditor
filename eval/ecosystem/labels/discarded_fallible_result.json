@@ -3,6 +3,356 @@
   "detector": "discarded_fallible_result",
   "labels": [
     {
+      "id": "EA-b71dde7c271ac491",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/pngdiff.go",
+      "message": "`os.WriteFile` at line 107 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 107
+    },
+    {
+      "id": "EA-90645e7e824a5e30",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/suite_standalone.go",
+      "message": "`os.WriteFile` at line 16 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 16
+    },
+    {
+      "id": "EA-f2749d6256355fb8",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/suite_standalone.go",
+      "message": "`os.WriteFile` at line 17 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-e9b1e33e4a8d9c41",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/suite_two_factor.go",
+      "message": "`os.WriteFile` at line 16 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 16
+    },
+    {
+      "id": "EA-a59cabee05382e69",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/suite_two_factor.go",
+      "message": "`os.WriteFile` at line 17 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-5c7d43e5616130f6",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/DBeaverLauncher.java",
+      "message": "`configDir.mkdirs` at line 1179 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1179
+    },
+    {
+      "id": "EA-96036d3f546f8951",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/DBeaverLauncher.java",
+      "message": "`new File(logFile.getParent()).mkdirs` at line 3166 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 3166
+    },
+    {
+      "id": "EA-462a57aa632f82e9",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/LauncherUtils.java",
+      "message": "`fileTest.delete` at line 95 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 95
+    },
+    {
+      "id": "EA-192e25d312cef0bf",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/utils/SecurityManagerUtils.java",
+      "message": "`noPermissions.setReadOnly` at line 78 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 78
+    },
+    {
+      "id": "EA-d5665560579c26b0",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.net.ssh.sshj/src/org/jkiss/dbeaver/model/net/ssh/KnownHostsVerifier.java",
+      "message": "`this.khFile.getParentFile().mkdirs` at line 96 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 96
+    },
+    {
+      "id": "EA-a5660dc760cca08e",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.net.ssh.sshj/src/org/jkiss/dbeaver/model/net/ssh/KnownHostsVerifier.java",
+      "message": "`this.khFile.getParentFile().mkdirs` at line 103 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 103
+    },
+    {
+      "id": "EA-023e3cc68c21075d",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-alert/dolphinscheduler-alert-plugins/dolphinscheduler-alert-email/src/main/java/org/apache/dolphinscheduler/plugin/alert/email/MailSender.java",
+      "message": "`file.getParentFile().mkdirs` at line 341 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 341
+    },
+    {
+      "id": "EA-511b7f24e1c7c91c",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/log/remote/RemoteLogUtils.java",
+      "message": "`directory.toFile().mkdirs` at line 74 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 74
+    },
+    {
+      "id": "EA-ae64c094e2a6243d",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-storage-plugin/dolphinscheduler-storage-cos/src/main/java/org/apache/dolphinscheduler/plugin/storage/cos/CosStorageOperator.java",
+      "message": "`metadata.setLastModified` at line 265 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 265
+    },
+    {
+      "id": "EA-ede57e8f21f96188",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-flink/src/main/java/org/apache/dolphinscheduler/plugin/task/flink/FileUtils.java",
+      "message": "`scriptFile.getParentFile().mkdirs` at line 85 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 85
+    },
+    {
+      "id": "EA-c0feae9021f52b82",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-hivecli/src/main/java/org/apache/dolphinscheduler/plugin/task/hivecli/HiveCliTask.java",
+      "message": "`file.getParentFile().mkdirs` at line 199 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 199
+    },
+    {
+      "id": "EA-e2e1ab67219bc204",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-spark/src/main/java/org/apache/dolphinscheduler/plugin/task/spark/SparkTask.java",
+      "message": "`file.getParentFile().mkdirs` at line 273 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 273
+    },
+    {
+      "id": "EA-41ce4e9001a7da22",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "distribution/downloads/src/main/java/CopyDependencies.java",
+      "message": "`targetDir.toFile().mkdirs` at line 42 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 42
+    },
+    {
+      "id": "EA-1bcbc3cfa114eec6",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-services/src/main/java/org/keycloak/exportimport/dir/DirExportProvider.java",
+      "message": "`rootDirectory.mkdirs` at line 56 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 56
+    },
+    {
+      "id": "EA-ac7ad48335a1ff6d",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/encoding/GzipResourceEncodingProviderFactory.java",
+      "message": "`cacheDir.mkdirs` at line 85 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 85
+    },
+    {
+      "id": "EA-7867a8eb07d0bd4a",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/truststore/TruststoreBuilder.java",
+      "message": "`file.getParentFile().mkdirs` at line 117 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 117
+    },
+    {
+      "id": "EA-725a4e5a8591c5ad",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestingResourceProvider.java",
+      "message": "`file.getParentFile().mkdirs` at line 256 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 256
+    },
+    {
+      "id": "EA-f702a062ef9e51a6",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/utils/src/main/java/org/keycloak/testsuite/KerberosEmbeddedServer.java",
+      "message": "`workDir.mkdirs` at line 219 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 219
+    },
+    {
+      "id": "EA-7067ea1f08dd38ef",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/destination/FileAuditDestination.java",
+      "message": "`logFolder.mkdirs` at line 83 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 83
+    },
+    {
+      "id": "EA-55d228f014176c71",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRolesProvider.java",
+      "message": "`cacheDirTmp.mkdirs` at line 278 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 278
+    },
+    {
+      "id": "EA-844f4c47370ccc8c",
+      "repository": "ranger",
+      "language": "java",
+      "path": "embeddedwebserver/src/main/java/org/apache/ranger/server/tomcat/EmbeddedServer.java",
+      "message": "`logDirectory.mkdirs` at line 194 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 194
+    },
+    {
+      "id": "EA-88b6418160f6b3b6",
+      "repository": "ranger",
+      "language": "java",
+      "path": "pdp/src/main/java/org/apache/ranger/pdp/RangerPdpServer.java",
+      "message": "`new File(docBase).mkdirs` at line 131 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 131
+    },
+    {
+      "id": "EA-cb431bc3b365f44f",
+      "repository": "ranger",
+      "language": "java",
+      "path": "tagsync/src/main/java/org/apache/ranger/tagsync/process/TagSyncMetricsProducer.java",
+      "message": "`userMetricFile.createNewFile` at line 79 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 79
+    },
+    {
+      "id": "EA-109107ad54b12c99",
+      "repository": "ranger",
+      "language": "java",
+      "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/process/UnixUserGroupBuilder.java",
+      "message": "`unixSyncSourceInfo.setLastModified` at line 198 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 198
+    },
+    {
+      "id": "EA-6dd9c2acd754f560",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/parosproxy/paros/extension/option/OptionsJvmPanel.java",
+      "message": "`JVM_PROPERTIES_FILE.getParent().toFile().mkdirs` at line 180 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 180
+    },
+    {
+      "id": "EA-7a5b70c5ed55f4b5",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/api/GoAPIGenerator.java",
+      "message": "`dir.mkdirs` at line 197 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 197
+    },
+    {
+      "id": "EA-1053fbf1ccee6158",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/api/GoAPIGenerator.java",
+      "message": "`file.createNewFile` at line 200 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 200
+    },
+    {
+      "id": "EA-a07ecacb143789e1",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/PolicyManager.java",
+      "message": "`oldFile.delete` at line 106 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 106
+    },
+    {
+      "id": "EA-32e6300472ce2fe2",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/PolicyManager.java",
+      "message": "`file.delete` at line 204 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 204
+    },
+    {
+      "id": "EA-d6a004890cf007a9",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/compare/ExtensionCompare.java",
+      "message": "`outfile.delete` at line 444 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 444
+    },
+    {
       "id": "EA-8b83693aa04af60b",
       "repository": "axios",
       "language": "javascript",
@@ -28,6 +378,586 @@
       ]
     },
     {
+      "id": "EA-cea38e3c8a8fab8d",
+      "repository": "duckduckgo-android",
+      "language": "javascript",
+      "path": "app/src/main/res/raw/webviewcompat_complex_test_script.js",
+      "message": "`this.process` at line 1597 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1597
+    },
+    {
+      "id": "EA-895981537fd051b2",
+      "repository": "duckduckgo-android",
+      "language": "javascript",
+      "path": "app/src/main/res/raw/webviewcompat_complex_test_script.js",
+      "message": "`featureManager.initFeatures().then` at line 2177 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2177
+    },
+    {
+      "id": "EA-7d74d64bac31f7ba",
+      "repository": "duckduckgo-android",
+      "language": "javascript",
+      "path": "app/src/main/res/raw/webviewcompat_large_test_script.js",
+      "message": "`this.process` at line 1466 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1466
+    },
+    {
+      "id": "EA-dd2de1edf65e9103",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "apps/portal/src/data-attributes.js",
+      "message": "`formSubmitHandler` at line 252 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 252
+    },
+    {
+      "id": "EA-a9f0398bfb62bbbf",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "apps/portal/src/data-attributes.js",
+      "message": "`fetch(`${siteUrl}/members/api/session`, {\u2026.then` at line 419 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 419
+    },
+    {
+      "id": "EA-fc6e080bd0583798",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/boot.js",
+      "message": "`initBackgroundServices` at line 811 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 811
+    },
+    {
+      "id": "EA-f255b3a3328da1fc",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/frontend/src/comment-counts/comment-counts.js",
+      "message": "`fetchCounts` at line 105 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 105
+    },
+    {
+      "id": "EA-c49f2ca0fbd9b8c4",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/activitypub/activity-pub-service-wrapper.js",
+      "message": "`configureActivityPub` at line 53 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 53
+    },
+    {
+      "id": "EA-ce9f38aec21d6be1",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/notifications/notifications.js",
+      "message": "`this.dangerousDestroyAll` at line 49 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 49
+    },
+    {
+      "id": "EA-4d9ae6fe9a3bb902",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/offers/offer-bookshelf-repository.js",
+      "message": "`options.transacting.executionPromise.then` at line 297 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 297
+    },
+    {
+      "id": "EA-b5464b5d9353832b",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
+      "message": "`response.then` at line 13987 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 13987
+    },
+    {
+      "id": "EA-329593d4d05f2fb0",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "koenig/kg-simplemde/debug/simplemde.js",
+      "message": "`response.then` at line 13987 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 13987
+    },
+    {
+      "id": "EA-9ae40c905ec84a32",
+      "repository": "keycloak",
+      "language": "javascript",
+      "path": "js/apps/create-keycloak-theme/create.js",
+      "message": "`simpleGit()\u2026.then` at line 65 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 65
+    },
+    {
+      "id": "EA-57ee1165b1088bee",
+      "repository": "ranger",
+      "language": "javascript",
+      "path": "security-admin/src/main/webapp/libs/bower/bootstrap/js/bootstrap.js",
+      "message": "`window.Promise.resolve().then` at line 1591 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1591
+    },
+    {
+      "id": "EA-281c03cf796b7c54",
+      "repository": "ranger",
+      "language": "javascript",
+      "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
+      "message": "`$.when(this.input.render())\u2026.then` at line 89 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 89
+    },
+    {
+      "id": "EA-d150e0e4f0ab4fcc",
+      "repository": "ranger",
+      "language": "javascript",
+      "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
+      "message": "`$.when(doAutotext ? this.render() : true).then` at line 1557 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1557
+    },
+    {
+      "id": "EA-9d2c3f82d2ef01de",
+      "repository": "ranger",
+      "language": "javascript",
+      "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
+      "message": "`$.when(this.render(response))\u2026.then` at line 1895 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1895
+    },
+    {
+      "id": "EA-12676b79586c83e8",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/dashboard/dashboard_spec.js",
+      "message": "`cy.createDashboard(\"Foo Bar\")\u2026.then` at line 73 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 73
+    },
+    {
+      "id": "EA-355f1db3dd677e6c",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/dashboard/sharing_spec.js",
+      "message": "`shareDashboard().then` at line 117 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 117
+    },
+    {
+      "id": "EA-7c12c248d9b98810",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/dashboard/widget_spec.js",
+      "message": "`createQueryAndAddWidget(this.dashboardId, query\u2026` at line 181 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 181
+    },
+    {
+      "id": "EA-5bca67f7fac4b5f1",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/destination/create_destination_spec.js",
+      "message": "`cy.createDestination(\"Slack Destination\", \"slac\u2026` at line 26 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 26
+    },
+    {
+      "id": "EA-99306f45e3936353",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/embed/share_embed_spec.js",
+      "message": "`cy.getByTestId(\"EmbedIframe\")\u2026.then` at line 17 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-5e9c0f6f0edc07b5",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/embed/share_embed_spec.js",
+      "message": "`cy.getByTestId(\"EmbedIframe\")\u2026.then` at line 91 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 91
+    },
+    {
+      "id": "EA-bf4235e07594d7f8",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/query/parameter_spec.js",
+      "message": "`cy.createQuery(queryData, false).then` at line 445 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 445
+    },
+    {
+      "id": "EA-7639123ee7ab40c1",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/visualizations/box_plot_spec.js",
+      "message": "`cy.createQuery({ query: SQL })\u2026.then` at line 43 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 43
+    },
+    {
+      "id": "EA-a2216fdd324ba589",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/visualizations/counter_spec.js",
+      "message": "`cy.createQuery({ query: SQL }).then` at line 13 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 13
+    },
+    {
+      "id": "EA-679095abc83f66cf",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/visualizations/funnel_spec.js",
+      "message": "`cy.createQuery({ query: SQL }).then` at line 26 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 26
+    },
+    {
+      "id": "EA-8172b87d9182c5f6",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/cypress/integration/visualizations/table/table_spec.js",
+      "message": "`prepareVisualization(query, \"TABLE\", \"All cell \u2026` at line 40 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 40
+    },
+    {
+      "id": "EA-b617b27fa1eaed1e",
+      "repository": "zulip",
+      "language": "javascript",
+      "path": "web/src/ui_init.js",
+      "message": "`initialize_everything` at line 878 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 878
+    },
+    {
+      "id": "EA-9d6312e92214fa36",
+      "repository": "zulip",
+      "language": "javascript",
+      "path": "web/src/ui_init.js",
+      "message": "`initialize_everything` at line 905 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 905
+    },
+    {
+      "id": "EA-8535573b1bc47f47",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/submarine_swaps.py",
+      "message": "`asyncio.create_task` at line 673 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 673
+    },
+    {
+      "id": "EA-d556cfa1c15bfa1f",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/submarine_swaps.py",
+      "message": "`asyncio.ensure_future` at line 1365 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1365
+    },
+    {
+      "id": "EA-33ce286297f72469",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/submarine_swaps.py",
+      "message": "`asyncio.create_task` at line 1815 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1815
+    },
+    {
+      "id": "EA-eab4c2de2c932e95",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/submarine_swaps.py",
+      "message": "`asyncio.create_task` at line 1818 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1818
+    },
+    {
+      "id": "EA-84799729c82b0491",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/submarine_swaps.py",
+      "message": "`asyncio.create_task` at line 1852 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1852
+    },
+    {
+      "id": "EA-d82423e34a4d36f1",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/txbatcher.py",
+      "message": "`asyncio.ensure_future` at line 131 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 131
+    },
+    {
+      "id": "EA-c01ddd8983c3c85e",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/api/fastapi_app.py",
+      "message": "`asyncio.create_task` at line 121 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 121
+    },
+    {
+      "id": "EA-e9498212319139a7",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/ptz/autotrack.py",
+      "message": "`self._autotracker_setup` at line 1541 creates a coroutine that is never awaited, so its body never runs",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1541
+    },
+    {
+      "id": "EA-5254a307f24b4c05",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-pty-proxy/src/runtime.rs",
+      "message": "`pty_writer.write_all` at line 278 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 278
+    },
+    {
+      "id": "EA-768fd5c8603c6695",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-pty-proxy/src/screen.rs",
+      "message": "`stream.write_all` at line 188 reports failure only through its result, which is discarded",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 188
+    },
+    {
+      "id": "EA-64cc16ef6a769ba4",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-client/src/components/transactions/TransactionsTable.tsx",
+      "message": "`onUpdate` at line 790 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 790
+    },
+    {
+      "id": "EA-0835b0d27410a6fc",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-client/src/components/transactions/TransactionsTable.tsx",
+      "message": "`onUpdate` at line 1626 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1626
+    },
+    {
+      "id": "EA-674e59f347c4b295",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-client/src/components/transactions/TransactionsTable.tsx",
+      "message": "`onUpdate` at line 1931 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1931
+    },
+    {
+      "id": "EA-f271cfb38244fdea",
+      "repository": "authelia",
+      "language": "typescript",
+      "path": "web/src/views/ResetPassword/ResetPasswordStep1.tsx",
+      "message": "`doInitiateResetPasswordProcess` at line 87 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 87
+    },
+    {
+      "id": "EA-6e8796bb57798d74",
+      "repository": "authelia",
+      "language": "typescript",
+      "path": "web/src/views/ResetPassword/ResetPasswordStep1.tsx",
+      "message": "`doInitiateResetPasswordProcess` at line 109 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 109
+    },
+    {
+      "id": "EA-8a8938ac834ba643",
+      "repository": "authelia",
+      "language": "typescript",
+      "path": "web/src/views/Settings/TwoFactorAuthentication/WebAuthnCredentialsPanel.tsx",
+      "message": "`handleElevationRefresh()\u2026.then` at line 97 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 97
+    },
+    {
+      "id": "EA-5b1e3667de061e5e",
+      "repository": "dolphinscheduler",
+      "language": "typescript",
+      "path": "dolphinscheduler-ui/src/views/projects/task/components/node/detail-modal.tsx",
+      "message": "`queryProjectPreferenceByProjectCode(projectCode\u2026` at line 124 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 124
+    },
+    {
+      "id": "EA-b4ca20ec8271f9ba",
+      "repository": "dolphinscheduler",
+      "language": "typescript",
+      "path": "dolphinscheduler-ui/src/views/security/alarm-instance-manage/use-form.ts",
+      "message": "`getUiPluginsByType` at line 99 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 99
+    },
+    {
+      "id": "EA-4963b9f4bf3b553a",
+      "repository": "dolphinscheduler",
+      "language": "typescript",
+      "path": "dolphinscheduler-ui/src/views/security/token-manage/components/use-modal.ts",
+      "message": "`updateToken(data).then` at line 155 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 155
+    },
+    {
+      "id": "EA-2bfa0bbf6cb5e204",
+      "repository": "frigate",
+      "language": "typescript",
+      "path": "web/src/components/config-form/sectionExtras/NotificationsSettingsExtras.tsx",
+      "message": "`navigator.serviceWorker\u2026.then` at line 656 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 656
+    },
+    {
+      "id": "EA-f3fc63387be91daf",
+      "repository": "frigate",
+      "language": "typescript",
+      "path": "web/src/hooks/use-persistence.ts",
+      "message": "`update` at line 25 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-7d62e050abf61414",
+      "repository": "frigate",
+      "language": "typescript",
+      "path": "web/src/hooks/use-persistence.ts",
+      "message": "`load` at line 46 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 46
+    },
+    {
+      "id": "EA-de9d091eb632d070",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "koenig/koenig-lexical/src/components/ui/cards/SignupCard.tsx",
+      "message": "`new FastAverageColor().getColorAsync(background\u2026` at line 88 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 88
+    },
+    {
+      "id": "EA-83a46da8fa64d781",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "koenig/koenig-lexical/src/nodes/BookmarkNodeComponent.tsx",
+      "message": "`fetchMetadata` at line 48 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 48
+    },
+    {
+      "id": "EA-6797723997c691d8",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "koenig/koenig-lexical/src/nodes/CallToActionNodeComponent.tsx",
+      "message": "`handleImageChange` at line 130 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 130
+    },
+    {
+      "id": "EA-079da8276e13f6dd",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "web_src/js/features/comp/EditorUpload.ts",
+      "message": "`handleUploadFiles` at line 145 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 145
+    },
+    {
+      "id": "EA-a6880d3b037889cf",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "web_src/js/features/repo-issue.ts",
+      "message": "`initCombo` at line 503 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 503
+    },
+    {
+      "id": "EA-cd8612dc74c32f60",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "web_src/js/modules/fetch-action.ts",
+      "message": "`performFetchActionTrigger` at line 389 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 389
+    },
+    {
       "id": "EA-0bc7f3ebe808f3c4",
       "repository": "hono",
       "language": "typescript",
@@ -46,6 +976,126 @@
           "reason": "`context[2](...).then(() => resolve(node))` is neither awaited, returned nor given a rejection handler, so a rejection from the async update hook is unhandled."
         }
       ]
+    },
+    {
+      "id": "EA-d743877999635232",
+      "repository": "keycloak",
+      "language": "typescript",
+      "path": "js/apps/admin-ui/src/clients/ClientDetails.tsx",
+      "message": "`save` at line 106 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 106
+    },
+    {
+      "id": "EA-6a0bfab140d71216",
+      "repository": "keycloak",
+      "language": "typescript",
+      "path": "js/apps/admin-ui/src/identity-providers/add/DetailSettings.tsx",
+      "message": "`save` at line 244 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 244
+    },
+    {
+      "id": "EA-4c04f8c7032f4771",
+      "repository": "keycloak",
+      "language": "typescript",
+      "path": "js/apps/admin-ui/src/realm-settings/PoliciesTab.tsx",
+      "message": "`saveStatus` at line 365 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 365
+    },
+    {
+      "id": "EA-5564edf2e5b8a39e",
+      "repository": "mitmproxy",
+      "language": "typescript",
+      "path": "web/src/js/backends/static.tsx",
+      "message": "`fetchApi(`./${resource}`)\u2026.then` at line 27 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 27
+    },
+    {
+      "id": "EA-e362c9f8b6a10f0c",
+      "repository": "mitmproxy",
+      "language": "typescript",
+      "path": "web/src/js/components/Header/FilterDocs.tsx",
+      "message": "`FilterDocs.xhr.then` at line 41 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 41
+    },
+    {
+      "id": "EA-b477bf505d149b53",
+      "repository": "redash",
+      "language": "typescript",
+      "path": "client/app/components/TagsList.tsx",
+      "message": "`getTags(tagsUrl).then` at line 29 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 29
+    },
+    {
+      "id": "EA-0ea2c33b0a56c132",
+      "repository": "redash",
+      "language": "typescript",
+      "path": "viz-lib/src/visualizations/chart/Renderer/PlotlyChart.tsx",
+      "message": "`_chart.initialized.then` at line 40 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 40
+    },
+    {
+      "id": "EA-35f7fb0271da56c7",
+      "repository": "redash",
+      "language": "typescript",
+      "path": "viz-lib/src/visualizations/choropleth/hooks/useLoadGeoJson.ts",
+      "message": "`promise.then` at line 21 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 21
+    },
+    {
+      "id": "EA-f220679c3d73d923",
+      "repository": "umbraco",
+      "language": "typescript",
+      "path": "src/Umbraco.Web.UI.Client/src/packages/elements/publishing/workspace-context/element-publishing.workspace-context.ts",
+      "message": "`this.#loadAndProcessLastPublished` at line 447 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 447
+    },
+    {
+      "id": "EA-1dd34c9eb077b2ff",
+      "repository": "umbraco",
+      "language": "typescript",
+      "path": "src/Umbraco.Web.UI.Client/src/packages/media/media/modals/media-picker/media-picker-modal.element.ts",
+      "message": "`this.#checkMediaAccess` at line 170 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 170
+    },
+    {
+      "id": "EA-873e72357921900d",
+      "repository": "warpgate",
+      "language": "typescript",
+      "path": "warpgate-web/src/theme/index.ts",
+      "message": "`loadTheme` at line 50 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 50
+    },
+    {
+      "id": "EA-3095e29c7174b6cc",
+      "repository": "warpgate",
+      "language": "typescript",
+      "path": "warpgate-web/src/theme/index.ts",
+      "message": "`loadTheme` at line 55 returns a promise that is neither awaited nor given a rejection handler",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 55
     }
   ]
 }

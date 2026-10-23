@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "mutable_default_argument",
+  "labels": [
+    {
+      "id": "EA-7c18f94be9e89951",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/tasks/queries/execution.py",
+      "message": "Parameter `metadata` of `enqueue_query` defaults to `{}`, one object shared by every call, and the function mutates it (`item assignment`) at line 83",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 32
+    },
+    {
+      "id": "EA-f101528e6d4e89c9",
+      "repository": "zulip",
+      "language": "python",
+      "path": "analytics/lib/counts.py",
+      "message": "Parameter `dependencies` of `__init__` defaults to `[]`, one object shared by every call, and the function stores it at line 124",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 121
+    },
+    {
+      "id": "EA-87c8818f382ee554",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/integrations.py",
+      "message": "Parameter `config_options` of `__init__` defaults to `[]`, one object shared by every call, and the function stores it at line 197",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 174
+    },
+    {
+      "id": "EA-004b55be0f80e9d3",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/integrations.py",
+      "message": "Parameter `url_options` of `__init__` defaults to `[]`, one object shared by every call, and the function stores it at line 182",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 175
+    }
+  ]
+}

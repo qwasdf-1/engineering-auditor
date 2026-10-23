@@ -3,6 +3,96 @@
   "detector": "xml_xxe_vulnerable",
   "labels": [
     {
+      "id": "EA-cc5449ad8431bd74",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "saml-core/src/main/java/org/keycloak/saml/common/util/StaxParserUtil.java",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 78",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 78
+    },
+    {
+      "id": "EA-90aeba785d53cad5",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/util/JAXPValidationUtil.java",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 144",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 144
+    },
+    {
+      "id": "EA-591d59c8db98114d",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/test-apps/servlets/src/main/java/org/keycloak/testsuite/adapter/servlet/SendUsernameServlet.java",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 125",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 125
+    },
+    {
+      "id": "EA-f3edcbeac8a04add",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/util/src/main/java/org/keycloak/testsuite/utils/io/IOUtil.java",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 89",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 89
+    },
+    {
+      "id": "EA-c2421a8e3fb58e49",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "testsuite/integration-arquillian/util/src/main/java/org/keycloak/testsuite/utils/undertow/UndertowDeployerHelper.java",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 167",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 167
+    },
+    {
+      "id": "EA-abe79b400f67a5a4",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/compare/ExtensionCompare.java",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 387",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 387
+    },
+    {
+      "id": "EA-48e6c94ddbde6571",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/html_tools.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 280",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 280
+    },
+    {
+      "id": "EA-b792ed433146b804",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/html_tools.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 394",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 394
+    },
+    {
+      "id": "EA-ca3b39585d67568d",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/html_tools.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 462",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 462
+    },
+    {
       "id": "EA-209818350d4af039",
       "repository": "fmt",
       "language": "python",
@@ -61,6 +151,136 @@
           "reason": "The file is opened from `self._doxyxml_dir` (generated doxygen output) in documentation support tooling, so the XXE rationale does not apply."
         }
       ]
+    },
+    {
+      "id": "EA-566d7125678a090b",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/contrib/wbxml/ASWBXML.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 819",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 819
+    },
+    {
+      "id": "EA-fc1c8166163e439f",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/email_notifications.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 304",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 304
+    },
+    {
+      "id": "EA-fd6491af76a23f12",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/email_notifications.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 311",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 311
+    },
+    {
+      "id": "EA-f5df4e42496fc254",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/html_diff.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 7",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 7
+    },
+    {
+      "id": "EA-58e67b4386ebf3fd",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/html_diff.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 17",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-df18a6e4cfe21ab2",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/markdown/__init__.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 497",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 497
+    },
+    {
+      "id": "EA-0478ec99f9b2dc35",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/markdown/fenced_code.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 528",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 528
+    },
+    {
+      "id": "EA-48a17973d728194e",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/markdown/fenced_code.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 544",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 544
+    },
+    {
+      "id": "EA-6af907a993eda602",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/push_notifications.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 946",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 946
+    },
+    {
+      "id": "EA-9f37fb8361370122",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/push_notifications.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 955",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 955
+    },
+    {
+      "id": "EA-20e4c574df80ecc3",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/tex.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 96",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 96
+    },
+    {
+      "id": "EA-449a9eb161852eea",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0257_fix_has_link_attribute.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 36",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 36
+    },
+    {
+      "id": "EA-565a958dd1f5f6cf",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0257_fix_has_link_attribute.py",
+      "message": "XML parsing with potential XXE (Bandit B313-317) at line 42",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 42
     }
   ]
 }

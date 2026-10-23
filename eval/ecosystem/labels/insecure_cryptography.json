@@ -3,6 +3,846 @@
   "detector": "insecure_cryptography",
   "labels": [
     {
+      "id": "EA-7e428309a4d6d4ee",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Extensions/StringExtensions.Encoding.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 321",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 321
+    },
+    {
+      "id": "EA-c2fc658d28908794",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Extensions/StringExtensions.Encoding.cs",
+      "message": "Weak crypto algorithm `MD5` at line 325",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 325
+    },
+    {
+      "id": "EA-4842e38e3716f288",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Extensions/StringExtensions.Encoding.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 326",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 326
+    },
+    {
+      "id": "EA-f3cd8fa6b56cb7a2",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Extensions/StringExtensions.Parsing.cs",
+      "message": "Weak crypto algorithm `MD5` at line 225",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 225
+    },
+    {
+      "id": "EA-e7014e866a777900",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/HashGenerator.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 152",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 152
+    },
+    {
+      "id": "EA-1d7acd2053d6e536",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/IO/FileSystemExtensions.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 26",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 26
+    },
+    {
+      "id": "EA-c4651086d16aa87e",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 84",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 84
+    },
+    {
+      "id": "EA-b250cc0e0d817f04",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 233",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 233
+    },
+    {
+      "id": "EA-99656707eb78575c",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 234",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 234
+    },
+    {
+      "id": "EA-e7181f99ea25f615",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Security/LegacyPasswordSecurity.cs",
+      "message": "Weak crypto algorithm `MD5` at line 238",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 238
+    },
+    {
+      "id": "EA-bab16f73468247e6",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core.Db/Db.cs",
+      "message": "Weak crypto algorithm `MD5` at line 141",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 141
+    },
+    {
+      "id": "EA-e28ab651228f8d19",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.Md5/Md5.cs",
+      "message": "Weak crypto algorithm `MD5` at line 118",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 118
+    },
+    {
+      "id": "EA-67fd532a72b254fd",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.Sha1/Sha1.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 118",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 118
+    },
+    {
+      "id": "EA-5dcfa524b1944e51",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/netcore/Wexflow.Core.Db/Db.cs",
+      "message": "Weak crypto algorithm `MD5` at line 141",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 141
+    },
+    {
+      "id": "EA-a09d81983edfb4a2",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/netcore/Wexflow.Tasks.Md5/Md5.cs",
+      "message": "Weak crypto algorithm `MD5` at line 91",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 91
+    },
+    {
+      "id": "EA-4c117a556da360da",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/netcore/Wexflow.Tasks.Sha1/Sha1.cs",
+      "message": "Weak crypto algorithm `SHA-1` at line 91",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 91
+    },
+    {
+      "id": "EA-b433caf6d687cb88",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/server/asset.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 485",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 485
+    },
+    {
+      "id": "EA-bcf1a398b9e015f6",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modelmigration/v1_10/v88.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 15",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 15
+    },
+    {
+      "id": "EA-22d56f307d2736da",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modelmigration/v1_11/v115.go",
+      "message": "Weak crypto algorithm `MD5` at line 148",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 148
+    },
+    {
+      "id": "EA-188915602ed5407d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "models/auth/twofactor.go",
+      "message": "Weak crypto algorithm `MD5` at line 94",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 94
+    },
+    {
+      "id": "EA-8891070ef095329d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "models/git/commit_status.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 551",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 551
+    },
+    {
+      "id": "EA-352a47e0ac48c0b0",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/auth/password/pwn/pwn.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 44",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-bfa86ebbd7d3a483",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/git/object_format.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 47",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 47
+    },
+    {
+      "id": "EA-aee6f262e42ac0d8",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/git/utils.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 43",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 43
+    },
+    {
+      "id": "EA-a0145cabb3893ef2",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/packages/alpine/metadata.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 82",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 82
+    },
+    {
+      "id": "EA-3eff461556be1f70",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/packages/alpine/metadata.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 122",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 122
+    },
+    {
+      "id": "EA-003338dccc568387",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/packages/multi_hasher.go",
+      "message": "Weak crypto algorithm `MD5` at line 43",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 43
+    },
+    {
+      "id": "EA-77eb6fb35ff0433a",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/packages/multi_hasher.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 44",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-002b8f3ff476a864",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/packages/npm/creator.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 378",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 378
+    },
+    {
+      "id": "EA-a1d33eb5ee416e2a",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/actions/artifacts.go",
+      "message": "Weak crypto algorithm `MD5` at line 237",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 237
+    },
+    {
+      "id": "EA-b0bc663d5472bdc4",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/actions/artifacts.go",
+      "message": "Weak crypto algorithm `MD5` at line 368",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 368
+    },
+    {
+      "id": "EA-edc08f9819218a9c",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/actions/artifacts_chunks.go",
+      "message": "Weak crypto algorithm `MD5` at line 93",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 93
+    },
+    {
+      "id": "EA-f249174887b9d771",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/actions/artifacts_utils.go",
+      "message": "Weak crypto algorithm `MD5` at line 72",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 72
+    },
+    {
+      "id": "EA-2b256613d02ec044",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/packages/chef/auth.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 210",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 210
+    },
+    {
+      "id": "EA-97286a3642f3355d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/packages/chef/auth.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 227",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 227
+    },
+    {
+      "id": "EA-fa9d35d1c3f36d00",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/packages/chef/auth.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 246",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 246
+    },
+    {
+      "id": "EA-1669ad394f9b579c",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/packages/maven/maven.go",
+      "message": "Weak crypto algorithm `MD5` at line 130",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 130
+    },
+    {
+      "id": "EA-1cd199850afbee04",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/packages/maven/maven.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 133",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 133
+    },
+    {
+      "id": "EA-8a7179925e07454a",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/packages/rubygems/rubygems.go",
+      "message": "Weak crypto algorithm `MD5` at line 362",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 362
+    },
+    {
+      "id": "EA-6f4d8452f67e1e88",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/packages/alpine/repository.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 257",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 257
+    },
+    {
+      "id": "EA-ee3e674dc3d5a11c",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/packages/debian/repository.go",
+      "message": "Weak crypto algorithm `MD5` at line 346",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 346
+    },
+    {
+      "id": "EA-6cd41e8ddcd943bb",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/packages/debian/repository.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 348",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 348
+    },
+    {
+      "id": "EA-87d4fbb62eb39fb6",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/webhook/matrix.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 285",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 285
+    },
+    {
+      "id": "EA-85011cc3365136fa",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/websocket.go",
+      "message": "Weak crypto algorithm `SHA-1` at line 113",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 113
+    },
+    {
+      "id": "EA-0a2422c169c13b86",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "internal/rsum/md5.go",
+      "message": "Weak crypto algorithm `MD5` at line 18",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 18
+    },
+    {
+      "id": "EA-db30b7965462c669",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/app/BaseWorkspaceImpl.java",
+      "message": "Weak crypto algorithm `MD5` at line 281",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 281
+    },
+    {
+      "id": "EA-753b4ae6bf3a6c33",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.config.migration/src/org/jkiss/dbeaver/ui/config/migration/wizards/navicat/NavicatEncrypt.java",
+      "message": "Weak crypto algorithm `SHA-1` at line 44",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-bbde9d3e9f5caf69",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.config.migration/src/org/jkiss/dbeaver/ui/config/migration/wizards/navicat/NavicatEncrypt.java",
+      "message": "Weak crypto algorithm `Blowfish` at line 58",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 58
+    },
+    {
+      "id": "EA-1d8a5d4373ab6e10",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.config.migration/src/org/jkiss/dbeaver/ui/config/migration/wizards/navicat/NavicatEncrypt.java",
+      "message": "Weak crypto algorithm `Blowfish` at line 70",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 70
+    },
+    {
+      "id": "EA-10cd2f97586a3895",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/dialogs/connection/EditConnectionWizard.java",
+      "message": "Weak crypto algorithm `MD5` at line 348",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 348
+    },
+    {
+      "id": "EA-4848b5ffb3cd71fc",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/utils/EncryptionUtils.java",
+      "message": "Weak crypto algorithm `MD5` at line 34",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
+    },
+    {
+      "id": "EA-f2caba77d1e467e6",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "distribution/downloads/src/main/java/CopyDependencies.java",
+      "message": "Weak crypto algorithm `MD5` at line 92",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 92
+    },
+    {
+      "id": "EA-ed99950b729825bf",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "distribution/downloads/src/main/java/CopyDependencies.java",
+      "message": "Weak crypto algorithm `SHA-1` at line 93",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 93
+    },
+    {
+      "id": "EA-c61de1b8b3b66da6",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "server-spi-private/src/main/java/org/keycloak/protocol/saml/util/ArtifactBindingUtils.java",
+      "message": "Weak crypto algorithm `SHA-1` at line 48",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 48
+    },
+    {
+      "id": "EA-83649f4b56abd7c4",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/cache/ComputedKey.java",
+      "message": "Weak crypto algorithm `MD5` at line 34",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
+    },
+    {
+      "id": "EA-e97106be264444d7",
+      "repository": "ranger",
+      "language": "java",
+      "path": "kms/src/main/java/org/apache/hadoop/crypto/key/RangerKeyStore.java",
+      "message": "Weak crypto algorithm `SHA-1` at line 965",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 965
+    },
+    {
+      "id": "EA-9b4b237bcface0dd",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
+      "message": "Weak crypto algorithm `MD5` at line 279",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 279
+    },
+    {
+      "id": "EA-3fe37486602a6cbe",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `DES` at line 565",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 565
+    },
+    {
+      "id": "EA-c552ce51f5dfec39",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `DES` at line 568",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 568
+    },
+    {
+      "id": "EA-f17fdeabfc435f20",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `RC4` at line 594",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 594
+    },
+    {
+      "id": "EA-a6b90908856a38b9",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `DES` at line 647",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 647
+    },
+    {
+      "id": "EA-7b225a36947ccf2c",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `DES` at line 737",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 737
+    },
+    {
+      "id": "EA-ab996c92a28cd492",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `RC4` at line 844",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 844
+    },
+    {
+      "id": "EA-8bb88782654b1470",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapNTLMEngineImpl.java",
+      "message": "Weak crypto algorithm `MD5` at line 1860",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1860
+    },
+    {
+      "id": "EA-97d5dd2700585d11",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/frontend/services/asset-hash/index.js",
+      "message": "Weak crypto algorithm `MD5` at line 81",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 81
+    },
+    {
+      "id": "EA-4e5db110be5f64e3",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/frontend/services/rss/cache.js",
+      "message": "Weak crypto algorithm `MD5` at line 10",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 10
+    },
+    {
+      "id": "EA-f8c4af40e6d266c3",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/frontend/web/routers/serve-favicon.js",
+      "message": "Weak crypto algorithm `MD5` at line 14",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 14
+    },
+    {
+      "id": "EA-de82cf8e60f6b7ed",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/frontend/web/routers/serve-public-file.js",
+      "message": "Weak crypto algorithm `MD5` at line 96",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 96
+    },
+    {
+      "id": "EA-4c893d8cbd845e01",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/lib/image/gravatar.js",
+      "message": "Weak crypto algorithm `MD5` at line 21",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 21
+    },
+    {
+      "id": "EA-31036940b2614c3e",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/web/admin/controller.js",
+      "message": "Weak crypto algorithm `MD5` at line 35",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 35
+    },
+    {
+      "id": "EA-6388317c234a5a9f",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/blueprint/browser_steps/__init__.py",
+      "message": "Weak crypto algorithm `MD5` at line 436",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 436
+    },
+    {
+      "id": "EA-e88f9164954195aa",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/content_fetchers/requests.py",
+      "message": "Weak crypto algorithm `MD5` at line 198",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 198
+    },
+    {
+      "id": "EA-4664176d8f4732d2",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/llm/evaluator.py",
+      "message": "Weak crypto algorithm `MD5` at line 684",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 684
+    },
+    {
+      "id": "EA-86722689a2a817b5",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/__init__.py",
+      "message": "Weak crypto algorithm `MD5` at line 369",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 369
+    },
+    {
+      "id": "EA-6aa7d8af02c093e2",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/base.py",
+      "message": "Weak crypto algorithm `MD5` at line 423",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 423
+    },
+    {
+      "id": "EA-8c3f867298f4bbc3",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "message": "Weak crypto algorithm `MD5` at line 52",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 52
+    },
+    {
+      "id": "EA-454dc1c6ea4e1ee5",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "message": "Weak crypto algorithm `MD5` at line 154",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 154
+    },
+    {
+      "id": "EA-db565dd0c6dc7998",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/restock_diff/plugins/llm_restock.py",
+      "message": "Weak crypto algorithm `MD5` at line 284",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 284
+    },
+    {
+      "id": "EA-c4297913c7513255",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/restock_diff/processor.py",
+      "message": "Weak crypto algorithm `MD5` at line 621",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 621
+    },
+    {
+      "id": "EA-4215053fdbbe006c",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/text_json_diff/processor.py",
+      "message": "Weak crypto algorithm `MD5` at line 130",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 130
+    },
+    {
+      "id": "EA-0e8e5a86fbafd4aa",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/text_json_diff/processor.py",
+      "message": "Weak crypto algorithm `MD5` at line 315",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 315
+    },
+    {
+      "id": "EA-0a5c41fd8e5851a5",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/processors/text_json_diff/processor.py",
+      "message": "Weak crypto algorithm `MD5` at line 413",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 413
+    },
+    {
+      "id": "EA-29207956adefb25e",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/plugins/labels/labels.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 225",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 225
+    },
+    {
+      "id": "EA-c2738a4e048d8865",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/x509.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 302",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 302
+    },
+    {
       "id": "EA-af8b93df28f72d0f",
       "repository": "flask",
       "language": "python",
@@ -21,6 +861,26 @@
           "reason": "Line 281 directly calls `hashlib.sha1(string)`, so the claim that the weak SHA-1 algorithm is used at that site is factually correct."
         }
       ]
+    },
+    {
+      "id": "EA-cebe968e7d11bf9c",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/detectors/detector_config.py",
+      "message": "Weak crypto algorithm `MD5` at line 215",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 215
+    },
+    {
+      "id": "EA-829091c426db90e6",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/detectors/detector_config.py",
+      "message": "Weak crypto algorithm `MD5` at line 218",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 218
     },
     {
       "id": "EA-069091bdc589b807",
@@ -43,6 +903,146 @@
       ]
     },
     {
+      "id": "EA-d0e0efd8c7d8121c",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/utils/htpasswd.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 77",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 77
+    },
+    {
+      "id": "EA-8fa1ea836c04b5ea",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/utils/magisk.py",
+      "message": "Weak crypto algorithm `MD5` at line 90",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 90
+    },
+    {
+      "id": "EA-0131a07ed4c30bc2",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/tasks/schedule.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 39",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 39
+    },
+    {
+      "id": "EA-2f96a7462d1cf461",
+      "repository": "zulip",
+      "language": "python",
+      "path": "scripts/lib/zulip_tools.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 386",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 386
+    },
+    {
+      "id": "EA-61d85cc35f50b917",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/avatar_hash.py",
+      "message": "Weak crypto algorithm `MD5` at line 15",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 15
+    },
+    {
+      "id": "EA-95586f1a19c0ea68",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/cache.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 476",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 476
+    },
+    {
+      "id": "EA-957cdf2df74cda99",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/cache.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 488",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 488
+    },
+    {
+      "id": "EA-34fa5ff4d897e886",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/cache.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 496",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 496
+    },
+    {
+      "id": "EA-ec0a01719d7f5a34",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/cache.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 500",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 500
+    },
+    {
+      "id": "EA-d881e68824cf3e2f",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/logging_util.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 87",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 87
+    },
+    {
+      "id": "EA-b879940b5d4123f2",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0544_copy_avatar_images.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 50",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 50
+    },
+    {
+      "id": "EA-2fb53bfbde595f4e",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0790_backfill_update_recipient_type_of_personal_messages_to_dm_group.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 31",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 31
+    },
+    {
+      "id": "EA-ef2dcdc8a5dad8f2",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0798_remove_userprofile_recipient_and_personal_recipients.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 33",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 33
+    },
+    {
+      "id": "EA-c6adcf3744083dfb",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/models/clients.py",
+      "message": "Weak crypto algorithm `SHA-1` at line 70",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 70
+    },
+    {
       "id": "EA-af4bed6a4af21ac5",
       "repository": "axum",
       "language": "rust",
@@ -61,6 +1061,136 @@
           "reason": "The SHA-1 at line 937 is the RFC 6455 WebSocket handshake (`258EAFA5-E914-...` GUID) that the protocol mandates, an idiom the rule should recognise rather than flag."
         }
       ]
+    },
+    {
+      "id": "EA-dd01f8b9d993d7ba",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Weak crypto algorithm `MD5` at line 237",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 237
+    },
+    {
+      "id": "EA-76d0a54b30c55251",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Weak crypto algorithm `MD5` at line 250",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 250
+    },
+    {
+      "id": "EA-097e341bb18ee955",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/sharding.rs",
+      "message": "Weak crypto algorithm `SHA-1` at line 65",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 65
+    },
+    {
+      "id": "EA-680ace92e6d7b008",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-mysql/src/common.rs",
+      "message": "Weak crypto algorithm `SHA-1` at line 10",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 10
+    },
+    {
+      "id": "EA-65e409ce39fa308b",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-mysql/src/common.rs",
+      "message": "Weak crypto algorithm `SHA-1` at line 11",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 11
+    },
+    {
+      "id": "EA-7e1c82ccb492fffb",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-mysql/src/common.rs",
+      "message": "Weak crypto algorithm `SHA-1` at line 13",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 13
+    },
+    {
+      "id": "EA-923c69388d80ae6b",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-vnc/src/server/rfb.rs",
+      "message": "Weak crypto algorithm `MD5` at line 228",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 228
+    },
+    {
+      "id": "EA-5e62198a2b076478",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/server/update.ts",
+      "message": "Weak crypto algorithm `MD5` at line 23",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 23
+    },
+    {
+      "id": "EA-fdf2125e9e04ce53",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "e2e/helpers/environment/constants.ts",
+      "message": "Weak crypto algorithm `SHA-1` at line 17",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-6768337f853dd575",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "ghost/core/server/services/remote-flags/resolve.ts",
+      "message": "Weak crypto algorithm `MD5` at line 25",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-217b94b7b3c637e5",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "tools/gx/lib/dev-stack.ts",
+      "message": "Weak crypto algorithm `SHA-1` at line 180",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 180
+    },
+    {
+      "id": "EA-26c38da7cb09d152",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "tools/scripts/lib/ghost-dev-env.ts",
+      "message": "Weak crypto algorithm `SHA-1` at line 26",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 26
+    },
+    {
+      "id": "EA-a65c60bc2c792fde",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "tools/scripts/lib/ghost-dev-env.ts",
+      "message": "Weak crypto algorithm `SHA-1` at line 190",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 190
     }
   ]
 }

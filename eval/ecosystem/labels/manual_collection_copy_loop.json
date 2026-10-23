@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "manual_collection_copy_loop",
+  "labels": [
+    {
+      "id": "EA-dadab5224b80bee7",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.kingbase/src/org/jkiss/dbeaver/ext/kingbase/KingbaseUtils.java",
+      "message": "Function `getIdVector` copies `objVector` into `result` one element at a time.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 100
+    },
+    {
+      "id": "EA-9a1b6613d39b5946",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model.jdbc/src/org/jkiss/dbeaver/model/impl/jdbc/exec/JDBCStatementImpl.java",
+      "message": "Function `executeStatementBatch` copies `result` into `longResult` one element at a time.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 164
+    },
+    {
+      "id": "EA-0476185659c963e5",
+      "repository": "ranger",
+      "language": "java",
+      "path": "hdfs-agent/src/main/java/org/apache/ranger/authorization/hadoop/RangerHdfsAuthorizer.java",
+      "message": "Function `checkRangerPermission` copies `curINodes` into `dirINodes` one element at a time.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 550
+    },
+    {
+      "id": "EA-aaf961faa7e1eece",
+      "repository": "ranger",
+      "language": "java",
+      "path": "hdfs-agent/src/main/java/org/apache/ranger/authorization/hadoop/RangerHdfsAuthorizer.java",
+      "message": "Function `checkRangerPermission` copies `curINodeAttributes` into `dirINodeAttrs` one element at a time.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 556
+    }
+  ]
+}

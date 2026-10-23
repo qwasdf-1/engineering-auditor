@@ -3,6 +3,66 @@
   "detector": "ssl_with_bad_defaults",
   "labels": [
     {
+      "id": "EA-35a1de5aecd56e0d",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/commands/debug.go",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 335",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 335
+    },
+    {
+      "id": "EA-f9fa73c0f08aeb3d",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/net/SSLHandlerTrustStoreImpl.java",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 190",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 190
+    },
+    {
+      "id": "EA-b252035fab815b14",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/net/SSLHandlerTrustStoreImpl.java",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 226",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 226
+    },
+    {
+      "id": "EA-fba3cc8c8679e8be",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "adapters/saml/core/src/main/java/org/keycloak/adapters/cloned/HttpClientBuilder.java",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 263",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 263
+    },
+    {
+      "id": "EA-038fad63ef30bba1",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 151",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 151
+    },
+    {
+      "id": "EA-e51c510f790398c0",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 533",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 533
+    },
+    {
       "id": "EA-ba14fa88373a835f",
       "repository": "okhttp",
       "language": "kotlin",
@@ -61,6 +121,16 @@
           "reason": "`COMPATIBLE_TLS` explicitly enables the deprecated `TlsVersion.TLS_1_1`, matching the claim."
         }
       ]
+    },
+    {
+      "id": "EA-3cffa41d9086ce3a",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-rdp/src/client/tls.rs",
+      "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 243",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 243
     }
   ]
 }

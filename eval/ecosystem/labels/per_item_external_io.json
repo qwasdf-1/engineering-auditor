@@ -3,6 +3,536 @@
   "detector": "per_item_external_io",
   "labels": [
     {
+      "id": "EA-387ea437e0bc05bf",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/netcore/Wexflow.Tasks.Http/Http.cs",
+      "message": "Function `Run` performs an external network operation for each loop item, through `DownloadFile`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 32
+    },
+    {
+      "id": "EA-a177bdf6534e8fb2",
+      "repository": "authelia",
+      "language": "go",
+      "path": "cmd/authelia-gen/cmd_misc_contributors.go",
+      "message": "Function `getContributorAvatars` performs an external network operation for each loop item, through `getContributorAvatar`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 209
+    },
+    {
+      "id": "EA-6628ca0f6e9637c0",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/mailer/incoming/incoming.go",
+      "message": "Function `Init` performs an external network operation for each loop item, through `processIncomingEmails`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 36
+    },
+    {
+      "id": "EA-2eb47eb3509d3530",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/mailer/incoming/incoming.go",
+      "message": "Function `processIncomingEmails` performs an external network operation for each loop item, through `processMessages`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 87
+    },
+    {
+      "id": "EA-5c714e0e40fc7a27",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/controller/quota/controller.go",
+      "message": "Function `flushQuota` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 129
+    },
+    {
+      "id": "EA-14c6cbd4fd6bacbc",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/jobservice/job/impl/scandataexport/scan_data_export.go",
+      "message": "Function `writeCsvFile` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 265
+    },
+    {
+      "id": "EA-91455155a23b2e28",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/server.go",
+      "message": "Function `Start` performs an external network operation for each loop item, through `fetchAccount`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2443
+    },
+    {
+      "id": "EA-f591635aa5b97524",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "cmd/rqlite/main.go",
+      "message": "Function `main` performs an external network operation for each loop item, through `extensions`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 192
+    },
+    {
+      "id": "EA-cadcf7986a7f9e1f",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "http/preflight.go",
+      "message": "Function `AnyServingHTTP` performs an external network operation for each loop item, through `IsServingHTTP`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-67d5d535c9807239",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "http/preflight.go",
+      "message": "Function `IsServingHTTP` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 40
+    },
+    {
+      "id": "EA-685f5da592216511",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.clickhouse/src/org/jkiss/dbeaver/ext/clickhouse/model/auth/ClickhouseJWTProvider.java",
+      "message": "Function `pollForToken` performs an external network operation for each loop item, through `sendFormIgnoringStatus`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 278
+    },
+    {
+      "id": "EA-931b28b2a9484a3f",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/engine/copilot/CopilotClientBase.java",
+      "message": "Function `requestAccessToken` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 170
+    },
+    {
+      "id": "EA-7a7f2d5eee965c9d",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/engine/openai/OpenAIAccountAuthenticator.java",
+      "message": "Function `completeDeviceAuthorization` performs an external network operation for each loop item, through `pollDeviceAuthorization`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 152
+    },
+    {
+      "id": "EA-4f0afa50c83da114",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.sql/src/org/jkiss/dbeaver/ui/editors/sql/templates/SQLTemplateStore.java",
+      "message": "Function `readContributedTemplates` performs an external network operation for each loop item, through `readIncludedTemplates`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 130
+    },
+    {
+      "id": "EA-710fc21a132bc7f4",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-remoteshell/src/main/java/org/apache/dolphinscheduler/plugin/task/remoteshell/RemoteExecutor.java",
+      "message": "Function `track` performs an external network operation for each loop item, through `runRemoteAndProcessLines`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 114
+    },
+    {
+      "id": "EA-4fc1beaa8312f982",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "message": "Function `loadFactories` performs an external network operation for each loop item, through `loadDeployedScriptProviders`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1081
+    },
+    {
+      "id": "EA-ee4363f0b69a9053",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/deployment/src/main/java/org/keycloak/quarkus/deployment/KeycloakProcessor.java",
+      "message": "Function `loadDeployedScriptProviders` performs an external network operation for each loop item, through `getScriptProviderDescriptorsFromClassPath`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1133
+    },
+    {
+      "id": "EA-37ed583b6e009a80",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/compatibility/DatabaseCompatibilityMetadataProvider.java",
+      "message": "Function `addUnsupportedDatabaseChanges` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 82
+    },
+    {
+      "id": "EA-c0c2d9e61f0d7a44",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/httpclient/VertxHttpClientProvider.java",
+      "message": "Function `advance` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 383
+    },
+    {
+      "id": "EA-9fd1b374caf5f01d",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/util/JAXBUtil.java",
+      "message": "Function `getValidatingUnmarshaller` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 177
+    },
+    {
+      "id": "EA-0b638df7ef4e843f",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/util/JAXPValidationUtil.java",
+      "message": "Function `sources` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 168
+    },
+    {
+      "id": "EA-6925f90e57b673a3",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "test-framework/conformance-runner/src/main/java/org/keycloak/testframework/conformance/runner/ConformanceApiClient.java",
+      "message": "Function `send` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 256
+    },
+    {
+      "id": "EA-b9dc5eb335350ca2",
+      "repository": "ranger",
+      "language": "java",
+      "path": "ranger-tools/src/main/java/org/apache/ranger/policyengine/CommandLineParser.java",
+      "message": "Function `validateRequestFiles` performs an external network operation for each loop item, through `getInputFileURL`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 217
+    },
+    {
+      "id": "EA-8340a0d6af224afc",
+      "repository": "ranger",
+      "language": "java",
+      "path": "ranger-tools/src/main/java/org/apache/ranger/sizing/RangerMemSizing.java",
+      "message": "Function `evaluateRequests` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 433
+    },
+    {
+      "id": "EA-7af4fa068f7ef5d9",
+      "repository": "ranger",
+      "language": "java",
+      "path": "tagsync/src/main/java/org/apache/ranger/tagsync/source/file/FileTagSource.java",
+      "message": "Function `run` performs an external network operation for each loop item, through `synchUp`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 213
+    },
+    {
+      "id": "EA-c1234b2b2b9fdb3a",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnInstaller.java",
+      "message": "Function `installAddOnFiles` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 665
+    },
+    {
+      "id": "EA-b338b67005fe757c",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnLoader.java",
+      "message": "Function `loadAllAddOns` performs an external network operation for each loop item, through `updateAddOnFiles`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 258
+    },
+    {
+      "id": "EA-269bea3878fb43a2",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnLoader.java",
+      "message": "Function `checkAndInstallAddOnsNotInstalled` performs an external network operation for each loop item, through `addAddOnImpl`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 567
+    },
+    {
+      "id": "EA-9f49cdc01ca1dafa",
+      "repository": "actual",
+      "language": "javascript",
+      "path": ".github/actions/handle-feature-requests.js",
+      "message": "Function `` performs an external network operation for each loop item, through `makeAPIRequest`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 75
+    },
+    {
+      "id": "EA-8cf94804265e1f45",
+      "repository": "actual",
+      "language": "javascript",
+      "path": "packages/sync-server/src/app-simplefin/app-simplefin.js",
+      "message": "Function `getAccounts` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 444
+    },
+    {
+      "id": "EA-3c31390a2f2ad9c8",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/data/tinybird/scripts/docker-analytics-manager.js",
+      "message": "Function `deleteSiteRows` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 765
+    },
+    {
+      "id": "EA-a7e5616218430f2f",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/members/members-api/repositories/member-repository.js",
+      "message": "Function `setComplimentarySubscription` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2677
+    },
+    {
+      "id": "EA-d622fae2ae10afef",
+      "repository": "mitmproxy",
+      "language": "javascript",
+      "path": "mitmproxy/tools/web/static/index-DA3bdZbQ.js",
+      "message": "Function `onOpen` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 9
+    },
+    {
+      "id": "EA-a51d47721b4055ba",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/api/auth.py",
+      "message": "Function `deny_response_for_go2rtc_stream` performs an external network operation for each loop item, through `_is_existing_go2rtc_stream`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1225
+    },
+    {
+      "id": "EA-c5f8cc55a40becfd",
+      "repository": "ranger",
+      "language": "python",
+      "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
+      "message": "Function `call_ranger_installed` performs an external network operation for each loop item, through `call_ambari_api`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 316
+    },
+    {
+      "id": "EA-718ac95f1c19da94",
+      "repository": "ranger",
+      "language": "python",
+      "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
+      "message": "Function `call_ranger_installed` performs an external network operation for each loop item, through `call_ambari_api`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 635
+    },
+    {
+      "id": "EA-7b17de3b2b4c838e",
+      "repository": "ranger",
+      "language": "python",
+      "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
+      "message": "Function `call_ranger_kms_installed` performs an external network operation for each loop item, through `call_ambari_api`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 686
+    },
+    {
+      "id": "EA-82f2bd091a8e5b26",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/tasks/general.py",
+      "message": "Function `record_event` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 19
+    },
+    {
+      "id": "EA-490f883d850f9f33",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/tasks/queries/execution.py",
+      "message": "Function `enqueue_query` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 38
+    },
+    {
+      "id": "EA-170fdacabb0f9b55",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/tasks/queries/maintenance.py",
+      "message": "Function `refresh_queries` performs an external network operation for each loop item, through `enqueue_query`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 88
+    },
+    {
+      "id": "EA-fe168389ae913e8d",
+      "repository": "zulip",
+      "language": "python",
+      "path": "scripts/lib/puppet_cache.py",
+      "message": "Function `do_puppet_module_install` performs an external network operation for each loop item, through `install_puppet_module`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 58
+    },
+    {
+      "id": "EA-f757f9d0b7049f76",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/microsoft_teams.py",
+      "message": "Function `get_microsoft_graph_api_data` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 242
+    },
+    {
+      "id": "EA-ec1db63f80c1515c",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/slack.py",
+      "message": "Function `fetch_shared_channel_users` performs an external network operation for each loop item, through `get_slack_api_data`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1449
+    },
+    {
+      "id": "EA-78e1bd3ab46d078a",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/slack.py",
+      "message": "Function `fetch_shared_channel_users` performs an external network operation for each loop item, through `get_slack_api_data`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1477
+    },
+    {
+      "id": "EA-7de56f7a140e9032",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/slack.py",
+      "message": "Function `get_slack_api_data` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1778
+    },
+    {
+      "id": "EA-261c737d8a46c954",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/rate_limiter.py",
+      "message": "Function `clear_history` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 253
+    },
+    {
+      "id": "EA-2d59464d82525f04",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/management/commands/convert_microsoft_teams_data.py",
+      "message": "Function `handle` performs an external network operation for each loop item, through `do_convert_directory`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 60
+    },
+    {
+      "id": "EA-97ca03eb7efab313",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/management/commands/convert_slack_data.py",
+      "message": "Function `handle` performs an external network operation for each loop item, through `do_convert_directory`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 64
+    },
+    {
+      "id": "EA-1900080759dc601a",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/management/commands/email_mirror.py",
+      "message": "Function `get_imap_messages` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 67
+    },
+    {
+      "id": "EA-d77e5390f1bf948b",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0260_missed_message_addresses_from_redis_to_db.py",
+      "message": "Function `move_missed_message_addresses_to_database` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 28
+    },
+    {
+      "id": "EA-74470824146a0d16",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/views/development/integrations.py",
+      "message": "Function `send_all_webhook_fixture_messages` performs an external network operation for each loop item, through `send_webhook_fixture_message`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 142
+    },
+    {
+      "id": "EA-b01eb847306cf186",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-ai/src/resume_tui/mod.rs",
+      "message": "Function `run` performs an external network operation for each loop item, through `request_details`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 902
+    },
+    {
+      "id": "EA-f2d22c4dbfd24c4e",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-domain/src/caps/middleware.rs",
+      "message": "Function `concurrent_burst_fetches_capabilities_once` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 326
+    },
+    {
       "id": "EA-c97b97addd3999ab",
       "repository": "axum",
       "language": "rust",
@@ -28,6 +558,76 @@
       ]
     },
     {
+      "id": "EA-088de716b94f0cc8",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-client/src/style/customThemes.ts",
+      "message": "Function `embedThemeFonts` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 603
+    },
+    {
+      "id": "EA-c7bce9d556158357",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/vite-backend-proxy.ts",
+      "message": "Function `resolveGhostSiteUrl` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 11
+    },
+    {
+      "id": "EA-43e35de890d4d13b",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "e2e/helpers/services/mailgun/fake-mailgun-server.ts",
+      "message": "Function `forwardToMailPit` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 167
+    },
+    {
+      "id": "EA-cd84a2ab18652c41",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "ghost/core/server/services/automations/automation-member-search.ts",
+      "message": "Function `browseMemberSearch` performs an external network operation for each loop item, through `fetchCandidates`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 163
+    },
+    {
+      "id": "EA-3b253e620c48d662",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "tools/scripts/release/release.ts",
+      "message": "Function `waitForChecks` performs an external network operation for each loop item, through `fetchRequiredCheck`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 260
+    },
+    {
+      "id": "EA-a16871531fbee122",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "tools/ci-tools.ts",
+      "message": "Function `fetchNames` performs an external network operation for each loop item, through `request`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 125
+    },
+    {
+      "id": "EA-79ee6822766b53ce",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "tools/ci-tools.ts",
+      "message": "Function `setPrLabels` performs an external network operation for each loop item, through `request`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 154
+    },
+    {
       "id": "EA-9b6459fe4ddc3ea5",
       "repository": "hono",
       "language": "typescript",
@@ -46,6 +646,16 @@
           "reason": "`app.fetch` is the in-process SSG fetch and is already governed by the bounded `createPool({ concurrency })`, so unbounded per-item external I/O does not apply."
         }
       ]
+    },
+    {
+      "id": "EA-5acc2c2c34b9f11d",
+      "repository": "mitmproxy",
+      "language": "typescript",
+      "path": "web/src/js/backends/websocket.tsx",
+      "message": "Function `onOpen` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 77
     },
     {
       "id": "EA-9029527608fb6d4c",
@@ -116,6 +726,16 @@
           "reason": "The claim holds because fetch(API_URL) is awaited inside the retry for-loop at line 8."
         }
       ]
+    },
+    {
+      "id": "EA-e12b1da25fc7be35",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/emojisets.ts",
+      "message": "Function `fetch_emojiset` performs an external network operation for each loop item.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
     }
   ]
 }

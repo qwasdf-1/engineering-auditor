@@ -3,6 +3,46 @@
   "detector": "known_size_preallocation",
   "labels": [
     {
+      "id": "EA-04938c75d7a2e01a",
+      "repository": "authelia",
+      "language": "go",
+      "path": "cmd/authelia-scripts/cmd/helpers_docker.go",
+      "message": "Function `Manifest` grows `args` once per item in `tags`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 49
+    },
+    {
+      "id": "EA-76359aa5019e7f6e",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/commands/context.go",
+      "message": "Function `LogProcessCurrentUserRunE` grows `gidsFinal` once per item in `gids`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 317
+    },
+    {
+      "id": "EA-d92e8fc0cd713e23",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/configuration/sources.go",
+      "message": "Function `NewDefaultSources` grows `sources` once per item in `fileSources`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 383
+    },
+    {
+      "id": "EA-3549f856016ba8e0",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/configuration/sources.go",
+      "message": "Function `NewDefaultSourcesFiltered` grows `sources` once per item in `fileSources`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 402
+    },
+    {
       "id": "EA-c626b1c598cc3f29",
       "repository": "chi",
       "language": "go",
@@ -46,6 +86,576 @@
           "reason": "`patterns := []Pattern{}` at route_headers.go:64 is grown by exactly one append per element of `match` in the loop below, so `len(match)` is a proven initial capacity."
         }
       ]
+    },
+    {
+      "id": "EA-cab204b320605a27",
+      "repository": "gitea",
+      "language": "go",
+      "path": "models/actions/run_job.go",
+      "message": "Function `CollectAllDescendantJobs` grows `out` once per item in `allJobs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 433
+    },
+    {
+      "id": "EA-eadb0a978255217e",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/web/repo/actions/view.go",
+      "message": "Function `convertToViewModel` grows `logLines` once per item in `logRows`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 882
+    },
+    {
+      "id": "EA-0387b0499b381e58",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/repository/license.go",
+      "message": "Function `resolveLicenses` grows `licenses` once per item in `found`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 176
+    },
+    {
+      "id": "EA-ef07d501c509bf97",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/common/rbac/project/rbac_util.go",
+      "message": "Function `getPoliciesForPublicProject` grows `policies` once per item in `publicProjectPolicies`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 49
+    },
+    {
+      "id": "EA-5da634953da19313",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/controller/p2p/preheat/enforcer.go",
+      "message": "Function `getLabels` grows `lt` once per item in `labels`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 561
+    },
+    {
+      "id": "EA-8ccc00f335e598a4",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/controller/scandataexport/execution.go",
+      "message": "Function `ListExecutions` grows `execs` once per item in `execsForUser`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 70
+    },
+    {
+      "id": "EA-263cda58903f5130",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/core/auth/ldap/ldap.go",
+      "message": "Function `attachGroupParallel` grows `ugs` once per item in `userGroupsList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 185
+    },
+    {
+      "id": "EA-7d82654a87ae0193",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/lib/orm/orm.go",
+      "message": "Function `ParamPlaceholderForIn` grows `placeholders` once per item in `n`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 273
+    },
+    {
+      "id": "EA-d6e264fd95d85a1e",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/blob/dao/dao.go",
+      "message": "Function `UpdateBlobStatus` grows `params` once per item in `stats`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 198
+    },
+    {
+      "id": "EA-23e522ff22575f96",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/blob/dao/dao.go",
+      "message": "Function `FindBlobsShouldUnassociatedWithProject` grows `params` once per item in `blobs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 250
+    },
+    {
+      "id": "EA-1574854990897d95",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/jobmonitor/queue.go",
+      "message": "Function `List` grows `resultQueues` once per item in `queues`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
+    },
+    {
+      "id": "EA-fad5be9a8853562f",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/notifier/notifier.go",
+      "message": "Function `Notify` grows `handlers` once per item in `indexer`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 189
+    },
+    {
+      "id": "EA-aada5cc8bb94afee",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/permission/types/resource.go",
+      "message": "Function `Subresource` grows `elements` once per item in `resources`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 50
+    },
+    {
+      "id": "EA-89733597629178b1",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/quota/util.go",
+      "message": "Function `PrettyPrintResourceNames` grows `values` once per item in `a`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 53
+    },
+    {
+      "id": "EA-814b9fbba3677245",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/reg/util/pattern.go",
+      "message": "Function `combinationPathComponents` grows `components` once per item in `components2`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 65
+    },
+    {
+      "id": "EA-4c7bfaf946943829",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/retention/manager.go",
+      "message": "Function `ListPolicyIDs` grows `policyIDs` once per item in `plcs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 111
+    },
+    {
+      "id": "EA-9a504c37cba6cfb2",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/retention/policy/alg/or/processor.go",
+      "message": "Function `toList` grows `l` once per item in `ch`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 210
+    },
+    {
+      "id": "EA-8753899c7f4d5113",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/scan/export/filter_processor.go",
+      "message": "Function `ProcessRepositoryFilter` grows `repoIDs` once per item in `candidates`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 83
+    },
+    {
+      "id": "EA-3e7a5b2b7891f6be",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/scan/postprocessors/report_converters.go",
+      "message": "Function `fromSchema` grows `vulnerabilityItems` once per item in `records`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 207
+    },
+    {
+      "id": "EA-5be4d6c9eb55642b",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/usergroup/model/model.go",
+      "message": "Function `UserGroupsFromName` grows `groups` once per item in `groupNames`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 35
+    },
+    {
+      "id": "EA-e519c19208122bca",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/server/registry/catalog.go",
+      "message": "Function `ServeHTTP` grows `repoNames` once per item in `repoRecords`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 56
+    },
+    {
+      "id": "EA-6aca455a4d2d4650",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/server/v2.0/handler/jobservice.go",
+      "message": "Function `toScheduleResponse` grows `result` once per item in `schs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 133
+    },
+    {
+      "id": "EA-9b6916cc8982fb22",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/server/v2.0/handler/jobservice.go",
+      "message": "Function `toQueueResponse` grows `result` once per item in `queues`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 158
+    },
+    {
+      "id": "EA-3a29a10542340121",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/server/v2.0/handler/member.go",
+      "message": "Function `toProjectMemberRespList` grows `result` once per item in `members`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 137
+    },
+    {
+      "id": "EA-94deedf9e67db616",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/route.go",
+      "message": "Function `addRoute` grows `conns` once per item in `n`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2270
+    },
+    {
+      "id": "EA-511f1909bf0d935f",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "db/extensions/store.go",
+      "message": "Function `Names` grows `names` once per item in `files`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 56
+    },
+    {
+      "id": "EA-540f878f2e6f35a5",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.data.office.ui/src/org/jkiss/dbeaver/data/office/ui/handlers/OpenSpreadsheetHandler.java",
+      "message": "Function `execute` grows `selectedRows` once per item in `rsSelectedRows`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 67
+    },
+    {
+      "id": "EA-4a18b41fbcdc9155",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.data.transfer.ui/src/org/jkiss/dbeaver/tools/transfer/ui/wizard/DataTransferPagePipes.java",
+      "message": "Function `loadConsumers` grows `transferTargets` once per item in `processors`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 936
+    },
+    {
+      "id": "EA-4e25a017d780c340",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.data.transfer.ui/src/org/jkiss/dbeaver/tools/transfer/ui/wizard/DataTransferWizard.java",
+      "message": "Function `initializeWizard` grows `childStatuses` once per item in `loadErrors`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 134
+    },
+    {
+      "id": "EA-771ac3fd999ef465",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreViewBase.java",
+      "message": "Function `getObjectDefinitionText` grows `actions` once per item in `triggers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 122
+    },
+    {
+      "id": "EA-e98a8ef36704dabb",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/ProviderPropertyDescriptor.java",
+      "message": "Function `extractProviderProperties` grows `properties` once per item in `propElements`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 51
+    },
+    {
+      "id": "EA-5d8d9d264f02a141",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/DBNDatabaseFolder.java",
+      "message": "Function `getChildrenObjects` grows `childObjects` once per item in `children`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 140
+    },
+    {
+      "id": "EA-b8a2409f60095844",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/sql/SQLUtils.java",
+      "message": "Function `collectComments` grows `subpatterns` once per item in `slComments`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 129
+    },
+    {
+      "id": "EA-8c02ecca9ee23c50",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.data/src/org/jkiss/dbeaver/ui/controls/resultset/handler/ResultSetHandlerCopyAs.java",
+      "message": "Function `openResultsWith` grows `selectedRows` once per item in `rsSelectedRows`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 120
+    },
+    {
+      "id": "EA-b5036286790cec82",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/SchedulerServiceImpl.java",
+      "message": "Function `queryScheduleList` grows `scheduleList` once per item in `schedules`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 335
+    },
+    {
+      "id": "EA-fa4d23e99650ad03",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "crypto/elytron/src/main/java/org/keycloak/crypto/elytron/ElytronCertificateUtilsProvider.java",
+      "message": "Function `createPoliciesExtension` grows `policyList` once per item in `certificatePolicyOid`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 354
+    },
+    {
+      "id": "EA-8c5156e48f9ec71b",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/DatabasePropertyMappers.java",
+      "message": "Function `namedQueryMappers` grows `mappers` once per item in `queryKeys`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 335
+    },
+    {
+      "id": "EA-c8683a205b34fba3",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/authentication/ClientAuthenticationFlow.java",
+      "message": "Function `findExecutionsToRun` grows `exIds` once per item in `executionsToRun`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 133
+    },
+    {
+      "id": "EA-fcd8462714bdc4bb",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/authorization/protection/permission/AbstractPermissionService.java",
+      "message": "Function `verifyRequestedResource` grows `requestedResources` once per item in `resources`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 67
+    },
+    {
+      "id": "EA-78c5fe755c57973f",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/mappers/OIDCAttributeMapperHelper.java",
+      "message": "Function `mapAttributeValue` grows `result` once per item in `valueAsList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 170
+    },
+    {
+      "id": "EA-2d21ce4cbd97cafa",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/x509/Rfc9440ClientCertificateLookup.java",
+      "message": "Function `getClientCertificateChainFromHeader` grows `parsedCertificates` once per item in `encodedCerts`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 146
+    },
+    {
+      "id": "EA-ea5825e4179df956",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/RoleDBStore.java",
+      "message": "Function `getRoles` grows `ret` once per item in `xxRoles`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 291
+    },
+    {
+      "id": "EA-70e2a6fd99619734",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/RoleDBStore.java",
+      "message": "Function `getRoles` grows `ret` once per item in `rolesFromDb`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 450
+    },
+    {
+      "id": "EA-7917bbcb1a94d6dc",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/UserMgr.java",
+      "message": "Function `setUserRoles` grows `stringRolesList` once per item in `vStringRolesList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 335
+    },
+    {
+      "id": "EA-f2af71bd7a10cc0d",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/db/XXGroupDao.java",
+      "message": "Function `getAllGroupsInfo` grows `ret` once per item in `rows`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 104
+    },
+    {
+      "id": "EA-3dbcf9e56735515e",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/db/XXPolicyRefConditionDao.java",
+      "message": "Function `findUpdatedConditionNamesByPolicy` grows `ret` once per item in `rows`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 80
+    },
+    {
+      "id": "EA-6bb9e39c8186617b",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/db/XXUserDao.java",
+      "message": "Function `getAllUsersInfo` grows `ret` once per item in `rows`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 173
+    },
+    {
+      "id": "EA-090dc9564e6d52de",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/rest/ServiceRESTUtil.java",
+      "message": "Function `processRevokeRequest` grows `appliedRangerPolicyItemAccess` once per item in `appliedPolicyItemAccessType`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 109
+    },
+    {
+      "id": "EA-0da3ea5e3e6b028e",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/service/XResourceService.java",
+      "message": "Function `populatePermList` grows `vXPermMapList` once per item in `xPermMapList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 301
+    },
+    {
+      "id": "EA-c2bc3ea8a1e0043a",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/parosproxy/paros/model/HistoryReference.java",
+      "message": "Function `getTags` grows `tags` once per item in `rtags`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 953
+    },
+    {
+      "id": "EA-44c31b2465b18b39",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/parosproxy/paros/model/Session.java",
+      "message": "Function `getContextDataStrings` grows `list` once per item in `dataList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1180
+    },
+    {
+      "id": "EA-32d3f738c8fed63e",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/parosproxy/paros/view/MainFrame.java",
+      "message": "Function `getMenuItemNames` grows `list` once per item in `looks`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 560
+    },
+    {
+      "id": "EA-a364493f080a1c96",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/CustomScanDialog.java",
+      "message": "Function `setUsers` grows `userNames` once per item in `users`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 426
+    },
+    {
+      "id": "EA-c2c510228f4c8420",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/script/ExtensionScript.java",
+      "message": "Function `getScriptingEngines` grows `engineNames` once per item in `engines`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 269
+    },
+    {
+      "id": "EA-663145b848b3508f",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/spider/SpiderDialog.java",
+      "message": "Function `setUsers` grows `userNames` once per item in `users`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 275
+    },
+    {
+      "id": "EA-89a25082e4ba9d23",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/view/ContextListPanel.java",
+      "message": "Function `initParam` grows `values` once per item in `contexts`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 152
+    },
+    {
+      "id": "EA-b75492455fc0fe4b",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-client/src/ai_session/database.rs",
+      "message": "Function `roles_clause` grows `any` once per item in `roles`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1016
     }
   ]
 }

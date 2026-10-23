@@ -83,6 +83,16 @@
       ]
     },
     {
+      "id": "EA-339eaecfaee54a09",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Server/WexflowService.cs",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 3703, through `GenerateRandomNumber`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 3703
+    },
+    {
       "id": "EA-2ac90ea492e23d16",
       "repository": "commons-lang",
       "language": "java",
@@ -101,6 +111,16 @@
           "reason": "The helper merely returns ThreadLocalRandom for the ArrayUtils shuffle methods, which is not a security-sensitive operation, so the rationale does not apply."
         }
       ]
+    },
+    {
+      "id": "EA-b5b90d163a9abeca",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/dialogs/connection/ConnectionWizard.java",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 162, through `getActiveDataSource`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 162
     },
     {
       "id": "EA-7d871bd0513a8c08",
@@ -123,6 +143,26 @@
       ]
     },
     {
+      "id": "EA-6f577f8bf967d505",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/vault/DefaultVaultCharSecret.java",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 90",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 90
+    },
+    {
+      "id": "EA-c17d3fd6908596db",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/rest/ServiceREST.java",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 4132",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 4132
+    },
+    {
       "id": "EA-a50a53f973daa826",
       "repository": "axios",
       "language": "javascript",
@@ -141,6 +181,26 @@
           "reason": "Math.random feeds a postMessage feature-detection marker token in axios, not a security token, so the claim of security sensitivity is wrong."
         }
       ]
+    },
+    {
+      "id": "EA-eecd0d71703f8a7b",
+      "repository": "duckduckgo-android",
+      "language": "javascript",
+      "path": "app/src/main/res/raw/webviewcompat_complex_test_script.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 147",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 147
+    },
+    {
+      "id": "EA-e583de5c6e536812",
+      "repository": "duckduckgo-android",
+      "language": "javascript",
+      "path": "app/src/main/res/raw/webviewcompat_large_test_script.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 86",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 86
     },
     {
       "id": "EA-8ff05af2ae6b872e",
@@ -203,6 +263,46 @@
       ]
     },
     {
+      "id": "EA-5c0cf3dd3181c986",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/data/tinybird/scripts/docker-analytics-manager.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 465",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 465
+    },
+    {
+      "id": "EA-342f0e187229d3c7",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/members/jobs/index.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 80, through `randomDailyCron`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 80
+    },
+    {
+      "id": "EA-0057c409866e7e0e",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/app/components/items-list/classes/ItemsSource.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 47",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 47
+    },
+    {
+      "id": "EA-fa0b628b15b31f16",
+      "repository": "redash",
+      "language": "javascript",
+      "path": "client/app/pages/queries/hooks/useDataSourceSchema.js",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 24",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 24
+    },
+    {
       "id": "EA-486540a71d9488a8",
       "repository": "okhttp",
       "language": "kotlin",
@@ -221,6 +321,36 @@
           "reason": "Random() is passed into RealWebSocket to generate WebSocket client masking keys, which are specifically required by the protocol to be unpredictable, so the claim holds."
         }
       ]
+    },
+    {
+      "id": "EA-844d42c96db5ef0f",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/util.py",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 2447",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2447
+    },
+    {
+      "id": "EA-c54c6602a037b216",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/wallet.py",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 199, through `get_locktime_for_new_transaction`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 199
+    },
+    {
+      "id": "EA-72cfdbe84481dfc2",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/utils/__init__.py",
+      "message": "Using random module for security-sensitive purpose (Bandit B311) at line 70",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 70
     },
     {
       "id": "EA-cceda0b077fb857a",

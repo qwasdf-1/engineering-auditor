@@ -3,6 +3,36 @@
   "detector": "nested_quadratic_iteration",
   "labels": [
     {
+      "id": "EA-8a2d8e9e76c0546b",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Cms.Api.Management/DependencyInjection/UmbracoBuilder.LocalizedText.cs",
+      "message": "Function `GetSupplementaryFileSources` independently traverses `contentFileProvider.GetDirectoryContents` for `langFileSource` and `langFile`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 55
+    },
+    {
+      "id": "EA-c63fef5c559a822d",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Extensions/RequestHandlerSettingsExtension.cs",
+      "message": "Function `MergeUnique` independently traverses `CollectionsMarshal.AsSpan` for `alternativeReplacement` and `priorityReplacement`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 69
+    },
+    {
+      "id": "EA-7283d53d382267a6",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/configuration/validator/server.go",
+      "message": "Function `ValidateServerEndpoints` independently traverses `authzs` for `name` and `oName`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 152
+    },
+    {
       "id": "EA-8d87f0862b2e2934",
       "repository": "gin",
       "language": "go",
@@ -23,6 +53,56 @@
       ]
     },
     {
+      "id": "EA-9f64d96df87cf18d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/avatar/identicon/block.go",
+      "message": "Function `drawBlock` independently traverses `size` for `i` and `j`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 28
+    },
+    {
+      "id": "EA-f2bb736398535f53",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/lib/link.go",
+      "message": "Function `ParseLinks` independently traverses `strings.SplitSeq` for `lk` and `attr`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 61
+    },
+    {
+      "id": "EA-25dfc3b7a2947665",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/consumer.go",
+      "message": "Function `checkConsumerCfg` independently traverses `subjectFilters` for `outer` and `inner`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 909
+    },
+    {
+      "id": "EA-b0c15a017c07d888",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/stream.go",
+      "message": "Function `checkStreamCfgLocked` independently traverses `config.Mirror.SubjectTransforms` for `outer` and `inner`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2194
+    },
+    {
+      "id": "EA-cc9e2ef450eee7f2",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/stream.go",
+      "message": "Function `checkStreamCfgLocked` independently traverses `src.SubjectTransforms` for `outer` and `inner`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2277
+    },
+    {
       "id": "EA-b0c1b1038088d53b",
       "repository": "commons-lang",
       "language": "java",
@@ -41,6 +121,226 @@
           "reason": "Both loops iterate the same `bounds` array with no early outer termination, so `normalizeUpperBounds` genuinely performs an all-pairs O(n^2) traversal."
         }
       ]
+    },
+    {
+      "id": "EA-29eb625f4467adcc",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/virtual/DBVModelSerializerLegacy.java",
+      "message": "Function `serializeEntity` independently traverses `CommonUtils.safeCollection` for `c` and `cc`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 134
+    },
+    {
+      "id": "EA-977448d6366a157e",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/virtual/DBVModelSerializerLegacy.java",
+      "message": "Function `serializeEntity` independently traverses `CommonUtils.safeCollection` for `fk` and `cc`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 153
+    },
+    {
+      "id": "EA-c83f22e1e32d925f",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/DataSourceProviderRegistry.java",
+      "message": "Function `readDriversConfig` independently traverses `allDrivers` for `driver1` and `driver2`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 361
+    },
+    {
+      "id": "EA-7c0f4b05ed02877a",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/maven/MavenRegistry.java",
+      "message": "Function `loadCustomRepositories` independently traverses `XMLUtils.getChildElementList` for `repoElement` and `scopeElement`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 151
+    },
+    {
+      "id": "EA-a758d9a752280047",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.navigator/src/org/jkiss/dbeaver/ui/navigator/actions/NavigatorHandlerSaveResource.java",
+      "message": "Function `saveMultipleResources` independently traverses `nodes` for `node` and `n`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 131
+    },
+    {
+      "id": "EA-ecf081b2acd29bcd",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
+      "message": "Function `importOrganizations` independently traverses `Optional.ofNullable` for `orgRep` and `identityProvider`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1784
+    },
+    {
+      "id": "EA-012b7241e11d6362",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
+      "message": "Function `importOrganizations` independently traverses `Optional.ofNullable` for `orgRep` and `groupRep`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1803
+    },
+    {
+      "id": "EA-d00daf3d0e61db61",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
+      "message": "Function `importOrganizations` independently traverses `Optional.ofNullable` for `orgRep` and `member`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1807
+    },
+    {
+      "id": "EA-d81ed7b9308fb0f9",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/httpclient/VertxHttpClientBridge.java",
+      "message": "Function `toApacheResponse` independently traverses `resp.headers` for `name` and `value`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 243
+    },
+    {
+      "id": "EA-7f7dd4e1777128a0",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/service/XPolicyService.java",
+      "message": "Function `updatePermGroup` independently traverses `userPermMap.entrySet` for `upMap` and `entry`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 615
+    },
+    {
+      "id": "EA-378a9f6c2b01989b",
+      "repository": "duckduckgo-android",
+      "language": "kotlin",
+      "path": "network-protection/network-protection-impl/src/main/java/com/wireguard/crypto/Curve25519.kt",
+      "message": "Function `mul` independently traverses `until.NUM_LIMBS_255BIT` for `i` and `j`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 166
+    },
+    {
+      "id": "EA-5a5801e5d93619fd",
+      "repository": "duckduckgo-android",
+      "language": "kotlin",
+      "path": "sync/sync-impl/src/main/java/com/duckduckgo/sync/impl/ui/pairing/read/camera/CameraScannerOverlayView.kt",
+      "message": "Function `rebuildGeometry` independently traverses `MIRROR_SCALES` for `scaleX` and `scaleY`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 108
+    },
+    {
+      "id": "EA-c7d0a7c4e6ffb1cb",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/x509.py",
+      "message": "Function `get_dict` independently traverses `get_children` for `ii` and `iii`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 168
+    },
+    {
+      "id": "EA-dd8343228bf39fc4",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/common/face/model.py",
+      "message": "Function `build_model` independently traverses `os.listdir` for `name` and `image`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 247
+    },
+    {
+      "id": "EA-c2039002afb5cdcd",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/common/face/model.py",
+      "message": "Function `build_model` independently traverses `os.listdir` for `name` and `image`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 358
+    },
+    {
+      "id": "EA-a2d4e23d125698ff",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/util/media.py",
+      "message": "Function `sync_event_thumbnails` independently traverses `os.listdir` for `camera_dir` and `file`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 375
+    },
+    {
+      "id": "EA-a17ac6ce310d5c2f",
+      "repository": "frigate",
+      "language": "python",
+      "path": "testing-scripts/object_dataset.py",
+      "message": "Function `iter_dataset` independently traverses `os.listdir` for `cls` and `name`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 366
+    },
+    {
+      "id": "EA-1c2d564f16e9b136",
+      "repository": "frigate",
+      "language": "python",
+      "path": "testing-scripts/object_dataset.py",
+      "message": "Function `confusion_matrix` independently traverses `classes` for `i` and `j`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 522
+    },
+    {
+      "id": "EA-b4dfc17643cb4b13",
+      "repository": "frigate",
+      "language": "python",
+      "path": "testing-scripts/object_dataset.py",
+      "message": "Function `pick_worst_confusion_pair` independently traverses `classes` for `src` and `tgt`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 707
+    },
+    {
+      "id": "EA-b65ed3b55c8aab08",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/query_runner/hive_ds.py",
+      "message": "Function `_get_tables` independently traverses `a.a.str` for `schema_name` and `table_name`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 84
+    },
+    {
+      "id": "EA-b0393d91686bde47",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/query_runner/impala_ds.py",
+      "message": "Function `_get_tables` independently traverses `str` for `schema_name` and `table_name`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 83
+    },
+    {
+      "id": "EA-4a255e8c679ccce6",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/query_runner/memsql_ds.py",
+      "message": "Function `_get_tables` independently traverses `a.a.str` for `schema_name` and `table_name`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 83
     },
     {
       "id": "EA-40062e5af6f7b404",
@@ -81,6 +381,56 @@
           "reason": "Both `for y in range(0, height)` (height = console.size.height - 3) and `for x in range(options.max_width)` scale with input dimensions, so the nested traversal is genuinely O(width \u00d7 height)."
         }
       ]
+    },
+    {
+      "id": "EA-e5f96c7cb4123be8",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/openapi/openapi.py",
+      "message": "Function `get_endpoint_from_operationid` independently traverses `openapi_spec.openapi` for `endpoint` and `method`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 322
+    },
+    {
+      "id": "EA-0adf1760082e760d",
+      "repository": "frigate",
+      "language": "typescript",
+      "path": "web/src/views/settings/MasksAndZonesView.tsx",
+      "message": "Function `` independently traverses `Object.entries` for `objectName` and `maskId`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 574
+    },
+    {
+      "id": "EA-a1d6e93c3da0d285",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/members/detail/member-detail-edit.ts",
+      "message": "Function `getEditableCustomFieldValues` independently traverses `Object.entries` for `namespace` and `fieldKey`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 80
+    },
+    {
+      "id": "EA-85569fc6f9bc89f7",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "ghost/core/server/services/members-metafields/values-service.ts",
+      "message": "Function `unwrapWire` independently traverses `Object.entries` for `namespace` and `key`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 259
+    },
+    {
+      "id": "EA-63f549dac9e19349",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/base/left-side-nav/registries/create-edit-endpoint/create-edit-endpoint.component.ts",
+      "message": "Function `getChanges` independently traverses `Object` for `prop` and `pro`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 494
     },
     {
       "id": "EA-c43d9f679a02dc7b",

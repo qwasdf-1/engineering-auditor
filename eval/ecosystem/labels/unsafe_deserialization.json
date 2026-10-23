@@ -23,6 +23,96 @@
       ]
     },
     {
+      "id": "EA-24fd8ee7759f31ac",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model.rcp/src/org/jkiss/dbeaver/model/rcp/DesktopWorkspaceImpl.java",
+      "message": "Unsafe deserialization call at line 535",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 535
+    },
+    {
+      "id": "EA-3d271625790a6f2e",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/utils/GeneralUtils.java",
+      "message": "Unsafe deserialization call at line 797",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 797
+    },
+    {
+      "id": "EA-140dfe78a4bb1a73",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "common/src/main/java/org/keycloak/common/util/KerberosSerializationUtils.java",
+      "message": "Unsafe deserialization call at line 115",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 115
+    },
+    {
+      "id": "EA-9399b1985256aebc",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/social/twitter/TwitterIdentityProvider.java",
+      "message": "Unsafe deserialization call at line 114",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 114
+    },
+    {
+      "id": "EA-99d0362169d8b180",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "test-framework/remote-providers/src/main/java/org/keycloak/testframework/remote/providers/runonserver/SerializationUtil.java",
+      "message": "Unsafe deserialization call at line 34",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
+    },
+    {
+      "id": "EA-8898233f694b73d3",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "test-framework/remote-providers/src/main/java/org/keycloak/testframework/remote/providers/runonserver/SerializationUtil.java",
+      "message": "Unsafe deserialization call at line 68",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 68
+    },
+    {
+      "id": "EA-fd76973400bde8a4",
+      "repository": "ranger",
+      "language": "java",
+      "path": "kms/src/main/java/org/apache/hadoop/crypto/key/RangerKeyStore.java",
+      "message": "Unsafe deserialization call at line 510",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 510
+    },
+    {
+      "id": "EA-04ccef6f2c4cec10",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/utils/ViewState.java",
+      "message": "Unsafe deserialization call at line 80",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 80
+    },
+    {
+      "id": "EA-8959fd968f681930",
+      "repository": "atuin",
+      "language": "python",
+      "path": "docs/scripts/gen_legacy_stubs.py",
+      "message": "Unsafe deserialization call at line 81",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 81
+    },
+    {
       "id": "EA-d9d403618a80edae",
       "repository": "black",
       "language": "python",
@@ -81,6 +171,96 @@
           "reason": "Line 129's `pickle.loads(pkl)` deserializes a bytes argument via pickle, matching the CWE-502 pattern the detector reports."
         }
       ]
+    },
+    {
+      "id": "EA-3fba91dbacf3aafb",
+      "repository": "frigate",
+      "language": "python",
+      "path": "docker/main/rootfs/usr/local/ffmpeg/get_ffmpeg_path.py",
+      "message": "Unsafe deserialization call at line 21",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 21
+    },
+    {
+      "id": "EA-805ebf37c9605edc",
+      "repository": "frigate",
+      "language": "python",
+      "path": "docker/main/rootfs/usr/local/go2rtc/create_config.py",
+      "message": "Unsafe deserialization call at line 44",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-6af76ee84f3d9feb",
+      "repository": "frigate",
+      "language": "python",
+      "path": "docker/main/rootfs/usr/local/nginx/get_nginx_settings.py",
+      "message": "Unsafe deserialization call at line 24",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 24
+    },
+    {
+      "id": "EA-f8f9e3a194d78317",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/api/camera.py",
+      "message": "Unsafe deserialization call at line 1203",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1203
+    },
+    {
+      "id": "EA-4d70a3d805d56fdc",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/config/config.py",
+      "message": "Unsafe deserialization call at line 1117",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1117
+    },
+    {
+      "id": "EA-65d7e11c611765e7",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/util/builtin.py",
+      "message": "Unsafe deserialization call at line 270",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 270
+    },
+    {
+      "id": "EA-086f74d00d1121a8",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/util/config.py",
+      "message": "Unsafe deserialization call at line 82",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 82
+    },
+    {
+      "id": "EA-d11e4906103ab951",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/optmanager.py",
+      "message": "Unsafe deserialization call at line 531",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 531
+    },
+    {
+      "id": "EA-b82eddccad2d579b",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/singleton_bmemcached.py",
+      "message": "Unsafe deserialization call at line 12",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 12
     }
   ]
 }

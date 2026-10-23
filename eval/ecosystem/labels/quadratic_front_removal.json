@@ -3,6 +3,56 @@
   "detector": "quadratic_front_removal",
   "labels": [
     {
+      "id": "EA-6b4bd30919fc4c74",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Extensions/VersionExtensions.cs",
+      "message": "Function `SubtractRevision` calls `parts.remove` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 50
+    },
+    {
+      "id": "EA-be2eb9e2f903a835",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/UserMgr.java",
+      "message": "Function `changePassword` calls `oldPasswords.remove` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 396
+    },
+    {
+      "id": "EA-3a4ebb1b86730fdb",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/autoupdate/AddOnDependencyChecker.java",
+      "message": "Function `calculateUninstallChanges` calls `addOnsToCheck.remove` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 604
+    },
+    {
+      "id": "EA-4fae13a4c1e830e6",
+      "repository": "ranger",
+      "language": "javascript",
+      "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
+      "message": "Function `` calls `seps.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 5945
+    },
+    {
+      "id": "EA-809934a17d86db62",
+      "repository": "ranger",
+      "language": "javascript",
+      "path": "security-admin/src/main/webapp/libs/other/datepicker/js/bootstrap-datepicker.js",
+      "message": "Function `` calls `seps.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 799
+    },
+    {
       "id": "EA-7cf6074db2466fa3",
       "repository": "black",
       "language": "python",
@@ -43,6 +93,136 @@
       ]
     },
     {
+      "id": "EA-fa81321fc3ae507d",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/real_time/whisper_online.py",
+      "message": "Function `insert` calls `new.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 433
+    },
+    {
+      "id": "EA-176e9d3a2e6a5f48",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/real_time/whisper_online.py",
+      "message": "Function `flush` calls `new.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 453
+    },
+    {
+      "id": "EA-7eecad4730d0a609",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/real_time/whisper_online.py",
+      "message": "Function `words_to_sentences` calls `cwords.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 639
+    },
+    {
+      "id": "EA-6067946076575d17",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/command.py",
+      "message": "Function `parse_partial` calls `next_params.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 227
+    },
+    {
+      "id": "EA-be1a295a379a6cf1",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/command.py",
+      "message": "Function `parse_partial` calls `next_params.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 243
+    },
+    {
+      "id": "EA-7e1e7214e5b3bcb1",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/coretypes/multidict.py",
+      "message": "Function `set_all` calls `values.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 97
+    },
+    {
+      "id": "EA-2c079c1e06039b1b",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/coretypes/multidict.py",
+      "message": "Function `set_all` calls `values.pop` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 101
+    },
+    {
+      "id": "EA-88e125796620f5eb",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin/src/print_error.rs",
+      "message": "Function `wrap_text` calls `out.remove` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 77
+    },
+    {
+      "id": "EA-13a0d6725be33665",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "web_src/js/components/WorkflowGraph.utils.ts",
+      "message": "Function `` calls `queue.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 235
+    },
+    {
+      "id": "EA-1d050eafb88af84d",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "web_src/js/modules/fomantic/dropdown.ts",
+      "message": "Function `hideScopedEmptyDividers` calls `visibleItems.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 360
+    },
+    {
+      "id": "EA-cb40901e55539ebe",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/shared/units/utils.ts",
+      "message": "Function `` calls `quotaUnitsDeep.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 594
+    },
+    {
+      "id": "EA-7ec1f10ce190d520",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/shared/units/utils.ts",
+      "message": "Function `` calls `quotaUnitsDeep.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 644
+    },
+    {
+      "id": "EA-59f495c25fedbe3d",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/shared/units/utils.ts",
+      "message": "Function `` calls `quotaUnitsDeepClone.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 646
+    },
+    {
       "id": "EA-e689208b7d958239",
       "repository": "hono",
       "language": "typescript",
@@ -81,6 +261,16 @@
           "reason": "`curNodesQueue.shift()` runs once per path-part iteration of the `for` loop on an array, so the claim holds, although the queue is small and bounded by path segment count."
         }
       ]
+    },
+    {
+      "id": "EA-8df92978724c88a1",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/bootstrap_typeahead.ts",
+      "message": "Function `defaultSorter` calls `items.shift` on the front of an array inside a loop; each call shifts every remaining element.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 177
     }
   ]
 }

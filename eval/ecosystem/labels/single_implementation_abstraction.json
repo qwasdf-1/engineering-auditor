@@ -3,6 +3,96 @@
   "detector": "single_implementation_abstraction",
   "labels": [
     {
+      "id": "EA-d3686d15696ddc90",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/authentication/ldap_client.go",
+      "message": "Interface `ldapDiscoverySetter` at line 23 has one implementation in the repository, `LDAPClient`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 23
+    },
+    {
+      "id": "EA-c5338fe74b3f6f7d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/graceful/server.go",
+      "message": "Interface `filer` at line 221 has one implementation in the repository, `wrappedListener`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 221
+    },
+    {
+      "id": "EA-3c0dea12416b4abb",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/queue/base.go",
+      "message": "Interface `baseQueueNotifiableInterface` at line 44 has one implementation in the repository, `baseQueueNotifiable`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-300608fa01ed895c",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/oidc/helper.go",
+      "message": "Interface `claimsProvider` at line 51 has one implementation in the repository, `fakeClaims`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 51
+    },
+    {
+      "id": "EA-cff554296096ef16",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/opts.go",
+      "message": "Interface `token` at line 982 has one implementation in the repository, `token`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 982
+    },
+    {
+      "id": "EA-4d00e84fbf5437f4",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/stree/node.go",
+      "message": "Interface `node` at line 17 has one implementation in the repository, `leaf`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 17
+    },
+    {
+      "id": "EA-28ba99da6c128001",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "db/conn.go",
+      "message": "Interface `execerQueryer` at line 35 has one implementation in the repository, `errorTestConn`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 35
+    },
+    {
+      "id": "EA-d5831a339f2032f5",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "db/conn.go",
+      "message": "Interface `queryer` at line 216 has one implementation in the repository, `errorTestConn`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 216
+    },
+    {
+      "id": "EA-0447d6731f4e7534",
+      "repository": "rqlite",
+      "language": "go",
+      "path": "snapshot/sink.go",
+      "message": "Interface `snapshotTypeController` at line 25 has one implementation in the repository, `Store`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
       "id": "EA-699b1d21298e5962",
       "repository": "commons-lang",
       "language": "java",
@@ -28,6 +118,56 @@
       ]
     },
     {
+      "id": "EA-4b5b6026a3163b28",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/registry/AISettingsManager.java",
+      "message": "Interface `AISettingsHolder` at line 213 has one implementation in the repository, `AISettingsLocalHolder`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 213
+    },
+    {
+      "id": "EA-0bdf9dcffcc7650f",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.data/src/org/jkiss/dbeaver/ui/controls/resultset/ActiveStatusMessage.java",
+      "message": "Abstract class `ActiveStatusMessage` at line 48 has one implementation in the repository, `anonymous class at line 2155`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 48
+    },
+    {
+      "id": "EA-cc8ccfbd50fc83c3",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui/src/org/jkiss/dbeaver/ui/controls/decorations/Painter.java",
+      "message": "Interface `Painter` at line 23 has one implementation in the repository, `SnowflakePainter`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 23
+    },
+    {
+      "id": "EA-cb96e409d8aea020",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-extract/dolphinscheduler-extract-base/src/main/java/org/apache/dolphinscheduler/extract/base/server/ServerMethodInvoker.java",
+      "message": "Interface `ServerMethodInvoker` at line 20 has one implementation in the repository, `ServerMethodInvokerImpl`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 20
+    },
+    {
+      "id": "EA-7ffdb036eeb8cb35",
+      "repository": "duckduckgo-android",
+      "language": "java",
+      "path": "app/src/main/java/com/duckduckgo/app/browser/tabs/adapter/FragmentStateAdapter.java",
+      "message": "Abstract class `DataSetChangeObserver` at line 874 has one implementation in the repository, `anonymous class at line 762`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 874
+    },
+    {
       "id": "EA-3952f432450220dc",
       "repository": "gson",
       "language": "java",
@@ -46,6 +186,46 @@
           "reason": "The sole implementation is an anonymous class that captures local context (accessor, typeAdapter, blockInaccessible, etc.) to implement write/readIntoArray/readIntoField, so BoundField is a closure-style callback interface; the abstraction has a real purpose."
         }
       ]
+    },
+    {
+      "id": "EA-d8c240b39076aa66",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java",
+      "message": "Interface `ClientSessionParser` at line 72 has one implementation in the repository, `AuthenticationSessionModelParser`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 72
+    },
+    {
+      "id": "EA-97a9a210e9b0dfcb",
+      "repository": "ranger",
+      "language": "java",
+      "path": "authz-remote/src/main/java/org/apache/ranger/authz/remote/authn/RangerRemoteKerberosContext.java",
+      "message": "Abstract class `AbstractJaasConf` at line 143 has one implementation in the repository, `KeytabJaasConf`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 143
+    },
+    {
+      "id": "EA-e9e59c4ba33c4418",
+      "repository": "ranger",
+      "language": "java",
+      "path": "kms/src/main/java/org/apache/hadoop/crypto/key/kms/server/KMSAuditLogger.java",
+      "message": "Interface `KMSAuditLogger` at line 38 has one implementation in the repository, `SimpleKMSAuditLogger`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 38
+    },
+    {
+      "id": "EA-a6ae69efb3d15da0",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/AttackModeScanner.java",
+      "message": "Interface `AttackModeScannerThread` at line 413 has one implementation in the repository, `AttackModeThread`; the abstraction adds a declaration for a variation nothing uses",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 413
     }
   ]
 }

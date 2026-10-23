@@ -3,6 +3,196 @@
   "detector": "repeated_collection_traversal",
   "labels": [
     {
+      "id": "EA-c808764798c880c7",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Cms.Api.Management/OpenApi/Transformers/BackOfficeSecurityRequirementsTransformer.cs",
+      "message": "Function `TransformAsync` performs 4 pure terminal traversals of unchanged `description.MethodInfo.GetCustomAttributes`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 24
+    },
+    {
+      "id": "EA-5d3368eec88ee032",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Services/ContentEditingServiceBase.cs",
+      "message": "Function `TryGetAndValidateContentType` performs 3 pure terminal traversals of unchanged `contentEditingModelBase.Variants`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 539
+    },
+    {
+      "id": "EA-3d9a82e78e7f119b",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/PropertyEditors/ValueConverters/BlockEditorVarianceHandler.cs",
+      "message": "Function `AlignExposeVariance` performs 3 pure terminal traversals of unchanged `contentData.Values`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 175
+    },
+    {
+      "id": "EA-2ed7b895425e7e3c",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/meta/PropertyConstraints.java",
+      "message": "Function `from` performs 4 pure terminal traversals of unchanged `property`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-17adbad97e2285bd",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/search/SearchThread.java",
+      "message": "Function `search` performs 4 pure terminal traversals of unchanged `pattern.matcher`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 174
+    },
+    {
+      "id": "EA-6eafb56fd6e5430a",
+      "repository": "mitmproxy",
+      "language": "javascript",
+      "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
+      "message": "Function `n` performs 3 pure terminal traversals of unchanged `n`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 42
+    },
+    {
+      "id": "EA-41c91ea974e465d6",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/old_mnemonic.py",
+      "message": "Function `mn_decode` performs 3 pure terminal traversals of unchanged `wordlist`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1688
+    },
+    {
+      "id": "EA-1c9c57638c9d26e0",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/common/license_plate/mixin.py",
+      "message": "Function `_is_valid_polygon` performs 4 pure terminal traversals of unchanged `point`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 703
+    },
+    {
+      "id": "EA-96964b059031d9d5",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/detectors/detector_utils.py",
+      "message": "Function `tflite_detect_raw` performs 4 pure terminal traversals of unchanged `interpreter.tensor`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 24
+    },
+    {
+      "id": "EA-9961c45fdcbdf22c",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/detectors/plugins/edgetpu_tfl.py",
+      "message": "Function `detect_raw` performs 4 pure terminal traversals of unchanged `interpreter.tensor`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 220
+    },
+    {
+      "id": "EA-15e2a0deeb1153b2",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-ai/src/tui/view/mod.rs",
+      "message": "Function `shell_tool_footer` performs 3 pure terminal traversals of unchanged `text`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 284
+    },
+    {
+      "id": "EA-099861b60577c744",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin/src/command/client/doctor.rs",
+      "message": "Function `checks` performs 3 pure terminal traversals of unchanged `info.shell.plugins`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 393
+    },
+    {
+      "id": "EA-0b16780f940f4e22",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/mocks/budget.ts",
+      "message": "Function `extractCommonThings` performs 3 pure terminal traversals of unchanged `groups`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 174
+    },
+    {
+      "id": "EA-9055c4a11b7515d1",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/mocks/budget.ts",
+      "message": "Function `fillPrimaryChecking` performs 5 pure terminal traversals of unchanged `billCategories`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 207
+    },
+    {
+      "id": "EA-732502fc9432c1bd",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/shared/schedules.ts",
+      "message": "Function `extractScheduleConds` performs 6 pure terminal traversals of unchanged `conditions`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 255
+    },
+    {
+      "id": "EA-4f0087c5d3cc8691",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/automations/components/canvas/automation-canvas.tsx",
+      "message": "Function `` performs 3 pure terminal traversals of unchanged `automation.actions`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 429
+    },
+    {
+      "id": "EA-a77c31b99b823691",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/posts/list/compose-post-buckets.ts",
+      "message": "Function `composePostBuckets` performs 3 pure terminal traversals of unchanged `results`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 41
+    },
+    {
+      "id": "EA-637deef338a1e020",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/base/project/project-log/audit-legacy-log.component.ts",
+      "message": "Function `toggleFilterOption` performs 3 pure terminal traversals of unchanged `filterOptions`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 218
+    },
+    {
+      "id": "EA-4051afc6e42a4d75",
+      "repository": "harbor",
+      "language": "typescript",
+      "path": "src/portal/src/app/base/project/project-log/audit-log.component.ts",
+      "message": "Function `toggleFilterOption` performs 3 pure terminal traversals of unchanged `filterOptions`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 220
+    },
+    {
       "id": "EA-b0660bab2e7de644",
       "repository": "trpc",
       "language": "typescript",
@@ -31,6 +221,56 @@
           "reason": "The excerpt shows only routerList.map and routerList.reduce, while the claimed four terminal traversals span past the visible function body."
         }
       ]
+    },
+    {
+      "id": "EA-fd6e7b5b43ef6a6f",
+      "repository": "umbraco",
+      "language": "typescript",
+      "path": "src/Umbraco.Web.UI.Client/src/packages/content/content/workspace/content-detail-workspace-type-transform.controller.ts",
+      "message": "Function `transformVariantsToInvariant` performs 3 pure terminal traversals of unchanged `variants`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 115
+    },
+    {
+      "id": "EA-d08fdd1c804e8bc5",
+      "repository": "umbraco",
+      "language": "typescript",
+      "path": "src/Umbraco.Web.UI.Client/src/packages/core/workspace/components/workspace-breadcrumb/workspace-variant-menu-breadcrumb/workspace-variant-menu-breadcrumb.element.ts",
+      "message": "Function `getItemVariantName` performs 3 pure terminal traversals of unchanged `structureItem.variants`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 105
+    },
+    {
+      "id": "EA-e049e2cad974d731",
+      "repository": "umbraco",
+      "language": "typescript",
+      "path": "src/Umbraco.Web.UI.Client/src/packages/core/workspace/controllers/resolve-stale-variant-route.function.ts",
+      "message": "Function `findFallbackVariant` performs 3 pure terminal traversals of unchanged `variants`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 99
+    },
+    {
+      "id": "EA-3d9ec975e518b535",
+      "repository": "umbraco",
+      "language": "typescript",
+      "path": "src/Umbraco.Web.UI.Client/src/packages/property-editors/slider/slider-property-value-preset.ts",
+      "message": "Function `processValue` performs 4 pure terminal traversals of unchanged `config`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 9
+    },
+    {
+      "id": "EA-2b9e169a45b4b7bc",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/portico/showroom.ts",
+      "message": "Function `` performs 3 pure terminal traversals of unchanged `buttons`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 243
     }
   ]
 }

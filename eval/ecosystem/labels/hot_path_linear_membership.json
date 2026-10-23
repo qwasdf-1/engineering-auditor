@@ -3,6 +3,526 @@
   "detector": "hot_path_linear_membership",
   "labels": [
     {
+      "id": "EA-3df653e4db484dd9",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Services/PropertyValidationService.cs",
+      "message": "Function `ValidatePropertyValue` checks loop-derived `validationResult` against linear collection `requiredDefaultMessages`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 145
+    },
+    {
+      "id": "EA-3b0c120e75a19deb",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Core/Services/PropertyValidationService.cs",
+      "message": "Function `ValidatePropertyValue` checks loop-derived `validationResult` against linear collection `formatDefaultMessages`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 151
+    },
+    {
+      "id": "EA-60527d8f23e41fa0",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/ContentRepositoryBase.cs",
+      "message": "Function `CheckDataIntegrity` checks loop-derived `node` against linear collection `rootIds`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 772
+    },
+    {
+      "id": "EA-34c91e02efceb38c",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/PropertyEditors/MultiNodeTreePickerPropertyEditor.cs",
+      "message": "Function `Validate` checks loop-derived `key` against linear collection `allowedTypes`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 443
+    },
+    {
+      "id": "EA-5d606a584a7eea9d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "models/git/protected_branch.go",
+      "message": "Function `updateTeamWhitelist` checks loop-derived `i` against linear collection `newWhitelist`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 562
+    },
+    {
+      "id": "EA-2d73da1957d67065",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/util/util.go",
+      "message": "Function `DiffSlice` checks loop-derived `v` against linear collection `oldSet`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 308
+    },
+    {
+      "id": "EA-d456d6b5538c89ee",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/util/util.go",
+      "message": "Function `DiffSlice` checks loop-derived `v` against linear collection `newSet`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 313
+    },
+    {
+      "id": "EA-93a8e54a2fbe3f96",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/web/explore/code.go",
+      "message": "Function `Code` appends loop-derived `result` to linear collection `loadRepoIDs` only after scanning it for `result`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 97
+    },
+    {
+      "id": "EA-3d5163bc7902e328",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/web/user/code.go",
+      "message": "Function `CodeSearch` appends loop-derived `result` to linear collection `loadRepoIDs` only after scanning it for `result`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 90
+    },
+    {
+      "id": "EA-74efb36af5be91a6",
+      "repository": "harbor",
+      "language": "go",
+      "path": "src/pkg/scan/export/filter_processor.go",
+      "message": "Function `ProcessLabelFilter` checks loop-derived `label` against linear collection `labelIDs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 174
+    },
+    {
+      "id": "EA-920a15dfc29bdefa",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `remapConsumerAssignment` checks loop-derived `p` against linear collection `retain`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 3657
+    },
+    {
+      "id": "EA-7e8a9e978ef4caf9",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `caughtUpPeers` checks loop-derived `p` against linear collection `catchups`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 4994
+    },
+    {
+      "id": "EA-ed17da531ab3a1f6",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `extendPeerSet` checks loop-derived `peer` against linear collection `actualPeers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 5050
+    },
+    {
+      "id": "EA-65e2b563c98c14ec",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `extendPeerSet` checks loop-derived `peer` against linear collection `hosted`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 5053
+    },
+    {
+      "id": "EA-c976616206382054",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `extendPeerSet` checks loop-derived `peer` against linear collection `desiredPeers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 5053
+    },
+    {
+      "id": "EA-eb4c495be0988661",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `reassignStreamPeers` checks loop-derived `v` against linear collection `peers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 10251
+    },
+    {
+      "id": "EA-b99d7ab68b5d6667",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `stepDownCandidates` checks loop-derived `p` against linear collection `members`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 11808
+    },
+    {
+      "id": "EA-cb0a0fd2f00ecd2f",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `stepDownCandidates` checks loop-derived `p` against linear collection `desiredPeers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 11808
+    },
+    {
+      "id": "EA-763e4342b1fe3e16",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `selectStepDownPreferred` checks loop-derived `p` against linear collection `desired`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 11821
+    },
+    {
+      "id": "EA-ccc698e0a83a5c21",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `holdForCatchup` checks loop-derived `p` against linear collection `desiredPeers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 13445
+    },
+    {
+      "id": "EA-33bcab3207a6b861",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/jetstream_cluster.go",
+      "message": "Function `holdForCatchup` checks loop-derived `p` against linear collection `catchups`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 13446
+    },
+    {
+      "id": "EA-0da8da585427c753",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/raft.go",
+      "message": "Function `EvictPeers` checks loop-derived `peer` against linear collection `peers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1267
+    },
+    {
+      "id": "EA-a2f1ca41256563e4",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.mysql/src/org/jkiss/dbeaver/ext/mysql/model/plan/MySQLPlanClassic.java",
+      "message": "Function `convertToPlanTree` checks loop-derived `node` against linear collection `parsed`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 146
+    },
+    {
+      "id": "EA-e56bd44e3b57b897",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.postgresql.ui/src/org/jkiss/dbeaver/ext/postgresql/tools/fdw/PostgreFDWConfigWizardPageInput.java",
+      "message": "Function `isFolderVisible` checks loop-derived `ds` against linear collection `dataSources`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 84
+    },
+    {
+      "id": "EA-6d5eda42230a091b",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreDatabase.java",
+      "message": "Function `getDataType` checks loop-derived `schema` against linear collection `searchPath`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1010
+    },
+    {
+      "id": "EA-6a3752ce3aba839b",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/DBUtils.java",
+      "message": "Function `isIdentifyingAssociation` checks loop-derived `attr` against linear collection `constAttrs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1206
+    },
+    {
+      "id": "EA-2804c20b3b33f6ea",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/edit/AbstractCommandContext.java",
+      "message": "Function `getFinalCommands` appends loop-derived `cmdInfo` to linear collection `cmdCopy` only after scanning it for `cmdInfo`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 327
+    },
+    {
+      "id": "EA-aefc543286bea25c",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/actions/datasource/NewConnectionDriverSelectorContributor.java",
+      "message": "Function `fillContributionItems` checks loop-derived `driver` against linear collection `recentDrivers`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 59
+    },
+    {
+      "id": "EA-15c263ccb296828e",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.erd/src/org/jkiss/dbeaver/ui/editors/erd/editor/ERDHighlightingManager.java",
+      "message": "Function `getEntityAttributes` checks loop-derived `attrPart` against linear collection `columns`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 288
+    },
+    {
+      "id": "EA-1283e8cabe3015a3",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/security/impl/oidc/OidcAuthenticator.java",
+      "message": "Function `determineUserType` checks loop-derived `group` against linear collection `adminGroups`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 388
+    },
+    {
+      "id": "EA-a608f3c0d6a903d9",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/WorkflowLineageServiceImpl.java",
+      "message": "Function `getWorkFlowRelations` checks loop-derived `workflowTaskLineage` against linear collection `workflowDefinitionCodes`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 162
+    },
+    {
+      "id": "EA-448cb0f9969d21d2",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/saml/v2/util/AssertionUtil.java",
+      "message": "Function `getRoles` checks loop-derived `attr` against linear collection `roleKeys`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 534
+    },
+    {
+      "id": "EA-12c872b90aa4ff3b",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/authentication/authenticators/x509/CertificateValidator.java",
+      "message": "Function `validateExtendedKeyUsage` checks loop-derived `eku` against linear collection `ekuList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 599
+    },
+    {
+      "id": "EA-c1c2e75f7e886cdf",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/authentication/authenticators/x509/CertificateValidator.java",
+      "message": "Function `validatePolicy` checks loop-derived `policy` against linear collection `policyList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 632
+    },
+    {
+      "id": "EA-3cc4e9f3d0aac3f0",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/clientregistration/AbstractClientRegistrationProvider.java",
+      "message": "Function `updateDefaultRoles` checks loop-derived `rel` against linear collection `defaultRolesArray`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 371
+    },
+    {
+      "id": "EA-21a36b24b66754b9",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/clientregistration/policy/impl/ClientScopesClientRegistrationPolicy.java",
+      "message": "Function `checkClientScopesAllowed` checks loop-derived `requested` against linear collection `allowedScopes`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 115
+    },
+    {
+      "id": "EA-3f62bfa7e5edd636",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/resources/admin/fgap/GroupPermissions.java",
+      "message": "Function `hasPermission` checks loop-derived `scope` against linear collection `expectedScopes`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 428
+    },
+    {
+      "id": "EA-44fcdef02978a4fb",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/userprofile/config/UPConfigUtils.java",
+      "message": "Function `validateRootAttributes` checks loop-derived `name` against linear collection `attributeNames`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 258
+    },
+    {
+      "id": "EA-144947903b1d9666",
+      "repository": "ranger",
+      "language": "java",
+      "path": "hive-agent/src/main/java/org/apache/ranger/services/hive/client/HiveClient.java",
+      "message": "Function `getDBListFromHM` checks loop-derived `dbName` against linear collection `dbList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 278
+    },
+    {
+      "id": "EA-b6031b254e68c2fc",
+      "repository": "ranger",
+      "language": "java",
+      "path": "plugin-kms/src/main/java/org/apache/ranger/services/kms/client/KMSClient.java",
+      "message": "Function `getKeyList` checks loop-derived `key` against linear collection `existingKeyList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 223
+    },
+    {
+      "id": "EA-1045e95c507e4e67",
+      "repository": "ranger",
+      "language": "java",
+      "path": "plugin-solr/src/main/java/org/apache/ranger/services/solr/client/ServiceSolrClient.java",
+      "message": "Function `getCollectionList` checks loop-derived `responseCollection` against linear collection `ignoreCollectionList`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 389
+    },
+    {
+      "id": "EA-2145932af0fea381",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/common/SearchUtil.java",
+      "message": "Function `buildWhereClause` appends loop-derived `table` to linear collection `joinTableList` only after scanning it for `table`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 558
+    },
+    {
+      "id": "EA-fb215210d6e4a816",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/common/ServiceUtil.java",
+      "message": "Function `mapPermMapToPermObj` appends loop-derived `permMap` to linear collection `groupList` only after scanning it for `permMap`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 986
+    },
+    {
+      "id": "EA-01d2ff7a82f0a376",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/patch/PatchForPrestoToSupportPresto333_J10038.java",
+      "message": "Function `checkResourcePresent` checks loop-derived `resourceDef` against linear collection `resources`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 163
+    },
+    {
+      "id": "EA-b0910fdc817b932e",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/service/XPolicyService.java",
+      "message": "Function `mapPermMapToPermObj` appends loop-derived `permMap` to linear collection `userList` only after scanning it for `permMap`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 446
+    },
+    {
+      "id": "EA-3e39b83087e0ad71",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/parosproxy/paros/model/HistoryReference.java",
+      "message": "Function `setTags` checks loop-derived `tag` against linear collection `tags`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 812
+    },
+    {
+      "id": "EA-f4138bed797334cb",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/parosproxy/paros/model/HistoryReference.java",
+      "message": "Function `setTags` checks loop-derived `tag` against linear collection `tags`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 818
+    },
+    {
+      "id": "EA-316237c4efcd637a",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/control/AddOn.java",
+      "message": "Function `getLoadedExtensionsWithDeps` checks loop-derived `extension` against linear collection `classnames`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 881
+    },
+    {
+      "id": "EA-280fbfa625a950bb",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/control/AddOnLoader.java",
+      "message": "Function `loadAddOnsRunState` checks loop-derived `savedExtension` against linear collection `currentExtensions`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1363
+    },
+    {
+      "id": "EA-168c0772b3743489",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/params/ExtensionParams.java",
+      "message": "Function `onHttpResponseReceive` checks loop-derived `hdrField` against linear collection `setCookieHeaders`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 426
+    },
+    {
+      "id": "EA-94f8e851c9200b96",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/extension/script/ExtensionScript.java",
+      "message": "Function `getScriptingEngines` checks loop-derived `sew` against linear collection `engines`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 275
+    },
+    {
+      "id": "EA-038dc6cf2f032097",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/view/TabbedPanel2.java",
+      "message": "Function `setVisiblePanels` checks loop-derived `component` against linear collection `panels`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 828
+    },
+    {
       "id": "EA-0482fbd95899de43",
       "repository": "eslint",
       "language": "javascript",
@@ -21,6 +541,306 @@
           "reason": "`rules.includes(ruleId)` is a linear membership check performed for every key in the `for (const ruleId in violationsByRule)` loop."
         }
       ]
+    },
+    {
+      "id": "EA-040175e407db2288",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/api/endpoints/users.js",
+      "message": "Function `shouldInvalidateCacheAfterChange` checks loop-derived `attr` against linear collection `publicAttrs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 98
+    },
+    {
+      "id": "EA-1f8724357d93188d",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/members/members-api/services/member-bread-service.js",
+      "message": "Function `attachSubscriptionsToMember` checks loop-derived `product` against linear collection `subscriptionProducts`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 165
+    },
+    {
+      "id": "EA-dea4b5717166063b",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/gui/qt/qrreader/qtmultimedia/validator.py",
+      "message": "Function `validate_results` checks loop-derived `result` against linear collection `results`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 89
+    },
+    {
+      "id": "EA-5f151af4ea6a0a95",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/api/app.py",
+      "message": "Function `get_sub_labels` appends loop-derived `part` to linear collection `sub_labels` only after scanning it for `part`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1387
+    },
+    {
+      "id": "EA-7c3b419a94020889",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/api/app.py",
+      "message": "Function `get_recognized_license_plates` appends loop-derived `part` to linear collection `recognized_license_plates` only after scanning it for `part`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1476
+    },
+    {
+      "id": "EA-1e98ea7fa1ca9d4f",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/post/review_descriptions.py",
+      "message": "Function `run_analysis` checks loop-derived `label` against linear collection `labelmap_objects`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 581
+    },
+    {
+      "id": "EA-db6a2fefe0001b2c",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/data_processing/post/review_descriptions.py",
+      "message": "Function `run_analysis` checks loop-derived `label` against linear collection `attribute_labels`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 584
+    },
+    {
+      "id": "EA-2e8bab5dc232c284",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/review/maintainer.py",
+      "message": "Function `check_if_new_segment` appends loop-derived `zone` to linear collection `zones` only after scanning it for `zone`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 624
+    },
+    {
+      "id": "EA-ad17135875d5b54d",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/addons/serverplayback.py",
+      "message": "Function `_hash` checks loop-derived `p` against linear collection `ignore_params`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 211
+    },
+    {
+      "id": "EA-8d065299b16b33f4",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/query_runner/influx_db.py",
+      "message": "Function `_transform_result` appends loop-derived `column` to linear collection `column_names` only after scanning it for `column`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 40
+    },
+    {
+      "id": "EA-346f4f8d9cf5bea2",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/query_runner/influx_db.py",
+      "message": "Function `_transform_result` appends loop-derived `key` to linear collection `column_names` only after scanning it for `key`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-7382ad26d052ace9",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/import_util.py",
+      "message": "Function `build_usermessages` checks loop-derived `user_id` against linear collection `mentioned_user_ids`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 437
+    },
+    {
+      "id": "EA-5c33dc9b76d630fd",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/export.py",
+      "message": "Function `make_raw` checks loop-derived `field` against linear collection `exclude`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 528
+    },
+    {
+      "id": "EA-7f72d74fd4a9e707",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/openapi/markdown_extension.py",
+      "message": "Function `generate_curl_example` checks loop-derived `parameter` against linear collection `include`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 346
+    },
+    {
+      "id": "EA-3558bbd5486d6119",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/openapi/markdown_extension.py",
+      "message": "Function `generate_curl_example` checks loop-derived `parameter` against linear collection `exclude`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 349
+    },
+    {
+      "id": "EA-fe0b7af0f1a173dc",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/openapi/openapi.py",
+      "message": "Function `get_openapi_parameters` checks loop-derived `key` against linear collection `required`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 407
+    },
+    {
+      "id": "EA-6244afd13147b36b",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-ai/src/resume_tui/panel.rs",
+      "message": "Function `tree_order` checks loop-derived `i` against linear collection `seen`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 309
+    },
+    {
+      "id": "EA-5f6645cf6fdc1f5e",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-core/src/config_providers/db.rs",
+      "message": "Function `apply_sso_role_mappings` checks loop-derived `role_name` against linear collection `assigned_role_names`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 857
+    },
+    {
+      "id": "EA-28a426e03f3f2012",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-core/src/config_providers/db.rs",
+      "message": "Function `apply_sso_admin_role_mappings` checks loop-derived `role_name` against linear collection `assigned_admin_role_names`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 920
+    },
+    {
+      "id": "EA-c22b47697b675377",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-tls/src/cert.rs",
+      "message": "Function `sni_names` appends loop-derived `name` to linear collection `unique_names` only after scanning it for `name`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 135
+    },
+    {
+      "id": "EA-47ee85e2236c69f4",
+      "repository": "dolphinscheduler",
+      "language": "typescript",
+      "path": "dolphinscheduler-ui/src/views/projects/task/components/node/detail-modal.tsx",
+      "message": "Function `` checks loop-derived `item` against linear collection `allowedFields`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 148
+    },
+    {
+      "id": "EA-baf20a87e773204b",
+      "repository": "frigate",
+      "language": "typescript",
+      "path": "web/src/components/config-form/section-configs/objects.ts",
+      "message": "Function `` checks loop-derived `attr` against linear collection `track`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 48
+    },
+    {
+      "id": "EA-768521a897dd13ae",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin-x-framework/src/utils/recipient-filter.ts",
+      "message": "Function `parseRecipientFilter` appends loop-derived `item` to linear collection `base` only after scanning it for `item`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 68
+    },
+    {
+      "id": "EA-1227667a94f7dae1",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin-x-framework/src/utils/recipient-filter.ts",
+      "message": "Function `parseRecipientFilter` appends loop-derived `item` to linear collection `specific` only after scanning it for `item`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 72
+    },
+    {
+      "id": "EA-825f0aff6a259508",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "apps/admin/src/editor/session/settings-fields.ts",
+      "message": "Function `invalidSettingsField` checks loop-derived `key` against linear collection `skip`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 233
+    },
+    {
+      "id": "EA-40141c14c74fd048",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "tools/gx/lib/dev-stack.ts",
+      "message": "Function `listeners` checks loop-derived `port` against linear collection `ports`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 361
+    },
+    {
+      "id": "EA-79ddb9f4ae5cdb2a",
+      "repository": "gitea",
+      "language": "typescript",
+      "path": "web_src/js/features/repo-issue-sidebar-combolist.ts",
+      "message": "Function `sendRequestToBackend` checks loop-derived `value` against linear collection `changedValues`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 104
+    },
+    {
+      "id": "EA-34266e8399c9504b",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/billing/helpers.ts",
+      "message": "Function `create_ajax_request` checks loop-derived `item` against linear collection `ignored_inputs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 76
+    },
+    {
+      "id": "EA-80452ce354dce714",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/inbox_ui.ts",
+      "message": "Function `insert_dms` checks loop-derived `key` against linear collection `keys_to_insert`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 540
+    },
+    {
+      "id": "EA-5dcacabc6aeb0c94",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/inbox_ui.ts",
+      "message": "Function `insert_topics` checks loop-derived `key` against linear collection `keys`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 769
     }
   ]
 }

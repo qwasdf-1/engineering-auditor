@@ -3,6 +3,46 @@
   "detector": "nested_cross_collection_traversal",
   "labels": [
     {
+      "id": "EA-83ff16767aeb269b",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/actions/workflowpattern/workflow_pattern.go",
+      "message": "Function `Skip` nests `sequence` inside `input` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
+    },
+    {
+      "id": "EA-e8440a20a5daddd5",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/issue/assignee.go",
+      "message": "Function `toBeRemovedAssignees` nests `assignees` inside `oriAssignees` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-88c77378f1360c18",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/reload.go",
+      "message": "Function `diffRoutes` nests `new` inside `old` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2840
+    },
+    {
+      "id": "EA-7665469319299fc2",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/reload.go",
+      "message": "Function `diffRoutes` nests `old` inside `new` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2851
+    },
+    {
       "id": "EA-4ae8131d8692fd5c",
       "repository": "commons-lang",
       "language": "java",
@@ -43,6 +83,306 @@
       ]
     },
     {
+      "id": "EA-cb2c15c94e5cdab0",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.cmp.simple/src/org/jkiss/dbeaver/tools/compare/simple/CompareObjectsExecutor.java",
+      "message": "Function `compareChildren` nests `childList` inside `allChildren` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 318
+    },
+    {
+      "id": "EA-f31d78883ff4b986",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.core/src/org/jkiss/dbeaver/tools/scripts/ScriptsImportWizard.java",
+      "message": "Function `collectFiles` nests `masks` inside `listFiles` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 184
+    },
+    {
+      "id": "EA-043413268f94e6b4",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/DataSourceRegistry.java",
+      "message": "Function `flushDataSourceEvents` nests `listeners` inside `events` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 740
+    },
+    {
+      "id": "EA-a55c1a858ba15144",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/datatype/DataTypeProviderRegistry.java",
+      "message": "Function `isChildOfAnyProvider` nests `dsList2` inside `dsList1` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 106
+    },
+    {
+      "id": "EA-75219ec5b670597b",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.navigator/src/org/jkiss/dbeaver/ui/navigator/actions/NavigatorHandlerObjectDelete.java",
+      "message": "Function `changeDependentObjectsList` nests `indexList` inside `constrList` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 208
+    },
+    {
+      "id": "EA-d084ab436b6db6fa",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/WorkflowInstanceServiceImpl.java",
+      "message": "Function `setTaskInstanceDependentResult` nests `taskInstanceDependentDetailsList` inside `taskInstanceContextList` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 337
+    },
+    {
+      "id": "EA-89fba0d1ddd9274a",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/WorkflowInstanceServiceImpl.java",
+      "message": "Function `viewGantt` nests `taskInstances` inside `nodeList` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 686
+    },
+    {
+      "id": "EA-b26c5e2116b80646",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-tools/src/main/java/org/apache/dolphinscheduler/tools/lineage/MigrateLineageService.java",
+      "message": "Function `getAllProcessLineages` nests `workflowTaskLineageList` inside `taskDefinitionList` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 80
+    },
+    {
+      "id": "EA-45dffc4dab7d0e46",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyevaluator/RangerPolicyEvaluator.java",
+      "message": "Function `processPolicyItem` nests `users` inside `accesses` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 390
+    },
+    {
+      "id": "EA-9e3406dab7893c46",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyevaluator/RangerPolicyEvaluator.java",
+      "message": "Function `processPolicyItem` nests `groups` inside `accesses` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 401
+    },
+    {
+      "id": "EA-bebd585e4bda0fbd",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyevaluator/RangerPolicyEvaluator.java",
+      "message": "Function `processPolicyItem` nests `roles` inside `accesses` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 414
+    },
+    {
+      "id": "EA-7684fda37982619f",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/store/AbstractServiceStore.java",
+      "message": "Function `updateTagServiceDefForUpdatingDataMaskDef` nests `svcDefMaskTypes` inside `tagDefMaskTypes` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 423
+    },
+    {
+      "id": "EA-3135dc2eed9c3427",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `createServiceDef` nests `dataMaskAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 667
+    },
+    {
+      "id": "EA-1489ee6672c93131",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `createServiceDef` nests `rowFilterAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 674
+    },
+    {
+      "id": "EA-960d98fa03d7257b",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `createServiceDef` nests `dataMaskResources` inside `xxResourceDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 710
+    },
+    {
+      "id": "EA-cf2a0cc40f4b098d",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `createServiceDef` nests `rowFilterResources` inside `xxResourceDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 717
+    },
+    {
+      "id": "EA-6e0038b7f603ef48",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `configs` inside `xxConfigs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 849
+    },
+    {
+      "id": "EA-b4fad032310f9740",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `resources` inside `xxResources` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 886
+    },
+    {
+      "id": "EA-9ebfe087c503c104",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `accessTypes` inside `xxAccessTypes` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 973
+    },
+    {
+      "id": "EA-c1e357e908997e42",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `policyConditions` inside `xxPolicyConditions` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1016
+    },
+    {
+      "id": "EA-1cd7a85f22496786",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `contextEnrichers` inside `xxContextEnrichers` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1062
+    },
+    {
+      "id": "EA-096660b3e9ec73e4",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `enumEleDefs` inside `xxEnumEleDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1110
+    },
+    {
+      "id": "EA-82ba547323d1c342",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `enums` inside `xxEnums` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1143
+    },
+    {
+      "id": "EA-9c05c517e8ea9ff8",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `dataMasks` inside `xxDataMaskTypes` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1203
+    },
+    {
+      "id": "EA-c0ab2cece8a246ed",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `dataMaskAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1236
+    },
+    {
+      "id": "EA-5c19ea7290a1ca6f",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `rowFilterAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1243
+    },
+    {
+      "id": "EA-ae1142c9354f1969",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `dataMaskResources` inside `xxResourceDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1276
+    },
+    {
+      "id": "EA-b5b2c6742bae1803",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `updateChildObjectsOfServiceDef` nests `rowFilterResources` inside `xxResourceDefs` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1283
+    },
+    {
+      "id": "EA-09a4c95de6843cad",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "Function `applyResourceFilter` nests `matchers` inside `policies` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 2845
+    },
+    {
+      "id": "EA-194c88a7603ae6b4",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/service/XPolicyService.java",
+      "message": "Function `updatePermGroup` nests `keyList` inside `masterKeyList` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 634
+    },
+    {
       "id": "EA-58d61500566bf6ce",
       "repository": "eslint",
       "language": "javascript",
@@ -61,6 +401,36 @@
           "reason": "`res.push(combinedObj)` is executed for every obj1/obj2 pair, so the nested product is the intended output, and the file lives under `tools/` as build tooling."
         }
       ]
+    },
+    {
+      "id": "EA-2d96e73a3d25d484",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/services/media-inliner/external-media-inliner.js",
+      "message": "Function `inlineFields` nests `domains` inside `fields` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 413
+    },
+    {
+      "id": "EA-f5c6be6f1456c5ad",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/slack.py",
+      "message": "Function `process_customprofilefields` nests `customprofilefield_value` inside `customprofilefield` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 445
+    },
+    {
+      "id": "EA-2ad4ac918fdaaaf8",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/topic_generator.ts",
+      "message": "Function `next_topic` nests `get_topics` inside `sorted_channels_info` with pair-dependent work.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 89
     }
   ]
 }

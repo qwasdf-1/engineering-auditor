@@ -3,6 +3,66 @@
   "detector": "map_entry_opportunity",
   "labels": [
     {
+      "id": "EA-6464980448861d7b",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/edit/PostgreCommandGrantPrivilege.java",
+      "message": "Function `merge` checks `userParams` for `mergedCommandId` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 180
+    },
+    {
+      "id": "EA-dfc9365a2a6a9436",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/security/handler/RangerAuthenticationProvider.java",
+      "message": "Function `getPamAuthentication` checks `options` for `\"ranger.pam.service\"` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 351
+    },
+    {
+      "id": "EA-32a509d7fcdeddad",
+      "repository": "duckduckgo-android",
+      "language": "python",
+      "path": "scripts/ps-analysis/ps_review_anomaly.py",
+      "message": "Function `analyze_anomalies` checks `date_reviews` for `review_date` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 74
+    },
+    {
+      "id": "EA-7caf5e40fb0e3d31",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/wallet_db.py",
+      "message": "Function `_convert_version_58` checks `prevouts_by_scripthash` for `scripthash` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1159
+    },
+    {
+      "id": "EA-173a6c1c2bb7a5f6",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/stats/emitter.py",
+      "message": "Function `get_stats_history` checks `selected` for `parent_key` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 108
+    },
+    {
+      "id": "EA-4860af4aa19d949a",
+      "repository": "frigate",
+      "language": "python",
+      "path": "frigate/track/norfair_tracker.py",
+      "message": "Function `match_and_update` checks `detections_by_type` for `label` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 529
+    },
+    {
       "id": "EA-31bb464fe5dbcad2",
       "repository": "nlohmann-json",
       "language": "python",
@@ -21,6 +81,26 @@
           "reason": "`docs/mkdocs/scripts/check_structure.py` is a documentation build/tooling script, so it falls outside the detector's stated scope."
         }
       ]
+    },
+    {
+      "id": "EA-d4eb535e6bc65015",
+      "repository": "redash",
+      "language": "python",
+      "path": "redash/query_runner/big_query.py",
+      "message": "Function `get_schema` checks `location_dataset_ids` for `location` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 333
+    },
+    {
+      "id": "EA-8959b68d0c070ca0",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/lib/migration_status.py",
+      "message": "Function `parse_migration_status` checks `stale_migrations_dict` for `app` before inserting it.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 132
     }
   ]
 }

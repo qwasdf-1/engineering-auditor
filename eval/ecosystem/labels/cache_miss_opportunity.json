@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "detector": "cache_miss_opportunity",
+  "labels": [
+    {
+      "id": "EA-11e91c4aa1f13a2c",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-private/src/main/java/org/keycloak/storage/UserStorageManager.java",
+      "message": "Function `getGroupMembersStream` evaluates `search.toLowerCase()` 4 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 642
+    },
+    {
+      "id": "EA-774376a140a507fb",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "server-spi/src/main/java/org/keycloak/storage/user/UserQueryMethodsProvider.java",
+      "message": "Function `getGroupMembersStream` evaluates `search.toLowerCase()` 4 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 191
+    },
+    {
+      "id": "EA-ad4f6924c389745f",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/PasswordUtils.java",
+      "message": "Function `needsIv` evaluates `cryptoAlgo.toLowerCase()` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 177
+    },
+    {
+      "id": "EA-f6377fcc7f334662",
+      "repository": "ranger",
+      "language": "java",
+      "path": "credentialbuilder/src/main/java/org/apache/ranger/credentialapi/CredentialReader.java",
+      "message": "Function `getDecryptedString` evaluates `CrendentialProviderPath.toLowerCase()` 4 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 51
+    },
+    {
+      "id": "EA-e8b31816db63cd64",
+      "repository": "ranger",
+      "language": "java",
+      "path": "kms/src/main/java/org/apache/hadoop/crypto/key/DBToAzureKeyVault.java",
+      "message": "Function `doExportMKToAzureKeyVault` evaluates `mKeyPass.trim()` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 149
+    },
+    {
+      "id": "EA-e35fed67048c33fc",
+      "repository": "ranger",
+      "language": "java",
+      "path": "kms/src/main/java/org/apache/hadoop/crypto/key/DBToKeySecure.java",
+      "message": "Function `doExportMKToKeySecure` evaluates `keySecureMKPassword.trim()` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 94
+    },
+    {
+      "id": "EA-5189913de8dfe42c",
+      "repository": "ranger",
+      "language": "java",
+      "path": "kms/src/main/java/org/apache/hadoop/crypto/key/MigrateDBMKeyToGCP.java",
+      "message": "Function `doExportMKToGcp` evaluates `mKeyPass.trim()` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 75
+    },
+    {
+      "id": "EA-143fab768fe3370c",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/credentialapi/CredentialReader.java",
+      "message": "Function `getDecryptedString` evaluates `CrendentialProviderPath.toLowerCase()` 4 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 49
+    },
+    {
+      "id": "EA-77e3650dbdc15b60",
+      "repository": "ranger",
+      "language": "java",
+      "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/config/UserGroupSyncConfig.java",
+      "message": "Function `getSSLKeyStorePathPassword` evaluates `password.trim()` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 447
+    },
+    {
+      "id": "EA-79a31f153da22ecb",
+      "repository": "ranger",
+      "language": "java",
+      "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/config/UserGroupSyncConfig.java",
+      "message": "Function `getSSLTrustStorePathPassword` evaluates `password.trim()` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 475
+    },
+    {
+      "id": "EA-b528aaf8bbc1ee99",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/bolt11.py",
+      "message": "Function `tagged5` evaluates `len(data5)` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 113
+    },
+    {
+      "id": "EA-0cebcccfaa3f4e0f",
+      "repository": "frigate",
+      "language": "python",
+      "path": "testing-scripts/face_dataset.py",
+      "message": "Function `degenerate_embedding_test` evaluates `len(pos)` 3 times.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 555
+    }
+  ]
+}

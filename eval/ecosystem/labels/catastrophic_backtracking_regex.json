@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "detector": "catastrophic_backtracking_regex",
+  "labels": [
+    {
+      "id": "EA-52be3a27a28fd6c3",
+      "repository": "zulip",
+      "language": "javascript",
+      "path": "web/third/marked/lib/marked.cjs",
+      "message": "Pattern at line 25 repeats `(?:[^\\n]+\\n?(?!hr|heading|blockquote|tag|def))+`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-101aa61126a0d049",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/data_import/mattermost.py",
+      "message": "Pattern at line 423 repeats `([A-Za-z0-9]+[_.]?)+`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 423
+    },
+    {
+      "id": "EA-9c4c7f3dde4891db",
+      "repository": "dolphinscheduler",
+      "language": "typescript",
+      "path": "dolphinscheduler-ui/src/views/security/user-manage/components/use-user-detail.ts",
+      "message": "Pattern at line 94 repeats `([a-zA-Z0-9]+[_|\\-|\\.]?)*`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 94
+    },
+    {
+      "id": "EA-13e8716a36d4db9c",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/compose_paste.ts",
+      "message": "Pattern at line 30 repeats `(\\n+\\s*)+`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 30
+    }
+  ]
+}

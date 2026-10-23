@@ -79,6 +79,96 @@
       "labeller": "model:claude-opus-5-5"
     },
     {
+      "id": "EA-739db55466e4a472",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.debug.ui/src/org/jkiss/dbeaver/debug/ui/internal/DebugUIInternals.java",
+      "message": "plugins/org.jkiss.dbeaver.debug.ui/src/org/jkiss/dbeaver/debug/ui/internal/DebugUIInternals.java constructs a StringBuffer at line 101 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 101
+    },
+    {
+      "id": "EA-d09e91ce5ba52787",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleSchedulerJob.java",
+      "message": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleSchedulerJob.java constructs a StringBuffer at line 712 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 712
+    },
+    {
+      "id": "EA-2171931730d2faa9",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/data/PostgreGeometryValueHandler.java",
+      "message": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/data/PostgreGeometryValueHandler.java constructs a StringBuffer at line 177 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 177
+    },
+    {
+      "id": "EA-905499bcc4caf852",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/DateTimeDataFormatter.java",
+      "message": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/DateTimeDataFormatter.java constructs a StringBuffer at line 65 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 65
+    },
+    {
+      "id": "EA-fe3d84ce43e3bf6a",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/NumberDataFormatter.java",
+      "message": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/NumberDataFormatter.java constructs a StringBuffer at line 116 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 116
+    },
+    {
+      "id": "EA-99c8a351d61678e8",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.charts/src/org/jfree/swt/SWTGraphics2D.java",
+      "message": "plugins/org.jkiss.dbeaver.ui.charts/src/org/jfree/swt/SWTGraphics2D.java constructs a StringBuffer at line 1062 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1062
+    },
+    {
+      "id": "EA-bcc60e8d9982b440",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/shell/ShellExecutor.java",
+      "message": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/shell/ShellExecutor.java constructs a StringBuffer at line 109 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 109
+    },
+    {
+      "id": "EA-dc1f3a35d7f19e31",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/log/SensitiveDataConverter.java",
+      "message": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/log/SensitiveDataConverter.java constructs a StringBuffer at line 67 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 67
+    },
+    {
+      "id": "EA-53747a89e91c4c9e",
+      "repository": "dolphinscheduler",
+      "language": "java",
+      "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/utils/ParameterUtils.java",
+      "message": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/utils/ParameterUtils.java constructs a StringBuffer at line 296 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 296
+    },
+    {
       "id": "EA-f73ee1a51179674f",
       "repository": "gson",
       "language": "java",
@@ -109,6 +199,146 @@
       "verdict": "false_positive",
       "reason": "No StringBuffer is constructed: a java.text.Format override, Javadoc, or a lookalike field name.",
       "labeller": "model:claude-opus-5-5"
+    },
+    {
+      "id": "EA-facb084cec1935f0",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "common/src/main/java/org/keycloak/common/util/EnvUtil.java",
+      "message": "common/src/main/java/org/keycloak/common/util/EnvUtil.java constructs a StringBuffer at line 44 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-33a289f98855cb73",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "common/src/main/java/org/keycloak/common/util/KeycloakUriBuilder.java",
+      "message": "common/src/main/java/org/keycloak/common/util/KeycloakUriBuilder.java constructs a StringBuffer at line 445 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 445
+    },
+    {
+      "id": "EA-b6c7158d8e071965",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "federation/ldap/src/main/java/org/keycloak/storage/ldap/mappers/HardcodedLDAPAttributeMapper.java",
+      "message": "federation/ldap/src/main/java/org/keycloak/storage/ldap/mappers/HardcodedLDAPAttributeMapper.java constructs a StringBuffer at line 72 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 72
+    },
+    {
+      "id": "EA-e06bb379c7a68d00",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "server-spi/src/main/java/org/keycloak/models/utils/Base32.java",
+      "message": "server-spi/src/main/java/org/keycloak/models/utils/Base32.java constructs a StringBuffer at line 51 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 51
+    },
+    {
+      "id": "EA-5064facb9a6d6006",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/broker/oidc/mappers/UsernameTemplateMapper.java",
+      "message": "services/src/main/java/org/keycloak/broker/oidc/mappers/UsernameTemplateMapper.java constructs a StringBuffer at line 168 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 168
+    },
+    {
+      "id": "EA-9de632951ad92b56",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/broker/saml/mappers/UsernameTemplateMapper.java",
+      "message": "services/src/main/java/org/keycloak/broker/saml/mappers/UsernameTemplateMapper.java constructs a StringBuffer at line 168 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 168
+    },
+    {
+      "id": "EA-671441e4dbe5046c",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/installation/KeycloakOIDCJbossSubsystemClientInstallation.java",
+      "message": "services/src/main/java/org/keycloak/protocol/oidc/installation/KeycloakOIDCJbossSubsystemClientInstallation.java constructs a StringBuffer at line 41 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 41
+    },
+    {
+      "id": "EA-fee705e370676bc2",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/managers/ClientManager.java",
+      "message": "services/src/main/java/org/keycloak/services/managers/ClientManager.java constructs a StringBuffer at line 359 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 359
+    },
+    {
+      "id": "EA-4c35ecdd29e1af82",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/services/resources/account/LinkedAccountsResource.java",
+      "message": "services/src/main/java/org/keycloak/services/resources/account/LinkedAccountsResource.java constructs a StringBuffer at line 365 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 365
+    },
+    {
+      "id": "EA-1ed0c95ae8c6e48e",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/MacroProcessor.java",
+      "message": "agents-common/src/main/java/org/apache/ranger/plugin/util/MacroProcessor.java constructs a StringBuffer at line 48 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 48
+    },
+    {
+      "id": "EA-bad79afa47a8adca",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRequestExprResolver.java",
+      "message": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRequestExprResolver.java constructs a StringBuffer at line 68 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 68
+    },
+    {
+      "id": "EA-4ff873cf8b74eca6",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
+      "message": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java constructs a StringBuffer at line 4398 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 4398
+    },
+    {
+      "id": "EA-971e8f9d47131992",
+      "repository": "ranger",
+      "language": "java",
+      "path": "security-admin/src/main/java/org/apache/ranger/common/PropertiesUtil.java",
+      "message": "security-admin/src/main/java/org/apache/ranger/common/PropertiesUtil.java constructs a StringBuffer at line 292 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 292
+    },
+    {
+      "id": "EA-8f4b5a1b83be434d",
+      "repository": "zaproxy",
+      "language": "java",
+      "path": "zap/src/main/java/org/zaproxy/zap/network/ZapHttpParser.java",
+      "message": "zap/src/main/java/org/zaproxy/zap/network/ZapHttpParser.java constructs a StringBuffer at line 89 instead of a StringBuilder",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 89
     }
   ]
 }

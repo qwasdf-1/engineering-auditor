@@ -3,6 +3,96 @@
   "detector": "loop_invariant_regex_compilation",
   "labels": [
     {
+      "id": "EA-b792f7cbfea50512",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/configuration/validator/access_control.go",
+      "message": "Function `validateQuery` calls `Compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 185
+    },
+    {
+      "id": "EA-55c4c610d105a7a2",
+      "repository": "authelia",
+      "language": "go",
+      "path": "internal/suites/kubernetes.go",
+      "message": "Function `WaitPodsReady` calls `MustCompile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 92
+    },
+    {
+      "id": "EA-4a35b5bd23c8dc1d",
+      "repository": "nats-server",
+      "language": "go",
+      "path": "server/opts.go",
+      "message": "Function `parseTLS` calls `MustCompile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 5316
+    },
+    {
+      "id": "EA-c3faaa3da49c4666",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.sql/src/org/jkiss/dbeaver/ui/editors/sql/semantics/SQLBackgroundParsingJob.java",
+      "message": "Function `obtainCompletionContext` calls `compile` with a loop-invariant pattern, through `prepareOffquery`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 204
+    },
+    {
+      "id": "EA-b0628fe3b5e503cc",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/PropertyMapper.java",
+      "message": "Function `validateValues` calls `compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 672
+    },
+    {
+      "id": "EA-7314a3fb75d48163",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "server-spi-private/src/main/java/org/keycloak/utils/ReservedCharValidator.java",
+      "message": "Function `validateSecurityHeaders` calls `compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 81
+    },
+    {
+      "id": "EA-1238e51f0875ac96",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "server-spi-private/src/main/java/org/keycloak/utils/ReservedCharValidator.java",
+      "message": "Function `validateSecurityHeaders` calls `compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 82
+    },
+    {
+      "id": "EA-9e62f59992def7b1",
+      "repository": "ranger",
+      "language": "java",
+      "path": "jisql/src/main/java/org/apache/util/sql/MySQLPLRunner.java",
+      "message": "Function `runScript` calls `compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 143
+    },
+    {
+      "id": "EA-79ee175db380ee8b",
+      "repository": "ranger",
+      "language": "java",
+      "path": "jisql/src/main/java/org/apache/util/sql/MySQLPLRunner.java",
+      "message": "Function `runScript` calls `compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 218
+    },
+    {
       "id": "EA-c9decfaf8fd0912d",
       "repository": "eslint",
       "language": "javascript",
@@ -21,6 +111,66 @@
           "reason": "The pattern handed to RegExpParser is `regexContent`, the content of the individual regex literal being processed, so it is not a loop-invariant operand that can be cached."
         }
       ]
+    },
+    {
+      "id": "EA-edb93f27b1fe6efd",
+      "repository": "zaproxy",
+      "language": "python",
+      "path": "docker/zap_common.py",
+      "message": "Function `load_config` calls `compile` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 166
+    },
+    {
+      "id": "EA-10349f7bb85d4327",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/config.rs",
+      "message": "Function `validate` calls `new` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 653
+    },
+    {
+      "id": "EA-90a8f0a7e197c2ff",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/pool.rs",
+      "message": "Function `from_config` calls `map` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 544
+    },
+    {
+      "id": "EA-00dbf2aa129c2c61",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/pool.rs",
+      "message": "Function `from_config` calls `unwrap` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 547
+    },
+    {
+      "id": "EA-dabc746d01d39fd0",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/pool.rs",
+      "message": "Function `from_config` calls `map` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 548
+    },
+    {
+      "id": "EA-f99c4e9d6bf889fb",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/pool.rs",
+      "message": "Function `from_config` calls `unwrap` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 551
     },
     {
       "id": "EA-7249cdf5bf04b504",
@@ -46,6 +196,16 @@
           "reason": "The `if (!emojiRegex)` guard already caches the regex, so `new RegExp(...)` at line 816 runs at most once and the 'compiled repeatedly' claim fails; this is the lazy-init idiom the rule should recognize."
         }
       ]
+    },
+    {
+      "id": "EA-6f1d0352f7cffdf0",
+      "repository": "zulip",
+      "language": "typescript",
+      "path": "web/src/typeahead.ts",
+      "message": "Function `triage_raw` calls `RegExp` with a loop-invariant pattern.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 346
     }
   ]
 }

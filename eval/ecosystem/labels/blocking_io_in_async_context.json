@@ -3,6 +3,686 @@
   "detector": "blocking_io_in_async_context",
   "labels": [
     {
+      "id": "EA-6dbc2648ad8922e1",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/Runtime/SqlMainDomLock.cs",
+      "message": "Function `AcquireLockAsync` executes blocking file I/O from an async function, through `WaitForExistingAsync`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 156
+    },
+    {
+      "id": "EA-8c4d5f33014d6d0b",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core/WexflowEngine.cs",
+      "message": "Function `SaveWorkflowFromFile` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 518
+    },
+    {
+      "id": "EA-ea4d998f8b0d6054",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core/WexflowEngine.cs",
+      "message": "Function `Run` executes blocking file I/O from an async function, through `SaveWorkflowFromFile`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 737
+    },
+    {
+      "id": "EA-3eb7e8e89bf0a298",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core/Workflow.cs",
+      "message": "Function `StartAsync` executes blocking file I/O from an async function, through `StartInternalAsync`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1072
+    },
+    {
+      "id": "EA-92f044a02eb563ad",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core/Workflow.cs",
+      "message": "Function `StartInternalAsync` executes blocking file I/O from an async function, through `RunSequentialTasksAsync`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1207
+    },
+    {
+      "id": "EA-596d4b0362d19398",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core/Workflow.cs",
+      "message": "Function `RunTaskAsync` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1514
+    },
+    {
+      "id": "EA-f46bd6ada06c4dda",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Core/Workflow.cs",
+      "message": "Function `RunSequentialTasksAsync` executes blocking file I/O from an async function, through `RunTaskAsync`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1541
+    },
+    {
+      "id": "EA-b84634325244a12b",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.ApprovalWorkflowsCreator/ApprovalWorkflowsCreator.cs",
+      "message": "Function `RunAsync` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 44
+    },
+    {
+      "id": "EA-46c68f3c4c229703",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.FileSystemWatcher/FileSystemWatcher.cs",
+      "message": "Function `RunAsync` executes blocking file I/O from an async function, through `InitFileSystemWatcher`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 62
+    },
+    {
+      "id": "EA-3d0196b1f80259c9",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/net/Wexflow.Tasks.FileSystemWatcher/FileSystemWatcher.cs",
+      "message": "Function `InitFileSystemWatcher` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 112
+    },
+    {
+      "id": "EA-24e068a5c9aba1ca",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/netcore/Wexflow.Core/WexflowEngine.cs",
+      "message": "Function `SaveWorkflowFromFile` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 533
+    },
+    {
+      "id": "EA-266a4ad63d169eeb",
+      "repository": "wexflow",
+      "language": "csharp",
+      "path": "src/netcore/Wexflow.Core/WexflowEngine.cs",
+      "message": "Function `Run` executes blocking file I/O from an async function, through `SaveWorkflowFromFile`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 752
+    },
+    {
+      "id": "EA-961001530e6de089",
+      "repository": "actual",
+      "language": "javascript",
+      "path": "packages/ci-actions/bin/release-notes-check.mjs",
+      "message": "Function `` executes blocking file I/O from an async function, through `validateFile`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 95
+    },
+    {
+      "id": "EA-4abcf02b85d7ed1c",
+      "repository": "ghost",
+      "language": "javascript",
+      "path": "ghost/core/server/web/gift-preview/image.js",
+      "message": "Function `renderGiftPreviewImage` executes blocking file I/O from an async function, through `buildSvg`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 225
+    },
+    {
+      "id": "EA-930c4886e74ff235",
+      "repository": "umbraco",
+      "language": "javascript",
+      "path": "src/Umbraco.Web.UI.Client/devops/icons/index.js",
+      "message": "Function `` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 62
+    },
+    {
+      "id": "EA-42e3cff084374a4e",
+      "repository": "umbraco",
+      "language": "javascript",
+      "path": "src/Umbraco.Web.UI.Client/devops/localization/generate-known-keys.js",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 156
+    },
+    {
+      "id": "EA-b90615e48bf914a8",
+      "repository": "umbraco",
+      "language": "javascript",
+      "path": "src/Umbraco.Web.UI.Client/devops/localization/generate-known-keys.js",
+      "message": "Function `main` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 227
+    },
+    {
+      "id": "EA-f20f382d44c6f0c9",
+      "repository": "umbraco",
+      "language": "javascript",
+      "path": "src/Umbraco.Web.UI.Client/devops/localization/unused-language-keys.js",
+      "message": "Function `` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 36
+    },
+    {
+      "id": "EA-d39f79db11c4cbb5",
+      "repository": "changedetection",
+      "language": "python",
+      "path": "changedetectionio/browser_steps/browser_steps.py",
+      "message": "Function `get_current_state` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 510
+    },
+    {
+      "id": "EA-0d054a6263fa35ca",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "mitmproxy/proxy/mode_servers.py",
+      "message": "Function `_start` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 354
+    },
+    {
+      "id": "EA-0b6f57e34eae76b9",
+      "repository": "mitmproxy",
+      "language": "python",
+      "path": "web/gen/tflow_js.py",
+      "message": "Function `make` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-898f10a6a85f3624",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-ai/src/skills/walker.rs",
+      "message": "Function `discovers_project_skills` executes blocking file I/O from an async function, through `setup_skill`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 128
+    },
+    {
+      "id": "EA-e6630508bef405e5",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/fs/tree_watcher/poller.rs",
+      "message": "Function `a_new_directory_yields_the_files_already_in_it` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 310
+    },
+    {
+      "id": "EA-c9994d7e1cb82f42",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/harnesstools/ccode/session.rs",
+      "message": "Function `messages_streams_each_turn_of_a_session_file` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1458
+    },
+    {
+      "id": "EA-acf1ba77c539e0ef",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/harnesstools/codex/rehydrate.rs",
+      "message": "Function `usage_recaptures_with_its_counts_and_turn` executes blocking file I/O from an async function, through `own_id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1101
+    },
+    {
+      "id": "EA-ecd182bad62093ef",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/harnesstools/codex/rehydrate.rs",
+      "message": "Function `notes_join_the_message_before_them_or_take_the_calls_id` executes blocking file I/O from an async function, through `assert_the_api_takes`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1411
+    },
+    {
+      "id": "EA-082dd50e270e1f81",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/harnesstools/pi/session.rs",
+      "message": "Function `existing_skips_a_file_whose_header_is_not_written_yet` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1780
+    },
+    {
+      "id": "EA-b964066cf6200b40",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/harnesstools/sync/ccode.rs",
+      "message": "Function `append` executes blocking file I/O from an async function, through `append_to`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 85
+    },
+    {
+      "id": "EA-67359a2e7e34f444",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-common/src/harnesstools/sync/codex.rs",
+      "message": "Function `append` executes blocking file I/O from an async function, through `append_in`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 96
+    },
+    {
+      "id": "EA-58a2a7b40e75e8cd",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin-dotfiles/src/shell/bash.rs",
+      "message": "Function `cached_aliases` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 9
+    },
+    {
+      "id": "EA-12d34bfbdf0fab72",
+      "repository": "atuin",
+      "language": "rust",
+      "path": "crates/atuin/src/command/client/kv.rs",
+      "message": "Function `run` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 88
+    },
+    {
+      "id": "EA-8385c13dbe08d4a5",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/config.rs",
+      "message": "Function `parse` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1446
+    },
+    {
+      "id": "EA-6e3a47ec0fb59de9",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/config.rs",
+      "message": "Function `test_config` executes blocking file I/O from an async function, through `parse`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1506
+    },
+    {
+      "id": "EA-e1ce6ada189e5b73",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/config.rs",
+      "message": "Function `test_serialize_configs` executes blocking file I/O from an async function, through `parse`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1579
+    },
+    {
+      "id": "EA-cf5d54e6084fa09c",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `send_ready_for_query` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 124
+    },
+    {
+      "id": "EA-db579f3395a7fa53",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `ssl_request` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 174
+    },
+    {
+      "id": "EA-932def674ce2c215",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `md5_password` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 283
+    },
+    {
+      "id": "EA-3f1cf18ef49816d4",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `error_response_terminal` executes blocking file I/O from an async function, through `write_all_half`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 367
+    },
+    {
+      "id": "EA-350d6167e9e3d95a",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `wrong_password` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 403
+    },
+    {
+      "id": "EA-0ba467f162557740",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `show_response` executes blocking file I/O from an async function, through `write_all_half`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 429
+    },
+    {
+      "id": "EA-f636f7b743fbe279",
+      "repository": "pgcat",
+      "language": "rust",
+      "path": "src/messages.rs",
+      "message": "Function `write_all_flush` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 623
+    },
+    {
+      "id": "EA-f3c503d21d9bf0af",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-common/src/helpers/net.rs",
+      "message": "Function `accept` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 122
+    },
+    {
+      "id": "EA-37a42009533f8cdd",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-core/src/recordings/storage.rs",
+      "message": "Function `write_all` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 53
+    },
+    {
+      "id": "EA-4840085083320047",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-rdp/src/client/mod.rs",
+      "message": "Function `send_resize` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 334
+    },
+    {
+      "id": "EA-0166759ef68b9fe4",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-rdp/src/client/mod.rs",
+      "message": "Function `handle_clipboard_out` executes blocking file I/O from an async function, through `send_clipboard`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 353
+    },
+    {
+      "id": "EA-7c090fb85ae356d7",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-rdp/src/client/mod.rs",
+      "message": "Function `send_clipboard` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 399
+    },
+    {
+      "id": "EA-9fefa44ffffb7b76",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-rdp/src/client/mod.rs",
+      "message": "Function `process_outputs` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 500
+    },
+    {
+      "id": "EA-ee868845854f4111",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-vnc/src/server/protocol.rs",
+      "message": "Function `write_raw_rect` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 199
+    },
+    {
+      "id": "EA-a0c7d6b01aa9613b",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-protocol-vnc/src/server/rfb.rs",
+      "message": "Function `server_vencrypt_sub_negotiate` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 112
+    },
+    {
+      "id": "EA-fce35a539595e955",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-tls/src/maybe_tls_stream.rs",
+      "message": "Function `prefixed_stream_replays_prefix_before_inner_data` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 232
+    },
+    {
+      "id": "EA-11372e1aada0f2d6",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-tls/src/maybe_tls_stream.rs",
+      "message": "Function `prefixed_stream_writes_pass_through` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 259
+    },
+    {
+      "id": "EA-a50d2bc0048da756",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/cli/src/config.ts",
+      "message": "Function `resolveConfig` executes blocking file I/O from an async function, through `readFileEnv`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 180
+    },
+    {
+      "id": "EA-f818c7722cdea258",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/cli/src/connection.ts",
+      "message": "Function `withConnection` executes blocking file I/O from an async function, through `resolveConfig`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 45
+    },
+    {
+      "id": "EA-1275fcc26ea1dfe1",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/cli/src/lock.ts",
+      "message": "Function `acquireShared` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 140
+    },
+    {
+      "id": "EA-dccad8ef9ca4da98",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/index.ts",
+      "message": "Function `loadGlobalPrefs` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 166
+    },
+    {
+      "id": "EA-58671cbc309c2b56",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/index.ts",
+      "message": "Function `createBackgroundProcess` executes blocking file I/O from an async function, through `loadGlobalPrefs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 224
+    },
+    {
+      "id": "EA-d1ce141ac3d47b6f",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/index.ts",
+      "message": "Function `startSyncServer` executes blocking file I/O from an async function, through `loadGlobalPrefs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 314
+    },
+    {
+      "id": "EA-4b7864d15c26a77d",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/index.ts",
+      "message": "Function `createWindow` executes blocking file I/O from an async function, through `get`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 431
+    },
+    {
+      "id": "EA-e83ced24c88dfef3",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/index.ts",
+      "message": "Function `` executes blocking file I/O from an async function, through `loadGlobalPrefs`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 548
+    },
+    {
+      "id": "EA-e68eb38916201514",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/window-state.ts",
+      "message": "Function `loadState` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 25
+    },
+    {
+      "id": "EA-0fae0d97e58ed78e",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/window-state.ts",
+      "message": "Function `saveState` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 51
+    },
+    {
+      "id": "EA-d1e7802606e54f05",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/desktop-electron/window-state.ts",
+      "message": "Function `get` executes blocking file I/O from an async function, through `loadState`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 154
+    },
+    {
+      "id": "EA-773f87d931598ce7",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/mocks/setup.ts",
+      "message": "Function `` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 142
+    },
+    {
+      "id": "EA-757d566e10ac01c1",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/loot-core/src/server/migrate/cli.ts",
+      "message": "Function `` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 73
+    },
+    {
+      "id": "EA-ae2c2cd57cd0532a",
+      "repository": "actual",
+      "language": "typescript",
+      "path": "packages/sync-server/src/app.ts",
+      "message": "Function `run` executes blocking file I/O from an async function, through `parseHTTPSConfig`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 223
+    },
+    {
+      "id": "EA-89094fcdaab4e5c6",
+      "repository": "authelia",
+      "language": "typescript",
+      "path": "internal/templates/src/index.tsx",
+      "message": "Function `doRender` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 37
+    },
+    {
+      "id": "EA-b2452391e27d00d4",
+      "repository": "frigate",
+      "language": "typescript",
+      "path": "web/e2e/helpers/api-mocker.ts",
+      "message": "Function `install` executes blocking file I/O from an async function, through `loadMockJson`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 58
+    },
+    {
+      "id": "EA-53eaff8e5e0cdf83",
+      "repository": "ghost",
+      "language": "typescript",
+      "path": "e2e/helpers/pages/admin/members/members-list-page.ts",
+      "message": "Function `exportMembers` executes blocking file I/O from an async function.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 275
+    },
+    {
       "id": "EA-c41c41111fb60a17",
       "repository": "trpc",
       "language": "typescript",

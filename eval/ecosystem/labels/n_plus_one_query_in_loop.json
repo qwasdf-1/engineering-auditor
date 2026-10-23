@@ -1,0 +1,576 @@
+{
+  "schema_version": 1,
+  "detector": "n_plus_one_query_in_loop",
+  "labels": [
+    {
+      "id": "EA-7e59fb86693a0769",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/Persistence/Factories/PropertyFactory.cs",
+      "message": "Function `BuildEntities` calls `languageRepository.GetIsoCodeById` with loop-derived `propDto`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 45
+    },
+    {
+      "id": "EA-59500e545c332420",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/PublishableContentRepositoryBase.cs",
+      "message": "Function `GetContentSchedule` calls `LanguageRepository.GetIsoCodeById` with loop-derived `scheduleDto`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 110
+    },
+    {
+      "id": "EA-a38b773dffbab539",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/PublishableContentRepositoryBase.cs",
+      "message": "Function `GetContentVariations` calls `LanguageRepository.GetIsoCodeById` with loop-derived `dto`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 486
+    },
+    {
+      "id": "EA-6711df30e08f8c69",
+      "repository": "umbraco",
+      "language": "csharp",
+      "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/PublishableContentRepositoryBase.cs",
+      "message": "Function `GetEntityVariations` calls `LanguageRepository.GetIsoCodeById` with loop-derived `dto`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 525
+    },
+    {
+      "id": "EA-c2e9405925c4346a",
+      "repository": "gitea",
+      "language": "go",
+      "path": "modules/indexer/code/indexer.go",
+      "message": "Function `Init` calls `repo_model.GetRepositoryByID` with loop-derived `indexerData`, through `index`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 132
+    },
+    {
+      "id": "EA-d8923f29a13b9c90",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/v1/org/org.go",
+      "message": "Function `deleteOrgReposBackground` calls `repo_model.GetRepositoryByID` with loop-derived `repoID`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 532
+    },
+    {
+      "id": "EA-555b6e651a5be0b6",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/v1/repo/issue_comment.go",
+      "message": "Function `ListIssueCommentsAndTimeline` calls `repo_model.GetRepositoryByID` with loop-derived `comment`, through `isXRefCommentAccessible`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 204
+    },
+    {
+      "id": "EA-2b70e3706954868a",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/api/v1/repo/key.go",
+      "message": "Function `ListDeployKeys` calls `repo_model.GetRepositoryByID` with loop-derived `i`, through `appendPrivateInformation`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 99
+    },
+    {
+      "id": "EA-eece4f4510e76dcb",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/common/compare.go",
+      "message": "Function `findHeadRepoFromRootBase` calls `repo_model.GetRepositoriesByForkID` with loop-derived `repo`, through `findHeadRepoFromRootBase`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 212
+    },
+    {
+      "id": "EA-3edacdfbe8b2f2e4",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/web/repo/actions/actions.go",
+      "message": "Function `prepareScopedWorkflows` calls `repo_model.GetRepositoryByID` with loop-derived `source`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 320
+    },
+    {
+      "id": "EA-5e006d674c7d969a",
+      "repository": "gitea",
+      "language": "go",
+      "path": "routers/web/shared/actions/scoped_workflows.go",
+      "message": "Function `ScopedWorkflows` calls `repo_model.GetRepositoryByID` with loop-derived `src`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 129
+    },
+    {
+      "id": "EA-c85a5a45a7a52da2",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/actions/approve.go",
+      "message": "Function `ApproveRuns` calls `repo_model.GetRepositoryByID` with loop-derived `job`, through `expandInlineReusableCaller`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 126
+    },
+    {
+      "id": "EA-ef84bcc258eb901c",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/actions/job_emitter.go",
+      "message": "Function `jobEmitterQueueHandler` calls `db.GetByID` with loop-derived `update`, through `checkJobsByRunID`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 58
+    },
+    {
+      "id": "EA-0195ed9d8d795ab6",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/actions/job_emitter.go",
+      "message": "Function `checkJobsOfCurrentRunAttempt` calls `repo_model.GetRepositoryByID` with loop-derived `job`, through `expandReusableWorkflowCaller`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 315
+    },
+    {
+      "id": "EA-dc2780c661a2fe97",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/convert/activity.go",
+      "message": "Function `ToActivities` calls `repo_model.GetMirrorByRepoID` with loop-derived `ac`, through `ToActivity`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 49
+    },
+    {
+      "id": "EA-3e6cea5264ef5eb0",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/convert/notification.go",
+      "message": "Function `ToNotifications` calls `repo_model.GetMirrorByRepoID` with loop-derived `n`, through `ToNotificationThread`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 104
+    },
+    {
+      "id": "EA-e30e75eb3bf21d3f",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/convert/pull.go",
+      "message": "Function `ToAPIPullRequests` calls `repo_model.GetMirrorByRepoID` with loop-derived `pr`, through `ToRepo`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 438
+    },
+    {
+      "id": "EA-e319bc7d2538e1a2",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/mirror/queue.go",
+      "message": "Function `queueHandler` calls `db.GetByID` with loop-derived `req`, through `doMirrorSync`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 33
+    },
+    {
+      "id": "EA-782b66226943b61d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/org/org.go",
+      "message": "Function `updateRepoForVisibilityChanged` calls `repo_model.GetRepositoriesByForkID` with loop-derived `i`, through `updateRepoForVisibilityChanged`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 153
+    },
+    {
+      "id": "EA-3cfe59e3484e2000",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/org/org.go",
+      "message": "Function `ChangeOrganizationVisibility` calls `repo_model.GetRepositoriesByForkID` with loop-derived `repo`, through `updateRepoForVisibilityChanged`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 180
+    },
+    {
+      "id": "EA-03346ba008986b1d",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/org/user.go",
+      "message": "Function `RemoveOrgUser` calls `repo_model.GetRepositoryByID` with loop-derived `repoID`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 70
+    },
+    {
+      "id": "EA-80431e798e4b0054",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/repository/license.go",
+      "message": "Function `repoLicenseUpdater` calls `repo_model.GetRepositoryByID` with loop-derived `opts`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 74
+    },
+    {
+      "id": "EA-64d2ee43b5e3ce5f",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/repository/repository.go",
+      "message": "Function `setRepoVisibility` calls `repo_model.GetRepositoriesByForkID` with loop-derived `forkRepo`, through `setRepoVisibility`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 194
+    },
+    {
+      "id": "EA-b78343a168880570",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/repository/repository.go",
+      "message": "Function `updateRepository` calls `repo_model.GetRepositoriesByForkID` with loop-derived `i`, through `updateRepository`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 316
+    },
+    {
+      "id": "EA-40d7f07b49f0e015",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/user/block.go",
+      "message": "Function `removeCollaborations` calls `repo_model.GetRepositoryByID` with loop-derived `collaboration`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 268
+    },
+    {
+      "id": "EA-a9cc0366f075a277",
+      "repository": "gitea",
+      "language": "go",
+      "path": "services/user/user.go",
+      "message": "Function `DeleteInactiveUsers` calls `repo_model.GetUnlinkedAttachmentsByUserID` with loop-derived `u`, through `DeleteUser`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 319
+    },
+    {
+      "id": "EA-ef7a8189e6e819d0",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/AITextUtils.java",
+      "message": "Function `loadCheckedEntitiesById` calls `DBUtils.findObjectById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 278
+    },
+    {
+      "id": "EA-c6c095f17c12efa3",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.tasks.native/src/org/jkiss/dbeaver/tasks/nativetool/AbstractNativeToolSettings.java",
+      "message": "Function `loadSettings` calls `DBUtils.findObjectById` with loop-derived `objectId`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 201
+    },
+    {
+      "id": "EA-013d2a45b011d16a",
+      "repository": "dbeaver",
+      "language": "java",
+      "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/preferences/PrefPageGlobalProjectNetworkProfiles.java",
+      "message": "Function `resolveConnections` calls `DBWorkbench.getProjectById` with loop-derived `projectUsage`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 275
+    },
+    {
+      "id": "EA-e2e8efaac6103b56",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/GroupAdapter.java",
+      "message": "Function `getRoleMappingsStream` calls `keycloakSession.getRoleById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 238
+    },
+    {
+      "id": "EA-c19a9c6544c42f9d",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/GroupAdapter.java",
+      "message": "Function `getSubGroupsStream` calls `keycloakSession.getGroupById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 274
+    },
+    {
+      "id": "EA-3e078da0e8432658",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "message": "Function `getRealmRolesStream` calls `session.getRoleById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 752
+    },
+    {
+      "id": "EA-e9570b55926e3bda",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "message": "Function `getClientRolesStream` calls `session.getRoleById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 786
+    },
+    {
+      "id": "EA-e970956ec9080684",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "message": "Function `getGroupsStream` calls `session.getGroupById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1066
+    },
+    {
+      "id": "EA-5d8b911823278816",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "message": "Function `getClientScopesStream` calls `session.getClientScopeById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1404
+    },
+    {
+      "id": "EA-ae82742d740b8746",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/RealmCacheSession.java",
+      "message": "Function `getClientScopes` calls `session.getClientScopeById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1509
+    },
+    {
+      "id": "EA-96f147feb4f7c27c",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/UserAdapter.java",
+      "message": "Function `getRoleMappingsStream` calls `keycloakSession.getRoleById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 438
+    },
+    {
+      "id": "EA-af672618fef507a3",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/UserAdapter.java",
+      "message": "Function `getGroupsStream` calls `keycloakSession.getGroupById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 468
+    },
+    {
+      "id": "EA-399f7ac435b4631b",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/UserCacheManager.java",
+      "message": "Function `fullUserInvalidation` calls `UserCacheSession.getUserByFederatedIdentityCacheKey` with loop-derived `socialLink`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 60
+    },
+    {
+      "id": "EA-465918f831d09633",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/ResourceAdapter.java",
+      "message": "Function `getScopes` calls `cacheSession.findById` with loop-derived `scopeId`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 179
+    },
+    {
+      "id": "EA-ce5e8e89bcd21b9e",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheManager.java",
+      "message": "Function `resourceUpdated` calls `StoreFactoryCacheSession.getResourceByUriCacheKey` with loop-derived `uri`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 98
+    },
+    {
+      "id": "EA-1c1687305a40d6f0",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/authorization/StoreFactoryCacheManager.java",
+      "message": "Function `resourceUpdated` calls `StoreFactoryCacheSession.getResourceByScopeCacheKey` with loop-derived `scope`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 104
+    },
+    {
+      "id": "EA-0dabf0ed0c4afba0",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/idp/InfinispanIdentityProviderStorageProvider.java",
+      "message": "Function `getByOrganization` calls `session.getById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 230
+    },
+    {
+      "id": "EA-cd8e33f421feaf1e",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/cache/infinispan/idp/InfinispanIdentityProviderStorageProvider.java",
+      "message": "Function `getForLogin` calls `session.getById` with loop-derived `id`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 275
+    },
+    {
+      "id": "EA-f272e0aad944ce42",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
+      "message": "Function `importOrganizationGroupMemberships` calls `session.getGroupById` with loop-derived `groupId`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 1885
+    },
+    {
+      "id": "EA-9bc6ce29e3a08ac2",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "rest/admin-ui-ext/src/main/java/org/keycloak/admin/ui/rest/RoleMappingDeleteResource.java",
+      "message": "Function `deleteRoleMappings` calls `session.getRoleById` with loop-derived `roleRequest`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 159
+    },
+    {
+      "id": "EA-7b80f7f3cbc608e4",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "scim/model/src/main/java/org/keycloak/scim/model/group/GroupCoreModelSchema.java",
+      "message": "Function `getAttributeMappers` calls `session.getUserById` with loop-derived `member`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 158
+    },
+    {
+      "id": "EA-1dbfa3a9d9aeedbe",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "scim/model/src/main/java/org/keycloak/scim/model/group/GroupCoreModelSchema.java",
+      "message": "Function `getAttributeMappers` calls `session.getUserById` with loop-derived `member`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 175
+    },
+    {
+      "id": "EA-040ffd0fc0dc697a",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "scim/model/src/main/java/org/keycloak/scim/model/user/UserCoreModelSchema.java",
+      "message": "Function `getAttributeMappers` calls `session.getGroupById` with loop-derived `membership`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 180
+    },
+    {
+      "id": "EA-b9d0346998562018",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "scim/model/src/main/java/org/keycloak/scim/model/user/UserCoreModelSchema.java",
+      "message": "Function `getAttributeMappers` calls `session.getGroupById` with loop-derived `membership`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 219
+    },
+    {
+      "id": "EA-6a0092bc7dd8f7cd",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "scim/model/src/main/java/org/keycloak/scim/model/user/UserCoreModelSchema.java",
+      "message": "Function `getAttributeMappers` calls `session.getGroupById` with loop-derived `membership`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 238
+    },
+    {
+      "id": "EA-9d3f25ba1a5e01be",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/mappers/ParameterizedScopeClientSubMapper.java",
+      "message": "Function `setClaim` calls `userSession.getClientByClientId` with loop-derived `parameterValue`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 51
+    },
+    {
+      "id": "EA-7c40999e80a3a0ee",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/protocol/oidc/resourceindicators/ResourceIndicatorsPostProcessor.java",
+      "message": "Function `findAudienceByClientAttribute` calls `session.getClientByClientId` with loop-derived `a`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 87
+    },
+    {
+      "id": "EA-14517ae5ee8fca75",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "services/src/main/java/org/keycloak/utils/GroupUtils.java",
+      "message": "Function `getAllMemberships` calls `session.getGroupById` with loop-derived `group`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 303
+    },
+    {
+      "id": "EA-fad6b0cf924ed92d",
+      "repository": "electrum",
+      "language": "python",
+      "path": "electrum/channel_db.py",
+      "message": "Function `_db_save_node_addresses` calls `c.execute` with loop-derived `addr`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 661
+    },
+    {
+      "id": "EA-165a79957c15ec96",
+      "repository": "redash",
+      "language": "python",
+      "path": "migrations/versions/969126bd800f_.py",
+      "message": "Function `upgrade` calls `db.execute` with loop-derived `dashboard`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 34
+    },
+    {
+      "id": "EA-343d9a6d6c6fb286",
+      "repository": "warpgate",
+      "language": "rust",
+      "path": "warpgate-db-migrations/src/m00075_hash_ticket_and_api_token_secrets.rs",
+      "message": "Function `hashes_existing_secrets_and_renames_the_column` calls `db.query_one` with loop-derived `table`.",
+      "status": "pending",
+      "sampled_from": "a8-a",
+      "line": 161
+    }
+  ]
+}
