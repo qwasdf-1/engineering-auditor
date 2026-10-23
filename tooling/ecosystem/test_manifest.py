@@ -10,7 +10,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-from tooling.ecosystem import run  # noqa: E402
+from tooling.ecosystem import corpus_holdout  # noqa: E402
 SCHEMA = REPO_ROOT / "contracts" / "ecosystem-corpus.schema.json"
 MANIFEST = REPO_ROOT / "eval" / "ecosystem" / "manifest.json"
 TIER_1 = {"rust", "python", "typescript", "javascript", "go", "java"}
@@ -86,8 +86,8 @@ class EcosystemManifestTest(unittest.TestCase):
     def test_the_seeded_rule_alone_picks_the_held_out_repositories(self):
         marked = {repository["id"] for repository in self.manifest["repositories"] + self.manifest["applications"]
                   if repository.get("holdout")}
-        self.assertEqual(marked, run.holdout_choice(self.manifest))
-        self.assertEqual(marked, run.holdout_ids())
+        self.assertEqual(marked, corpus_holdout.holdout_choice(self.manifest))
+        self.assertEqual(marked, corpus_holdout.holdout_ids())
         held_languages = {repository["language"] for repository in self.manifest["repositories"]
                           if repository.get("holdout")}
         self.assertTrue(TIER_1 | TIER_2 <= held_languages)

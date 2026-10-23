@@ -61,7 +61,7 @@ labels read as stale.
 ## Held-out repositories
 
 Sixteen repositories carry `"holdout": true`: one per library language and
-six applications, picked by the seeded hash in `tooling/ecosystem/run.py`
+six applications, picked by the seeded hash in `tooling/ecosystem/corpus_holdout.py`
 (`HOLDOUT_SEED`), never by hand; `test_manifest.py` fails if the flags
 differ from the rule. A detector fix is designed from the other
 repositories' findings and labels only, and then measured on the held-out

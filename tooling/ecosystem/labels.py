@@ -37,6 +37,7 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tooling.ecosystem import label_precision, label_store, label_workflow, run  # noqa: E402
+from tooling.ecosystem.corpus_holdout import holdout_ids  # noqa: E402
 
 
 def report_skipped(skipped) -> None:
@@ -101,7 +102,7 @@ def precision_command(args, labels) -> str:
     claims = json.loads(args.claims.read_text(encoding="utf-8")) if args.claims else None
     chosen = dict(label_store.selected(labels, args.detector))
     if args.split != "all":
-        chosen, claims = label_precision.restrict(chosen, claims, run.holdout_ids(), args.split == "holdout")
+        chosen, claims = label_precision.restrict(chosen, claims, holdout_ids(), args.split == "holdout")
     table = label_precision.precision(chosen, live, claims)
     if args.json:
         args.json.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
