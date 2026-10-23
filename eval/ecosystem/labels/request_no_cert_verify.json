@@ -8,9 +8,12 @@
       "language": "csharp",
       "path": "src/Umbraco.Web.Common/DependencyInjection/UmbracoBuilderExtensions.cs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 251",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 251
+      "line": 251,
+      "verdict": "true_positive",
+      "reason": "The named IgnoreCertificateErrors HttpClient uses DangerousAcceptAnyServerCertificateValidator, accepting any server certificate.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-49bca7c660742811",
@@ -18,9 +21,12 @@
       "language": "go",
       "path": "internal/commands/debug.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 334",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 334
+      "line": 334,
+      "verdict": "true_positive",
+      "reason": "The TLS debug command dials with InsecureSkipVerify: true; intentional, but certificates are not verified.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c095a0ce46992323",
@@ -28,9 +34,12 @@
       "language": "go",
       "path": "internal/storage/sql_provider_backend_postgres.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 303",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 303
+      "line": 303,
+      "verdict": "false_positive",
+      "reason": "InsecureSkipVerify: true is the Go idiom for custom verification: verify-ca installs VerifyConnection/VerifyPeerCertificate and verify-full turns it back off.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-bf1f3a2857a4e231",
@@ -38,9 +47,12 @@
       "language": "go",
       "path": "internal/suites/http.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 17",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "internal/suites is Authelia's integration test suite (marked not used in production); test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-dd1d57fabc2a4587",
@@ -48,9 +60,12 @@
       "language": "go",
       "path": "modules/private/internal.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 77",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 77
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "The internal API client to the local listener sets InsecureSkipVerify: true, so it accepts any certificate.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b6d45111bf01e524",
@@ -58,9 +73,12 @@
       "language": "go",
       "path": "src/pkg/oidc/helper.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 113",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 113
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "The admin-gated insecure OIDC transport sets InsecureSkipVerify: true; intentional, but verification is off when used.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-49fdab9f43437c82",
@@ -68,9 +86,12 @@
       "language": "go",
       "path": "http/preflight.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 33",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 33
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "The preflight client sets InsecureSkipVerify: true to probe whether a server is running.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-797629bd998b7a2d",
@@ -78,9 +99,12 @@
       "language": "go",
       "path": "system_test/helpers.go",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 1129",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1129
+      "line": 1129,
+      "verdict": "false_positive",
+      "reason": "system_test/helpers.go is rqlite's system test helper; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-11f0c8477412c052",
@@ -88,9 +112,12 @@
       "language": "java",
       "path": "adapters/saml/core/src/main/java/org/keycloak/adapters/cloned/HttpClientBuilder.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 95",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 95
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "PassthroughTrustManager's checkServerTrusted is empty, accepting every server certificate when the trust manager is disabled.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-fa66f45b1fdfa75d",
@@ -98,9 +125,12 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/connections/httpclient/HttpClientBuilder.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 66",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 66
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "PassthroughTrustManager's checkServerTrusted is empty, accepting every server certificate when disableTrustManager is set.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c2a7406354638ef2",
@@ -108,9 +138,12 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/connections/httpclient/HttpClientBuilder.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 255",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 255
+      "line": 255,
+      "verdict": "true_positive",
+      "reason": "The ANY hostname policy installs NoopHostnameVerifier, which accepts any host name.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-65dc64658393abc8",
@@ -118,9 +151,12 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/connections/httpclient/HttpClientBuilder.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 274",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 274
+      "line": 274,
+      "verdict": "true_positive",
+      "reason": "With disableTrustManager the client uses NoopHostnameVerifier together with a pass-through trust manager.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-a3a2d53d89baec13",
@@ -128,9 +164,12 @@
       "language": "java",
       "path": "test-framework/core/src/main/java/org/keycloak/testframework/server/DistributionKeycloakServer.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 424",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 424
+      "line": 424,
+      "verdict": "false_positive",
+      "reason": "DistributionKeycloakServer is in Keycloak's test framework; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-d18ff1b1a9516fbf",
@@ -138,9 +177,12 @@
       "language": "java",
       "path": "test-framework/core/src/main/java/org/keycloak/testframework/server/ReadinessProbe.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 84",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 84
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "ReadinessProbe is in Keycloak's test framework; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c4530f34c1bc575d",
@@ -148,9 +190,12 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/util/src/main/java/org/keycloak/testsuite/utils/tls/TLSUtils.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 27",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 27
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "TLSUtils is in the integration testsuite utilities; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-861a2dfb5a6b3533",
@@ -158,9 +203,12 @@
       "language": "java",
       "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 140",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 140
+      "line": 140,
+      "verdict": "true_positive",
+      "reason": "ZAP's SSLContextManager installs a trust manager whose checkServerTrusted is empty; deliberate for an intercepting proxy, but no verification.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-a61e7d6c2984fe1a",
@@ -168,9 +216,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/SSLConnector.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 989",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 989
+      "line": 989,
+      "verdict": "true_positive",
+      "reason": "SSLConnector.checkServerTrusted is empty, so ZAP's connector accepts any server certificate.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-cb9b044cf2171df5",
@@ -178,9 +229,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/SSLConnector.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 997",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 997
+      "line": 997,
+      "verdict": "true_positive",
+      "reason": "The socket overload of checkServerTrusted is empty, accepting any server certificate.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-abb9ab7d94d99fdf",
@@ -188,9 +242,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/SSLConnector.java",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 1007",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1007
+      "line": 1007,
+      "verdict": "true_positive",
+      "reason": "The SSLEngine overload of checkServerTrusted is empty, accepting any server certificate.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-80f7b33b3c33f1cf",
@@ -198,9 +255,12 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/openapi/index.js",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 32",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 32
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "devops/openapi/index.js is a development script fetching the local OpenAPI document; tooling is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-73ee01d71d823220",
@@ -208,9 +268,12 @@
       "language": "javascript",
       "path": "templates/UmbracoExtension/Client/scripts/generate-openapi.js",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 17",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "templates/.../scripts/generate-openapi.js is a development script for a project template; tooling is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-d8af27650ab930c7",
@@ -298,9 +361,12 @@
       "language": "python",
       "path": "changedetectionio/content_fetchers/requests.py",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 97",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 97
+      "line": 97,
+      "verdict": "true_positive",
+      "reason": "The requests fetcher passes verify=False for every monitored page, so TLS certificates are never checked.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-cb8cddfad87a0108",
@@ -308,9 +374,12 @@
       "language": "python",
       "path": "changedetectionio/content_fetchers/requests.py",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 119",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 119
+      "line": 119,
+      "verdict": "true_positive",
+      "reason": "Redirect hops are fetched with verify=False, so certificates are not checked.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-232a1d3e4509a0a8",
@@ -318,9 +387,12 @@
       "language": "rust",
       "path": "src/tls.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 76",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 76
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "NoCertificateVerification implements verify_server_cert to accept any certificate when verification is turned off.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-7b834bdd473133b0",
@@ -328,9 +400,12 @@
       "language": "rust",
       "path": "warpgate-protocol-http/src/client_cache.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 45",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 45
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "When tls.verify is false the HTTP target client calls danger_accept_invalid_certs(true).",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-3ba76b807e776204",
@@ -338,9 +413,12 @@
       "language": "rust",
       "path": "warpgate-protocol-kubernetes/src/server/auth.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 464",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 464
+      "line": 464,
+      "verdict": "true_positive",
+      "reason": "When tls.verify is false the Kubernetes upstream client calls danger_accept_invalid_certs(true).",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-adb5eb645d2dd1a9",
@@ -348,9 +426,12 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/tls.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 264",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 264
+      "line": 264,
+      "verdict": "true_positive",
+      "reason": "When verify is false the RDP client sets SslVerifyMode::NONE and disables host name verification.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-56144e90a0fb59b9",
@@ -358,9 +439,12 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/tls.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 355",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 355
+      "line": 355,
+      "verdict": "true_positive",
+      "reason": "NoCertificateVerification accepts any server certificate for RDP targets without verification.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-ece4c850125f017f",
@@ -368,9 +452,12 @@
       "language": "rust",
       "path": "warpgate-tls/src/rustls_helpers.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 215",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 215
+      "line": 215,
+      "verdict": "true_positive",
+      "reason": "DummyTlsVerifier accepts any server certificate.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-2bc77b1a94f3ba19",
@@ -378,9 +465,12 @@
       "language": "rust",
       "path": "warpgate/src/commands/healthcheck.rs",
       "message": "HTTPS request without certificate verification (Bandit B501) at line 15",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 15
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "The healthcheck client to Warpgate's own listener uses danger_accept_invalid_certs(true).",
+      "labeller": "model:claude-opus-5-5"
     }
   ]
 }

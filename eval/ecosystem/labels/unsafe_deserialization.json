@@ -28,9 +28,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.rcp/src/org/jkiss/dbeaver/model/rcp/DesktopWorkspaceImpl.java",
       "message": "Unsafe deserialization call at line 535",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 535
+      "line": 535,
+      "verdict": "true_positive",
+      "reason": "A legacy workspace properties file is read with an unfiltered ObjectInputStream.readObject, so a crafted file in a shared workspace deserializes arbitrary classes.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-3d271625790a6f2e",
@@ -38,9 +41,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/utils/GeneralUtils.java",
       "message": "Unsafe deserialization call at line 797",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 797
+      "line": 797,
+      "verdict": "true_positive",
+      "reason": "deserializeObject Base64-decodes arbitrary text and calls readObject on an unfiltered ObjectInputStream.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-140dfe78a4bb1a73",
@@ -48,9 +54,12 @@
       "language": "java",
       "path": "common/src/main/java/org/keycloak/common/util/KerberosSerializationUtils.java",
       "message": "Unsafe deserialization call at line 115",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 115
+      "line": 115,
+      "verdict": "false_positive",
+      "reason": "A DelegatingSerializationFilter allowlisting Kerberos classes is set on the stream before readObject, so deserialization is restricted.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-9399b1985256aebc",
@@ -58,9 +67,12 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/social/twitter/TwitterIdentityProvider.java",
       "message": "Unsafe deserialization call at line 114",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 114
+      "line": 114,
+      "verdict": "true_positive",
+      "reason": "The Twitter request token is read back with an unfiltered ObjectInputStream.readObject from a Base64 auth note.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-99d0362169d8b180",
@@ -68,9 +80,12 @@
       "language": "java",
       "path": "test-framework/remote-providers/src/main/java/org/keycloak/testframework/remote/providers/runonserver/SerializationUtil.java",
       "message": "Unsafe deserialization call at line 34",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 34
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "SerializationUtil is in Keycloak's test-framework module; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-8898233f694b73d3",
@@ -78,9 +93,12 @@
       "language": "java",
       "path": "test-framework/remote-providers/src/main/java/org/keycloak/testframework/remote/providers/runonserver/SerializationUtil.java",
       "message": "Unsafe deserialization call at line 68",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 68
+      "line": 68,
+      "verdict": "false_positive",
+      "reason": "decodeException is in Keycloak's test-framework module; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-fd76973400bde8a4",
@@ -88,9 +106,12 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/RangerKeyStore.java",
       "message": "Unsafe deserialization call at line 510",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 510
+      "line": 510,
+      "verdict": "true_positive",
+      "reason": "The KMS keystore loads each sealed key with an unfiltered ObjectInputStream.readObject over the stored key stream.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-04ccef6f2c4cec10",
@@ -98,9 +119,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/utils/ViewState.java",
       "message": "Unsafe deserialization call at line 80",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "ViewState.decode Base64-decodes a view state taken from traffic and calls readObject on an unfiltered ObjectInputStream.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-8959fd968f681930",
@@ -108,9 +132,12 @@
       "language": "python",
       "path": "docs/scripts/gen_legacy_stubs.py",
       "message": "Unsafe deserialization call at line 81",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 81
+      "line": 81,
+      "verdict": "false_positive",
+      "reason": "yaml.load here uses _MkdocsLoader, a yaml.SafeLoader subclass, and the file is a docs build script.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-d9d403618a80edae",
@@ -178,9 +205,12 @@
       "language": "python",
       "path": "docker/main/rootfs/usr/local/ffmpeg/get_ffmpeg_path.py",
       "message": "Unsafe deserialization call at line 21",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 21
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "yaml is a ruamel.yaml YAML() round-trip loader, which does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-805ebf37c9605edc",
@@ -188,9 +218,12 @@
       "language": "python",
       "path": "docker/main/rootfs/usr/local/go2rtc/create_config.py",
       "message": "Unsafe deserialization call at line 44",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 44
+      "line": 44,
+      "verdict": "false_positive",
+      "reason": "yaml is a ruamel.yaml YAML() round-trip loader, which does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-6af76ee84f3d9feb",
@@ -198,9 +231,12 @@
       "language": "python",
       "path": "docker/main/rootfs/usr/local/nginx/get_nginx_settings.py",
       "message": "Unsafe deserialization call at line 24",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 24
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "yaml is a ruamel.yaml YAML() round-trip loader, which does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-f8f9e3a194d78317",
@@ -208,9 +244,12 @@
       "language": "python",
       "path": "frigate/api/camera.py",
       "message": "Unsafe deserialization call at line 1203",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1203
+      "line": 1203,
+      "verdict": "false_positive",
+      "reason": "yaml = YAML() from ruamel.yaml is a round-trip loader that does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-4d70a3d805d56fdc",
@@ -218,9 +257,12 @@
       "language": "python",
       "path": "frigate/config/config.py",
       "message": "Unsafe deserialization call at line 1117",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1117
+      "line": 1117,
+      "verdict": "false_positive",
+      "reason": "The module-level yaml is ruamel.yaml YAML(), a round-trip loader that does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-65d7e11c611765e7",
@@ -228,9 +270,12 @@
       "language": "python",
       "path": "frigate/util/builtin.py",
       "message": "Unsafe deserialization call at line 270",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 270
+      "line": 270,
+      "verdict": "false_positive",
+      "reason": "yaml = YAML() from ruamel.yaml is a round-trip loader that does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-086f74d00d1121a8",
@@ -238,9 +283,12 @@
       "language": "python",
       "path": "frigate/util/config.py",
       "message": "Unsafe deserialization call at line 82",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 82
+      "line": 82,
+      "verdict": "false_positive",
+      "reason": "yaml = YAML() from ruamel.yaml is a round-trip loader that does not construct arbitrary Python objects.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-d11e4906103ab951",
@@ -248,9 +296,12 @@
       "language": "python",
       "path": "mitmproxy/optmanager.py",
       "message": "Unsafe deserialization call at line 531",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 531
+      "line": 531,
+      "verdict": "false_positive",
+      "reason": "ruamel.yaml.YAML(typ='safe') is the safe loader.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b82eddccad2d579b",
@@ -258,9 +309,12 @@
       "language": "python",
       "path": "zerver/lib/singleton_bmemcached.py",
       "message": "Unsafe deserialization call at line 12",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 12
+      "line": 12,
+      "verdict": "false_positive",
+      "reason": "pickle.loads only reverses pickle.dumps of the settings dict the same module made to key an lru_cache; the bytes never come from outside.",
+      "labeller": "model:claude-opus-5-5"
     }
   ]
 }

@@ -8,9 +8,12 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Api.Management/DependencyInjection/UmbracoBuilder.LocalizedText.cs",
       "message": "Function `GetSupplementaryFileSources` independently traverses `contentFileProvider.GetDirectoryContents` for `langFileSource` and `langFile`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 55
+      "line": 55,
+      "verdict": "false_positive",
+      "reason": "The inner listing is of the subfolder the outer element names, so the nesting walks a tree once; it is not independent.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c63fef5c559a822d",
@@ -18,9 +21,12 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/RequestHandlerSettingsExtension.cs",
       "message": "Function `MergeUnique` independently traverses `CollectionsMarshal.AsSpan` for `alternativeReplacement` and `priorityReplacement`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 69
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "Each alternative replacement scans the whole priority list, an independent O(n*m) pairing a dictionary would replace.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-7283d53d382267a6",
@@ -28,9 +34,12 @@
       "language": "go",
       "path": "internal/configuration/validator/server.go",
       "message": "Function `ValidateServerEndpoints` independently traverses `authzs` for `name` and `oName`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 152
+      "line": 152,
+      "verdict": "true_positive",
+      "reason": "Every authz endpoint name is paired with every other name of the same list, an O(n^2) pairwise check.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-8d87f0862b2e2934",
@@ -58,9 +67,12 @@
       "language": "go",
       "path": "modules/avatar/identicon/block.go",
       "message": "Function `drawBlock` independently traverses `size` for `i` and `j`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "false_positive",
+      "reason": "The loops walk the pixels of a size-by-size identicon block; a 2D grid traversal is inherent, not redundant.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-f2bb736398535f53",
@@ -68,9 +80,12 @@
       "language": "go",
       "path": "src/lib/link.go",
       "message": "Function `ParseLinks` independently traverses `strings.SplitSeq` for `lk` and `attr`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 61
+      "line": 61,
+      "verdict": "false_positive",
+      "reason": "The inner split is of the outer link's own text, so the nesting parses each link once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-25dfc3b7a2947665",
@@ -78,9 +93,12 @@
       "language": "go",
       "path": "server/consumer.go",
       "message": "Function `checkConsumerCfg` independently traverses `subjectFilters` for `outer` and `inner`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 909
+      "line": 909,
+      "verdict": "true_positive",
+      "reason": "Every subject filter is compared with every other filter of the same list, an O(n^2) pairwise overlap check.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b0c15a017c07d888",
@@ -88,9 +106,12 @@
       "language": "go",
       "path": "server/stream.go",
       "message": "Function `checkStreamCfgLocked` independently traverses `config.Mirror.SubjectTransforms` for `outer` and `inner`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 2194
+      "line": 2194,
+      "verdict": "true_positive",
+      "reason": "Every mirror subject transform is compared with every other of the same list, an O(n^2) pairwise check.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-cc9e2ef450eee7f2",
@@ -98,9 +119,12 @@
       "language": "go",
       "path": "server/stream.go",
       "message": "Function `checkStreamCfgLocked` independently traverses `src.SubjectTransforms` for `outer` and `inner`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 2277
+      "line": 2277,
+      "verdict": "true_positive",
+      "reason": "Every source subject transform is compared with every other of the same list, an O(n^2) pairwise check.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b0c1b1038088d53b",
@@ -128,9 +152,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/virtual/DBVModelSerializerLegacy.java",
       "message": "Function `serializeEntity` independently traverses `CommonUtils.safeCollection` for `c` and `cc`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 134
+      "line": 134,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer constraint's own attribute references; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-977448d6366a157e",
@@ -138,9 +165,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/virtual/DBVModelSerializerLegacy.java",
       "message": "Function `serializeEntity` independently traverses `CommonUtils.safeCollection` for `fk` and `cc`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 153
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer foreign key's own columns; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c83f22e1e32d925f",
@@ -148,9 +178,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/DataSourceProviderRegistry.java",
       "message": "Function `readDriversConfig` independently traverses `allDrivers` for `driver1` and `driver2`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 361
+      "line": 361,
+      "verdict": "true_positive",
+      "reason": "Every driver of all providers is compared with every other driver, an O(n^2) pairing over hundreds of drivers.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-7c0f4b05ed02877a",
@@ -158,9 +191,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/maven/MavenRegistry.java",
       "message": "Function `loadCustomRepositories` independently traverses `XMLUtils.getChildElementList` for `repoElement` and `scopeElement`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 151
+      "line": 151,
+      "verdict": "false_positive",
+      "reason": "The inner loop reads the outer repository element's own scope children; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-a758d9a752280047",
@@ -168,9 +204,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.navigator/src/org/jkiss/dbeaver/ui/navigator/actions/NavigatorHandlerSaveResource.java",
       "message": "Function `saveMultipleResources` independently traverses `nodes` for `node` and `n`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 131
+      "line": 131,
+      "verdict": "true_positive",
+      "reason": "Every selected node is compared with every other selected node, an O(n^2) pairing.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-ecf081b2acd29bcd",
@@ -178,9 +217,12 @@
       "language": "java",
       "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
       "message": "Function `importOrganizations` independently traverses `Optional.ofNullable` for `orgRep` and `identityProvider`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1784
+      "line": 1784,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer organization's own identity providers; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-012b7241e11d6362",
@@ -188,9 +230,12 @@
       "language": "java",
       "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
       "message": "Function `importOrganizations` independently traverses `Optional.ofNullable` for `orgRep` and `groupRep`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1803
+      "line": 1803,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer organization's own groups; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-d00daf3d0e61db61",
@@ -198,9 +243,12 @@
       "language": "java",
       "path": "model/storage-private/src/main/java/org/keycloak/storage/datastore/DefaultExportImportManager.java",
       "message": "Function `importOrganizations` independently traverses `Optional.ofNullable` for `orgRep` and `member`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1807
+      "line": 1807,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer organization's own members; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-d81ed7b9308fb0f9",
@@ -208,9 +256,12 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/httpclient/VertxHttpClientBridge.java",
       "message": "Function `toApacheResponse` independently traverses `resp.headers` for `name` and `value`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 243
+      "line": 243,
+      "verdict": "false_positive",
+      "reason": "The inner loop reads the values of the outer header name; together they visit each header value once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-7f7dd4e1777128a0",
@@ -218,9 +269,12 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/service/XPolicyService.java",
       "message": "Function `updatePermGroup` independently traverses `userPermMap.entrySet` for `upMap` and `entry`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 615
+      "line": 615,
+      "verdict": "true_positive",
+      "reason": "Each entry of userPermMap is compared with the other entries of the same map, an O(n^2) pairing.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-378a9f6c2b01989b",
@@ -228,9 +282,12 @@
       "language": "kotlin",
       "path": "network-protection/network-protection-impl/src/main/java/com/wireguard/crypto/Curve25519.kt",
       "message": "Function `mul` independently traverses `until.NUM_LIMBS_255BIT` for `i` and `j`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 166
+      "line": 166,
+      "verdict": "false_positive",
+      "reason": "Fixed-size limb multiplication over NUM_LIMBS_255BIT words is the field arithmetic algorithm itself.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-5a5801e5d93619fd",
@@ -238,9 +295,12 @@
       "language": "kotlin",
       "path": "sync/sync-impl/src/main/java/com/duckduckgo/sync/impl/ui/pairing/read/camera/CameraScannerOverlayView.kt",
       "message": "Function `rebuildGeometry` independently traverses `MIRROR_SCALES` for `scaleX` and `scaleY`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 108
+      "line": 108,
+      "verdict": "false_positive",
+      "reason": "MIRROR_SCALES has two values; the four mirror combinations are a constant amount of work.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c7d0a7c4e6ffb1cb",
@@ -248,9 +308,12 @@
       "language": "python",
       "path": "electrum/x509.py",
       "message": "Function `get_dict` independently traverses `get_children` for `ii` and `iii`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 168
+      "line": 168,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer node's own children; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-dd8343228bf39fc4",
@@ -258,9 +321,12 @@
       "language": "python",
       "path": "frigate/data_processing/common/face/model.py",
       "message": "Function `build_model` independently traverses `os.listdir` for `name` and `image`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 247
+      "line": 247,
+      "verdict": "false_positive",
+      "reason": "The inner listing is of the outer person's own folder; the nesting walks a tree once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c2039002afb5cdcd",
@@ -268,9 +334,12 @@
       "language": "python",
       "path": "frigate/data_processing/common/face/model.py",
       "message": "Function `build_model` independently traverses `os.listdir` for `name` and `image`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 358
+      "line": 358,
+      "verdict": "false_positive",
+      "reason": "The inner listing is of the outer person's own folder; the nesting walks a tree once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-a2d4e23d125698ff",
@@ -278,9 +347,12 @@
       "language": "python",
       "path": "frigate/util/media.py",
       "message": "Function `sync_event_thumbnails` independently traverses `os.listdir` for `camera_dir` and `file`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 375
+      "line": 375,
+      "verdict": "false_positive",
+      "reason": "The inner listing is of the outer camera's own directory; the nesting walks a tree once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-a17ac6ce310d5c2f",
@@ -288,9 +360,12 @@
       "language": "python",
       "path": "testing-scripts/object_dataset.py",
       "message": "Function `iter_dataset` independently traverses `os.listdir` for `cls` and `name`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 366
+      "line": 366,
+      "verdict": "false_positive",
+      "reason": "testing-scripts/object_dataset.py is a dataset tool, and the inner listing is of the outer class directory.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-1c2d564f16e9b136",
@@ -298,9 +373,12 @@
       "language": "python",
       "path": "testing-scripts/object_dataset.py",
       "message": "Function `confusion_matrix` independently traverses `classes` for `i` and `j`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 522
+      "line": 522,
+      "verdict": "false_positive",
+      "reason": "testing-scripts/object_dataset.py is an evaluation tool; tooling is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b4dfc17643cb4b13",
@@ -308,9 +386,12 @@
       "language": "python",
       "path": "testing-scripts/object_dataset.py",
       "message": "Function `pick_worst_confusion_pair` independently traverses `classes` for `src` and `tgt`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 707
+      "line": 707,
+      "verdict": "false_positive",
+      "reason": "testing-scripts/object_dataset.py is an evaluation tool; tooling is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b65ed3b55c8aab08",
@@ -318,9 +399,12 @@
       "language": "python",
       "path": "redash/query_runner/hive_ds.py",
       "message": "Function `_get_tables` independently traverses `a.a.str` for `schema_name` and `table_name`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 84
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "The inner query lists the outer schema's own tables; the nesting walks the catalog once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b0393d91686bde47",
@@ -328,9 +412,12 @@
       "language": "python",
       "path": "redash/query_runner/impala_ds.py",
       "message": "Function `_get_tables` independently traverses `str` for `schema_name` and `table_name`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "The inner query lists the outer schema's own tables; the nesting walks the catalog once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-4a255e8c679ccce6",
@@ -338,9 +425,12 @@
       "language": "python",
       "path": "redash/query_runner/memsql_ds.py",
       "message": "Function `_get_tables` independently traverses `a.a.str` for `schema_name` and `table_name`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "The inner query lists the outer schema's own tables; the nesting walks the catalog once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-40062e5af6f7b404",
@@ -388,9 +478,12 @@
       "language": "python",
       "path": "zerver/openapi/openapi.py",
       "message": "Function `get_endpoint_from_operationid` independently traverses `openapi_spec.openapi` for `endpoint` and `method`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 322
+      "line": 322,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer endpoint's own methods; the nesting visits each operation once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-0adf1760082e760d",
@@ -398,9 +491,12 @@
       "language": "typescript",
       "path": "web/src/views/settings/MasksAndZonesView.tsx",
       "message": "Function `` independently traverses `Object.entries` for `objectName` and `maskId`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 574
+      "line": 574,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer filter's own masks; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-a1d6e93c3da0d285",
@@ -408,9 +504,12 @@
       "language": "typescript",
       "path": "apps/admin/src/members/detail/member-detail-edit.ts",
       "message": "Function `getEditableCustomFieldValues` independently traverses `Object.entries` for `namespace` and `fieldKey`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer namespace's own records; the nesting flattens a two-level map once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-85569fc6f9bc89f7",
@@ -418,9 +517,12 @@
       "language": "typescript",
       "path": "ghost/core/server/services/members-metafields/values-service.ts",
       "message": "Function `unwrapWire` independently traverses `Object.entries` for `namespace` and `key`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 259
+      "line": 259,
+      "verdict": "false_positive",
+      "reason": "The inner loop walks the outer namespace's own values; the nesting flattens a two-level map once.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-63f549dac9e19349",
@@ -428,9 +530,12 @@
       "language": "typescript",
       "path": "src/portal/src/app/base/left-side-nav/registries/create-edit-endpoint/create-edit-endpoint.component.ts",
       "message": "Function `getChanges` independently traverses `Object` for `prop` and `pro`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 494
+      "line": 494,
+      "verdict": "false_positive",
+      "reason": "The inner keys come from the outer property's own field objects; the nesting is a tree walk.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c43d9f679a02dc7b",

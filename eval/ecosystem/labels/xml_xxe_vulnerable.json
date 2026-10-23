@@ -8,9 +8,12 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/common/util/StaxParserUtil.java",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 78",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 78
+      "line": 78,
+      "verdict": "false_positive",
+      "reason": "The schema is a bundled resource and the document is read through StaxParserUtil's hardened event reader; no untrusted XML reaches an entity-resolving parser here.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-90aeba785d53cad5",
@@ -18,9 +21,12 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/util/JAXPValidationUtil.java",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 144",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 144
+      "line": 144,
+      "verdict": "false_positive",
+      "reason": "The SchemaFactory compiles Keycloak's own bundled schema sources through its resource resolver; no untrusted document is parsed.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-591d59c8db98114d",
@@ -28,9 +34,12 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/test-apps/servlets/src/main/java/org/keycloak/testsuite/adapter/servlet/SendUsernameServlet.java",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 125",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 125
+      "line": 125,
+      "verdict": "false_positive",
+      "reason": "SendUsernameServlet is a testsuite application; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-f3edcbeac8a04add",
@@ -38,9 +47,12 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/util/src/main/java/org/keycloak/testsuite/utils/io/IOUtil.java",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 89",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "IOUtil.loadXML is in the integration testsuite utilities; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-c2421a8e3fb58e49",
@@ -48,9 +60,12 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/util/src/main/java/org/keycloak/testsuite/utils/undertow/UndertowDeployerHelper.java",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 167",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 167
+      "line": 167,
+      "verdict": "false_positive",
+      "reason": "UndertowDeployerHelper is in the integration testsuite utilities; test code is outside the detector scope.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-abe79b400f67a5a4",
@@ -58,9 +73,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/compare/ExtensionCompare.java",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 387",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 387
+      "line": 387,
+      "verdict": "false_positive",
+      "reason": "The document is parsed with XmlUtils.newXxeDisabledDocumentBuilderFactory(); the TransformerFactory only applies ZAP's own stylesheet to that DOM.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-48e6c94ddbde6571",
@@ -68,9 +86,12 @@
       "language": "python",
       "path": "changedetectionio/html_tools.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 280",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 280
+      "line": 280,
+      "verdict": "false_positive",
+      "reason": "lxml_html_parser() is an HTML parser, which does not resolve external entities.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-b792ed433146b804",
@@ -78,9 +99,12 @@
       "language": "python",
       "path": "changedetectionio/html_tools.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 394",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 394
+      "line": 394,
+      "verdict": "false_positive",
+      "reason": "The XMLParser is built with resolve_entities=False and no_network=True, so external entities are not resolved.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-ca3b39585d67568d",
@@ -88,9 +112,12 @@
       "language": "python",
       "path": "changedetectionio/html_tools.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 462",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 462
+      "line": 462,
+      "verdict": "false_positive",
+      "reason": "The XMLParser is built with resolve_entities=False and no_network=True, so external entities are not resolved.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-209818350d4af039",
@@ -158,9 +185,12 @@
       "language": "python",
       "path": "mitmproxy/contrib/wbxml/ASWBXML.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 819",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 819
+      "line": 819,
+      "verdict": "false_positive",
+      "reason": "xml.dom.minidom uses expat without external entity resolution, so parseString does not fetch external entities.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-fc1c8166163e439f",
@@ -168,9 +198,12 @@
       "language": "python",
       "path": "zerver/lib/email_notifications.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 304",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 304
+      "line": 304,
+      "verdict": "false_positive",
+      "reason": "lxml.html.fragment_fromstring parses HTML, which has no external entities; the input is Zulip's own rendered message HTML.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-fd6491af76a23f12",
@@ -178,9 +211,12 @@
       "language": "python",
       "path": "zerver/lib/email_notifications.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 311",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 311
+      "line": 311,
+      "verdict": "false_positive",
+      "reason": "lxml.html.tostring serializes an element tree; it parses no XML.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-f5df4e42496fc254",
@@ -188,9 +224,12 @@
       "language": "python",
       "path": "zerver/lib/html_diff.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 7",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 7
+      "line": 7,
+      "verdict": "false_positive",
+      "reason": "lxml.html.fragment_fromstring parses the HTML diff output; HTML parsing resolves no external entities.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-58e67b4386ebf3fd",
@@ -198,9 +237,12 @@
       "language": "python",
       "path": "zerver/lib/html_diff.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 17",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "lxml.html.tostring serializes an element tree; it parses no XML.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-df18a6e4cfe21ab2",
@@ -208,9 +250,12 @@
       "language": "python",
       "path": "zerver/lib/markdown/__init__.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 497",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 497
+      "line": 497,
+      "verdict": "false_positive",
+      "reason": "iterparse runs with no_network=True on lxml 6.1.1, whose default resolves only internal entities, so external entities are not fetched.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-0478ec99f9b2dc35",
@@ -218,9 +263,12 @@
       "language": "python",
       "path": "zerver/lib/markdown/fenced_code.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 528",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 528
+      "line": 528,
+      "verdict": "false_positive",
+      "reason": "lxml.html.fromstring parses Pygments' HTML output; HTML parsing resolves no external entities.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-48a17973d728194e",
@@ -228,9 +276,12 @@
       "language": "python",
       "path": "zerver/lib/markdown/fenced_code.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 544",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 544
+      "line": 544,
+      "verdict": "false_positive",
+      "reason": "lxml.html.tostring serializes an element tree; it parses no XML.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-6af907a993eda602",
@@ -238,9 +289,12 @@
       "language": "python",
       "path": "zerver/lib/push_notifications.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 946",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 946
+      "line": 946,
+      "verdict": "false_positive",
+      "reason": "lxml.html.Element constructs a new element; nothing is parsed.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-9f37fb8361370122",
@@ -248,9 +302,12 @@
       "language": "python",
       "path": "zerver/lib/push_notifications.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 955",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 955
+      "line": 955,
+      "verdict": "false_positive",
+      "reason": "lxml.html.fragment_fromstring parses Zulip's rendered message HTML; HTML parsing resolves no external entities.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-20e4c574df80ecc3",
@@ -258,9 +315,12 @@
       "language": "python",
       "path": "zerver/lib/tex.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 96",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 96
+      "line": 96,
+      "verdict": "false_positive",
+      "reason": "lxml.html.Element constructs a new element; nothing is parsed.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-449a9eb161852eea",
@@ -268,9 +328,12 @@
       "language": "python",
       "path": "zerver/migrations/0257_fix_has_link_attribute.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 36",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 36
+      "line": 36,
+      "verdict": "false_positive",
+      "reason": "lxml.html.fromstring parses stored rendered message HTML in a migration; HTML parsing resolves no external entities.",
+      "labeller": "model:claude-opus-5-5"
     },
     {
       "id": "EA-565a958dd1f5f6cf",
@@ -278,9 +341,12 @@
       "language": "python",
       "path": "zerver/migrations/0257_fix_has_link_attribute.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 42",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "find_class searches an already parsed HTML tree; nothing is parsed.",
+      "labeller": "model:claude-opus-5-5"
     }
   ]
 }
