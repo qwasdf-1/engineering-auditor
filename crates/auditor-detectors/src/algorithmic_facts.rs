@@ -514,19 +514,26 @@ fn searched_sequence(
     loop_fact: &StructureLoop,
 ) -> Option<(CollectionKind, Cardinality)> {
     let (collection_kind, cardinality) = collection_shape(file, owner, collection);
+    let scope = |region| MutationScope {
+        owner,
+        root: collection,
+        aliases,
+        region,
+        except: None,
+    };
+    // A literal bound once and never grown stays its size, however many
+    // items it holds.
+    let fixed = match cardinality {
+        Cardinality::KnownBounded(size) => {
+            size <= 8
+                || mutating_calls(file, &scope(None)).is_empty()
+                    && rebinding_assignments(file, &scope(None)).len() <= 1
+        }
+        Cardinality::UnknownScalable => false,
+    };
     let searched = collection_kind == CollectionKind::LinearSequence
-        && !matches!(cardinality, Cardinality::KnownBounded(size) if size <= 8)
-        && mutation_lines(
-            file,
-            MutationScope {
-                owner,
-                root: collection,
-                aliases,
-                region: Some(loop_fact.control_region),
-                except: None,
-            },
-        )
-        .is_empty();
+        && !fixed
+        && mutation_lines(file, scope(Some(loop_fact.control_region))).is_empty();
     searched.then_some((collection_kind, cardinality))
 }
 

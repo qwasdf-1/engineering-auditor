@@ -348,12 +348,12 @@
       "language": "python",
       "path": "zerver/lib/markdown/__init__.py",
       "message": "XML parsing with potential XXE (Bandit B313-317) at line 497",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 497,
       "verdict": "false_positive",
-      "reason": "iterparse runs with no_network=True on lxml 6.1.1, whose default resolves only internal entities, so external entities are not fetched.",
-      "labeller": "model:claude-opus-5-5",
+      "reason": "Adjudicated (arbiter): zulip pins lxml 6.1.1 (uv.lock), where resolve_entities defaults to 'internal' (since lxml 5.0), and the call also sets no_network=True, so external entities are never resolved.",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

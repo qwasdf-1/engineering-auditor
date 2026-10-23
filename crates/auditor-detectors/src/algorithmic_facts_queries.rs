@@ -186,10 +186,16 @@ fn starts_with_select_literal(arguments: &str) -> bool {
 /// from a store module.
 pub(super) fn query_receiver_is_proven(file: &StructureFile, owner: u32, receiver: &str) -> bool {
     let name = receiver.to_ascii_lowercase();
-    STORE_NAMES.iter().any(|signal| name.contains(signal))
-        || snake_case(receiver)
-            .split('_')
-            .any(|word| STORE_WORDS.contains(&word))
+    let snake = snake_case(receiver);
+    // A utility class (`DBUtils`, `DbHelper`) only names what its helpers
+    // work on; they navigate in memory as often as they query.
+    let utility = snake
+        .rsplit('_')
+        .next()
+        .is_some_and(|last| matches!(last, "utils" | "util" | "helper" | "helpers"));
+    !utility
+        && (STORE_NAMES.iter().any(|signal| name.contains(signal))
+            || snake.split('_').any(|word| STORE_WORDS.contains(&word)))
         || file.symbols.iter().any(|symbol| {
             symbol.name == receiver && (typed_store(owner, symbol) || imported_store(file, symbol))
         })

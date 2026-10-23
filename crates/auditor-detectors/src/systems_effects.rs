@@ -51,8 +51,10 @@ fn effects_for_call(
         .iter()
         .any(|span| span.start_byte <= call.span.start_byte && call.span.end_byte <= span.end_byte);
     let enclosing_loop = enclosing_loop(file, call.control_region, call.span);
+    let offloaded = is_offloaded(file, call);
     classify_call(&signature)
         .into_iter()
+        .filter(|kind| !(offloaded && *kind == EffectKind::BlockingIo))
         .map(|kind| {
             // State built in a `return` is built once, however deep in a loop
             // (`while (..) { .. return new Regex(pattern); }`).
@@ -109,6 +111,9 @@ pub(super) fn inherited_effect(
     facts: BoundFacts,
     via: String,
 ) -> Option<SystemEffect> {
+    if kind == EffectKind::BlockingIo && is_offloaded(file, call) {
+        return None;
+    }
     let owner = call.owner?;
     let function = file.symbols.get(owner as usize)?;
     let in_async_callback = file
@@ -141,6 +146,32 @@ pub(super) fn inherited_effect(
         in_request_path: is_request_path(&function.name),
         owner: Some(owner),
         via: Some(via),
+    })
+}
+
+/// Calls that run their callback on another thread: blocking work handed to
+/// them does not stall the async caller.
+const BLOCKING_BOUNDARIES: &[&str] = &[
+    "Task.Run",
+    "Task.Factory.StartNew",
+    "ThreadPool.QueueUserWorkItem",
+    "spawn_blocking",
+    "block_in_place",
+    "to_thread",
+    "run_in_executor",
+];
+
+/// `call` sits inside the arguments of a blocking boundary (`Task.Run(() =>
+/// ..)`, `new Thread(() => ..)`, `tokio::task::spawn_blocking(..)`).
+fn is_offloaded(file: &StructureFile, call: &StructureCall) -> bool {
+    file.calls.iter().any(|boundary| {
+        boundary.span.start_byte < call.span.start_byte
+            && call.span.end_byte <= boundary.span.end_byte
+            && (BLOCKING_BOUNDARIES.iter().any(|name| {
+                boundary.callee == *name
+                    || boundary.callee.ends_with(&format!(".{name}"))
+                    || boundary.callee.ends_with(&format!("::{name}"))
+            }) || boundary.expression.starts_with("new Thread("))
     })
 }
 

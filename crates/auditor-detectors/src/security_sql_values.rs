@@ -30,6 +30,11 @@ const SAFE_CALLS: &[&str] = &[
     "escapeIdentifier",
     "escape_identifier",
     "QuoteName",
+    // A catalog object's own name, quoted for SQL (DBeaver, Liquibase).
+    "getFullyQualifiedName",
+    "getQuotedIdentifier",
+    "escapeObjectName",
+    "correctObjectName",
     "nameof",
     "parseInt",
     "parseLong",

@@ -386,8 +386,9 @@ pub(crate) fn csharp_weak_cryptography(root: AstNode<'_>) -> Vec<(AstNode<'_>, &
                 return None;
             }
             let algorithm = match class {
-                "MD5" | "MD5CryptoServiceProvider" | "HMACMD5" => "MD5",
-                "SHA1" | "SHA1CryptoServiceProvider" | "SHA1Managed" | "HMACSHA1" => "SHA-1",
+                // HMACMD5 and HMACSHA1 do not rely on collision resistance.
+                "MD5" | "MD5CryptoServiceProvider" => "MD5",
+                "SHA1" | "SHA1CryptoServiceProvider" | "SHA1Managed" => "SHA-1",
                 "DES"
                 | "DESCryptoServiceProvider"
                 | "TripleDES"

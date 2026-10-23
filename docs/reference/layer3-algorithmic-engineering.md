@@ -154,7 +154,11 @@ Language contract: see [`language-support.md`](./language-support.md).
 Detects `contains`/`includes` membership on a proven linear collection
 inside a loop when the lookup needle depends on that loop. Local bounded
 collections, unknown collection shapes, invariant lookups, mutation, and
-set/map inputs are excluded.
+set/map inputs are excluded. A local literal is bounded at any size when the
+function binds it once and never grows it; literals include JS/Python
+`[..]`, Rust `vec![..]`, C# and Java `new[] { .. }` and `new List<T> { .. }`
+initializers, and Java and Kotlin `List.of(..)`, `Arrays.asList(..)`,
+`listOf(..)`, and `arrayOf(..)`.
 
 It also detects the deduplicating append, where the loop grows the searched
 list itself: the negated membership test (`item not in out`,
@@ -199,7 +203,9 @@ command (`cmd.Parameters.AddWithValue("@id", id)`,
 `cmd.Parameters["@id"].Value = id`). A receiver
 is proven when its name reads as a store (`repo`, `repository`, `database`,
 `connection`, `session`) or contains the word `db` or `conn` (`db`, `userDb`,
-`db_conn`, but not `feedback` or `dbg`); when it is declared with a store
+`db_conn`, but not `feedback` or `dbg`), unless the name ends in `Utils`,
+`Util`, `Helper`, or `Helpers` (DBeaver's `DBUtils.findObjectById`
+navigates an in-memory registry); when it is declared with a store
 type (repository, database, connection, session, query client or manager,
 persistence or entity manager, Go `sql.DB`/`Tx`/`Conn`) as a parameter or
 local of the function, including

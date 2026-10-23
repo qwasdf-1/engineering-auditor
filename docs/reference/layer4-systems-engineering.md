@@ -124,9 +124,13 @@ still consume direct effects only.
 
 ### `blocking_io_in_async_context`
 
-Reports a proven blocking file or process I/O effect directly inside an async
-function. Async-native APIs and work delegated through a blocking boundary are
-semantic negatives.
+Reports a proven blocking file or process I/O effect, or a thread sleep,
+directly inside an async function. Async-native APIs and work delegated
+through a blocking boundary are semantic negatives: a call inside the
+callback of `Task.Run`, `Task.Factory.StartNew`, `ThreadPool.QueueUserWorkItem`,
+`new Thread(..)`, `spawn_blocking`, `block_in_place`, `asyncio.to_thread`, or
+`run_in_executor` runs on another thread, and neither it nor a call
+inheriting its effect is reported.
 Tooling files (a `scripts/`, `tools/`, or `tooling/` directory at any depth,
 such as a docs site's `www/scripts/`) are excluded: a one-shot script runs nothing concurrently, so blocking there
 stalls nothing.

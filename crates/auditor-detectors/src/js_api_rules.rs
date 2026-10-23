@@ -355,8 +355,9 @@ pub(crate) fn js_xxe_parsers(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         .collect()
 }
 
-/// `crypto` hashes, HMACs, and ciphers with a broken algorithm or ECB mode,
-/// and the deprecated `createCipher`, which derives its key with MD5.
+/// `crypto` hashes and ciphers with a broken algorithm or ECB mode, and the
+/// deprecated `createCipher`, which derives its key with MD5. An HMAC does
+/// not rely on its hash's collision resistance.
 pub(crate) fn js_weak_cryptography(root: AstNode<'_>) -> Vec<(AstNode<'_>, &'static str)> {
     JsScope::new(root)
         .calls(root)
@@ -368,7 +369,7 @@ pub(crate) fn js_weak_cryptography(root: AstNode<'_>) -> Vec<(AstNode<'_>, &'sta
             }
             if !matches!(
                 function,
-                "createHash" | "createHmac" | "createCipheriv" | "createDecipheriv"
+                "createHash" | "createCipheriv" | "createDecipheriv"
             ) {
                 return None;
             }

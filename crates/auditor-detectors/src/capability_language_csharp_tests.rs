@@ -34,7 +34,7 @@ pub(super) fn csharp_fact_capability_files(
         "hot_path_linear_membership" => (
             "",
             "void Choose(List<string> ids, List<string> wanted) {\n        foreach (var id in ids) {\n            if (wanted.Contains(id)) {\n                Consume(id);\n            }\n        }\n    }",
-            "void Choose(List<string> ids, HashSet<string> wanted) {\n        foreach (var id in ids) {\n            if (wanted.Contains(id)) {\n                Consume(id);\n            }\n        }\n    }",
+            "void Choose(List<string> ids, HashSet<string> wanted) {\n        foreach (var id in ids) {\n            if (wanted.Contains(id)) {\n                Consume(id);\n            }\n        }\n    }\n\n    void Pick(List<string> ids) {\n        var wanted = new[] { \"a\", \"b\" };\n        foreach (var id in ids) {\n            if (wanted.Contains(id)) {\n                Consume(id);\n            }\n        }\n    }\n\n    void PickMany(List<string> ids) {\n        var wanted = new List<string> { \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\" };\n        foreach (var id in ids) {\n            if (wanted.Contains(id)) {\n                Consume(id);\n            }\n        }\n    }",
         ),
         "n_plus_one_query_in_loop" => (
             "",
@@ -89,7 +89,7 @@ pub(super) fn csharp_fact_capability_files(
         "blocking_io_in_async_context" => (
             "using System.IO;\nusing System.Threading.Tasks;\n",
             "async Task<string> Load(string path) {\n        await Task.Yield();\n        return File.ReadAllText(path);\n    }",
-            "async Task<string> Load(string path) {\n        return await File.ReadAllTextAsync(path);\n    }\n\n    string LoadNow(string path) {\n        return File.ReadAllText(path);\n    }",
+            "async Task<string> Load(string path) {\n        return await File.ReadAllTextAsync(path);\n    }\n\n    string LoadNow(string path) {\n        return File.ReadAllText(path);\n    }\n\n    async Task<string> LoadOff(string path) {\n        return await Task.Run(() => File.ReadAllText(path));\n    }\n\n    async Task Poll() {\n        await Task.Run(() => Thread.Sleep(1000));\n    }",
         ),
         "per_item_external_io" => (
             "using System.Net.Http;\nusing System.Threading.Tasks;\n",

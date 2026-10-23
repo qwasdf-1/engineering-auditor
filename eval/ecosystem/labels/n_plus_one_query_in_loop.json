@@ -168,12 +168,12 @@
       "language": "go",
       "path": "routers/common/compare.go",
       "message": "Function `findHeadRepoFromRootBase` calls `repo_model.GetRepositoriesByForkID` with loop-derived `repo`, through `findHeadRepoFromRootBase`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 212,
       "verdict": "true_positive",
-      "reason": "The fork search queries GetRepositoriesByForkID per repository level by level, a query per visited repository.",
-      "labeller": "model:claude-opus-5-5",
+      "reason": "Adjudicated (arbiter): Each recursive findHeadRepoFromRootBase(ctx, repo, ...) call issues GetUserFork and GetRepositoriesByForkID (WHERE fork_id=?) for that loop repo, one read query per fork that a level-wide fork_id IN query could batch.",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -368,12 +368,12 @@
       "language": "go",
       "path": "services/org/org.go",
       "message": "Function `updateRepoForVisibilityChanged` calls `repo_model.GetRepositoriesByForkID` with loop-derived `i`, through `updateRepoForVisibilityChanged`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 153,
       "verdict": "true_positive",
-      "reason": "The visibility update recurses into each fork, querying its forks with GetRepositoriesByForkID per repository.",
-      "labeller": "model:claude-opus-5-5",
+      "reason": "Adjudicated (arbiter): updateRepoForVisibilityChanged recursively calls itself per fork, and each call runs GetRepositoriesByForkID(ctx, repo.ID), a SELECT per loop-derived fork repo.",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -448,12 +448,12 @@
       "language": "go",
       "path": "services/repository/repository.go",
       "message": "Function `setRepoVisibility` calls `repo_model.GetRepositoriesByForkID` with loop-derived `forkRepo`, through `setRepoVisibility`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 194,
       "verdict": "true_positive",
-      "reason": "setRepoVisibility recurses into each fork, querying its forks with GetRepositoriesByForkID per repository.",
-      "labeller": "model:claude-opus-5-5",
+      "reason": "Adjudicated (arbiter): setRepoVisibility(ctx, forkRepo, private) re-enters the shouldUpdateForks branch, which runs GetRepositoriesByForkID(ctx, repo.ID) for each loop fork, one read query per fork.",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -468,12 +468,12 @@
       "language": "go",
       "path": "services/repository/repository.go",
       "message": "Function `updateRepository` calls `repo_model.GetRepositoriesByForkID` with loop-derived `i`, through `updateRepository`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 316,
       "verdict": "true_positive",
-      "reason": "updateRepository recurses into each fork, querying its forks per repository.",
-      "labeller": "model:claude-opus-5-5",
+      "reason": "Adjudicated (arbiter): updateRepository(ctx, forkRepos[i], true) passes visibilityChanged=true, so each recursive call re-runs GetRepositoriesByForkID for that fork; B's claim that it does not query forks is wrong.",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

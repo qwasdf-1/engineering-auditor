@@ -234,6 +234,9 @@ fn numbers_and_placeholder_lists_cannot_carry_sql() {
     assert!(java(
         r#""SELECT * FROM t WHERE id = " + Integer.parseInt(raw)"#
     ));
+    assert!(java(
+        r#""SELECT GET_DDL('TABLE', '" + table.getFullyQualifiedName(DBPEvaluationContext.DDL) + "')""#
+    ));
     let typed = "class A { void f(Handle h, long sessionId, String name) {\n  h.execute(\"DELETE FROM t WHERE s = \" + sessionId);\n  h.execute(\"DELETE FROM t WHERE n = \" + name);\n} }\n";
     assert!(structure_only_in(
         AstLang::Java,

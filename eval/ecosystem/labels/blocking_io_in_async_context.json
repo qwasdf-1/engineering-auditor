@@ -8,12 +8,12 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Runtime/SqlMainDomLock.cs",
       "message": "Function `AcquireLockAsync` executes blocking file I/O from an async function, through `WaitForExistingAsync`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 156,
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): WaitForExistingAsync wraps its polling loop, including Thread.Sleep(1000), in Task.Run, so the sleep happens on a thread-pool worker and not on AcquireLockAsync's async continuation.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

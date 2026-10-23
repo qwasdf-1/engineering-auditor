@@ -368,3 +368,11 @@ class Repo {
         ]
     );
 }
+
+#[test]
+fn utility_classes_named_for_a_store_are_not_stores() {
+    let source = "class A {\n    void load(List<String> ids, Repository repo) {\n        for (String id : ids) {\n            DBUtils.findObjectById(id);\n            DbHelper.getRowById(id);\n            repo.findById(id);\n        }\n    }\n}\n";
+    let found = messages("utility", "src/main/java/A.java", source);
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert!(found[0].contains("findById"), "{found:?}");
+}

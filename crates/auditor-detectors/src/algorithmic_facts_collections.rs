@@ -10,31 +10,34 @@ pub(super) fn collection_shape(
     owner: u32,
     collection: &str,
 ) -> (CollectionKind, Cardinality) {
-    if let Some(declaration) = file.symbols.iter().find_map(|symbol| {
+    let declaration = file.symbols.iter().find_map(|symbol| {
         (matches!(symbol.kind, SymbolKind::Parameter | SymbolKind::Variable)
             && symbol.parent == Some(owner)
             && symbol.name == collection)
             .then_some(symbol.declaration.as_deref())
             .flatten()
-    }) {
-        return (
-            value_kind(&file.language, declaration),
-            Cardinality::UnknownScalable,
-        );
-    }
-    if let Some(value) = file.assignments.iter().find_map(|assignment| {
+    });
+    let assigned = file.assignments.iter().find_map(|assignment| {
         (assignment.owner == Some(owner)
             && assignment_root(assignment).as_deref() == Some(collection))
         .then_some(assignment.value.as_deref())
         .flatten()
-    }) {
-        let kind = value_kind(&file.language, value);
-        let cardinality = literal_cardinality(value)
-            .map(Cardinality::KnownBounded)
-            .unwrap_or(Cardinality::UnknownScalable);
-        return (kind, cardinality);
+    });
+    // `var allowed = new[] { A, B };` declares its literal; a declaration's
+    // text may stop at its name, leaving the literal to the assignment.
+    let initializer = declaration.and_then(|declaration| {
+        top_level(declaration, |ch, next| ch == '=' && next != Some('='))
+            .map(|index| &declaration[index + 1..])
+    });
+    let cardinality = initializer
+        .or(assigned)
+        .and_then(literal_cardinality)
+        .map(Cardinality::KnownBounded)
+        .unwrap_or(Cardinality::UnknownScalable);
+    match declaration.or(assigned) {
+        Some(text) => (value_kind(&file.language, text), cardinality),
+        None => (CollectionKind::Unknown, Cardinality::UnknownScalable),
     }
-    (CollectionKind::Unknown, Cardinality::UnknownScalable)
 }
 
 fn value_kind(language: &Language, text: &str) -> CollectionKind {
@@ -110,14 +113,33 @@ pub(super) fn collection_kind_from_text(text: &str) -> CollectionKind {
     }
 }
 
+/// The elements of a whole-value collection initializer: C# and Java
+/// `new[] { .. }`, `new string[] { .. }`, `new List<T> { .. }`, and Java and
+/// Kotlin `List.of(..)`, `Arrays.asList(..)`, `listOf(..)`, `arrayOf(..)`.
+fn initializer_body(value: &str) -> Option<&str> {
+    const FACTORIES: &[&str] = &["List.of(", "Arrays.asList(", "listOf(", "arrayOf("];
+    let (open, close) = if value.starts_with("new ") || value.starts_with("new[") {
+        ('{', '}')
+    } else if FACTORIES.iter().any(|factory| value.starts_with(factory)) {
+        ('(', ')')
+    } else {
+        return None;
+    };
+    let start = value.find(open)?;
+    value
+        .ends_with(close)
+        .then(|| &value[start + 1..value.len() - 1])
+        .filter(|body| !body.contains(open))
+}
+
 fn literal_cardinality(value: &str) -> Option<usize> {
-    let compact = value.trim();
+    let compact = value.trim().trim_end_matches(';').trim_end();
     let body = if let Some(body) = compact.strip_prefix('[').and_then(|v| v.split(']').next()) {
         body
+    } else if let Some((_, rest)) = compact.split_once("vec![") {
+        rest.split(']').next()?
     } else {
-        compact
-            .split_once("vec![")
-            .and_then(|(_, rest)| rest.split(']').next())?
+        initializer_body(compact)?
     };
     if body.contains("...") || body.contains("..") {
         return None;

@@ -628,12 +628,12 @@
       "language": "javascript",
       "path": "ghost/core/server/services/members/members-api/repositories/member-repository.js",
       "message": "Function `setComplimentarySubscription` performs an external network operation for each loop item.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 2677,
       "verdict": "false_positive",
-      "reason": "subscription.related('stripePrice').fetch() loads a related row from Ghost's database, not an external network service.",
-      "labeller": "model:claude-opus-5-5",
+      "reason": "Adjudicated (arbiter): The flagged subscription.related('stripePrice').fetch is a Bookshelf read from Ghost's own database, not external I/O. The real Stripe calls in the loop (getSubscription, updateSubscriptionItemPrice) act on one subscription each, and Stripe has no batch endpoint for them.",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -183,7 +183,7 @@ pub(crate) fn blocking_io_in_async_context_findings(index: &SystemsIndex) -> Vec
             effect,
             "blocking_io_in_async_context",
             "Blocking I/O in async context",
-            "executes blocking file I/O from an async function",
+            "makes a blocking call from an async function",
             "Use the runtime's asynchronous I/O API or isolate blocking work on a blocking executor.",
         )
     })
