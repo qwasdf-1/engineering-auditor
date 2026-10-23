@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 use auditor_ast::SymbolKind;
 use auditor_core::{Confidence, Finding, Severity};
@@ -124,7 +124,7 @@ fn assignment_targets_parameter(language: &Language, target: &str, parameter: &s
 fn inheritance_depth(
     file_index: usize,
     class: &StructureSymbol,
-    classes: &[(usize, usize, &StructureSymbol)],
+    classes: &ClassIndex<'_>,
 ) -> usize {
     let mut depth = 0;
     let mut cursor = (file_index, class.base.as_deref());
@@ -134,7 +134,7 @@ fn inheritance_depth(
             break;
         }
         depth += 1;
-        let Some((base_file, _, base_class)) = resolve_class(file, base, classes) else {
+        let Some((base_file, _, base_class)) = classes.resolve(file, base) else {
             break;
         };
         cursor = (*base_file, base_class.base.as_deref());
@@ -142,24 +142,79 @@ fn inheritance_depth(
     depth
 }
 
-/// The class a base name in `file` refers to: one declared in the same file,
-/// else the only class of that name. A common name (`State`) declared in
-/// several files resolves to none of them.
-pub(super) fn resolve_class<'a, 'b>(
-    file: usize,
-    name: &str,
-    classes: &'a [(usize, usize, &'b StructureSymbol)],
-) -> Option<&'a (usize, usize, &'b StructureSymbol)> {
-    let mut named = classes
-        .iter()
-        .filter(|(_, _, candidate)| candidate.name == name);
-    let local = named
-        .clone()
-        .find(|(candidate_file, _, _)| *candidate_file == file);
-    local.or_else(|| {
-        let first = named.next()?;
-        named.next().is_none().then_some(first)
-    })
+/// A repository's classes as (file, symbol, class), indexed by name.
+pub(super) struct ClassIndex<'a> {
+    pub(super) classes: Vec<(usize, usize, &'a StructureSymbol)>,
+    by_name: HashMap<&'a str, Vec<usize>>,
+}
+
+impl<'a> ClassIndex<'a> {
+    pub(super) fn of(index: &'a StructureIndex) -> Self {
+        let classes = index
+            .files()
+            .iter()
+            .enumerate()
+            .flat_map(|(file_index, file)| {
+                file.symbols
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, symbol)| {
+                        matches!(symbol.kind, SymbolKind::Class | SymbolKind::Object)
+                    })
+                    .map(move |(symbol_index, symbol)| (file_index, symbol_index, symbol))
+            })
+            .collect::<Vec<_>>();
+        Self::new(classes)
+    }
+
+    /// NOC: each class's children, every base resolved once.
+    pub(super) fn child_counts(&self) -> HashMap<(usize, usize), usize> {
+        let mut children = HashMap::new();
+        for (file, _, class) in &self.classes {
+            let resolved = class
+                .base
+                .as_deref()
+                .and_then(|base| self.resolve(*file, base));
+            if let Some((base_file, base_symbol, _)) = resolved {
+                *children.entry((*base_file, *base_symbol)).or_default() += 1;
+            }
+        }
+        children
+    }
+
+    fn new(classes: Vec<(usize, usize, &'a StructureSymbol)>) -> Self {
+        let mut by_name: HashMap<&'a str, Vec<usize>> = HashMap::new();
+        for (position, (_, _, class)) in classes.iter().enumerate() {
+            by_name
+                .entry(class.name.as_str())
+                .or_default()
+                .push(position);
+        }
+        Self { classes, by_name }
+    }
+
+    pub(super) fn contains_name(&self, name: &str) -> bool {
+        self.by_name.contains_key(name)
+    }
+
+    /// The class a base name in `file` refers to: one declared in the same
+    /// file, else the only class of that name. A common name (`State`)
+    /// declared in several files resolves to none of them.
+    pub(super) fn resolve(
+        &self,
+        file: usize,
+        name: &str,
+    ) -> Option<&(usize, usize, &'a StructureSymbol)> {
+        let named = self.by_name.get(name)?;
+        let local = named
+            .iter()
+            .map(|position| &self.classes[*position])
+            .find(|(candidate_file, _, _)| *candidate_file == file);
+        local.or_else(|| match named.as_slice() {
+            [only] => Some(&self.classes[*only]),
+            _ => None,
+        })
+    }
 }
 
 fn symbol_kind_name(kind: SymbolKind) -> &'static str {

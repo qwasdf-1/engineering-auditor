@@ -2,23 +2,9 @@ use super::*;
 
 pub(crate) fn class_structure_metrics_findings(index: &StructureIndex) -> Vec<Finding> {
     let mut findings = Vec::new();
-    let classes = index
-        .files()
-        .iter()
-        .enumerate()
-        .flat_map(|(file_index, file)| {
-            file.symbols
-                .iter()
-                .enumerate()
-                .filter(|(_, symbol)| matches!(symbol.kind, SymbolKind::Class | SymbolKind::Object))
-                .map(move |(symbol_index, symbol)| (file_index, symbol_index, symbol))
-        })
-        .collect::<Vec<_>>();
-    let class_names = classes
-        .iter()
-        .map(|(_, _, symbol)| symbol.name.as_str())
-        .collect::<BTreeSet<_>>();
-    for (file_index, symbol_index, class) in &classes {
+    let classes = ClassIndex::of(index);
+    let children = classes.child_counts();
+    for (file_index, symbol_index, class) in &classes.classes {
         let file = &index.files()[*file_index];
         // A Kotlin interface or `expect` class declares an API surface that
         // its implementations carry.
@@ -55,34 +41,14 @@ pub(crate) fn class_structure_metrics_findings(index: &StructureIndex) -> Vec<Fi
                         .is_some_and(|owner| method_owners.contains(&owner))
                 })
                 .count();
-        let cbo = class_names
-            .iter()
-            .filter(|name| **name != class.name)
-            .filter(|name| {
-                file.references.iter().any(|reference| {
-                    reference.name == **name
-                        && reference.kind != auditor_ast::ReferenceKind::Import
-                        && reference.owner.is_some_and(|owner| {
-                            owner == class_owner || method_owners.contains(&owner)
-                        })
-                        && class.span.start_byte <= reference.span.start_byte
-                        && reference.span.end_byte <= class.span.end_byte
-                })
-            })
-            .count();
+        let mut owners = method_owners.clone();
+        owners.insert(class_owner);
+        let cbo = coupled_classes(file, class, &owners, &classes);
         let dit = inheritance_depth(*file_index, class, &classes);
-        let noc = classes
-            .iter()
-            .filter(|(candidate_file, _, candidate)| {
-                candidate.base.as_deref().is_some_and(|base| {
-                    resolve_class(*candidate_file, base, &classes).is_some_and(
-                        |(base_file, base_symbol, _)| {
-                            (*base_file, *base_symbol) == (*file_index, *symbol_index)
-                        },
-                    )
-                })
-            })
-            .count();
+        let noc = children
+            .get(&(*file_index, *symbol_index))
+            .copied()
+            .unwrap_or_default();
         // A method-less leaf deep in a hierarchy (an exception taxonomy) adds
         // no behaviour, so its depth alone is not a design smell; a base built
         // for extension has many children by design.
@@ -176,3 +142,26 @@ const CLASS_STRUCTURE: FindingText = FindingText {
     title: "Class structure exceeds metric budget",
     recommendation: "Reduce class responsibility, inheritance depth, or coupling when the class owns unrelated behavior.",
 };
+
+/// CBO: the other repository classes that `class` and its methods (the
+/// symbols in `owners`) reference by name, imports aside.
+fn coupled_classes(
+    file: &StructureFile,
+    class: &StructureSymbol,
+    owners: &BTreeSet<u32>,
+    classes: &ClassIndex<'_>,
+) -> usize {
+    file.references
+        .iter()
+        .filter(|reference| {
+            reference.name != class.name
+                && classes.contains_name(&reference.name)
+                && reference.kind != auditor_ast::ReferenceKind::Import
+                && reference.owner.is_some_and(|owner| owners.contains(&owner))
+                && class.span.start_byte <= reference.span.start_byte
+                && reference.span.end_byte <= class.span.end_byte
+        })
+        .map(|reference| reference.name.as_str())
+        .collect::<BTreeSet<_>>()
+        .len()
+}
