@@ -1,5 +1,53 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `hardcoded_credential` is demoted to the `full` profile (54 gating, 70
+  full-only). The 24 new corpus applications measured it at 21 true
+  positives to 142 false positives: placeholder and documentation
+  passwords, key and message-key names, and template literals, in six
+  languages, so scoping single languages cannot save it.
+- Four gating detectors run only in the `full` profile in the languages
+  where the application slice measured them below the bar or holding false
+  positives: `sql_injection` in C#, Go, and Java; `shell_execution` in
+  JavaScript and Python; `unsafe_deserialization` in Java and Python; and
+  `hot_path_linear_membership` in Go, Java, Python, and TypeScript. A gate
+  in those languages no longer reports them.
+- `sql_injection` treats values that cannot carry SQL text as safe:
+  numbers (`int.Parse`, `parseInt`, `Atoi`, names declared with a numeric
+  type, `%d`-style placeholders), generated bind-placeholder lists
+  (`ids.map(() => '?').join(',')`), constants in template strings, and a
+  catalog object's quoted name (`getFullyQualifiedName`, Liquibase
+  `escapeObjectName`). A list joined through a callback's template
+  (`rows.map(([id]) => `WHEN '${id}' ..`).join(' ')`) is read as that
+  template, so a value spliced into it stays an injection site.
+- `unsafe_deserialization` skips a Java `ObjectInputStream` whose method
+  installs a class filter (`setObjectInputFilter`, a filter builder's
+  `setFilter`, a `resolveClass` override).
+- `insecure_cryptography` no longer reports HMACs (C# `HMACSHA1`/`HMACMD5`,
+  JCA `HmacSHA1`, JS `createHmac`), which do not rely on collision
+  resistance.
+- `blocking_io_in_async_context` skips a blocking call inside the callback
+  of a call that runs it on another thread (`Task.Run`,
+  `Task.Factory.StartNew`, `ThreadPool.QueueUserWorkItem`, `new Thread`,
+  `spawn_blocking`, `block_in_place`, `asyncio.to_thread`,
+  `run_in_executor`), and its message names a blocking call, not file I/O.
+- `hot_path_linear_membership` reads a local literal that is never grown as
+  bounded at any size, including C#/Java `new[] { .. }` and collection
+  initializers and Java/Kotlin `List.of`, `Arrays.asList`, `listOf`, and
+  `arrayOf`.
+- `n_plus_one_query_in_loop` no longer treats a utility class (`DBUtils`,
+  `DbHelper`) as a store by its name alone.
+- Source roles: minified JavaScript (a `.js`/`.mjs`/`.cjs` file of at least
+  2 KiB whose lines average over 110 bytes) and webpack bundles are
+  generated; `e2e/` and `test-framework/` directories are test code; and a
+  `*-scripts/` directory is tooling.
+- `unused_assignment` builds each scope's data flow once per file, and the
+  class-structure and coupling metrics are counted in one pass; a large
+  bundle no longer takes minutes. Findings are unchanged.
+
 ## 1.5.0 - Inline Suppressions And Structural Detectors
 
 Three detectors join the catalog, now 124. Inline suppressions arrive:
