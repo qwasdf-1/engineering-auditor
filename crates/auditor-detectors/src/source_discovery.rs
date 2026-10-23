@@ -62,7 +62,18 @@ const BENCHMARK_COMPONENTS: &[&str] = &[
 /// syntax, in any directory) are not audited.
 pub const IGNORE_FILENAME: &str = ".eaignore";
 /// Fuzzing harnesses (`fuzz/`, `ossfuzz/`) exercise the code like tests.
-const TEST_COMPONENTS: &[&str] = &["test", "tests", "__tests__", "fuzz", "fuzzing", "ossfuzz"];
+/// `e2e/` holds end-to-end suites and `test-framework/` a test harness
+/// (Keycloak's).
+const TEST_COMPONENTS: &[&str] = &[
+    "test",
+    "tests",
+    "__tests__",
+    "fuzz",
+    "fuzzing",
+    "ossfuzz",
+    "e2e",
+    "test-framework",
+];
 /// `snippets/` holds code compiled for documentation (Polly `src/Snippets/`).
 const EXAMPLE_COMPONENTS: &[&str] = &[
     "example",
@@ -564,7 +575,12 @@ fn ordered_source_roles<'a>(
         ),
         (
             SourceRole::Tooling,
-            has_component(layout, TOOLING_COMPONENTS) || is_build_path(components, name),
+            has_component(layout, TOOLING_COMPONENTS)
+                || is_build_path(components, name)
+                // A project's own script tool (`cmd/authelia-scripts/`).
+                || layout
+                    .iter()
+                    .any(|component| component.ends_with("-scripts")),
         ),
         (
             SourceRole::Documentation,

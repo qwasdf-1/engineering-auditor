@@ -48,7 +48,7 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         ]),
         CapabilityCase::new(
             "hardcoded_credential",
-            ScanProfile::Gating,
+            ScanProfile::Full,
             "src/config.py",
             "password = \"supersecret\"\n",
             "src/config.py",

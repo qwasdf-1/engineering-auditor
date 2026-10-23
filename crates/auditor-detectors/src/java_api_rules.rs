@@ -318,15 +318,23 @@ pub(crate) fn java_ssh_insecure_host_keys(root: AstNode<'_>) -> Vec<AstNode<'_>>
 }
 
 /// `new ObjectInputStream(..)` and `new XMLDecoder(..)`: Java
-/// deserialization runs gadget code from the stream.
+/// deserialization runs gadget code from the stream. An object stream whose
+/// method installs a class filter (`setObjectInputFilter`, a filter
+/// builder's `setFilter(in)`, or a `resolveClass` override) reads only the
+/// classes it allows.
 pub(crate) fn java_unsafe_deserialization(root: AstNode<'_>) -> Vec<AstNode<'_>> {
-    java_calls_to(
-        root,
-        &[
-            "java.io.ObjectInputStream.<init>",
-            "java.beans.XMLDecoder.<init>",
-        ],
-    )
+    const FILTERS: &[&str] = &["setObjectInputFilter", ".setFilter(", "resolveClass"];
+    let decoders = java_calls_to(root, &["java.beans.XMLDecoder.<init>"]);
+    let mut sites = java_calls_to(root, &["java.io.ObjectInputStream.<init>"])
+        .into_iter()
+        .filter(|call| {
+            !enclosing_java_method(*call)
+                .is_some_and(|method| FILTERS.iter().any(|token| method.text().contains(token)))
+        })
+        .chain(decoders)
+        .collect::<Vec<_>>();
+    sites.sort_by_key(|call| call.start_byte());
+    sites
 }
 
 /// An XML parser factory created in a method that neither disables DOCTYPE

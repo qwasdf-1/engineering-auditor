@@ -215,7 +215,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L3",
         HotPathLinearMembership
-    ),
+    )
+    .full_profile_in(&["go"]),
     spec!(
         "n_plus_one_query_in_loop",
         "algorithmic",
@@ -639,7 +640,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "hardcoded_credential",
         "correctness",
         Medium,
-        Gating,
+        Full,
         "L1",
         HardcodedCredential
     )
@@ -651,7 +652,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L1",
         UnsafeDeserialization
-    ),
+    )
+    .full_profile_in(&["python"]),
     spec!(
         "bind_all_interfaces",
         "correctness",
@@ -839,7 +841,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L1",
         ShellExecution
     )
-    .with_roles(RoleApplicability::Production),
+    .with_roles(RoleApplicability::Production)
+    .full_profile_in(&["javascript", "python"]),
     spec!(
         "insecure_cryptography",
         "correctness",

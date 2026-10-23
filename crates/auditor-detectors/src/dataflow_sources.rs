@@ -191,7 +191,7 @@ fn chain_starts_with(text: &str, prefix: &str) -> bool {
         .is_some_and(|rest| rest.is_empty() || rest.starts_with(['.', '[', '(']))
 }
 
-fn callee_text(call: AstNode<'_>) -> &str {
+pub(crate) fn callee_text(call: AstNode<'_>) -> &str {
     if let (Some(object), Some(name)) = (
         call.child_by_field_name("object"),
         call.child_by_field_name("name"),

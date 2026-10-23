@@ -39,7 +39,7 @@ const SHELL: &str =
 
 #[test]
 fn a_reasoned_suppression_removes_the_finding_and_keeps_it_in_the_report() {
-    let unsuppressed = scan("bare", "app/run.py", SHELL, ScanProfile::Gating);
+    let unsuppressed = scan("bare", "app/run.py", SHELL, ScanProfile::Full);
     assert_eq!(found(&unsuppressed), [("shell_execution".to_string(), 5)]);
     let trailing = "import subprocess\n\n\ndef run(cmd):\n    return subprocess.call(cmd, shell=True)  # auditor-ignore[shell_execution]: admin tool; cmd is a fixed list\n";
     let above = "import subprocess\n\n\ndef run(cmd):\n    # auditor-ignore[shell_execution]: admin tool\n    return subprocess.call(cmd, shell=True)\n";
@@ -47,7 +47,7 @@ fn a_reasoned_suppression_removes_the_finding_and_keeps_it_in_the_report() {
         ("trailing", trailing, 5, "admin tool; cmd is a fixed list"),
         ("above", above, 6, "admin tool"),
     ] {
-        let analysis = scan(name, "app/run.py", source, ScanProfile::Gating);
+        let analysis = scan(name, "app/run.py", source, ScanProfile::Full);
         assert_eq!(found(&analysis), Vec::<(String, usize)>::new(), "{name}");
         assert_eq!(analysis.suppressed.len(), 1, "{name}");
         let record = &analysis.suppressed[0];
@@ -70,7 +70,7 @@ fn invalid_suppressions_are_reported_and_suppress_nothing_without_a_reason() {
     // A missing reason keeps the finding; an unknown detector and a
     // suppression that matches nothing are reported where they stand.
     let source = "import subprocess\n\n\ndef run(cmd):\n    return subprocess.call(cmd, shell=True)  # auditor-ignore[shell_execution]\n\n\ndef later():\n    # auditor-ignore[no_such_detector]: typo\n    pass\n    # auditor-ignore[shell_execution]: nothing here runs a shell\n    return 1\n";
-    let analysis = scan("invalid", "app/run.py", source, ScanProfile::Gating);
+    let analysis = scan("invalid", "app/run.py", source, ScanProfile::Full);
     let messages = analysis
         .findings
         .iter()

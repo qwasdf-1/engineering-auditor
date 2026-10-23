@@ -117,6 +117,12 @@ fn source_roles_follow_stable_path_precedence() {
         ("references/donor/tests/sample.py", SourceRole::Reference),
         ("src/donor_parity_tests.rs", SourceRole::Test),
         ("packages/resolution/test-resolution.ts", SourceRole::Test),
+        ("web/e2e/global-setup.ts", SourceRole::Test),
+        (
+            "test-framework/remote/src/main/java/SerializationUtil.java",
+            SourceRole::Test,
+        ),
+        ("cmd/authelia-scripts/cmd/bootstrap.go", SourceRole::Tooling),
     ];
     for (path, expected) in cases {
         assert_eq!(source_role_for_path(Path::new(path)), expected, "{path}");

@@ -17,7 +17,7 @@ fn messages(name: &str, relative: &str, source: &str) -> Vec<String> {
     let analysis = analyze_repository(
         &root,
         SourceDiscoveryOptions::default(),
-        ScanProfile::Gating,
+        ScanProfile::Full,
     )
     .unwrap();
     let _ = std::fs::remove_dir_all(root);

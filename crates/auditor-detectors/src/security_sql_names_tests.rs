@@ -41,7 +41,6 @@ fn values_formatted_into_java_queries_are_not_names() {
     assert!(!java(
         r#""SELECT * FROM t WHERE name = '%s'".formatted(name)"#
     ));
-    assert!(!java(r#""SELECT * FROM t WHERE id = %d".formatted(id)"#));
     assert!(!java(r#""SELECT * FROM t ORDER BY " + sort"#));
     assert!(!java(
         r#""SELECT * FROM " + table + " WHERE id IN (" + ids + ")""#
@@ -226,5 +225,58 @@ fn values_stay_values_beside_fragments() {
         AstLang::Rust,
         rust,
         "format!(\"DELETE FROM {}\", table)"
+    ));
+}
+
+#[test]
+fn numbers_and_placeholder_lists_cannot_carry_sql() {
+    assert!(java(r#""SELECT * FROM t WHERE id = %d".formatted(id)"#));
+    assert!(java(r#""SELECT * FROM t WHERE id = " + Integer.parseInt(raw)"#));
+    let typed = "class A { void f(Handle h, long sessionId, String name) {\n  h.execute(\"DELETE FROM t WHERE s = \" + sessionId);\n  h.execute(\"DELETE FROM t WHERE n = \" + name);\n} }\n";
+    assert!(structure_only_in(
+        AstLang::Java,
+        typed,
+        "\"DELETE FROM t WHERE s = \" + sessionId"
+    ));
+    assert!(!structure_only_in(
+        AstLang::Java,
+        typed,
+        "\"DELETE FROM t WHERE n = \" + name"
+    ));
+
+    let csharp = "class T { void D(string raw) { cmd.CommandText = $\"DELETE FROM t WHERE id = {int.Parse(raw)}\"; cmd.CommandText = $\"DELETE FROM t WHERE id = {Text.Parse(raw)}\"; } }";
+    assert!(structure_only_in(
+        AstLang::CSharp,
+        csharp,
+        "$\"DELETE FROM t WHERE id = {int.Parse(raw)}\""
+    ));
+    assert!(!structure_only_in(
+        AstLang::CSharp,
+        csharp,
+        "$\"DELETE FROM t WHERE id = {Text.Parse(raw)}\""
+    ));
+
+    let js = "const placeholders = ids.map(() => '?').join(',');\ndb.raw(`SELECT * FROM t WHERE id IN (${placeholders})`, ids);\ndb.raw(`DROP INDEX ${INDEX_NAME}`);\ndb.raw(`SELECT * FROM t WHERE id IN (${ids.join(',')})`);\n";
+    assert!(structure_only_in(
+        AstLang::JavaScript,
+        js,
+        "`SELECT * FROM t WHERE id IN (${placeholders})`"
+    ));
+    assert!(structure_only_in(
+        AstLang::JavaScript,
+        js,
+        "`DROP INDEX ${INDEX_NAME}`"
+    ));
+    assert!(!structure_only_in(
+        AstLang::JavaScript,
+        js,
+        "`SELECT * FROM t WHERE id IN (${ids.join(',')})`"
+    ));
+
+    let go = "package db\nfunc f() {\n  db.Exec(fmt.Sprintf(\"DELETE FROM t LIMIT %d\", n))\n}\n";
+    assert!(structure_only_in(
+        AstLang::Go,
+        go,
+        "fmt.Sprintf(\"DELETE FROM t LIMIT %d\", n)"
     ));
 }

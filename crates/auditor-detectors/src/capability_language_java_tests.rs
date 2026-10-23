@@ -40,9 +40,9 @@ pub(super) fn java_capability_files(
             "new ScriptEngineManager().getEngineByName(\"js\").getFactory();",
         ),
         "unsafe_deserialization" => (
-            "import java.io.ObjectInputStream;\nimport java.io.DataInputStream;",
+            "import java.io.ObjectInputStream;",
             "new ObjectInputStream(input).readObject();",
-            "new DataInputStream(input).readUTF();",
+            "ObjectInputStream in = new ObjectInputStream(input); in.setObjectInputFilter(filter); in.readObject();",
         ),
         "bind_all_interfaces" => (
             "import java.net.InetSocketAddress;",
