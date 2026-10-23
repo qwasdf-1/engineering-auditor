@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased
+## 1.5.0 - Inline Suppressions And Structural Detectors
+
+Three detectors join the catalog, now 124. Inline suppressions arrive:
+`auditor-ignore[detector]: reason` in a comment removes a finding, and the
+report lists it with its reason. The new gating `invalid_suppression`
+reports a suppression without a reason, for an unknown detector, or that
+matches nothing. `pass_through_wrapper` and
+`single_implementation_abstraction` run in the `full` profile, and
+`sql_injection` is promoted to `gating`. `skipped_test_without_reason`
+reads C and C++ tests, `go_errcheck` reads Go syntax trees,
+`n_plus_one_query_in_loop` reads Python comprehensions and C# ADO.NET
+commands, and `hot_path_linear_membership` reports deduplicating appends.
+Stable surfaces gain the optional `suppressed_findings` report fields and
+are otherwise unchanged. The gating profile gains two detectors, and
+`go_errcheck` reads more calls, so a gate against a 1.4.0 baseline can
+report new `invalid_suppression`, `sql_injection`, and `go_errcheck`
+findings.
 
 ### Added
 
@@ -56,8 +72,6 @@
   of the stored value.
 - `scan --quiet` without `--output` reports `output=none`, not
   `output=stdout`: it writes the report nowhere.
-
-### Changed
 
 - `skipped_test_without_reason` reads C and C++ test files: GoogleTest
   `DISABLED_` suites and tests and `GTEST_SKIP()`, CppUTest and Unity

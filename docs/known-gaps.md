@@ -1,6 +1,6 @@
 # Known Gaps
 
-What Engineering Auditor does not do, or does only partly, as of 1.4.0.
+What Engineering Auditor does not do, or does only partly, as of 1.5.0.
 
 ## Analysis Depth
 

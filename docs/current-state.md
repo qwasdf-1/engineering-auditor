@@ -1,6 +1,6 @@
 # Current State
 
-What Engineering Auditor does today, by area, as of 1.4.0. Limitations are
+What Engineering Auditor does today, by area, as of 1.5.0. Limitations are
 in [`known-gaps.md`](known-gaps.md).
 
 ## Release
@@ -18,7 +18,10 @@ fields to the report. 1.3.0 extends the algorithmic, systems, and
 optimization detectors to C#, C++, and C. 1.4.0 adds seven detectors
 (retries without backoff, unbounded fan-out and queues, eager debug-log
 formatting, float equality, mutable defaults, unexplained skipped tests)
-and promotes `eager_log_formatting` to the gating profile.
+and promotes `eager_log_formatting` to the gating profile. 1.5.0 adds
+inline suppressions with the gating `invalid_suppression`, two structural
+detectors (pass-through wrappers, single-implementation abstractions), and
+C and C++ skipped tests, and promotes `sql_injection` to the gating profile.
 
 ## Scanning
 
