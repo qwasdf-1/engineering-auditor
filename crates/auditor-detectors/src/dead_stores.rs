@@ -7,7 +7,7 @@
 
 use std::collections::BTreeMap;
 
-use auditor_ast::AstNode;
+use auditor_ast::{AstNode, FlowCache};
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::assignment_shapes::{mentions, simple_assignment, LocalNames};
@@ -27,11 +27,12 @@ pub(crate) fn unused_assignment_findings(scan: AstScan<'_, '_>) -> Vec<Finding> 
             Language::C | Language::Cpp => &["compound_statement"],
             _ => &["block"],
         };
+        let mut flows = FlowCache::default();
         for block in ast_scan::nodes_of_kind(tree.root_node(), blocks) {
             if *language == Language::Rust && ast_scan::is_inside_rust_test(block) {
                 continue;
             }
-            for (target, overwritten) in overwritten_stores(language, block) {
+            for (target, overwritten) in overwritten_stores(language, block, &mut flows) {
                 let line = overwritten.start_position().0 + 1;
                 findings.push(
                         auditor_core::finding!(
@@ -60,9 +61,13 @@ pub(crate) fn unused_assignment_findings(scan: AstScan<'_, '_>) -> Vec<Finding> 
 
 /// `(name, statement)` for each assignment in `block` whose value the next
 /// assignment to the same name discards unread.
-fn overwritten_stores<'a>(language: &Language, block: AstNode<'a>) -> Vec<(String, AstNode<'a>)> {
+fn overwritten_stores<'a>(
+    language: &Language,
+    block: AstNode<'a>,
+    flows: &mut FlowCache<'a>,
+) -> Vec<(String, AstNode<'a>)> {
     let mut stores = Vec::new();
-    let Some(locals) = LocalNames::of(language, block) else {
+    let Some(locals) = LocalNames::of(language, block, flows) else {
         return stores;
     };
     // In a `try` body any call may throw, so a handler (`catch`, `except`,
@@ -118,7 +123,7 @@ mod tests {
             .unwrap();
         ast_scan::nodes_of_kind(tree.root_node(), &["block"])
             .into_iter()
-            .flat_map(|block| overwritten_stores(&language, block))
+            .flat_map(|block| overwritten_stores(&language, block, &mut FlowCache::default()))
             .map(|(name, _)| name)
             .collect()
     }

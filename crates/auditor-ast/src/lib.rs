@@ -17,7 +17,7 @@ pub use complexity::{
 };
 pub use dataflow::{
     call_arguments, call_receiver, Assigned, Binding, BindingKind, CallFlow, Destination,
-    FunctionFlow, Origin,
+    FlowCache, FunctionFlow, Origin,
 };
 pub use extract::{
     can_parse, extract_comments, extract_functions, function_fingerprint, structural_fingerprint,

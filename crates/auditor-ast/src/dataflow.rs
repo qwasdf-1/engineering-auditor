@@ -424,6 +424,24 @@ impl<'a> FunctionFlow<'a> {
     }
 }
 
+/// Function flows built once per scope, for a caller that asks about many
+/// nodes of one file: building a flow walks its whole scope, which for a
+/// file's top level (a bundle of anonymous functions) is the whole file.
+#[derive(Default)]
+pub struct FlowCache<'a> {
+    flows: std::collections::HashMap<AstNode<'a>, FunctionFlow<'a>>,
+}
+
+impl<'a> FlowCache<'a> {
+    /// [`FunctionFlow::enclosing`], built on the first request for its scope.
+    pub fn enclosing(&mut self, node: AstNode<'a>) -> &FunctionFlow<'a> {
+        let scope = enclosing_scope(node);
+        self.flows
+            .entry(scope)
+            .or_insert_with(|| FunctionFlow::of(scope))
+    }
+}
+
 #[cfg(test)]
 #[path = "dataflow_tests.rs"]
 mod tests;

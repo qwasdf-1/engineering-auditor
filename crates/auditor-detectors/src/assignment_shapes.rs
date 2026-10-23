@@ -3,7 +3,7 @@
 
 use std::collections::BTreeSet;
 
-use auditor_ast::{AstNode, Binding, BindingKind, FunctionFlow};
+use auditor_ast::{AstNode, Binding, BindingKind, FlowCache};
 
 use crate::ast_scan;
 use crate::{util, Language};
@@ -47,7 +47,11 @@ pub(crate) enum LocalNames {
 }
 
 impl LocalNames {
-    pub(crate) fn of(language: &Language, block: AstNode<'_>) -> Option<Self> {
+    pub(crate) fn of<'a>(
+        language: &Language,
+        block: AstNode<'a>,
+        flows: &mut FlowCache<'a>,
+    ) -> Option<Self> {
         let function = std::iter::successors(Some(block), |node| node.parent())
             .find(|node| FUNCTIONS.contains(&node.kind()))?;
         Some(match language {
@@ -58,7 +62,7 @@ impl LocalNames {
                     .flat_map(mentions)
                     .collect(),
             ),
-            _ => Self::Declared(declared_names(language, function, block)),
+            _ => Self::Declared(declared_names(language, function, flows.enclosing(block))),
         })
     }
 
@@ -77,9 +81,8 @@ impl LocalNames {
 fn declared_names(
     language: &Language,
     function: AstNode<'_>,
-    block: AstNode<'_>,
+    flow: &auditor_ast::FunctionFlow<'_>,
 ) -> BTreeSet<String> {
-    let flow = FunctionFlow::enclosing(block);
     let mut names = flow
         .bindings()
         .iter()
