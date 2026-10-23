@@ -243,12 +243,12 @@
       "language": "rust",
       "path": "lychee-bin/src/formatters/stats/mod.rs",
       "message": "`sort_stat_map` at line 82 only passes its parameters on to `sort_stats_iter`, unchanged; it adds a name and a call and nothing else",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a6-a",
       "line": 82,
       "verdict": "true_positive",
       "reason": "sort_stat_map only forwards the map to sort_stats_iter, which already accepts any IntoIterator including &HashMap; the narrower signature adds nothing its two callers need.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-fable-5-1",

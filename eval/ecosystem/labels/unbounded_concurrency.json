@@ -48,12 +48,12 @@
       "language": "javascript",
       "path": "lib/eslint/eslint-helpers.js",
       "message": "`allSettled` at line 457 starts one concurrent task per item of a collection, with no limit on how many run at once",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "t25-b",
       "line": 457,
       "verdict": "true_positive",
       "reason": "One globSearch directory walk per normalized CLI search, all started at once; the number of searches comes from user input.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-fable-5-1",
@@ -313,12 +313,12 @@
       "language": "python",
       "path": "apprise/apprise.py",
       "message": "`gather` at line 1253 starts one concurrent task per item of a collection, with no limit on how many run at once",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a4-c",
       "line": 1253,
       "verdict": "true_positive",
       "reason": "Every active notification chain is dispatched concurrently through gather, so the number of configured services sets the concurrent network calls.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-fable-5-1",

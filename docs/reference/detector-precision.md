@@ -14,8 +14,8 @@ at least 22 clean labels, or about 40 with one false positive.
 > A pre-label counts once an independent check corroborates it: a reference
 > tool that confirms or refutes the finding's factual claim, or a second,
 > different model that reaches the same verdict blind. A human confirms a
-> label with `labels.py confirm`; every disputed pre-label so far (254 in
-> all) was reviewed and confirmed as human-final.
+> label with `labels.py confirm`; every disputed pre-label on a live finding
+> so far (257 in all) was reviewed and confirmed as human-final.
 >
 > On the 40-repository corpus (scan `t30-a`), 19 detectors meet the bar
 > (`assert_in_production`, `class_structure_metrics`,
@@ -90,11 +90,11 @@ at least 22 clean labels, or about 40 with one false positive.
 > commons-lang and gson, `restartMonitor` in uptime-kuma, lychee's
 > `load_from_file`), 3 false positives (names for a distinct concept the
 > code base keeps separate: jsoup's `normalName`, hyper's `can_have_body`,
-> and an axios demo callback), and 1 disputed (lychee's `sort_stat_map`:
-> true positive for the pre-label and the Fable arbiter, false positive
-> for the blind check), awaiting confirmation. An eslint wrapper exported
+> and an axios demo callback), and 1 operator-confirmed true positive
+> (lychee's `sort_stat_map`: true positive for the pre-label and the Fable
+> arbiter, false positive for the blind check). An eslint wrapper exported
 > through `module.exports` was a false positive that the rule no longer
-> reports. At 70% the rule is below the bar and runs in `full`.
+> reports. At 73% the rule is below the bar and runs in `full`.
 >
 > The full-only `single_implementation_abstraction` reports 2 library
 > abstractions and none in the applications. The first probe reported 46,
@@ -134,11 +134,11 @@ at least 22 clean labels, or about 40 with one false positive.
 > Kuma, per-recipient API posts, a goroutine per request entry in
 > Miniflux) and 6 false positives on fan-outs that open nothing per item
 > or iterate a set fixed by the program (a tea.Batch, schema union
-> options, in-memory router lookups); two more are disputed (ESLint's
-> per-base-path glob searches, Apprise's per-chain dispatch), where the
-> Fable arbiter upholds the first labeller's true positives (both sets come
-> from the caller's arguments: paths given to `findFiles`, a tag filter)
-> pending operator confirmation. Its probe's
+> options, in-memory router lookups); two more were disputed (ESLint's
+> per-base-path glob searches, Apprise's per-chain dispatch), and the
+> operator confirmed them as true positives, as the Fable arbiter ruled
+> (both sets come from the caller's arguments: paths given to `findFiles`,
+> a tag filter), so the rule is 15/6 (71%). Its probe's
 > fan-outs bounded by a `Retrier` with `concurrency: 100` and by a
 > `.slice(0, budget)` are no longer reported. `unbounded_channel_or_queue`
 > has 5: 2 true positives (ripgrep's searcher-to-printer channel,
@@ -428,7 +428,7 @@ Gating bar: the 95% lower confidence bound of precision >= 85% over final or cor
 | `orphan_symbol` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | — | — | — |
 | `out_parameter` | 81 | 1 | 0 | 99% | — | 0 | meets_bar | 82 / 0 | 0 | — | — | 43/67 |
 | `package_coupling_metrics` | 2 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 2 | 0 | — | — | 2/2 |
-| `pass_through_wrapper` | 7 | 3 | 0 | 70% | — | 0 | below_bar | 0 / 10 | 1 | true_positive 1 | — | 11/12 |
+| `pass_through_wrapper` | 8 | 3 | 0 | 73% | — | 0 | below_bar | 1 / 10 | 0 | — | — | 11/12 |
 | `per_item_external_io` | 0 | 5 | 0 | 0% | — | 0 | insufficient_sample | 1 / 4 | 0 | — | — | 7/8 |
 | `quadratic_front_removal` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | — | — | 4/4 |
 | `random_for_security` | 0 | 1 | 0 | 0% | — | 0 | insufficient_sample | 1 / 0 | 0 | — | — | 0/1 |
@@ -457,7 +457,7 @@ Gating bar: the 95% lower confidence bound of precision >= 85% over final or cor
 | `too_many_returns` | 128 | 0 | 0 | 100% | 63/0 | 398 | meets_bar | 12 / 116 | 0 | — | 63/63 | 81/96 |
 | `too_many_statements` | 97 | 2 | 0 | 98% | 11/0 | 0 | meets_bar | 1 / 98 | 0 | — | 11/11 | 87/88 |
 | `unbounded_channel_or_queue` | 2 | 3 | 0 | 40% | — | 0 | insufficient_sample | 0 / 5 | 0 | — | — | 5/5 |
-| `unbounded_concurrency` | 13 | 6 | 0 | 68% | — | 0 | below_bar | 0 / 19 | 2 | true_positive 2 | — | 21/23 |
+| `unbounded_concurrency` | 15 | 6 | 0 | 71% | — | 0 | below_bar | 2 / 19 | 0 | — | — | 21/23 |
 | `unhandled_termination_in_production` | 0 | 30 | 0 | 0% | — | 0 | below_bar | 18 / 12 | 0 | — | — | 29/56 |
 | `unreachable_code` | 3 | 0 | 0 | 100% | — | 0 | insufficient_sample | 2 / 1 | 0 | — | — | 1/3 |
 | `unsafe_deserialization` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | — | — | 4/4 |
