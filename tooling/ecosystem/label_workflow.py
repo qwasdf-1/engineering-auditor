@@ -83,7 +83,11 @@ def sample(reports, existing, policy: SamplePolicy) -> dict:
         # Round-robin: the i-th pick of every repository precedes any (i+1)-th.
         picks = sorted((rank, position, entry) for position, queue in enumerate(queues)
                        for rank, entry in enumerate(queue))
-        added[detector] += [entry for _, _, entry in picks[:max(policy.cap - held, 0)]]
+        # Labels are keyed by finding ID, and a repository-level finding (a
+        # root package) can carry the same ID in two repositories: draw it once.
+        drawn = {entry["id"] for entry in added[detector]}
+        unique = [entry for _, _, entry in picks if entry["id"] not in drawn and not drawn.add(entry["id"])]
+        added[detector] += unique[:max(policy.cap - held, 0)]
     return {detector: entries for detector, entries in added.items() if entries}
 
 

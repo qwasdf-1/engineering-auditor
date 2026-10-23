@@ -52,6 +52,12 @@ class SampleTest(unittest.TestCase):
         self.assertEqual(sorted(entry["language"] for entry in drawn), ["go", "python"])
         self.assertTrue(all(entry["status"] == "pending" for entry in drawn))
 
+    def test_an_id_shared_by_two_repositories_is_drawn_once(self):
+        root = finding(1, detector="package_coupling_metrics", path="__root__")
+        reports = {"alpha": report([root], {}), "beta": report([root, finding(2, detector="package_coupling_metrics")], {})}
+        drawn = label_workflow.sample(reports, {}, policy(cap=30))["package_coupling_metrics"]
+        self.assertEqual(sorted(entry["id"] for entry in drawn), [finding(1)["id"], finding(2)["id"]])
+
     def test_accepted_findings_are_never_drawn(self):
         reports = {"alpha": report([finding(1), finding(2)], {"a.py": "python"})}
         accepted = frozenset({finding(1)["id"]})
