@@ -324,3 +324,72 @@ fn a_language_scoped_to_full_is_dropped_from_gating_scans_and_marked() {
         .unwrap()
         .starts_with("Full profile only"));
 }
+
+/// A switch whose arms each only return counts as one exit; arms that do
+/// work first, and the function's other returns, still count.
+#[test]
+fn a_switch_of_returns_counts_as_one_exit() {
+    let arms = |arm: &dyn Fn(usize) -> String| (0..7).map(arm).collect::<String>();
+    let c = format!(
+        "int name_c(int k) {{ switch (k) {{\n{}default: return -1; }} }}\n\
+         int busy_c(int k) {{ switch (k) {{\n{}}} return -1; }}\n",
+        arms(&|i| format!("case {i}: return {i};\n")),
+        arms(&|i| format!("case {i}: note(); return {i};\n")),
+    );
+    let java = format!(
+        "class Codes {{\n  int name(int k) {{ switch (k) {{\n{}}} return -1; }}\n\
+         \x20 int guarded(int k) {{ switch (k) {{ case 0: return 0; default: return 1; }}\n{}  }}\n}}\n",
+        arms(&|i| format!("    case {i}: {{ return {i}; }}\n")),
+        arms(&|i| format!("    if (k > {i}0) return {i};\n")),
+    );
+    let csharp = format!(
+        "class Kinds {{\n  int Name(int k) {{ switch (k) {{\n{}    default: return -1;\n  }} }}\n}}\n",
+        arms(&|i| format!("    // arm {i}\n    case {i}: return {i};\n")),
+    );
+    let javascript = format!(
+        "function nameJs(k) {{ switch (k) {{\n{}}} return -1; }}\n",
+        arms(&|i| format!("case Kind.A{i}: return {i};\n")),
+    );
+    let go = format!(
+        "package kinds\n\nfunc NameGo(k int) int {{\n\tswitch k {{\n{}\t}}\n\treturn -1\n}}\n\n\
+         func BusyGo(k int) int {{\n\tswitch k {{\n{}\t}}\n\treturn -1\n}}\n",
+        arms(&|i| format!("\tcase {i}:\n\t\treturn {i}\n")),
+        arms(&|i| format!("\tcase {i}:\n\t\tnote()\n\t\treturn {i}\n")),
+    );
+    let python = format!(
+        "def name_py(k):\n    match k:\n{}    return -1\n",
+        arms(&|i| format!("        case {i}:\n            return {i}\n")),
+    );
+    let rust = format!(
+        "fn name_rs(k: i32) -> i32 {{\n    match k {{\n{}        _ => {{}}\n    }}\n    -1\n}}\n\n\
+         fn busy_rs(k: i32) -> i32 {{\n    match k {{\n{}        _ => {{}}\n    }}\n    -1\n}}\n",
+        arms(&|i| format!("        {i} => return {i},\n")),
+        arms(&|i| format!("        {i} => {{ note(); return {i}; }}\n")),
+    );
+    let kotlin = format!(
+        "fun nameKt(k: Int): Int {{\n    when (k) {{\n{}    }}\n    return -1\n}}\n",
+        arms(&|i| format!("        {i} -> return {i}\n")),
+    );
+    let findings = analyze(
+        "dispatch-returns",
+        &[
+            ("src/kinds.c", &c),
+            ("src/Codes.java", &java),
+            ("src/Kinds.cs", &csharp),
+            ("src/kinds.js", &javascript),
+            ("src/kinds.go", &go),
+            ("src/kinds.py", &python),
+            ("src/kinds.rs", &rust),
+            ("src/kinds.kt", &kotlin),
+        ],
+    );
+    assert_eq!(
+        anchors_for(&findings, "too_many_returns"),
+        [
+            "symbol:BusyGo",
+            "symbol:Codes::guarded",
+            "symbol:busy_c",
+            "symbol:busy_rs",
+        ]
+    );
+}

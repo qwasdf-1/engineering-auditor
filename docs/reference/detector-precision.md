@@ -734,6 +734,7 @@ return silently.
 | `magic_literal_cluster` | Prose lines of multi-line `/* .. */` comments (commons-lang) | Block comments are masked |
 | all | Java package `tools.jackson` read as a tooling directory; `single_include/` amalgamations (nlohmann/json) duplicating their sources | Packages below a JVM source root are not tooling directories; `single_include/` and `amalgamation/` are generated |
 | `too_many_returns` | Returns inside lambdas and closures credited to the enclosing function | They belong to the closure |
+| `too_many_returns` | Lookup-table switches, one `return` per arm (gin `MethodColor`, jsoup `parsePseudoSelector`, Newtonsoft `JsonConvert.ToString`) | A switch whose arms each only return counts as one exit |
 | `naming_convention` | Rust modules under `#![allow(non_camel_case_types)]`; okhttp's `-Name.kt` file prefix | Lint allows in the module or an ancestor are honoured; the `-` prefix is ignored |
 | `unsafe_type_cast`, `kt_non_null_assertion` | KDoc and string text; the safe `as?` flagged instead of the hard `as` | Comments and strings masked; only hard casts flagged |
 | `stale_link_reference`, `stale_section_anchor` | Escaped brackets, spaced destinations, URI schemes, percent-encoding, directory index pages; anchors from raw heading text | All parsed as CommonMark and GitHub render them |

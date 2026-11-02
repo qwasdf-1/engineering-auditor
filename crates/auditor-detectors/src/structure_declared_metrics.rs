@@ -1,11 +1,11 @@
 //! Function metrics for grammars whose semantic facts do not normalize them:
 //! Kotlin (locals are `val`/`var` properties and loop variables, a return is
-//! a `return` jump, and statements are the entries of `statements` blocks)
+//! a `return` jump, all of a dispatch switch's arms one, and statements are the entries of `statements` blocks)
 //! and C/C++ (locals are the declarators of `declaration`s). Nested
 //! functions and lambdas count toward their own owners, not the enclosing
 //! function.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use auditor_ast::{AstNode, SymbolKind};
 
@@ -61,6 +61,7 @@ struct Counts {
     locals: usize,
     returns: usize,
     statements: usize,
+    dispatches: BTreeSet<usize>,
 }
 
 fn walk(language: &Language, node: AstNode<'_>, counts: &mut Counts) {
@@ -81,7 +82,11 @@ fn walk(language: &Language, node: AstNode<'_>, counts: &mut Counts) {
                 .count();
         }
         (Language::Kotlin, "jump_expression") if node.text().starts_with("return") => {
-            counts.returns += 1;
+            if auditor_ast::dispatch_switch(node)
+                .is_none_or(|switch| counts.dispatches.insert(switch))
+            {
+                counts.returns += 1;
+            }
         }
         // Comments are named children of a block, not statements.
         (Language::Kotlin, "statements") => {

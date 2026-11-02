@@ -4,7 +4,10 @@ use crate::{AstLang, AstNode, AstTree};
 
 #[path = "semantic_controls.rs"]
 mod controls;
+#[path = "semantic_dispatch.rs"]
+mod dispatch;
 use controls::{control_kind, is_control_branch, nesting_increment};
+pub use dispatch::dispatch_switch;
 #[path = "semantic_fields.rs"]
 mod fields;
 use fields::{first_field, loop_field, loop_header, symbol_name};
@@ -154,6 +157,8 @@ pub struct LiteralFact {
 pub struct ReturnFact {
     pub span: SourceSpan,
     pub owner: Option<u32>,
+    /// The switch this return is a whole arm of; see [`dispatch_switch`].
+    pub dispatch: Option<usize>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -396,6 +401,7 @@ fn record_operations(
         builder.returns.push(ReturnFact {
             span,
             owner: context.owner,
+            dispatch: dispatch_switch(node),
         });
     }
     if node_kind.is(STATEMENT_KINDS) {

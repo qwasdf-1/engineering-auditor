@@ -400,6 +400,9 @@ Language contract: see [`language-support.md`](./language-support.md).
 Flags functions with >5 `return` statements.
 
 Algorithm: counts semantic return facts owned by the nearest named function.
+A switch, `match`, or `when` whose arms each consist only of a `return`
+(`case X: return y;`, a lookup table) counts as one exit however many arms
+it has; an arm that does anything before returning is an ordinary exit.
 
 Language contract: see [`language-support.md`](./language-support.md).
 

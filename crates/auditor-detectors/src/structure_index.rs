@@ -433,11 +433,19 @@ fn collect_function_metrics(
             metric.locals += 1;
         }
     }
+    // A switch whose arms each only return is one exit, however many arms.
+    let mut dispatches = BTreeSet::new();
     for fact in facts.returns.iter() {
-        if let Some(metric) =
-            nearest_function_owner(symbols, fact.owner).and_then(|owner| metrics.get_mut(&owner))
-        {
-            metric.returns += 1;
+        let Some(owner) = nearest_function_owner(symbols, fact.owner) else {
+            continue;
+        };
+        if let Some(metric) = metrics.get_mut(&owner) {
+            if fact
+                .dispatch
+                .is_none_or(|switch| dispatches.insert((owner, switch)))
+            {
+                metric.returns += 1;
+            }
         }
     }
     for fact in facts.statements.iter() {

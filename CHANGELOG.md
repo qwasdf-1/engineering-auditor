@@ -4,6 +4,14 @@
 
 ### Changed
 
+- `too_many_returns` counts a switch whose arms each consist only of a
+  `return` (`case X: return y;`, a lookup table) as one exit, in every
+  language with switch, `match`, or `when` arms. Such a function has one
+  decision and no exits to track; an arm that does work before returning
+  still counts. In the labelled repositories this drops 58 of 509 findings,
+  among them the 10 dispatch functions of the new labels and 14 labelled
+  true positives under the old count (gin `MethodColor`, jsoup
+  `parsePseudoSelector`); every other labelled finding stays.
 - `hardcoded_credential` is demoted to the `full` profile. The 24 new
   corpus applications measured it at 21 true
   positives to 142 false positives: placeholder and documentation
