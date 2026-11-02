@@ -94,6 +94,7 @@ fn source_roles_follow_stable_path_precedence() {
         ("fixtures/python/sample.py", SourceRole::Fixture),
         ("src/capability_cases_rules.rs", SourceRole::Fixture),
         ("benches/scan.rs", SourceRole::Benchmark),
+        ("programs/bench.c", SourceRole::Benchmark),
         (
             "metrics/src/main/java/ParseBenchmark.java",
             SourceRole::Benchmark,

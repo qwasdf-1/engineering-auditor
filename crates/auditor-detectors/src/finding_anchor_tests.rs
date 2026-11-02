@@ -163,6 +163,46 @@ fn overrides_and_mixin_injectors_mirror_another_signature() {
 }
 
 #[test]
+fn c_functions_used_as_values_mirror_a_function_pointer_type() {
+    let six = "int a, int b, int c, int d, int e, int f";
+    let c_source = format!(
+        "typedef int (*step_fn)({six});\n\
+         int only_called({six});\n\
+         int on_match({six}) {{ return a; }}\n\
+         int on_table({six}) {{ return b; }}\n\
+         int pick_fast({six}) {{ return c; }}\n\
+         int pick_slow({six}) {{ return d; }}\n\
+         int on_address({six}) {{ return e; }}\n\
+         int only_called({six}) {{ return f; }}\n\
+         int on_unparsed({six}) {{ return a; }}\n\
+         static const step_fn table[] = {{ on_table }};\n\
+         step_fn select(int fast) {{ return fast ? pick_fast : pick_slow; }}\n\
+         void unparsed(void) {{ foreach_name(on_unparsed, 0); @@@ ### $$$ }}\n\
+         int run(void) {{\n\
+         \x20   foreach_name(on_match, 0);\n\
+         \x20   step_fn fp = &on_address;\n\
+         \x20   return only_called(1, 2, 3, 4, 5, 6) + fp(1, 2, 3, 4, 5, 6);\n}}\n"
+    );
+    let cpp_source = format!(
+        "struct Hooks {{ int (*cb)({six}); }};\n\
+         int on_event({six}) {{ return a; }}\n\
+         int Widget::on_member({six}) {{ return b; }}\n\
+         int called({six}) {{ return c; }}\n\
+         const Hooks hooks = {{ .cb = on_event }};\n\
+         auto member = &Widget::on_member;\n\
+         int run() {{ return called(1, 2, 3, 4, 5, 6); }}\n"
+    );
+    let findings = analyze(
+        "c-value-references",
+        &[("src/engine.c", &c_source), ("src/hooks.cpp", &cpp_source)],
+    );
+    assert_eq!(
+        anchors_for(&findings, "too_many_parameters"),
+        ["symbol:called", "symbol:only_called"]
+    );
+}
+
+#[test]
 fn rust_methods_anchor_on_their_impl_type() {
     let params = "a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8";
     let source = format!(

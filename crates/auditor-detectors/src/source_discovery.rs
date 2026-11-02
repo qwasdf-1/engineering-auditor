@@ -531,9 +531,10 @@ fn is_generated_name(name: &str, stem: &str) -> bool {
     name.contains(".generated.") || stem.ends_with("_generated")
 }
 
-/// `bench_x`, `x_bench`, or JMH's `ParseBenchmark.java`.
+/// `bench`, `bench_x`, `x_bench`, or JMH's `ParseBenchmark.java`.
 fn is_benchmark_stem(stem: &str) -> bool {
-    stem.starts_with("bench_")
+    stem == "bench"
+        || stem.starts_with("bench_")
         || stem.ends_with("_bench")
         || stem.ends_with("benchmark")
         || stem.ends_with("benchmarks")

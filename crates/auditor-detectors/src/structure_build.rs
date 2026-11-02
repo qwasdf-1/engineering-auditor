@@ -38,6 +38,7 @@ pub(super) fn build_structure_file(
         memberships: super::operands::collect_memberships(file, tree, &symbols),
         go_module: None,
         async_spans: java_async_spans(file, tree),
+        value_references: c_value_references(file, tree),
         symbols,
     }
 }

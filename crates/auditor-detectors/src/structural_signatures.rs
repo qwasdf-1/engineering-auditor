@@ -1,5 +1,6 @@
 //! Parameter lists another declaration fixes, which `too_many_parameters`
-//! does not measure: foreign bindings, overrides, and Mixin injectors.
+//! does not measure: foreign bindings, overrides, Mixin injectors, and C/C++
+//! functions used as function-pointer values.
 
 use super::*;
 
@@ -26,8 +27,15 @@ const MIXIN_INJECTORS: &[&str] = &[
 /// which carries the finding where the repository declares it; a Mixin
 /// injector callback must mirror the method it injects into. A javax or
 /// Guice `@Inject` constructor is not a Mixin callback: the file must import
-/// the Mixin library.
+/// the Mixin library. A C or C++ function the file uses as a value (a
+/// callback argument, a table entry, `return name;`, `&name`) has the
+/// signature of the function-pointer type it is used as.
 pub(super) fn mirrors_another_signature(file: &StructureFile, function: &StructureSymbol) -> bool {
+    if matches!(file.language, Language::C | Language::Cpp)
+        && file.value_references.contains(&function.name)
+    {
+        return true;
+    }
     let Some(declaration) = function.declaration.as_deref() else {
         return false;
     };

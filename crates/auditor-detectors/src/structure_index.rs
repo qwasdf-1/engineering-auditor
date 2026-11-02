@@ -28,9 +28,9 @@ use build::build_structure_file;
 use imports::normalize_path;
 use imports::{first_quoted, import_bindings, parse_import, resolve_imports};
 use spans::{
-    import_has_documented_reason, module_name, python_guarded_import_spans, python_memoized_spans,
-    python_overload_spans, python_type_checking_spans, rust_associated_spans,
-    rust_implicitly_used_spans, rust_test_spans,
+    c_value_references, import_has_documented_reason, module_name, python_guarded_import_spans,
+    python_memoized_spans, python_overload_spans, python_type_checking_spans,
+    rust_associated_spans, rust_implicitly_used_spans, rust_test_spans,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -264,6 +264,9 @@ pub(crate) struct StructureFile {
     /// Callbacks that run on a shared asynchronous executor (a Java lambda
     /// passed to `CompletableFuture.supplyAsync` without an executor).
     pub(crate) async_spans: Vec<SourceSpan>,
+    /// The names a C or C++ file uses as values (a callback argument, a
+    /// table entry, `return name;`, `&name`); empty for other languages.
+    pub(crate) value_references: BTreeSet<String>,
 }
 
 /// A Go module: its import path and its directory relative to the scan root.
