@@ -1,5 +1,5 @@
-//! Catalog entries of the detector families added for v1.0: the
-//! test-quality family, which emits in test code, network timeouts, and
+//! Catalog entries after the core table: the Kotlin-specific rules, and the
+//! detector families added for v1.0: the test-quality family, which emits in test code, network timeouts, and
 //! the Layer 3 front-removal and regex-backtracking rules, dependency and
 //! error hygiene, and inline-suppression hygiene.
 
@@ -9,6 +9,30 @@ use super::{DetectorOwner, DetectorSpec, RoleApplicability};
 use crate::ScanProfile;
 
 pub(super) static FAMILY_CATALOG: &[DetectorSpec] = &[
+    spec!(
+        "kt_non_null_assertion",
+        "correctness",
+        Medium,
+        Gating,
+        "L1",
+        KtNonNullAssertion
+    ),
+    spec!(
+        "kt_require_check_misuse",
+        "correctness",
+        Medium,
+        Full,
+        "L2",
+        KtRequireCheckMisuse
+    ),
+    spec!(
+        "unsafe_type_cast",
+        "correctness",
+        Low,
+        Full,
+        "L1",
+        UnsafeTypeCast
+    ),
     spec!(
         "test_without_assertion",
         "test_quality",

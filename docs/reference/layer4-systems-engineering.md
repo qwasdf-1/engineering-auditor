@@ -56,18 +56,7 @@ TypeScript `import type`, an import whose names all resolve to interfaces or
 type aliases, and a lazy `import(..)` do not close one (operator decision,
 2026-10-27).
 
-### `package_coupling_metrics`
-
-Computes package afferent/efferent coupling, instability, abstractness, and
-distance from the main sequence over resolved local edges and classifiable
-types. Incomplete local topology and packages without classifiable types fail
-closed for the affected metric, and so does a package with fewer than two
-coupling edges: with one edge, instability is 0 or 1 by construction and the
-distance only restates abstractness. A package within 0.3 of the main
-sequence is balanced and not reported, and loose top-level files
-(`__root__`) are no package.
-
-### `loop_artifact_rewrite`
+### `loop_artifact_rewrite` (Rust full-only)
 
 Reports a loop that performs a whole-artifact read followed by a write of the
 derived value. Both effects must share the function, loop region, and value
@@ -103,6 +92,20 @@ the one that creates it grow it. Because the window and the quartile cutoffs mov
 new commit, a file can enter or leave the hotspot set without being edited.
 
 ## Full-Only Owners
+
+### `package_coupling_metrics`
+
+Computes package afferent/efferent coupling, instability, abstractness, and
+distance from the main sequence over resolved local edges and classifiable
+types. Incomplete local topology and packages without classifiable types fail
+closed for the affected metric, and so does a package with fewer than two
+coupling edges: with one edge, instability is 0 or 1 by construction and the
+distance only restates abstractness. A package within 0.3 of the main
+sequence is balanced and not reported, and loose top-level files
+(`__root__`) are no package. It runs in `full` (2026-11-02): a package is a
+top-level directory, so Go's `internal/rtls` and `internal/rsync` count as
+one efferent package, which miscounts coupling (rqlite's `otlp`).
+
 
 ## Effects Through Calls
 

@@ -382,16 +382,22 @@ fn audited_file(
     } else {
         language
     };
+    // A vendored or generated file is so wherever it sits, a `tools/` tree
+    // included (mitmproxy's `tools/web/static/vendor-*.js` bundle).
     let role = match source_role_for_path(&relative) {
-        SourceRole::Production => match attributes.role(&relative) {
-            Some(marked) => marked,
-            None if language != Language::Markdown && is_generated_output(&path) => {
-                SourceRole::Generated
-            }
-            None => SourceRole::Production,
-        },
-        SourceRole::Tooling if ships_container_image(root, &relative) => SourceRole::Production,
+        role @ (SourceRole::Production | SourceRole::Tooling) => attributes
+            .role(&relative)
+            .or_else(|| {
+                (language != Language::Markdown && is_generated_output(&path))
+                    .then_some(SourceRole::Generated)
+            })
+            .unwrap_or(role),
         role => role,
+    };
+    let role = if role == SourceRole::Tooling && ships_container_image(root, &relative) {
+        SourceRole::Production
+    } else {
+        role
     };
     Some(AuditedFile {
         absolute: path,

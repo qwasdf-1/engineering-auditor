@@ -11,7 +11,7 @@ intervening mutation, evaluation order, failure behavior, receiver/container
 type, known size, and result use. An unresolved obligation fails closed.
 `eager_log_formatting` reads log calls from the syntax tree.
 
-## `cache_miss_opportunity` (gating)
+## `cache_miss_opportunity` (gating, production code)
 
 Detects at least three identical known-pure calls in one control region when
 their typed operands are unchanged between calls. Supported APIs are deliberately
@@ -35,7 +35,7 @@ there is a library's own, such as moment's). A call guarded by a switch on, or a
 loop over a map runs at most once per loop (map keys are unique) and is not
 reported.
 
-## `loop_invariant_regex_compilation` (gating)
+## `loop_invariant_regex_compilation` (gating; Go, Java, Rust full-only)
 
 Detects a recognized, unshadowed regex compiler inside a loop when the pattern
 is invariant. Rust, Python, JavaScript, TypeScript, and Java arms require the

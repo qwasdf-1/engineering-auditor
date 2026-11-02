@@ -54,7 +54,7 @@ Language contract: see [`language-support.md`](./language-support.md).
 
 ---
 
-## `stale_link_reference` (gating)
+## `stale_link_reference` (full-only)
 
 Markdown link targets that do not resolve to existing files.
 
@@ -113,7 +113,7 @@ Language contract: see [`language-support.md`](./language-support.md).
 
 ---
 
-## `section_divider_comment` (gating)
+## `section_divider_comment` (gating; Java, JavaScript full-only)
 
 Flags functions that use decorative comment dividers (`// ----`, `# ====`,
 `/* ****`) excessively (default threshold: 3 divider lines per function).
@@ -210,7 +210,7 @@ Language contract: see [`language-support.md`](./language-support.md).
 
 ---
 
-## `stringly_typed_parameter` (gating)
+## `stringly_typed_parameter` (gating; Java, Python, TypeScript full-only)
 
 Flags functions with parameters named like sentinel values (`mode`, `kind`,
 `type`, `status`, `state`, `action`, `variant`) typed as a string (`str`,

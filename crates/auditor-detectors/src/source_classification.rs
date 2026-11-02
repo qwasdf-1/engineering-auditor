@@ -398,6 +398,7 @@ mod tests {
         let wide = format!("const message = '{}';\n", "x".repeat(200));
         for (path, text) in [
             ("static/main-CA4.js", minified.clone()),
+            ("tools/web/static/vendor-CA4.js", minified.clone()),
             ("static/main-CA4.ts", minified),
             ("static/vendor.js", "(window[\"webpackJsonp\"] = window[\"webpackJsonp\"] || []).push([[\"vendor\"],{\n".to_string()),
             ("lib/wide.js", format!("{wide}{}", "let x = 1;\n".repeat(40))),
@@ -425,6 +426,10 @@ mod tests {
         assert_eq!(roles["api/types.go"], SourceRole::Generated);
         assert_eq!(roles["lib/notes.js"], SourceRole::Production);
         assert_eq!(roles["static/main-CA4.js"], SourceRole::Generated);
+        assert_eq!(
+            roles["tools/web/static/vendor-CA4.js"],
+            SourceRole::Generated
+        );
         assert_eq!(roles["static/main-CA4.ts"], SourceRole::Production);
         assert_eq!(roles["static/vendor.js"], SourceRole::Generated);
         assert_eq!(roles["lib/wide.js"], SourceRole::Production);

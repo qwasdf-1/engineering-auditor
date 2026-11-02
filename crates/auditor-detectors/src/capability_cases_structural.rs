@@ -714,7 +714,7 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         ]),
         CapabilityCase::new(
             "package_coupling_metrics",
-            ScanProfile::Gating,
+            ScanProfile::Full,
             "crates/core/src/lib.rs",
             "pub struct Config;\n",
             "src/lib.rs",

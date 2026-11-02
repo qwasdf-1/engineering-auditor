@@ -74,7 +74,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L2",
         StaleLinkReference
     )
-    .with_roles(RoleApplicability::Documentation),
+    .with_roles(RoleApplicability::Documentation)
+    .full_profile_in(&["markdown"]),
     spec!(
         "stale_section_anchor",
         "staleness",
@@ -107,7 +108,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L2",
         SectionDividerComment
-    ),
+    )
+    .full_profile_in(&["java", "javascript"]),
     spec!(
         "magic_literal_cluster",
         "lexical",
@@ -142,7 +144,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L2",
         StringlyTypedParameter
     )
-    .full_profile_in(&["python", "typescript"]),
+    .full_profile_in(&["java", "python", "typescript"]),
     spec!(
         "function_local_import",
         "structural",
@@ -175,7 +177,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L5",
         CacheMissOpportunity
-    ),
+    )
+    .with_roles(RoleApplicability::Production),
     spec!(
         "repeated_format_allocation",
         "optimization",
@@ -207,7 +210,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L3",
         RepeatedCollectionTraversal
-    ),
+    )
+    .full_profile_in(&["csharp", "java", "python", "typescript"]),
     spec!(
         "hot_path_linear_membership",
         "algorithmic",
@@ -264,7 +268,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L5",
         LoopInvariantRegexCompilation
-    ),
+    )
+    .full_profile_in(&["go", "java", "rust"]),
     spec!(
         "immutable_string_concatenation_in_loop",
         "optimization",
@@ -456,7 +461,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "package_coupling_metrics",
         "systems_economics",
         Low,
-        Gating,
+        Full,
         "L4",
         PackageCouplingMetrics
     ),
@@ -521,7 +526,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L4",
         LoopArtifactRewrite
-    ),
+    )
+    .full_profile_in(&["rust"]),
     spec!(
         "latest_only_unbounded_cache",
         "systems_economics",
@@ -635,7 +641,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L1",
         EvalInProduction
-    ),
+    )
+    .full_profile_in(&["java", "javascript"]),
     spec!(
         "hardcoded_credential",
         "correctness",
@@ -661,7 +668,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L1",
         BindAllInterfaces
-    ),
+    )
+    .full_profile_in(&["c", "java", "kotlin"]),
     spec!(
         "try_except_pass",
         "correctness",
@@ -766,7 +774,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L1",
         UnreachableCode
-    ),
+    )
+    .full_profile_in(&["cpp", "python", "typescript"]),
     spec!(
         "constant_condition",
         "correctness",
@@ -816,7 +825,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         ExitInProduction
     )
     .with_roles(RoleApplicability::Production)
-    .full_profile_in(&["javascript", "python", "typescript"]),
+    .full_profile_in(&["go", "java", "javascript", "python", "typescript"]),
     spec!(
         "unhandled_termination_in_production",
         "correctness",
@@ -904,7 +913,8 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         Gating,
         "L1",
         GoLogFatal
-    ),
+    )
+    .with_roles(RoleApplicability::Production),
     spec!(
         "go_errcheck",
         "correctness",
@@ -921,7 +931,7 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L1",
         UnusedAssignment
     )
-    .full_profile_in(&["cpp"]),
+    .full_profile_in(&["cpp", "python"]),
     spec!(
         "go_repeated_string_literal",
         "lexical",
@@ -938,30 +948,6 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "L5",
         JavaInefficientStringBuffer
     ),
-    spec!(
-        "kt_non_null_assertion",
-        "correctness",
-        Medium,
-        Gating,
-        "L1",
-        KtNonNullAssertion
-    ),
-    spec!(
-        "kt_require_check_misuse",
-        "correctness",
-        Medium,
-        Full,
-        "L2",
-        KtRequireCheckMisuse
-    ),
-    spec!(
-        "unsafe_type_cast",
-        "correctness",
-        Low,
-        Full,
-        "L1",
-        UnsafeTypeCast
-    ),
 ];
 
 pub(crate) fn detector_catalog(
@@ -970,7 +956,8 @@ pub(crate) fn detector_catalog(
     catalog_specs().filter(move |spec| profile.includes(spec.minimum_profile))
 }
 
-/// Every catalog entry: the core table, then the v1.0 families.
+/// Every catalog entry: the core table, then the Kotlin rules and the v1.0
+/// families.
 pub(crate) fn catalog_specs() -> impl Iterator<Item = &'static DetectorSpec> {
     DETECTOR_CATALOG.iter().chain(families::FAMILY_CATALOG)
 }

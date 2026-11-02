@@ -141,7 +141,7 @@ Language contract: see [`language-support.md`](./language-support.md).
 
 ---
 
-## `repeated_collection_traversal`
+## `repeated_collection_traversal` (gating; C#, Java, Python, TypeScript full-only)
 
 Detects at least three pure terminal traversals over the same unmodified
 collection in one function. Direct call arguments and callbacks with unknown

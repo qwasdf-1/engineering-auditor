@@ -328,12 +328,8 @@ fn handle_request(ids: Vec<String>, wanted: Vec<String>) {
 }
 "#,
     );
-    let analysis = analyze_repository(
-        &root,
-        SourceDiscoveryOptions::default(),
-        ScanProfile::Gating,
-    )
-    .unwrap();
+    let analysis =
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full).unwrap();
     let detectors: BTreeSet<_> = analysis
         .findings
         .iter()
@@ -449,17 +445,13 @@ fn javascript_evaluation_of_literal_source_is_not_reported() {
         "src/lib.js",
         "const root = Function('return this')();\nconst run = (code) => eval(code);\nmodule.exports = { root, run };\n",
     );
-    let lines = analyze_repository(
-        &root,
-        SourceDiscoveryOptions::default(),
-        ScanProfile::Gating,
-    )
-    .unwrap()
-    .findings
-    .iter()
-    .filter(|f| f.detector == "eval_in_production")
-    .filter_map(|f| f.locations.first().and_then(|location| location.line))
-    .collect::<Vec<_>>();
+    let lines = analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full)
+        .unwrap()
+        .findings
+        .iter()
+        .filter(|f| f.detector == "eval_in_production")
+        .filter_map(|f| f.locations.first().and_then(|location| location.line))
+        .collect::<Vec<_>>();
     assert_eq!(lines, [2]);
 }
 
@@ -1122,12 +1114,8 @@ fn markdown_stale_link_is_detected() {
         "README.md",
         "See [details](docs/missing-page.md) for more info.\n",
     );
-    let analysis = analyze_repository(
-        &root,
-        SourceDiscoveryOptions::default(),
-        ScanProfile::Gating,
-    )
-    .unwrap();
+    let analysis =
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full).unwrap();
     let stale_count = analysis
         .findings
         .iter()
@@ -1154,17 +1142,13 @@ fn placeholders_site_routes_and_built_pages_are_not_stale_links() {
         "site/docs/guide.md",
         "Get the [app](../../download) and read the [API](./api/get-user.api.mdx).\n",
     );
-    let targets = analyze_repository(
-        &root,
-        SourceDiscoveryOptions::default(),
-        ScanProfile::Gating,
-    )
-    .unwrap()
-    .findings
-    .iter()
-    .filter(|f| f.detector == "stale_link_reference")
-    .map(|f| f.message.clone())
-    .collect::<Vec<_>>();
+    let targets = analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full)
+        .unwrap()
+        .findings
+        .iter()
+        .filter(|f| f.detector == "stale_link_reference")
+        .map(|f| f.message.clone())
+        .collect::<Vec<_>>();
     assert_eq!(targets.len(), 1, "{targets:?}");
     assert!(targets[0].contains("docs/missing.md"));
 }
@@ -1228,12 +1212,8 @@ fn markdown_valid_link_is_silent() {
         "docs/README.md",
         "See [setup](SETUP.md) and [code](../src/helper.rs).\n",
     );
-    let analysis = analyze_repository(
-        &root,
-        SourceDiscoveryOptions::default(),
-        ScanProfile::Gating,
-    )
-    .unwrap();
+    let analysis =
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full).unwrap();
     let stale_count = analysis
         .findings
         .iter()

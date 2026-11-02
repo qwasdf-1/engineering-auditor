@@ -66,24 +66,33 @@ best-case precision is under 90%.
 | `sibling_call_redundancy` | insufficient_sample (3/3) | Shared helper callees are composition, not redundant work |
 | `resource_not_closed` | insufficient_sample (2/1) | fmt's release script under `support/`, a path no role rule reads as tooling |
 | `identifier_tersity` | insufficient_sample (1/2) | Domain names (`r1, g1, b1`) and vendored docopt |
+| `package_coupling_metrics` | insufficient_sample (25/1) | A package is a top-level directory, so Go `internal/*` packages count as one and miscount efferent coupling (rqlite `otlp`); findings carry no language to scope by (2026-11-02) |
 | `hardcoded_credential` | below_bar (21/142) | The application slice: placeholder and documentation passwords, key and message-key names, and template literals in six languages, and false positives in C# and Rust too, so scoping cannot save it (2026-10-23) |
 
 ### Scoped to full in some languages
 
 | Detector | Full-profile languages | Reason |
 |---|---|---|
-| `exit_in_production` | JavaScript, Python, TypeScript | Every JavaScript and TypeScript false positive (0/2 each) is a CLI or build entry point's exit; Python's two are vendored docopt exiting after `--help` (2026-10-18); Go holds none |
+| `exit_in_production` | Go, Java, JavaScript, Python, TypeScript | Every JavaScript and TypeScript false positive (0/2 each) is a CLI or build entry point's exit; Python's two are vendored docopt exiting after `--help` (2026-10-18). The backlog labels add command and boot exits the path rules cannot tell from a library's: Gitea's `cmd` hook action, Ghost's boot routine, Django management commands, click commands, ZAP's startup failure, Keycloak's `Picocli.exit` hook (Go 10/4, Java 26/4; 2026-11-02) |
 | `large_file` | C | Below the bar there (26/3): every false positive is vendored third-party code (zlib `contrib/minizip`, jq's David M. Gay dtoa) that path rules cannot tell from the project's own; the other languages still gate |
 | `class_structure_metrics` | Python | Below the bar there when promoted; Java meets it and the other languages gate |
 | `cognitive_complexity` | C, C++ | Below the bar there when promoted (macro-heavy and vendored code); the other languages gate |
 | `npath_complexity` | C, C++ | Below the bar there when promoted, like `cognitive_complexity`; the other languages gate |
 | `duplicate_import` | TypeScript | Its one live false positive is zod's module-resolution test package; C, JavaScript, and Python hold none (2026-10-18) |
-| `unused_assignment` | C++ | All three false positives are yaml-cpp `util/` and `contrib/` code; the other languages hold none |
-| `stringly_typed_parameter` | Python, TypeScript | `mode` mirroring `open()` and a media-type value; JavaScript holds none |
+| `unused_assignment` | C++, Python | All three C++ false positives are yaml-cpp `util/` and `contrib/` code; Python's are a build script and Zulip's OpenAPI doc-example harness (24/4, 2026-11-02) |
+| `stringly_typed_parameter` | Java, Python, TypeScript | `mode` mirroring `open()` and a media-type value; Java's are string-to-enum factories for catalog codes (DBeaver, 3/2, 2026-11-02); JavaScript holds none |
 | `sql_injection` | C#, Go, Java | Below the bar or holding false positives on the application slice (2026-10-23): Umbraco and Wexflow constants and integer values the rule cannot type, Gitea migration sequence names, DBeaver catalog names reached through a ternary or a local; JavaScript holds none |
 | `hot_path_linear_membership` | Go, Java, Python, TypeScript | Lists a domain keeps small (raft peer sets capped by replica count, API-spec parameter lists, a camera frame's QR codes) that no static rule bounds; C#, JavaScript, and Rust hold none (2026-10-23) |
 | `shell_execution` | JavaScript, Python | Literal commands and an Action's own inputs; Java holds none (2026-10-23) |
 | `unsafe_deserialization` | Java, Python | Python's own-data pickles and Java streams of server-written data; JavaScript, TypeScript, Kotlin, and C# hold none (2026-10-23) |
+| `stale_link_reference` | Markdown | Its one language: links into the documentation website's assembled version trees (DolphinScheduler) and Zulip page routes no file names (17/5, 2026-11-02) |
+| `section_divider_comment` | Java, JavaScript | Banners fencing a NetBeans GUI-builder block (ZAP) and commented-out `===` comparisons (Wexflow); the other languages hold none (2026-11-02) |
+| `repeated_collection_traversal` | C#, Java, Python, TypeScript | Traversals under mutually exclusive guards or of distinct bindings (Umbraco), annotation accessors (DBeaver), column slices of one array (Frigate), and a dev-only showroom page (Zulip) (2026-11-02) |
+| `loop_invariant_regex_compilation` | Go, Java, Rust | Patterns from the loop's values (Authelia, pgcat), a compile in a one-key `switch` case (NATS), and a static field of an anonymous class (DBeaver) (2026-11-02) |
+| `loop_artifact_rewrite` | Rust | Its one false positive is Warpgate's per-entry install copy; Rust is its only measured language (2026-11-02) |
+| `eval_in_production` | Java, JavaScript | A constant script (Ranger) and a CI benchmark action (Ghost); Python and TypeScript hold none (2026-11-02) |
+| `bind_all_interfaces` | C, Java, Kotlin | libuv's deferred port-0 autobind, an address used only to format a node name (Keycloak), and a VPN route range start (DuckDuckGo) (2026-11-02) |
+| `unreachable_code` | C++, Python, TypeScript | A return behind `#if` branches the detector reads together (LevelDB), vendored `contrib/` code (mitmproxy), and an MSW mock backend (Umbraco) (2026-11-02) |
 
 ### Gating detectors with a measured standing
 
