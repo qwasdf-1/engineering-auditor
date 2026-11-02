@@ -567,7 +567,7 @@ Gating bar: the 95% lower confidence bound of precision >= 85% over final or cor
 | `test_without_assertion` | 12 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 12 | 0 | true_positive 1 | — | 12/12 |
 | `todo_unimplemented_in_production` | 143 | 2 | 0 | 99% | — | 0 | meets_bar | 3 / 142 | 0 | pending 33 | — | 237/240 |
 | `too_many_locals` | 148 | 14 | 0 | 91% | 18/1 | 0 | unverified | 3 / 159 | 0 | true_positive 5 | 18/18 | 155/156 |
-| `too_many_parameters` | 89 | 0 | 0 | 100% | 38/0 | 188 | meets_bar | 6 / 83 | 0 | pending 39 | 38/42 | 123/125 |
+| `too_many_parameters` | 89 | 0 | 0 | 100% | 38/0 | 184 | meets_bar | 6 / 83 | 0 | pending 39 | 38/42 | 123/125 |
 | `too_many_returns` | 128 | 0 | 0 | 100% | 63/0 | 398 | meets_bar | 12 / 116 | 0 | pending 70 | 63/63 | 81/96 |
 | `too_many_statements` | 97 | 2 | 0 | 98% | 11/0 | 0 | meets_bar | 1 / 98 | 0 | pending 44 | 11/11 | 87/88 |
 | `try_except_pass` | 16 | 1 | 0 | 94% | — | 0 | insufficient_sample | 0 / 17 | 0 | — | — | 17/17 |
@@ -575,7 +575,7 @@ Gating bar: the 95% lower confidence bound of precision >= 85% over final or cor
 | `unbounded_concurrency` | 15 | 6 | 0 | 71% | — | 0 | below_bar | 2 / 19 | 0 | — | — | 21/23 |
 | `unhandled_termination_in_production` | 0 | 30 | 0 | 0% | — | 0 | below_bar | 18 / 12 | 0 | — | — | 29/56 |
 | `unreachable_code` | 19 | 3 | 0 | 86% | — | 0 | below_bar | 2 / 20 | 0 | — | — | 20/22 |
-| `unsafe_deserialization` | 8 | 11 | 0 | 42% | — | 0 | below_bar | 0 / 19 | 0 | — | — | 19/19 |
+| `unsafe_deserialization` | 8 | 3 | 0 | 73% | — | 0 | below_bar | 0 / 11 | 0 | — | — | 11/11 |
 | `unsafe_type_cast` | 26 | 4 | 0 | 87% | — | 0 | below_bar | 1 / 29 | 0 | — | — | 29/30 |
 | `unused_assignment` | 110 | 10 | 0 | 92% | — | 0 | meets_bar | 4 / 116 | 0 | — | — | 116/121 |
 | `unused_declared_dependency` | 23 | 35 | 0 | 40% | — | 0 | below_bar | 5 / 53 | 0 | — | — | 53/58 |
@@ -842,6 +842,8 @@ return silently.
 | `unused_assignment` | Round fifteen: jQuery-style `$name` locals and `{ name }` shorthand reads missed; C macro (`UNZ_OK`), C# `null`/`false`, and Python `_` throwaway initializers reported | `$` kept in names, shorthand properties read, constant initializers and throwaways skipped |
 | `stale_link_reference`, `section_divider_comment`, `eval_in_production`, `duplicate_import`, `bind_all_interfaces`, `identifier_verbosity` | Round fifteen: template placeholders, Docusaurus routes, and gitignored generated pages; go-swagger `// ---` markers; `Function('return this')()`; X-macro re-includes; multicast `INADDR_ANY`; constants split at digits | Each recognised (see the detector references) |
 | `repeated_sort_in_loop`, `sort_for_extremum`, `repeated_collection_traversal`, `repeated_format_allocation`, `loop_invariant_regex_compilation`, `unreachable_code`, `assignment_in_operand`, `package_coupling_metrics` | Round fifteen: sorts in a `for .. of` header or of a per-item collection, sorts whose order is used, call-computed receivers, moment's `.format`, a Rust `.map(..)` holding a `Regex::new`, a Python string block comment and a C `;;` after `return`, Rust do-while blocks, and packages near the main sequence | Each excluded |
+| `unsafe_deserialization` | Downstream report (2026-11-02): `yaml.load` with a repository `SafeLoader` subclass that only rejects duplicate keys; on the corpus, Frigate's and mitmproxy's ruamel.yaml `YAML()` loads (8 corroborated false positives) | A repository subclass of a safe loader is safe unless the repository registers a `python/` tag constructor on it; a ruamel.yaml `YAML()` load is safe unless its `typ` builds objects |
+| `too_many_parameters` | Downstream report (2026-11-02): overrides of a platform method (Fabric `@Override` of Minecraft's `BowItem`) and Mixin injector callbacks; on the corpus, okhttp's and jackson-core's overrides and commons-lang's `TimeZone.getOffset` overrides | An override restates its supertype's method, which carries the finding where the repository declares it; a Mixin injector in a file importing the Mixin library mirrors its target |
 
 Two true positives were lost as accepted trade-offs: a `Tree.add` call whose
 result is passed on (rich), and one Halstead state handler with difficulty

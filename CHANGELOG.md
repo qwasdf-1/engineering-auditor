@@ -86,8 +86,9 @@
   from `SafeLoader`, `CSafeLoader`, or `BaseLoader` as safe, unless the
   repository registers a `python/` tag constructor on it, and skips
   `yaml.load` on a ruamel.yaml `YAML()` instance whose loader is the
-  default round-trip, `safe`, or `base` one. A downstream report and six
-  corpus labels showed both shapes.
+  default round-trip, `safe`, or `base` one. A downstream report showed
+  the first; eight corroborated corpus false positives (Frigate and
+  mitmproxy ruamel.yaml loads) the second.
 - `too_many_parameters` skips an override (Java `@Override`; Kotlin, C#,
   and TypeScript `override`), whose supertype's declaration carries the
   finding where the repository declares it, and a Mixin injector callback

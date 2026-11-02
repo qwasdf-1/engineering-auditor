@@ -139,7 +139,7 @@ only with no false positive here.
 | `stale_section_anchor` | insufficient_sample | 14/0 | 0 | — | — |
 | `stringly_typed_parameter` | insufficient_sample | 2/0 | 0 | — | java, python, typescript |
 | `todo_unimplemented_in_production` | meets_bar | 143/2 | 0 | java, kotlin, rust | — |
-| `too_many_parameters` | meets_bar | 89/0 | 188 | csharp, java, kotlin, python | — |
+| `too_many_parameters` | meets_bar | 89/0 | 184 | csharp, kotlin, python | — |
 | `too_many_returns` | meets_bar | 128/0 | 398 | c, java, javascript, kotlin, python, typescript | — |
 | `too_many_statements` | meets_bar | 97/2 | 0 | java | — |
 | `unreachable_code` | insufficient_sample | 5/0 | 0 | — | cpp, python, typescript |
