@@ -88,7 +88,7 @@ best-case precision is under 90%.
 ### Gating detectors with a measured standing
 
 Gating detectors absent here produced no labelled corpus finding. TP/FP
-counts only final and corroborated labels on scans `l9-d` and `a9-d` (application slice), in the
+counts only final and corroborated labels on scans `l10-a` and `a10-a` (application slice), in the
 languages the detector gates in. An `insufficient_sample` detector gates
 only with no false positive here.
 
