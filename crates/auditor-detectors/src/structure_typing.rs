@@ -292,3 +292,17 @@ pub(crate) fn simple_type(text: &str) -> String {
     }
     base.rsplit(['.', ':']).next().unwrap_or(base).to_string()
 }
+
+/// The outermost node spanning exactly `span`: a declaration whose only
+/// child covers it whole (`variable_declaration` in C#) reads as itself.
+pub(crate) fn declaration_node(
+    mut node: auditor_ast::AstNode<'_>,
+    span: auditor_ast::SourceSpan,
+) -> auditor_ast::AstNode<'_> {
+    while let Some(parent) = node.parent().filter(|parent| {
+        parent.start_byte() == span.start_byte && parent.end_byte() == span.end_byte
+    }) {
+        node = parent;
+    }
+    node
+}

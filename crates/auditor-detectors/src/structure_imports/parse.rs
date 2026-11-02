@@ -208,3 +208,20 @@ fn first_angle_path(text: &str) -> Option<String> {
     let (path, _) = tail.split_once('>')?;
     Some(path.to_string())
 }
+
+/// Where a C or C++ file defines or undefines a macro (`#define`, `#undef`).
+pub(in crate::structure_index) fn macro_changes(tree: &auditor_ast::AstTree) -> Vec<usize> {
+    crate::ast_scan::nodes_of_kind(
+        tree.root_node(),
+        &["preproc_def", "preproc_function_def", "preproc_call"],
+    )
+    .into_iter()
+    .filter(|node| {
+        node.kind() != "preproc_call"
+            || node
+                .child_by_field_name("directive")
+                .is_some_and(|directive| directive.text().trim() == "#undef")
+    })
+    .map(|node| node.start_byte())
+    .collect()
+}

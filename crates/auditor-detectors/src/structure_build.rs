@@ -80,7 +80,7 @@ fn collect_symbols(
             let node = tree
                 .root_node()
                 .descendant_for_byte_range(symbol.span.start_byte, symbol.span.end_byte)
-                .map(|node| declaration_node(node, symbol.span));
+                .map(|node| crate::structure_typing::declaration_node(node, symbol.span));
             if name.is_empty() && symbol.kind == SymbolKind::Variable {
                 name = declaration_binding(source).unwrap_or_default();
             }
@@ -205,20 +205,6 @@ fn declared_type(source: &str, type_end: &[char]) -> String {
     }
 }
 
-/// The outermost node spanning exactly `span`: a declaration whose only
-/// child covers it whole (`variable_declaration` in C#) reads as itself.
-fn declaration_node(
-    mut node: auditor_ast::AstNode<'_>,
-    span: auditor_ast::SourceSpan,
-) -> auditor_ast::AstNode<'_> {
-    while let Some(parent) = node.parent().filter(|parent| {
-        parent.start_byte() == span.start_byte && parent.end_byte() == span.end_byte
-    }) {
-        node = parent;
-    }
-    node
-}
-
 fn declaration_binding(source: &str) -> Option<String> {
     let identifiers = util::identifiers(source);
     let mut identifiers = identifiers.iter().map(String::as_str);
@@ -260,7 +246,7 @@ fn collect_imports(
 ) -> Vec<StructureImport> {
     let guarded = python_guarded_import_spans(file, tree);
     let macro_changes = if matches!(file.language, Language::C | Language::Cpp) {
-        macro_changes(tree)
+        super::imports::macro_changes(tree)
     } else {
         Vec::new()
     };
@@ -310,23 +296,6 @@ fn collect_imports(
             && left.dynamic == right.dynamic
     });
     imports
-}
-
-/// Where a C or C++ file defines or undefines a macro (`#define`, `#undef`).
-fn macro_changes(tree: &auditor_ast::AstTree) -> Vec<usize> {
-    crate::ast_scan::nodes_of_kind(
-        tree.root_node(),
-        &["preproc_def", "preproc_function_def", "preproc_call"],
-    )
-    .into_iter()
-    .filter(|node| {
-        node.kind() != "preproc_call"
-            || node
-                .child_by_field_name("directive")
-                .is_some_and(|directive| directive.text().trim() == "#undef")
-    })
-    .map(|node| node.start_byte())
-    .collect()
 }
 
 /// The preprocessor branches enclosing `span`, outermost first: each

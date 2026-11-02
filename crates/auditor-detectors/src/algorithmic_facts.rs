@@ -406,26 +406,6 @@ fn collect_sort_selections(
     collect_sorted_subscripts(file, owner, function, facts);
 }
 
-/// Whether code after the sort reads `root` other than at the selection:
-/// passed whole on (`addToRedeliverQueue(expired...)`), iterated, or indexed
-/// elsewhere, the order itself is used, not only an endpoint.
-fn sorted_order_used_elsewhere(
-    file: &StructureFile,
-    owner: u32,
-    root: &str,
-    sort: SourceSpan,
-    selection: SourceSpan,
-) -> bool {
-    let name = root.rsplit('.').next().unwrap_or(root);
-    file.references.iter().any(|reference| {
-        reference.owner == Some(owner)
-            && reference.name == name
-            && reference.span.start_byte > sort.end_byte
-            && !(selection.start_byte <= reference.span.start_byte
-                && reference.span.end_byte <= selection.end_byte)
-    })
-}
-
 /// Python `sorted(xs)[0]`, `sorted(xs)[-1]`, and `sorted(xs)[:k]`: a full sort
 /// of a fresh copy read only at an endpoint or prefix.
 fn collect_sorted_subscripts(
@@ -564,164 +544,6 @@ fn collect_repeated_traversals(
     }
 }
 
-/// The shape of a collection searched linearly inside `loop_fact`: a linear
-/// sequence of more than a handful of items that the loop leaves unmutated.
-fn searched_sequence(
-    file: &StructureFile,
-    owner: u32,
-    collection: &str,
-    loop_fact: &StructureLoop,
-    lookups: &Lookups<'_>,
-) -> Option<(CollectionKind, Cardinality)> {
-    let (collection_kind, cardinality) = match collection_shape(file, owner, collection) {
-        // A constant declared elsewhere, read directly or through a local
-        // (`List<String> names = NAMES`), is its literal when no code can
-        // grow it (`static final List<String> NAMES = List.of(..)`).
-        (kind, Cardinality::UnknownScalable) => {
-            let source = local_initializer(file, owner, collection).unwrap_or(collection);
-            match lookups
-                .callees
-                .types
-                .resolve_text(owner as usize, source)
-                .constant
-                .as_deref()
-                .and_then(constant_collection)
-            {
-                Some((constant_kind, bounded)) if kind == CollectionKind::Unknown => {
-                    (constant_kind, bounded)
-                }
-                Some((_, bounded)) => (kind, bounded),
-                None => (kind, Cardinality::UnknownScalable),
-            }
-        }
-        shape => shape,
-    };
-    let scope = |region| MutationScope {
-        owner,
-        root: collection,
-        aliases: lookups.aliases,
-        region,
-        except: None,
-    };
-    // A literal bound once and never grown stays its size, however many
-    // items it holds.
-    let fixed = match cardinality {
-        Cardinality::KnownBounded(size) => {
-            size <= 8
-                || mutating_calls(file, &scope(None)).is_empty()
-                    && rebinding_assignments(file, &scope(None)).len() <= 1
-        }
-        Cardinality::UnknownScalable => false,
-    };
-    let searched = collection_kind == CollectionKind::LinearSequence
-        && !fixed
-        && mutation_lines(file, scope(Some(loop_fact.control_region))).is_empty();
-    searched.then_some((collection_kind, cardinality))
-}
-
-fn collect_linear_membership(
-    file: &StructureFile,
-    owner: u32,
-    function: &StructureSymbol,
-    lookups: &Lookups<'_>,
-    facts: &mut Vec<AlgorithmicFact>,
-) {
-    for call in owner_calls(file, owner) {
-        let Some(shape) = call_shape(call, lookups.aliases) else {
-            continue;
-        };
-        if !matches!(shape.method.as_str(), "contains" | "includes") {
-            continue;
-        }
-        let Some((loop_fact, binding)) =
-            dependent_loop_binding(file, owner, call, &shape.arguments)
-        else {
-            continue;
-        };
-        let Some((collection_kind, cardinality)) =
-            searched_sequence(file, owner, &shape.root, loop_fact, lookups)
-        else {
-            continue;
-        };
-        push_fact(
-            file,
-            function,
-            call.line,
-            AlgorithmicFactKind::LinearMembership {
-                collection: shape.root,
-                needle: binding,
-                loop_span: loop_fact.span,
-                call_span: call.span,
-                collection_kind,
-                cardinality,
-                appended: None,
-            },
-            facts,
-        );
-    }
-}
-
-/// Python `needle in collection` on a list inside a loop over the needles:
-/// the operator calls `collection.__contains__`, a linear scan.
-fn collect_membership_tests(
-    file: &StructureFile,
-    owner: u32,
-    function: &StructureSymbol,
-    lookups: &Lookups<'_>,
-    facts: &mut Vec<AlgorithmicFact>,
-) {
-    for membership in file
-        .memberships
-        .iter()
-        .filter(|membership| membership.owner == Some(owner))
-    {
-        let Some(collection) = exact_identifier(&membership.collection) else {
-            continue;
-        };
-        let collection = canonical(&collection, lookups.aliases);
-        let Some(loop_fact) = owner_loops(file, owner)
-            .into_iter()
-            .filter(|loop_fact| {
-                loop_fact.span.start_byte <= membership.span.start_byte
-                    && membership.span.end_byte <= loop_fact.span.end_byte
-                    && !loop_fact.iterable_span.is_some_and(|span| {
-                        span.start_byte <= membership.span.start_byte
-                            && membership.span.end_byte <= span.end_byte
-                    })
-            })
-            .max_by_key(|loop_fact| loop_fact.span.start_byte)
-        else {
-            continue;
-        };
-        let Some(binding) = loop_bindings(loop_fact)
-            .into_iter()
-            .find(|binding| contains_identifier(&membership.needle, binding))
-        else {
-            continue;
-        };
-        let Some((collection_kind, cardinality)) =
-            searched_sequence(file, owner, &collection, loop_fact, lookups)
-        else {
-            continue;
-        };
-        push_fact(
-            file,
-            function,
-            membership.span.start_line,
-            AlgorithmicFactKind::LinearMembership {
-                collection,
-                needle: binding,
-                loop_span: loop_fact.span,
-                call_span: membership.span,
-                collection_kind,
-                cardinality,
-                appended: None,
-            },
-            facts,
-        );
-    }
-}
-
 fn collect_queries_in_loops(
     file: &StructureFile,
     owner: u32,
@@ -775,6 +597,8 @@ mod effects;
 mod front_removal;
 #[path = "algorithmic_facts_inherited.rs"]
 mod inherited;
+#[path = "algorithmic_facts_membership.rs"]
+mod membership;
 #[path = "algorithmic_facts_package_calls.rs"]
 mod package_calls;
 #[path = "algorithmic_facts_queries.rs"]
@@ -790,6 +614,7 @@ use cost_collectors::*;
 use dedupe::collect_deduplicating_appends;
 use effects::*;
 use front_removal::collect_front_removals;
+use membership::{collect_linear_membership, collect_membership_tests};
 use queries::{may_be_store_query, store_query_inputs};
 use semantics::*;
 use structure::*;

@@ -269,3 +269,23 @@ pub(super) fn is_keyword(identifier: &str) -> bool {
             | "this"
     )
 }
+
+/// Whether code after the sort reads `root` other than at the selection:
+/// passed whole on (`addToRedeliverQueue(expired...)`), iterated, or indexed
+/// elsewhere, the order itself is used, not only an endpoint.
+pub(super) fn sorted_order_used_elsewhere(
+    file: &StructureFile,
+    owner: u32,
+    root: &str,
+    sort: SourceSpan,
+    selection: SourceSpan,
+) -> bool {
+    let name = root.rsplit('.').next().unwrap_or(root);
+    file.references.iter().any(|reference| {
+        reference.owner == Some(owner)
+            && reference.name == name
+            && reference.span.start_byte > sort.end_byte
+            && !(selection.start_byte <= reference.span.start_byte
+                && reference.span.end_byte <= selection.end_byte)
+    })
+}

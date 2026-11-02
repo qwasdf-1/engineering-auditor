@@ -20,6 +20,34 @@ pub(super) fn collection_shape(
         None => (CollectionKind::Unknown, Cardinality::UnknownScalable),
     }
 }
+/// [`collection_shape`], with a constant declared elsewhere, read directly
+/// or through a local (`List<String> names = NAMES`), taken as its literal
+/// when no code can grow it (`static final List<String> NAMES = List.of(..)`).
+pub(super) fn declared_collection_shape(
+    file: &StructureFile,
+    owner: u32,
+    collection: &str,
+    types: crate::type_facts::TypeScope<'_>,
+) -> (CollectionKind, Cardinality) {
+    match collection_shape(file, owner, collection) {
+        (kind, Cardinality::UnknownScalable) => {
+            let source = local_initializer(file, owner, collection).unwrap_or(collection);
+            match types
+                .resolve_text(owner as usize, source)
+                .constant
+                .as_deref()
+                .and_then(constant_collection)
+            {
+                Some((constant_kind, bounded)) if kind == CollectionKind::Unknown => {
+                    (constant_kind, bounded)
+                }
+                Some((_, bounded)) => (kind, bounded),
+                None => (kind, Cardinality::UnknownScalable),
+            }
+        }
+        shape => shape,
+    }
+}
 
 /// The value a local of `owner` is bound to (`List<String> names = NAMES`).
 pub(super) fn local_initializer<'f>(
