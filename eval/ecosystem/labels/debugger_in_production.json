@@ -33,9 +33,19 @@
       "language": "python",
       "path": "redash/__init__.py",
       "message": "Debugger statement in production code at line 24",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 24
+      "line": 24,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Shipped module redash/__init__.py calls `debugpy.listen((\"0.0.0.0\", 5678))` and `debugpy.wait_for_client()` at import time; the REMOTE_DEBUG gate makes it opt-in, but a debugger entry point (ruff T100) is still in production code, and intentional code counts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "redash/__init__.py calls `debugpy.listen((\"0.0.0.0\", 5678))` and `debugpy.wait_for_client()` in module-level production code; the REMOTE_DEBUG env gate makes it opt-in but the debugger entry point is shipped."
+        }
+      ]
     }
   ]
 }

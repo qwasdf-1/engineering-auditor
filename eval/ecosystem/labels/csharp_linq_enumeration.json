@@ -188,9 +188,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Api.Management/Factories/RelationTypePresentationFactory.cs",
       "message": "src/Umbraco.Cms.Api.Management/Factories/RelationTypePresentationFactory.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 71
+      "line": 71,
+      "verdict": "false_positive",
+      "reason": "Line 71 is the materialization itself (`relationItemModels.ToArray()` into `relationItemModelsCollection`); the parameter is enumerated exactly once and every later use reads the array.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `.ToArray()` at line 71 materializes `relationItemModels` once into `relationItemModelsCollection`, and later code uses that collection, so there is no repeated enumeration of a deferred sequence."
+        }
+      ]
     },
     {
       "id": "EA-e0bffb0c97146613",
@@ -198,9 +208,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Persistence.SqlServer/Services/SqlServerSyntaxProvider.cs",
       "message": "src/Umbraco.Cms.Persistence.SqlServer/Services/SqlServerSyntaxProvider.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 224
+      "line": 224,
+      "verdict": "false_positive",
+      "reason": "`items` in GetColumnsInSchema is a `List<ColumnInSchemaDto>` from `db.Fetch`, projected once with `.Select(...).ToList()`; no deferred IEnumerable is enumerated twice anywhere in SqlServerSyntaxProvider.cs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Every flagged call in SqlServerSyntaxProvider is a terminal `.ToList()` on a `db.Fetch` result inside a `Get*InSchema` method; each result is materialized once and returned."
+        }
+      ]
     },
     {
       "id": "EA-7110ab16c88c94d7",
@@ -208,9 +228,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Composing/TypeFinder.cs",
       "message": "src/Umbraco.Core/Composing/TypeFinder.cs has 5 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 67
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "Line 67 materializes `KnownAssemblyExclusionFilter.Union(...)` into a string array once; the `assemblies` sequences in TypeFinder are copied into a HashSet before iteration, so there is no repeated enumeration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TypeFinder's `.ToArray()`/`.ToList()` calls each materialize a distinct sequence once (the exclusion filter at line 67, per-assembly types at line 298); `assemblies` is copied into a HashSet before reuse, so nothing is enumerated repeatedly."
+        }
+      ]
     },
     {
       "id": "EA-f252ca35ef0684e4",
@@ -218,9 +248,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Models/Membership/User.cs",
       "message": "src/Umbraco.Core/Models/Membership/User.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 447
+      "line": 447,
+      "verdict": "false_positive",
+      "reason": "`_userGroups.ToArray()` in RemoveGroup is a required snapshot so `_userGroups.Remove` can run inside the loop without invalidating the iterator; it is not a repeated deferred enumeration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`_userGroups.ToArray()` at line 447 is a deliberate snapshot taken so `_userGroups.Remove` can run inside the foreach; the other calls are one-shot clones, so this is not repeated enumeration."
+        }
+      ]
     },
     {
       "id": "EA-1aed9d5aa1192a65",
@@ -228,9 +268,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/DocumentUrlService.cs",
       "message": "src/Umbraco.Core/Services/DocumentUrlService.cs has 9 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 357
+      "line": 357,
+      "verdict": "false_positive",
+      "reason": "`alternates` at line 357 is a `List<string>` (from the grouped tuple), so `alternates.Count`/`ToArray()` are list operations; parameters like `documentsEnumerable` and `documentKeysEnumerable` are already materialized via `as T[] ?? .ToArray()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DocumentUrlService uses `x as Guid[] ?? x.ToArray()` and one-time `.ToArray()` on freshly built segment lists; the flagged line 357 converts an already-counted `alternates` list once, so no deferred sequence is enumerated twice."
+        }
+      ]
     },
     {
       "id": "EA-35c6a641a1596604",
@@ -238,9 +288,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/ExternalLoginService.cs",
       "message": "src/Umbraco.Core/Services/ExternalLoginService.cs has 3 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 53
+      "line": 53,
+      "verdict": "false_positive",
+      "reason": "ExternalLoginService.Find returns `_externalLoginRepository.Get(query).ToList()` once inside the scope; neither this nor the `logins`/`tokens` parameters are enumerated more than once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ExternalLoginService's three `.ToList()` calls (lines 53, 63, 73) each terminate a separate repository query inside a using scope, which is the materialize-once pattern the detector recommends."
+        }
+      ]
     },
     {
       "id": "EA-a4763bc0c7a8945f",
@@ -248,9 +308,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/LogViewerServiceBase.cs",
       "message": "src/Umbraco.Core/Services/LogViewerServiceBase.cs has 3 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 109
+      "line": 109,
+      "verdict": "false_positive",
+      "reason": "`savedLogQueries` at line 109 is materialized to an array before `.Length` and `.Skip/.Take`, and `logs` at line 231 is likewise `.ToArray()`-ed, so the file already follows the recommendation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In LogViewerServiceBase `GetMany().ToArray()` is materialized to an array before `Length`/`Skip`/`Take`, and `logs.Count()` at line 262 runs on an already-materialized array, so there is no re-enumeration."
+        }
+      ]
     },
     {
       "id": "EA-b0c070487d87ab00",
@@ -258,9 +328,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/MediaPermissionService.cs",
       "message": "src/Umbraco.Core/Services/MediaPermissionService.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 32
+      "line": 32,
+      "verdict": "false_positive",
+      "reason": "AuthorizeAccessAsync materializes the `mediaKeys` parameter into `keysArray` at line 32 and only uses the array afterwards; this is the fix, not the problem.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MediaPermissionService materializes `mediaKeys` once into `keysArray` and the entity paths once into `entityPaths`, then uses `Length`; the duplicated pattern is in two separate methods, not repeated enumeration."
+        }
+      ]
     },
     {
       "id": "EA-6c44a8f076c2d9e9",
@@ -268,9 +348,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/MemberService.cs",
       "message": "src/Umbraco.Core/Services/MemberService.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 830
+      "line": 830,
+      "verdict": "false_positive",
+      "reason": "Save(IEnumerable<IMember> members, ...) immediately materializes `members.ToArray()` into `membersA` at line 830 and enumerates only that array.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MemberService.Save materializes `members` once into `membersA` at line 830 and reuses the array for the notification and save; the other `.ToArray()` calls are in different methods."
+        }
+      ]
     },
     {
       "id": "EA-a236e1471d72a236",
@@ -278,9 +368,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/UserGroupService.cs",
       "message": "src/Umbraco.Core/Services/UserGroupService.cs has 16 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 71
+      "line": 71,
+      "verdict": "false_positive",
+      "reason": "`_userGroupRepository.GetMany().OrderBy(...).ToArray()` at line 71 is enumerated once into `groups`, whose `.Length` is then read; the 16 counted calls are separate one-shot materializations.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "UserGroupService line 71 materializes the ordered `GetMany()` once into `groups` and then uses `groups.Length`/`Skip`/`Take`; the flagged line is the single-materialization fix, not a repeated enumeration."
+        }
+      ]
     },
     {
       "id": "EA-bde3f1b77ac6981b",
@@ -288,9 +388,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Cache/DefaultRepositoryCachePolicy.cs",
       "message": "src/Umbraco.Infrastructure/Cache/DefaultRepositoryCachePolicy.cs has 5 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 214
+      "line": 214,
+      "verdict": "false_positive",
+      "reason": "`ids` is an `int[]` and `entities` is materialized with `.ToArray()` at line 214 before `.Length` is compared; DefaultRepositoryCachePolicy has no doubly enumerated IEnumerable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DefaultRepositoryCachePolicy line 214 materializes `ids.Select(GetCached).WhereNotNull()` once into `entities` and compares `entities.Length` against `ids.Length`, so the sequence is not enumerated twice."
+        }
+      ]
     },
     {
       "id": "EA-494570d787366119",
@@ -298,9 +408,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Examine/Deferred/DeliveryApiContentIndexHandlePublicAccessChanges.cs",
       "message": "src/Umbraco.Infrastructure/Examine/Deferred/DeliveryApiContentIndexHandlePublicAccessChanges.cs has 6 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 79
+      "line": 79,
+      "verdict": "false_positive",
+      "reason": "`protectedContentIds` is materialized from `_publicAccessService.GetAll()` with `.ToArray()` at line 79 before `.Any()`, so the subsequent checks reread an array.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DeliveryApiContentIndexHandlePublicAccessChanges line 79 materializes the protected ids into an array before `.Any()` is called, and batch handling uses `batch as int[] ?? batch.ToArray()`, so nothing is enumerated repeatedly."
+        }
+      ]
     },
     {
       "id": "EA-37d379294fa7adc6",
@@ -308,9 +428,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/ModelsBuilder/Building/Builder.cs",
       "message": "src/Umbraco.Infrastructure/ModelsBuilder/Building/Builder.cs has 3 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 143
+      "line": 143,
+      "verdict": "false_positive",
+      "reason": "`xx.Count()` at line 143 counts each IGrouping from `TypeModels.GroupBy`, a single pass over the `TypeModels` list; no source sequence is re-enumerated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Builder.cs line 143 is a `GroupBy(...).Where(x => x.Count() > 1)` duplicate-name check where `x.Count()` runs on in-memory IGrouping groups of the `IList<TypeModel>` TypeModels, not a deferred IEnumerable re-enumeration."
+        }
+      ]
     },
     {
       "id": "EA-579dbce16b5b4d00",
@@ -318,9 +448,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/ContentTypeRepositoryBase.cs",
       "message": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/ContentTypeRepositoryBase.cs has 12 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 538
+      "line": 538,
+      "verdict": "false_positive",
+      "reason": "`entity.PropertyGroups.Select(x => x.Id).ToList()` at line 538 is a single projection of an in-memory collection used with `Except`; `impacted` is converted with `.ToList()` in MovePropertyTypeVariantData, so no multiple enumeration exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ContentTypeRepositoryBase line 538 materializes the group ids once with `.ToList()` and the following `Except(...).ToArray()` consumes it; each flagged call terminates a separate sequence."
+        }
+      ]
     },
     {
       "id": "EA-7e166336e0322b9b",
@@ -328,9 +468,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/MemberGroupRepository.cs",
       "message": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/MemberGroupRepository.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 278
+      "line": 278,
+      "verdict": "false_positive",
+      "reason": "`memberIds` is an `int[]` and `memberIds.Distinct().ToArray()` at line 278 is a one-pass dedupe; the role sequences in AssignRolesInternal are each consumed once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MemberGroupRepository line 278 does `memberIds.Distinct().ToArray()` on an `int[]` parameter to reassign it once, and later `Fetch` results are materialized once each, so there is no repeated enumeration."
+        }
+      ]
     },
     {
       "id": "EA-a44e655aa8f37058",
@@ -338,9 +488,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/TemplateRepository.cs",
       "message": "src/Umbraco.Infrastructure/Persistence/Repositories/Implement/TemplateRepository.cs has 12 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 92
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "`GetMany().Where(x => keySet.Contains(x.Key)).ToArray()` at line 92 is a single enumeration (the `keys` parameter is first turned into `keySet`); nothing in TemplateRepository enumerates a deferred sequence twice.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TemplateRepository line 92 materializes a filtered `GetMany()` once with `.ToArray()` after building `keySet`; the other calls convert distinct DTO lists once each into arrays that are then reused."
+        }
+      ]
     },
     {
       "id": "EA-d639d71185d5fb58",
@@ -348,9 +508,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/PropertyEditors/MultiNodeTreePickerPropertyEditor.cs",
       "message": "src/Umbraco.Infrastructure/PropertyEditors/MultiNodeTreePickerPropertyEditor.cs has 4 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 165
+      "line": 165,
+      "verdict": "false_positive",
+      "reason": "`UdisToEntityReferences(stringValue.Split(...)).ToArray()` at line 165 materializes the yielded references once for the return value; `stringUdis` and `nodeReferences` are each iterated a single time.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MultiNodeTreePickerPropertyEditor line 165 materializes the lazy `UdisToEntityReferences` iterator once with `.ToArray()` as the return value, which is the recommended single materialization."
+        }
+      ]
     },
     {
       "id": "EA-7a18f8d5ea1595d8",
@@ -358,9 +528,19 @@
       "language": "csharp",
       "path": "src/Umbraco.PublishedCache.HybridCache/Services/DocumentCacheService.cs",
       "message": "src/Umbraco.PublishedCache.HybridCache/Services/DocumentCacheService.cs has 7 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 274
+      "line": 274,
+      "verdict": "false_positive",
+      "reason": "`coldNodes` at line 274 is declared `IReadOnlyCollection<ContentCacheNode>` and filled by `.ToArray()` from `GetDocumentSourcesAsync`; `contentTypeIds` is also materialized via `as int[] ?? ToArray()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DocumentCacheService line 274 materializes the awaited `GetDocumentSourcesAsync` result once into `coldNodes` and later uses `coldNodes.Count`, so the sequence is not enumerated multiple times."
+        }
+      ]
     },
     {
       "id": "EA-6b2c8975bdd5d4c6",
@@ -368,9 +548,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.LiteDB/Db.cs",
       "message": "src/net/Wexflow.Core.Db.LiteDB/Db.cs has 10 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1299
+      "line": 1299,
+      "verdict": "false_positive",
+      "reason": "In src/net LiteDB Db.cs, `q = col.Find(Query.All(\"StatusDate\")).ToArray()` at line 1299 is an array, so `q.Any()` followed by `q.Select(...).First()` does not re-run the LiteDB query.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Wexflow LiteDB line 1299 does `col.Find(...).ToArray()` into `q` and then calls `q.Any()` and `q.Select(...).First()` on the array, so the query is materialized once."
+        }
+      ]
     },
     {
       "id": "EA-bf77a4bb4f5f91d3",
@@ -378,9 +568,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MongoDB/Db.cs",
       "message": "src/net/Wexflow.Core.Db.MongoDB/Db.cs has 13 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 614
+      "line": 614,
+      "verdict": "false_positive",
+      "reason": "In src/net MongoDB Db.cs, the cursor is converted with `.ToEnumerable().ToArray()` at line 614 before `q.Any()` and `q.Select(...).First()`, so the Mongo query runs once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Wexflow MongoDB line 614 materializes the sorted cursor once via `ToEnumerable().ToArray()` into `q`, and the following `q.Any()`/`q.Select().First()` run on the array, not the cursor."
+        }
+      ]
     },
     {
       "id": "EA-08cd3af9b0f84e00",
@@ -388,9 +588,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.RavenDB/Db.cs",
       "message": "src/net/Wexflow.Core.Db.RavenDB/Db.cs has 48 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 224
+      "line": 224,
+      "verdict": "false_positive",
+      "reason": "In src/net RavenDB Db.cs, `rels = col.Where(uw => uw.UserId == userId).ToArray()` at line 224 executes the session query once before the foreach; the 48 counted calls are independent per-method materializations.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "RavenDB Db.cs line 224 materializes the `Where(...)` query once into `rels` and iterates that array for deletion; the other flagged calls are likewise one-shot materializations within separate sessions."
+        }
+      ]
     },
     {
       "id": "EA-6b93a7de2571efe2",
@@ -398,9 +608,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/Task.cs",
       "message": "src/net/Wexflow.Core/Task.cs has 9 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 118
+      "line": 118,
+      "verdict": "false_positive",
+      "reason": "In src/net Task.cs, `attributes` is an `IList<Attribute>` built as `new List<Attribute>()`, so `attributes.ToArray()` at line 118 copies a list once; QueryFiles enumerates `files` only once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Task.cs line 118 is `attributes.ToArray()` on a `List<Attribute>` passed into the Setting constructor once per loop iteration; each element is converted once, not enumerated repeatedly."
+        }
+      ]
     },
     {
       "id": "EA-601e8138ba095553",
@@ -408,9 +628,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core/Workflow.cs",
       "message": "src/net/Wexflow.Core/Workflow.cs has 14 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 388
+      "line": 388,
+      "verdict": "false_positive",
+      "reason": "In src/net Workflow.cs, `localVariables` is a `List<Variable>` and `LocalVariables = localVariables.ToArray()` at line 388 copies it once; RunSequentialTasksAsync already materializes `tasks` via `as Task[] ?? ToArray()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Workflow.cs line 388 is `localVariables.ToArray()` assigned once to `LocalVariables`; the remaining calls convert separate node/task lists once, and `RunSequentialTasksAsync` uses `tasks as Task[] ?? tasks.ToArray()`."
+        }
+      ]
     },
     {
       "id": "EA-63505efe01e8f0fc",
@@ -418,9 +648,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Server/WexflowService.cs",
       "message": "src/net/Wexflow.Server/WexflowService.cs has 44 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 391
+      "line": 391,
+      "verdict": "false_positive",
+      "reason": "In src/net WexflowService.cs, `WexflowEngine.Workflows` is an `IList<Workflow>`, so `.ToList().Where(...)` at line 391 is at most a redundant copy, not a repeated enumeration of a deferred IEnumerable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "WexflowService line 391 calls `.ToList()` on the engine's Workflows collection as a snapshot before a single lazy Where/Select pipeline ended by one `.ToArray()`; no sequence is enumerated more than once."
+        }
+      ]
     },
     {
       "id": "EA-9724643afd753707",
@@ -428,9 +668,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.LiteDB/Db.cs",
       "message": "src/netcore/Wexflow.Core.Db.LiteDB/Db.cs has 10 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1299
+      "line": 1299,
+      "verdict": "false_positive",
+      "reason": "In src/netcore LiteDB Db.cs, line 1299 assigns the `col.Find(...)` result to an array `q` before `q.Any()` and `q.Select(e => e.StatusDate).First()`, so the collection is read once.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore LiteDB Db.cs line 1299 materializes `col.Find(...)` once into `q` and then only runs `.Any()`/`.Select().First()` on the array, so there is no repeated query enumeration."
+        }
+      ]
     },
     {
       "id": "EA-6091611728671ba4",
@@ -438,9 +688,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MongoDB/Db.cs",
       "message": "src/netcore/Wexflow.Core.Db.MongoDB/Db.cs has 13 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 614
+      "line": 614,
+      "verdict": "false_positive",
+      "reason": "In src/netcore MongoDB Db.cs, the sorted HistoryEntry find is materialized by `.ToEnumerable().ToArray()` at line 614, so the later `Any`/`First` work on the array rather than re-querying.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore MongoDB Db.cs line 614 materializes the sorted cursor once into `q` with `ToEnumerable().ToArray()`, and the subsequent `Any`/`Select` run on the array."
+        }
+      ]
     },
     {
       "id": "EA-b9ddd3d0c35aed51",
@@ -448,9 +708,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.RavenDB/Db.cs",
       "message": "src/netcore/Wexflow.Core.Db.RavenDB/Db.cs has 48 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 224
+      "line": 224,
+      "verdict": "false_positive",
+      "reason": "In src/netcore RavenDB Db.cs, the `UserWorkflow` query at line 224 is executed once by `.ToArray()` into `rels` before the delete loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore RavenDB Db.cs line 224 materializes the filtered query once into `rels` and iterates it a single time to delete, so the count is of independent one-shot materializations."
+        }
+      ]
     },
     {
       "id": "EA-a222411c68c1efe7",
@@ -458,9 +728,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core/Task.cs",
       "message": "src/netcore/Wexflow.Core/Task.cs has 9 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 119
+      "line": 119,
+      "verdict": "false_positive",
+      "reason": "In src/netcore Task.cs, line 119 calls `attributes.ToArray()` on a local `IList<Attribute>` created with `new List<Attribute>()` at line 111, a single copy with no deferred source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore Task.cs line 119 is `attributes.ToArray()` on a List passed to the Setting constructor once per setting; no deferred sequence is enumerated more than once."
+        }
+      ]
     },
     {
       "id": "EA-b4f2ce9379989891",
@@ -468,9 +748,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core/Workflow.cs",
       "message": "src/netcore/Wexflow.Core/Workflow.cs has 11 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 738
+      "line": 738,
+      "verdict": "false_positive",
+      "reason": "In src/netcore Workflow.cs, `loadedAssemblies` at line 738 materializes `AppDomain.CurrentDomain.GetAssemblies()` names once with `.ToArray()` so the later lookups reuse the array.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore Workflow.cs line 738 materializes the loaded assembly names once into `loadedAssemblies` and then probes that array with `All(...)`, which is the materialize-once fix, not re-enumeration."
+        }
+      ]
     },
     {
       "id": "EA-749f5621fbadfc69",
@@ -478,9 +768,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Server/WexflowService.cs",
       "message": "src/netcore/Wexflow.Server/WexflowService.cs has 25 LINQ enumeration calls; consider materializing once",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 580
+      "line": 580,
+      "verdict": "false_positive",
+      "reason": "In src/netcore WexflowService.cs, line 580's `.ToList()` copies the `IList<Workflow>` engine list before a single `.Where` filter; there is no second enumeration of a lazy sequence.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "netcore WexflowService line 580 uses `.ToList()` as a snapshot of the Workflows collection ahead of one Where/Select pipeline ending in a single `.ToArray()`, so nothing is enumerated repeatedly."
+        }
+      ]
     }
   ]
 }

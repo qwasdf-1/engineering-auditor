@@ -28,9 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.cdata/src/org/jkiss/dbeaver/ext/cdata/registry/CDataDriverIconLoader.java",
       "message": "`LinkedBlockingQueue` at line 58 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 58
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The CData icon ThreadPoolExecutor uses `new LinkedBlockingQueue<>()` with no capacity, and CDataDriverDescriptor enqueues one download task per driver via load(), so the backlog is unbounded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The LinkedBlockingQueue is the work queue of a 4-thread icon loader, and CDataDriverIconLoader.load is called once per CData driver descriptor (CDataDriverDescriptor line 105), so the task count is bounded by the fixed driver catalog."
+        }
+      ]
     },
     {
       "id": "EA-df40b9d3a5c0b9a2",
@@ -38,9 +48,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.cdata/src/org/jkiss/dbeaver/ext/cdata/registry/CDataProcessExecutor.java",
       "message": "`newSingleThreadExecutor` at line 51 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "outputExecutor in CDataProcessExecutor only ever gets the single readOutput task submitted and is shut down with shutdownNow, so its work queue never holds more than one item.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "newSingleThreadExecutor in CDataProcessExecutor is created per process run and receives a single submit (readOutput) before shutdownNow in the finally block, so its queue never holds more than one task."
+        }
+      ]
     },
     {
       "id": "EA-da3a63a6698af8dd",
@@ -48,9 +68,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/DBeaverLauncher.java",
       "message": "`newSingleThreadExecutor` at line 853 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 853
+      "line": 853,
+      "verdict": "false_positive",
+      "reason": "httpExecutor backs a HttpClient used for one client.send to /handleCommandLine and is shut down afterwards, so the single-thread executor's queue holds only that request's internal tasks.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "httpExecutor in DBeaverLauncher is a single-use executor handed to one HttpClient for one launcher request sequence and shut down at line 934, so its queue holds only a few requests."
+        }
+      ]
     },
     {
       "id": "EA-f2974570f0fa3d34",
@@ -58,9 +88,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui/src/org/jkiss/dbeaver/ui/browser/LocalResourceHttpServer.java",
       "message": "`newSingleThreadExecutor` at line 174 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "true_positive",
+      "reason": "LocalResourceHttpServer passes the newSingleThreadExecutor to HttpServer.setExecutor, so every incoming HTTP exchange is queued on its unbounded LinkedBlockingQueue and served one at a time, with no limit on how many requests pile up.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The loopback HttpServer dispatches every incoming request to a newSingleThreadExecutor with an unbounded LinkedBlockingQueue (server.setExecutor(executor)), so requests that arrive faster than the one handler thread serves them queue without limit."
+        }
+      ]
     },
     {
       "id": "EA-ab714e9e2750303d",
@@ -88,9 +128,19 @@
       "language": "java",
       "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/thread/ThreadUtils.java",
       "message": "`newFixedThreadPool` at line 41 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 41
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "ThreadUtils.newDaemonFixedThreadExecutor wraps Executors.newFixedThreadPool, and callers such as NettyRemotingServer's methodInvokerExecutor and CommandEngine feed it network/command work, so its unbounded work queue can grow under load.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "newDaemonFixedThreadExecutor wraps Executors.newFixedThreadPool and is used for externally fed pools such as NettyRemotingServer's methodInvokerExecutor and CommandEngine, so incoming RPC/command load queues unboundedly behind threadsNum threads."
+        }
+      ]
     },
     {
       "id": "EA-c94a5b9ea1499924",
@@ -98,9 +148,19 @@
       "language": "java",
       "path": "dolphinscheduler-datasource-plugin/dolphinscheduler-datasource-azure-sql/src/main/java/org/apache/dolphinscheduler/plugin/datasource/azuresql/param/AzureSQLDataSourceProcessor.java",
       "message": "`newSingleThreadExecutor` at line 205 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 205
+      "line": 205,
+      "verdict": "false_positive",
+      "reason": "The executor built per getConnection is given to ConfidentialClientApplication for one acquireToken call, which is awaited with future.get(), so its queue holds only that token request.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The executor in tokenGetConnection is created for one acquireToken call that is awaited with future.get(), so it only ever receives that single task."
+        }
+      ]
     },
     {
       "id": "EA-3e212c4d29ba1d9b",
@@ -108,9 +168,19 @@
       "language": "java",
       "path": "dolphinscheduler-storage-plugin/dolphinscheduler-storage-cos/src/main/java/org/apache/dolphinscheduler/plugin/storage/cos/CosStorageOperator.java",
       "message": "`newFixedThreadPool` at line 358 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 358
+      "line": 358,
+      "verdict": "true_positive",
+      "reason": "getCosTransferManager's newFixedThreadPool(16) is shared by the operator's TransferManager for all uploads/downloads, with parts as small as 1 MB, so concurrent transfers enqueue part tasks without bound.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getCosTransferManager builds Executors.newFixedThreadPool(16) for the TransferManager, whose multipart upload parts are submitted into an unbounded queue behind 16 threads, with no limit on how many uploads can pile up."
+        }
+      ]
     },
     {
       "id": "EA-5a221536f49e7d69",
@@ -118,9 +188,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-executor/src/main/java/org/apache/dolphinscheduler/task/executor/eventbus/TaskExecutorLifecycleEventRemoteReporter.java",
       "message": "`LinkedBlockingQueue` at line 297 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 297
+      "line": 297,
+      "verdict": "false_positive",
+      "reason": "Each ReportableTaskExecutorLifecycleEventChannel is per task instance and holds only that task's few lifecycle events until the master acknowledges them, after which the channel is removed, so the queue is bounded by the lifecycle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Each ReportableTaskExecutorLifecycleEventChannel holds the lifecycle events of one task executor (typed state transitions removed by type via removeIf), so the queue length is bounded by the finite per-task event set."
+        }
+      ]
     },
     {
       "id": "EA-05be36eeed402781",
@@ -128,9 +208,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/jgroups/protocol/KEYCLOAK_JDBC_PING2.java",
       "message": "`newSingleThreadExecutor` at line 73 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "false_positive",
+      "reason": "NETWORK_TIMEOUT_EXECUTOR is only the executor handed to connection.setNetworkTimeout, which the JDBC driver uses just to abort a timed-out connection, so it receives a task only on rare timeouts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "NETWORK_TIMEOUT_EXECUTOR is only handed to connection.setNetworkTimeout, which uses it for occasional timeout aborts, so its single-thread queue receives a few tasks and is not a throughput queue."
+        }
+      ]
     },
     {
       "id": "EA-a97a12de3a9a1eed",
@@ -138,9 +228,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/expiration/BaseExpirationTask.java",
       "message": "`newSingleThreadExecutor` at line 65 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 65
+      "line": 65,
+      "verdict": "false_positive",
+      "reason": "BaseExpirationTask schedules the next purge only after runAndComplete finishes, so CompletableFuture.runAsync(this::purgeExpired, executorService) has at most one task queued at a time.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "executorService runs purgeExpired via CompletableFuture.runAsync, and scheduleNextTask only schedules the next purge after one finishes, so it receives at most one task at a time."
+        }
+      ]
     },
     {
       "id": "EA-16a1ddc2942e4d62",
@@ -148,9 +248,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/util/InfinispanKeyGenerator.java",
       "message": "`newSingleThreadExecutor` at line 86 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 86
+      "line": 86,
+      "verdict": "false_positive",
+      "reason": "The newSingleThreadExecutor passed to newLocalKeyAffinityService runs the KeyAffinityService's single long-lived key-generator task (as the comment says), created once per cache by computeIfAbsent, so its queue never builds up.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The single-thread executor is passed to Infinispan's KeyAffinityService, which submits one long-lived key-filler task that sits in WAITING state (per the comment), so the queue holds one task."
+        }
+      ]
     },
     {
       "id": "EA-3b5658c7301857ae",
@@ -178,9 +288,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/events/TestEventsListenerProvider.java",
       "message": "`LinkedBlockingQueue` at line 34 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 34
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "TestEventsListenerProvider.events is in the keycloak testsuite-providers module, a test support provider deployed only into the integration test server, so it is outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TestEventsListenerProvider lives under testsuite/integration-arquillian testsuite-providers and is a test-event recorder, so it is outside the production scope."
+        }
+      ]
     },
     {
       "id": "EA-0d528a04342107ee",
@@ -188,9 +308,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/events/TestEventsListenerProvider.java",
       "message": "`LinkedBlockingQueue` at line 35 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 35
+      "line": 35,
+      "verdict": "false_positive",
+      "reason": "TestEventsListenerProvider.adminEvents collects admin events for integration tests in testsuite/integration-arquillian, which is test code outside the detector's production-only scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This adminEvents queue is in the Arquillian testsuite-providers TestEventsListenerProvider, a test fixture outside the detector's production scope."
+        }
+      ]
     },
     {
       "id": "EA-f18d765c7d0812bc",
@@ -198,9 +328,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestApplicationResourceProviderFactory.java",
       "message": "`LinkedBlockingDeque` at line 47 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 47
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "adminLogoutActions in TestApplicationResourceProviderFactory belongs to the arquillian testsuite-providers test module, not shipped Keycloak code, so it is outside production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "adminLogoutActions is in TestApplicationResourceProviderFactory under the Arquillian testsuite-providers module, a test fixture outside production scope."
+        }
+      ]
     },
     {
       "id": "EA-7be1168811cb071a",
@@ -208,9 +348,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestApplicationResourceProviderFactory.java",
       "message": "`LinkedBlockingDeque` at line 48 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "false_positive",
+      "reason": "backChannelLogoutTokens in TestApplicationResourceProviderFactory records tokens for integration tests under testsuite/, which is outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "backChannelLogoutTokens belongs to the Arquillian testsuite-providers TestApplicationResourceProviderFactory, test-only code outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-318fb0ed5ed020e2",
@@ -218,9 +368,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestSamlApplicationResourceProviderFactory.java",
       "message": "`LinkedBlockingDeque` at line 39 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 39
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "testAvailabilityActions in TestSamlApplicationResourceProviderFactory is a test fixture queue in the testsuite-providers module, outside the production-only scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "testAvailabilityActions sits in TestSamlApplicationResourceProviderFactory in the Arquillian testsuite-providers module, test fixture code outside scope."
+        }
+      ]
     },
     {
       "id": "EA-7c6ce72db96b4174",
@@ -228,9 +388,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/queue/AuditAsyncQueue.java",
       "message": "`LinkedBlockingQueue` at line 38 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 38
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The only producer, AuditAsyncQueue.log, checks `queue.size() >= getMaxQueueSize()` before `queue.add(event)` and fails the event instead (default cap 1024*1024, configurable), so the backlog is bounded by hand.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "AuditAsyncQueue.log checks `queue.size() >= getMaxQueueSize()` before queue.add (line 64), so the unbounded LinkedBlockingQueue is capped manually."
+        }
+      ]
     },
     {
       "id": "EA-03f798967a481036",
@@ -238,9 +408,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/queue/AuditFileCacheProviderSpool.java",
       "message": "`LinkedBlockingQueue` at line 80 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "indexQueue gets one AuditIndexRecord per spool file at rollover (fileRolloverSec, default 24h) or on recovery, so it holds small metadata records bounded by the number of spool files, not by event rate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "indexQueue holds one AuditIndexRecord per rolled audit log file (added at lines 267, 279, 564), and the spool caps archived files (maxArchiveFiles), so it is bounded by the file count rather than event rate."
+        }
+      ]
     },
     {
       "id": "EA-400cc75f0700ac8e",
@@ -248,9 +428,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/queue/AuditFileQueueSpool.java",
       "message": "`LinkedBlockingQueue` at line 76 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 76
+      "line": 76,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): indexQueue gets one AuditIndexRecord per spool file (at rollover, line 565, or at init) and mirrors the indexRecords list. Growth follows file rollover (24h by default), not audit event rate, and the backlog lives on disk by design, so a capacity bound would only block the spooler.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "indexQueue in AuditFileQueueSpool holds one small AuditIndexRecord per rolled spool file (added at lines 263/275/565), so growth follows file rollover, not event rate."
+        }
+      ]
     },
     {
       "id": "EA-33b3f79af75b4c8a",
@@ -258,9 +448,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/queue/AuditFileSpool.java",
       "message": "`LinkedBlockingQueue` at line 70 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 70
+      "line": 70,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): indexQueue gets one AuditIndexRecord per spool file: at init, or when the writer file rolls over (once per fileRolloverSec, 24h by default). The records shadow files on disk, which is the spool's intended buffer, so no in-memory producer outpaces the consumer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "AuditFileSpool.indexQueue likewise queues one AuditIndexRecord per spool file (lines 233/243/506), bounded by the number of rolled files rather than a producer outpacing a consumer."
+        }
+      ]
     },
     {
       "id": "EA-d2e34b6c464480b0",
@@ -268,9 +468,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/queue/AuditSummaryQueue.java",
       "message": "`LinkedBlockingQueue` at line 47 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 47
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "AuditSummaryQueue.log() checks queue.size() >= getMaxQueueSize() and returns false before its only queue.add(event), so the LinkedBlockingQueue is bounded by the configured max size at its sole producer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "AuditSummaryQueue.log() rejects events once queue.size() >= getMaxQueueSize() (default 1M, line 83), so the LinkedBlockingQueue is explicitly capped by program logic."
+        }
+      ]
     },
     {
       "id": "EA-85fd437264ae3d9e",
@@ -278,9 +488,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/contextenricher/RangerTagEnricher.java",
       "message": "`LinkedBlockingQueue` at line 95 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 95
+      "line": 95,
+      "verdict": "false_positive",
+      "reason": "Every producer of tagDownloadQueue (syncTagsWithAdmin and DownloaderTask.run) calls put() then token.waitForCompletion(), so a producer cannot outpace RangerTagRefresher; the queue never holds more than one trigger per blocked caller.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "tagDownloadQueue receives a trigger from a Timer every pollingIntervalMs (60s default) plus blocking syncTagsWithAdmin calls that wait for completion, so the producer is paced."
+        }
+      ]
     },
     {
       "id": "EA-b8e7799e5aedbbdf",
@@ -288,9 +508,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyengine/RangerResourceTrie.java",
       "message": "`LinkedBlockingQueue` at line 812 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 812
+      "line": 812,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): workQueue is filled only by the trie build loop over an in-memory, finite evaluator/resource set (insert -> add), then one termination item per thread, so its size is bounded by the policy set the program already holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "workQueue in ResourceTrieBuilderThread is filled once from the finite evaluators loop while building a trie, and drained by the builder thread; it is bounded by the policy set."
+        }
+      ]
     },
     {
       "id": "EA-be7a029b3f2ca21b",
@@ -298,9 +528,19 @@
       "language": "java",
       "path": "common-utils/src/main/java/org/apache/ranger/plugin/util/RangerCache.java",
       "message": "`newFixedThreadPool` at line 77 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 77
+      "line": 77,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The only submit to loaderThreadPool (refreshIfNeeded with timeout, line 310) runs under the per-key lock and only when `this.refresher` is null, so there is at most one queued task per cached key. The queue cannot grow faster than the cache's own entries.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "newFixedThreadPool in RangerCache.refreshIfNeeded gets at most one pending refresh per cache key (the refresher future guards resubmission), so the queue is bounded by the key count."
+        }
+      ]
     },
     {
       "id": "EA-fc3a9173008b4992",
@@ -308,9 +548,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/AzureKeyVaultClientAuthenticator.java",
       "message": "`newFixedThreadPool` at line 152 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 152
+      "line": 152,
+      "verdict": "false_positive",
+      "reason": "The newFixedThreadPool(1, ...) at line 152 is created per doAuthenticate call, handed to one AuthenticationContext for a single acquireToken(...).get(), and shut down in finally, so its work queue can never hold a backlog.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The pool created at line 152 is single-threaded, receives exactly one acquireToken task, and is shut down in the finally block, so no backlog can build."
+        }
+      ]
     },
     {
       "id": "EA-f815642c43afd45c",
@@ -318,9 +568,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/AzureKeyVaultClientAuthenticator.java",
       "message": "`newFixedThreadPool` at line 192 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 192
+      "line": 192,
+      "verdict": "false_positive",
+      "reason": "getAccessTokenFromClientCredentials builds a one-thread pool solely for a single context.acquireToken(resource, credentials, null) whose future it awaits, then shuts the service down; at most one task ever enters the queue.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The pool at line 192 handles a single acquireToken call and service.shutdown() runs in finally; the work queue never holds more than one task."
+        }
+      ]
     },
     {
       "id": "EA-ce10e2c647bfad85",
@@ -328,9 +588,19 @@
       "language": "java",
       "path": "src/android/app/src/main/java/com/wexflow/LoginActivity.java",
       "message": "`newSingleThreadExecutor` at line 36 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 36
+      "line": 36,
+      "verdict": "true_positive",
+      "reason": "LoginActivity's Executors.newSingleThreadExecutor() has an unbounded work queue, and each login attempt executes a new UserLoginTask with no guard against repeated submissions while one is pending.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "LoginActivity's single-thread executor receives one task per login button press (line 83) after field validation; a human tap rate cannot grow the queue meaningfully."
+        }
+      ]
     },
     {
       "id": "EA-38f321acc8dd3cba",
@@ -338,9 +608,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/pscan/PassiveScanController.java",
       "message": "`newFixedThreadPool` at line 164 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 164
+      "line": 164,
+      "verdict": "true_positive",
+      "reason": "PassiveScanController's executor is Executors.newFixedThreadPool(threads, ...) whose unbounded LinkedBlockingQueue receives a passive scan task per proxied message, which can outpace scanner threads under heavy traffic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PassiveScanController's loop submits a PassiveScanTask per history record at line 134 with no queue-depth check, so the fixed pool's unbounded queue absorbs any backlog of unscanned messages."
+        }
+      ]
     },
     {
       "id": "EA-88948d2a1e94819a",
@@ -348,9 +628,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/spider/Spider.java",
       "message": "`newFixedThreadPool` at line 523 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 523
+      "line": 523,
+      "verdict": "true_positive",
+      "reason": "Spider.threadPool = Executors.newFixedThreadPool(spiderParam.getThreadCount(), ...) queues a task per discovered URI in its unbounded LinkedBlockingQueue, so a large crawl frontier grows in memory.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Spider.submitTask executes a task for each discovered URI on a fixed pool whose LinkedBlockingQueue is unbounded, so a crawl that finds links faster than threads fetch them grows the queue."
+        }
+      ]
     },
     {
       "id": "EA-fd20763e16bc9520",
@@ -378,9 +668,19 @@
       "language": "python",
       "path": "electrum/gui/common_qt/util.py",
       "message": "`Queue` at line 161 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 161
+      "line": 161,
+      "verdict": "false_positive",
+      "reason": "TaskThread.tasks receives tasks from GUI actions (sign message, dialogs via thread.add) on the Qt thread, one per user action, where a blocking bounded put would freeze the UI; nothing produces work faster than the user.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TaskThread.tasks is an unbounded queue.Queue fed by add() from GUI code with no cap, so tasks submitted faster than the single worker thread runs them grow the backlog."
+        }
+      ]
     },
     {
       "id": "EA-b1ad75b24de58d68",
@@ -388,9 +688,19 @@
       "language": "python",
       "path": "electrum/gui/qml/qeapp.py",
       "message": "`Queue` at line 102 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 102
+      "line": 102,
+      "verdict": "true_positive",
+      "reason": "user_notification_queue gets one entry per wallet userNotify, but on_notification_timer removes just one item per 20 second rate_limit, so a burst of notifications outpaces the consumer and accumulates.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "user_notification_queue is filled by put() for every incoming wallet notification and only drained by a 500 ms timer via get_nowait, with no maxsize, so a notification burst accumulates unbounded."
+        }
+      ]
     },
     {
       "id": "EA-5df29933fa836aa5",
@@ -398,9 +708,19 @@
       "language": "python",
       "path": "electrum/gui/qml/qewallet.py",
       "message": "`Queue` at line 119 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 119
+      "line": 119,
+      "verdict": "true_positive",
+      "reason": "QEWallet.tx_notification_queue is filled by add_tx_notification for every new transaction, and notify_transactions returns early while the wallet is not up to date, so a large initial sync queues every Transaction object.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "tx_notification_queue gets a put(tx) for each transaction the wallet reports and is drained by a 500 ms/2 s timer, with no maxsize, so a flood of transactions from the network grows it without limit."
+        }
+      ]
     },
     {
       "id": "EA-27e369a5e8ab6e17",
@@ -408,9 +728,19 @@
       "language": "python",
       "path": "electrum/gui/qt/main_window.py",
       "message": "`Queue` at line 203 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 203
+      "line": 203,
+      "verdict": "true_positive",
+      "reason": "ElectrumWindow.tx_notification_queue gets every new Transaction from on_event_new_transaction, and notify_transactions skips draining while syncing and rate-limits to once per 20 s, so the backlog grows with the sync.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "tx_notification_queue in main_window is fed by put(tx) at line 480 for every notified transaction and drained only on a timer pass (line 936), with no maxsize."
+        }
+      ]
     },
     {
       "id": "EA-bbc3d1965dea5047",
@@ -418,9 +748,19 @@
       "language": "python",
       "path": "electrum/interface.py",
       "message": "`Queue` at line 1142 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1142
+      "line": 1142,
+      "verdict": "true_positive",
+      "reason": "header_queue receives every blockchain.headers.subscribe notification the remote server pushes, and run_fetch_blocks processes each header (possibly with a slow chain sync) before taking the next, so a fast or hostile server can grow it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "header_queue is an unbounded asyncio.Queue passed to session.subscribe and filled by server-pushed 'blockchain.headers.subscribe' notifications, so a remote server's push rate, not the local loop, sets the backlog."
+        }
+      ]
     },
     {
       "id": "EA-146d97e14bd6f2e1",
@@ -428,9 +768,19 @@
       "language": "python",
       "path": "electrum/lnpeer.py",
       "message": "`Queue` at line 773 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 773
+      "line": 773,
+      "verdict": "false_positive",
+      "reason": "on_reply_channel_range sleeps while reply_channel_range.qsize() > 10 before put_nowait, so the producer applies its own backpressure and the asyncio.Queue stays bounded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "reply_channel_range is an unbounded asyncio.Queue filled by whatever reply_channel_range messages the remote peer sends, with no limit on how many replies a misbehaving peer can push before get_channel_range consumes them."
+        }
+      ]
     },
     {
       "id": "EA-01c0ced3a3d4e02b",
@@ -438,9 +788,19 @@
       "language": "python",
       "path": "electrum/lnrouter.py",
       "message": "`PriorityQueue` at line 603 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 603
+      "line": 603,
+      "verdict": "false_positive",
+      "reason": "nodes_to_explore is the Dijkstra frontier inside a single path search, not a producer/consumer channel, and it is bounded by the edges of the channel graph being explored.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "nodes_to_explore is the local Dijkstra frontier in the path search, filled and drained in the same single-threaded loop and bounded by the channel graph's edges, so it is an algorithm worklist rather than a producer/consumer buffer."
+        }
+      ]
     },
     {
       "id": "EA-4c289a75e7cf8c70",
@@ -448,9 +808,19 @@
       "language": "python",
       "path": "electrum/lnworker.py",
       "message": "`Queue` at line 884 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 884
+      "line": 884,
+      "verdict": "false_positive",
+      "reason": "sent_htlcs_q gets one HtlcLog per HTLC this PaySession has sent, which is bounded by the HTLCs in flight for the payment, and it is consumed by the payment loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sent_htlcs_q receives one HtlcLog per HTLC the payment session itself sent, which the pay loop at line 952 awaits, so the backlog is bounded by the number of in-flight HTLCs of one payment."
+        }
+      ]
     },
     {
       "id": "EA-66cb03deae765555",
@@ -458,9 +828,19 @@
       "language": "python",
       "path": "electrum/onion_message.py",
       "message": "`PriorityQueue` at line 572 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 572
+      "line": 572,
+      "verdict": "false_positive",
+      "reason": "send_queue items are local requests from submit_send, each registered in `pending` with a REQUEST_REPLY_TIMEOUT expiry and re-queued only in place of itself, so the queue tracks a bounded set of our own outstanding requests.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "send_queue is an unbounded asyncio.PriorityQueue filled via put_nowait in submit_send with no size check (unlike submit_forward), so message requests can queue without limit."
+        }
+      ]
     },
     {
       "id": "EA-02e24f66346c0cf8",
@@ -468,9 +848,19 @@
       "language": "python",
       "path": "electrum/onion_message.py",
       "message": "`PriorityQueue` at line 573 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 573
+      "line": 573,
+      "verdict": "false_positive",
+      "reason": "submit_forward drops packets once forward_queue.qsize() >= FORWARD_MAX_QUEUE, so this PriorityQueue has an explicit capacity check even though no maxsize is passed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "forward_queue is guarded by submit_forward, which drops a packet when qsize() >= FORWARD_MAX_QUEUE, so the PriorityQueue has an explicit manual bound."
+        }
+      ]
     },
     {
       "id": "EA-98641696ea8f1966",
@@ -478,9 +868,19 @@
       "language": "python",
       "path": "electrum/plugins/psbt_nostr/psbt_nostr.py",
       "message": "`Queue` at line 120 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 120
+      "line": 120,
+      "verdict": "false_positive",
+      "reason": "self.messages = asyncio.Queue() in CosignerWallet has no put or get anywhere in the psbt_nostr plugin, so no producer exists to grow it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "messages is an unbounded asyncio.Queue fed by incoming nostr events from relays, so remote relay traffic can outpace the consumer in the cosigner main loop."
+        }
+      ]
     },
     {
       "id": "EA-d7b2d2fa42851d86",
@@ -488,9 +888,19 @@
       "language": "python",
       "path": "electrum/sql_db.py",
       "message": "`Queue` at line 34 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 34
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "Every @sql-wrapped call (ChannelDB gossip writes, SweepStore) puts a request on db_requests and returns a future without waiting for room, so a gossip flood from peers can outpace the single SQLite thread.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "db_requests is an unbounded queue.Queue feeding a single SQL writer thread that also sleeps for commit_interval, so write requests produced faster than sqlite can apply them accumulate in memory."
+        }
+      ]
     },
     {
       "id": "EA-c989216bc0cd2ce6",
@@ -498,9 +908,19 @@
       "language": "python",
       "path": "electrum/synchronizer.py",
       "message": "`Queue` at line 75 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 75
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "status_queue receives a blockchain.scripthash.subscribe notification from the server for every subscribed address, handled one at a time by handle_status, so a server pushing statuses quickly can grow it without limit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "status_queue is an unbounded asyncio.Queue filled by server address-status notifications that handle_status consumes one at a time with network round trips, so server pushes can outpace it."
+        }
+      ]
     },
     {
       "id": "EA-ec6a1165cb0a10da",
@@ -508,9 +928,19 @@
       "language": "python",
       "path": "electrum/synchronizer.py",
       "message": "`Queue` at line 309 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 309
+      "line": 309,
+      "verdict": "true_positive",
+      "reason": "_start_watching_queue is fed by the notify RPC command via start_watching_addr with no cap, and each entry is handled by main() awaiting _add_address, so RPC callers can enqueue faster than subscriptions complete.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_start_watching_queue is an unbounded asyncio.Queue filled by start_watching_addr (put per request from the RPC/webhook API), consumed one address at a time with a network call each."
+        }
+      ]
     },
     {
       "id": "EA-52a9020481cf58a1",
@@ -518,9 +948,19 @@
       "language": "python",
       "path": "frigate/app.py",
       "message": "`Queue` at line 101 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "false_positive",
+      "reason": "detection_queue carries camera names: each detector client puts self.name and then waits on detector_subscriber for its result, so there is at most one entry per camera.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "detection_queue carries connection-name tokens that each camera client puts then synchronously waits on check_for_update with a timeout, so outstanding entries are bounded by the number of cameras."
+        }
+      ]
     },
     {
       "id": "EA-9391b9cc3fe9936a",
@@ -528,9 +968,19 @@
       "language": "python",
       "path": "frigate/app.py",
       "message": "`Queue` at line 104 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 104
+      "line": 104,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): `self.log_queue` is assigned at app.py:104 and never used again. Processes log through `frigate.log.log_listener.queue`, a separate manager.Queue in log.py, so nothing ever fills this queue.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "self.log_queue in FrigateApp.__init__ is created but never read or written anywhere else in the app (logging uses frigate.log.log_listener.queue), so nothing ever fills it."
+        }
+      ]
     },
     {
       "id": "EA-308a3f57efd3fec2",
@@ -538,9 +988,19 @@
       "language": "python",
       "path": "frigate/app.py",
       "message": "`Queue` at line 178 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 178
+      "line": 178,
+      "verdict": "true_positive",
+      "reason": "timeline_queue receives a timeline event for every tracked-object update from all cameras for the TimelineProcessor, with no capacity, so a busy scene can outpace the DB writer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "timeline_queue is an unbounded mp.Queue that EventProcessor puts onto for every tracked-object and API event, while a separate timeline process drains it, so event bursts have no backpressure."
+        }
+      ]
     },
     {
       "id": "EA-20f733e281928a86",
@@ -548,9 +1008,19 @@
       "language": "python",
       "path": "frigate/comms/webpush.py",
       "message": "`Queue` at line 80 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "WebPushClient.notification_queue gets a PushNotification per alert, and _process_notifications sends each one over HTTP on one thread, so alert bursts can outpace the sender.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "notification_queue is an unbounded queue.Queue that send_push_notification fills per event, drained by one webpush thread doing blocking network sends, so slow push endpoints let it grow."
+        }
+      ]
     },
     {
       "id": "EA-eda82d53430f32e0",
@@ -558,9 +1028,19 @@
       "language": "python",
       "path": "frigate/data_processing/common/face/model.py",
       "message": "`Queue` at line 230 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 230
+      "line": 230,
+      "verdict": "false_positive",
+      "reason": "model_builder_queue in this run_build_task receives exactly one face_embeddings_map from the build_model thread and is polled once and reset to None, so it never holds more than one item.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "model_builder_queue in run_build_task receives exactly one item (the finished embeddings map, put at line 260) from the single build thread, so it never holds more than one entry."
+        }
+      ]
     },
     {
       "id": "EA-f25dd0ed34c43f9f",
@@ -568,9 +1048,19 @@
       "language": "python",
       "path": "frigate/data_processing/common/face/model.py",
       "message": "`Queue` at line 341 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 341
+      "line": 341,
+      "verdict": "false_positive",
+      "reason": "This second classifier's run_build_task also puts a single face_embeddings_map into model_builder_queue and clears it after reading, so its size never goes above one.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This second run_build_task's model_builder_queue likewise receives a single put of the built face_embeddings_map (line 371) from one build thread, so its size is at most one."
+        }
+      ]
     },
     {
       "id": "EA-57793c8b9a2206cd",
@@ -578,9 +1068,19 @@
       "language": "python",
       "path": "frigate/data_processing/real_time/audio_transcription.py",
       "message": "`Queue` at line 46 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 46
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "process_audio puts every speech segment (obj_data, audio ndarray) on audio_queue for the whisper thread, and transcription is much slower than real time, so the numpy buffers can pile up.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "audio_queue is an unbounded queue.Queue that process_audio fills with a numpy audio chunk for every frame of the stream, while the Whisper/transcription thread consuming it may run slower than real time."
+        }
+      ]
     },
     {
       "id": "EA-46c72ea093cc4c90",
@@ -588,9 +1088,19 @@
       "language": "python",
       "path": "frigate/log.py",
       "message": "`Queue` at line 251 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 251
+      "line": 251,
+      "verdict": "false_positive",
+      "reason": "The redirect_output_to_logger queue buffers the wrapped function's C-level stdout lines and is drained right after func returns; it is a capture buffer scoped to one call, not a long-running producer/consumer channel.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "queue in redirect_output_to_logger is a per-call capture buffer for C-level stdout lines produced during one wrapped function and drained after it finishes, so it is bounded by that call's output."
+        }
+      ]
     },
     {
       "id": "EA-47c11ef0e488568f",
@@ -598,9 +1108,19 @@
       "language": "python",
       "path": "frigate/object_detection/util.py",
       "message": "`Queue` at line 19 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 19
+      "line": 19,
+      "verdict": "false_positive",
+      "reason": "RequestStore.input_queue is used by the hailo8l detect_raw, which puts one tensor and then waits on response_store.get for that request_id, so requests are submitted synchronously, one at a time.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "input_queue is an unbounded queue.Queue filled by put() for every detection request from many camera threads and consumed by a detector, so a slow detector lets tensors pile up in memory."
+        }
+      ]
     },
     {
       "id": "EA-1ac181cc1cb32d0b",
@@ -608,9 +1128,19 @@
       "language": "python",
       "path": "frigate/ptz/autotrack.py",
       "message": "`Queue` at line 324 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 324
+      "line": 324,
+      "verdict": "false_positive",
+      "reason": "_enqueue_move only puts onto move_queues[camera] when move_queue_locks[camera] is not locked and the PTZ is not moving, and _process_move_queue drops stale moves, so the queue never builds up a backlog.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "move_queues[camera] is an unbounded asyncio.Queue filled via put_nowait per autotracking movement computed each frame, consumed by _process_move_queue that awaits slow ONVIF PTZ moves."
+        }
+      ]
     },
     {
       "id": "EA-2629bb8ad74cf913",
@@ -618,9 +1148,19 @@
       "language": "python",
       "path": "frigate/service_manager/multiprocessing_waiter.py",
       "message": "`Queue` at line 22 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 22
+      "line": 22,
+      "verdict": "false_positive",
+      "reason": "MultiprocessingWaiter._queue receives one (sentinel, future) per service process passed to wait_for_sentinel, which is bounded by the number of managed services.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The waiter's _queue holds one (sentinel, future) entry per wait_for_sentinel call for the process/service handles frigate itself supervises, so it is bounded by the small fixed set of service sentinels."
+        }
+      ]
     },
     {
       "id": "EA-7c82fa08c5325e8f",
@@ -628,9 +1168,19 @@
       "language": "python",
       "path": "frigate/service_manager/service.py",
       "message": "`Queue` at line 224 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 224
+      "line": 224,
+      "verdict": "false_positive",
+      "reason": "_command_queue carries ServiceManager lifecycle commands from _send_command (start/stop for registered services), a small, program-bounded set rather than a data stream.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "_command_queue holds start/stop-style commands for the services the manager supervises, each consumed immediately by _monitor_command_queue, so entries are bounded by the program's own service operations."
+        }
+      ]
     },
     {
       "id": "EA-8d719cf766601444",
@@ -658,9 +1208,19 @@
       "language": "python",
       "path": "mitmproxy/addons/clientplayback.py",
       "message": "`Queue` at line 153 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 153
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "ClientPlayback.queue gets one put_nowait per flow the user passes to start_replay, and those flows are already in memory, so the queue is bounded by the user-chosen flow set.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ClientPlayback.queue holds flows the user already loaded and chose to replay (put_nowait in start_replay, one per flow), so its size is bounded by the existing in-memory flow set and a consumer awaiting each replay."
+        }
+      ]
     },
     {
       "id": "EA-17363ba7892d195c",
@@ -668,9 +1228,19 @@
       "language": "python",
       "path": "zerver/management/commands/export_search.py",
       "message": "`Queue` at line 28 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): download_queue only receives short path_id strings from one finite export run (line 299), and the command then calls download_queue.join(). The backlog is capped by the export's attachment set, not by a producer running without limit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "download_queue in export_search.py is filled once from the finite attachment list of a single export run (line 299) with short path-id strings and then joined, so it is bounded by the export."
+        }
+      ]
     },
     {
       "id": "EA-85bdd43891f1125b",
@@ -678,9 +1248,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/terminal.rs",
       "message": "`unbounded_channel` at line 48 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "Events::new creates `mpsc::unbounded_channel()` and a std::thread that forwards every crossterm event into `tx` with no capacity. A burst of input or resize events queues without bound, in the shipped atuin-ai resume TUI.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Events::new's unbounded channel carries terminal key events from a single crossterm polling thread, whose producer is the human keyboard and is drained by a fast UI loop (`behind()` catches up), so no practical backlog growth."
+        }
+      ]
     },
     {
       "id": "EA-51cd79095f76c811",
@@ -688,9 +1268,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/worker.rs",
       "message": "`unbounded_channel` at line 126 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 126
+      "line": 126,
+      "verdict": "true_positive",
+      "reason": "worker::spawn's search request lane `(search_tx, search_rx)` is a tokio `unbounded_channel`. UI keystrokes can enqueue searches faster than the `searches` task drains them, with no backpressure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "worker::spawn's `search_tx` lane is unbounded while the consumer `searches` does slow session-source IO per request, so queued searches can pile up faster than they are served."
+        }
+      ]
     },
     {
       "id": "EA-cd65f4e2d072c8b3",
@@ -698,9 +1288,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/worker.rs",
       "message": "`unbounded_channel` at line 127 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 127
+      "line": 127,
+      "verdict": "true_positive",
+      "reason": "The detail request lane `(detail_tx, detail_rx)` feeding the `details` task is also built with `mpsc::unbounded_channel()`, so it has no capacity limit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "worker::spawn's `detail_tx` lane carries Preview/Plan/Restore/Continue/Fork requests served by `details`, which writes sessions to disk; the unbounded queue has no backpressure."
+        }
+      ]
     },
     {
       "id": "EA-28379a55a9651b2d",
@@ -708,9 +1308,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/worker.rs",
       "message": "`unbounded_channel` at line 128 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 128
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "The transcript lane `(transcript_tx, transcript_rx)` is an unbounded tokio channel. The consumer reads only the newest request, but the queue itself still has no bound.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "worker::spawn's `transcript_tx` lane feeds `transcripts`, which reads whole conversations, and nothing bounds queued Transcript requests."
+        }
+      ]
     },
     {
       "id": "EA-9157273227c3fce9",
@@ -718,9 +1328,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/worker.rs",
       "message": "`unbounded_channel` at line 129 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 129
+      "line": 129,
+      "verdict": "true_positive",
+      "reason": "The shared response channel `(resp_tx, resp_rx)`, cloned into three producer tasks and returned as `UnboundedReceiver<Response>`, has no capacity. Responses (including transcripts) pile up if the UI stops polling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "worker::spawn's `resp_tx` response channel is shared by three worker tasks and drained by the UI, with no capacity, so large Response payloads (row vectors, transcripts) can accumulate."
+        }
+      ]
     },
     {
       "id": "EA-abc6d107fdc2a296",
@@ -728,9 +1348,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/tui/persist.rs",
       "message": "`unbounded_channel` at line 42 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "spawn_persist_worker builds its PersistJob queue with `unbounded_channel()` and returns an UnboundedSender. Session snapshots with full event lists can accumulate without limit if persistence is slower than the producer (intentional, but the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "spawn_persist_worker's unbounded `tx` queues PersistJob::Session jobs holding full cloned `events` vectors for a worker that does disk writes, so a slow disk grows memory without limit."
+        }
+      ]
     },
     {
       "id": "EA-491a489ffb6c7cc8",
@@ -738,9 +1368,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/watcher.rs",
       "message": "`channel` at line 111 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 111
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "create_watcher uses `std::sync::mpsc::channel::<()>()` (not sync_channel) to feed the debounce thread from notify callbacks. It is a std unbounded channel exactly as the detector defines, although its unit messages are cheap.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The std mpsc channel in create_watcher only carries `()` debounce tokens for events on one config file, drained by `debounce_loop`, so the backlog is negligible and bounded by user edits."
+        }
+      ]
     },
     {
       "id": "EA-1b8c4c13d58ee97f",
@@ -748,9 +1388,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/fs/tree_watcher/builder.rs",
       "message": "`unbounded` at line 136 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 136
+      "line": 136,
+      "verdict": "true_positive",
+      "reason": "The notify debouncer callback pushes every DebounceEventResult batch into flume::unbounded() `tx`, while TreeWatcherPoller::run drains `rx` only between full walks and stat polls, so filesystem churn can outpace the consumer and pile up in memory.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "flume::unbounded() carries every debounced notify event from the watcher callback (tx.send) with no backpressure, so a burst of filesystem events accumulates in memory until the poller task drains it."
+        }
+      ]
     },
     {
       "id": "EA-c7d2cb7f85e88122",
@@ -758,9 +1408,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/fs/tree_watcher/builder.rs",
       "message": "`unbounded` at line 154 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 154
+      "line": 154,
+      "verdict": "true_positive",
+      "reason": "The `found` flume::unbounded() sender gets one WatchedFile per newly seen file from FileTracker, and the TreeWatcher stream consumer may be slow or stalled, so a directory with heavy file churn grows this backlog without limit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `found` channel receives one WatchedFile per distinct regular file in the watched tree, each yielded once, so the backlog is bounded by the file count rather than by an unthrottled event rate."
+        }
+      ]
     },
     {
       "id": "EA-1d99b20d7cd74a35",
@@ -768,9 +1428,19 @@
       "language": "rust",
       "path": "crates/atuin-daemon/src/session_capture/recovery.rs",
       "message": "`unbounded_channel` at line 366 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 366
+      "line": 366,
+      "verdict": "false_positive",
+      "reason": "The Coordinator mailbox carries Rebuild/SeriesRewritten messages whose senders await a oneshot reply, plus at most one ReplayDone and one WaitedOut for the single running replay/backoff, so its backlog is bounded by the request/response protocol.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The coordinator mailbox carries Rebuild/SeriesRewritten requests that each hold a oneshot reply the caller awaits, plus at most one ReplayDone and one WaitedOut from the single running replay/backoff, so the backlog is bounded by outstanding callers."
+        }
+      ]
     },
     {
       "id": "EA-006a519ee6c494b3",
@@ -778,9 +1448,19 @@
       "language": "rust",
       "path": "crates/atuin-daemon/src/sync/engine/worker.rs",
       "message": "`unbounded_channel` at line 103 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 103
+      "line": 103,
+      "verdict": "false_positive",
+      "reason": "spawn_ai_session_projector's unbounded_channel::<()> is a coalescing wake signal: the task drains every pending () with try_recv before each project_synced, so the queue holds no data and never accumulates work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The unbounded_channel::<()> is a wakeup signal: the worker task drains it with `while rx.try_recv().is_ok() {}` before each project_synced call, so queued unit messages coalesce into one projection and carry no payload."
+        }
+      ]
     },
     {
       "id": "EA-4da4f0835b9e35ed",
@@ -788,9 +1468,19 @@
       "language": "rust",
       "path": "crates/atuin/src/logs/held.rs",
       "message": "`channel` at line 16 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 16
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "HeldEvents::hold uses std mpsc::channel as a holding buffer for the WARN/ERROR events logged during Settings::new, drained later by emit(); producer and consumer never run concurrently, and a bounded sync_channel would deadlock.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The std mpsc channel in HeldEvents::hold only captures WARN-and-above tracing events emitted while `f` (settings loading at startup) runs, and emit() drains it with try_iter, so it is a short-lived startup capture buffer."
+        }
+      ]
     },
     {
       "id": "EA-fbb5169201775428",
@@ -838,9 +1528,19 @@
       "language": "rust",
       "path": "warpgate-protocol-mysql/src/session_handle.rs",
       "message": "`unbounded_channel` at line 10 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 10
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "MySqlSessionHandle's abort channel carries () and is only sent from close() as a cancellation signal; the receiver stops on the first recv, so the 'producer outpaces consumer' rationale does not apply (oneshot-style signal idiom).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "MySqlSessionHandle's abort channel carries a () sent from close(); it is a one-shot abort signal that cannot accumulate a meaningful backlog."
+        }
+      ]
     },
     {
       "id": "EA-0d9a08c820a446a6",
@@ -848,9 +1548,19 @@
       "language": "rust",
       "path": "warpgate-protocol-postgres/src/session_handle.rs",
       "message": "`unbounded_channel` at line 10 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 10
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "The postgres session handle's mpsc::unbounded_channel is a unit abort signal sent once by SessionHandle::close(); no data stream flows through it to build a backlog.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "PostgresSessionHandle's unbounded channel only carries a () abort signal from close(); the receiver ends the session on the first message."
+        }
+      ]
     },
     {
       "id": "EA-68172c7d536be701",
@@ -858,9 +1568,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/mod.rs",
       "message": "`unbounded_channel` at line 106 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 106
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "clipboard_tx feeds ClientClipboardSink, which the RDP library's clipboard backend pushes clipboard data through to active_loop's clipboard_rx; the target can emit clipboard updates faster than they are consumed with no capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "clipboard_tx carries ClipboardOut Request/Text messages produced by the remote RDP target with no backpressure (ClientClipboardSink ignores send failure), so a chatty target can grow the queue."
+        }
+      ]
     },
     {
       "id": "EA-1f0484d5cd2cd0d8",
@@ -868,9 +1588,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/lib.rs",
       "message": "`unbounded_channel` at line 90 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 90
+      "line": 90,
+      "verdict": "false_positive",
+      "reason": "unbounded_channel::<()>() at rdp lib.rs:90 is the abort_tx returned in DesktopClientHandles, a unit cancel signal that client::run selects on with abort_rx.recv() and returns; it cannot accumulate a meaningful backlog.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "abort_tx at lib.rs:90 is a () abort signal for the RDP session; the neighbouring event_tx and input_tx channels are already bounded, and this one needs no capacity."
+        }
+      ]
     },
     {
       "id": "EA-1e6d2ab432c4b006",
@@ -878,9 +1608,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/server/mod.rs",
       "message": "`unbounded_channel` at line 166 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 166
+      "line": 166,
+      "verdict": "true_positive",
+      "reason": "server_out_tx (unbounded_channel::<ServerEvent>) carries viewer events from the rdp::run_on_thread server thread to control_loop, unlike the bounded server_in channel next to it, so a fast viewer can queue events without backpressure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "server_out_tx carries ServerEvent items (viewer keys, pointer moves, resize) from the remote viewer into control_loop with no capacity, unlike the deliberately bounded server_in channel beside it."
+        }
+      ]
     },
     {
       "id": "EA-67aaefc24da815d6",
@@ -888,9 +1628,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/session_handle.rs",
       "message": "`unbounded_channel` at line 10 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 10
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "RdpSessionHandle's unbounded () channel exists only for close() to send a single abort that the server loop's abort_rx.recv() arm acts on; it is a cancellation flag, not a work queue.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "RdpSessionHandle::new creates an abort-only unbounded channel of () used by close(); a single signal ends the session."
+        }
+      ]
     },
     {
       "id": "EA-831f4c453be41f1b",
@@ -898,9 +1648,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 372 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 372
+      "line": 372,
+      "verdict": "true_positive",
+      "reason": "command_tx carries RCCommand values including Channel(Uuid, ChannelOperation) data operations from the SSH server session to RemoteClient; being unbounded, client data can queue in memory if the target side is slow.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "command_tx accepts RCCommand::Channel(.., ChannelOperation::Data) from server/session.rs:1985 via send_command with no acknowledgement, so a fast SSH client outpaces a slow target and data piles up."
+        }
+      ]
     },
     {
       "id": "EA-78bb595d69fc1a61",
@@ -908,9 +1668,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 373 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 373
+      "line": 373,
+      "verdict": "false_positive",
+      "reason": "RemoteClient's abort_tx is an UnboundedSender<()> sent from session.rs:2667/2738 to stop the client, a unit cancellation signal rather than a producer stream.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "abort_tx at line 373 is an abort signal for RemoteClient; one message terminates it, so unbounded capacity does not matter."
+        }
+      ]
     },
     {
       "id": "EA-4f83e758b1eff77d",
@@ -918,9 +1688,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 375 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 375
+      "line": 375,
+      "verdict": "true_positive",
+      "reason": "inner_event_tx forwards every incoming RCCommand (line 398) plus connection events into inner_event_rx with no capacity, so it relays the same data-carrying command stream unbounded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "inner_event_tx funnels every forwarded RCCommand (line 398, including channel data) and handler events into one unbounded queue, with no backpressure on the forwarder."
+        }
+      ]
     },
     {
       "id": "EA-28c138307109e3aa",
@@ -928,9 +1708,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 608 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 608
+      "line": 608,
+      "verdict": "true_positive",
+      "reason": "The per-channel pipe created in setup_server_initiated_channel is stored in channel_pipes and receives ChannelOperation data for that SSH channel; with no capacity, data destined for a slow SessionChannel buffers without limit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The per-channel pipe tx at line 608 receives ChannelOperation::Data for the SSH channel from the client side with no capacity or window accounting, so a slow target channel buffers without limit."
+        }
+      ]
     },
     {
       "id": "EA-81feda721bf00a89",
@@ -938,9 +1728,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 849 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 849
+      "line": 849,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): event_tx carries only ClientHandlerEvent control messages (HostKeyReceived, HostKeyUnknown, forwarded-channel opens, X11, Disconnect), never channel data, and a spawned task forwards each one as it arrives (mod.rs:708). Nothing produces a high-rate flow that could outpace the consumer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "event_tx at line 849 carries ClientHandlerEvent items such as HostKeyReceived, Disconnect and forwarded-channel notices, which are low-rate connection events rather than bulk data."
+        }
+      ]
     },
     {
       "id": "EA-738fad9692631c2f",
@@ -948,9 +1748,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 879 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 879
+      "line": 879,
+      "verdict": "true_positive",
+      "reason": "Each jump-host hop at line 879 gets its own unbounded event_tx for ClientHandler callbacks, the same unbounded russh-event path as the first hop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "event_tx for the jump-host handler (line 879) carries only handshake and forwarding notices from ClientHandler, consumed during the connect; the volume is small and bounded by connection setup."
+        }
+      ]
     },
     {
       "id": "EA-a740d8dc6d8b96bd",
@@ -958,9 +1768,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/client/mod.rs",
       "message": "`unbounded_channel` at line 1297 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1297
+      "line": 1297,
+      "verdict": "true_positive",
+      "reason": "ops_tx registered in channel_pipes buffers channel operations arriving before and after the open completes (comment at 1298) with no capacity, so client channel data can accumulate unboundedly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ops_tx is registered in channel_pipes before the open completes so operations, including Data, buffer in an unbounded queue while the remote open is pending or the channel is slow."
+        }
+      ]
     },
     {
       "id": "EA-d921e1e27a8cf0a0",
@@ -968,9 +1788,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/server/mod.rs",
       "message": "`unbounded_channel` at line 99 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 99
+      "line": 99,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): ServerHandler attaches a oneshot to Data, ExtendedData, Eof, requests, and auth events and awaits `rx.await` before returning to russh (21 awaits across 25 sends). The session loop's acknowledgements therefore throttle the producer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ServerHandler sends events with an attached oneshot ack (Data, ChannelEof, etc.) and awaits the reply (rx.await), so the russh handler throttles itself and the queue stays shallow."
+        }
+      ]
     },
     {
       "id": "EA-aa1cb70392cf5240",
@@ -978,9 +1808,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/server/session_handle.rs",
       "message": "`unbounded_channel` at line 15 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 15
+      "line": 15,
+      "verdict": "false_positive",
+      "reason": "SSHSessionHandle's channel only carries SessionHandleCommand::Close, sent from close(); a single-variant close command channel cannot build a producer backlog.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "SSHSessionHandle's channel carries only SessionHandleCommand::Close sent from close(); it is a control signal, not a data stream."
+        }
+      ]
     },
     {
       "id": "EA-2f33c3003386e9d6",
@@ -988,9 +1828,19 @@
       "language": "rust",
       "path": "warpgate-protocol-vnc/src/client.rs",
       "message": "`unbounded_channel` at line 127 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 127
+      "line": 127,
+      "verdict": "false_positive",
+      "reason": "The VNC client's unbounded_channel::<()>() abort_tx is a unit stop signal; client loop at line 257 returns on the first abort_rx.recv(), so no backlog forms.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "abort_tx in the VNC client is an unbounded channel of () used to abort the session; the data channels beside it (event_tx, input_tx) are bounded."
+        }
+      ]
     },
     {
       "id": "EA-fb7253d55f5d58ee",
@@ -998,9 +1848,19 @@
       "language": "rust",
       "path": "warpgate-protocol-vnc/src/server/mod.rs",
       "message": "`unbounded_channel` at line 236 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 236
+      "line": 236,
+      "verdict": "true_positive",
+      "reason": "events_tx is passed to read_client_messages, which parses every VNC viewer message into the unbounded channel; a fast viewer (pointer/key floods) can outpace the render loop draining events_rx.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "events_tx receives every client message parsed by the read_client_messages task from the viewer socket, decoupled from the render loop by an unbounded channel, so input floods are buffered without limit."
+        }
+      ]
     },
     {
       "id": "EA-83ebd2ef91bd0950",
@@ -1008,9 +1868,19 @@
       "language": "rust",
       "path": "warpgate-protocol-vnc/src/server/session_handle.rs",
       "message": "`unbounded_channel` at line 10 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 10
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "VncSessionHandle's mpsc::unbounded_channel carries only the () sent by close(), consumed by the abort_rx.recv() select arm in server/mod.rs:101 as a teardown signal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "VncSessionHandle::new makes an abort channel of () used only by close(); one signal suffices and nothing accumulates."
+        }
+      ]
     }
   ]
 }

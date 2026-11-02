@@ -27,8 +27,18 @@
       "language": "repository",
       "path": "dolphinscheduler-authentication",
       "message": "Package `dolphinscheduler-authentication` has Ca=3, Ce=0, I=0.000, A=0.100, D=0.900.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "Imports confirm dolphinscheduler-authentication has no outgoing module edges and three dependents (common, storage-plugin, task-plugin), so with A=0.1 it sits at D=0.9 in the stable-concrete corner.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Metrics are consistent (Ca=3, Ce=0, A=0.1 gives D=0.9, Warning zone) for the dolphinscheduler-authentication module, whose submodules actuator/aws-authentication depend on it; it is shipped runtime code."
+        }
+      ]
     },
     {
       "id": "EA-7cef9d878fb44b8a",
@@ -36,8 +46,18 @@
       "language": "repository",
       "path": "dolphinscheduler-dao",
       "message": "Package `dolphinscheduler-dao` has Ca=6, Ce=4, I=0.400, A=0.418, D=0.182.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "pre_label",
+      "sampled_from": "a8-a",
+      "verdict": "false_positive",
+      "reason": "dolphinscheduler-dao's own figures (I=0.400, A=0.418) give D=0.182, close to the main sequence; it is labelled 'Painful' only by the I<0.5 and A<0.5 quadrant test, so the 'outside the main sequence' claim does not hold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dolphinscheduler-dao has Ca=6, Ce=4, I=0.4, A=0.418 and D=0.182, which is a low distance, yet it was emitted as Painful because I<0.5 and A<0.5; the stable-and-concrete classification of the shipped DAO module is computed correctly from the stated numbers."
+        }
+      ]
     },
     {
       "id": "EA-985dc33759567431",
@@ -45,8 +65,18 @@
       "language": "repository",
       "path": "dolphinscheduler-dao-plugin",
       "message": "Package `dolphinscheduler-dao-plugin` has Ca=3, Ce=0, I=0.000, A=0.222, D=0.778.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "dolphinscheduler-dao-plugin is imported by api, dao and tools and imports no sibling module (Ce=0), so I=0 with A=0.222 gives a verified D=0.778.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dolphinscheduler-dao-plugin has Ca=3, Ce=0, A=0.222 so I=0, D=0.778, a stable and mostly concrete module in the Warning zone; its dao-api/h2/mysql/postgresql submodules are runtime code."
+        }
+      ]
     },
     {
       "id": "EA-425bf815e01a6657",
@@ -54,8 +84,18 @@
       "language": "repository",
       "path": "dolphinscheduler-eventbus",
       "message": "Package `dolphinscheduler-eventbus` has Ca=2, Ce=0, I=0.000, A=0.500, D=0.500.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "dolphinscheduler-eventbus is depended on by master and task-executor and depends on nothing local; at I=0, A=0.5 it reaches the detector's D=0.5 warning line.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dolphinscheduler-eventbus is depended on by master, worker and task-executor (Ca>=2) with Ce=0 and A=0.5, which gives D=0.5, exactly the Warning threshold, in shipped runtime code."
+        }
+      ]
     },
     {
       "id": "EA-6449f10e6a93a4cb",
@@ -63,8 +103,18 @@
       "language": "repository",
       "path": "dolphinscheduler-registry",
       "message": "Package `dolphinscheduler-registry` has Ca=4, Ce=1, I=0.200, A=0.342, D=0.458.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The metrics check out against the source: registry code imports only dolphinscheduler.common outside its own tree (Ce=1), and master, api, worker, alert-server and service poms depend on the registry modules. The detector documents no 0.5 distance threshold, so the reported D=0.458 is a valid metric finding.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dolphinscheduler-registry has Ca=4, Ce=1 (I=0.2) and A=0.342, so Painful zone (stable and concrete) with D=0.458; it is a production module with registry-api/plugins/all submodules."
+        }
+      ]
     },
     {
       "id": "EA-a635fe351c38aa13",
@@ -72,8 +122,18 @@
       "language": "repository",
       "path": "dolphinscheduler-task-executor",
       "message": "Package `dolphinscheduler-task-executor` has Ca=4, Ce=3, I=0.429, A=0.311, D=0.260.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "pre_label",
+      "sampled_from": "a8-a",
+      "verdict": "false_positive",
+      "reason": "dolphinscheduler-task-executor sits at I=0.429, A=0.311, D=0.260, near the main sequence; the quadrant-only 'Painful' label overstates its imbalance.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dolphinscheduler-task-executor has Ca=4, Ce=3 (I=0.429) and A=0.311, a concrete module classified Painful as I<0.5 and A<0.5; its poms show master, worker and extract modules depending on it."
+        }
+      ]
     },
     {
       "id": "EA-82b0f6b2d5122458",
@@ -81,8 +141,18 @@
       "language": "repository",
       "path": "dolphinscheduler-task-plugin",
       "message": "Package `dolphinscheduler-task-plugin` has Ca=9, Ce=4, I=0.308, A=0.135, D=0.557.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "dolphinscheduler-task-plugin has nine production dependents and four dependencies (verified from imports) with A=0.135, giving D=0.557 above the warning threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dolphinscheduler-task-plugin has Ca=9, Ce=4, I=0.308 and A=0.135, giving D=0.557 in the Warning zone; the arithmetic is right and the package is shipped plugin code."
+        }
+      ]
     },
     {
       "id": "EA-8c3e5ea5223644c7",
@@ -128,8 +198,18 @@
       "language": "repository",
       "path": "modelmigration",
       "message": "Package `modelmigration` has Ca=3, Ce=2, I=0.400, A=0.000, D=0.600.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "gitea modelmigration is imported by cmd, routers and services and imports models and modules (Ca=3, Ce=2 verified); it ships as the DB migration code, has no interfaces (A=0) and sits at D=0.6.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "gitea's modelmigration (A=0, Ca=3, Ce=2, I=0.4, D=0.6) is the shipped DB migration package imported by the runtime (Makefile only tests it separately), and its numbers fit the Warning zone."
+        }
+      ]
     },
     {
       "id": "EA-c37a3f592cf9e3cd",
@@ -137,8 +217,18 @@
       "language": "repository",
       "path": "src/common",
       "message": "Package `src/common` has Ca=10, Ce=5, I=0.333, A=0.138, D=0.528.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "harbor src/common is imported by about ten src/ packages and has A=0.138, I=0.333, so D=0.528 exceeds the warning distance.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "harbor src/common has Ca=10, Ce=5 (I=0.333) and A=0.138, so D=0.528 in the Warning zone, a runtime shared package with consistent arithmetic."
+        }
+      ]
     },
     {
       "id": "EA-7731345a3c6a5c95",
@@ -146,8 +236,18 @@
       "language": "repository",
       "path": "src/controller",
       "message": "Package `src/controller` has Ca=6, Ce=5, I=0.455, A=0.229, D=0.316.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Non-test imports confirm the metrics: src/controller/** depends on common, core, jobservice, lib, pkg (Ce=5) and is imported by common, core, jobservice, pkg, server, testing (Ca=6), and the reported distance from the main sequence (D=0.316) follows from them; the reference sets no distance threshold that excludes it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "harbor src/controller has Ca=6, Ce=5 (I=0.455) and A=0.229, which is the Painful zone since both I and A are below 0.5; it is core server code."
+        }
+      ]
     },
     {
       "id": "EA-ecf9874e5fdadab3",
@@ -155,8 +255,18 @@
       "language": "repository",
       "path": "src/lib",
       "message": "Package `src/lib` has Ca=10, Ce=2, I=0.167, A=0.103, D=0.730.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "harbor src/lib is a widely imported foundation (Ca=10, Ce=2) that is mostly concrete (A=0.103), so D=0.730 places it far from the main sequence.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "harbor src/lib has Ca=10, Ce=2 (I=0.167) and A=0.103, giving D=0.730 in Warning; the stable, almost entirely concrete shared library is correctly characterised."
+        }
+      ]
     },
     {
       "id": "EA-679f988e9ade5c6f",
@@ -164,8 +274,18 @@
       "language": "repository",
       "path": "src/pkg",
       "message": "Package `src/pkg` has Ca=9, Ce=5, I=0.357, A=0.219, D=0.423.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The figures check out against the source at top-level component granularity: 9 other src/ trees (cmd, common, controller, core, jobservice, lib, registryctl, server, testing) import src/pkg, and src/pkg's non-test code imports common, controller, core, jobservice, and lib (Ce=5). The reference docs set no 0.5 cut-off that would suppress D=0.423.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "harbor src/pkg has Ca=9, Ce=5 (I=0.357) and A=0.219, so Painful (stable and concrete) with D=0.423; the metrics are consistent for this runtime package."
+        }
+      ]
     },
     {
       "id": "EA-49cfc767bcab1c62",
@@ -173,8 +293,18 @@
       "language": "repository",
       "path": "common",
       "message": "Package `common` has Ca=20, Ce=0, I=0.000, A=0.270, D=0.730.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "keycloak common is imported by twenty production modules (core, services, model, crypto and others) and imports none, so I=0 with A=0.27 gives D=0.73.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "keycloak `common` has Ca=20, Ce=0 and A=0.27, so I=0 and D=0.73 in Warning; it is the shipped keycloak-common module that many modules depend on."
+        }
+      ]
     },
     {
       "id": "EA-c2364a979f0904cb",
@@ -182,8 +312,18 @@
       "language": "repository",
       "path": "util",
       "message": "Package `util` has Ca=1, Ce=1, I=0.500, A=0.000, D=0.500.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "false_positive",
+      "reason": "keycloak util holds only `util/embedded-ldap`, an embedded LDAP server whose sole dependent is the testsuite (KerberosRule, LDAPRule), so it is test-support code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "keycloak/util only contains util/embedded-ldap (LDAPEmbeddedServer, KerberosKeytabCreator), referenced from testsuite poms, so it is test-support tooling outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-2c800f9585eb3f2b",
@@ -191,8 +331,18 @@
       "language": "repository",
       "path": "agents-audit",
       "message": "Package `agents-audit` has Ca=17, Ce=1, I=0.056, A=0.119, D=0.825.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "Imports confirm agents-audit has 17 dependent modules (agents-common, plugins, security-admin) and one dependency (agents-cred), so I=0.056 and A=0.119 put it at D=0.825.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ranger agents-audit has Ca=17, Ce=1 and A=0.119, so I=0.056 and D=0.825 in Warning; a widely depended-on shipped concrete module with consistent numbers."
+        }
+      ]
     },
     {
       "id": "EA-0e123060a180b0dc",
@@ -200,8 +350,18 @@
       "language": "repository",
       "path": "agents-cred",
       "message": "Package `agents-cred` has Ca=4, Ce=0, I=0.000, A=0.000, D=1.000.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "agents-cred is imported by agents-audit, agents-common, embeddedwebserver and security-admin and imports nothing local, and it has no abstract types (A=0), so D=1.0.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ranger agents-cred has Ca=4, Ce=0, A=0 (credential/kerberos provider classes only), so I=0 and D=1.0, the Painful zone; the arithmetic follows from its all-concrete main sources."
+        }
+      ]
     },
     {
       "id": "EA-2e7e9ef8ba69bc92",
@@ -209,8 +369,18 @@
       "language": "repository",
       "path": "common-utils",
       "message": "Package `common-utils` has Ca=23, Ce=0, I=0.000, A=0.040, D=0.960.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "common-utils has 23 dependent modules and no local dependencies with A=0.04, verified from imports, putting it at D=0.96 in the stable-concrete corner.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ranger common-utils has Ca=23, Ce=0 and A=0.04, producing D=0.96 in Warning; a heavily depended-on concrete utility module in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-dde9d61a21ceeec7",
@@ -218,8 +388,18 @@
       "language": "repository",
       "path": "ranger-authn",
       "message": "Package `ranger-authn` has Ca=2, Ce=0, I=0.000, A=0.400, D=0.600.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "ranger-authn is used by pdp and security-admin and depends on no sibling module; with I=0 and A=0.4 its distance is 0.6.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ranger-authn has Ca=2, Ce=0, A=0.4 so I=0 and D=0.6 (Warning); it contains RangerAuthHandler and JWT handler classes and meets the two-edge minimum."
+        }
+      ]
     },
     {
       "id": "EA-664bba6ea2c4d92e",
@@ -227,8 +407,18 @@
       "language": "repository",
       "path": "ranger-metrics",
       "message": "Package `ranger-metrics` has Ca=2, Ce=1, I=0.333, A=0.000, D=0.667.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "ranger-metrics is imported by kms and security-admin and imports one module, and it has no abstract types, giving I=0.333, A=0 and D=0.667.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ranger-metrics has Ca=2, Ce=1 (I=0.333) and A=0 (no interfaces in its source/sink/wrapper classes), so D=0.667 in Warning; it is shipped runtime code."
+        }
+      ]
     },
     {
       "id": "EA-9ab0a104cbfa2fe8",
@@ -236,8 +426,18 @@
       "language": "repository",
       "path": "ranger-plugin-classloader",
       "message": "Package `ranger-plugin-classloader` has Ca=16, Ce=0, I=0.000, A=0.000, D=1.000.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "ranger-plugin-classloader (two concrete classes, RangerPluginClassLoader and RangerPluginClassLoaderUtil) is imported by agents-common and 15 *-plugin-shim modules and imports no local module, so Ca=16, Ce=0, A=0, D=1 is accurate: a maximally stable, fully concrete package in the zone of pain.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ranger-plugin-classloader module has 16 dependent modules (the plugin shims, agents-common, pdp) and no abstract types, giving Ca=16, Ce=0, A=0, D=1.0 in the pain zone."
+        }
+      ]
     },
     {
       "id": "EA-b95f1a2e0978d373",
@@ -245,8 +445,18 @@
       "language": "repository",
       "path": "ugsync-util",
       "message": "Package `ugsync-util` has Ca=3, Ce=0, I=0.000, A=0.154, D=0.846.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "ugsync-util is imported by agents-common, security-admin and ugsync and imports no other ranger module, and only Mapper/AbstractMapper are abstract among its model/transform types, so the reported Ca=3, Ce=0, D=0.846 holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ugsync-util is depended on by ugsync, security-admin, agents-common and others with Ce=0, and is mostly concrete model classes (A=0.154), so D=0.846 is accurate."
+        }
+      ]
     },
     {
       "id": "EA-cb2192ae596fe239",
@@ -254,8 +464,18 @@
       "language": "repository",
       "path": "auth",
       "message": "Package `auth` has Ca=3, Ce=0, I=0.000, A=0.333, D=0.667.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "rqlite auth is imported by cluster, cmd and http in non-test files and its only local import (internal/fsutil) is in credential_store_test.go, so Ca=3, Ce=0 is right; with mostly concrete types, D=0.667 is well off the main sequence.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rqlite auth is imported by cluster, cmd/rqlited and http (Ca=3, Ce=0 reproduced from import graph) and holds a single concrete credential store, so D=0.667 holds."
+        }
+      ]
     },
     {
       "id": "EA-5963afad61cdf876",
@@ -263,8 +483,18 @@
       "language": "repository",
       "path": "cluster",
       "message": "Package `cluster` has Ca=5, Ce=4, I=0.444, A=0.471, D=0.085.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "false_positive",
+      "reason": "cluster's Ca=5/Ce=4 is accurate, but I=0.444 and A=0.471 put it at D=0.085, effectively on the main sequence; it was flagged only because both values are a little under 0.5, so the claim 'lies outside the main sequence' is wrong here.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "rqlite cluster has I=0.444 and A=0.471, only D=0.085 from the main sequence, so classifying it as 'outside the main sequence' (Painful zone only because both values fall under 0.5) is a misclassification."
+        }
+      ]
     },
     {
       "id": "EA-3f4eca9229557dc0",
@@ -272,8 +502,18 @@
       "language": "repository",
       "path": "command",
       "message": "Package `command` has Ca=8, Ce=1, I=0.111, A=0.071, D=0.817.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "command is imported by eight top-level packages (cdc, cluster, cmd, db, http, proxy, store, system_test) and itself imports only internal, and it is almost all concrete types (A=0.071), so D=0.817 is accurate and the package sits in the zone of pain.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rqlite command has Ca=8 (cdc, cluster, cmd, db, http, proxy, store, system_test) and Ce=1, with mostly concrete helpers (A=0.071), so D=0.817 is a true stable-concrete outlier."
+        }
+      ]
     },
     {
       "id": "EA-c1d21bd32afeb8ed",
@@ -281,8 +521,18 @@
       "language": "repository",
       "path": "db",
       "message": "Package `db` has Ca=5, Ce=2, I=0.286, A=0.135, D=0.579.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "db is imported by auto, cmd, http, snapshot and store and imports command and internal, which gives Ca=5/Ce=2, I=0.286; with A=0.135 the distance of 0.579 is a real deviation for this heavily used, concrete package.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rqlite db has Ca=5 (cmd, http, snapshot, store, auto) and Ce=2 with few interfaces (A=0.135), so D=0.579 correctly exceeds the 0.5 warning threshold."
+        }
+      ]
     },
     {
       "id": "EA-f945b2aced911928",
@@ -290,8 +540,18 @@
       "language": "repository",
       "path": "otlp",
       "message": "Package `otlp` has Ca=1, Ce=1, I=0.500, A=0.000, D=0.500.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "pre_label",
+      "sampled_from": "a8-a",
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): Package otlp imports two local packages in production code (internal/rtls in config.go and internal/rsync in service.go), so Ce is 2, not 1, and the reported I and D are miscounted.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rqlite otlp has Ca=1 (cmd/rqlited) and Ce=1 (internal) with no abstractions, so I=0.5, A=0 and D=0.5 are accurate, though the signal is thin."
+        }
+      ]
     },
     {
       "id": "EA-fafa7a40e0fbef3e",
@@ -299,8 +559,18 @@
       "language": "repository",
       "path": "queue",
       "message": "Package `queue` has Ca=2, Ce=0, I=0.000, A=0.000, D=1.000.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "queue is imported by cdc and http and its only rqlite import (command/proto) is in queue_test.go, so Ca=2, Ce=0 is correct; with only a concrete generic Queue type, A=0 and D=1.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rqlite queue is imported by cdc and http (Ca=2) and imports no local package, with no interfaces, so I=0, A=0, D=1.0 is correct."
+        }
+      ]
     },
     {
       "id": "EA-cd93b184c6e469d1",
@@ -308,8 +578,18 @@
       "language": "repository",
       "path": "store",
       "message": "Package `store` has Ca=5, Ce=4, I=0.444, A=0.130, D=0.425.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "true_positive",
+      "reason": "store's edges are verified: it is imported by cdc, cmd, http, proxy and system_test and imports command, db, internal and snapshot; with A=0.130 the distance of 0.425 places this concrete core package below the main sequence.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rqlite store has Ca=5 and Ce=4 (command, db, internal, snapshot), mostly concrete types (A=0.130), so D=0.425 in the Painful zone follows the metrics."
+        }
+      ]
     },
     {
       "id": "EA-419e0ae6b0fbbd45",
@@ -374,8 +654,18 @@
       "language": "repository",
       "path": "__root__",
       "message": "Package `__root__` has Ca=1, Ce=1, I=0.500, A=0.000, D=0.500.",
-      "status": "pending",
-      "sampled_from": "a8-a"
+      "status": "corroborated",
+      "sampled_from": "a8-a",
+      "verdict": "false_positive",
+      "reason": "In zulip, `__root__` is just the loose top-level files (manage.py, version.py and JS config files) lumped together. It is not a package, so its Ca=1/Ce=1 instability and abstractness say nothing about package design.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "zulip `__root__` is a synthetic bucket for manage.py and version.py, and its Ca=1 is wrong because version.py is imported by zerver, zproject, scripts, tools and docs."
+        }
+      ]
     }
   ]
 }

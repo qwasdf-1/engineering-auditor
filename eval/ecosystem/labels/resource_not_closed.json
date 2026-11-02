@@ -8,9 +8,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/StringExtensions.Parsing.cs",
       "message": "File or resource opened at line 103 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 103
+      "line": 103,
+      "verdict": "false_positive",
+      "reason": "The undisposed `StreamWriter` wraps a returned `MemoryStream`; disposing it would close the stream being returned, and a writer over a MemoryStream holds no OS resource after `Flush()`, so this is the standard idiom.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GenerateStreamFromString deliberately leaves the StreamWriter undisposed because disposing it would close the MemoryStream it returns; the writer is flushed and holds no unmanaged resource."
+        }
+      ]
     },
     {
       "id": "EA-96df1f81880a3dca",
@@ -18,9 +28,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "File or resource opened at line 14142 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 14142
+      "line": 14142,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.debug.js is a 14k-line built debug bundle of SimpleMDE with its bundled spell-checker dependency, not maintained source, so the `fs.openSync` site is out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "simplemde.debug.js is a browserify-built vendored bundle (simplemde v1.11.2 header) under koenig/kg-simplemde/debug, not first-party production source."
+        }
+      ]
     },
     {
       "id": "EA-57c986a23b707f89",
@@ -28,9 +48,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "File or resource opened at line 14142 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 14142
+      "line": 14142,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.js is the generated browserify bundle duplicating the same vendored `fs.openSync(path, 'r')` dictionary loader; generated/vendored code is outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "debug/simplemde.js is the same generated simplemde v1.11.2 bundle output, so the unclosed fs.openSync in its bundled code is outside the detector scope."
+        }
+      ]
     },
     {
       "id": "EA-b95a95dbc4541fb5",
@@ -78,9 +108,19 @@
       "language": "python",
       "path": "changedetectionio/store/file_saving_datastore.py",
       "message": "File or resource opened at line 269 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 269
+      "line": 269,
+      "verdict": "false_positive",
+      "reason": "`f = open(watch_json, 'rb')` in load_watch_from_file is immediately followed by `with f:`, which closes the file; the try/except around open only handles the not-found case.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`f = open(watch_json, 'rb')` is immediately followed by `with f:`, which closes it; the only early returns are in the except path where open failed."
+        }
+      ]
     },
     {
       "id": "EA-2965a947fb079a81",
@@ -88,9 +128,19 @@
       "language": "python",
       "path": "changedetectionio/store/file_saving_datastore.py",
       "message": "File or resource opened at line 407 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 407
+      "line": 407,
+      "verdict": "false_positive",
+      "reason": "In the tag loader `f = open(tag_json, 'rb')` is consumed by `with f:` on the next block, so the handle is closed by the context manager.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`f = open(tag_json, 'rb')` is entered with `with f:` straight after the try/except, so the file is closed by the context manager."
+        }
+      ]
     },
     {
       "id": "EA-99fe73664cf367b1",
@@ -98,9 +148,19 @@
       "language": "python",
       "path": "setup.py",
       "message": "File or resource opened at line 40 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "setup.py is the packaging script, run only at build/install time; `open('requirements.txt').readlines()` there is build tooling outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`open('requirements.txt').readlines()` is in the top-level `setup.py` packaging script, which is build tooling run only to build the package."
+        }
+      ]
     },
     {
       "id": "EA-d097b349ea3eca75",
@@ -108,9 +168,19 @@
       "language": "python",
       "path": "electrum/plugins/safe_t/qt.py",
       "message": "File or resource opened at line 315 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 315
+      "line": 315,
+      "verdict": "true_positive",
+      "reason": "`img = open(filename, 'rb').read()` in the Safe-T Qt plugin's homescreen picker never closes the file object explicitly (no `with`), relying on refcount finalisation in shipped wallet code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`img = open(filename, 'rb').read()` in the Safe-T Qt plugin never closes the file object explicitly or via `with`, in shipped wallet plugin code."
+        }
+      ]
     },
     {
       "id": "EA-3b54849f6ed28253",
@@ -118,9 +188,19 @@
       "language": "python",
       "path": "electrum/plugins/trezor/qt.py",
       "message": "File or resource opened at line 588 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 588
+      "line": 588,
+      "verdict": "true_positive",
+      "reason": "The Trezor Qt plugin's `img = open(filename, 'rb').read()` leaves the handle to garbage collection instead of a `with` block, in shipped user-facing code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`img = open(filename, 'rb').read()` in the Trezor Qt plugin's image upload leaves the handle unclosed instead of using `with open(...)`, in shipped plugin code."
+        }
+      ]
     },
     {
       "id": "EA-d1cf8b15908e095f",
@@ -168,9 +248,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "File or resource opened at line 1043 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1043
+      "line": 1043,
+      "verdict": "true_positive",
+      "reason": "`install_properties_file = open(install_properties_path)` in the ambari2.0 import_properties_from_file is read and never closed; migration-util is packaged by distro/src/main/assembly/migration-util.xml, so it ships to users.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "import_properties_from_file assigns install_properties_file = open(...) and only calls .read(), never closing it or using a with block; the ambari2.0 migration-util is packaged by distro's migration-util.xml assembly."
+        }
+      ]
     },
     {
       "id": "EA-242e58841086603f",
@@ -178,9 +268,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "File or resource opened at line 2051 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2051
+      "line": 2051,
+      "verdict": "true_positive",
+      "reason": "In the ambari2.1 migration utility, `install_properties_file = open(install_properties_path)` is iterated via `.read()` and no `close()` or `with` follows; the shipped migration-util assembly includes it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The ambari2.1 import_properties_from_file opens install_properties_file and never closes it; this migration-util directory is shipped via the migration-util assembly."
+        }
+      ]
     },
     {
       "id": "EA-44ef8cd2bc901dfc",
@@ -188,9 +288,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "File or resource opened at line 2070 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2070
+      "line": 2070,
+      "verdict": "true_positive",
+      "reason": "read_properties_file does `open(properties_file_path,'r').read()` with the handle dropped unclosed instead of a `with` block, in the packaged ambari2.1 migration utility.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "read_properties_file calls open(properties_file_path,'r').read() on an anonymous handle that is never closed or wrapped in with, in a shipped migration utility."
+        }
+      ]
     },
     {
       "id": "EA-fd5b7b23ff46966c",
@@ -198,9 +308,19 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "File or resource opened at line 220 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 220
+      "line": 220,
+      "verdict": "true_positive",
+      "reason": "populate_config_dict_from_file opens install_config.properties into `read_config_file` and never closes it; security-admin/src/bin is shipped via admin-web.xml as the installer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "populate_config_dict_from_file opens install_config.properties into read_config_file and never closes it; ranger_install.py is packaged into the admin-web assembly."
+        }
+      ]
     },
     {
       "id": "EA-bdb25e3b93324ee5",
@@ -208,9 +328,19 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "File or resource opened at line 1025 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1025
+      "line": 1025,
+      "verdict": "true_positive",
+      "reason": "`beanStrToBeAppended = open(beanSettingPath).read()` in the LDAP branch of ranger_install.py discards the handle without closing, unlike the neighbouring fileObj which is closed explicitly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the LDAP branch beanStrToBeAppended = open(beanSettingPath).read() leaves an anonymous handle unclosed, while the sibling fileObj handles are explicitly closed, in the shipped installer."
+        }
+      ]
     },
     {
       "id": "EA-ed9d46eb58cef2c2",
@@ -218,9 +348,19 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "File or resource opened at line 1026 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1026
+      "line": 1026,
+      "verdict": "true_positive",
+      "reason": "`secStrToBeAppended = open(secSettingPath).read()` for ldap_security_settings.xml leaves the file object unclosed in the shipped installer script.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "secStrToBeAppended = open(secSettingPath).read() in the LDAP branch opens a file that is never closed (no with, no close), in the shipped ranger installer."
+        }
+      ]
     },
     {
       "id": "EA-7c0a77f1f87133cf",
@@ -228,9 +368,19 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "File or resource opened at line 1053 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1053
+      "line": 1053,
+      "verdict": "true_positive",
+      "reason": "In the AD branch, `open(beanSettingPath).read()` for ad_bean_settings.xml never closes its file object, while only appContextPath's fileObj gets `close()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the ACTIVE_DIRECTORY branch beanStrToBeAppended = open(beanSettingPath).read() is an unclosed anonymous handle, in the shipped ranger installer."
+        }
+      ]
     },
     {
       "id": "EA-8a9639348f195d8c",
@@ -238,9 +388,19 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "File or resource opened at line 1054 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1054
+      "line": 1054,
+      "verdict": "true_positive",
+      "reason": "`secStrToBeAppended = open(secSettingPath).read()` for ad_security_settings.xml in ranger_install.py is never closed or wrapped in `with`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "secStrToBeAppended = open(secSettingPath).read() in the AD branch is never closed, unlike the later fileObj.close() calls, in the shipped installer."
+        }
+      ]
     },
     {
       "id": "EA-2e88a4f1e542fbe5",
@@ -258,9 +418,19 @@
       "language": "python",
       "path": "zerver/migrations/0501_delete_dangling_usermessages.py",
       "message": "File or resource opened at line 150 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 150
+      "line": 150,
+      "verdict": "false_positive",
+      "reason": "The log file `open(...0501_delete_dangling_usermessages.log, 'w')` is registered with `stack.enter_context` inside `with ExitStack()`, which closes it on exit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The open(...) of the migration log file is passed directly to stack.enter_context inside a with ExitStack() block, so it is closed on exit."
+        }
+      ]
     },
     {
       "id": "EA-bb05710e8660c988",
@@ -268,9 +438,19 @@
       "language": "python",
       "path": "zerver/views/upload.py",
       "message": "File or resource opened at line 164 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 164
+      "line": 164,
+      "verdict": "false_positive",
+      "reason": "`open(local_path, 'rb')` is handed to Django's `FileResponse`, which owns and closes the file when the response is closed; this is the documented FileResponse usage.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "open(local_path, 'rb') is handed to Django's FileResponse, which takes ownership and closes it when the response finishes; the line carries a deliberate noqa SIM115."
+        }
+      ]
     },
     {
       "id": "EA-add80933c2d886c5",
@@ -278,9 +458,19 @@
       "language": "python",
       "path": "zerver/views/upload.py",
       "message": "File or resource opened at line 448 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 448
+      "line": 448,
+      "verdict": "false_positive",
+      "reason": "The avatar file `open(local_path, 'rb')` is passed into `FileResponse`, which closes it after streaming, so ownership is transferred rather than leaked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The open(local_path, 'rb') in the avatar dev branch is passed straight into FileResponse, which closes the file at the end of the response."
+        }
+      ]
     },
     {
       "id": "EA-d8f9056e7d57bebc",
@@ -288,9 +478,19 @@
       "language": "typescript",
       "path": "ghost/core/server/adapters/storage/LocalStorageBase.ts",
       "message": "File or resource opened at line 330 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 330
+      "line": 330,
+      "verdict": "false_positive",
+      "reason": "The FileHandle from `open(..., 'r')` is passed to `file.createReadStream()` and returned; the stream's default autoClose closes the handle when it ends, so ownership is transferred, not leaked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "readStream returns file.createReadStream() from the opened FileHandle, so the stream (autoClose) owns and closes the handle; it is handed on, not leaked."
+        }
+      ]
     }
   ]
 }

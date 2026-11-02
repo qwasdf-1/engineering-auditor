@@ -8,9 +8,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/authentication/authenticators/x509/CertificateValidator.java",
       "message": "Function `verifyCertificateTrust` appends every item from `trustedIntermediateCerts` to `intermediateCerts`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 770
+      "line": 770,
+      "verdict": "true_positive",
+      "reason": "verifyCertificateTrust adds each element of the Set<X509Certificate> trustedIntermediateCerts unchanged into a fresh HashSet intermediateCerts, which new HashSet<>(trustedIntermediateCerts) or addAll would do.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The loop in verifyCertificateTrust copies each element of the Set trustedIntermediateCerts into the HashSet intermediateCerts, which new HashSet<>(trustedIntermediateCerts) or addAll would do."
+        }
+      ]
     },
     {
       "id": "EA-e74ee02b7facfb48",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/AssetMgr.java",
       "message": "Function `getAccessLogs` appends every item from `userGroupZones` to `zoneNameSet`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1152
+      "line": 1152,
+      "verdict": "true_positive",
+      "reason": "In getAccessLogs the inner loop adds every String from List<String> userGroupZones to the Set zoneNameSet with no other work, so zoneNameSet.addAll(userGroupZones) is equivalent.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The inner loop adds each zoneName from userGroupZones (a List<String>) unchanged to the Set zoneNameSet, so zoneNameSet.addAll(userGroupZones) applies."
+        }
+      ]
     },
     {
       "id": "EA-facb36cf5d755989",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/CustomScanDialog.java",
       "message": "Function `save` appends every item from `scanFilterList` to `contextSpecificObjects`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 876
+      "line": 876,
+      "verdict": "true_positive",
+      "reason": "CustomScanDialog.save copies List<ScanFilter> scanFilterList element by element into List<Object> contextSpecificObjects; contextSpecificObjects.addAll(scanFilterList) is a direct replacement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CustomScanDialog.save adds every ScanFilter in scanFilterList unchanged to the ArrayList contextSpecificObjects, replaceable by addAll."
+        }
+      ]
     },
     {
       "id": "EA-d518eaf450e53e47",
@@ -38,9 +68,19 @@
       "language": "python",
       "path": "zilencer/views.py",
       "message": "Function `delete_duplicate_registrations` appends every item from `registrations` to `deduplicated_registrations_to_return`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 797
+      "line": 797,
+      "verdict": "false_positive",
+      "reason": "The loop in delete_duplicate_registrations skips registrations whose token is in tokens_to_deduplicate with a non-null user_id, so it filters and is not a plain extend of registrations.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "delete_duplicate_registrations skips registrations whose token is in tokens_to_deduplicate with a user_id, so the append is a filter, not an unconditional copy."
+        }
+      ]
     },
     {
       "id": "EA-4fd5d275b4da685a",
@@ -48,9 +88,19 @@
       "language": "typescript",
       "path": "web/src/util.ts",
       "message": "Function `try_parse_as_truthy` appends every item from `val` to `result`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 395
+      "line": 395,
+      "verdict": "false_positive",
+      "reason": "try_parse_as_truthy returns undefined as soon as an element x is falsy, so the loop validates before pushing to result and is not an identity-only copy that a bulk push could replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "try_parse_as_truthy returns undefined as soon as a falsy item is found, so the push loop is a conditional validate-and-copy, not an identity bulk extension."
+        }
+      ]
     }
   ]
 }

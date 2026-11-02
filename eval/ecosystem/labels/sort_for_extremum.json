@@ -8,9 +8,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.ImagesConcat/ImagesConcat.cs",
       "message": "Function `ConcatImages` sorts `imageHeights` only to select its `last` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 115
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "In net ImagesConcat, `imageHeights` is sorted only so `imageHeights[imageHeights.Count - 1]` gives the max height; nothing else reads the list.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`imageHeights.Sort()` is followed only by `imageHeights[Count - 1]`, the maximum, and the list is not used elsewhere in ConcatImages."
+        }
+      ]
     },
     {
       "id": "EA-67ee0323b76c065a",
@@ -18,9 +28,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.ImagesOverlay/ImagesOverlay.cs",
       "message": "Function `OverlayImages` sorts `imageHeights` only to select its `last` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 114
+      "line": 114,
+      "verdict": "true_positive",
+      "reason": "In net ImagesOverlay, `imageHeights.Sort()` serves only `imageHeights[imageHeights.Count - 1]` (max height); a Max() would suffice.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`imageHeights.Sort()` in net OverlayImages is used only for `imageHeights[Count - 1]`, so Max() would do."
+        }
+      ]
     },
     {
       "id": "EA-1daf19dbe107fbfd",
@@ -28,9 +48,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.ImagesOverlay/ImagesOverlay.cs",
       "message": "Function `OverlayImages` sorts `imageWidths` only to select its `last` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 115
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "In net ImagesOverlay, `imageWidths.Sort()` serves only `imageWidths[imageWidths.Count - 1]` for the max width; the list has no other reader.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`imageWidths.Sort()` in net OverlayImages exists only to read the last element for `width`; the list is not otherwise used."
+        }
+      ]
     },
     {
       "id": "EA-24f58f00402ec499",
@@ -38,9 +68,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Tasks.ImagesConcat/ImagesConcat.cs",
       "message": "Function `ConcatImages` sorts `imageHeights` only to select its `last` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "In netcore ImagesConcat, `imageHeights.Sort()` is followed solely by `imageHeights[^1]` to get the tallest image height.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "netcore ConcatImages sorts `imageHeights` solely to read `imageHeights[^1]`, the maximum."
+        }
+      ]
     },
     {
       "id": "EA-eb535b0a81fd0b97",
@@ -48,9 +88,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Tasks.ImagesOverlay/ImagesOverlay.cs",
       "message": "Function `OverlayImages` sorts `imageHeights` only to select its `last` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "In netcore ImagesOverlay, `imageHeights` is sorted only to read `imageHeights[^1]`, the maximum height.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "netcore OverlayImages sorts `imageHeights` only to read `imageHeights[^1]` as the height."
+        }
+      ]
     },
     {
       "id": "EA-9c7e4fc8aa9b78b6",
@@ -58,9 +108,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Tasks.ImagesOverlay/ImagesOverlay.cs",
       "message": "Function `OverlayImages` sorts `imageWidths` only to select its `last` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 74
+      "line": 74,
+      "verdict": "true_positive",
+      "reason": "In netcore ImagesOverlay, `imageWidths` is sorted only to read `imageWidths[^1]`, the maximum width.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "netcore OverlayImages sorts `imageWidths` only to read `imageWidths[^1]` as the width."
+        }
+      ]
     },
     {
       "id": "EA-fac61a64b8fda360",
@@ -68,9 +128,19 @@
       "language": "go",
       "path": "modules/git/log_name_status_nogogit.go",
       "message": "Function `walkGitLog` sorts `paths` only to select its `first` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 283
+      "line": 283,
+      "verdict": "false_positive",
+      "reason": "`sort.Strings(paths)` is needed for the adjacent-duplicate removal loop that follows; `paths[0]` is only one of several uses of the ordering.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sort.Strings(paths)` is followed by the paths[0] check and then an adjacent-duplicate removal pass over every element, which needs the full ordering."
+        }
+      ]
     },
     {
       "id": "EA-b4da76d86145cab5",
@@ -78,9 +148,19 @@
       "language": "go",
       "path": "server/consumer.go",
       "message": "Function `forceExpirePending` sorts `expired` only to select its `first` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2469
+      "line": 2469,
+      "verdict": "false_positive",
+      "reason": "In forceExpirePending the sorted `expired` slice is passed whole to addToRedeliverQueue and iterated to keep redelivery order; `expired[0]` is only the time offset base.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`slices.Sort(expired)` orders every sequence before addToRedeliverQueue(expired...) and the per-seq timestamp loop; expired[0] is only one use of the sorted result."
+        }
+      ]
     },
     {
       "id": "EA-037f3ad7b04f5f69",
@@ -88,9 +168,19 @@
       "language": "go",
       "path": "server/consumer.go",
       "message": "Function `checkPending` sorts `expired` only to select its `first` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 6200
+      "line": 6200,
+      "verdict": "false_positive",
+      "reason": "In checkPending, `slices.Sort(expired)` orders the full redelivery queue (`addToRedeliverQueue(expired...)`) and the timestamp loop; it is not an extremum-only sort.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In checkPending the sorted `expired` slice is queued whole with addToRedeliverQueue(expired...) and iterated for timestamps, so the sort is needed beyond expired[0]."
+        }
+      ]
     },
     {
       "id": "EA-c9ecad5d026b40a6",
@@ -98,9 +188,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/model/validation/RangerValidityScheduleValidator.java",
       "message": "Function `validateRanges` sorts `values` only to select its `first` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 464
+      "line": 464,
+      "verdict": "false_positive",
+      "reason": "`Collections.sort(values)` in validateRanges supports the loop computing differences between consecutive values (`values.get(i + 1) - values.get(i)`), not only first/last selection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The sorted `values` list is walked pairwise to compute the minimum adjacent gap (values.get(i+1)-values.get(i)), so it needs the full order, not just the first element."
+        }
+      ]
     },
     {
       "id": "EA-238ddb206a3ab5fa",
@@ -108,9 +208,19 @@
       "language": "java",
       "path": "ranger-plugin-classloader/src/main/java/org/apache/ranger/plugin/classloader/RangerPluginClassLoader.java",
       "message": "Function `getInstance` sorts `pluginTypes` only to select its `first` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 68
+      "line": 68,
+      "verdict": "true_positive",
+      "reason": "`pluginTypes` is built from PLUGIN_CLASS_LOADERS keys, sorted, and only `pluginTypes.get(0)` is read, so Collections.min would give the same entry without the sort.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Collections.sort(pluginTypes)` is followed only by `pluginTypes.get(0)`, so a single minimum is wanted and Collections.min would avoid the O(n log n) sort."
+        }
+      ]
     },
     {
       "id": "EA-2b392a1c71dc331a",
@@ -118,9 +228,19 @@
       "language": "python",
       "path": "electrum/gui/qt/console.py",
       "message": "Function `completions` sorts `completions` only to select its `first` value.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 358
+      "line": 358,
+      "verdict": "false_positive",
+      "reason": "`completions.sort()` feeds the whole sorted list to os.path.commonprefix and show_completions, not just `completions[0]`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "After `completions.sort()` the whole list feeds os.path.commonprefix and show_completions, so it is a full ordering and not an extremum selection."
+        }
+      ]
     }
   ]
 }

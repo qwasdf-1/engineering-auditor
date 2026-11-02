@@ -8,9 +8,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.ProcessLauncher/ProcessLauncher.cs",
       "message": "Function `Run` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "`new Regex(outputRegexPattern)` uses a `const string` pattern yet is constructed for every file in `foreach (var file in SelectFiles())`; it could be a static readonly Regex.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`new Regex(outputRegexPattern)` in `Run` is built from a constant `const string` inside the per-file foreach, so the same regex is rebuilt for every file and could be a static field."
+        }
+      ]
     },
     {
       "id": "EA-ef81b3acb15fda85",
@@ -18,9 +28,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Tasks.Xslt/Xslt.cs",
       "message": "Function `TransformFiles` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 85
+      "line": 85,
+      "verdict": "true_positive",
+      "reason": "Inside `foreach (var file in SelectFiles())` the code reloads `XDocument.Load(XsltPath)` and constructs and `Load`s a new `XslCompiledTransform` from the same `XsltPath` per file; compiling the stylesheet once is the expected fix.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`XDocument.Load(XsltPath)` and `new XslCompiledTransform()` with `xslt.Load(XsltPath)` run inside the per-file loop although `XsltPath` never changes, so the compiled stylesheet is rebuilt for each file."
+        }
+      ]
     },
     {
       "id": "EA-4b9ea8314a3a87e9",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "internal/configuration/validator/access_control.go",
       "message": "Function `validateQuery` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 145
+      "line": 145,
+      "verdict": "false_positive",
+      "reason": "The only expensive construction is `regexp.Compile(v)` where `v` is `Query[j][k].Value`, indexed by the loop counter `k`, so each iteration compiles a different user pattern and nothing can be hoisted.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`regexp.Compile(v)` in the validation loop takes the per-rule `Value` string `v` from `Query[j][k]`, which varies each iteration and is stored back into the rule, so it is not reusable state."
+        }
+      ]
     },
     {
       "id": "EA-397527be4bd6c0b8",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "internal/suites/kubernetes.go",
       "message": "Function `WaitPodsReady` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 91
+      "line": 91,
+      "verdict": "false_positive",
+      "reason": "internal/suites/kubernetes.go is Authelia's integration-test suite harness (WaitPodsReady polls kubectl in test environments), which is test/dev tooling outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This `regexp.MustCompile(`1/1|2/2`)` sits in `internal/suites/kubernetes.go`, the end-to-end suite harness (k3d/kubectl helpers) that is test/dev tooling and not shipped Authelia runtime code."
+        }
+      ]
     },
     {
       "id": "EA-c8f2ef4a6c59e442",
@@ -48,9 +88,19 @@
       "language": "go",
       "path": "src/cmd/swagger/genyaml.go",
       "message": "Function `main` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 97
+      "line": 97,
+      "verdict": "false_positive",
+      "reason": "src/cmd/swagger/genyaml.go is a code-generation program for swagger YAML (build tooling), and `template.New(\"test\").Parse(file.TempName)` parses a different template per `file`, so it is not invariant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`src/cmd/swagger/genyaml.go` is a dev-time swagger generator, and the `template.New(\"test\").Parse(file.TempName)` it flags parses a different template for each of the two entries."
+        }
+      ]
     },
     {
       "id": "EA-c11de49ab59084f0",
@@ -58,9 +108,19 @@
       "language": "go",
       "path": "server/opts.go",
       "message": "Function `parseTLS` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 5192
+      "line": 5192,
+      "verdict": "false_positive",
+      "reason": "The `regexp.MustCompile(\"^[A-Fa-f0-9]{64}$\")` sits under `case \"pinned_certs\":` of a switch on the map key `mk` of `range tlsm`, so it runs at most once per parse; the map-key exemption should cover it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In `parseTLS` the `regexp.MustCompile(\"^[A-Fa-f0-9]{64}$\")` is inside the `case \"pinned_certs\"` arm of a switch on the map key `mk`, so it runs at most once per call, not per iteration."
+        }
+      ]
     },
     {
       "id": "EA-c5c5ecad1810faaf",
@@ -68,9 +128,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.core/src/org/jkiss/dbeaver/tools/scripts/ScriptsImportWizard.java",
       "message": "Function `importScripts` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 102
+      "line": 102,
+      "verdict": "false_positive",
+      "reason": "`Pattern.compile(mask)` compiles the per-token mask read from `st.nextToken()` in the loop, so each iteration builds a distinct pattern and the loop-variant exemption applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`Pattern.compile(mask)` is built from the current `StringTokenizer` token (with `*` replaced), so every iteration compiles a different file mask; it is loop-variant."
+        }
+      ]
     },
     {
       "id": "EA-64dc8b280af876ed",
@@ -78,9 +148,19 @@
       "language": "java",
       "path": "dolphinscheduler-registry/dolphinscheduler-registry-plugins/dolphinscheduler-registry-jdbc/src/main/java/org/apache/dolphinscheduler/plugin/registry/jdbc/server/JdbcRegistryLockManager.java",
       "message": "Function `acquireJdbcRegistryLock` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 57
+      "line": 57,
+      "verdict": "false_positive",
+      "reason": "The loop builds a `JdbcRegistryLockDTO` via builder with `new Date()` per attempt in `acquireJdbcRegistryLock(Long, String)`; a plain DTO is not an expensive client/parser/regex, and its createTime must be fresh each retry.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `while(true)` retry loop in `acquireJdbcRegistryLock` only builds a lock DTO with a fresh `new Date()` and `lockKey`/`clientId`; this is a cheap per-attempt row object, not an expensive client, parser or regex."
+        }
+      ]
     },
     {
       "id": "EA-67a14f8735a4d097",
@@ -88,9 +168,19 @@
       "language": "java",
       "path": "dolphinscheduler-registry/dolphinscheduler-registry-plugins/dolphinscheduler-registry-jdbc/src/main/java/org/apache/dolphinscheduler/plugin/registry/jdbc/server/JdbcRegistryLockManager.java",
       "message": "Function `acquireJdbcRegistryLock` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "false_positive",
+      "reason": "In the timed `acquireJdbcRegistryLock(..., long timeout)` loop the only construction is a lightweight `JdbcRegistryLockDTO` builder with a fresh `new Date()`, which is neither expensive nor loop-invariant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The timed `while` retry in `acquireJdbcRegistryLock(clientId, lockKey, timeout)` builds a `JdbcRegistryLockDTO` with a new `createTime` each attempt, which is intentionally per-attempt data and not expensive reusable state."
+        }
+      ]
     },
     {
       "id": "EA-573b710d3265ae9b",
@@ -98,9 +188,19 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/PropertyMapper.java",
       "message": "Function `validateValues` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 650
+      "line": 650,
+      "verdict": "true_positive",
+      "reason": "`Pattern.compile(\"SRCFG\\\\d+: (.*)$\")` is a constant regex compiled inside the `for (String v : values)` loop; the thrown PropertyException is caught inside the loop, so it recompiles for every failing value and could be a static field.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `Pattern.compile(\"SRCFG\\\\d+: (.*)$\")` in `validateValues` runs only in the catch block after `convert` fails and the exception is turned into a PropertyException, an error path rather than per-iteration hot work."
+        }
+      ]
     },
     {
       "id": "EA-fbb87ed02a39e120",
@@ -108,9 +208,19 @@
       "language": "java",
       "path": "server-spi-private/src/main/java/org/keycloak/utils/ReservedCharValidator.java",
       "message": "Function `validateSecurityHeaders` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "`Pattern.compile(\"\\\\n\")` with a constant pattern is called twice per header entry in the `headers.entrySet()` loop; it is fully loop-invariant and should be a static final Pattern.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`validateSecurityHeaders` compiles the constant `Pattern.compile(\"\\\\n\")` twice for every header entry; the pattern is invariant and could be a static field."
+        }
+      ]
     },
     {
       "id": "EA-ecb9b92791fd1496",
@@ -118,9 +228,19 @@
       "language": "java",
       "path": "jisql/src/main/java/org/apache/util/sql/MySQLPLRunner.java",
       "message": "Function `runScript` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 132
+      "line": 132,
+      "verdict": "true_positive",
+      "reason": "`Pattern.compile(DELIMITER_LINE_REGEX)` compiles a constant inside the `while ((line = lineReader.readLine()) != null)` loop for every delimiter-terminated line; jisql ships with Ranger's DB setup, so it is in scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Pattern.compile(DELIMITER_LINE_REGEX)` compiles the constant `(?i)delimiter.+` for each delimiter-terminated line in `runScript` and could be a static field; jisql ships in the Ranger distro."
+        }
+      ]
     },
     {
       "id": "EA-bddb7e686c7a462e",
@@ -128,9 +248,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/service/filter/RangerRESTAPIFilter.java",
       "message": "Function `loadPathPatterns` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 155
+      "line": 155,
+      "verdict": "false_positive",
+      "reason": "`Pattern.compile(regEx)` compiles a regex assembled from each method's HTTP verb and `@Path` value in the `klass.getMethods()` loop, so every iteration builds a different pattern.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`Pattern.compile(regEx)` in `loadPathPatterns` is built from `httpMethod`, `path.value()` and the UriTemplate regex of each method, so each iteration compiles a distinct pattern."
+        }
+      ]
     },
     {
       "id": "EA-8d9258f1446349b1",
@@ -138,9 +268,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Function `extractLineClasses` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3565
+      "line": 3565,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.debug.js is a bundled CodeMirror/SimpleMDE build, and the `new RegExp(... + lineClass[2] + ...)` depends on the loop's per-iteration match, so it is both vendored and loop-variant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`koenig/kg-simplemde/debug/simplemde.debug.js` is a vendored CodeMirror/SimpleMDE debug bundle, and its `new RegExp(... + lineClass[2] + ...)` also depends on the per-iteration `lineClass` match."
+        }
+      ]
     },
     {
       "id": "EA-776b59af0d2b77e8",
@@ -148,9 +288,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Function `extractLineClasses` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3565
+      "line": 3565,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.js is the vendored SimpleMDE bundle, and its `new RegExp` in `extractLineClasses` is built from `lineClass[2]`, which changes every iteration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`koenig/kg-simplemde/debug/simplemde.js` is a vendored third-party bundle copy, and its `new RegExp` is built from `lineClass[2]`, which changes every iteration."
+        }
+      ]
     },
     {
       "id": "EA-ac4f8cc226c26663",
@@ -158,9 +308,19 @@
       "language": "python",
       "path": "docker/zap_common.py",
       "message": "Function `load_config` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 163
+      "line": 163,
+      "verdict": "true_positive",
+      "reason": "`re.compile(optional)` depends only on the outer line's `optional`, yet it runs inside the inner `for plugin_id in key.split(',')` loop, compiling the same pattern once per plugin id; zap_common.py ships in the ZAP docker image for the baseline scans.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the inner `for plugin_id in key.split(',')` loop, `re.compile(optional)` uses the same `optional` pattern for every plugin id and could be compiled once before the loop."
+        }
+      ]
     },
     {
       "id": "EA-af4337467a4bac37",
@@ -168,9 +328,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/client/search/engines/db.rs",
       "message": "Function `get_highlight_indices_fulltext` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "`regex::Regex::new(r)` compiles the pattern carried by the loop's `QueryToken::Regex(r)` token, so each iteration builds a different regex; this loop-variant constructor is exempt by the detector's documented rule.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `regex::Regex::new(r)` in the loop is built from `r`, the `QueryToken::Regex` payload of the current token, so each iteration compiles a different pattern and nothing can be hoisted."
+        }
+      ]
     },
     {
       "id": "EA-3a284f72f56df59e",
@@ -178,9 +348,19 @@
       "language": "rust",
       "path": "src/config.rs",
       "message": "Function `validate` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 648
+      "line": 648,
+      "verdict": "false_positive",
+      "reason": "`Regex::new(regex.as_str())` validates the loop element `option` (shard_id_regex vs sharding_key_regex), so each of the two iterations compiles a different pattern and nothing is invariant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`Regex::new(regex.as_str())` validates `shard_id_regex` and `sharding_key_regex`, two different user-supplied patterns in a two-element loop, so each construction is for different input."
+        }
+      ]
     },
     {
       "id": "EA-301cfe997a66e621",
@@ -188,9 +368,19 @@
       "language": "rust",
       "path": "src/pool.rs",
       "message": "Function `from_config` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 297
+      "line": 297,
+      "verdict": "false_positive",
+      "reason": "The loop over `pool_config.users.values()` builds a distinct bb8 `Pool`/`ServerPool` per user with that user's pool_size and timeouts; per-user connection pools are loop-variant state, not hoistable initialization.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop over `pool_config.users` in `from_config` creates a per-user, per-server bb8 `Pool` and `ServerPool` from loop-variant `address`/`user`, which must differ each iteration; the only invariant piece, `AuthPassthrough::from_pool_config`, is a trivial struct."
+        }
+      ]
     },
     {
       "id": "EA-afc934067e08079a",
@@ -293,9 +483,19 @@
       "language": "typescript",
       "path": "web/src/typeahead.ts",
       "message": "Function `triage_raw` constructs expensive reusable state inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 335
+      "line": 335,
+      "verdict": "true_positive",
+      "reason": "`new RegExp(`[${word_boundary_chars}]${_.escapeRegExp(lower_query)}`)` depends only on `lower_query` and a constant, yet is constructed for each `obj` in the loop that falls through to the word-boundary test.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`new RegExp(`[${word_boundary_chars}]${_.escapeRegExp(lower_query)}`)` uses only the constant `word_boundary_chars` and the pre-loop `lower_query`, so it is rebuilt per object although it is invariant."
+        }
+      ]
     }
   ]
 }

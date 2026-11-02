@@ -8,9 +8,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/helpers_docker.go",
       "message": "Function `Manifest` grows `args` once per item in `tags`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 49
+      "line": 49,
+      "verdict": "false_positive",
+      "reason": "cmd/authelia-scripts is the build/CI helper run by .buildkite/pipeline.sh (`authelia-scripts docker push-manifest`), so it is tooling; also `args` starts as `[]string{\"build\"}` and gets two values per tag.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Manifest lives in authelia's `cmd/authelia-scripts` CI tooling (Buildkite docker manifest helper), and `args` starts with \"build\" already."
+        }
+      ]
     },
     {
       "id": "EA-76359aa5019e7f6e",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "internal/commands/context.go",
       "message": "Function `LogProcessCurrentUserRunE` grows `gidsFinal` once per item in `gids`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 317
+      "line": 317,
+      "verdict": "false_positive",
+      "reason": "The append to `gidsFinal` is conditional: `if gid == current.Gid { continue }` skips one element, so it is not one unconditional append per item of `gids`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`gidsFinal` appends only after `if gid == current.Gid { continue }`, so the append is conditional, not one per item of `gids`."
+        }
+      ]
     },
     {
       "id": "EA-d92e8fc0cd713e23",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "internal/configuration/sources.go",
       "message": "Function `NewDefaultSources` grows `sources` once per item in `fileSources`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 383
+      "line": 383,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): NewFileSources returns []*FileSource, so each element is appended one at a time into `sources`, which starts as a one-element literal. The final size, len(fileSources)+3+len(additionalSources), is known up front.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sources` starts as a one-element literal `[]Source{NewMapSource(defaults)}`, so it is not a zero-capacity slice and later appends follow the loop."
+        }
+      ]
     },
     {
       "id": "EA-3549f856016ba8e0",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "internal/configuration/sources.go",
       "message": "Function `NewDefaultSourcesFiltered` grows `sources` once per item in `fileSources`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 402
+      "line": 402,
+      "verdict": "false_positive",
+      "reason": "`NewDefaultSourcesFiltered` seeds `sources` with the map source and appends environment, secrets and variadic sources after the `fileSources` loop, so this is not a fresh empty slice with a known size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`NewDefaultSourcesFiltered` begins with a non-empty literal `[]Source{NewMapSource(defaults)}`, so it is not a fresh zero-capacity slice."
+        }
+      ]
     },
     {
       "id": "EA-c626b1c598cc3f29",
@@ -93,9 +133,19 @@
       "language": "go",
       "path": "models/actions/run_job.go",
       "message": "Function `CollectAllDescendantJobs` grows `out` once per item in `allJobs`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 433
+      "line": 433,
+      "verdict": "false_positive",
+      "reason": "The append to `out` sits behind `if j.ID == parent.ID || !parents[j.ID] { continue }`, so it is filtered and `len(allJobs)` is only an upper bound, not the known size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `append(out, j)` in `CollectAllDescendantJobs` sits behind `if j.ID == parent.ID || !parents[j.ID] { continue }`, so it is conditional and `len(allJobs)` is not the result size."
+        }
+      ]
     },
     {
       "id": "EA-eadb0a978255217e",
@@ -103,9 +153,19 @@
       "language": "go",
       "path": "routers/web/repo/actions/view.go",
       "message": "Function `convertToViewModel` grows `logLines` once per item in `logRows`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 882
+      "line": 882,
+      "verdict": "true_positive",
+      "reason": "Within `if validCursor`, `logLines` gets exactly one `&ViewStepLogLine{...}` per row of `logRows` and nothing else, so it could be allocated with `len(logRows)` capacity (still marshalling to `[]`).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`logLines` is declared outside the `if validCursor` block and filled inside it from `logRows`, which is only in scope there; the empty `make` is deliberate so JSON marshals `[]`, not `null`."
+        }
+      ]
     },
     {
       "id": "EA-0387b0499b381e58",
@@ -113,9 +173,19 @@
       "language": "go",
       "path": "services/repository/license.go",
       "message": "Function `resolveLicenses` grows `licenses` once per item in `found`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 176
+      "line": 176,
+      "verdict": "false_positive",
+      "reason": "`licenses` builds up across the outer loop over `entries`, which skips non-regular, non-license and error cases with `continue`, and the inner loop over each `found`; the total isn't known up front.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`licenses` in `resolveLicenses` is appended inside a nested `for _, license := range found` under several `continue` guards, so there is no one-append-per-item relation to a known size."
+        }
+      ]
     },
     {
       "id": "EA-ef07d501c509bf97",
@@ -123,9 +193,19 @@
       "language": "go",
       "path": "src/common/rbac/project/rbac_util.go",
       "message": "Function `getPoliciesForPublicProject` grows `policies` once per item in `publicProjectPolicies`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 49
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "`policies := []*types.Policy{}` gets one `&types.Policy{...}` per element of the package-level `publicProjectPolicies` slice, so `make(..., 0, len(publicProjectPolicies))` applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`policies` gets exactly one `&types.Policy{...}` appended per entry of `publicProjectPolicies`, so `make([]*types.Policy, 0, len(publicProjectPolicies))` applies."
+        }
+      ]
     },
     {
       "id": "EA-5da634953da19313",
@@ -133,9 +213,19 @@
       "language": "go",
       "path": "src/controller/p2p/preheat/enforcer.go",
       "message": "Function `getLabels` grows `lt` once per item in `labels`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 561
+      "line": 561,
+      "verdict": "true_positive",
+      "reason": "`getLabels` appends `l.Name` to an empty `make([]string, 0)` once per element of the `labels` slice parameter, with no other work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`getLabels` appends `l.Name` once for each element of `labels` with no conditions, so `make([]string, 0, len(labels))` is straightforward."
+        }
+      ]
     },
     {
       "id": "EA-8ccc00f335e598a4",
@@ -143,9 +233,19 @@
       "language": "go",
       "path": "src/controller/scandataexport/execution.go",
       "message": "Function `ListExecutions` grows `execs` once per item in `execsForUser`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 70
+      "line": 70,
+      "verdict": "true_positive",
+      "reason": "`execs` gets one `convertToExportExecStatus` result per element of `execsForUser` from `execMgr.List`, with no filtering, so `len(execsForUser)` is exact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`execs` receives one converted execution per element of `execsForUser` unconditionally, and `len(execsForUser)` is known."
+        }
+      ]
     },
     {
       "id": "EA-263cda58903f5130",
@@ -153,9 +253,19 @@
       "language": "go",
       "path": "src/core/auth/ldap/ldap.go",
       "message": "Function `attachGroupParallel` grows `ugs` once per item in `userGroupsList`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 185
+      "line": 185,
+      "verdict": "false_positive",
+      "reason": "The loop runs `append(ugs, userGroups...)`, which spreads a variable-length slice each iteration, so the final size is the sum of the inner lengths, not `len(userGroupsList)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`ugs = append(ugs, userGroups...)` spreads a whole sub-slice per iteration of `userGroupsList`, so it is not one append per item and `len(userGroupsList)` is not the final size."
+        }
+      ]
     },
     {
       "id": "EA-7d82654a87ae0193",
@@ -163,9 +273,19 @@
       "language": "go",
       "path": "src/lib/orm/orm.go",
       "message": "Function `ParamPlaceholderForIn` grows `placeholders` once per item in `n`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 273
+      "line": 273,
+      "verdict": "true_positive",
+      "reason": "`ParamPlaceholderForIn` appends \"?\" to an empty `[]string{}` exactly `n` times (`for range n`), so the capacity `n` is known up front.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ParamPlaceholderForIn` appends a literal `\"?\"` exactly `n` times in `for range n`, so `make([]string, 0, n)` is exact."
+        }
+      ]
     },
     {
       "id": "EA-d6e264fd95d85a1e",
@@ -173,9 +293,19 @@
       "language": "go",
       "path": "src/pkg/blob/dao/dao.go",
       "message": "Function `UpdateBlobStatus` grows `params` once per item in `stats`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 198
+      "line": 198,
+      "verdict": "false_positive",
+      "reason": "`params` is a four-element literal `[]any{time.Now(), blob.Status, blob.ID, blob.Version}`, not a zero-capacity slice, so the reported `len(stats)` is not its size; this is outside the detector's zero-capacity scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`params` is a 4-element literal that then gets one `append(params, stat)` per element of `stats`, a known-length slice, so capacity `4+len(stats)` avoids regrowth."
+        }
+      ]
     },
     {
       "id": "EA-23e522ff22575f96",
@@ -183,9 +313,19 @@
       "language": "go",
       "path": "src/pkg/blob/dao/dao.go",
       "message": "Function `FindBlobsShouldUnassociatedWithProject` grows `params` once per item in `blobs`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 250
+      "line": 250,
+      "verdict": "false_positive",
+      "reason": "`params := []any{projectID}` already holds one element, so the final size is 1+len(blobs), not `len(blobs)`; the slice is not the zero-capacity slice the detector covers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`params := []any{projectID}` is followed by one `append(params, blob.Digest)` per element of `blobs` with no conditions, so capacity `1+len(blobs)` is known."
+        }
+      ]
     },
     {
       "id": "EA-1574854990897d95",
@@ -193,9 +333,19 @@
       "language": "go",
       "path": "src/pkg/jobmonitor/queue.go",
       "message": "Function `List` grows `resultQueues` once per item in `queues`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 34
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "`resultQueues` gets exactly one `&Queue{...}` per element of `queues` from `monitClient.Queues()`, so it can be made after the call with `len(queues)` capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`resultQueues` receives one `&Queue{...}` per element of `queues` unconditionally, so `len(queues)` could size it."
+        }
+      ]
     },
     {
       "id": "EA-fad5be9a8853562f",
@@ -203,9 +353,19 @@
       "language": "go",
       "path": "src/pkg/notifier/notifier.go",
       "message": "Function `Notify` grows `handlers` once per item in `indexer`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 189
+      "line": 189,
+      "verdict": "true_positive",
+      "reason": "`handlers` gets each value of the `indexer` map (`HandlerIndexer` is `map[string]NotificationHandler`) unconditionally, so `len(indexer)` is the exact capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`handlers` is filled with one `append(handlers, h)` per entry of the `indexer` map, so `make([]NotificationHandler, 0, len(indexer))` applies."
+        }
+      ]
     },
     {
       "id": "EA-aada5cc8bb94afee",
@@ -213,9 +373,19 @@
       "language": "go",
       "path": "src/pkg/permission/types/resource.go",
       "message": "Function `Subresource` grows `elements` once per item in `resources`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 50
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `elements := []string{res.String()}` has capacity 1, and then each element of the variadic resources is appended unconditionally, so the final size 1+len(resources) is known and the slice regrows instead of being preallocated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elements` starts with `res.String()` and gets one append per variadic `resources` element, so capacity `len(resources)+1` is known."
+        }
+      ]
     },
     {
       "id": "EA-89733597629178b1",
@@ -223,9 +393,19 @@
       "language": "go",
       "path": "src/pkg/quota/util.go",
       "message": "Function `PrettyPrintResourceNames` grows `values` once per item in `a`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 53
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "`PrettyPrintResourceNames` converts each `types.ResourceName` in `a` and appends it to an empty `values` slice once per element, so `len(a)` is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`values` in `PrettyPrintResourceNames` receives one `string(value)` per element of `a` with no branching, so `len(a)` sizes it."
+        }
+      ]
     },
     {
       "id": "EA-814b9fbba3677245",
@@ -233,9 +413,19 @@
       "language": "go",
       "path": "src/pkg/reg/util/pattern.go",
       "message": "Function `combinationPathComponents` grows `components` once per item in `components2`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 65
+      "line": 65,
+      "verdict": "false_positive",
+      "reason": "The append is inside a loop nested in a loop (`components1` x `components2`), so the size is the product, not `len(components2)`; nested control is excluded, and the message names the wrong size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The append in `combinationPathComponents` runs inside nested `components1` and `components2` loops, so the count is a product and the claim of one append per `components2` item is wrong."
+        }
+      ]
     },
     {
       "id": "EA-4c7bfaf946943829",
@@ -243,9 +433,19 @@
       "language": "go",
       "path": "src/pkg/retention/manager.go",
       "message": "Function `ListPolicyIDs` grows `policyIDs` once per item in `plcs`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 111
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "`policyIDs` gets exactly one `p.ID` per element of `plcs` from `dao.ListPolicies`, so `make([]int64, 0, len(plcs))` after the query applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`policyIDs` gets `p.ID` once for each element of `plcs` unconditionally, so `make([]int64, 0, len(plcs))` fits."
+        }
+      ]
     },
     {
       "id": "EA-9a504c37cba6cfb2",
@@ -253,9 +453,19 @@
       "language": "go",
       "path": "src/pkg/retention/policy/alg/or/processor.go",
       "message": "Function `toList` grows `l` once per item in `ch`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 210
+      "line": 210,
+      "verdict": "true_positive",
+      "reason": "`toList` appends every value of the `cHash` map `ch` to an empty slice unconditionally, so `len(ch)` gives the exact capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`toList` appends each map value once while ranging over `ch`, so `make([]*selector.Candidate, 0, len(ch))` is exact."
+        }
+      ]
     },
     {
       "id": "EA-8753899c7f4d5113",
@@ -263,9 +473,19 @@
       "language": "go",
       "path": "src/pkg/scan/export/filter_processor.go",
       "message": "Function `ProcessRepositoryFilter` grows `repoIDs` once per item in `candidates`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "true_positive",
+      "reason": "`repoIDs` gets one `c.NamespaceID` per element of the `candidates` slice returned by `sel.Select`, with no filtering.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`repoIDs` receives `c.NamespaceID` once per element of `candidates` with no condition, so `len(candidates)` gives the size."
+        }
+      ]
     },
     {
       "id": "EA-3e7a5b2b7891f6be",
@@ -273,9 +493,19 @@
       "language": "go",
       "path": "src/pkg/scan/postprocessors/report_converters.go",
       "message": "Function `fromSchema` grows `vulnerabilityItems` once per item in `records`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 207
+      "line": 207,
+      "verdict": "true_positive",
+      "reason": "`vulnerabilityItems` gets one `toVulnerabilityItem(record, ...)` per element of the `records` parameter, so `len(records)` is exact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`vulnerabilityItems` gets one `toVulnerabilityItem(record, artifactDigest)` per element of `records`, so `len(records)` is the exact capacity."
+        }
+      ]
     },
     {
       "id": "EA-5be4d6c9eb55642b",
@@ -283,9 +513,19 @@
       "language": "go",
       "path": "src/pkg/usergroup/model/model.go",
       "message": "Function `UserGroupsFromName` grows `groups` once per item in `groupNames`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 35
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "`UserGroupsFromName` builds one `UserGroup{...}` per element of `groupNames` into an empty slice, so its capacity is `len(groupNames)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`groups` in `UserGroupsFromName` gets one `UserGroup{...}` per element of `groupNames` with no condition."
+        }
+      ]
     },
     {
       "id": "EA-e519c19208122bca",
@@ -293,9 +533,19 @@
       "language": "go",
       "path": "src/server/registry/catalog.go",
       "message": "Function `ServeHTTP` grows `repoNames` once per item in `repoRecords`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 56
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "Every `repo` in `repoRecords` from `NonEmptyRepos` adds `repo.Name` to `repoNames` unconditionally, so `len(repoRecords)` is the final size (the early return for an empty result is unaffected).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`repoNames` is appended with `repo.Name` once per element of `repoRecords` after the empty-case early return, so `len(repoRecords)` sizes it."
+        }
+      ]
     },
     {
       "id": "EA-6aca455a4d2d4650",
@@ -303,9 +553,19 @@
       "language": "go",
       "path": "src/server/v2.0/handler/jobservice.go",
       "message": "Function `toScheduleResponse` grows `result` once per item in `schs`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 133
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "`toScheduleResponse` appends one `&models.ScheduleTask{...}` per element of `schs` to `make(..., 0)`, so the capacity `len(schs)` is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`toScheduleResponse` appends one `&models.ScheduleTask{...}` per element of `schs` unconditionally."
+        }
+      ]
     },
     {
       "id": "EA-9b6916cc8982fb22",
@@ -313,9 +573,19 @@
       "language": "go",
       "path": "src/server/v2.0/handler/jobservice.go",
       "message": "Function `toQueueResponse` grows `result` once per item in `queues`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 158
+      "line": 158,
+      "verdict": "true_positive",
+      "reason": "`toQueueResponse` appends one `&models.JobQueue{...}` per element of `queues` with no condition, so `make(..., 0, len(queues))` fits.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`toQueueResponse` appends one `&models.JobQueue{...}` per element of `queues` unconditionally, so `len(queues)` fits."
+        }
+      ]
     },
     {
       "id": "EA-3a29a10542340121",
@@ -323,9 +593,19 @@
       "language": "go",
       "path": "src/server/v2.0/handler/member.go",
       "message": "Function `toProjectMemberRespList` grows `result` once per item in `members`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 137
+      "line": 137,
+      "verdict": "true_positive",
+      "reason": "`toProjectMemberRespList` maps each element of `members` through `toProjectMemberResp` into an empty slice, so its length is exactly `len(members)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`toProjectMemberRespList` appends `toProjectMemberResp(mem)` once for each of `members`, so `len(members)` is the exact size."
+        }
+      ]
     },
     {
       "id": "EA-94deedf9e67db616",
@@ -333,9 +613,19 @@
       "language": "go",
       "path": "server/route.go",
       "message": "Function `addRoute` grows `conns` once per item in `n`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2270
+      "line": 2270,
+      "verdict": "false_positive",
+      "reason": "The flagged `make([]*client, effectivePoolSize)` is already sized, and the `for range n` append of nil is in the separate `else if pool` branch on a `conns` slice taken from `s.routes`, not a zero-capacity slice.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 2270 is `make([]*client, effectivePoolSize)`, already sized; the only appends are `conns = append(conns, nil)` in a separate branch, so the reported zero-capacity slice does not exist."
+        }
+      ]
     },
     {
       "id": "EA-511f1909bf0d935f",
@@ -343,9 +633,19 @@
       "language": "go",
       "path": "db/extensions/store.go",
       "message": "Function `Names` grows `names` once per item in `files`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 56
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "`Names` appends `filepath.Base(file)` to `make([]string, 0)` once per element of `files` from `s.List()`, so `len(files)` is the capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Names` appends `filepath.Base(file)` once per element of `files` with no condition, so `len(files)` sizes `names`."
+        }
+      ]
     },
     {
       "id": "EA-540f878f2e6f35a5",
@@ -353,9 +653,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.data.office.ui/src/org/jkiss/dbeaver/data/office/ui/handlers/OpenSpreadsheetHandler.java",
       "message": "Function `execute` grows `selectedRows` once per item in `rsSelectedRows`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 67
+      "line": 67,
+      "verdict": "true_positive",
+      "reason": "`selectedRows` gets one unconditional `add(selectedRow.getRowNumber())` per element of the `List<ResultSetRow> rsSelectedRows`, so `new ArrayList<>(rsSelectedRows.size())` applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`selectedRows` is a fresh `ArrayList` receiving one `getRowNumber()` add per element of `rsSelectedRows`, whose size is known."
+        }
+      ]
     },
     {
       "id": "EA-4a18b41fbcdc9155",
@@ -363,9 +673,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.data.transfer.ui/src/org/jkiss/dbeaver/tools/transfer/ui/wizard/DataTransferPagePipes.java",
       "message": "Function `loadConsumers` grows `transferTargets` once per item in `processors`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 936
+      "line": 936,
+      "verdict": "false_positive",
+      "reason": "`transferTargets` is filled from an outer consumer loop with three `continue` guards, a conditional single add, and an inner loop over `processors`, so its size is not `processors.size()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`transferTargets` adds sit behind several `continue` guards and an if/else on `processors`, so adds are neither unconditional nor one per item."
+        }
+      ]
     },
     {
       "id": "EA-4e25a017d780c340",
@@ -373,9 +693,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.data.transfer.ui/src/org/jkiss/dbeaver/tools/transfer/ui/wizard/DataTransferWizard.java",
       "message": "Function `initializeWizard` grows `childStatuses` once per item in `loadErrors`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 134
+      "line": 134,
+      "verdict": "true_positive",
+      "reason": "`childStatuses` gets one transformed `add(GeneralUtils.makeExceptionStatus(error))` per element of the `loadErrors` list with no other work, so its size is known as `loadErrors.size()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`childStatuses` gets exactly one `makeExceptionStatus(error)` add per `loadErrors` element, so `new ArrayList<>(loadErrors.size())` fits."
+        }
+      ]
     },
     {
       "id": "EA-771ac3fd999ef465",
@@ -383,9 +713,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreViewBase.java",
       "message": "Function `getObjectDefinitionText` grows `actions` once per item in `triggers`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 122
+      "line": 122,
+      "verdict": "false_positive",
+      "reason": "`actions` also gets the comment, column-comment, \"View Triggers\" header and grant-permission actions under several conditions, so `triggers.size()` is not its size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`actions` is shared with earlier comment adds and `getObjectGrantPermissionActions`, and the trigger loop sits inside nested ifs, so `triggers.size()` is not the list's size."
+        }
+      ]
     },
     {
       "id": "EA-e98a8ef36704dabb",
@@ -393,9 +733,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/ProviderPropertyDescriptor.java",
       "message": "Function `extractProviderProperties` grows `properties` once per item in `propElements`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "true_positive",
+      "reason": "`properties` gets one `add(new ProviderPropertyDescriptor(category, prop))` per element of the `propElements` array and nothing else, so it can be sized to `propElements.length`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`properties` gets one `new ProviderPropertyDescriptor(category, prop)` per element of the `propElements` array, with no other work."
+        }
+      ]
     },
     {
       "id": "EA-5d8d9d264f02a141",
@@ -403,9 +753,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/navigator/DBNDatabaseFolder.java",
       "message": "Function `getChildrenObjects` grows `childObjects` once per item in `children`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 140
+      "line": 140,
+      "verdict": "true_positive",
+      "reason": "In `getChildrenObjects`, every element of the `children` array leads to an unconditional `childObjects.add(child.getObject())`, so the list's size equals `children.length` (inside the non-empty guard).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`childObjects` receives one `child.getObject()` add per element of the `children` array, so it could be sized to `children.length`."
+        }
+      ]
     },
     {
       "id": "EA-b8a2409f60095844",
@@ -413,9 +773,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/sql/SQLUtils.java",
       "message": "Function `collectComments` grows `subpatterns` once per item in `slComments`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 129
+      "line": 129,
+      "verdict": "false_positive",
+      "reason": "`subpatterns` gets a conditional add for `mlComments` before the loop, and the `slComments` loop sits inside a null check, so `slComments.length` is not the list's final size; the extra add puts this outside the one-add-per-element shape.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`subpatterns` receives one `add(Pattern.quote(prefix) + ...)` per element of `slComments`, so `new ArrayList<>(slComments.length + 1)` would avoid regrowth."
+        }
+      ]
     },
     {
       "id": "EA-8c02ecca9ee23c50",
@@ -423,9 +793,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.data/src/org/jkiss/dbeaver/ui/controls/resultset/handler/ResultSetHandlerCopyAs.java",
       "message": "Function `openResultsWith` grows `selectedRows` once per item in `rsSelectedRows`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 120
+      "line": 120,
+      "verdict": "true_positive",
+      "reason": "`selectedRows` starts as an empty `ArrayList` and gets exactly one `getRowNumber()` add per element of the `rsSelectedRows` List, so `rsSelectedRows.size()` is the exact capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`selectedRows.add(selectedRow.getRowNumber())` is an unconditional per-row transform over `rsSelectedRows`, whose size is known."
+        }
+      ]
     },
     {
       "id": "EA-b5036286790cec82",
@@ -433,9 +813,19 @@
       "language": "java",
       "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/SchedulerServiceImpl.java",
       "message": "Function `queryScheduleList` grows `scheduleList` once per item in `schedules`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 335
+      "line": 335,
+      "verdict": "true_positive",
+      "reason": "`scheduleList` is filled with one `new ScheduleVO(schedule)` per element of the `schedules` List from the DAO and nothing else, so `new ArrayList<>(schedules.size())` fits.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`scheduleList.add(new ScheduleVO(schedule))` runs once per element of `schedules`, so `new ArrayList<>(schedules.size())` fits."
+        }
+      ]
     },
     {
       "id": "EA-fa4d23e99650ad03",
@@ -443,9 +833,19 @@
       "language": "java",
       "path": "crypto/elytron/src/main/java/org/keycloak/crypto/elytron/ElytronCertificateUtilsProvider.java",
       "message": "Function `createPoliciesExtension` grows `policyList` once per item in `certificatePolicyOid`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 354
+      "line": 354,
+      "verdict": "true_positive",
+      "reason": "`policyList` gets one `new PolicyInformation(policyOid)` per element of the `certificatePolicyOid` array, so `new ArrayList<>(certificatePolicyOid.length)` applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`policyList.add(new PolicyInformation(policyOid))` is one unconditional add per element of the `certificatePolicyOid` array, so `.length` is known."
+        }
+      ]
     },
     {
       "id": "EA-8c5156e48f9ec71b",
@@ -453,9 +853,19 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/DatabasePropertyMappers.java",
       "message": "Function `namedQueryMappers` grows `mappers` once per item in `queryKeys`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 335
+      "line": 335,
+      "verdict": "true_positive",
+      "reason": "`mappers` gets one built `PropertyMapper` per key of the `queryKeys` TreeSet, which is complete before the loop, so `queryKeys.size()` is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`mappers.add(fromOption(...).build())` runs once per entry of `queryKeys`, so `new ArrayList<>(queryKeys.size())` applies."
+        }
+      ]
     },
     {
       "id": "EA-c8683a205b34fba3",
@@ -463,9 +873,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/authentication/ClientAuthenticationFlow.java",
       "message": "Function `findExecutionsToRun` grows `exIds` once per item in `executionsToRun`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 133
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "Inside the trace branch, `exIds` gets one `execution.getId()` per element of the `executionsToRun` List, so `executionsToRun.size()` is exact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`exIds.add(execution.getId())` is unconditional for each of `executionsToRun`; the trace guard is outside the loop, so sizing from `executionsToRun.size()` holds, though the benefit is small."
+        }
+      ]
     },
     {
       "id": "EA-fcd8462714bdc4bb",
@@ -473,9 +893,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/authorization/protection/permission/AbstractPermissionService.java",
       "message": "Function `verifyRequestedResource` grows `requestedResources` once per item in `resources`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 67
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "`requestedResources` builds up across the outer loop over `request`, with branch-dependent adds (one Permission when `resources` is empty, otherwise one per resource), so no single known size exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`requestedResources` in `verifyRequestedResource` is added to in a branch (`resources.isEmpty()`) or in an inner loop over `resources`, so the count per `PermissionRequest` varies and it is not one add per item."
+        }
+      ]
     },
     {
       "id": "EA-78c5fe755c57973f",
@@ -483,9 +913,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/protocol/oidc/mappers/OIDCAttributeMapperHelper.java",
       "message": "Function `mapAttributeValue` grows `result` once per item in `valueAsList`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 170
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "In the multivalued branch, `result` gets one recursive `mapAttributeValue(...)` per element of the `valueAsList` Collection, so `valueAsList.size()` is exact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`result.add(mapAttributeValue(mappingModel, valueItem))` is one unconditional add per element of `valueAsList`, which is a `Collection` with `size()`."
+        }
+      ]
     },
     {
       "id": "EA-2d21ce4cbd97cafa",
@@ -493,9 +933,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/x509/Rfc9440ClientCertificateLookup.java",
       "message": "Function `getClientCertificateChainFromHeader` grows `parsedCertificates` once per item in `encodedCerts`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 146
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "`parsedCertificates` gets one `parseCertificateFromHttpByteSequence` result per element of the (possibly truncated) `encodedCerts` list, so `encodedCerts.size()` is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`parsedCertificates.add(parseCertificateFromHttpByteSequence(encodedCert))` runs once per element of `encodedCerts`, so `encodedCerts.size()` is known."
+        }
+      ]
     },
     {
       "id": "EA-ea5825e4179df956",
@@ -503,9 +953,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/RoleDBStore.java",
       "message": "Function `getRoles` grows `ret` once per item in `xxRoles`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 291
+      "line": 291,
+      "verdict": "true_positive",
+      "reason": "In `getRoles(SearchFilter)`, `ret` gets one `roleService.read(...)` per element of `xxRoles` and nothing else, so `xxRoles.size()` is the capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ret.add(roleService.read(xxRole.getId()))` is one unconditional add per element of `xxRoles`, so `xxRoles.size()` could size `ret`."
+        }
+      ]
     },
     {
       "id": "EA-70e2a6fd99619734",
@@ -513,9 +973,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/RoleDBStore.java",
       "message": "Function `getRoles` grows `ret` once per item in `rolesFromDb`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 450
+      "line": 450,
+      "verdict": "true_positive",
+      "reason": "`ret = new ArrayList<>()` is followed by exactly one `roleService.read(xxRole.getId())` per element of `rolesFromDb`, so `new ArrayList<>(rolesFromDb.size())` applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Inside the non-empty check, `ret = new ArrayList<>()` is filled with one `roleService.read` per element of `rolesFromDb`, so `rolesFromDb.size()` applies."
+        }
+      ]
     },
     {
       "id": "EA-7917bbcb1a94d6dc",
@@ -523,9 +993,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/UserMgr.java",
       "message": "Function `setUserRoles` grows `stringRolesList` once per item in `vStringRolesList`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 335
+      "line": 335,
+      "verdict": "true_positive",
+      "reason": "`stringRolesList` gets one `vXString.getValue()` per element of the `vStringRolesList` parameter, so the size is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`stringRolesList.add(vXString.getValue())` runs once per element of `vStringRolesList`, a `List` with known size."
+        }
+      ]
     },
     {
       "id": "EA-f2af71bd7a10cc0d",
@@ -533,9 +1013,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/db/XXGroupDao.java",
       "message": "Function `getAllGroupsInfo` grows `ret` once per item in `rows`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 104
+      "line": 104,
+      "verdict": "true_positive",
+      "reason": "`ret` in `getAllGroupsInfo` gets one `toGroupInfo(row)` per element of the `rows` query result and nothing else, so `rows.size()` is exact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ret.add(toGroupInfo(row))` runs once per element of `rows` with no condition, so `rows.size()` is known."
+        }
+      ]
     },
     {
       "id": "EA-3dbcf9e56735515e",
@@ -543,9 +1033,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/db/XXPolicyRefConditionDao.java",
       "message": "Function `findUpdatedConditionNamesByPolicy` grows `ret` once per item in `rows`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "`ret` gets one `new PolicyTextNameMap(...)` per element of the `rows` result list, so it could be sized from `rows.size()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ret.add(new PolicyTextNameMap(...))` is added once per element of `rows` unconditionally, so `rows.size()` sizes the list."
+        }
+      ]
     },
     {
       "id": "EA-6bb9e39c8186617b",
@@ -553,9 +1053,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/db/XXUserDao.java",
       "message": "Function `getAllUsersInfo` grows `ret` once per item in `rows`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 173
+      "line": 173,
+      "verdict": "true_positive",
+      "reason": "`ret` in `getAllUsersInfo` gets one `toUserInfo(row)` per element of `rows` and no other adds, so `rows.size()` is exact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ret.add(toUserInfo(row))` runs once for every element of `rows`, so `rows.size()` is known."
+        }
+      ]
     },
     {
       "id": "EA-090dc9564e6d52de",
@@ -563,9 +1073,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/rest/ServiceRESTUtil.java",
       "message": "Function `processRevokeRequest` grows `appliedRangerPolicyItemAccess` once per item in `appliedPolicyItemAccessType`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 109
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "`appliedRangerPolicyItemAccess` gets one `new RangerPolicyItemAccess(accessType, false)` per element of the `appliedPolicyItemAccessType` Set, so its size is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`appliedRangerPolicyItemAccess.add(new RangerPolicyItemAccess(accessType, false))` happens once per element of the `appliedPolicyItemAccessType` set, whose `size()` is known."
+        }
+      ]
     },
     {
       "id": "EA-0da3ea5e3e6b028e",
@@ -573,9 +1093,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/service/XResourceService.java",
       "message": "Function `populatePermList` grows `vXPermMapList` once per item in `xPermMapList`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 301
+      "line": 301,
+      "verdict": "true_positive",
+      "reason": "`vXPermMapList` gets one `populateViewBean(xPermMap)` per element of `xPermMapList`, which is fetched before the list is created, so its size is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`vXPermMapList.add(xPermMapService.populateViewBean(xPermMap))` is one unconditional add per element of `xPermMapList`."
+        }
+      ]
     },
     {
       "id": "EA-c2bc3ea8a1e0043a",
@@ -583,9 +1113,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/model/HistoryReference.java",
       "message": "Function `getTags` grows `tags` once per item in `rtags`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 953
+      "line": 953,
+      "verdict": "true_positive",
+      "reason": "`tags` gets one `rtag.getTag()` per element of `rtags` from `getTagsForHistoryID`, with no other adds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`tags.add(rtag.getTag())` is added once per `RecordTag` in `rtags`, so `rtags.size()` is known."
+        }
+      ]
     },
     {
       "id": "EA-44c31b2465b18b39",
@@ -593,9 +1133,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/model/Session.java",
       "message": "Function `getContextDataStrings` grows `list` once per item in `dataList`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1180
+      "line": 1180,
+      "verdict": "true_positive",
+      "reason": "`list` gets one `data.getData()` per element of `dataList`, which is fetched before the list is created, so `dataList.size()` is known.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`list.add(data.getData())` happens once per `RecordContext` in `dataList` with no branches."
+        }
+      ]
     },
     {
       "id": "EA-32d3f738c8fed63e",
@@ -603,9 +1153,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/view/MainFrame.java",
       "message": "Function `getMenuItemNames` grows `list` once per item in `looks`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 560
+      "line": 560,
+      "verdict": "true_positive",
+      "reason": "`list` gets one `look.getName()` per element of the `looks` array from `getInstalledLookAndFeels()`, so `looks.length` is the exact size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`list.add(look.getName())` runs once per element of the `looks` array, so `looks.length` is the exact size."
+        }
+      ]
     },
     {
       "id": "EA-a364493f080a1c96",
@@ -613,9 +1173,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/CustomScanDialog.java",
       "message": "Function `setUsers` grows `userNames` once per item in `users`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 426
+      "line": 426,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): In setUsers, userNames = new ArrayList<>() gets one unconditional transformed add(user.getName()) per element of users. The final size, users.size() + 1, is known before the loop, so the list could be sized up front.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In `setUsers`, `userNames.add(user.getName())` runs once per element of `users` after a single initial `add(\"\")`, so capacity `users.size()+1` is known."
+        }
+      ]
     },
     {
       "id": "EA-c2c510228f4c8420",
@@ -623,9 +1193,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/script/ExtensionScript.java",
       "message": "Function `getScriptingEngines` grows `engineNames` once per item in `engines`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 269
+      "line": 269,
+      "verdict": "false_positive",
+      "reason": "After the `engines` loop, a second loop over `this.engineWrappers` adds more names conditionally to `engineNames`, so `engines.size()` is not its final size.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The first loop in `getScriptingEngines` adds one name per element of `engines`, so `engines.size()` is a known lower bound for the initial capacity."
+        }
+      ]
     },
     {
       "id": "EA-663145b848b3508f",
@@ -633,9 +1213,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/spider/SpiderDialog.java",
       "message": "Function `setUsers` grows `userNames` once per item in `users`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 275
+      "line": 275,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Inside the context branch, userNames gets one placeholder add(\"\") and then exactly one transformed add(user.getName()) per element of `users`. The size, users.size()+1, is known as soon as users is fetched, so the list can be sized up front.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In SpiderDialog `setUsers`, `userNames.add(user.getName())` runs once per element of `users` after an initial `add(\"\")`, so the size is known."
+        }
+      ]
     },
     {
       "id": "EA-89a25082e4ba9d23",
@@ -643,9 +1233,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/view/ContextListPanel.java",
       "message": "Function `initParam` grows `values` once per item in `contexts`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 152
+      "line": 152,
+      "verdict": "true_positive",
+      "reason": "`values` gets one `new Object[]{context.getId(), ...}` per element of the `contexts` List, so `contexts.size()` is the exact capacity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`values.add(new Object[]{...})` runs once per `Context` in `contexts` unconditionally, so `contexts.size()` sizes `values`."
+        }
+      ]
     },
     {
       "id": "EA-b75492455fc0fe4b",
@@ -653,9 +1253,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/ai_session/database.rs",
       "message": "Function `roles_clause` grows `any` once per item in `roles`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1016
+      "line": 1016,
+      "verdict": "true_positive",
+      "reason": "`roles` is a `&[MessageRole]` and `any` gets exactly one transformed `push(match kind {...})` per element, so `Vec::with_capacity(roles.len())` applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`any` receives exactly one `push` per element of the `roles` slice (the `?` calls only return early), so `Vec::with_capacity(roles.len())` fits."
+        }
+      ]
     }
   ]
 }

@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 457",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 457
+      "line": 457,
+      "verdict": "false_positive",
+      "reason": "INADDR_ANY in uv__udp_maybe_deferred_bind is libuv's implicit port-0 bind of a not-yet-bound UDP handle before send/connect/multicast, mirroring kernel autobind; it does not expose a service the caller did not request.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__udp_maybe_deferred_bind sets sin_addr.s_addr = INADDR_ANY and calls uv__udp_bind, so the UDP socket really is bound to the IPv4 wildcard address."
+        }
+      ]
     },
     {
       "id": "EA-a142faa2d898e30c",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 466",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 466
+      "line": 466,
+      "verdict": "false_positive",
+      "reason": "`addr->sin6_addr = in6addr_any` is the AF_INET6 branch of the same deferred ephemeral bind in uv__udp_maybe_deferred_bind (port left 0 by memset), library autobind semantics rather than a listening service.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The AF_INET6 branch of uv__udp_maybe_deferred_bind assigns in6addr_any and passes it to uv__udp_bind, a real bind to all IPv6 interfaces."
+        }
+      ]
     },
     {
       "id": "EA-8cf6b1d6df4cbf19",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 686",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 686
+      "line": 686,
+      "verdict": "false_positive",
+      "reason": "`mreq.imr_interface.s_addr = htonl(INADDR_ANY)` in the IPv4 multicast membership helper tells the kernel to choose the interface for IP_ADD_MEMBERSHIP when interface_addr is NULL; it is not a bind call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 686 sets mreq.imr_interface to INADDR_ANY in the multicast membership request, which asks the kernel to pick the interface; it is not a bind of a listening socket."
+        }
+      ]
     },
     {
       "id": "EA-d20d70c5517bc6af",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 791",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 791
+      "line": 791,
+      "verdict": "false_positive",
+      "reason": "htonl(INADDR_ANY) here fills mreq.imr_interface for IP_ADD_SOURCE_MEMBERSHIP in uv__udp_set_source_membership4, meaning 'let the kernel pick the multicast interface'; it is not a bind or listen address.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "INADDR_ANY at udp.c:791 only picks the default multicast interface for the IP_ADD_SOURCE_MEMBERSHIP mreq, not a bind of a listening socket."
+        }
+      ]
     },
     {
       "id": "EA-24626536281a59d4",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 1153",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1153
+      "line": 1153,
+      "verdict": "false_positive",
+      "reason": "In uv_udp_set_multicast_interface (unix), addr4->sin_addr = INADDR_ANY is passed to setsockopt IP_MULTICAST_IF to reset the outgoing multicast interface to the default, not to bind a socket to all interfaces.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "htonl(INADDR_ANY) at udp.c:1153 fills the address passed to IP_MULTICAST_IF to select the outgoing interface; no socket is bound to all interfaces."
+        }
+      ]
     },
     {
       "id": "EA-3c89485a7340b56d",
@@ -58,9 +108,19 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "Service binds to all network interfaces at line 576",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 576
+      "line": 576,
+      "verdict": "false_positive",
+      "reason": "Windows uv__udp_set_membership4 sets mreq.imr_interface.s_addr to INADDR_ANY for IP_ADD_MEMBERSHIP/IP_DROP_MEMBERSHIP group selection; no bind() uses this value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Windows uv_udp_set_membership sets mreq.imr_interface to INADDR_ANY (line 576) as the default interface for IP_ADD_MEMBERSHIP, which is not a service bind."
+        }
+      ]
     },
     {
       "id": "EA-875282e9a2121d5b",
@@ -68,9 +128,19 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "Service binds to all network interfaces at line 686",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 686
+      "line": 686,
+      "verdict": "false_positive",
+      "reason": "Windows source-specific multicast join uses INADDR_ANY as the ip_mreq_source interface when interface_addr is NULL; this is multicast interface selection, not a service bind.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "INADDR_ANY at win/udp.c:686 is the default imr_interface for a source-specific multicast membership request, not a listen/bind call."
+        }
+      ]
     },
     {
       "id": "EA-9156a834cc026098",
@@ -78,9 +148,19 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "Service binds to all network interfaces at line 843",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 843
+      "line": 843,
+      "verdict": "false_positive",
+      "reason": "Windows uv_udp_set_multicast_interface feeds INADDR_ANY into setsockopt(IP_MULTICAST_IF) to choose the default send interface; the socket's bind address is not affected.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "win/udp.c:843 assigns INADDR_ANY to addr4 for the IP_MULTICAST_IF setsockopt, selecting an interface rather than binding a service."
+        }
+      ]
     },
     {
       "id": "EA-ba9176843cf5f32b",
@@ -88,9 +168,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Server/WexflowServer.cs",
       "message": "Service binds to all network interfaces at line 110",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 110
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "Kestrel options.ListenAnyIP(port, ...) in the HTTPS branch of WexflowServer binds the server to all interfaces; the shipped Wexflow.Server uses it unconditionally with no host setting.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Kestrel options.ListenAnyIP(port, ...UseHttps) in WexflowServer.cs binds the HTTPS server to every interface."
+        }
+      ]
     },
     {
       "id": "EA-d4fb3a98c65d7adf",
@@ -98,9 +188,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Server/WexflowServer.cs",
       "message": "Service binds to all network interfaces at line 117",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 117
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "The non-HTTPS branch calls options.ListenAnyIP(port), so plain-HTTP Wexflow listens on every interface with no configurable host.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The plain-HTTP fallback options.ListenAnyIP(port) in WexflowServer.cs binds the server to all interfaces without TLS."
+        }
+      ]
     },
     {
       "id": "EA-5a426d4b63adbd07",
@@ -108,9 +208,19 @@
       "language": "java",
       "path": "model/infinispan/src/main/java/org/keycloak/connections/infinispan/TopologyInfo.java",
       "message": "Service binds to all network interfaces at line 153",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 153
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "`new InetSocketAddress(0)` in TopologyInfo is only a fallback used to format a node name string via getHostString()/getPort(); no socket is bound to it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`new InetSocketAddress(0)` in TopologyInfo is only built to format a fallback node name via getHostString/getPort; nothing binds or listens on it."
+        }
+      ]
     },
     {
       "id": "EA-99a8a215aeb9b618",
@@ -138,9 +248,19 @@
       "language": "kotlin",
       "path": "network-protection/network-protection-impl/src/main/java/com/duckduckgo/networkprotection/impl/config/WgVpnRoutes.kt",
       "message": "Service binds to all network interfaces at line 41",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 41
+      "line": 41,
+      "verdict": "false_positive",
+      "reason": "`InetAddress.getByName(\"0.0.0.0\")` in WgVpnRoutes is the start of an IPv4 range for computing VPN include routes around excluded CIDRs; nothing is bound or listened on.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`InetAddress.getByName(\"0.0.0.0\")` in WgVpnRoutes is the starting address of an IPv4 range when computing VPN routes (CIDR), not a socket bind."
+        }
+      ]
     },
     {
       "id": "EA-45c5c1c04b447aec",
@@ -148,9 +268,19 @@
       "language": "python",
       "path": "redash/__init__.py",
       "message": "Service binds to all network interfaces at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "redash/__init__.py, shipped package code, calls debugpy.listen((\"0.0.0.0\", 5678)) when REMOTE_DEBUG is set, which exposes an unauthenticated debugger on every interface; being env-gated does not change the literal all-interface listen.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "debugpy.listen((\"0.0.0.0\", 5678)) when REMOTE_DEBUG is set opens a debug server on every interface, a real all-interface listener even though opt-in."
+        }
+      ]
     },
     {
       "id": "EA-bed852e70b498dcf",
@@ -158,9 +288,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 56",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 56
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "_default_http_listen builds SocketAddr::new(Ipv6Addr::UNSPECIFIED, 8888), and config/mod.rs uses it as the serde default for the HTTP listener, so Warpgate binds [::]:8888 unless configured otherwise.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_http_listen builds SocketAddr from Ipv6Addr::UNSPECIFIED on 8888, so the HTTP service defaults to all interfaces."
+        }
+      ]
     },
     {
       "id": "EA-ed57eb5738da519c",
@@ -168,9 +308,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 61",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 61
+      "line": 61,
+      "verdict": "true_positive",
+      "reason": "_default_mysql_listen returns an Ipv6Addr::UNSPECIFIED endpoint on port 33306, which mod.rs line 599 wires in as the MySQL listener default, an all-interface bind.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_mysql_listen defaults the MySQL proxy to Ipv6Addr::UNSPECIFIED:33306, exposing it on all interfaces unless overridden."
+        }
+      ]
     },
     {
       "id": "EA-7b3c6e3f59310c75",
@@ -178,9 +328,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 73",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "_default_postgres_listen defaults the Postgres protocol listener to [::]:55432 via Ipv6Addr::UNSPECIFIED (serde default at mod.rs:709).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_postgres_listen uses Ipv6Addr::UNSPECIFIED on port 55432, so the Postgres proxy listens on all interfaces by default."
+        }
+      ]
     },
     {
       "id": "EA-da2ef226afb65d92",
@@ -188,9 +348,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 78",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 78
+      "line": 78,
+      "verdict": "true_positive",
+      "reason": "_default_kubernetes_listen produces SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 8443), used as the Kubernetes listener default, so it listens on all interfaces by default.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_kubernetes_listen uses Ipv6Addr::UNSPECIFIED on 8443, a default wildcard listen address for the Kubernetes proxy."
+        }
+      ]
     },
     {
       "id": "EA-6178dfec41b37894",
@@ -198,9 +368,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 83",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "true_positive",
+      "reason": "_default_vnc_listen sets the VNC listener default to the unspecified IPv6 address on port 5900, referenced by #[serde(default = \"_default_vnc_listen\")].",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_vnc_listen builds an unspecified-address SocketAddr on port 5900, defaulting the VNC listener to all interfaces."
+        }
+      ]
     },
     {
       "id": "EA-4e55b4e01c4417e0",
@@ -208,9 +388,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 88",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 88
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "_default_rdp_listen returns an all-interface [::]:3389 ListenEndpoint that config/mod.rs:812 uses as the RDP listener default.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_rdp_listen defaults the RDP listener to Ipv6Addr::UNSPECIFIED:3389, an all-interface bind by default."
+        }
+      ]
     },
     {
       "id": "EA-be46ea57cbce71f5",
@@ -218,9 +408,19 @@
       "language": "rust",
       "path": "warpgate-common/src/config/defaults.rs",
       "message": "Service binds to all network interfaces at line 117",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 117
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "_default_ssh_listen defaults the SSH listener to Ipv6Addr::UNSPECIFIED port 2222 (mod.rs:430 and 476), a SocketAddr built from an unspecified address as the detector documents.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_default_ssh_listen defaults the SSH listener to Ipv6Addr::UNSPECIFIED:2222, binding all interfaces unless configured."
+        }
+      ]
     }
   ]
 }

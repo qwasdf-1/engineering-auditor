@@ -8,9 +8,19 @@
       "language": "python",
       "path": "redash/tasks/queries/execution.py",
       "message": "Parameter `metadata` of `enqueue_query` defaults to `{}`, one object shared by every call, and the function mutates it (`item assignment`) at line 83",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 32
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "`metadata={}` is a shared default and `enqueue_query` writes `metadata[\"Queue\"] = queue_name` at line 83, so calls that omit metadata mutate the same dict.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`metadata={}` is a shared default and enqueue_query assigns `metadata[\"Queue\"] = queue_name` at line 83, mutating it across calls."
+        }
+      ]
     },
     {
       "id": "EA-f101528e6d4e89c9",
@@ -18,9 +28,19 @@
       "language": "python",
       "path": "analytics/lib/counts.py",
       "message": "Parameter `dependencies` of `__init__` defaults to `[]`, one object shared by every call, and the function stores it at line 124",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 121
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "`dependencies: Sequence[str] = []` is one list shared by every DependentCountStat and is stored as `self.dependencies` at line 124, so the instances alias it, which is the documented store-into-attribute case.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`dependencies: Sequence[str] = []` is one shared list stored as `self.dependencies`; it is only read today, but the shared mutable default is the documented attribute-store trigger."
+        }
+      ]
     },
     {
       "id": "EA-87c8818f382ee554",
@@ -28,9 +48,19 @@
       "language": "python",
       "path": "zerver/lib/integrations.py",
       "message": "Parameter `config_options` of `__init__` defaults to `[]`, one object shared by every call, and the function stores it at line 197",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "true_positive",
+      "reason": "`config_options: Sequence[WebhookConfigOption] = []` is a shared list default that `__init__` assigns to an attribute at line 197, so every Integration built without it aliases one list.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`config_options: Sequence[WebhookConfigOption] = []` is one shared list stored as `self.config_options` at line 197; read-only today, but it is the documented store trigger."
+        }
+      ]
     },
     {
       "id": "EA-004b55be0f80e9d3",
@@ -38,9 +68,19 @@
       "language": "python",
       "path": "zerver/lib/integrations.py",
       "message": "Parameter `url_options` of `__init__` defaults to `[]`, one object shared by every call, and the function stores it at line 182",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 175
+      "line": 175,
+      "verdict": "true_positive",
+      "reason": "`url_options: Sequence[WebhookUrlOption] = []` is stored directly as `self.url_options` at line 182, so integrations constructed without it share the same default list object.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`url_options: Sequence[WebhookUrlOption] = []` is one shared list stored as `self.url_options` at line 182; read-only today, but it is the documented store trigger."
+        }
+      ]
     }
   ]
 }

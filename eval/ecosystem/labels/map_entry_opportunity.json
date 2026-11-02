@@ -8,9 +8,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/edit/PostgreCommandGrantPrivilege.java",
       "message": "Function `merge` checks `userParams` for `mergedCommandId` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 180
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "`userParams` is a `Map<Object, Object>` and `containsKey(mergedCommandId)` followed by `put(mergedCommandId, true)` maps to `if (userParams.putIfAbsent(mergedCommandId, true) == null)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`containsKey(mergedCommandId)` followed immediately by `put(mergedCommandId, true)` is the check-then-put shape that `putIfAbsent(...) == null` expresses."
+        }
+      ]
     },
     {
       "id": "EA-dfc9365a2a6a9436",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/security/handler/RangerAuthenticationProvider.java",
       "message": "Function `getPamAuthentication` checks `options` for `\"ranger.pam.service\"` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 351
+      "line": 351,
+      "verdict": "true_positive",
+      "reason": "`options` is the HashMap from `PropertiesUtil.getPropertiesMap()`, and `containsKey(\"ranger.pam.service\")` then `put(..., \"ranger-admin\")` with a literal value is `putIfAbsent`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`options.containsKey(\"ranger.pam.service\")` then `options.put(\"ranger.pam.service\", \"ranger-admin\")` with a constant value is the `putIfAbsent` pattern."
+        }
+      ]
     },
     {
       "id": "EA-32a509d7fcdeddad",
@@ -28,9 +48,19 @@
       "language": "python",
       "path": "scripts/ps-analysis/ps_review_anomaly.py",
       "message": "Function `analyze_anomalies` checks `date_reviews` for `review_date` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 74
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "scripts/ps-analysis/ps_review_anomaly.py is a developer Play Store review-analysis script, not part of the shipped Android app, so it is tooling outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ps_review_anomaly.py is an analysis helper under scripts/ps-analysis in duckduckgo-android, a developer script not shipped in the app."
+        }
+      ]
     },
     {
       "id": "EA-7caf5e40fb0e3d31",
@@ -38,9 +68,19 @@
       "language": "python",
       "path": "electrum/wallet_db.py",
       "message": "Function `_convert_version_58` checks `prevouts_by_scripthash` for `scripthash` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1159
+      "line": 1159,
+      "verdict": "true_positive",
+      "reason": "`if scripthash not in prevouts_by_scripthash: prevouts_by_scripthash[scripthash] = {}` in the shipped wallet DB upgrade is the `setdefault(scripthash, {})` shape.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if scripthash not in prevouts_by_scripthash: prevouts_by_scripthash[scripthash] = {}` followed by an item store is the `setdefault(scripthash, {})` pattern in the wallet DB upgrade code."
+        }
+      ]
     },
     {
       "id": "EA-173a6c1c2bb7a5f6",
@@ -48,9 +88,19 @@
       "language": "python",
       "path": "frigate/stats/emitter.py",
       "message": "Function `get_stats_history` checks `selected` for `parent_key` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 108
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "`selected` is a plain dict and `if parent_key not in selected: selected[parent_key] = {}` is a guard-then-fill that `selected.setdefault(parent_key, {})` expresses.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if parent_key not in selected: selected[parent_key] = {}` then fills `selected[parent_key][child_key]`, which `setdefault(parent_key, {})` covers."
+        }
+      ]
     },
     {
       "id": "EA-4860af4aa19d949a",
@@ -58,9 +108,19 @@
       "language": "python",
       "path": "frigate/track/norfair_tracker.py",
       "message": "Function `match_and_update` checks `detections_by_type` for `label` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 529
+      "line": 529,
+      "verdict": "true_positive",
+      "reason": "`detections_by_type: dict[str, list[Detection]]` is filled with `[]` under `label not in` and appended later, which is `setdefault(label, [])` (or a defaultdict).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if label not in detections_by_type: detections_by_type[label] = []` followed by `detections_by_type[label].append(detection)` is the `setdefault(label, [])` pattern."
+        }
+      ]
     },
     {
       "id": "EA-31bb464fe5dbcad2",
@@ -88,9 +148,19 @@
       "language": "python",
       "path": "redash/query_runner/big_query.py",
       "message": "Function `get_schema` checks `location_dataset_ids` for `location` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 333
+      "line": 333,
+      "verdict": "true_positive",
+      "reason": "`location_dataset_ids = {}` is filled with `[]` under `location not in location_dataset_ids` and then appended to, which is the `setdefault(location, [])` idiom.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if location not in location_dataset_ids: location_dataset_ids[location] = []` then `.append(dataset_id)` is the `setdefault(location, [])` pattern."
+        }
+      ]
     },
     {
       "id": "EA-8959b68d0c070ca0",
@@ -98,9 +168,19 @@
       "language": "python",
       "path": "zerver/lib/migration_status.py",
       "message": "Function `parse_migration_status` checks `stale_migrations_dict` for `app` before inserting it.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 132
+      "line": 132,
+      "verdict": "true_positive",
+      "reason": "`stale_migrations_dict[app] = []` under `app not in stale_migrations_dict`, followed by append, is replaceable by `setdefault(app, []).append(migration)` in production zerver/lib code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if app not in stale_migrations_dict: stale_migrations_dict[app] = []` followed by `.append(migration)` is the `setdefault`/defaultdict pattern."
+        }
+      ]
     }
   ]
 }

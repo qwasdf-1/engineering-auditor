@@ -8,9 +8,19 @@
       "language": "go",
       "path": "services/packages/debian/repository.go",
       "message": "Function `buildPackagesIndices` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 228
+      "line": 228,
+      "verdict": "true_positive",
+      "reason": "`fmt.Sprintf(\"%s|%s|%s\", distribution, component, architecture)` uses only function parameters that are invariant across the three-element Packages/Packages.gz/Packages.xz loop, and the same key was already computed earlier as `key`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`fmt.Sprintf(\"%s|%s|%s\", distribution, component, architecture)` formats three invariant strings for each of the three index files, so the CompositeKey could be built once before the loop."
+        }
+      ]
     },
     {
       "id": "EA-479158131fc29184",
@@ -58,9 +68,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/comments/comments-service-emails.js",
       "message": "Function `notifyPostAuthors` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 81
+      "line": 81,
+      "verdict": "false_positive",
+      "reason": "`moment(comment.get('created_at')).tz(...).format(...)` is invariant across `post.related('authors')`, but moment's format is not among the documented qualifying calls (fmt.Sprintf/String.format/util.format) and its operands are method-call results, not proven primitives, so the site is outside the detector's stated scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`moment(comment.get('created_at')).tz(timezone).format('D MMM YYYY')` depends only on the comment and a setting, not on `author`, so the same date string is recomputed for every notified author."
+        }
+      ]
     },
     {
       "id": "EA-0ef750b2f1b3f6cc",
@@ -68,9 +88,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/stats/members-stats-service.js",
       "message": "Function `_generateCompleteRange` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "false_positive",
+      "reason": "`currentDate.format('YYYY-MM-DD')` in `_generateCompleteRange` formats a cursor that the loop advances each iteration, so the value is loop-variant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`currentDate.format('YYYY-MM-DD')` in `_generateCompleteRange` formats a moment advanced each iteration (the loop condition `isSameOrBefore(endDateMoment)`), so the operand varies."
+        }
+      ]
     },
     {
       "id": "EA-43204d1c5b750a8e",
@@ -78,9 +108,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/stats/posts-stats-service.js",
       "message": "Function `_fillMissingDates` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1156
+      "line": 1156,
+      "verdict": "false_positive",
+      "reason": "In `_fillMissingDates`, `currentDate.add(1, 'day')` changes `currentDate` every iteration, so `currentDate.format('YYYY-MM-DD')` is not loop-invariant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`currentDate.format('YYYY-MM-DD')` in `_fillMissingDates` is applied to a cloned date advanced by `currentDate.add(1, 'day')` every pass, so it is loop-variant."
+        }
+      ]
     },
     {
       "id": "EA-0c9d02f4b83388be",
@@ -88,9 +128,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/growth/components/paid-subscription-change-chart.tsx",
       "message": "Function `` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 87
+      "line": 87,
+      "verdict": "false_positive",
+      "reason": "`currentPeriod.format('YYYY-MM-DD')` formats a moment that `currentPeriod.add(1, 'month')` advances every iteration, so the operand is loop-variant; moment's format is also not one of the qualifying APIs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`currentPeriod.format('YYYY-MM-DD')` formats a moment that is advanced by `currentPeriod.add(1, 'month')` every iteration, so the operand is loop-variant."
+        }
+      ]
     },
     {
       "id": "EA-f8acc77de2350958",
@@ -98,9 +148,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/growth/components/paid-subscription-change-chart.tsx",
       "message": "Function `` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 111
+      "line": 111,
+      "verdict": "false_positive",
+      "reason": "The weekly branch formats `currentPeriod`, which `currentPeriod.add(1, 'week')` mutates each pass, so the formatted value differs per iteration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`currentPeriod.format(...)` in the weekly branch formats a moment mutated by `currentPeriod.add(1, 'week')` each pass, so it is not loop-invariant data."
+        }
+      ]
     },
     {
       "id": "EA-356346474bdd6c11",
@@ -108,9 +168,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/growth/components/paid-subscription-change-chart.tsx",
       "message": "Function `` formats loop-invariant data inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 134
+      "line": 134,
+      "verdict": "false_positive",
+      "reason": "The daily loop formats `currentDate`, advanced by `currentDate.add(1, 'day')`, so the operand is loop-variant and nothing could be hoisted.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`currentDate.format('YYYY-MM-DD')` in the daily branch formats `currentDate`, which `currentDate.add(1, 'day')` changes every iteration, so the claim of invariant data is wrong."
+        }
+      ]
     }
   ]
 }

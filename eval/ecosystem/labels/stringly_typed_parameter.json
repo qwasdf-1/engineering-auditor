@@ -8,9 +8,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleDependencyType.java",
       "message": "Function `getByType` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 29
+      "line": 29,
+      "verdict": "false_positive",
+      "reason": "OracleDependencyType.getByType(String) is the string-to-enum factory that converts the catalog's 'HARD'/'REF' value into the enum, a boundary conversion the rule says to leave silent.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "OracleDependencyType.getByType converts a database string ('HARD'/'REF') into the enum; it is the boundary conversion that already returns the typed value."
+        }
+      ]
     },
     {
       "id": "EA-5cdd077116e17f49",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreDefaultPrivilege.java",
       "message": "Function `setUnderKind` accepts sentinel-like string parameter `kind`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 49
+      "line": 49,
+      "verdict": "false_positive",
+      "reason": "setUnderKind(String kind) translates the catalog's relkind code ('r','S','f','T') into the PostgrePrivilegeGrant.Kind enum; it is a boundary conversion into a typed value, not a stringly typed API.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "PostgreDefaultPrivilege.setUnderKind(String kind) maps catalog relkind codes onto PostgrePrivilegeGrant.Kind; it is a boundary conversion, with a typed overload beside it."
+        }
+      ]
     },
     {
       "id": "EA-44376b5de180bad3",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "model/storage-services/src/main/java/org/keycloak/services/resources/admin/UserStorageProviderResource.java",
       "message": "Function `syncUsers` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 135
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "syncUsers dispatches on the `action` query string against 'triggerFullSync' and 'triggerChangedUsersSync'; JAX-RS could bind an enum here, so the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "syncUsers dispatches the string `action` query parameter on \"triggerFullSync\" and \"triggerChangedUsersSync\" with an error branch, a stringly typed selector."
+        }
+      ]
     },
     {
       "id": "EA-b08b7c7e4399a021",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "rest/admin-ui-ext/src/main/java/org/keycloak/admin/ui/rest/AuthenticationManagementResource.java",
       "message": "Function `listUsed` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 98
+      "line": 98,
+      "verdict": "true_positive",
+      "reason": "listUsed branches on the `type` path string 'clients' vs 'idp' and throws IllegalArgumentException otherwise, a closed set suitable for an enum path param.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "listUsed branches on the String `type` against \"clients\" and \"idp\" and throws on anything else, so the string acts as a selector."
+        }
+      ]
     },
     {
       "id": "EA-1fab6d6c7c80234b",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "ssf/transmitter/src/main/java/org/keycloak/ssf/transmitter/subject/SubjectManagementService.java",
       "message": "Function `resolveByAdminType` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 383
+      "line": 383,
+      "verdict": "true_positive",
+      "reason": "resolveByAdminType selects behaviour by comparing `type` with 'user-id', 'user-email', 'user-username' and 'org-alias', a closed sentinel set passed as String.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "resolveByAdminType takes a String `type` and checks it against \"user-id\", \"user-email\", \"user-username\", \"org-alias\" in sequence, a sentinel selector."
+        }
+      ]
     },
     {
       "id": "EA-d21e36e500de2e74",
@@ -58,9 +108,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestApplicationResourceProvider.java",
       "message": "Function `post` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 172
+      "line": 172,
+      "verdict": "false_positive",
+      "reason": "TestApplicationResourceProvider.post lives in testsuite/integration-arquillian testsuite-providers, a test-only fake app endpoint, which is outside this detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TestApplicationResourceProvider is a testsuite-providers class under integration-arquillian, test infrastructure outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-7a2ab8166fc308fc",
@@ -68,9 +128,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestApplicationResourceProvider.java",
       "message": "Function `get` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 206
+      "line": 206,
+      "verdict": "false_positive",
+      "reason": "The GET handler `get(String action)` comparing 'auth'/'logout' belongs to the Arquillian testsuite provider module, test infrastructure not shipped with Keycloak.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This GET handler (`get`, `action`) is in the arquillian testsuite-providers module, which is test-only code."
+        }
+      ]
     },
     {
       "id": "EA-6995e72198b06562",
@@ -78,9 +148,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestSamlApplicationResourceProvider.java",
       "message": "Function `post` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 119
+      "line": 119,
+      "verdict": "false_positive",
+      "reason": "TestSamlApplicationResourceProvider.post is part of the integration testsuite's fake SAML application, test code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TestSamlApplicationResourceProvider.post lives in the testsuite-providers test module, so it is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-dd4dff087d919642",
@@ -88,9 +168,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestSamlApplicationResourceProvider.java",
       "message": "Function `get` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 148
+      "line": 148,
+      "verdict": "false_positive",
+      "reason": "TestSamlApplicationResourceProvider.get(action) is a test-harness endpoint under testsuite/.../testsuite-providers, not production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TestSamlApplicationResourceProvider.get is test-suite infrastructure in testsuite-providers, not shipped product code."
+        }
+      ]
     },
     {
       "id": "EA-96fce61aa9bb1436",
@@ -118,9 +208,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/oembed/oembed-service.js",
       "message": "Function `fetchOembedDataFromUrl` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 785
+      "line": 785,
+      "verdict": "true_positive",
+      "reason": "#fetchOembedDataFromUrl documents `type` as {string} and branches on type !== 'bookmark' && type !== 'mention', an internal request-kind sentinel that could be a typed union/constant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "#fetchOembedDataFromUrl takes a JSDoc {string} `type` and branches on 'bookmark' and 'mention' to choose fetch behaviour, a real string selector."
+        }
+      ]
     },
     {
       "id": "EA-cd655ff584d5e805",
@@ -168,9 +268,19 @@
       "language": "python",
       "path": "zerver/lib/dev_ldap_directory.py",
       "message": "Function `generate_dev_ldap_dir` accepts sentinel-like string parameter `mode`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "generate_dev_ldap_dir is only used by init_fakeldap (mock.patch of ldap.initialize driven by FAKE_LDAP_MODE in dev settings) and by tests, so it is development tooling outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "generate_dev_ldap_dir builds fake LDAP data for the dev environment (modes a/b/c) and is only reached via init_fakeldap from dev settings and tests, so it is dev tooling."
+        }
+      ]
     },
     {
       "id": "EA-ba7639208117899c",
@@ -178,9 +288,19 @@
       "language": "python",
       "path": "zerver/lib/events.py",
       "message": "Function `apply_event` accepts sentinel-like string parameter `state`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1016
+      "line": 1016,
+      "verdict": "false_positive",
+      "reason": "apply_event's `state` parameter is typed dict[str, Any], not str; the string comparisons are on event['type'], so the claimed string sentinel parameter is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In apply_event, `state` is annotated `dict[str, Any]`, not a string, so the string-typed claim is a misparse."
+        }
+      ]
     },
     {
       "id": "EA-9e2eda8ce65f57d4",
@@ -188,9 +308,19 @@
       "language": "python",
       "path": "zerver/webhooks/bitbucket/view.py",
       "message": "Function `get_topic_based_on_type` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 155
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "get_topic_based_on_type receives the internal event type string returned by get_type and dispatches on 'pull_request'/'issue' prefixes and 'push', an internal sentinel that could be an enum.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_topic_based_on_type branches on type.startswith(\"pull_request\"), startswith(\"issue\") and asserts != \"push\", a string-prefix selector."
+        }
+      ]
     },
     {
       "id": "EA-22e976d778123769",
@@ -198,9 +328,19 @@
       "language": "python",
       "path": "zerver/webhooks/bitbucketdatacenter/view.py",
       "message": "Function `pr_handler` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 340
+      "line": 340,
+      "verdict": "true_positive",
+      "reason": "pr_handler branches on `action: str` across 'opened', 'modified', 'merged', 'needs_work' and 'reviewers_updated', a closed set of PR actions passed as a bare string.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "pr_handler dispatches the str `action` over \"opened\"/\"modified\" and \"merged\" and further branches, a string selector."
+        }
+      ]
     },
     {
       "id": "EA-53aaf7329c6fe12c",
@@ -208,9 +348,19 @@
       "language": "python",
       "path": "zerver/webhooks/gitlab/view.py",
       "message": "Function `get_emoji_event_transformed_type` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 523
+      "line": 523,
+      "verdict": "false_positive",
+      "reason": "get_emoji_event_transformed_type maps GitLab's awardable_type payload string ('MergeRequest', 'Note', 'DesignManagement::Design') to a display label and lower-cases anything else, a passive boundary conversion of external data.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_emoji_event_transformed_type compares `type` to \"MergeRequest\", \"Note\" and \"DesignManagement::Design\" and recurses, selecting behaviour by string."
+        }
+      ]
     },
     {
       "id": "EA-84e091e267daadaa",
@@ -218,9 +368,19 @@
       "language": "python",
       "path": "zerver/webhooks/gitlab/view.py",
       "message": "Function `get_emoji_event_topic_title` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 558
+      "line": 558,
+      "verdict": "true_positive",
+      "reason": "get_emoji_event_topic_title dispatches on the internally transformed `type` values 'MR', 'issue' and 'snippet' produced by get_emoji_event_transformed_type, a sentinel that could be typed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_emoji_event_topic_title selects the payload section by comparing `type` to \"MR\", \"issue\" and \"snippet\" in an if/elif chain."
+        }
+      ]
     },
     {
       "id": "EA-6d6ff1186c1530b0",
@@ -228,9 +388,19 @@
       "language": "python",
       "path": "zerver/webhooks/sentry/view.py",
       "message": "Function `handle_issue_payload` accepts sentinel-like string parameter `action`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 197
+      "line": 197,
+      "verdict": "true_positive",
+      "reason": "handle_issue_payload switches on `action: str` among 'created', 'resolved', 'assigned', 'ignored', selecting message templates, which is the sentinel-string dispatch the rule targets.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "handle_issue_payload branches on the str `action` (\"created\" and further actions) to build the message, a string selector."
+        }
+      ]
     },
     {
       "id": "EA-34834217605956cd",
@@ -238,9 +408,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/hooks/useFormat.ts",
       "message": "Function `` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 167
+      "line": 167,
+      "verdict": "false_positive",
+      "reason": "The formatDisplay callback's `type` is typed FormatType, a closed union of string literals ('string' | 'number' | 'financial' ...), not a plain string, so it is already a typed sentinel.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In useFormat.ts formatDisplay's `type` is typed `FormatType`, a union type alias, not a plain string, so the string-typed claim is wrong."
+        }
+      ]
     },
     {
       "id": "EA-4160238208111caf",
@@ -248,9 +428,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/aql/compiler.ts",
       "message": "Function `val` accepts sentinel-like string parameter `type`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 343
+      "line": 343,
+      "verdict": "false_positive",
+      "reason": "In val() the `type` parameter is only truth-tested and passed to castInput; the literal comparisons 'id' and 'string' are on castedExpr.type, not on the parameter.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In compiler.ts `val` only forwards `type` to castInput and tests it for truthiness; it never compares it against string literals, so it is not a selector there."
+        }
+      ]
     },
     {
       "id": "EA-8601a78b8b9bed56",
@@ -258,9 +448,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/base/left-side-nav/replication/replication/replication.component.ts",
       "message": "Function `getStatusStr` accepts sentinel-like string parameter `status`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 654
+      "line": 654,
+      "verdict": "false_positive",
+      "reason": "getStatusStr compares `status` against only one literal ('Failed') and otherwise maps it through STATUS_MAP for display, so the two-distinct-literal sentinel dispatch the rule requires is not present.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getStatusStr compares `status` to only 'Failed' and otherwise does a STATUS_MAP lookup of backend status text for display, so it is not a multi-literal selector."
+        }
+      ]
     },
     {
       "id": "EA-252d108d60de0a1f",
@@ -288,9 +488,19 @@
       "language": "typescript",
       "path": "web/src/settings_components.ts",
       "message": "Function `change_save_button_state` accepts sentinel-like string parameter `state`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 571
+      "line": 571,
+      "verdict": "true_positive",
+      "reason": "change_save_button_state takes `state: string` and branches on 'discarded', 'succeeded', 'failed' etc.; a literal union type would fit this internal UI state sentinel.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "change_save_button_state compares the string `state` against \"discarded\", \"succeeded\", \"saving\" and switches on it, a clear string state machine."
+        }
+      ]
     }
   ]
 }

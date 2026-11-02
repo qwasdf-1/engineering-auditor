@@ -8,9 +8,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Pattern at line 25 repeats `(?:[^\\n]+\\n?(?!hr|heading|blockquote|tag|def))+`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 25
+      "line": 25,
+      "verdict": "false_positive",
+      "reason": "web/third/marked/lib/marked.cjs is vendored third-party marked code in Zulip's web/third directory, which is outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "web/third/marked/lib/marked.cjs is vendored third-party code, outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-101aa61126a0d049",
@@ -18,9 +28,19 @@
       "language": "python",
       "path": "zerver/data_import/mattermost.py",
       "message": "Pattern at line 423 repeats `([A-Za-z0-9]+[_.]?)+`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 423
+      "line": 423,
+      "verdict": "false_positive",
+      "reason": "In the mattermost import regex, @(([A-Za-z0-9]+[_.]?)+) ends the pattern, so re.findall accepts the first greedy match and no failing suffix can force exponential backtracking.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The mattermost mention pattern ends with the ambiguous group (([A-Za-z0-9]+[_.]?)+) with no trailing element that can fail, so findall matches greedily without exponential backtracking."
+        }
+      ]
     },
     {
       "id": "EA-9c4c7f3dde4891db",
@@ -28,9 +48,19 @@
       "language": "typescript",
       "path": "dolphinscheduler-ui/src/views/security/user-manage/components/use-user-detail.ts",
       "message": "Pattern at line 94 repeats `([a-zA-Z0-9]+[_|\\-|\\.]?)*`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 94
+      "line": 94,
+      "verdict": "true_positive",
+      "reason": "The email validator /^([a-zA-Z0-9]+[_|\\-|\\.]?)*[a-zA-Z0-9]+@.../ nests [a-zA-Z0-9]+ in a * group with an optional separator, so a long alphanumeric run with no '@' backtracks exponentially; the regex runs on user input in the user form.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The email regex nests ([a-zA-Z0-9]+[_|\\-|\\.]?)* where the optional separator lets an alnum run split many ways, followed by a required @ so a near-miss fails and backtracks exponentially."
+        }
+      ]
     },
     {
       "id": "EA-13e8716a36d4db9c",
@@ -38,9 +68,19 @@
       "language": "typescript",
       "path": "web/src/compose_paste.ts",
       "message": "Pattern at line 30 repeats `(\\n+\\s*)+`, whose body can match the same text in more than one way; a near-miss input makes matching exponential",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 30
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "In /(\\n+\\s*)+/g the ambiguous group ends the pattern with nothing after it that can fail, so each match succeeds at once on the greedy pass and replaceAll never backtracks exponentially.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "/(\\n+\\s*)+/g is ambiguous but nothing follows the group, so the match always succeeds greedily and a failing continuation that triggers backtracking never exists."
+        }
+      ]
     }
   ]
 }

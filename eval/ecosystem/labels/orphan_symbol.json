@@ -8,9 +8,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/commands/resume.rs",
       "message": "Symbol `ACCEPT_PREFIX` defined at line 69 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 69
+      "line": 69,
+      "verdict": "false_positive",
+      "reason": "`ACCEPT_PREFIX` is used at resume.rs:761 in `eprintln!(\"{ACCEPT_PREFIX}{line}\")`; the inline format-argument capture was not resolved as a reference.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ACCEPT_PREFIX is used at resume.rs:761 in eprintln!(\"{ACCEPT_PREFIX}{line}\") through an inline format-args capture that the reference resolver missed."
+        }
+      ]
     },
     {
       "id": "EA-771a53aee5688501",
@@ -18,9 +28,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/ai_session/database.rs",
       "message": "Symbol `TITLE_WEIGHT` defined at line 48 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "false_positive",
+      "reason": "`TITLE_WEIGHT` is referenced as `{TITLE_WEIGHT:?}` inside the bm25 query format string at database.rs:1181, so the constant is used.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TITLE_WEIGHT is referenced at database.rs:1181 inside the format string as {TITLE_WEIGHT:?} in the bm25 SQL, an inline captured identifier the resolver did not count."
+        }
+      ]
     },
     {
       "id": "EA-4c307fbadb8cf2b7",
@@ -28,9 +48,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/ai_session/database.rs",
       "message": "Symbol `RECENCY_DAYS` defined at line 52 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 52
+      "line": 52,
+      "verdict": "false_positive",
+      "reason": "`RECENCY_DAYS` appears as `{RECENCY_DAYS:?}` in the recency-scoring format string at database.rs:1187, an inline capture the detector missed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "RECENCY_DAYS is used at database.rs:1187 via the {RECENCY_DAYS:?} format capture in the score-division SQL expression, so it is not orphaned."
+        }
+      ]
     },
     {
       "id": "EA-f7a70a59e6f47183",
@@ -38,9 +68,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/ai_session/database.rs",
       "message": "Symbol `DAY_MILLIS` defined at line 54 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "`DAY_MILLIS` is interpolated via `{DAY_MILLIS:?}` in the same database.rs:1187 ranking SQL format string, so it is not orphaned.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "DAY_MILLIS is consumed at database.rs:1187 as {DAY_MILLIS:?} inside the recency SQL format string; the reference is an inline format capture."
+        }
+      ]
     },
     {
       "id": "EA-17fc064c24de9a30",
@@ -48,9 +88,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/record/sqlite_store.rs",
       "message": "Symbol `STORE_COLUMNS` defined at line 23 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "`STORE_COLUMNS` is interpolated as `{STORE_COLUMNS}` in seven select statements (sqlite_store.rs lines 167-529).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "STORE_COLUMNS is interpolated as {STORE_COLUMNS} into several select queries in sqlite_store.rs (lines 167, 319, 351, 435, 455, 501, 529), all inline format captures."
+        }
+      ]
     },
     {
       "id": "EA-5d95b6ab87c8ec09",
@@ -58,9 +108,19 @@
       "language": "rust",
       "path": "crates/atuin-kv/src/database.rs",
       "message": "Symbol `KV_COLUMNS` defined at line 13 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "`KV_COLUMNS` is used through `{KV_COLUMNS}` in the three kv select queries at atuin-kv database.rs lines 106, 121 and 128.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "KV_COLUMNS is used via {KV_COLUMNS} in the select queries at database.rs lines 106, 121 and 128, inline format-string captures the resolver missed."
+        }
+      ]
     },
     {
       "id": "EA-1364ec46fea7f262",
@@ -68,9 +128,19 @@
       "language": "rust",
       "path": "crates/atuin-scripts/src/database.rs",
       "message": "Symbol `SCRIPT_COLUMNS` defined at line 13 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "`SCRIPT_COLUMNS` is interpolated as `{SCRIPT_COLUMNS}` in the script queries at atuin-scripts database.rs lines 114, 139 and 224.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "SCRIPT_COLUMNS is interpolated as {SCRIPT_COLUMNS} in the select statements at database.rs lines 114, 139 and 224, inline format captures."
+        }
+      ]
     },
     {
       "id": "EA-a117a1dcd8a7eaa7",
@@ -78,9 +148,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/client/search/interactive.rs",
       "message": "Symbol `ACCEPT_PREFIX` defined at line 54 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "`ACCEPT_PREFIX` in interactive.rs is used at line 2305 in `format!(\"{ACCEPT_PREFIX}{command}\")`, an implicit format capture.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This ACCEPT_PREFIX is used at interactive.rs:2305 in format!(\"{ACCEPT_PREFIX}{command}\"), an inline format capture, so it has a real reference."
+        }
+      ]
     },
     {
       "id": "EA-b7a51ae9990e7b8f",
@@ -88,9 +168,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/contributors.rs",
       "message": "Symbol `CONTRIBUTORS` defined at line 1 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1
+      "line": 1,
+      "verdict": "false_positive",
+      "reason": "The `CONTRIBUTORS` static is printed by `run()` two lines below via `println!(\"\\n{CONTRIBUTORS}\")`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "CONTRIBUTORS is printed by println!(\"\\n{CONTRIBUTORS}\") on line 4 of the same file via an inline format capture, so it is referenced."
+        }
+      ]
     },
     {
       "id": "EA-c90d8dc17b5982f2",
@@ -138,9 +228,19 @@
       "language": "rust",
       "path": "warpgate-protocol-ssh/src/server/service_output.rs",
       "message": "Symbol `ERASE_LINE` defined at line 21 has zero resolved source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 21
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "`ERASE_LINE` is used at service_output.rs:261 in `format!(\"{CURSOR_UP}\\r{ERASE_LINE}\")` (and in a test at line 304).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ERASE_LINE is used at service_output.rs:261 in format!(\"{CURSOR_UP}\\r{ERASE_LINE}\") and in a test at line 304, inline format captures that were not resolved."
+        }
+      ]
     }
   ]
 }

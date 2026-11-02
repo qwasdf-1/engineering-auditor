@@ -8,9 +8,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.net.ssh.jsch/src/org/jkiss/dbeaver/model/net/ssh/JSCHSessionController.java",
       "message": "SSH host key verification disabled (Bandit B507) at line 128",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 128
+      "line": 128,
+      "verdict": "true_positive",
+      "reason": "JSch `session.setConfig(\"StrictHostKeyChecking\", \"no\")` is set whenever DBeaver runs headless or PROP_BYPASS_HOST_VERIFICATION is set, disabling host key checks in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "JSCHSessionController sets StrictHostKeyChecking=no in headless mode or when the bypass property is set, so SSH host keys go unverified, which is what the rule reports."
+        }
+      ]
     },
     {
       "id": "EA-a7c0fbcae5e08e64",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.net.ssh.jsch/src/org/jkiss/dbeaver/model/net/ssh/JSCHSessionController.java",
       "message": "SSH host key verification disabled (Bandit B507) at line 142",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 142
+      "line": 142,
+      "verdict": "true_positive",
+      "reason": "When the known_hosts file is corrupted and the user confirms the dialog, JSCHSessionController sets StrictHostKeyChecking to \"no\", connecting with no host key verification at all.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "After the corrupted known_hosts dialog is confirmed, line 142 sets StrictHostKeyChecking=no, which really disables host key verification for that session despite the user prompt."
+        }
+      ]
     },
     {
       "id": "EA-a2f4eeaa8690f5ac",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.net.ssh.sshj/src/org/jkiss/dbeaver/model/net/ssh/SSHJSessionController.java",
       "message": "SSH host key verification disabled (Bandit B507) at line 133",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 133
+      "line": 133,
+      "verdict": "true_positive",
+      "reason": "sshj `client.addHostKeyVerifier(new PromiscuousVerifier())` plus setVerifyHostKeyCertificates(false) accepts any host key in headless or bypass mode.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "SSHJSessionController adds `PromiscuousVerifier` and disables host-key certificate verification whenever headless or the bypass property is set, so host identity is not checked."
+        }
+      ]
     }
   ]
 }

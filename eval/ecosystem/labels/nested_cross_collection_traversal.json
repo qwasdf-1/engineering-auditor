@@ -8,9 +8,19 @@
       "language": "go",
       "path": "modules/actions/workflowpattern/workflow_pattern.go",
       "message": "Function `Skip` nests `sequence` inside `input` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 34
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "`Skip` has to evaluate each `item.glob.Match(file)` in order for every input file (negations override earlier matches), so the glob x file traversal cannot be replaced by an index.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Skip tests every changed file against the ordered glob `sequence` with last-match-wins semantics, an inherent pattern-list evaluation that cannot be replaced by an index."
+        }
+      ]
     },
     {
       "id": "EA-e8440a20a5daddd5",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "services/issue/assignee.go",
       "message": "Function `toBeRemovedAssignees` nests `assignees` inside `oriAssignees` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 25
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "The inner loop looks for `assignee.ID == alreadyAssignee.ID`, an ID equality lookup that a set of the new assignees' IDs would replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "toBeRemovedAssignees scans `assignees` for each `oriAssignees` entry comparing IDs, a set-difference that an ID set would reduce to linear."
+        }
+      ]
     },
     {
       "id": "EA-88c77378f1360c18",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "server/reload.go",
       "message": "Function `diffRoutes` nests `new` inside `old` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2840
+      "line": 2840,
+      "verdict": "true_positive",
+      "reason": "The remove loop checks each old route against every new route with `urlsAreEqual` (reflect.DeepEqual), an equality membership test that a set keyed by `u.String()` makes linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "diffRoutes removes by scanning `new` for each `old` route with `urlsAreEqual`, a nested set-difference over two route lists."
+        }
+      ]
     },
     {
       "id": "EA-7665469319299fc2",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "server/reload.go",
       "message": "Function `diffRoutes` nests `old` inside `new` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2851
+      "line": 2851,
+      "verdict": "true_positive",
+      "reason": "The add loop repeats the same equality-membership scan in reverse, testing each `newRoute` against all of `old`, which one keyed set lookup per route would replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "diffRoutes finds additions by scanning `old` for each `new` route with `urlsAreEqual`, the mirror nested set-difference."
+        }
+      ]
     },
     {
       "id": "EA-4ae8131d8692fd5c",
@@ -88,9 +128,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.cmp.simple/src/org/jkiss/dbeaver/tools/compare/simple/CompareObjectsExecutor.java",
       "message": "Function `compareChildren` nests `childList` inside `allChildren` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 318
+      "line": 318,
+      "verdict": "false_positive",
+      "reason": "`childList` is an element of `allChildren`, so the inner loop flattens a nested structure (total work is the sum of children), not a product of two distinct collections.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 318 is the flattening loop that collects child names into `allChildNames`, linear in total children with work depending only on `child`, so no pair-dependent inner work exists."
+        }
+      ]
     },
     {
       "id": "EA-f31d78883ff4b986",
@@ -98,9 +148,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.core/src/org/jkiss/dbeaver/tools/scripts/ScriptsImportWizard.java",
       "message": "Function `collectFiles` nests `masks` inside `listFiles` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 184
+      "line": 184,
+      "verdict": "false_positive",
+      "reason": "Every file name has to be tested against each `Pattern mask` with `matcher().matches()`; regex matching cannot be indexed, so this all-pairs check is the required work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "collectFiles matches each file against a short user-typed list of filename masks with an any-match `break`, the usual pattern-list idiom rather than a collection join."
+        }
+      ]
     },
     {
       "id": "EA-043413268f94e6b4",
@@ -108,9 +168,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/DataSourceRegistry.java",
       "message": "Function `flushDataSourceEvents` nests `listeners` inside `events` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 740
+      "line": 740,
+      "verdict": "false_positive",
+      "reason": "`listener.handleDataSourceEvent(event)` has to deliver every event to every listener, a Cartesian product the contract excludes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "flushDataSourceEvents calls `listener.handleDataSourceEvent(event)` for every event and listener, a required Cartesian dispatch rather than a lookup that could be indexed."
+        }
+      ]
     },
     {
       "id": "EA-a55c1a858ba15144",
@@ -118,9 +188,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/datatype/DataTypeProviderRegistry.java",
       "message": "Function `isChildOfAnyProvider` nests `dsList2` inside `dsList1` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 106
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): isChildOfAnyProvider is a private static method with no caller anywhere in dbeaver, and its inputs would be plugin-registered data source provider lists, so the dsList1 x dsList2 product has no runtime cost or scaling input.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "isChildOfAnyProvider compares two small, static data source provider registries and walks a short parent chain, so the quadratic shape has no scaling input."
+        }
+      ]
     },
     {
       "id": "EA-75219ec5b670597b",
@@ -128,9 +208,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.navigator/src/org/jkiss/dbeaver/ui/navigator/actions/NavigatorHandlerObjectDelete.java",
       "message": "Function `changeDependentObjectsList` nests `indexList` inside `constrList` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 208
+      "line": 208,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Every constraint is compared with every index via DBUtils.referrerMatches, which checks ordered attribute-name equality. That is hashable as a name list, so indexes could be keyed by name list, and getEntityAttributes is recomputed for every pair.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each constraint is compared against every index with `DBUtils.referrerMatches` and matches are removed from `dependentObjectsList`, a pair-dependent nested scan over two derived lists."
+        }
+      ]
     },
     {
       "id": "EA-d084ab436b6db6fa",
@@ -138,9 +228,19 @@
       "language": "java",
       "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/WorkflowInstanceServiceImpl.java",
       "message": "Function `setTaskInstanceDependentResult` nests `taskInstanceDependentDetailsList` inside `taskInstanceContextList` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 337
+      "line": 337,
+      "verdict": "true_positive",
+      "reason": "Matching `taskInstanceDependentDetails.getId().equals(taskInstanceContext.getTaskInstanceId())` is an equality join that a map keyed by id would make linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Nested loop joins taskInstanceContextList to taskInstanceDependentDetailsList by `getId().equals(getTaskInstanceId())`, a lookup a map keyed by task instance id would replace."
+        }
+      ]
     },
     {
       "id": "EA-89fba0d1ddd9274a",
@@ -148,9 +248,19 @@
       "language": "java",
       "path": "dolphinscheduler-api/src/main/java/org/apache/dolphinscheduler/api/service/impl/WorkflowInstanceServiceImpl.java",
       "message": "Function `viewGantt` nests `taskInstances` inside `nodeList` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 686
+      "line": 686,
+      "verdict": "true_positive",
+      "reason": "For each `node` the inner loop scans `taskInstances` for `instance.getTaskCode() == node`, an equality lookup that a map from task code to instance makes O(n+m).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "For each node code the inner loop scans `taskInstances` for matching workflow instance id and task code, an O(nodes x instances) lookup replaceable by a map."
+        }
+      ]
     },
     {
       "id": "EA-b26c5e2116b80646",
@@ -158,9 +268,19 @@
       "language": "java",
       "path": "dolphinscheduler-tools/src/main/java/org/apache/dolphinscheduler/tools/lineage/MigrateLineageService.java",
       "message": "Function `getAllProcessLineages` nests `workflowTaskLineageList` inside `taskDefinitionList` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "For each taskDefinition the loop rescans the whole growing `workflowTaskLineageList` and reruns the same relation stream filter, quadratic work in the migrate-lineage tool shipped in the dolphinscheduler-bin distribution.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "For each taskDefinition the loop rescans `workflowTaskLineageList` (growing via parseDependentTaskParams) with an inner stream over `workflowTaskRelationList`, a pair-dependent nested traversal."
+        }
+      ]
     },
     {
       "id": "EA-45dffc4dab7d0e46",
@@ -168,9 +288,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyevaluator/RangerPolicyEvaluator.java",
       "message": "Function `processPolicyItem` nests `users` inside `accesses` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 390
+      "line": 390,
+      "verdict": "false_positive",
+      "reason": "`addAccess(user, USER, access.getType(), ...)` has to record every (access, user) pair, so the accesses x users product is the required output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Each access is combined with each user to call `addAccess(user, USER, access.getType(), ...)`, so the output is the required access x user product rather than a join."
+        }
+      ]
     },
     {
       "id": "EA-9e3406dab7893c46",
@@ -178,9 +308,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyevaluator/RangerPolicyEvaluator.java",
       "message": "Function `processPolicyItem` nests `groups` inside `accesses` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 401
+      "line": 401,
+      "verdict": "false_positive",
+      "reason": "Each group is granted each access type through `addAccess(group, GROUP, access.getType(), ...)`, so the accesses x groups nesting builds a required Cartesian product.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Each access is combined with each group to call `addAccess(group, GROUP, access.getType(), ...)`, so the output is the required access x group product."
+        }
+      ]
     },
     {
       "id": "EA-bebd585e4bda0fbd",
@@ -188,9 +328,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyevaluator/RangerPolicyEvaluator.java",
       "message": "Function `processPolicyItem` nests `roles` inside `accesses` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 414
+      "line": 414,
+      "verdict": "false_positive",
+      "reason": "`for (String role : roles) addAccess(role, ROLE, access.getType(), ...)` emits one entry per (access, role) pair, a required product that no index can shrink.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Each access is combined with each role to call `addAccess(role, ROLE, access.getType(), ...)`, so the output is the required access x role product."
+        }
+      ]
     },
     {
       "id": "EA-7684fda37982619f",
@@ -198,9 +348,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/store/AbstractServiceStore.java",
       "message": "Function `updateTagServiceDefForUpdatingDataMaskDef` nests `svcDefMaskTypes` inside `tagDefMaskTypes` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 423
+      "line": 423,
+      "verdict": "true_positive",
+      "reason": "Each tag mask type rescans `svcDefMaskTypes` for `tagMaskType.getItemId().equals(itemIdOffset + svcMaskType.getItemId())`, an item-id equality join a map keyed by item id would make linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Inner scan of svcDefMaskTypes for each tagMaskType matches on itemId+offset with an early break, a keyed lookup that a map from computed item id would turn from O(n*m) into O(n+m)."
+        }
+      ]
     },
     {
       "id": "EA-3135dc2eed9c3427",
@@ -208,9 +368,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `createServiceDef` nests `dataMaskAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 667
+      "line": 667,
+      "verdict": "true_positive",
+      "reason": "For every `xxAccessTypeDef` the loop scans `dataMaskAccessTypes` for a `StringUtils.equals(getName(), ...)` hit, a name-equality lookup a name-keyed map would replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "For each xxAccessTypeDef the loop over dataMaskAccessTypes linearly searches for a same-named RangerAccessTypeDef, a name-keyed join replaceable by a Map<String,...> built once."
+        }
+      ]
     },
     {
       "id": "EA-1489ee6672c93131",
@@ -218,9 +388,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `createServiceDef` nests `rowFilterAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 674
+      "line": 674,
+      "verdict": "true_positive",
+      "reason": "The second inner scan over `rowFilterAccessTypes` in `createServiceDef` repeats the same name-equality search per `xxAccessTypeDef`, which a map from name to def turns into one probe.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The rowFilterAccessTypes loop is a second linear name search nested inside the xxAccessTypeDefs loop in createServiceDef, repeating the same O(n*m) join that a name-indexed map would remove."
+        }
+      ]
     },
     {
       "id": "EA-960d98fa03d7257b",
@@ -228,9 +408,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `createServiceDef` nests `dataMaskResources` inside `xxResourceDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 710
+      "line": 710,
+      "verdict": "true_positive",
+      "reason": "`createServiceDef` searches `dataMaskResources` by `resource.getName()` equality for each `xxResourceDef`, an indexable equality join rather than required pairwise work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each XXResourceDef triggers a full linear scan of dataMaskResources comparing resource.getName(), an unindexed name join between two independent lists."
+        }
+      ]
     },
     {
       "id": "EA-cf2a0cc40f4b098d",
@@ -238,9 +428,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `createServiceDef` nests `rowFilterResources` inside `xxResourceDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 717
+      "line": 717,
+      "verdict": "true_positive",
+      "reason": "The `rowFilterResources` scan for each `xxResourceDef` matches only on equal names, so a name-keyed index of row-filter resources removes the product.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rowFilterResources is rescanned linearly for every xxResourceDef in createServiceDef to find the same-named resource, a quadratic join over two lists."
+        }
+      ]
     },
     {
       "id": "EA-6e0038b7f603ef48",
@@ -248,9 +448,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `configs` inside `xxConfigs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 849
+      "line": 849,
+      "verdict": "true_positive",
+      "reason": "The removal pass tests each `xConfig` against all `configs` with `getItemId().equals(config.getItemId())`, a membership check a set of config item ids makes O(n+m).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each stored XXServiceConfigDef xConfig scans the full incoming configs list for a matching itemId to decide whether to remove it, a set-difference done quadratically instead of via an itemId set."
+        }
+      ]
     },
     {
       "id": "EA-b4fad032310f9740",
@@ -258,9 +468,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `resources` inside `xxResources` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 886
+      "line": 886,
+      "verdict": "true_positive",
+      "reason": "Each `xRes` is checked for presence in `resources` by item-id equality before `deleteXXResourceDef`, which a HashSet of resource item ids would answer directly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Every XXResourceDef in xxResources scans all incoming resources for a matching itemId before the policy-ref check and delete, so the stale-resource detection is O(n*m) where an id set would do."
+        }
+      ]
     },
     {
       "id": "EA-9ebfe087c503c104",
@@ -268,9 +488,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `accessTypes` inside `xxAccessTypes` with pair-dependent work.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 973
+      "line": 973,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The nested loops match a single service definition's access types (a handful of entries, such as read/write/execute) against the stored rows by itemId; both lists are small by schema, and the loop is dominated by the per-item DAO calls, so the product-cost rationale does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each existing XXAccessTypeDef is compared against every incoming accessTypes entry by itemId to find stale access types, an unindexed existence check over two independent lists."
+        }
+      ]
     },
     {
       "id": "EA-c1e357e908997e42",
@@ -278,9 +508,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `policyConditions` inside `xxPolicyConditions` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1016
+      "line": 1016,
+      "verdict": "true_positive",
+      "reason": "`xxPolicyConditions` x `policyConditions` is an item-id membership test (`xCondition.getItemId().equals(condition.getItemId())`) that a set of condition ids would replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "For each XXPolicyConditionDef the code scans every incoming policyConditions entry by itemId to set `found`, a quadratic membership test on two independent lists."
+        }
+      ]
     },
     {
       "id": "EA-1cd7a85f22496786",
@@ -288,9 +528,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `contextEnrichers` inside `xxContextEnrichers` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1062
+      "line": 1062,
+      "verdict": "true_positive",
+      "reason": "The context-enricher removal loop searches `contextEnrichers` for an equal `getItemId()` per `xContext`, an equality lookup indexable by item id.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each XXContextEnricherDef is checked against the whole contextEnrichers list by itemId to decide removal, a quadratic membership test replaceable by a set of item ids."
+        }
+      ]
     },
     {
       "id": "EA-096660b3e9ec73e4",
@@ -298,9 +548,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `enumEleDefs` inside `xxEnumEleDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1110
+      "line": 1110,
+      "verdict": "true_positive",
+      "reason": "Within each enum, every `xxEleDef` scans `enumEleDefs` for an equal item id to decide `xEnumEleDao.remove`, a membership test a set of element ids would do in one probe.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "enumEleDefs (incoming enum elements) is scanned in full for each stored xxEleDef by itemId to find removals, a quadratic membership test between two lists, albeit nested under the enum loop."
+        }
+      ]
     },
     {
       "id": "EA-82ba547323d1c342",
@@ -308,9 +568,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `enums` inside `xxEnums` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1143
+      "line": 1143,
+      "verdict": "true_positive",
+      "reason": "Each stored `xEnumDef` is looked up in `enums` by `getItemId().equals`, a nested equality join that a set of enum item ids makes linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each stored XXEnumDef scans all incoming enums by itemId to compute `found` before deleting its elements, a quadratic membership test over two independent lists."
+        }
+      ]
     },
     {
       "id": "EA-9c05c517e8ea9ff8",
@@ -318,9 +588,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `dataMasks` inside `xxDataMaskTypes` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1203
+      "line": 1203,
+      "verdict": "true_positive",
+      "reason": "Removing stale data masks scans `dataMasks` for an equal item id per `xxDataMask`, an equality membership test rather than a needed all-pairs computation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Each XXDataMaskTypeDef in xxDataMaskTypes is matched against every entry of dataMasks by itemId to find removals, an O(n*m) set-difference."
+        }
+      ]
     },
     {
       "id": "EA-c0ab2cece8a246ed",
@@ -328,9 +608,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `dataMaskAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1236
+      "line": 1236,
+      "verdict": "true_positive",
+      "reason": "In `updateChildObjectsOfServiceDef` each `xxAccessTypeDef` scans `dataMaskAccessTypes` for an equal name, a lookup a name-keyed map would make constant time.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In updateChildObjectsOfServiceDef each xxAccessTypeDef linearly searches dataMaskAccessTypes by name, the same unindexed name join as in createServiceDef."
+        }
+      ]
     },
     {
       "id": "EA-5c19ea7290a1ca6f",
@@ -338,9 +628,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `rowFilterAccessTypes` inside `xxAccessTypeDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1243
+      "line": 1243,
+      "verdict": "true_positive",
+      "reason": "The `rowFilterAccessTypes` scan per `xxAccessTypeDef` in the update path is again a name-equality search, indexable by access-type name.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rowFilterAccessTypes is linearly searched by name for each xxAccessTypeDef in the update path, a quadratic join that a name-keyed map would avoid."
+        }
+      ]
     },
     {
       "id": "EA-ae1142c9354f1969",
@@ -348,9 +648,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `dataMaskResources` inside `xxResourceDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1276
+      "line": 1276,
+      "verdict": "true_positive",
+      "reason": "Each `xxResourceDef` in the update path rescans `dataMaskResources` comparing `resource.getName()`, an equality join a map by name would remove.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "For every XXResourceDef the update path scans dataMaskResources for a same-named resource, an unindexed name join of two independent lists."
+        }
+      ]
     },
     {
       "id": "EA-b5b2c6742bae1803",
@@ -358,9 +668,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `rowFilterResources` inside `xxResourceDefs` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1283
+      "line": 1283,
+      "verdict": "true_positive",
+      "reason": "The update path's `rowFilterResources` inner loop only looks for a name equal to `xxResourceDef.getName()`, which a name index answers without the product.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "rowFilterResources is scanned linearly for each xxResourceDef in updateChildObjectsOfServiceDef to match by name, a quadratic join replaceable by a name map."
+        }
+      ]
     },
     {
       "id": "EA-09a4c95de6843cad",
@@ -368,9 +688,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `applyResourceFilter` nests `matchers` inside `policies` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2845
+      "line": 2845,
+      "verdict": "false_positive",
+      "reason": "The pair test is `matcher.isMatch(policy, scope, null)`, a resource-matching predicate with no hashable key, so testing each policy against the matchers is the inherent filter work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The inner `matchers` list is built by getMatchers from the service-def's resource hierarchies per policy type (a handful of entries), so it is not a scalable input, and matcher.isMatch(policy, ...) is genuine pair-dependent semantics with no index alternative."
+        }
+      ]
     },
     {
       "id": "EA-194c88a7603ae6b4",
@@ -378,9 +708,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/service/XPolicyService.java",
       "message": "Function `updatePermGroup` nests `keyList` inside `masterKeyList` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 634
+      "line": 634,
+      "verdict": "false_positive",
+      "reason": "`keyList` is an element of `masterKeyList` (a `List<List<String>>` of grouped keys built just above), so the inner loop flattens a nested structure and total work is the sum of group sizes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The inner `keyList` is an element of the outer masterKeyList (list of lists), so the nest just flattens a grouped structure with total work linear in all keys rather than crossing two independent collections."
+        }
+      ]
     },
     {
       "id": "EA-58d61500566bf6ce",
@@ -408,9 +748,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/media-inliner/external-media-inliner.js",
       "message": "Function `inlineFields` nests `domains` inside `fields` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 413
+      "line": 413,
+      "verdict": "false_positive",
+      "reason": "The pair test is `src.startsWith(domain)`, a prefix match over a short domain list for a few named fields, so there is no equality key to index and the field x domain check is inherent.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "inlineFields pairs a handful of resource fields with the configured domain list for a `startsWith` test; both are small config-scale lists and the nesting is incidental to the per-field import."
+        }
+      ]
     },
     {
       "id": "EA-f5c6be6f1456c5ad",
@@ -418,9 +768,19 @@
       "language": "python",
       "path": "zerver/data_import/slack.py",
       "message": "Function `process_customprofilefields` nests `customprofilefield_value` inside `customprofilefield` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 445
+      "line": 445,
+      "verdict": "true_positive",
+      "reason": "For each custom profile field the loop rescans all `customprofilefield_value` rows for `field_value[\"field\"] == field[\"id\"]`, an equality join that grouping values by field id makes linear in the shipped Slack importer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "For each field in customprofilefield the code scans all customprofilefield_value entries for a matching field id with len>50 and breaks, an O(n*m) join by field id that a dict keyed by field id would avoid."
+        }
+      ]
     },
     {
       "id": "EA-2ad4ac918fdaaaf8",
@@ -428,9 +788,19 @@
       "language": "typescript",
       "path": "web/src/topic_generator.ts",
       "message": "Function `next_topic` nests `get_topics` inside `sorted_channels_info` with pair-dependent work.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "`get_topics(channel_info.channel_id)` returns the topics belonging to that channel, so the loop walks a channel->topic hierarchy once each, not a product of two independent collections.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "get_topics(channel_info.channel_id) is derived from the outer channel binding, so the nest is a hierarchical walk over channels and their topics (linear in total topics), not a cross-product of two independent collections."
+        }
+      ]
     }
   ]
 }

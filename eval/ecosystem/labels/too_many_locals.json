@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/compile.c",
       "message": "Function `compile` has 20 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1214
+      "line": 1214,
+      "verdict": "true_positive",
+      "reason": "jq compile() declares errors, pos, var_frame_idx, localnames, length, idx, subfn, params, code, constant_pool, maxvar, op, var plus loop cursors, about 20 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "jq's compile() declares errors, pos, var_frame_idx, localnames, curr, length, arg, idx, subfn, params, param, constant_pool, maxvar and var variants, over 15."
+        }
+      ]
     },
     {
       "id": "EA-a56d3af16171c681",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Function `jq_next` has 100 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 343
+      "line": 343,
+      "verdict": "true_positive",
+      "reason": "jq_next is the bytecode interpreter loop with per-opcode case blocks declaring many locals; the count of 100 exceeds the 15 budget by far.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "jq_next is the bytecode interpreter loop with a very large number of locals (100), far above 15."
+        }
+      ]
     },
     {
       "id": "EA-44eb7da39619533b",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/linker.c",
       "message": "Function `process_dependencies` has 18 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 244
+      "line": 244,
+      "verdict": "true_positive",
+      "reason": "process_dependencies declares deps, bk, nerrors, i, dep, as_str, is_data, raw, v, optional, relpath, as, search, resolved, emsg, dep_def_block (twice) and state_idx: 18 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process_dependencies declares deps, bk, nerrors, i, dep, as_str, is_data, raw, v, optional, relpath, as, search, resolved, emsg, state_idx and two dep_def_block, 18 in total."
+        }
+      ]
     },
     {
       "id": "EA-361884333f172867",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "src/main.c",
       "message": "Function `umain` has 34 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 287
+      "line": 287,
+      "verdict": "true_positive",
+      "reason": "umain in jq src/main.c is the CLI entry point with option-parsing state for dozens of flags; its 34 locals exceed the threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "umain declares jq, input_state, ret, compiled, parser_flags, nfiles, last_result, badwrite, options, ARGS, program_arguments and many more, well over 15."
+        }
+      ]
     },
     {
       "id": "EA-b72fb9e07fb5bf24",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "src/util.c",
       "message": "Function `strptime` has 19 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 615
+      "line": 615,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): strptime in src/util.c is the vendored NetBSD implementation (NetBSD Foundation copyright in the file header, compiled only under #ifndef HAVE_STRPTIME), which is third-party code outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "strptime in jq's util.c is the vendored NetBSD implementation (NetBSD Foundation copyright, guarded by #ifndef HAVE_STRPTIME), third-party code outside scope."
+        }
+      ]
     },
     {
       "id": "EA-59871e361895972f",
@@ -83,9 +133,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Function `uv__io_poll` has 25 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1350
+      "line": 1350,
+      "verdict": "true_positive",
+      "reason": "uv__io_poll declares lfields, events, prep, inv, pe, e, ctl, iou, real_timeout, q, w, sigmask, sigset, base, have_iou_events, have_signals, nevents, epollfd, count, nfds, fd, op, i, user_timeout, reset_timeout: 25 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__io_poll declares 25 locals up front (lfields, events, prep, inv, pe, e, ctl, iou, q, w, sigmask, sigset, base, nfds, fd, op, i, and others)."
+        }
+      ]
     },
     {
       "id": "EA-45a4cfde6a133933",
@@ -93,9 +153,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Function `uv_cpu_info` has 19 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1714
+      "line": 1714,
+      "verdict": "true_positive",
+      "reason": "uv_cpu_info declares model_marker, model_marker2, fp, p, found, n, i, cpu, maxcpu, size, skip, cpus, c, t, model, bitmap, models, buf and more, exceeding 15 even in one preprocessor configuration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_cpu_info declares 19 locals (model_marker, model_marker2, parts, fp, p, found, n, i, cpu, maxcpu, size, skip, cpus, c, t, model, bitmap, models, buf)."
+        }
+      ]
     },
     {
       "id": "EA-ce87a459557fed0b",
@@ -103,9 +173,19 @@
       "language": "c",
       "path": "src/unix/os390.c",
       "message": "Function `uv__io_poll` has 20 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 811
+      "line": 811,
+      "verdict": "true_positive",
+      "reason": "uv__io_poll in os390.c declares 18 locals at the top (lfields, events, pe, e, ep, ... reset_timeout) plus `stream` in the watcher loop and `nevents`, giving the reported 20 in shipped libuv source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__io_poll in libuv's shipped os390 backend declares 18 locals at the top plus `stream` and `nevents` in inner scopes, giving 20."
+        }
+      ]
     },
     {
       "id": "EA-e3cc73692c5d30c9",
@@ -143,9 +223,19 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "Function `fs__create_junction` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2707
+      "line": 2707,
+      "verdict": "true_positive",
+      "reason": "fs__create_junction declares exactly 16 locals (handle, buffer, created, target_len, is_absolute, is_long_path, four buf-size ints, start, len, i, add_slash, bytes, path_buf), one over the threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fs__create_junction in src/win/fs.c declares exactly 16 locals (handle, buffer, created, target_len, ... add_slash, bytes, path_buf), one over the limit."
+        }
+      ]
     },
     {
       "id": "EA-0d4d0a9854af5dd0",
@@ -153,9 +243,19 @@
       "language": "c",
       "path": "src/win/process.c",
       "message": "Function `make_program_env` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 645
+      "line": 645,
+      "verdict": "true_positive",
+      "reason": "make_program_env has 13 top-level locals plus two loop-scoped `ssize_t len` and two `int cmp` declarations, matching the reported 17.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "make_program_env has 13 top-level locals plus the nested `len` (twice) and `cmp` (twice) declarations, 17 in the shipped Windows process code."
+        }
+      ]
     },
     {
       "id": "EA-73f1d295de94cfce",
@@ -163,9 +263,19 @@
       "language": "c",
       "path": "src/win/process.c",
       "message": "Function `uv_spawn` has 20 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 890
+      "line": 890,
+      "verdict": "true_positive",
+      "reason": "uv_spawn declares i, err, path, alloc_path, result, the five WCHAR* pointers application_path..cwd, startup, info, process_flags, cwd_len, child_stdio_buffer plus nested r, path_len, r, err and fdopt: 20 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_spawn declares i, err, path, alloc_path, result, five WCHAR* pointers, startup, info, process_flags, cwd_len, child_stdio_buffer and nested r/path_len/err/fdopt, 20 total."
+        }
+      ]
     },
     {
       "id": "EA-f398ac70f588a4e0",
@@ -173,9 +283,19 @@
       "language": "c",
       "path": "src/win/process.c",
       "message": "Function `uv__kill` has 18 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1168
+      "line": 1168,
+      "verdict": "true_positive",
+      "reason": "uv__kill's SIGQUIT dump path declares registry_key, pid, ret, basename, hDumpFile, dump_folder, dump_name, dump_folder_len, key_type, the static GUID, localappdata, dump_options, sym_options, two FILE_DISPOSITION_INFO values, err and two status locals: 18.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__kill's SIGQUIT branch declares registry_key, pid, ret, basename, hDumpFile, dump_folder, dump_name, localappdata, dump_options, DeleteOnClose and more, well over 15 in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-1787c7fdb09f3a50",
@@ -183,9 +303,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv__tty_write_bufs` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1691
+      "line": 1691,
+      "verdict": "true_positive",
+      "reason": "uv__tty_write_bufs declares utf16_buf, utf16_buf_used, i, four cached parser-state locals, buf, j, c, first_zero_bit, not_c, style, value and x/y/d (about 18 by my count, the detector says 17), well over 15 either way.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tty_write_bufs declares utf16_buf, utf16_buf_used, i, four utf8/ansi state copies, buf, j, c, first_zero_bit, not_c, style and x/y/d, more than 15 in shipped TTY code."
+        }
+      ]
     },
     {
       "id": "EA-9182c42ad9ba1797",
@@ -193,9 +323,19 @@
       "language": "c",
       "path": "src/win/util.c",
       "message": "Function `uv_cpu_info` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 529
+      "line": 529,
+      "verdict": "true_positive",
+      "reason": "uv_cpu_info has 10 top-level locals (cpu_infos, sppi, sppi_size, system_info, cpu_count, i, status, result_size, err, cpu_info) plus 7 per-CPU registry locals (key_name..len), exactly 17.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_cpu_info has ten top-level locals (cpu_infos, sppi, sppi_size, system_info, cpu_count, i, status, result_size, err, cpu_info) plus seven in the loop (key_name, processor_key, cpu_speed, cpu_brand, len...), 17."
+        }
+      ]
     },
     {
       "id": "EA-8baf214c4e4965da",
@@ -203,9 +343,19 @@
       "language": "c",
       "path": "src/win/util.c",
       "message": "Function `uv_interface_addresses` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 654
+      "line": 654,
+      "verdict": "true_positive",
+      "reason": "uv_interface_addresses declares 9 top-level locals plus r, two unicast_address/name_size pairs, r, sa and prefix_len in nested blocks, totalling the reported 17.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_interface_addresses declares win_address_buf, adapter, uv_address_buf, name_buf, uv_address, count, flags and nested r, unicast_address, name_size, sa, prefix_len, which reaches 17 in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-f5e20b6fd60f6cc8",
@@ -213,9 +363,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4MID_compress` has 49 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 522
+      "line": 522,
+      "verdict": "true_positive",
+      "reason": "LZ4MID_compress in lz4hc.c declares about 49 locals (hash4Table, hash8Table, ip, anchor, iend, mflimit, ... many nested matchPtr/pos8/pos4/safeLen consts), far over 15 in the shipped library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4MID_compress in the shipped lz4hc.c is a long hot-path function with dozens of pointer and index locals; 49 is correct and far above 15."
+        }
+      ]
     },
     {
       "id": "EA-9b5a3e598a8c885f",
@@ -223,9 +383,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4HC_compress_hashChain` has 32 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1121
+      "line": 1121,
+      "verdict": "true_positive",
+      "reason": "LZ4HC_compress_hashChain declares inputSize, patternAnalysis, ip, anchor, iend, mflimit, matchlimit, optr, op, oend, start0/2/3, m0..m3, nomatch and many nested correction/ll/llAdd locals, about 32.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4HC_compress_hashChain in the shipped library declares ip/anchor/op/ovref/start2/ml2 style locals (32 counted), clearly over 15."
+        }
+      ]
     },
     {
       "id": "EA-088261b9bd76855a",
@@ -233,9 +403,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4HC_compress_optimal` has 57 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1823
+      "line": 1823,
+      "verdict": "true_positive",
+      "reason": "LZ4HC_compress_optimal declares retval, opt, ip, anchor, iend, op, opSaved, ovml, ovoff, llen, best_mlen, cur, newMatch, price, ll and dozens more nested consts, consistent with 57 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4HC_compress_optimal in the shipped library carries the opt[] parse state with 57 locals; the count is real and library code is in scope."
+        }
+      ]
     },
     {
       "id": "EA-4cbdbacb31d6475a",
@@ -243,9 +423,19 @@
       "language": "c",
       "path": "contrib/blast/blast.c",
       "message": "Function `decomp` has 23 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 281
+      "line": 281,
+      "verdict": "true_positive",
+      "reason": "blast.c decomp declares lit, dict, symbol, len, dist, copy, from, to plus 15 function-scope static tables (virgin, litcnt..distsym, litcode/lencode/distcode, litlen, lenlen, distlen, base, extra): 23. The contrib blast library is built by contrib/CMakeLists.txt.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "decomp in contrib/blast/blast.c is the library function built as libblast, declaring symbol, len, dist, copy and state locals (23 counted) in non-test code."
+        }
+      ]
     },
     {
       "id": "EA-88ab77e211d8618c",
@@ -253,9 +443,19 @@
       "language": "c",
       "path": "contrib/crc32vx/crc32_vx.c",
       "message": "Function `crc32_le_vgfm_16` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 38
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "crc32_le_vgfm_16 declares six constant vectors (perm_le2be, r2r1, r4r3, r5, ru_poly, crc_poly), v0..v4, part1..part4 and v9: 16. The file is the CRC32VX feature that contrib/CMakeLists.txt builds for s390x.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "crc32_le_vgfm_16 in crc32_vx.c is compiled into zlib itself (Makefile.in builds crc32_vx.o) and declares six const vector constants plus v0-v4, part1-4 and v9, 16 locals."
+        }
+      ]
     },
     {
       "id": "EA-5b84a0679c6d000a",
@@ -263,9 +463,19 @@
       "language": "c",
       "path": "contrib/minizip/miniunz.c",
       "message": "Function `do_extract_currentfile` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 306
+      "line": 306,
+      "verdict": "true_positive",
+      "reason": "do_extract_currentfile declares filename_inzip, filename_withoutpath, p, err, fout, buf, size_buf, file_info, write_filename, skip, relative_check, rep, ftestexist, answer, ret and c: 16. miniunz.c is built as the miniunzip executable in minizip's CMakeLists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "do_extract_currentfile in miniunz.c declares filename_inzip, filename_withoutpath, p, err, fout, buf, size_buf, file_info, write_filename, skip, relative_check, rep, ftestexist, answer, ret, c, 16; miniunzip is an installed minizip executable."
+        }
+      ]
     },
     {
       "id": "EA-f422ba3fc47b6e40",
@@ -273,9 +483,19 @@
       "language": "c",
       "path": "contrib/minizip/miniunz.c",
       "message": "Function `main` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 524
+      "line": 524,
+      "verdict": "true_positive",
+      "reason": "miniunz main declares zipfilename, filename_to_extract, password, filename_try, i, ret_value, five opt_* flags, dirname, uf, p, c and ffunc: 16, in the miniunzip executable that minizip's CMake builds and installs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "main in miniunz.c declares zipfilename, filename_to_extract, password, filename_try, i, ret_value, six opt_* flags, dirname, uf, p, c and ffunc, 16 locals in the installed miniunzip tool."
+        }
+      ]
     },
     {
       "id": "EA-1372e77b79f209e8",
@@ -303,9 +523,19 @@
       "language": "c",
       "path": "contrib/minizip/mztools.c",
       "message": "Function `unzRepair` has 33 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 33
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "unzRepair in the minizip mztools library declares about 33 locals (file handles, header buffers, offsets, counters), far over 15, and mztools.c is part of the minizip library sources.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "unzRepair in minizip's mztools.c (part of the minizip library) declares 33 locals for the zip-repair routine, correctly over the limit."
+        }
+      ]
     },
     {
       "id": "EA-c51cbb386a822c2c",
@@ -313,9 +543,19 @@
       "language": "c",
       "path": "contrib/testzlib/testzlib.c",
       "message": "Function `main` has 29 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 145
+      "line": 145,
+      "verdict": "false_positive",
+      "reason": "contrib/testzlib/testzlib.c main is a Windows benchmark that times compress/uncompress with rdtsc/QueryPerformanceCounter. That is benchmark code, outside the detector's production scope, even though its 29 locals are real.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "main in contrib/testzlib/testzlib.c is a Windows-only timing benchmark harness for zlib (testzlib binary), so it is benchmark code outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-4aedf9400824634e",
@@ -323,9 +563,19 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "Function `to_decimal` has 19 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1263
+      "line": 1263,
+      "verdict": "true_positive",
+      "reason": "dragonbox to_decimal declares br, significand_mask, significand, exponent, include_left/right_endpoint, minus_k, cache, beta, deltai, two_fc, z_mul, ret_value, r, x_mul, dist, approx_y_parity, divisible_by_small_divisor, y_mul: 19 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Dragonbox to_decimal declares 19 locals (br, significand, exponent, minus_k, cache, beta, deltai, two_fc, z_mul, ret_value, r, x_mul, dist, y_mul, ...)."
+        }
+      ]
     },
     {
       "id": "EA-e5d52d13aacbc63a",
@@ -333,9 +583,19 @@
       "language": "cpp",
       "path": "db/db_impl.cc",
       "message": "Function `DoCompactionWork` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 892
+      "line": 892,
+      "verdict": "true_positive",
+      "reason": "DoCompactionWork declares start_micros, imm_micros, input, status, ikey, current_user_key, has_current_user_key, last_sequence_for_key, imm_start, key, drop, stats, which, two loop i's and tmp: exactly 16.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DoCompactionWork declares start_micros, imm_micros, imm_start, input, status, ikey, current_user_key, key, drop, stats, which, two i loops and tmp, 16 locals."
+        }
+      ]
     },
     {
       "id": "EA-7ab50056997bd391",
@@ -343,9 +603,19 @@
       "language": "cpp",
       "path": "db/version_set.cc",
       "message": "Function `Recover` has 21 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 862
+      "line": 862,
+      "verdict": "true_positive",
+      "reason": "VersionSet::Recover declares the manifest reader state (current, file, reporter, record, scratch, builder, have_* flags, log/next/last numbers, etc.), 21 locals over the 15 budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "VersionSet::Recover declares current, s, dscname, file, four have_* flags, next_file, last_sequence, log_number, prev_log_number, builder, read_records, reporter, reader, record, scratch, edit, 21 in total."
+        }
+      ]
     },
     {
       "id": "EA-40e3447a3259d8ca",
@@ -353,9 +623,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_chars.hpp",
       "message": "Function `grisu2_digit_gen` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 587
+      "line": 587,
+      "verdict": "true_positive",
+      "reason": "grisu2_digit_gen declares delta, dist, one, p1, p2, pow10, k, n, d, r, rest, ten_n, m, d, r and ten_m: exactly 16 locals in the shipped to_chars.hpp header.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "grisu2_digit_gen declares only 15 locals (delta, dist, one, p1, p2, pow10, k, n, d, r, rest, ten_n, m, and a second d and r in the later loop), so the reported 16 exceeds the actual count and is not over the >15 limit."
+        }
+      ]
     },
     {
       "id": "EA-d6b04d77f2bfbdc1",
@@ -363,9 +643,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `parse_cbor_internal` has 37 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 428
+      "line": 428,
+      "verdict": "true_positive",
+      "reason": "parse_cbor_internal declares a separate typed `number`, `len`, `s`, `b`, half-float temporaries and more in its CBOR case blocks; my grep finds about 40 declarations, over 15 (each declaration is a local, even if it is case-scoped).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_cbor_internal in the header-only library is one large switch with dozens of per-case locals (37 counted), which is real."
+        }
+      ]
     },
     {
       "id": "EA-332aec328b358fcf",
@@ -373,9 +663,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `parse_msgpack_internal` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1204
+      "line": 1204,
+      "verdict": "true_positive",
+      "reason": "parse_msgpack_internal declares string_t s, binary_t b, ten case-scoped `number` temporaries (float through int64_t), four `len` values and last_token: exactly 17.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_msgpack_internal declares string_t s, binary_t b, eight `number{}` temporaries across cases, two `len{}` and more, over 15 in shipped header code."
+        }
+      ]
     },
     {
       "id": "EA-67a618926cd0c279",
@@ -383,9 +683,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_value` has 21 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2307
+      "line": 2307,
+      "verdict": "true_positive",
+      "reason": "get_ubjson_value declares eleven typed `number` locals, byte1_raw, byte2_raw, byte1, byte2, half, val, exp in the half-float lambda, s and two last_token locals, about 21.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_value declares many per-case locals (21 counted) in the shipped binary_reader.hpp; the count is correct."
+        }
+      ]
     },
     {
       "id": "EA-20f190631747b7d1",
@@ -488,9 +798,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `GenerateDeserializers` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1747
+      "line": 1747,
+      "verdict": "true_positive",
+      "reason": "GenerateDeserializers declares deserializers, splits, isMultiSplit, typeCount plus first/currentPos/splitIdx/currentSplit/i/type/splitPoint in one branch and currentPos/splitIdx/currentSplit/typeIdx/type/splitPoint in the other: 17 locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateDeserializers declares 17 locals (deserializers, splits, isMultiSplit, typeCount, currentPos, splitIdx, currentSplit, splitPoint, type per branch), exceeding 15."
+        }
+      ]
     },
     {
       "id": "EA-828062a7474e5329",
@@ -498,9 +818,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `PackListParameters` has 25 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2163
+      "line": 2163,
+      "verdict": "true_positive",
+      "reason": "PackListParameters in Dapper/SqlMapper.cs is a long parameter-expansion routine whose declared locals clearly exceed 15 (reported 25).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PackListParameters declares well over 15 locals (byPosition, list, count, isString, isDbString, dbType, splitAt, viaSplit, lastValue, nextName, listParam, tmp, padParam and more)."
+        }
+      ]
     },
     {
       "id": "EA-264506097b34de20",
@@ -508,9 +838,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `CreateParamInfoGenerator` has 43 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2559
+      "line": 2559,
+      "verdict": "true_positive",
+      "reason": "CreateParamInfoGenerator, the large IL-emitting parameter generator, declares dozens of locals (reported 43), far beyond the 15 budget.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateParamInfoGenerator is a very long IL-emitting method with dozens of local declarations, clearly above 15."
+        }
+      ]
     },
     {
       "id": "EA-4c0dc8083a5e2881",
@@ -518,9 +858,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `GenerateValueTupleDeserializer` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3412
+      "line": 3412,
+      "verdict": "true_positive",
+      "reason": "GenerateValueTupleDeserializer declares nullableUnderlyingType, currentValueTupleType, constructors, languageTupleElementTypes, arity, constructorParameterTypes, restField, elementNumber, itemFieldCount, stringEnumLocal, targetType, finishLabel, nullableTupleConstructor and loop/out variables, over 15.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateValueTupleDeserializer declares arity, constructorParameterTypes, restField, itemFieldCount, stringEnumLocal, isDbNullLabel, finishLabel, nullableTupleConstructor and others, above 15."
+        }
+      ]
     },
     {
       "id": "EA-797b7a93b8ce0a8c",
@@ -528,9 +878,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `GenerateDeserializerFromMap` has 22 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3514
+      "line": 3514,
+      "verdict": "true_positive",
+      "reason": "GenerateDeserializerFromMap, the IL type-map deserializer builder, has well over 15 local declarations (reported 22).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateDeserializerFromMap declares currentIndexDiagnosticLocal, returnValueLocal, names, index, supportInitialize, types, members, allDone, stringEnumLocal and more, over 15."
+        }
+      ]
     },
     {
       "id": "EA-2a2d3fc629f3449a",
@@ -538,9 +898,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
       "message": "Function `ParseReadNumber` has 18 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1981
+      "line": 1981,
+      "verdict": "true_positive",
+      "reason": "ParseReadNumber declares numberValue, singleDigit, nonBase10 and per-branch `string number`, `int/long integer`, `ParseResult parseResult`, `out double d` and several catch variables `ex`, at least 18 distinct local declarations.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ParseReadNumber declares numberValue, numberType, singleDigit, nonBase10 and repeated per-case number/integer/parseResult/value/ex locals across the switch arms, 18 distinct declarations in shipped reader code."
+        }
+      ]
     },
     {
       "id": "EA-120c6e30df68975c",
@@ -573,9 +943,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Schema/JsonSchemaGenerator.cs",
       "message": "Function `GenerateInternal` has 16 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 246
+      "line": 246,
+      "verdict": "true_positive",
+      "reason": "GenerateInternal declares resolvedId, explicitId, resolvedSchema, contract, converter, arrayAttribute, allowNullItem, collectionItemType, enumValues, i, v, value, schemaType, keyType, valueType and keyContract: exactly 16 (lambda parameter tc excluded).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateInternal in JsonSchemaGenerator declares resolvedId, explicitId, resolvedSchema, contract, converter, arrayAttribute, allowNullItem, collectionItemType, keyType, valueType and others, reaching 16 in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-37c6e99ebbca5ea2",
@@ -583,9 +963,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
       "message": "Function `SetExtensionDataDelegates` has 17 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 494
+      "line": 494,
+      "verdict": "true_positive",
+      "reason": "SetExtensionDataDelegates declares extensionDataAttribute, t, dictionaryType, keyType, valueType, createdType, the getter/setter/create delegates, setMethod, setExtensionDataDictionaryValue, extensionDataSetter, enumerableWrapper, constructors, createEnumerableWrapper, extensionDataGetter and lambda-local dictionary, 17+ locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "SetExtensionDataDelegates declares t, keyType, valueType, createdType, getExtensionDataDictionary, createExtensionDataDictionary, setExtensionDataDictionaryValue, the two delegate lambdas, enumerableWrapper, constructors and more, 17 in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-7d3011974d590204",
@@ -593,9 +983,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `CreateObjectUsingCreatorWithParameters` has 23 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1987
+      "line": 1987,
+      "verdict": "true_positive",
+      "reason": "CreateObjectUsingCreatorWithParameters declares trackPresence, objectType, parameters, propertyContexts, creatorParameterValues, v, propertyPresence, s, constructorProperty, i, createdObject, propertyContract, propertyArrayContract, createdObjectCollection, newValues, targetDictionary, e, entry and several foreach variables, over 23.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateObjectUsingCreatorWithParameters is a long runtime deserialization method with 23 local declarations, in the shipped library."
+        }
+      ]
     },
     {
       "id": "EA-a83661e6968faaaa",
@@ -603,9 +1003,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
       "message": "Function `DecimalTryParse` has 19 local variables (> 15).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1309
+      "line": 1309,
+      "verdict": "true_positive",
+      "reason": "DecimalTryParse declares four decimalMaxValue consts, isNegative, i, end, numDecimalStart, numDecimalEnd, exponent, hi19, lo10, mantissaDigits, exponentFromMantissa, c, exponentNegative, newExponent and more, at least 19.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DecimalTryParse declares four const limits plus isNegative, i, end, numDecimalStart, numDecimalEnd, exponent, mantissaDigits, exponentFromMantissa, c, exponentNegative, newExponent, 19 in shipped code."
+        }
+      ]
     },
     {
       "id": "EA-0e406e5b29583408",

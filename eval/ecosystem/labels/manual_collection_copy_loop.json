@@ -8,9 +8,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.kingbase/src/org/jkiss/dbeaver/ext/kingbase/KingbaseUtils.java",
       "message": "Function `getIdVector` copies `objVector` into `result` one element at a time.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 100
+      "line": 100,
+      "verdict": "false_positive",
+      "reason": "`result[i] = objVector[i]` unboxes `Long[]` into `long[]`, a per-element conversion that `System.arraycopy`/`Arrays.copyOf` cannot do, so the loop is not a plain copy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop unboxes `Long[]` into `long[]` (`result[i] = objVector[i]`), which System.arraycopy cannot do because element types differ, so it is not a plain collection copy."
+        }
+      ]
     },
     {
       "id": "EA-9a1b6613d39b5946",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.jdbc/src/org/jkiss/dbeaver/model/impl/jdbc/exec/JDBCStatementImpl.java",
       "message": "Function `executeStatementBatch` copies `result` into `longResult` one element at a time.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 164
+      "line": 164,
+      "verdict": "false_positive",
+      "reason": "`longResult[i] = result[i]` widens `int[]` to `long[]`, and `System.arraycopy` throws ArrayStoreException across primitive types, so no bulk copy replaces it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop widens `int[]` to `long[]` (`longResult[i] = result[i]`), a type-converting copy that System.arraycopy/Arrays.copyOf cannot express."
+        }
+      ]
     },
     {
       "id": "EA-0476185659c963e5",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "hdfs-agent/src/main/java/org/apache/ranger/authorization/hadoop/RangerHdfsAuthorizer.java",
       "message": "Function `checkRangerPermission` copies `curINodes` into `dirINodes` one element at a time.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 550
+      "line": 550,
+      "verdict": "true_positive",
+      "reason": "The loop copies `curINodes` element-by-element into the larger `dirINodes` array with no other work, which `Arrays.copyOf(curINodes, curINodes.length + 1)` replaces.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Loop copies `curINodes[idx]` into `dirINodes[idx]` of the same INode[] type, replaceable by System.arraycopy(curINodes, 0, dirINodes, 0, curINodes.length)."
+        }
+      ]
     },
     {
       "id": "EA-aaf961faa7e1eece",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "hdfs-agent/src/main/java/org/apache/ranger/authorization/hadoop/RangerHdfsAuthorizer.java",
       "message": "Function `checkRangerPermission` copies `curINodeAttributes` into `dirINodeAttrs` one element at a time.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 556
+      "line": 556,
+      "verdict": "true_positive",
+      "reason": "`dirINodeAttrs[idx] = curINodeAttributes[idx]` is a pure same-type array copy into a one-larger array, replaceable by `Arrays.copyOf`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Loop copies `curINodeAttributes[idx]` into `dirINodeAttrs[idx]` of the same INodeAttributes[] type, replaceable by System.arraycopy even though idx is reused after the loop."
+        }
+      ]
     }
   ]
 }

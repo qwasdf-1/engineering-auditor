@@ -21,9 +21,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.tasks.ui/src/org/jkiss/dbeaver/tasks/ui/wizard/TaskConfigurationWizard.java",
       "message": "Condition `true` at line 381 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 381
+      "line": 381,
+      "verdict": "true_positive",
+      "reason": "createVariablesButton begins with `if (true) { return; }`, so the rest of the method creating the variables button is unreachable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (true) { return; }` in createVariablesButton is a literal predicate that makes the rest of the method unreachable."
+        }
+      ]
     },
     {
       "id": "EA-04afcf319f3b1e76",
@@ -31,9 +41,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.standalone/src/org/jkiss/dbeaver/ui/app/standalone/ApplicationActionBarAdvisor.java",
       "message": "Condition `false` at line 278 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 278
+      "line": 278,
+      "verdict": "true_positive",
+      "reason": "ApplicationActionBarAdvisor has an `if (false)` block that holds the disabled Edit-menu/convertLineDelimiters setup, a literal constant predicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (false)` at ApplicationActionBarAdvisor.java:278 permanently disables the Edit-menu block with a literal predicate."
+        }
+      ]
     },
     {
       "id": "EA-6e4e89891986d0fd",
@@ -41,9 +61,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.dashboard/src/org/jkiss/dbeaver/ui/dashboard/view/DashboardUpdater.java",
       "message": "Condition `false` at line 208 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 208
+      "line": 208,
+      "verdict": "true_positive",
+      "reason": "DashboardUpdater wraps the auto-commit switch in `if (false)` with FIXME comments, so revertTxn can never become true and the block is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (false)` at DashboardUpdater.java:208 is a literal constant condition that disables the auto-commit switch block."
+        }
+      ]
     },
     {
       "id": "EA-198eef9cc55f148a",
@@ -51,9 +81,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/dialogs/connection/EditConnectionDialog.java",
       "message": "Condition `false` at line 84 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 84
+      "line": 84,
+      "verdict": "true_positive",
+      "reason": "EditConnectionDialog's 'Expand first page' tree logic sits under a literal `if (false)` and never runs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (false)` at EditConnectionDialog.java:84 is a literal predicate that disables the expand-first-page block."
+        }
+      ]
     },
     {
       "id": "EA-66c09aafa9f2f6a0",
@@ -61,9 +101,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.erd/src/org/jkiss/dbeaver/ui/editors/erd/part/AttributePart.java",
       "message": "Condition `false` at line 200 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 200
+      "line": 200,
+      "verdict": "true_positive",
+      "reason": "AttributePart.setSelected has an `if (false)` around the rightPanel EditableLabel selection update, which is constant-false dead code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (false)` at AttributePart.java:200 is a literal always-false predicate guarding the rightPanel selection code."
+        }
+      ]
     },
     {
       "id": "EA-300a1fa5d1c908f5",
@@ -71,9 +121,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui/src/org/jkiss/dbeaver/ui/UIUtils.java",
       "message": "Condition `false` at line 2417 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2417
+      "line": 2417,
+      "verdict": "true_positive",
+      "reason": "The whole body of UIUtils.fixReadonlyTextBackground sits under `if (false)`, so the public method does nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (false)` at UIUtils.java:2417 literally disables the whole fixReadonlyTextBackground body."
+        }
+      ]
     },
     {
       "id": "EA-8ce4ae6cd6004826",
@@ -101,9 +161,19 @@
       "language": "javascript",
       "path": "changedetectionio/static/js/realtime.js",
       "message": "Condition `0` at line 157 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 157
+      "line": 157,
+      "verdict": "true_positive",
+      "reason": "realtime.js replaced the commented-out `if (queueBubble)` with a literal `if (0)`, so the queue-bubble update block in this shipped static script never runs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (0)` at realtime.js:157 is a literal always-false predicate that permanently disables the queue-bubble update block."
+        }
+      ]
     },
     {
       "id": "EA-ed9b72b7def4864b",
@@ -111,9 +181,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Condition `false` at line 5866 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 5866
+      "line": 5866,
+      "verdict": "false_positive",
+      "reason": "This is the vendored Handlebars.js dist bundle under libs/bower/require-handlebars-plugin; the `if (false)` around `require('source-map')` is build-generated AMD stubbing, not Ranger code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`if (false)` guarding the `require('source-map')` branch sits in the vendored bower library Handlebars.js under libs/bower, which is third-party code and not the project's own."
+        }
+      ]
     },
     {
       "id": "EA-f8f17c426da9b2e6",
@@ -121,9 +201,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/other/visualsearch/js/visualsearch.js",
       "message": "Condition `false` at line 1700 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1700
+      "line": 1700,
+      "verdict": "false_positive",
+      "reason": "visualsearch.js under libs/other is a vendored third-party library, and its `if (false)` IE console debugging block is documented as an intentional toggle (\"Just remove the `false`\").",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`if (false)` enabling the IE console shim is in the vendored visualsearch.js under libs/other, third-party code whose comment tells users to flip the literal when debugging."
+        }
+      ]
     },
     {
       "id": "EA-f717ac00309dc6e0",
@@ -131,9 +221,19 @@
       "language": "python",
       "path": "changedetectionio/model/Watch.py",
       "message": "Condition `True` at line 1177 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1177
+      "line": 1177,
+      "verdict": "true_positive",
+      "reason": "Watch.py line 1177 has a literal `if True:` wrapping the history-regex CSV export body; the branch is unconditional and the if is dead structure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if True:` at Watch.py:1177 is a literal always-true predicate wrapping the snapshot-regex body, not a loop sentinel."
+        }
+      ]
     },
     {
       "id": "EA-8d4a99f05b90151f",
@@ -141,9 +241,19 @@
       "language": "python",
       "path": "frigate/data_processing/common/license_plate/mixin.py",
       "message": "Condition `False` at line 124 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 124
+      "line": 124,
+      "verdict": "true_positive",
+      "reason": "mixin.py line 124 has `if False:` guarding the debug cv2.imwrite of the probability map; the code even carries type: ignore[unreachable].",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if False:` at mixin.py:124 is a literal constant condition guarding the probability-map debug cv2.imwrite."
+        }
+      ]
     },
     {
       "id": "EA-c44ded3b05851492",
@@ -151,9 +261,19 @@
       "language": "python",
       "path": "frigate/data_processing/common/license_plate/mixin.py",
       "message": "Condition `False` at line 970 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 970
+      "line": 970,
+      "verdict": "true_positive",
+      "reason": "The `if False:` at mixin.py:970 disables the preprocessed_recognition debug image dump, a literal constant predicate in shipped LPR code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if False:` at mixin.py:970 is a literal always-false predicate guarding the preprocessed-recognition debug image write."
+        }
+      ]
     },
     {
       "id": "EA-1fa748aaa2e0d31a",
@@ -161,9 +281,19 @@
       "language": "python",
       "path": "frigate/track/norfair_tracker.py",
       "message": "Condition `False` at line 677 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 677
+      "line": 677,
+      "verdict": "true_positive",
+      "reason": "norfair_tracker.debug_draw has `if False:` around the license_plate print_objects_as_table console dump, which is constant-false.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if False:` at norfair_tracker.py:677 is a literal constant condition around the license-plate table printing."
+        }
+      ]
     },
     {
       "id": "EA-eb0f0de1fd346de4",
@@ -171,9 +301,19 @@
       "language": "python",
       "path": "frigate/track/norfair_tracker.py",
       "message": "Condition `False` at line 727 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 727
+      "line": 727,
+      "verdict": "true_positive",
+      "reason": "The `if False:` at norfair_tracker.py:727 guards drawing the formatted timestamp onto the frame, so it never runs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if False:` at norfair_tracker.py:727 is a literal always-false predicate around the time-overlay drawing."
+        }
+      ]
     },
     {
       "id": "EA-07cbc9b1a020ba46",
@@ -181,9 +321,19 @@
       "language": "python",
       "path": "frigate/video/detect.py",
       "message": "Condition `False` at line 464 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 464
+      "line": 464,
+      "verdict": "true_positive",
+      "reason": "detect.py:464 `if False:` disables the object-tracking debug_draw and track-*.jpg imwrite in process_frames.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The first `if False:` in detect.py (line 464) is a literal constant predicate disabling the track debug_draw/imwrite block."
+        }
+      ]
     },
     {
       "id": "EA-d3a03ad4337df820",
@@ -191,9 +341,19 @@
       "language": "python",
       "path": "frigate/video/detect.py",
       "message": "Condition `False` at line 474 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 474
+      "line": 474,
+      "verdict": "true_positive",
+      "reason": "The second `if False:` at detect.py:474 disables drawing motion_boxes onto a debug frame, a separate literal constant condition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The second `if False:` in detect.py (line 474) is a literal constant predicate disabling the motion-box debug drawing."
+        }
+      ]
     },
     {
       "id": "EA-e21dbb6a81b84ae5",
@@ -201,9 +361,19 @@
       "language": "python",
       "path": "release/deploy-microsoft-store.py",
       "message": "Condition `False` at line 101 does not depend on runtime state.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "false_positive",
+      "reason": "release/deploy-microsoft-store.py is mitmproxy's CI release-deployment script (tooling), and the `if False:` is a deliberate debug toggle guarding printing of sensitive upload URLs, marked `# noinspection PyUnreachableCode`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`if False:` in release/deploy-microsoft-store.py is a deliberate debug toggle (marked `# noinspection PyUnreachableCode`) inside a release-publishing script, which is tooling outside the detector's scope."
+        }
+      ]
     }
   ]
 }

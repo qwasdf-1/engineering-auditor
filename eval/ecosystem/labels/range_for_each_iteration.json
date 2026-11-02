@@ -8,9 +8,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-grpc/src/main/java/org/apache/dolphinscheduler/plugin/task/grpc/protobufjs/types/TypeType.java",
       "message": "Function `enumOneofs` iterates range `IntStream.range(0,oneofCount)` through `forEach`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 100
+      "line": 100,
+      "verdict": "true_positive",
+      "reason": "TypeType.enumOneofs runs `IntStream.range(0, oneofCount).forEach(oneofIndex -> ...)` in dolphinscheduler's own grpc task-plugin code, which is exactly the Java range-forEach form the detector targets; a plain for loop would do.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TypeType.java calls `IntStream.range(0, oneofCount).forEach(...)` in production grpc task-plugin code, matching the Java range-forEach pattern."
+        }
+      ]
     },
     {
       "id": "EA-2063c34752fe2b3b",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "core/src/main/java/org/keycloak/sdjwt/SdJwtClaimFactory.java",
       "message": "Function `createArrayDisclosure` iterates range `IntStream.range(0,arrayNode.size())` through `forEach`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "createArrayDisclosure iterates `IntStream.range(0, arrayNode.size()).forEach(i -> processArrayElement(...))` purely for side effects, which is the documented IntStream range-forEach pattern that an indexed for loop replaces.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "SdJwtClaimFactory.createArrayDisclosure uses `IntStream.range(0, arrayNode.size()).forEach(...)`, a range consumed through forEach where a for loop is the idiom."
+        }
+      ]
     },
     {
       "id": "EA-61fbf26686518154",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/protocol/oid4vc/issuance/credentialbuilder/SdJwtCredentialBuilder.java",
       "message": "Function `buildCredentialBody` iterates range `IntStream.range(0,size)` through `forEach`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 79
+      "line": 79,
+      "verdict": "true_positive",
+      "reason": "buildCredentialBody uses `IntStream.range(0, size).forEach(i -> disclosureSpecBuilder.withUndisclosedArrayElt(...))` only to drive builder side effects, a range-forEach better written as a for loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "SdJwtCredentialBuilder.buildCredentialBody iterates `IntStream.range(0, size).forEach` to add per-element array disclosures, matching the pattern."
+        }
+      ]
     },
     {
       "id": "EA-9c4481ac22c60e11",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/protocol/oid4vc/issuance/credentialbuilder/SdJwtCredentialBuilder.java",
       "message": "Function `buildCredentialBody` iterates range `IntStream.range(0,credentialBuildConfig.getNumberOfDecoys())` through `forEach`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 111
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "`IntStream.range(0, credentialBuildConfig.getNumberOfDecoys()).forEach(i -> disclosureSpecBuilder.withDecoyClaim(...))` is a side-effect-only range forEach in production keycloak services code, matching the detector.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "SdJwtCredentialBuilder uses `IntStream.range(0, getNumberOfDecoys()).forEach` to add decoy claims, a range-forEach loop replaceable by a for loop."
+        }
+      ]
     }
   ]
 }

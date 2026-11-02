@@ -8,9 +8,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/components/reports/reports/monte-carlo/monteCarloSimulation.ts",
       "message": "Function `runMonteCarloSimulation` repeatedly sorts unchanged `balancesByYear` inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2427
+      "line": 2427,
+      "verdict": "false_positive",
+      "reason": "`balancesByYear[year].slice().sort()` sorts a different array each iteration, indexed by the loop counter `year`, so it is not a repeated sort of an unchanged collection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`balancesByYear[year].slice().sort()` sorts a different year's array on each iteration (indexed by the loop counter `year`), so the collection is not invariant."
+        }
+      ]
     },
     {
       "id": "EA-0583af9653c23f8a",
@@ -18,9 +28,19 @@
       "language": "typescript",
       "path": "apps/admin/src/settings/site/theme/theme-editor-utils.ts",
       "message": "Function `` repeatedly sorts unchanged `Array` inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 361
+      "line": 361,
+      "verdict": "false_positive",
+      "reason": "`Array.from(allPaths).sort()` is the iterable expression of `for (const path of ...)`, which is evaluated once before iteration, not on each pass.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`Array.from(allPaths).sort()` is the iterable expression of the `for...of`, evaluated once before the loop starts, not on every iteration."
+        }
+      ]
     },
     {
       "id": "EA-db7be58a525d2251",
@@ -28,9 +48,19 @@
       "language": "typescript",
       "path": "ghost/core/server/services/members-metafields/definitions-service.ts",
       "message": "Function `` repeatedly sorts unchanged `keys` inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 429
+      "line": 429,
+      "verdict": "false_positive",
+      "reason": "`[...keys].sort()` in `reorder` is the for-of iterable header, evaluated a single time; the sort is not repeated inside the loop body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`[...keys].sort()` is the for-of header expression evaluated once, so the sort does not repeat inside the loop that does the awaited updates."
+        }
+      ]
     },
     {
       "id": "EA-bd21f61fcf8fb7fe",
@@ -38,9 +68,19 @@
       "language": "typescript",
       "path": "tools/scripts/ci/typescript-inventory.ts",
       "message": "Function `inventory` repeatedly sorts unchanged `new` inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 383
+      "line": 383,
+      "verdict": "false_positive",
+      "reason": "tools/scripts/ci/typescript-inventory.ts is a CI tooling script, and each `field` iteration sorts a different `new Set(selected.map(file => file[field]))`, so it is neither in scope nor an unchanged collection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `.sort()` is on a `new Set(selected.map(file => file[field]))` spread, built per `field` of the two-element loop so it is different data each time, and the file is a CI inventory script."
+        }
+      ]
     },
     {
       "id": "EA-fe807102d7fdb93e",
@@ -48,9 +88,19 @@
       "language": "typescript",
       "path": "tools/scripts/ci/typescript-inventory.ts",
       "message": "Function `inventoryAtRevision` repeatedly sorts unchanged `new` inside a loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 502
+      "line": 502,
+      "verdict": "false_positive",
+      "reason": "`inventoryAtRevision` lives in the CI script tools/scripts/ci/typescript-inventory.ts, and the sorted set is rebuilt per `field` ('package' then 'category'), so the collection changes between iterations.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In `inventoryAtRevision` the sorted `[...new Set(files.map(file => file[field]))]` differs per `field` iteration, and `tools/scripts/ci/typescript-inventory.ts` is CI tooling."
+        }
+      ]
     }
   ]
 }

@@ -8,9 +8,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/permissions/shell.rs",
       "message": "Unreferenced function `extracts_subcommand_names` defined at line 668 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 668
+      "line": 668,
+      "verdict": "false_positive",
+      "reason": "`extracts_subcommand_names` is an `#[rstest]` parameterized test with `#[case]` rows inside the `#[cfg(test)]` module of permissions/shell.rs; the test harness invokes it, so it has no source callers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`extracts_subcommand_names` is an `#[rstest]`/`#[case]` test function in shell.rs's test module; the test harness invokes it, so having no source references does not make it dead."
+        }
+      ]
     },
     {
       "id": "EA-0f3d215c195c571e",
@@ -18,9 +28,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/tui/tools_exec.rs",
       "message": "Unreferenced function `shell_stream_interrupt_still_delivers_outcome` defined at line 147 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 147
+      "line": 147,
+      "verdict": "false_positive",
+      "reason": "`shell_stream_interrupt_still_delivers_outcome` carries `#[rstest]`, `#[timeout]`, and `#[tokio::test]`, making it a test entry point run by the harness rather than unreferenced code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`shell_stream_interrupt_still_delivers_outcome` is annotated `#[rstest]` and `#[tokio::test]`, so the test runner calls it and the zero-reference count is meaningless."
+        }
+      ]
     },
     {
       "id": "EA-040b76bc921407a8",
@@ -28,9 +48,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Unreferenced function `the_default_socket_lives_in_a_per_uid_tmp_dir` defined at line 414 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 414
+      "line": 414,
+      "verdict": "false_positive",
+      "reason": "`the_default_socket_lives_in_a_per_uid_tmp_dir` is an `#[rstest]` case test in daemon.rs's `#[cfg(all(unix, test))]` module; the detector misses the compound cfg and the rstest attribute.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`the_default_socket_lives_in_a_per_uid_tmp_dir` is an `#[rstest]` case-parameterised test in daemon.rs, executed by the test harness rather than called from code."
+        }
+      ]
     },
     {
       "id": "EA-c8f7d5dced5174d9",
@@ -38,9 +68,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Unreferenced function `no_directory_is_created_for_a_user_defined_socket` defined at line 506 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 506
+      "line": 506,
+      "verdict": "false_positive",
+      "reason": "`no_directory_is_created_for_a_user_defined_socket(tmp: TempDir)` is an `#[rstest]` test with a fixture argument, called by the test harness inside the `cfg(all(unix, test))` module.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`no_directory_is_created_for_a_user_defined_socket` is an `#[rstest]` test taking a `tmp: TempDir` fixture; it is run by the harness, so it is not unreferenced dead code."
+        }
+      ]
     },
     {
       "id": "EA-45749baf326a6eed",
@@ -48,9 +88,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Unreferenced function `default_socket_dir_is_created_privately_then_reused` defined at line 517 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 517
+      "line": 517,
+      "verdict": "false_positive",
+      "reason": "`default_socket_dir_is_created_privately_then_reused` is an `#[rstest]` test taking the `default_socket` fixture; tests have no source references by design.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`default_socket_dir_is_created_privately_then_reused` is an `#[rstest]` test taking the `default_socket` fixture, discovered by the test runner and not dead."
+        }
+      ]
     },
     {
       "id": "EA-7c0e55c02e30350a",
@@ -58,9 +108,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/db/mod.rs",
       "message": "Unreferenced function `db_url_debug_redacts_passwords` defined at line 300 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 300
+      "line": 300,
+      "verdict": "false_positive",
+      "reason": "`db_url_debug_redacts_passwords` is an `#[rstest]` parameterized test in atuin-common db/mod.rs's `#[cfg(all(test, feature = \"sqlite\"))] mod tests`, so it is a test definition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`db_url_debug_redacts_passwords` is an `#[rstest]` test with `#[case]` attributes in the db module's tests, entry points the harness calls."
+        }
+      ]
     },
     {
       "id": "EA-49540f5b49306209",
@@ -68,9 +128,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/db/mod.rs",
       "message": "Unreferenced function `db_url_as_str_matches_view` defined at line 310 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 310
+      "line": 310,
+      "verdict": "false_positive",
+      "reason": "`db_url_as_str_matches_view` is an `#[rstest]` test with postgres/mysql/sqlite `#[case]` rows in the db tests module, invoked by the harness.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`db_url_as_str_matches_view` is an `#[rstest]` test with `#[case]` rows; rstest-attribute tests are run by the harness, so zero direct references is expected."
+        }
+      ]
     },
     {
       "id": "EA-b2f67936d7929af2",
@@ -78,9 +148,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/db/mod.rs",
       "message": "Unreferenced function `db_url_rejects_unknown_scheme` defined at line 326 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 326
+      "line": 326,
+      "verdict": "false_positive",
+      "reason": "`db_url_rejects_unknown_scheme` is an `#[rstest]` test asserting `DbUrlParseError::UnknownScheme` for redis/bare cases, not dead production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`db_url_rejects_unknown_scheme` is an `#[rstest]` test with `#[case::redis]`/`#[case::bare]` rows, invoked by the test runner, not dead code."
+        }
+      ]
     },
     {
       "id": "EA-f3ad2acb2d333a4a",
@@ -88,9 +168,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/db/mod.rs",
       "message": "Unreferenced function `banned_pattern_classifies` defined at line 354 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 354
+      "line": 354,
+      "verdict": "false_positive",
+      "reason": "`banned_pattern_classifies` is an `#[rstest]` table test of `BannedPattern::test` in the db tests module; zero source callers is expected for a test.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`banned_pattern_classifies` is an `#[rstest]` test with many `#[case]` rows asserting `BannedPattern::test`, run by the harness rather than called."
+        }
+      ]
     },
     {
       "id": "EA-1f90e8c06cf64ff2",
@@ -98,9 +188,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/db/mod.rs",
       "message": "Unreferenced function `explicit_columns_survive_add_column` defined at line 414 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 414
+      "line": 414,
+      "verdict": "false_positive",
+      "reason": "`explicit_columns_survive_add_column` is an `#[rstest]` + `#[tokio::test]` async test using the `#[future] primed_db` fixture, run by the test harness.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`explicit_columns_survive_add_column` is an `#[rstest]` plus `#[tokio::test]` async test using a `#[future]` fixture, an entry point for the test runner."
+        }
+      ]
     },
     {
       "id": "EA-c69c13d9b05f20bb",
@@ -108,9 +208,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/shell.rs",
       "message": "Unreferenced function `command_output_unparseable` defined at line 308 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 308
+      "line": 308,
+      "verdict": "false_positive",
+      "reason": "`command_output_unparseable` in atuin-common shell.rs is an `#[rstest]` test with byte-string `#[case]` inputs for `from_printf`, not an unused helper.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`command_output_unparseable` is an `#[rstest]` test with `#[case]` byte inputs in shell.rs; the harness runs it, so no source reference is expected."
+        }
+      ]
     },
     {
       "id": "EA-739ca946edd7e07c",
@@ -118,9 +228,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/shell.rs",
       "message": "Unreferenced function `command_failed` defined at line 315 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 315
+      "line": 315,
+      "verdict": "false_positive",
+      "reason": "`command_failed` is marked `#[rstest]` and exercises `shell_from_command(\"false\", ...)`; it is a test entry point, which the detector's test exclusion should cover.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`command_failed` is a bare `#[rstest]` test function in shell.rs's test module, discovered by the harness and therefore not dead."
+        }
+      ]
     },
     {
       "id": "EA-2d2850245a4fbbfa",
@@ -128,9 +248,19 @@
       "language": "rust",
       "path": "crates/atuin-daemon/src/client.rs",
       "message": "Unreferenced function `a_refusal_is_known_by_its_build` defined at line 572 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 572
+      "line": 572,
+      "verdict": "false_positive",
+      "reason": "`a_refusal_is_known_by_its_build` in atuin-daemon client.rs is an `#[rstest]` test with `#[case::other_build]`/`our_build`/`no_build` rows.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`a_refusal_is_known_by_its_build` is an `#[rstest]` test with `#[case]` rows in client.rs's tests, executed by the test runner."
+        }
+      ]
     },
     {
       "id": "EA-b8c37bda85a44201",
@@ -138,9 +268,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/client/search/syntax.rs",
       "message": "Unreferenced function `classify_renders` defined at line 200 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 200
+      "line": 200,
+      "verdict": "false_positive",
+      "reason": "`classify_renders` is an `#[rstest]` test with many `#[case]` rows comparing `render_shell` output in search/syntax.rs; it is invoked by the test harness.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`classify_renders` is an `#[rstest]` test with `#[case]` rows in syntax.rs, run by the harness and not an unreferenced private function."
+        }
+      ]
     },
     {
       "id": "EA-1e12fa15d2c5f7de",
@@ -148,9 +288,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/client/search/syntax.rs",
       "message": "Unreferenced function `odd_inputs_do_not_panic` defined at line 205 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 205
+      "line": 205,
+      "verdict": "false_positive",
+      "reason": "`odd_inputs_do_not_panic` is an `#[rstest]` matrix test using `#[values(...)]` parameters for cmd and shell, not dead code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`odd_inputs_do_not_panic` is an `#[rstest]` test using `#[values]` parameters, so the harness generates and calls it; it is not dead."
+        }
+      ]
     },
     {
       "id": "EA-d2e6f842e92ce40d",
@@ -191,9 +341,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/ldap_servers.rs",
       "message": "Unreferenced function `api_test_ldap_server` defined at line 407 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 407
+      "line": 407,
+      "verdict": "false_positive",
+      "reason": "`api_test_ldap_server` is a method in a `#[OpenApi]` impl with `#[oai(method = \"post\", operation_id = \"test_ldap_server_connection\")]`; poem-openapi registers it as an HTTP route, an external entry point.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_test_ldap_server` carries `#[oai(path = \"/ldap-servers/test\", method = \"post\")]`, so the poem-openapi macro registers it as an HTTP route; being uncalled in source is expected."
+        }
+      ]
     },
     {
       "id": "EA-68058333f3c0ea17",
@@ -201,9 +361,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/roles.rs",
       "message": "Unreferenced function `api_delete_role` defined at line 183 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 183
+      "line": 183,
+      "verdict": "false_positive",
+      "reason": "`api_delete_role` is the `DELETE /role/:id` handler declared with `#[oai(path = \"/role/:id\", method = \"delete\")]` in an `#[OpenApi]` impl, so the macro wires it to the router.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_delete_role` is annotated `#[oai(path = \"/role/:id\", method = \"delete\", ...)]`, registered as an HTTP route by the poem-openapi macro, so it is a framework entry point, not dead."
+        }
+      ]
     },
     {
       "id": "EA-d32afa0b83fe9020",
@@ -211,9 +381,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/secret_backends.rs",
       "message": "Unreferenced function `api_get_secret_reference_usage` defined at line 533 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 533
+      "line": 533,
+      "verdict": "false_positive",
+      "reason": "`api_get_secret_reference_usage` is a method in a poem-openapi `#[OpenApi]` impl annotated `#[oai(path = \"/secret-backends/:id/usage\")]`; the macro registers it as an HTTP route, so it has no direct callers by design.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_get_secret_reference_usage` is a poem-openapi `#[oai(path=\"/secret-backends/:id/usage\")]` route handler registered by the macro, so zero textual references is expected."
+        }
+      ]
     },
     {
       "id": "EA-24fca2add9f6fe17",
@@ -221,9 +401,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/sessions_detail.rs",
       "message": "Unreferenced function `api_close_session` defined at line 101 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "false_positive",
+      "reason": "`api_close_session` is the `POST /sessions/:id/close` handler registered by the `#[oai]` attribute inside the `#[OpenApi]` impl at line 39; attribute-registered endpoints are live entry points.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_close_session` carries `#[oai(path=\"/sessions/:id/close\", method=\"post\")]`, an HTTP entry point invoked by the framework router, not dead."
+        }
+      ]
     },
     {
       "id": "EA-394fd357be9883f3",
@@ -231,9 +421,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/sessions_list.rs",
       "message": "Unreferenced function `api_get_all_sessions` defined at line 47 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 47
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "`api_get_all_sessions` is wired up by `#[oai(path = \"/sessions\", method = \"get\")]` in an `#[OpenApi]` impl, so the macro-generated router calls it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_get_all_sessions` is the `GET /sessions` handler via `#[oai(...operation_id=\"get_sessions\")]` in an `#[OpenApi] impl`, reached by routing rather than by name."
+        }
+      ]
     },
     {
       "id": "EA-9c429c3dbd39013b",
@@ -241,9 +441,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/ticket_requests_list.rs",
       "message": "Unreferenced function `api_get_all_ticket_requests` defined at line 28 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "false_positive",
+      "reason": "`api_get_all_ticket_requests` is the `GET /ticket-requests` operation `get_ticket_requests` registered by `#[oai]` in the `#[OpenApi]` impl at line 21, not unreferenced code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_get_all_ticket_requests` is the `GET /ticket-requests` `#[oai]` handler inside an `#[OpenApi]` impl; the macro wires it, so no Rust caller exists by design."
+        }
+      ]
     },
     {
       "id": "EA-c8cd8eb65be63bd4",
@@ -251,9 +461,19 @@
       "language": "rust",
       "path": "warpgate-admin/src/api/users.rs",
       "message": "Unreferenced function `api_get_user_admin_roles` defined at line 785 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 785
+      "line": 785,
+      "verdict": "false_positive",
+      "reason": "`api_get_user_admin_roles` is the `/users/:id/admin-roles` endpoint declared with `#[oai]` in an `#[OpenApi]` impl of users.rs; poem-openapi dispatches it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_get_user_admin_roles` is the `GET /users/:id/admin-roles` `#[oai]` endpoint, an external entry point resolved by the OpenApi macro."
+        }
+      ]
     },
     {
       "id": "EA-999b4993e73ada63",
@@ -261,9 +481,19 @@
       "language": "rust",
       "path": "warpgate-core/src/cluster.rs",
       "message": "Unreferenced function `reap_ends_connection_bound_sessions_without_a_live_owner` defined at line 710 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 710
+      "line": 710,
+      "verdict": "false_positive",
+      "reason": "`reap_ends_connection_bound_sessions_without_a_live_owner` is a `#[tokio::test]` inside `mod tests` (cluster.rs line 521); tests run via the harness and are excluded by the detector.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`reap_ends_connection_bound_sessions_without_a_live_owner` is a `#[tokio::test]` in cluster.rs; test functions are run by the harness and tests are out of scope for dead_code."
+        }
+      ]
     },
     {
       "id": "EA-97cfa82194d44e49",
@@ -271,9 +501,19 @@
       "language": "rust",
       "path": "warpgate-core/src/state.rs",
       "message": "Unreferenced function `an_ended_login_cannot_open_a_target_session` defined at line 397 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 397
+      "line": 397,
+      "verdict": "false_positive",
+      "reason": "`an_ended_login_cannot_open_a_target_session` carries `#[tokio::test]` in state.rs's `mod tests`, so it is a test entry point, not dead code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`an_ended_login_cannot_open_a_target_session` is a `#[tokio::test]` function in state.rs, invoked by the test runner and out of dead_code scope."
+        }
+      ]
     },
     {
       "id": "EA-7df7ebe052984bc1",
@@ -281,9 +521,19 @@
       "language": "rust",
       "path": "warpgate-core/src/state.rs",
       "message": "Unreferenced function `nodes_racing_a_shared_target_session_adopt_one_row` defined at line 738 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 738
+      "line": 738,
+      "verdict": "false_positive",
+      "reason": "`nodes_racing_a_shared_target_session_adopt_one_row` is a `#[tokio::test]` function in state.rs `mod tests`; the test runner invokes it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`nodes_racing_a_shared_target_session_adopt_one_row` is a `#[tokio::test]` case in state.rs, discovered by the harness, not dead production code."
+        }
+      ]
     },
     {
       "id": "EA-567b6a5adf5491a5",
@@ -291,9 +541,19 @@
       "language": "rust",
       "path": "warpgate-core/src/state.rs",
       "message": "Unreferenced function `direct_target_session_has_independent_state` defined at line 855 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 855
+      "line": 855,
+      "verdict": "false_positive",
+      "reason": "`direct_target_session_has_independent_state` is annotated `#[tokio::test]` within the state.rs test module, which the detector's Rust-test exclusion should cover.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`direct_target_session_has_independent_state` is annotated `#[tokio::test]`, so the test harness calls it and it sits outside dead_code scope."
+        }
+      ]
     },
     {
       "id": "EA-cf01d0ce2b8757ae",
@@ -301,9 +561,19 @@
       "language": "rust",
       "path": "warpgate-db-migrations/src/m00080_user_and_target_sessions.rs",
       "message": "Unreferenced function `a_pre_target_id_column_row_keeps_its_history` defined at line 400 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 400
+      "line": 400,
+      "verdict": "false_positive",
+      "reason": "`a_pre_target_id_column_row_keeps_its_history` is a `#[tokio::test]` in the m00080 migration's `mod tests` (line 262), a harness-run test rather than unused code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`a_pre_target_id_column_row_keeps_its_history` is a `#[tokio::test]` in the m00080 migration test module, run by the harness, not an unused function."
+        }
+      ]
     },
     {
       "id": "EA-fd9a1fbf2146f287",
@@ -311,9 +581,19 @@
       "language": "rust",
       "path": "warpgate-protocol-http/src/api/web_desktop.rs",
       "message": "Unreferenced function `api_create_web_desktop_session` defined at line 37 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 37
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "`api_create_web_desktop_session` is the `POST /web-desktop/sessions` route declared by `#[oai]` in the `#[OpenApi]` impl at web_desktop.rs line 30.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_create_web_desktop_session` is the `POST /web-desktop/sessions` `#[oai]` handler, registered through the poem-openapi macro rather than called by name."
+        }
+      ]
     },
     {
       "id": "EA-8dd517be54b8ea9e",
@@ -321,9 +601,19 @@
       "language": "rust",
       "path": "warpgate-protocol-http/src/api/web_desktop.rs",
       "message": "Unreferenced function `api_delete_web_desktop_session` defined at line 76 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 76
+      "line": 76,
+      "verdict": "false_positive",
+      "reason": "`api_delete_web_desktop_session` is registered as `DELETE /web-desktop/sessions/:session_id` via `#[oai]`, so the generated OpenAPI service references it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_delete_web_desktop_session` is the `DELETE /web-desktop/sessions/:session_id` `#[oai]` route handler, a framework entry point."
+        }
+      ]
     },
     {
       "id": "EA-f5d30de9d6e6842a",
@@ -331,9 +621,19 @@
       "language": "rust",
       "path": "warpgate-protocol-http/src/api/web_ssh.rs",
       "message": "Unreferenced function `api_delete_web_ssh_session` defined at line 71 has zero source references beyond its definition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 71
+      "line": 71,
+      "verdict": "false_positive",
+      "reason": "`api_delete_web_ssh_session` is the `delete_web_ssh_session` operation registered through `#[oai]` in web_ssh.rs's `#[OpenApi]` impl; it is reached via the router.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`api_delete_web_ssh_session` is the `DELETE /web-ssh/sessions/:session_id` `#[oai]` endpoint, dispatched by the router, so zero named references is not dead code."
+        }
+      ]
     }
   ]
 }

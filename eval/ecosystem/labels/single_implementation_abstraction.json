@@ -8,9 +8,19 @@
       "language": "go",
       "path": "internal/authentication/ldap_client.go",
       "message": "Interface `ldapDiscoverySetter` at line 23 has one implementation in the repository, `LDAPClient`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "ldapDiscoverySetter is unexported and only *LDAPClient defines setDiscovery; its single use, the type assertion in ldap_client_factory.go:527, could assert the concrete type, so the interface adds a variation nothing uses.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ldapDiscoverySetter is a Go optional-interface used in `c.LDAPExtendedClient.(ldapDiscoverySetter)` at ldap_client_factory.go:527, so mocks without setDiscovery are skipped; it is a capability probe, not an unused variation."
+        }
+      ]
     },
     {
       "id": "EA-c5338fe74b3f6f7d",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "modules/graceful/server.go",
       "message": "Interface `filer` at line 221 has one implementation in the repository, `wrappedListener`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 221
+      "line": 221,
+      "verdict": "false_positive",
+      "reason": "`filer` is a capability interface type-asserted on arbitrary net.Listener values (`l.(filer)` in restart_unix.go, `wl.Listener.(filer)` in server.go), satisfied by stdlib listeners such as *net.TCPListener, so `wrappedListener` is not its only implementation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`filer` exists so server.go and restart_unix.go can type-assert listeners for File(), which stdlib *net.TCPListener and *net.UnixListener satisfy, so the variation is used beyond `wrappedListener`."
+        }
+      ]
     },
     {
       "id": "EA-3c0dea12416b4abb",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "modules/queue/base.go",
       "message": "Interface `baseQueueNotifiableInterface` at line 44 has one implementation in the repository, `baseQueueNotifiable`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 44
+      "line": 44,
+      "verdict": "false_positive",
+      "reason": "`baseQueueNotifiableInterface` is asserted on baseLevelQueue, baseLevelQueueUnique and baseRedis (which embed baseQueueNotifiable) and type-asserted on queues in base_test.go; it is a view over three queue types, not a one-implementation abstraction.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`baseQueueNotifiableInterface` is also satisfied by baseLevelQueue, baseLevelQueueUnique and baseRedis (compile-time asserts in their files) and is asserted in base_test.go, so it has more than one implementer."
+        }
+      ]
     },
     {
       "id": "EA-300608fa01ed895c",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "src/pkg/oidc/helper.go",
       "message": "Interface `claimsProvider` at line 51 has one implementation in the repository, `fakeClaims`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "`claimsProvider` is passed *gooidc.UserInfo (helper.go:360) and *gooidc.IDToken (helper.go:373) in production besides the test `fakeClaims`, so it unifies two external types and the one-implementation claim is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`claimsProvider` is fed real *gooidc.UserInfo and *gooidc.IDToken from userInfoFromClaims callers at lines 360 and 373; fakeClaims is only the test double, so the interface is a consumer-side seam over external types."
+        }
+      ]
     },
     {
       "id": "EA-cff554296096ef16",
@@ -48,9 +88,19 @@
       "language": "go",
       "path": "server/opts.go",
       "message": "Interface `token` at line 982 has one implementation in the repository, `token`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 982
+      "line": 982,
+      "verdict": "false_positive",
+      "reason": "Interface `token` in package server is how it reaches the unexported `conf.token` struct (conf/parse.go:141) that the parser returns as `any`; the reported implementation is the same-named type in another package, so the interface cannot be replaced by the type without exporting it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`token` in server/opts.go is the only way to reach the unexported `token` struct of the conf package across the package boundary, so the interface is required rather than a speculative abstraction."
+        }
+      ]
     },
     {
       "id": "EA-4d00e84fbf5437f4",
@@ -58,9 +108,19 @@
       "language": "go",
       "path": "server/stree/node.go",
       "message": "Interface `node` at line 17 has one implementation in the repository, `leaf`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "stree `node` is implemented by node4, node10, node16, node48 and node256 (each defines addChild/isFull/grow etc.) as well as `leaf`, so the count of one implementation is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`node` is implemented by leaf plus node4, node10, node16, node48 and node256 in stree, so the single-implementation count is wrong."
+        }
+      ]
     },
     {
       "id": "EA-28ba99da6c128001",
@@ -68,9 +128,19 @@
       "language": "go",
       "path": "db/conn.go",
       "message": "Interface `execerQueryer` at line 35 has one implementation in the repository, `errorTestConn`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 35
+      "line": 35,
+      "verdict": "false_positive",
+      "reason": "`execerQueryer` is satisfied in production by *sql.Conn (`execerQueryer(c.conn)` at conn.go:52 and :390) and *sql.Tx, not only by the test `errorTestConn`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`execerQueryer` is applied to the real *sql.Conn (line 52) and *sql.Tx in conn.go, so stdlib types exercise the variation in production and errorTestConn is merely a test double."
+        }
+      ]
     },
     {
       "id": "EA-d5831a339f2032f5",
@@ -78,9 +148,19 @@
       "language": "go",
       "path": "db/conn.go",
       "message": "Interface `queryer` at line 216 has one implementation in the repository, `errorTestConn`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 216
+      "line": 216,
+      "verdict": "false_positive",
+      "reason": "`queryer` holds either `c.conn` (*sql.Conn) or `tx` (*sql.Tx) in Conn.Query (conn.go:232/241), two stdlib implementations besides errorTestConn.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`queryer` holds c.conn (*sql.Conn) and is reassigned to a *sql.Tx at line 241, so production uses two implementers; errorTestConn is just a test fake."
+        }
+      ]
     },
     {
       "id": "EA-0447d6731f4e7534",
@@ -88,9 +168,19 @@
       "language": "go",
       "path": "snapshot/sink.go",
       "message": "Interface `snapshotTypeController` at line 25 has one implementation in the repository, `Store`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 25
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "`snapshotTypeController` (DueNext/SetDueNext) is implemented only by snapshot.Store in the same package; NewSink callers pass that Store or nil, so no second variant exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`snapshotTypeController` is a lowercase Go interface with DueNext and SetDueNext whose only implementer is snapshot.Store, passed in store.go's NewSink call; tests pass either the same store or nil."
+        }
+      ]
     },
     {
       "id": "EA-699b1d21298e5962",
@@ -123,9 +213,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.ai/src/org/jkiss/dbeaver/model/ai/registry/AISettingsManager.java",
       "message": "Interface `AISettingsHolder` at line 213 has one implementation in the repository, `AISettingsLocalHolder`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 213
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "Private interface AISettingsHolder (three methods) is implemented only by AISettingsLocalHolder, and getSettingsHolder() always returns AISettingsLocalHolder.INSTANCE, so the indirection serves no variation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "AISettingsHolder is a private nested interface whose sole implementer AISettingsLocalHolder is returned from getSettingsHolder, so the abstraction adds nothing."
+        }
+      ]
     },
     {
       "id": "EA-0bdf9dcffcc7650f",
@@ -133,9 +233,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.data/src/org/jkiss/dbeaver/ui/controls/resultset/ActiveStatusMessage.java",
       "message": "Abstract class `ActiveStatusMessage` at line 48 has one implementation in the repository, `anonymous class at line 2155`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "Package-private abstract class ActiveStatusMessage declares abstract isActionEnabled/createLoadService and has a single subclass, the anonymous class at ResultSetViewer.java:2155.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ActiveStatusMessage is a package-private abstract class with two abstract hooks (isActionEnabled, createLoadService) implemented only by the anonymous subclass at ResultSetViewer.java:2155."
+        }
+      ]
     },
     {
       "id": "EA-cc8ccfbd50fc83c3",
@@ -143,9 +253,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui/src/org/jkiss/dbeaver/ui/controls/decorations/Painter.java",
       "message": "Interface `Painter` at line 23 has one implementation in the repository, `SnowflakePainter`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "Package-private interface Painter (paint/update/reset) is implemented only by SnowflakePainter, which HolidayDecorations instantiates directly, so the interface has one variant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Package-private interface Painter has one implementer, SnowflakePainter, and HolidayDecorations only instantiates SnowflakePainter, so the interface is an unused variation point."
+        }
+      ]
     },
     {
       "id": "EA-cb96e409d8aea020",
@@ -153,9 +273,19 @@
       "language": "java",
       "path": "dolphinscheduler-extract/dolphinscheduler-extract-base/src/main/java/org/apache/dolphinscheduler/extract/base/server/ServerMethodInvoker.java",
       "message": "Interface `ServerMethodInvoker` at line 20 has one implementation in the repository, `ServerMethodInvokerImpl`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 20
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "Package-private ServerMethodInvoker has four methods and only ServerMethodInvokerImpl implements it (constructed directly in RpcServer.registerServerMethodInvokerProvider); no test double implements it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Package-private ServerMethodInvoker has a single implementer ServerMethodInvokerImpl and no fake or second implementation anywhere in the repository."
+        }
+      ]
     },
     {
       "id": "EA-7ffdb036eeb8cb35",
@@ -163,9 +293,19 @@
       "language": "java",
       "path": "app/src/main/java/com/duckduckgo/app/browser/tabs/adapter/FragmentStateAdapter.java",
       "message": "Abstract class `DataSetChangeObserver` at line 874 has one implementation in the repository, `anonymous class at line 762`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 874
+      "line": 874,
+      "verdict": "false_positive",
+      "reason": "FragmentStateAdapter.java is a copy of AndroidX viewpager2's FragmentStateAdapter (header 'Copyright 2018 The Android Open Source Project'), so DataSetChangeObserver is vendored third-party code outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "FragmentStateAdapter.java is a copy of the AndroidX FragmentStateAdapter (AOSP copyright header), vendored third-party code, so its private DataSetChangeObserver is outside scope."
+        }
+      ]
     },
     {
       "id": "EA-3952f432450220dc",
@@ -193,9 +333,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/managers/CodeGenerateUtil.java",
       "message": "Interface `ClientSessionParser` at line 72 has one implementation in the repository, `AuthenticationSessionModelParser`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 72
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "Package-private `ClientSessionParser` has exactly one implementer, `AuthenticationSessionModelParser`, registered as the sole PARSERS entry; the class's own TODO calls it unnecessary genericity.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ClientSessionParser` is package-private inside CodeGenerateUtil, has many abstract methods, only `AuthenticationSessionModelParser` implements it, and the class's own TODO calls it unnecessary genericity."
+        }
+      ]
     },
     {
       "id": "EA-97a9a210e9b0dfcb",
@@ -203,9 +353,19 @@
       "language": "java",
       "path": "authz-remote/src/main/java/org/apache/ranger/authz/remote/authn/RangerRemoteKerberosContext.java",
       "message": "Abstract class `AbstractJaasConf` at line 143 has one implementation in the repository, `KeytabJaasConf`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 143
+      "line": 143,
+      "verdict": "true_positive",
+      "reason": "Private `AbstractJaasConf` declares one abstract method `addOptions` and its only subclass is `KeytabJaasConf`; the split adds a layer with no second variant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Private `AbstractJaasConf` declares abstract `addOptions` and its only subclass in this file is `KeytabJaasConf` (the same-named classes in agents-cred are separate types), so the base is a one-variant hierarchy."
+        }
+      ]
     },
     {
       "id": "EA-e9e59c4ba33c4418",
@@ -213,9 +373,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/kms/server/KMSAuditLogger.java",
       "message": "Interface `KMSAuditLogger` at line 38 has one implementation in the repository, `SimpleKMSAuditLogger`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 38
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): KMSAuditLogger is package-private with three abstract methods (cleanup, initialize, logAuditEvent), and SimpleKMSAuditLogger is its only implementer anywhere in the repo. Reflective loading in KMSAudit can only reach in-package implementations, so the public-API exclusion does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`KMSAuditLogger` is a package-private interface with abstract initialize, logAuditEvent and cleanup, and `SimpleKMSAuditLogger` is the only implementer in the repository."
+        }
+      ]
     },
     {
       "id": "EA-a6ae69efb3d15da0",
@@ -223,9 +393,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/AttackModeScanner.java",
       "message": "Interface `AttackModeScannerThread` at line 413 has one implementation in the repository, `AttackModeThread`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 413
+      "line": 413,
+      "verdict": "true_positive",
+      "reason": "`AttackModeScannerThread` (isRunning/isActive) is implemented only by the private inner class `AttackModeThread`, and its single consumer AttackScan is in the same package, so the interface adds a declaration for a variation nothing uses.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`AttackModeScannerThread` is a package-private nested interface with isRunning and isActive, and only the inner `AttackModeThread` implements it."
+        }
+      ]
     }
   ]
 }

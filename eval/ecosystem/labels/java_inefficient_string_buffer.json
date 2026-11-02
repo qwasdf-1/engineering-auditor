@@ -84,9 +84,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.debug.ui/src/org/jkiss/dbeaver/debug/ui/internal/DebugUIInternals.java",
       "message": "plugins/org.jkiss.dbeaver.debug.ui/src/org/jkiss/dbeaver/debug/ui/internal/DebugUIInternals.java constructs a StringBuffer at line 101 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "true_positive",
+      "reason": "The local `StringBuffer label` in DebugUIInternals only receives appends and `toString()` within the loop body, never shared across threads, so `StringBuilder` is a drop-in replacement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`StringBuffer label` is a method-local that is only appended to and passed to `label.toString()`, so synchronization is unneeded and `StringBuilder` fits."
+        }
+      ]
     },
     {
       "id": "EA-d09e91ce5ba52787",
@@ -94,9 +104,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleSchedulerJob.java",
       "message": "plugins/org.jkiss.dbeaver.ext.oracle/src/org/jkiss/dbeaver/ext/oracle/model/OracleSchedulerJob.java constructs a StringBuffer at line 712 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 712
+      "line": 712,
+      "verdict": "true_positive",
+      "reason": "`getRunActions` builds `runScript` as a method-local StringBuffer with five appends and a `toString()`; no synchronization is needed and StringBuilder fits.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`runScript` in `getRunActions` is a local StringBuffer used only for append and toString, so `StringBuilder` is a safe replacement."
+        }
+      ]
     },
     {
       "id": "EA-2171931730d2faa9",
@@ -104,9 +124,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/data/PostgreGeometryValueHandler.java",
       "message": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/data/PostgreGeometryValueHandler.java constructs a StringBuffer at line 177 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 177
+      "line": 177,
+      "verdict": "false_positive",
+      "reason": "The `sb` StringBuffer is passed reflectively to PostGIS `mediumWKT(StringBuffer)` (`new Class[]{StringBuffer.class}`), and the code even suppresses `StringBufferMayBeStringBuilder`; the external API requires StringBuffer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sb` is passed to PostGIS `mediumWKT` via reflection with `new Class[]{StringBuffer.class}`, so the API requires StringBuffer (and the code already suppresses the warning)."
+        }
+      ]
     },
     {
       "id": "EA-905499bcc4caf852",
@@ -114,9 +144,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/DateTimeDataFormatter.java",
       "message": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/DateTimeDataFormatter.java constructs a StringBuffer at line 65 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 65
+      "line": 65,
+      "verdict": "false_positive",
+      "reason": "`buffer` is a field passed to `DateFormat.format(value, buffer, position)`, whose signature takes a `StringBuffer`, so StringBuilder cannot replace it (and it is not a local).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`buffer` is a field passed to `DateFormat.format(Date, StringBuffer, FieldPosition)`, which only accepts StringBuffer, so it cannot become a StringBuilder."
+        }
+      ]
     },
     {
       "id": "EA-fe3d84ce43e3bf6a",
@@ -124,9 +164,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/NumberDataFormatter.java",
       "message": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/data/formatters/NumberDataFormatter.java constructs a StringBuffer at line 116 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 116
+      "line": 116,
+      "verdict": "false_positive",
+      "reason": "NumberDataFormatter's `buffer` field is passed to `NumberFormat.format(value, buffer, position)`, which requires a StringBuffer, so the suggested StringBuilder swap would not compile.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`buffer` in `NumberDataFormatter` is a field handed to `NumberFormat.format(..., StringBuffer, FieldPosition)`, an API that requires StringBuffer."
+        }
+      ]
     },
     {
       "id": "EA-99c8a351d61678e8",
@@ -134,9 +184,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.charts/src/org/jfree/swt/SWTGraphics2D.java",
       "message": "plugins/org.jkiss.dbeaver.ui.charts/src/org/jfree/swt/SWTGraphics2D.java constructs a StringBuffer at line 1062 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1062
+      "line": 1062,
+      "verdict": "true_positive",
+      "reason": "In `drawString(AttributedCharacterIterator, ...)` the local `StringBuffer sb` is only appended char-by-char and turned into `new String(sb)`; this DBeaver-copyrighted file needs no synchronization, so StringBuilder applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`sb` in `drawString(AttributedCharacterIterator...)` is local, only appended to and then copied via `new String(sb)`, so `StringBuilder` is suitable."
+        }
+      ]
     },
     {
       "id": "EA-bcc60e8d9982b440",
@@ -144,9 +204,19 @@
       "language": "java",
       "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/shell/ShellExecutor.java",
       "message": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/shell/ShellExecutor.java constructs a StringBuffer at line 109 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 109
+      "line": 109,
+      "verdict": "false_positive",
+      "reason": "`output` is the private field `StringBuffer output` read later by `getOutput()`, not a local construction, so it is outside the detector's local-buffer scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`output` is an instance field of ShellExecutor assigned in `parseExecResult` and read in `getOutput`, so it is not a local buffer that can be assumed single-threaded."
+        }
+      ]
     },
     {
       "id": "EA-dc1f3a35d7f19e31",
@@ -154,9 +224,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/log/SensitiveDataConverter.java",
       "message": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/log/SensitiveDataConverter.java constructs a StringBuffer at line 67 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 67
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "dolphinscheduler compiles with `java.version` 1.8, where `Matcher.appendReplacement`/`appendTail` only accept StringBuffer, so `sb` in `maskSensitiveData` cannot become a StringBuilder.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sb` is passed to `Matcher.appendReplacement`, which only takes StringBuffer on Java 8, and the dolphinscheduler pom sets java.version 1.8."
+        }
+      ]
     },
     {
       "id": "EA-53747a89e91c4c9e",
@@ -164,9 +244,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/utils/ParameterUtils.java",
       "message": "dolphinscheduler-task-plugin/dolphinscheduler-task-api/src/main/java/org/apache/dolphinscheduler/plugin/task/api/utils/ParameterUtils.java constructs a StringBuffer at line 296 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 296
+      "line": 296,
+      "verdict": "false_positive",
+      "reason": "`newValue` in `dateTemplateParse` is fed to `matcher.appendReplacement`/`appendTail`, which on the project's Java 1.8 target take only StringBuffer, so the replacement is not available.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`newValue` feeds `Matcher.appendReplacement`/`appendTail`, which need StringBuffer on Java 8, the project's configured target (java.version 1.8)."
+        }
+      ]
     },
     {
       "id": "EA-f73ee1a51179674f",
@@ -206,9 +296,19 @@
       "language": "java",
       "path": "common/src/main/java/org/keycloak/common/util/EnvUtil.java",
       "message": "common/src/main/java/org/keycloak/common/util/EnvUtil.java constructs a StringBuffer at line 44 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 44
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "Keycloak targets Java 17 (`maven.compiler.release` 17), where `Matcher.appendReplacement(StringBuilder, ...)` exists, so the local `buf` in `EnvUtil.replace` can be a StringBuilder.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`buf` in `EnvUtil.replace` is local and used for `appendReplacement` and `toString`; Keycloak targets Java 17 where those accept StringBuilder."
+        }
+      ]
     },
     {
       "id": "EA-33a289f98855cb73",
@@ -216,9 +316,19 @@
       "language": "java",
       "path": "common/src/main/java/org/keycloak/common/util/KeycloakUriBuilder.java",
       "message": "common/src/main/java/org/keycloak/common/util/KeycloakUriBuilder.java constructs a StringBuffer at line 445 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 445
+      "line": 445,
+      "verdict": "false_positive",
+      "reason": "The local `buffer` in `substitutePathParameter` is passed to the protected overridable `replacePathParameter(..., StringBuffer buffer, ...)`, so it must stay a StringBuffer unless that API changes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`buffer` is passed to the protected `replacePathParameter(..., StringBuffer buffer, ...)` whose signature takes StringBuffer, so switching would require changing that API."
+        }
+      ]
     },
     {
       "id": "EA-b6c7158d8e071965",
@@ -226,9 +336,19 @@
       "language": "java",
       "path": "federation/ldap/src/main/java/org/keycloak/storage/ldap/mappers/HardcodedLDAPAttributeMapper.java",
       "message": "federation/ldap/src/main/java/org/keycloak/storage/ldap/mappers/HardcodedLDAPAttributeMapper.java constructs a StringBuffer at line 72 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 72
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "`computeAttributeValue` uses the local `sb` only with `m.appendReplacement`/`appendTail` and `toString()`; on Keycloak's Java 17 target those accept StringBuilder, so no StringBuffer is needed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`sb` in `computeAttributeValue` is local and only used with `appendReplacement`/`appendTail`/`toString`; Java 17 allows StringBuilder."
+        }
+      ]
     },
     {
       "id": "EA-e06bb379c7a68d00",
@@ -236,9 +356,19 @@
       "language": "java",
       "path": "server-spi/src/main/java/org/keycloak/models/utils/Base32.java",
       "message": "server-spi/src/main/java/org/keycloak/models/utils/Base32.java constructs a StringBuffer at line 51 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "true_positive",
+      "reason": "`Base32.encode` builds the local `base32` StringBuffer by appending encoded digits and returns it as a string; it never escapes, so StringBuilder is appropriate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`StringBuffer base32` in `Base32.encode` is a local result buffer with only append/toString, so StringBuilder suffices."
+        }
+      ]
     },
     {
       "id": "EA-5064facb9a6d6006",
@@ -246,9 +376,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/broker/oidc/mappers/UsernameTemplateMapper.java",
       "message": "services/src/main/java/org/keycloak/broker/oidc/mappers/UsernameTemplateMapper.java constructs a StringBuffer at line 168 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 168
+      "line": 168,
+      "verdict": "true_positive",
+      "reason": "The OIDC `UsernameTemplateMapper.setUserNameFromTemplate` local `sb` is used with `Matcher.appendReplacement`, which has a StringBuilder overload on Keycloak's Java 17 target, and is thread-confined.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The OIDC `UsernameTemplateMapper` local `sb` is used only for `appendReplacement` and `toString` on a Java 17 codebase, so StringBuilder works."
+        }
+      ]
     },
     {
       "id": "EA-9de632951ad92b56",
@@ -256,9 +396,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/broker/saml/mappers/UsernameTemplateMapper.java",
       "message": "services/src/main/java/org/keycloak/broker/saml/mappers/UsernameTemplateMapper.java constructs a StringBuffer at line 168 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 168
+      "line": 168,
+      "verdict": "true_positive",
+      "reason": "The SAML `UsernameTemplateMapper` builds the username in a method-local `StringBuffer sb` via `appendReplacement`; with Java 17 a StringBuilder works identically.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The SAML `UsernameTemplateMapper` local `sb` is only used with `Matcher.appendReplacement`, which accepts StringBuilder on Java 17."
+        }
+      ]
     },
     {
       "id": "EA-671441e4dbe5046c",
@@ -266,9 +416,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/protocol/oidc/installation/KeycloakOIDCJbossSubsystemClientInstallation.java",
       "message": "services/src/main/java/org/keycloak/protocol/oidc/installation/KeycloakOIDCJbossSubsystemClientInstallation.java constructs a StringBuffer at line 41 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 41
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "`generateInstallation` builds the `<secure-deployment>` XML in a local `StringBuffer buffer` with plain appends, so an unsynchronized StringBuilder suffices.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`buffer` in `generateInstallation` is a local built purely by `append` chains and `toString`, so StringBuffer's locking is wasted."
+        }
+      ]
     },
     {
       "id": "EA-fee705e370676bc2",
@@ -276,9 +436,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/managers/ClientManager.java",
       "message": "services/src/main/java/org/keycloak/services/managers/ClientManager.java constructs a StringBuffer at line 359 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 359
+      "line": 359,
+      "verdict": "true_positive",
+      "reason": "`toJBossSubsystemConfig` assembles XML in the local `StringBuffer buffer` with appends only and returns its string, so StringBuilder is the correct replacement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`buffer` in `toJBossSubsystemConfig` is local and used only for appends and `toString`, so `StringBuilder` is the right type."
+        }
+      ]
     },
     {
       "id": "EA-4c35ecdd29e1af82",
@@ -286,9 +456,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/services/resources/account/LinkedAccountsResource.java",
       "message": "services/src/main/java/org/keycloak/services/resources/account/LinkedAccountsResource.java constructs a StringBuffer at line 365 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 365
+      "line": 365,
+      "verdict": "false_positive",
+      "reason": "The `new StringBuffer()` is the required argument of `MessageFormat.format(Object[], StringBuffer, FieldPosition)`, which has no StringBuilder overload.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`new StringBuffer()` is passed to `MessageFormat.format(Object, StringBuffer, FieldPosition)`, which requires StringBuffer."
+        }
+      ]
     },
     {
       "id": "EA-1ed0c95ae8c6e48e",
@@ -296,9 +476,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/MacroProcessor.java",
       "message": "agents-common/src/main/java/org/apache/ranger/plugin/util/MacroProcessor.java constructs a StringBuffer at line 48 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "false_positive",
+      "reason": "Ranger compiles with `javac.source.version` 1.8, and `ret` in `expandMacros` is used with `matcher.appendReplacement(ret, replacer)`, which on Java 8 requires a StringBuffer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`ret` is used with `Matcher.appendReplacement`, which needs StringBuffer on Java 8, and the Ranger pom requires Java 1.8."
+        }
+      ]
     },
     {
       "id": "EA-bad79afa47a8adca",
@@ -306,9 +496,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRequestExprResolver.java",
       "message": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRequestExprResolver.java constructs a StringBuffer at line 68 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 68
+      "line": 68,
+      "verdict": "false_positive",
+      "reason": "`resolveExpressions` feeds `sb` to `matcher.appendReplacement`/`appendTail`; under Ranger's Java 1.8 target those accept only StringBuffer, so the swap is not possible.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sb` goes to `matcher.appendReplacement(sb, val)`, which requires StringBuffer under Ranger's Java 1.8 target."
+        }
+      ]
     },
     {
       "id": "EA-4ff873cf8b74eca6",
@@ -316,9 +516,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java constructs a StringBuffer at line 4398 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4398
+      "line": 4398,
+      "verdict": "true_positive",
+      "reason": "In ServiceDBStore the local `StringBuffer sb` only collects `resourceKeyVal`/`resKey`/`resValue` appends before `sb.toString()`, with no Matcher or shared use, so StringBuilder applies even on Java 8.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`sb`, `sbIsRecursive` and `sbIsExcludes` in ServiceDBStore are locals only appended to and read via `toString`, so StringBuilder is safe."
+        }
+      ]
     },
     {
       "id": "EA-971e8f9d47131992",
@@ -326,9 +536,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/common/PropertiesUtil.java",
       "message": "security-admin/src/main/java/org/apache/ranger/common/PropertiesUtil.java constructs a StringBuffer at line 292 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 292
+      "line": 292,
+      "verdict": "true_positive",
+      "reason": "`ranger_jpa_jdbc_url_ssl` is a block-local StringBuffer receiving appends and one `toString()` for the JDBC URL, so StringBuilder (available since Java 5) is a safe replacement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ranger_jpa_jdbc_url_ssl` is a local built with `append` calls and used for its string value, so StringBuilder would do."
+        }
+      ]
     },
     {
       "id": "EA-8f4b5a1b83be434d",
@@ -336,9 +556,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/network/ZapHttpParser.java",
       "message": "zap/src/main/java/org/zaproxy/zap/network/ZapHttpParser.java constructs a StringBuffer at line 89 instead of a StringBuilder",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "`value` is a method-local `StringBuffer` in `parseHeaders` used only for folded-header appends and `toString()`, so StringBuilder is appropriate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`value` in `parseHeaders` is a local only appended to and `toString`'d, and ZAP compiles for Java 17+, so StringBuilder is appropriate."
+        }
+      ]
     }
   ]
 }

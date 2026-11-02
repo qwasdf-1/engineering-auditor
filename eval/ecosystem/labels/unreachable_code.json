@@ -8,9 +8,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Code at line 415 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 415
+      "line": 415,
+      "verdict": "false_positive",
+      "reason": "Line 415 is the return of LZ4F_compressFrameBound itself; the only 'code' after it is the stray empty statement from ';;', which is not an executable statement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 415 is itself the return statement of LZ4F_compressFrameBound; the preceding if/else with MEM_INIT does not return, so nothing follows an unconditional return."
+        }
+      ]
     },
     {
       "id": "EA-2b2364e65412200e",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "programs/bench.c",
       "message": "Code at line 340 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 340
+      "line": 340,
+      "verdict": "true_positive",
+      "reason": "In the lz4 CLI's bench.c (compiled into the shipped lz4 binary for -b mode), (void)dictStart; (void)dictSize; sits after return -1 and can never execute.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4_decompress_dict-style stub in bench.c returns -1 at line 339, leaving the `(void)dictStart; (void)dictSize;` casts at line 340 unreachable (lz4 CLI's benchmark code is built into the shipped lz4 binary)."
+        }
+      ]
     },
     {
       "id": "EA-07486e047f82753d",
@@ -28,9 +48,19 @@
       "language": "cpp",
       "path": "port/port_stdcxx.h",
       "message": "Code at line 101 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 101
+      "line": 101,
+      "verdict": "false_positive",
+      "reason": "The final return false in Snappy_Compress is reached in the #else (no HAVE_SNAPPY) build; it only looks dead because the detector read through both preprocessor branches, including the #if branch's return true.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `return false;` at line 101 is reachable: the HAVE_SNAPPY branch returns inside #if, while the #else branch falls through to it, so the finding misreads the preprocessor conditional."
+        }
+      ]
     },
     {
       "id": "EA-738661e3839362b9",
@@ -189,9 +219,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 2789 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2789
+      "line": 2789,
+      "verdict": "false_positive",
+      "reason": "Handlebars.js under security-admin/.../libs/bower is the vendored handlebars v4.7.9 bundle; the break after return $$[$0 - 1] in case 1 is Jison-generated parser code, not Ranger source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 2789 is a `break` after `return` in a jison-generated switch (case 1) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-d5fc08117d98b869",
@@ -199,9 +239,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3343 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3343
+      "line": 3343,
+      "verdict": "false_positive",
+      "reason": "The break after return 15 in case 1 of the vendored handlebars lexer's performAction switch is generated third-party code in libs/bower, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3343 is a `break` after `return` in a jison-generated switch (case 1) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-c7c3a12aa0404c1e",
@@ -209,9 +259,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3367 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3367
+      "line": 3367,
+      "verdict": "false_positive",
+      "reason": "Case 5's return 15; break; at line 3367 is in the bower-vendored handlebars v4.7.9 lexer, a third-party generated bundle the project does not maintain.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3367 is a `break` after `return` in a jison-generated switch (case 5) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-c7c7072aa0432f47",
@@ -219,9 +279,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3372 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3372
+      "line": 3372,
+      "verdict": "false_positive",
+      "reason": "Line 3372's break after this.popState(); return 14; in case 6 belongs to the vendored handlebars Jison lexer under libs/bower, out of scope as third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3372 is a `break` after `return` in a jison-generated switch (case 6) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-c7c03b2aa03d68f5",
@@ -229,9 +299,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3378 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3378
+      "line": 3378,
+      "verdict": "false_positive",
+      "reason": "The break following return 68 in case 8 at line 3378 is in the vendored Handlebars.js bundle (libs/bower/require-handlebars-plugin), not production Ranger code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3378 is a `break` after `return` in a jison-generated switch (case 8) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-c79e3f2aa020895b",
@@ -239,9 +319,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3387 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3387
+      "line": 3387,
+      "verdict": "false_positive",
+      "reason": "Case 10's this.begin('raw'); return 23; break; at line 3387 is generated lexer code in the bower-vendored handlebars library, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3387 is a `break` after `return` in a jison-generated switch (case 10) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-97ed826e3eb4aa60",
@@ -249,9 +339,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3393 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3393
+      "line": 3393,
+      "verdict": "false_positive",
+      "reason": "The break after return 60 in case 12 (line 3393) is in the vendored third-party Handlebars.js, a Jison-generated lexer kept under libs/bower.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3393 is a `break` after `return` in a jison-generated switch (case 12) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-97fe806e3ec31a2d",
@@ -259,9 +359,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3402 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3402
+      "line": 3402,
+      "verdict": "false_positive",
+      "reason": "Line 3402's break after this.popState();return 44; in case 15 lies in the vendored handlebars v4.7.9 bundle, which is third-party code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3402 is a `break` after `return` in a jison-generated switch (case 15) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-97fb1a6e3ec03704",
@@ -269,9 +379,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3405 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3405
+      "line": 3405,
+      "verdict": "false_positive",
+      "reason": "Case 16's this.popState();return 44; break; at line 3405 is the vendored handlebars lexer's generated switch under libs/bower, not first-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3405 is a `break` after `return` in a jison-generated switch (case 16) inside the vendored bower library Handlebars.js, which is generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-9808b26e3ecbc3a8",
@@ -279,9 +399,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3417 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3417
+      "line": 3417,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the dead `break` after `case 20: return 48;` at line 3417 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3417 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d1af76e2f46c748",
@@ -289,9 +419,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3428 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3428
+      "line": 3428,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 22`'s `this.popState(); return 14;` at line 3428 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3428 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d1e5d6e2f49aa71",
@@ -299,9 +439,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3431 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3431
+      "line": 3431,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` following `case 23: return 48;` at line 3431 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3431 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d21c36e2f4c8d9a",
@@ -309,9 +459,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3434 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3434
+      "line": 3434,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` following `case 24: return 73;` at line 3434 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3434 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d25296e2f4f70c3",
@@ -319,9 +479,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3437 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3437
+      "line": 3437,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` following `case 25: return 72;` at line 3437 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3437 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d288f6e2f5253ec",
@@ -329,9 +499,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3440 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3440
+      "line": 3440,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` following `case 26: return 72;` at line 3440 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3440 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d2bf56e2f553715",
@@ -339,9 +519,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3443 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3443
+      "line": 3443,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` following `case 27: return 87;` at line 3443 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3443 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-7d2f5b6e2f581a3e",
@@ -349,9 +539,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3449 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3449
+      "line": 3449,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 29: this.popState();return 54;` at line 3449 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3449 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-8631326e348b2b13",
@@ -359,9 +559,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3461 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3461
+      "line": 3461,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 33: return 85;` at line 3461 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3461 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-862dcc6e348847ea",
@@ -369,9 +579,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3464 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3464
+      "line": 3464,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 34: return 82;` at line 3464 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3464 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-862a666e348564c1",
@@ -379,9 +599,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3467 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3467
+      "line": 3467,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 35: return 82;` at line 3467 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3467 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-8627006e34828198",
@@ -389,9 +619,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3470 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3470
+      "line": 3470,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 36: return 83;` at line 3470 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3470 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-863eca6e3496b7b7",
@@ -399,9 +639,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3473 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3473
+      "line": 3473,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 37: return 84;` at line 3473 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3473 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-8637fe6e3490f165",
@@ -409,9 +659,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3479 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3479
+      "line": 3479,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 39: return 75;` at line 3479 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3479 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-8616026e347411cb",
@@ -419,9 +679,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3485 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3485
+      "line": 3485,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 41: return 72;` at line 3485 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3485 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-b180996e4d13246a",
@@ -429,9 +699,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3491 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3491
+      "line": 3491,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 43: return 'INVALID';` at line 3491 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3491 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-b183ff6e4d160793",
@@ -439,9 +719,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Code at line 3494 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3494
+      "line": 3494,
+      "verdict": "false_positive",
+      "reason": "Vendored handlebars v4.7.9 bundle under libs/bower/require-handlebars-plugin (third-party, jison-generated lexer); the `break` after `case 44: return 5;` at line 3494 is generator output in vendored code, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 3494 is a redundant `break` after `return` in the generated lexer switch of the vendored bower library Handlebars.js under libs/bower, which is third-party code out of scope."
+        }
+      ]
     },
     {
       "id": "EA-89517821b013da9a",
@@ -449,9 +739,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/templates/helpers/XAHelpers.js",
       "message": "Code at line 296 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 296
+      "line": 296,
+      "verdict": "true_positive",
+      "reason": "In Ranger's own XAHelpers.js `ifCond` helper, the `break;` at line 296 follows `return (v1 == v2) ? options.fn(this) : options.inverse(this);` in `case '=='` and can never run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the ifCond helper's switch in XAHelpers.js, the `break;` at line 296 follows a `return` ternary and can never execute; this is Ranger's own application code."
+        }
+      ]
     },
     {
       "id": "EA-f8f46bde5fc93adf",
@@ -459,9 +759,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/templates/helpers/XAHelpers.js",
       "message": "Code at line 302 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 302
+      "line": 302,
+      "verdict": "true_positive",
+      "reason": "The `break;` at line 302 sits after the unconditional `return (v1 < v2) ? ...` of `case '<'` in the `ifCond` helper, so it is dead code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the ifCond helper's switch in XAHelpers.js, the `break;` at line 302 follows a `return` ternary and can never execute; this is Ranger's own application code."
+        }
+      ]
     },
     {
       "id": "EA-f8f105de5fc657b6",
@@ -469,9 +779,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/templates/helpers/XAHelpers.js",
       "message": "Code at line 305 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 305
+      "line": 305,
+      "verdict": "true_positive",
+      "reason": "Line 305's `break;` follows the `case '<='` return `(v1 <= v2) ? options.fn(this) : options.inverse(this)` and is unreachable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the ifCond helper's switch in XAHelpers.js, the `break;` at line 305 follows a `return` ternary and can never execute; this is Ranger's own application code."
+        }
+      ]
     },
     {
       "id": "EA-f8e007de5fb7e7e9",
@@ -479,9 +799,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/templates/helpers/XAHelpers.js",
       "message": "Code at line 308 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 308
+      "line": 308,
+      "verdict": "true_positive",
+      "reason": "Line 308's `break;` follows `case '>'`'s unconditional return in `ifCond` and can never execute.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the ifCond helper's switch in XAHelpers.js, the `break;` at line 308 follows a `return` ternary and can never execute; this is Ranger's own application code."
+        }
+      ]
     },
     {
       "id": "EA-ffdd523a1e591b11",
@@ -489,9 +819,19 @@
       "language": "python",
       "path": "electrum/gui/text.py",
       "message": "Code at line 202 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 202
+      "line": 202,
+      "verdict": "true_positive",
+      "reason": "print_clipboard begins with a bare return, so c = pyperclip.paste() and the clipboard drawing below it never execute.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "print_clipboard begins with a bare `return` at line 201, so the pyperclip.paste() body from line 202 is dead code that can never run."
+        }
+      ]
     },
     {
       "id": "EA-22981d0182ba0a20",
@@ -499,9 +839,19 @@
       "language": "python",
       "path": "electrum/lnworker.py",
       "message": "Code at line 456 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 456
+      "line": 456,
+      "verdict": "true_positive",
+      "reason": "is_good_peer returns True on line 455, leaving the feature-bit lookup starting at node_id = peer.pubkey dead; the comment confirms it was disabled on purpose, but the code is still unreachable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "is_good_peer returns True at line 455 and the node_id/channel_db feature-bit check from line 456 on is unreachable; the comment confirms it is deliberately disabled."
+        }
+      ]
     },
     {
       "id": "EA-36655a2b6421a8dc",
@@ -509,9 +859,19 @@
       "language": "python",
       "path": "electrum/qrreader/__init__.py",
       "message": "Code at line 52 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 52
+      "line": 52,
+      "verdict": "false_positive",
+      "reason": "The 'statement' after return ZbarQrCodeReader() is a triple-quoted string literal used as a block comment around DEBUG CODE; a bare string expression is comment trivia, not executable code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 52 is a triple-quoted string literal holding commented-out debug code, not executable logic; it is a no-op expression (used as a comment), not code that someone expects to run."
+        }
+      ]
     },
     {
       "id": "EA-88c6e6eca25b423e",
@@ -519,9 +879,19 @@
       "language": "python",
       "path": "electrum/transaction.py",
       "message": "Code at line 564 follows an unconditional branch whose alternatives terminate.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 564
+      "line": 564,
+      "verdict": "true_positive",
+      "reason": "In get_scriptcode_for_sighash every arm of the if/elif chain on script_type returns or raises and the chain ends in else: raise, so raise Exception('should not get here') can never run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Every branch of the script_type if/elif chain above returns or raises, so `raise Exception(\"should not get here\")` at line 564 is never reached."
+        }
+      ]
     },
     {
       "id": "EA-1cddec10e378528c",
@@ -529,9 +899,19 @@
       "language": "python",
       "path": "electrum/transaction.py",
       "message": "Code at line 1147 follows an unconditional branch whose alternatives terminate.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1147
+      "line": 1147,
+      "verdict": "true_positive",
+      "reason": "serialize_preimage's if txin.is_segwit() taproot/witness-v0 branches and the legacy else branch all end in return preimage, so the trailing raise Exception('should not reach this') is unreachable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Both the segwit and legacy sighash branches of serialize_preimage return or raise before line 1147, so the trailing raise is unreachable."
+        }
+      ]
     },
     {
       "id": "EA-af6009a3c8685428",
@@ -539,9 +919,19 @@
       "language": "python",
       "path": "frigate/data_processing/post/license_plate.py",
       "message": "Code at line 74 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 74
+      "line": 74,
+      "verdict": "true_positive",
+      "reason": "LicensePlatePostProcessor.process_data returns immediately ('don't run LPR post processing for now'), so event_id = data['event_id'] and the rest are dead, as the author's type: ignore[unreachable] admits.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process() starts with an unconditional `return` at line 72 (\"don't run LPR post processing for now\") so the whole body from line 74 is dead, as the type: ignore[unreachable] marker admits."
+        }
+      ]
     },
     {
       "id": "EA-6878768bb22ec885",
@@ -549,9 +939,19 @@
       "language": "python",
       "path": "frigate/detectors/plugins/memryx.py",
       "message": "Code at line 66 follows an unconditional throw.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 66
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "Inside the except ModuleNotFoundError handler, raise ImportError(...) from None is followed by a return that can never execute.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `return` at line 66 sits directly after `raise ImportError(...) from None` in the except block, so it can never execute."
+        }
+      ]
     },
     {
       "id": "EA-0ac4b5f451da156a",
@@ -663,9 +1063,19 @@
       "language": "python",
       "path": "mitmproxy/contrib/wbxml/ASWBXML.py",
       "message": "Code at line 870 follows an unconditional throw.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 870
+      "line": 870,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/contrib/wbxml/ASWBXML.py is vendored third-party code (David Shaw's MIT-licensed EAS parser under contrib/), outside the detector's production scope, though the break after raise is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ASWBXML.py is the vendored third-party wbxml library under mitmproxy/contrib (David Shaw, MIT header), and its `break` after `raise` is dead code only inside vendored code."
+        }
+      ]
     },
     {
       "id": "EA-f4443d5de21c56ee",
@@ -751,9 +1161,19 @@
       "language": "typescript",
       "path": "viz-lib/src/visualizations/chart/plotly/updateChartSize.ts",
       "message": "Code at line 127 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 127
+      "line": 127,
+      "verdict": "true_positive",
+      "reason": "In updateChartSize.ts the `break;` at 127 follows `return placeLegendAuto(plotlyElement, layout);` in `case \"auto\"`, which is genuinely unreachable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In updateChartSize.ts the `break` at line 127 after `return placeLegendAuto(...)` is unreachable in the 'auto' case."
+        }
+      ]
     },
     {
       "id": "EA-f665a37444dba24b",
@@ -761,9 +1181,19 @@
       "language": "typescript",
       "path": "viz-lib/src/visualizations/chart/plotly/updateChartSize.ts",
       "message": "Code at line 130 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 130
+      "line": 130,
+      "verdict": "true_positive",
+      "reason": "The `break;` at line 130 follows `return placeLegendBelowPlot(plotlyElement, layout);` in `case \"below\"` and never runs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In updateChartSize.ts the `break` at line 130 after `return placeLegendBelowPlot(...)` is unreachable in the 'below' case."
+        }
+      ]
     },
     {
       "id": "EA-546e99d7a8b91b51",
@@ -771,9 +1201,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/mocks/db/utils/content/content-collection.manager.ts",
       "message": "Code at line 6 follows an unconditional return.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 6
+      "line": 6,
+      "verdict": "false_positive",
+      "reason": "`contentQueryFilter`'s `console.log` after `return true` is in Umbraco.Web.UI.Client/mocks, the MSW mock backend used for the dev server and e2e tests, not shipped code; outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `console.log` after `return true` in contentQueryFilter sits in Umbraco's mocks/db dev mock server, a fixture/mock path outside production scope."
+        }
+      ]
     },
     {
       "id": "EA-d1a4d8611b514cde",
@@ -781,9 +1221,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/core/sorter/sorter.controller.ts",
       "message": "Code at line 421 follows an unconditional branch whose alternatives terminate.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 421
+      "line": 421,
+      "verdict": "true_positive",
+      "reason": "In sorter.controller.ts `#initialize`, both arms of `if (this.#config.containerSelector)` throw an Error, so the `return;` at line 421 is unreachable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `return;` at line 421 in sorter.controller.ts follows an if/else whose both branches `throw`, so it is dead."
+        }
+      ]
     },
     {
       "id": "EA-36d08fedd5bc1648",
@@ -791,9 +1241,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/property-editors/collection/config/column/column-configuration.element.ts",
       "message": "Code at line 54 follows an unconditional throw.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "In column-configuration.element.ts the `return;` at line 54 directly follows `throw new Error('Duplicate field/columns are not allowed.')` and cannot run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `return;` after `throw new Error('Duplicate field/columns are not allowed.')` in column-configuration.element.ts #onAdd is unreachable."
+        }
+      ]
     },
     {
       "id": "EA-251e1d38e5b18c8c",
@@ -801,9 +1261,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/property-editors/collection/config/layout/layout-configuration.element.ts",
       "message": "Code at line 72 follows an unconditional throw.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 72
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "In layout-configuration.element.ts the `return;` at line 72 follows `throw new Error('Duplicate `collectionView` aliases are not allowed.')` and is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `return;` after `throw new Error('Duplicate `collectionView` aliases ...')` in layout-configuration.element.ts #onAdd is unreachable."
+        }
+      ]
     }
   ]
 }

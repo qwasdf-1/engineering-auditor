@@ -8,9 +8,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Api.Management/OpenApi/Transformers/BackOfficeSecurityRequirementsTransformer.cs",
       "message": "Function `TransformAsync` performs 4 pure terminal traversals of unchanged `description.MethodInfo.GetCustomAttributes`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 24
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "Only two of the four counted calls are on `description.MethodInfo.GetCustomAttributes(true)` (Any, then Count); the other two are on `MethodInfo.DeclaringType?.GetCustomAttributes(true)`, a different receiver, and each call returns a fresh reflection array, so the count of four is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`GetCustomAttributes(true)` returns fresh arrays and splits across MethodInfo and DeclaringType, so each source is read twice at most, not four times as claimed."
+        }
+      ]
     },
     {
       "id": "EA-5d3368eec88ee032",
@@ -18,9 +28,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/ContentEditingServiceBase.cs",
       "message": "Function `TryGetAndValidateContentType` performs 3 pure terminal traversals of unchanged `contentEditingModelBase.Variants`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 539
+      "line": 539,
+      "verdict": "false_positive",
+      "reason": "The three `contentEditingModelBase.Variants.Any(...)` checks are guarded by VariesByNothing, VariesByCulture and VariesBySegment, and VariesByNothing excludes the other two, so at most two of them run on any call, not the three reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In TryGetAndValidateContentType the three `Variants.Any` calls are guarded by VariesByNothing, VariesByCulture and VariesBySegment, and the first excludes the others, so at most two can run."
+        }
+      ]
     },
     {
       "id": "EA-3d9a82e78e7f119b",
@@ -28,9 +48,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/PropertyEditors/ValueConverters/BlockEditorVarianceHandler.cs",
       "message": "Function `AlignExposeVariance` performs 3 pure terminal traversals of unchanged `contentData.Values`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 175
+      "line": 175,
+      "verdict": "false_positive",
+      "reason": "The three `contentData.Values` traversals are on two different bindings: the `BlockItemData? contentData` local inside the `blockValue.Expose` foreach (Any/All, per iteration) and the later `foreach (BlockItemData contentData in contentDataToAlign)` loop variable (Any/Where), so no single unchanged collection is traversed three times.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The three `contentData.Values` traversals belong to two different `contentData` variables (the first foreach's FirstOrDefault result with Any/All, and the separate loop variable in the later foreach), so they are not repeated passes over one collection."
+        }
+      ]
     },
     {
       "id": "EA-2ed7b895425e7e3c",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/meta/PropertyConstraints.java",
       "message": "Function `from` performs 4 pure terminal traversals of unchanged `property`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 25
+      "line": 25,
+      "verdict": "false_positive",
+      "reason": "`property.min()` and `property.max()` are accessors on the `@Property` annotation returning floats, not collection min/max traversals, so PropertyConstraints.from traverses nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "PropertyConstraints.from calls `property.min()` and `property.max()` on an annotation, which are attribute accessors rather than collection traversals."
+        }
+      ]
     },
     {
       "id": "EA-17adbad97e2285bd",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/search/SearchThread.java",
       "message": "Function `search` performs 4 pure terminal traversals of unchanged `pattern.matcher`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "false_positive",
+      "reason": "`pattern.matcher(...).find()` is java.util.regex Matcher.find on different input strings (url, tag, note, headers, bodies), not a terminal traversal of a collection named `pattern.matcher`; the detector misread regex calls as collection traversals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`pattern.matcher` is not a collection; `pattern.matcher(url)` just creates a Matcher object per history record in different branches, so there are no repeated traversals of an unchanged collection."
+        }
+      ]
     },
     {
       "id": "EA-6eafb56fd6e5430a",
@@ -58,9 +108,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Function `n` performs 3 pure terminal traversals of unchanged `n`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js is a hash-named, minified, bundled vendor build artifact, which is outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js is a minified, hashed Vite vendor bundle under mitmproxy/tools/web/static, a built third-party artifact, not source."
+        }
+      ]
     },
     {
       "id": "EA-41c91ea974e465d6",
@@ -68,9 +128,19 @@
       "language": "python",
       "path": "electrum/old_mnemonic.py",
       "message": "Function `mn_decode` performs 3 pure terminal traversals of unchanged `wordlist`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1688
+      "line": 1688,
+      "verdict": "true_positive",
+      "reason": "mn_decode calls `wordlist.index(word1/2/3)` three times per loop iteration over the 1626-word module list, which is unchanged, so every call is a linear scan; a word-to-index dict would remove them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "mn_decode calls `wordlist.index(...)` three times per iteration on the module-level word list, so each decoded triple does three linear scans of the same unmodified list."
+        }
+      ]
     },
     {
       "id": "EA-1c9c57638c9d26e0",
@@ -78,9 +148,19 @@
       "language": "python",
       "path": "frigate/data_processing/common/license_plate/mixin.py",
       "message": "Function `_is_valid_polygon` performs 4 pure terminal traversals of unchanged `point`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 703
+      "line": 703,
+      "verdict": "false_positive",
+      "reason": "_is_valid_polygon calls min/max on two different column slices, `point[:, 0]` and `point[:, 1]`, of a 4x2 numpy array, so no single collection is traversed three times; each slice is reduced only twice.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_is_valid_polygon calls `.min()` and `.max()` on both columns of the same `point` array in one short-circuit expression, four reductions over an unmodified array."
+        }
+      ]
     },
     {
       "id": "EA-96964b059031d9d5",
@@ -88,9 +168,19 @@
       "language": "python",
       "path": "frigate/detectors/detector_utils.py",
       "message": "Function `tflite_detect_raw` performs 4 pure terminal traversals of unchanged `interpreter.tensor`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 24
+      "line": 24,
+      "verdict": "false_positive",
+      "reason": "`self.interpreter.tensor(idx)` is a TFLite accessor call that returns a different output tensor for each index 0-3, not repeated traversal of one unchanged collection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "tflite_detect_raw calls `self.interpreter.tensor(<different output index>)()` four times, each retrieving a distinct output tensor rather than re-traversing one collection."
+        }
+      ]
     },
     {
       "id": "EA-9961c45fdcbdf22c",
@@ -98,9 +188,19 @@
       "language": "python",
       "path": "frigate/detectors/plugins/edgetpu_tfl.py",
       "message": "Function `detect_raw` performs 4 pure terminal traversals of unchanged `interpreter.tensor`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 220
+      "line": 220,
+      "verdict": "false_positive",
+      "reason": "In edgetpu_tfl detect_raw, the four `self.interpreter.tensor(self.tensor_output_details[k][\"index\"])` calls fetch four distinct output tensors (boxes, class_ids, scores, count), so nothing is traversed repeatedly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "edgetpu_tfl detect_raw's `self.interpreter.tensor(...)` calls each pass a different output-tensor index (boxes, class ids, scores, count), so they are distinct lookups, not repeat scans."
+        }
+      ]
     },
     {
       "id": "EA-15e2a0deeb1153b2",
@@ -108,9 +208,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/tui/view/mod.rs",
       "message": "Function `shell_tool_footer` performs 3 pure terminal traversals of unchanged `text`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 284
+      "line": 284,
+      "verdict": "false_positive",
+      "reason": "In shell_tool_footer, `text` is the UI element constructor called as `text(label)`, `text(\"[Ctrl+C] Interrupt\")` and `text(format!(...))` in mutually exclusive early returns, not a collection being traversed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "shell_tool_footer's three `text(...)` hits are calls to a UI element constructor in mutually exclusive early-return branches, not traversals of any collection."
+        }
+      ]
     },
     {
       "id": "EA-099861b60577c744",
@@ -118,9 +228,19 @@
       "language": "rust",
       "path": "crates/atuin/src/command/client/doctor.rs",
       "message": "Function `checks` performs 3 pure terminal traversals of unchanged `info.shell.plugins`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 393
+      "line": 393,
+      "verdict": "true_positive",
+      "reason": "Inside `if info.shell.name == \"bash\"`, `info.shell.plugins.iter().any(...)` runs three times (blesh/bash-preexec, atuin, blesh) over the same unchanged Vec<String> on one path, so the claim of three traversals is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "doctor.rs `checks` runs `info.shell.plugins.iter().any(..)` three times (lines 435, 439, 440) on the same unmodified Vec, so three pure scans are present."
+        }
+      ]
     },
     {
       "id": "EA-0b16780f940f4e22",
@@ -128,9 +248,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/mocks/budget.ts",
       "message": "Function `extractCommonThings` performs 3 pure terminal traversals of unchanged `groups`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "true_positive",
+      "reason": "extractCommonThings runs `groups.find(g => !g.is_income)`, `groups.find(g => g.is_income)` and `groups.find(g => g.name === 'Bills')` over the unchanged `groups` parameter, three separate scans in createTestBudget code that the server ships for test-mode budgets.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "extractCommonThings runs three `.find` scans over `groups` (non-income, income, 'Bills'), the shipped demo-budget generator reached via budgetfiles/app.ts."
+        }
+      ]
     },
     {
       "id": "EA-9055c4a11b7515d1",
@@ -138,9 +268,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/mocks/budget.ts",
       "message": "Function `fillPrimaryChecking` performs 5 pure terminal traversals of unchanged `billCategories`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 207
+      "line": 207,
+      "verdict": "true_positive",
+      "reason": "fillPrimaryChecking calls `billCategories.find(c => c.name === 'Power'/'Water'/'Mortgage'/'Internet'/...)` repeatedly, even inside the per-month loop, over an unchanged list, so a name-keyed map built once would replace the repeated scans.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fillPrimaryChecking calls `billCategories.find` five times (Power, Water, Mortgage, Internet, Cell), inside a per-month loop, on the same unmodified array."
+        }
+      ]
     },
     {
       "id": "EA-732502fc9432c1bd",
@@ -148,9 +288,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/shared/schedules.ts",
       "message": "Function `extractScheduleConds` performs 6 pure terminal traversals of unchanged `conditions`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 255
+      "line": 255,
+      "verdict": "true_positive",
+      "reason": "extractScheduleConds makes six separate `conditions.find(...)` scans of the unchanged `conditions` array (payee/description, account/acct, amount, date), all evaluated in one call, which one pass could replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "extractScheduleConds performs six `conditions.find` scans (payee/description, account/acct, amount, date) over the same unmodified array in shared schedule code."
+        }
+      ]
     },
     {
       "id": "EA-4f0087c5d3cc8691",
@@ -158,9 +308,19 @@
       "language": "typescript",
       "path": "apps/admin/src/automations/components/canvas/automation-canvas.tsx",
       "message": "Function `` performs 3 pure terminal traversals of unchanged `automation.actions`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 429
+      "line": 429,
+      "verdict": "true_positive",
+      "reason": "Each render of AutomationCanvas evaluates `automation.actions.find(...)` for emailModalAction, deleteConfirmationAction and the EmailPerformanceSidebar `email` prop over the same unchanged actions array, so three scans per render hold; an id map such as the existing `actionsById` would serve.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The three `automation.actions` uses in AutomationCanvas are in separate event handlers, memo callbacks and render paths (finds at lines 579, 605, 658, 864), never one execution."
+        }
+      ]
     },
     {
       "id": "EA-a77c31b99b823691",
@@ -168,9 +328,19 @@
       "language": "typescript",
       "path": "apps/admin/src/posts/list/compose-post-buckets.ts",
       "message": "Function `composePostBuckets` performs 3 pure terminal traversals of unchanged `results`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 41
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "composePostBuckets traverses the unchanged `results` parameter with `reduce` (totalItems), `some(isError)` and `some(isLoading)` on the same path, three passes that one loop could fold together.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "composePostBuckets walks `results` with `reduce` for totalItems and two `some` calls (isError, isLoading), three pure terminal passes over the same bucket array."
+        }
+      ]
     },
     {
       "id": "EA-637deef338a1e020",
@@ -178,9 +348,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/base/project/project-log/audit-legacy-log.component.ts",
       "message": "Function `toggleFilterOption` performs 3 pure terminal traversals of unchanged `filterOptions`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 218
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "In audit-legacy-log's toggleFilterOption else-branch, `this.filterOptions` is scanned by `find(option)`, `find('all')`, `filter(...).forEach` and `find('all')` again, while the array itself is never reassigned (only elements' `checked` changes), so at least three traversals hold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "audit-legacy-log toggleFilterOption scans `filterOptions` with `find` for the option, `find` for 'all' when unchecked, `filter(...).forEach` and a final `find`, over 3+ passes."
+        }
+      ]
     },
     {
       "id": "EA-4051afc6e42a4d75",
@@ -188,9 +368,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/base/project/project-log/audit-log.component.ts",
       "message": "Function `toggleFilterOption` performs 3 pure terminal traversals of unchanged `filterOptions`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 220
+      "line": 220,
+      "verdict": "true_positive",
+      "reason": "The newer audit-log.component.ts toggleFilterOption repeats the same body: it looks up `filterOptions.find(value => value.key === 'all')` twice plus the initial find and a filter pass over the unchanged array on one path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "audit-log toggleFilterOption has the same sequence: find selected, find 'all', filter-forEach, find 'all' again, on the unchanged `filterOptions` array."
+        }
+      ]
     },
     {
       "id": "EA-b0660bab2e7de644",
@@ -228,9 +418,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/content/content/workspace/content-detail-workspace-type-transform.controller.ts",
       "message": "Function `transformVariantsToInvariant` performs 3 pure terminal traversals of unchanged `variants`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 115
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "`variants` is walked by `some` (cultureToKeep), `find` on the else arm, and `some` again inside the `for (const variant of variants)` loop, with no mutation of `variants`; three pure traversals on the longest path is accurate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`variants.some(...)`, `variants.find(...)` and the nested `variants.some(v => v.culture === null ...)` inside the for-of each walk the same unmodified `variants` array, so the repeated-traversal claim holds (the inner one is even quadratic)."
+        }
+      ]
     },
     {
       "id": "EA-d08fdd1c804e8bc5",
@@ -238,9 +438,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/core/workspace/components/workspace-breadcrumb/workspace-variant-menu-breadcrumb/workspace-variant-menu-breadcrumb.element.ts",
       "message": "Function `getItemVariantName` performs 3 pure terminal traversals of unchanged `structureItem.variants`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 105
+      "line": 105,
+      "verdict": "true_positive",
+      "reason": "`structureItem.variants.find` runs four times (active variant, app culture, default culture, invariant) when no earlier lookup matches, and the array is never mutated; one pass could rank the candidates.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`structureItem.variants.find` is called three-plus times with different predicates (active variant, app culture, default culture, invariant) on the same unmodified array, so repeated terminal scans are real and could be one pass."
+        }
+      ]
     },
     {
       "id": "EA-e049e2cad974d731",
@@ -248,9 +458,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/core/workspace/controllers/resolve-stale-variant-route.function.ts",
       "message": "Function `findFallbackVariant` performs 3 pure terminal traversals of unchanged `variants`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 99
+      "line": 99,
+      "verdict": "true_positive",
+      "reason": "`findFallbackVariant` chains three `variants.find` calls with `??`, each scanning the unchanged `variants` array when previous ones miss, so the 3-traversal claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`findFallbackVariant` chains three `variants.find(...)` calls with `??` on the same unchanged array; in the worst case all three scans run, so the count is correct."
+        }
+      ]
     },
     {
       "id": "EA-3d9ec975e518b535",
@@ -258,9 +478,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/property-editors/slider/slider-property-value-preset.ts",
       "message": "Function `processValue` performs 4 pure terminal traversals of unchanged `config`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 9
+      "line": 9,
+      "verdict": "true_positive",
+      "reason": "`config.find` by alias runs four live times (enableRange, step, initVal1, initVal2; the minVal/maxVal lines are commented out) over the unchanged `config`, which could be indexed once by alias.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`processValue` calls `config.find` four times (enableRange, step, initVal1, initVal2) on the same unmodified `config` list, each a full terminal scan that could be a single keyed lookup."
+        }
+      ]
     },
     {
       "id": "EA-2b9e169a45b4b7bc",
@@ -268,9 +498,19 @@
       "language": "typescript",
       "path": "web/src/portico/showroom.ts",
       "message": "Function `` performs 3 pure terminal traversals of unchanged `buttons`.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 243
+      "line": 243,
+      "verdict": "false_positive",
+      "reason": "web/src/portico/showroom.ts backs the /devtools/buttons and /devtools/banners pages registered only in zproject/dev_urls.py, so it is development tooling outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`update_buttons` runs `buttons.find` for \"solid\", \"subtle\" and \"text\" on the same unmodified `buttons` array, three separate terminal scans that match the detector's definition."
+        }
+      ]
     }
   ]
 }

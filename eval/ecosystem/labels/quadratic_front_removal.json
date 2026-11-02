@@ -8,9 +8,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Extensions/VersionExtensions.cs",
       "message": "Function `SubtractRevision` calls `parts.remove` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 50
+      "line": 50,
+      "verdict": "false_positive",
+      "reason": "`parts` is built from exactly four values (`new List<int>(new[] { Major, Minor, Build, Revision })`), so the `RemoveAt(0)` loop runs at most four times on a four-element list; there is no growing n.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "SubtractRevision's `parts` is a fixed four-element List<int> (Major, Minor, Build, Revision), so `RemoveAt(0)` runs at most four times and cannot be quadratic."
+        }
+      ]
     },
     {
       "id": "EA-be2eb9e2f903a835",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/UserMgr.java",
       "message": "Function `changePassword` calls `oldPasswords.remove` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 396
+      "line": 396,
+      "verdict": "true_positive",
+      "reason": "`oldPasswords = new ArrayList<>(Arrays.asList(...))` is trimmed with `while (oldPasswords.size() > passwordHistoryCount) oldPasswords.remove(0)`, removing from the front of an ArrayList in a loop; subList(...).clear() would do it in one shift.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "UserMgr.changePassword trims history with `while (oldPasswords.size() > passwordHistoryCount) oldPasswords.remove(0)` on a local ArrayList, a front-removal loop (small in practice)."
+        }
+      ]
     },
     {
       "id": "EA-3a4ebb1b86730fdb",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/autoupdate/AddOnDependencyChecker.java",
       "message": "Function `calculateUninstallChanges` calls `addOnsToCheck.remove` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 604
+      "line": 604,
+      "verdict": "true_positive",
+      "reason": "`addOnsToCheck = new ArrayList<>(remainingAddOns)` is drained by `while (!addOnsToCheck.isEmpty()) addOnsToCheck.remove(0)`, which shifts the ArrayList on every add-on; an ArrayDeque would make the work-list linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "calculateUninstallChanges uses local ArrayList `addOnsToCheck` as a work queue drained with `remove(0)` in `while (!addOnsToCheck.isEmpty())`, shifting the rest each pass."
+        }
+      ]
     },
     {
       "id": "EA-4fae13a4c1e830e6",
@@ -38,9 +68,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "Function `` calls `seps.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 5945
+      "line": 5945,
+      "verdict": "false_positive",
+      "reason": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js is the vendored third-party x-editable bundle, which is outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bootstrap-editable.js lives under libs/bower, a vendored third-party library, so it is outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-809934a17d86db62",
@@ -48,9 +88,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/other/datepicker/js/bootstrap-datepicker.js",
       "message": "Function `` calls `seps.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 799
+      "line": 799,
+      "verdict": "false_positive",
+      "reason": "libs/other/datepicker/js/bootstrap-datepicker.js is a vendored copy of the third-party bootstrap-datepicker library under ranger's webapp libs, not ranger code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bootstrap-datepicker.js sits under libs/other, a vendored third-party datepicker bundle, so it is outside scope."
+        }
+      ]
     },
     {
       "id": "EA-7cf6074db2466fa3",
@@ -98,9 +148,19 @@
       "language": "python",
       "path": "frigate/data_processing/real_time/whisper_online.py",
       "message": "Function `insert` calls `new.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 433
+      "line": 433,
+      "verdict": "false_positive",
+      "reason": "The receiver is the instance field `self.new` (the finding drops `self.`), and the detector's scope excludes field receivers; the `for j in range(i)` loop also pops at most the few words of a matched n-gram tail.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "whisper_online.py insert pops from `self.new` inside `for j in range(i)` where i is capped at 5 by `min(min(cn, nn), 5)`, so at most five pops occur and nothing quadratic."
+        }
+      ]
     },
     {
       "id": "EA-176e9d3a2e6a5f48",
@@ -108,9 +168,19 @@
       "language": "python",
       "path": "frigate/data_processing/real_time/whisper_online.py",
       "message": "Function `flush` calls `new.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 453
+      "line": 453,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `self.new` is a list (assigned [] and list comprehensions in __init__/insert), and flush drains it with pop(0) inside `while self.new`, shifting the rest on every pop. The receiver's type is certain, so the field-receiver uncertainty does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "HypothesisBuffer.flush drains `self.new` and `self.buffer` with pop(0) inside `while self.new`, repeatedly shifting both lists as it commits words."
+        }
+      ]
     },
     {
       "id": "EA-7eecad4730d0a609",
@@ -118,9 +188,19 @@
       "language": "python",
       "path": "frigate/data_processing/real_time/whisper_online.py",
       "message": "Function `words_to_sentences` calls `cwords.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 639
+      "line": 639,
+      "verdict": "true_positive",
+      "reason": "`cwords = [w for w in words]` is a local list that the nested `while cwords: ... cwords.pop(0)` drains word by word over a transcript, so every pop shifts the remaining words; iterating with an index or a deque would make it linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "words_to_sentences copies words into list `cwords` and drains it with `cwords.pop(0)` inside a `while cwords` loop nested in a sentence loop."
+        }
+      ]
     },
     {
       "id": "EA-6067946076575d17",
@@ -128,9 +208,19 @@
       "language": "python",
       "path": "mitmproxy/command.py",
       "message": "Function `parse_partial` calls `next_params.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 227
+      "line": 227,
+      "verdict": "true_positive",
+      "reason": "`next_params` is a local `list[CommandParameter]`, reassigned from `self.commands[part].parameters + next_params[1:]`, and `next_params.pop(0)` consumes one expected parameter per lexed part in the `for part in parts` loop, so the list is front-drained. A deque or index would avoid the shifts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "command.py parse_partial calls `next_params.pop(0)` for each lexed token in `for part in parts` on a local list, so every token shifts the remaining parameters."
+        }
+      ]
     },
     {
       "id": "EA-be1a295a379a6cf1",
@@ -138,9 +228,19 @@
       "language": "python",
       "path": "mitmproxy/command.py",
       "message": "Function `parse_partial` calls `next_params.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 243
+      "line": 243,
+      "verdict": "true_positive",
+      "reason": "This second `next_params.pop(0)`, for an unknown command followed by CmdArgs, removes from the front of the same local parameter list inside the `for part in parts` loop, adding to the front-removal cost of draining it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The second `next_params.pop(0)` in parse_partial runs inside the same per-token loop on the locally built `next_params` list, a front removal repeated per iteration."
+        }
+      ]
     },
     {
       "id": "EA-7e1e7214e5b3bcb1",
@@ -148,9 +248,19 @@
       "language": "python",
       "path": "mitmproxy/coretypes/multidict.py",
       "message": "Function `set_all` calls `values.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 97
+      "line": 97,
+      "verdict": "true_positive",
+      "reason": "In MultiDict.set_all, `values: list[VT]` is popped from the front (`values.pop(0)`) once per matching field inside `for field in self.fields`, so each replacement shifts the remaining values; iterating `values` with an iterator would be linear.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MultiDict.set_all drains the list parameter `values` via `values.pop(0)` inside the fields loop, shifting remaining values each time."
+        }
+      ]
     },
     {
       "id": "EA-2c079c1e06039b1b",
@@ -158,9 +268,19 @@
       "language": "python",
       "path": "mitmproxy/coretypes/multidict.py",
       "message": "Function `set_all` calls `values.pop` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "true_positive",
+      "reason": "The trailing `while values: new_fields.append((key, values.pop(0)))` loop drains the whole `values` list from the front, which is quadratic in the number of extra values.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The trailing `while values: new_fields.append((key, values.pop(0)))` in set_all is a plain drain-from-front loop on a Python list."
+        }
+      ]
     },
     {
       "id": "EA-88e125796620f5eb",
@@ -168,9 +288,19 @@
       "language": "rust",
       "path": "crates/atuin/src/print_error.rs",
       "message": "Function `wrap_text` calls `out.remove` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 77
+      "line": 77,
+      "verdict": "true_positive",
+      "reason": "`out` is a local `Vec::new()` in wrap_text, and `while out.first().is_some_and(String::is_empty) { out.remove(0) }` shifts the whole Vec once per leading blank line, so input with many leading blank paragraphs is trimmed quadratically; a drain(..k) or VecDeque would avoid it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "print_error.rs wrap_text strips leading blank lines with `while out.first().is_some_and(String::is_empty) { out.remove(0) }` on a local Vec<String>, a genuine front-removal loop."
+        }
+      ]
     },
     {
       "id": "EA-13a0d6725be33665",
@@ -178,9 +308,19 @@
       "language": "typescript",
       "path": "web_src/js/components/WorkflowGraph.utils.ts",
       "message": "Function `` calls `queue.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 235
+      "line": 235,
+      "verdict": "true_positive",
+      "reason": "The BFS in `collect` uses the local array `const queue = [startId]` and `queue.shift()` in its while loop, so each dequeue re-indexes the whole frontier, the classic O(n^2) BFS; a head index would fix it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WorkflowGraph.utils.ts `collect` uses a local array as a BFS queue with `queue.shift()!` in `while (queue.length > 0)`, the canonical quadratic-queue idiom."
+        }
+      ]
     },
     {
       "id": "EA-1d050eafb88af84d",
@@ -188,9 +328,19 @@
       "language": "typescript",
       "path": "web_src/js/modules/fomantic/dropdown.ts",
       "message": "Function `hideScopedEmptyDividers` calls `visibleItems.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 360
+      "line": 360,
+      "verdict": "true_positive",
+      "reason": "`visibleItems` is a local `Element[]` built in hideScopedEmptyDividers, and the while loop calls `visibleItems.shift()` once per leading divider, shifting the array each time; advancing a start index would avoid it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "dropdown.ts hideScopedEmptyDividers removes leading dividers with `visibleItems.shift()` in a while loop over a local array of element nodes, matching the pattern."
+        }
+      ]
     },
     {
       "id": "EA-cb40901e55539ebe",
@@ -198,9 +348,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/shared/units/utils.ts",
       "message": "Function `` calls `quotaUnitsDeep.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 594
+      "line": 594,
+      "verdict": "false_positive",
+      "reason": "`quotaUnitsDeep` is a parameter of getSuitableUnit, and the `for...of` body returns on its first iteration, so `quotaUnitsDeep.shift()` runs at most once per call before recursion. Nothing is drained inside a loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "getSuitableUnit's `for` loop returns on its first iteration in both branches, so `quotaUnitsDeep.shift()` runs once per call and recursion depth is bounded by the handful of storage units."
+        }
+      ]
     },
     {
       "id": "EA-7ec1f10ce190d520",
@@ -208,9 +368,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/shared/units/utils.ts",
       "message": "Function `` calls `quotaUnitsDeep.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 644
+      "line": 644,
+      "verdict": "false_positive",
+      "reason": "In GetIntegerAndUnit, `quotaUnitsDeep.shift()` runs on a parameter inside a `for...of` whose every branch returns, so it is a single shift per recursive call over the short unit table, not a draining loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GetIntegerAndUnit's `for` loop returns in every branch on the first iteration, so `quotaUnitsDeep.shift()` is executed once per call and never accumulates inside the loop."
+        }
+      ]
     },
     {
       "id": "EA-59f495c25fedbe3d",
@@ -218,9 +388,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/shared/units/utils.ts",
       "message": "Function `` calls `quotaUnitsDeepClone.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 646
+      "line": 646,
+      "verdict": "false_positive",
+      "reason": "`quotaUnitsDeepClone.shift()` is also a parameter shifted once right before `return GetIntegerAndUnit(...)`, so the enclosing loop never repeats the removal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`quotaUnitsDeepClone.shift()` in GetIntegerAndUnit sits in a loop body that always returns immediately, so it is a single shift on a six-entry unit array per recursion step."
+        }
+      ]
     },
     {
       "id": "EA-e689208b7d958239",
@@ -268,9 +448,19 @@
       "language": "typescript",
       "path": "web/src/bootstrap_typeahead.ts",
       "message": "Function `defaultSorter` calls `items.shift` on the front of an array inside a loop; each call shifts every remaining element.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 177
+      "line": 177,
+      "verdict": "true_positive",
+      "reason": "defaultSorter's `items: string[]` parameter is drained with `while ((item = items.shift()))` over every typeahead candidate, so each shift re-indexes the rest; a for...of loop would be linear and would not empty the caller's array.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "defaultSorter drains the `items` array with `items.shift()` in `while ((item = items.shift()))` while bucketing typeahead entries, a front-removal loop."
+        }
+      ]
     }
   ]
 }

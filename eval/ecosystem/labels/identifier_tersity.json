@@ -28,9 +28,19 @@
       "language": "python",
       "path": "changedetectionio/conditions/default_plugin.py",
       "message": "Function `register_operator_choices` has terse identifier density 1.00 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "false_positive",
+      "reason": "The only short identifier in register_operator_choices is the flask_babel lazy_gettext alias `_l` wrapping each label, the standard i18n idiom; there are no terse variables.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "register_operator_choices contains only _l(...) gettext calls, and the 2-char _l alias is the standard lazy_gettext idiom, so the density is not unreadable naming."
+        }
+      ]
     },
     {
       "id": "EA-729b2d180ea5700d",
@@ -38,9 +48,19 @@
       "language": "python",
       "path": "changedetectionio/languages.py",
       "message": "Function `_build_short_timeago_rows` has terse identifier density 0.94 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 74
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "_build_short_timeago_rows consists entirely of `_l(...)` calls after `from flask_babel import lazy_gettext as _l`; the 0.94 density comes from the gettext alias, not from cryptic naming.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "_build_short_timeago_rows is dominated by the _l lazy_gettext alias imported on the previous line, an i18n idiom rather than terse naming."
+        }
+      ]
     },
     {
       "id": "EA-96dc819c12f0e89a",
@@ -48,9 +68,19 @@
       "language": "python",
       "path": "electrum/gui/common_qt/i18n.py",
       "message": "Function `__init__` has terse identifier density 0.58 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 8
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "ElectrumTranslator.__init__ only repeats the gettext function `_` imported from electrum.i18n to enumerate Qt strings; `_` is the conventional translation marker.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ElectrumTranslator.__init__ is dominated by the conventional gettext _ function, so its terse density reflects the i18n idiom."
+        }
+      ]
     },
     {
       "id": "EA-1954684c038e2fc3",
@@ -58,9 +88,19 @@
       "language": "python",
       "path": "electrum/gui/qml/qeinvoice.py",
       "message": "Function `userinfo_for_invoice_status` has terse identifier density 0.55 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 30
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "userinfo_for_invoice_status maps PR_* constants to `_('...')` translated messages; the terse identifiers counted are the gettext `_` calls, which the comment says deliberately evaluate at call time.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "userinfo_for_invoice_status counts the gettext _() calls in its mapping, the standard translation alias, not cryptic variable names."
+        }
+      ]
     },
     {
       "id": "EA-b4704d644f4b00bb",
@@ -68,9 +108,19 @@
       "language": "python",
       "path": "electrum/gui/qt/main_window.py",
       "message": "Function `show_about` has terse identifier density 0.56 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 879
+      "line": 879,
+      "verdict": "false_positive",
+      "reason": "show_about builds the QMessageBox text from `_(\"Version\")` and other gettext `_` calls; there is no terse variable, only the i18n marker.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "show_about's terse identifiers are the repeated gettext _() calls in the message concatenation, which is an accepted idiom."
+        }
+      ]
     },
     {
       "id": "EA-0b014eae0e914e31",
@@ -78,9 +128,19 @@
       "language": "python",
       "path": "electrum/gui/qt/seed_dialog.py",
       "message": "Function `seed_warning_msg` has terse identifier density 0.55 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 59
+      "line": 59,
+      "verdict": "false_positive",
+      "reason": "seed_warning_msg's short identifiers are the `_()` translation calls around each warning sentence plus the descriptive `seed` parameter; the gettext idiom inflates the density.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "seed_warning_msg is mostly _() translation calls (plus a single seed parameter), so the 1-char name is the gettext idiom."
+        }
+      ]
     },
     {
       "id": "EA-0b05908d8ceb93ec",
@@ -88,9 +148,19 @@
       "language": "python",
       "path": "electrum/interface.py",
       "message": "Function `sanitize_tx_broadcast_response` has terse identifier density 0.68 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1707
+      "line": 1707,
+      "verdict": "false_positive",
+      "reason": "sanitize_tx_broadcast_response uses descriptive names (server_msg, substring, script_error_messages, msg); its terse count comes from the many `_(...)` translated error strings.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sanitize_tx_broadcast_response has nine _() gettext calls against eleven server_msg uses, so the terse density comes from the translation alias."
+        }
+      ]
     },
     {
       "id": "EA-212af725469a33aa",
@@ -98,9 +168,19 @@
       "language": "python",
       "path": "electrum/invoices.py",
       "message": "Function `pr_expiration_values` has terse identifier density 1.00 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 63
+      "line": 63,
+      "verdict": "false_positive",
+      "reason": "pr_expiration_values returns a dict of durations to `_('Never')`, `_('1 hour')` etc.; every counted identifier is the gettext `_`, so the 1.00 density reflects i18n markup.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "pr_expiration_values consists solely of _() gettext calls for dict values, so the 1.00 density is the translation idiom."
+        }
+      ]
     },
     {
       "id": "EA-3054806ca28ae84d",
@@ -108,9 +188,19 @@
       "language": "python",
       "path": "electrum/lnonion.py",
       "message": "Function `amt_to_forward` has terse identifier density 0.57 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 395
+      "line": 395,
+      "verdict": "true_positive",
+      "reason": "amt_to_forward assigns `k1 = k2 = 'amt_to_forward'` and passes k1, k2 to _get_from_payload, so the opaque names k1/k2 make up most identifiers and hide which payload key each stands for.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "amt_to_forward binds the opaque names k1 and k2 (both the same 'amt_to_forward' string) and passes them on, so most identifiers carry no meaning."
+        }
+      ]
     },
     {
       "id": "EA-92f4c7cebb5c6c25",
@@ -118,9 +208,19 @@
       "language": "python",
       "path": "electrum/plugins/ledger/ledger.py",
       "message": "Function `has_detached_pin_support` has terse identifier density 0.57 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 515
+      "line": 515,
+      "verdict": "false_positive",
+      "reason": "In has_detached_pin_support the only short names are the exception variable `e` in `except BTChipException as e` and the library attribute `e.sw`; `e` for a caught exception is an established idiom.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "has_detached_pin_support's terse names are the exception variable e and the btchip API's e.sw status attribute, a conventional catch binding."
+        }
+      ]
     },
     {
       "id": "EA-07a31d0cc1a13a5f",
@@ -128,9 +228,19 @@
       "language": "python",
       "path": "electrum/plugins/ledger/ledger.py",
       "message": "Function `is_pin_validated` has terse identifier density 0.55 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 524
+      "line": 524,
+      "verdict": "false_positive",
+      "reason": "is_pin_validated's short identifiers are the caught exception `e` and the btchip status-word field `sw` it inspects, which the function cannot rename; that is idiomatic exception handling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "is_pin_validated uses e for the caught BTChipException and e.sw from the external btchip API, the conventional exception idiom."
+        }
+      ]
     },
     {
       "id": "EA-b055b635876aaed1",
@@ -138,9 +248,19 @@
       "language": "python",
       "path": "electrum/stored_dict.py",
       "message": "Function `_walk_path` has terse identifier density 0.64 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "true_positive",
+      "reason": "_walk_path(d, path) names the nested dict being descended `d` and reassigns it repeatedly (d = d[k], d = d['*']), so terse names dominate the function as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "_walk_path uses d for the dictionary on every line (d, d[k], '*' in d) and a bare path walk, so single-letter d dominates a helper with no docstring."
+        }
+      ]
     },
     {
       "id": "EA-d4643973038abfa5",
@@ -168,9 +288,19 @@
       "language": "python",
       "path": "frigate/config/camera/objects.py",
       "message": "Function `validate_required_zones` has terse identifier density 0.67 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 129
+      "line": 129,
+      "verdict": "false_positive",
+      "reason": "validate_required_zones in objects.py is a pydantic @field_validator whose value parameter `v` follows pydantic's documented `(cls, v)` convention; there is nothing else terse.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "validate_required_zones is a four-line pydantic before-validator whose value parameter v is the documented pydantic idiom."
+        }
+      ]
     },
     {
       "id": "EA-578a92ae1ce47a88",
@@ -178,9 +308,19 @@
       "language": "python",
       "path": "frigate/config/camera/review.py",
       "message": "Function `validate_required_zones` has terse identifier density 0.67 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 53
+      "line": 53,
+      "verdict": "false_positive",
+      "reason": "The validate_required_zones validator at review.py:53 (alerts config) only uses the pydantic-conventional `v` parameter to wrap a string into a list.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This review.py validate_required_zones is the same short pydantic field_validator using the conventional v parameter."
+        }
+      ]
     },
     {
       "id": "EA-9e86c0aed976335b",
@@ -188,9 +328,19 @@
       "language": "python",
       "path": "frigate/config/camera/review.py",
       "message": "Function `validate_required_zones` has terse identifier density 0.67 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 93
+      "line": 93,
+      "verdict": "false_positive",
+      "reason": "The second validate_required_zones at review.py:93 (detections config) is the same pydantic field_validator idiom using `v` for the incoming value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The second validate_required_zones in review.py (DetectionsConfig-style block) is a pydantic validator where v is the standard value name."
+        }
+      ]
     },
     {
       "id": "EA-085f0bae9f0a9b34",
@@ -198,9 +348,19 @@
       "language": "python",
       "path": "frigate/config/camera/zone.py",
       "message": "Function `validate_objects` has terse identifier density 0.67 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 84
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "ZoneConfig.validate_objects is a pydantic mode=\"before\" validator on `objects` whose sole short name is the conventional validator argument `v`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "validate_objects is a four-line pydantic field_validator with v as the conventional value parameter."
+        }
+      ]
     },
     {
       "id": "EA-f276e60a96c4a645",
@@ -208,9 +368,19 @@
       "language": "python",
       "path": "frigate/config/camera_group.py",
       "message": "Function `validate_cameras` has terse identifier density 0.67 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 27
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "CameraGroupConfig.validate_cameras uses `v` as the pydantic field_validator value parameter, the library's documented naming convention.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "validate_cameras is a four-line pydantic validator using the standard v parameter name."
+        }
+      ]
     },
     {
       "id": "EA-8e4912da6bfcf76c",
@@ -218,9 +388,19 @@
       "language": "python",
       "path": "frigate/data_processing/real_time/whisper_online.py",
       "message": "Function `ts_words` has terse identifier density 0.92 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 94
+      "line": 94,
+      "verdict": "true_positive",
+      "reason": "ts_words uses r, o, s, w, t for the transcribe result, output list, segment, word and tuple, so nearly every identifier is a cryptic single letter and needs the comment to explain.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ts_words uses o, s, w, t and r for accumulator, segment, word, tuple and result in a loop, with no names conveying meaning."
+        }
+      ]
     },
     {
       "id": "EA-499e312206be06e2",
@@ -228,9 +408,19 @@
       "language": "python",
       "path": "frigate/util/object.py",
       "message": "Function `box_overlaps` has terse identifier density 1.00 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 308
+      "line": 308,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): box_overlaps(b1, b2) is a two-line predicate over a pair of boxes, and b1/b2 are positional pair names. This is the same domain naming as the r1/g1/b1 case the precision notes already record as a false positive.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "box_overlaps takes two boxes b1 and b2 in a coordinate-comparison predicate, positional pair names in the style of the doc's r1/g1/b1 domain exemption."
+        }
+      ]
     },
     {
       "id": "EA-c0c40f711446e2ee",
@@ -238,9 +428,19 @@
       "language": "python",
       "path": "frigate/util/object.py",
       "message": "Function `box_inside` has terse identifier density 1.00 (> 0.50).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 314
+      "line": 314,
+      "verdict": "true_positive",
+      "reason": "box_inside(b1, b2) relies on a comment ('check if b2 is inside b1') because the terse parameter names b1/b2 do not say which is the container, confirming the readability cost.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "box_inside likewise compares box b1 against b2 by index in a one-line predicate whose name and comment state the roles; paired domain names, not cryptic ones."
+        }
+      ]
     },
     {
       "id": "EA-3f142c5f116df06b",
@@ -258,9 +458,19 @@
       "language": "python",
       "path": "mitmproxy/types.py",
       "message": "Function `parse` has terse identifier density 0.67 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 457
+      "line": 457,
+      "verdict": "false_positive",
+      "reason": "This parse(self, manager, t, s) override keeps the parameter names of the shared type-handler signature used by every parse method in mitmproxy/types.py (base `parse(manager, typ, s)`), so `t`/`s` are dictated by the interface.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Choice.parse implements the fixed CommandType.parse(manager, t, s) signature shared by every type class in mitmproxy/types.py, so the parameter names are dictated by the base interface."
+        }
+      ]
     },
     {
       "id": "EA-4052bb4130862962",
@@ -288,9 +498,19 @@
       "language": "python",
       "path": "redash/query_runner/clickhouse.py",
       "message": "Function `split_multi_query` has terse identifier density 0.60 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 22
+      "line": 22,
+      "verdict": "false_positive",
+      "reason": "split_multi_query is a one-line list comprehension whose only short name is the comprehension variable `st`; a scoped comprehension variable is an accepted idiom, and `query` is descriptive.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "split_multi_query's st is a comprehension loop variable in a one-line list comprehension, an accepted short-scope name."
+        }
+      ]
     },
     {
       "id": "EA-b4ed49362983410c",
@@ -298,9 +518,19 @@
       "language": "python",
       "path": "redash/settings/helpers.py",
       "message": "Function `parse_boolean` has terse identifier density 0.62 (> 0.50).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 22
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "parse_boolean names its input `s` and reuses it in strip/lower, both membership tests and the error message, so the single-letter name is most of the function's identifiers as reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "parse_boolean uses s as the string argument of a tiny parser, the common convention for a string input."
+        }
+      ]
     },
     {
       "id": "EA-bbde3851653c62e6",
@@ -308,9 +538,19 @@
       "language": "python",
       "path": "redash/utils/__init__.py",
       "message": "Function `slugify` has terse identifier density 0.60 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 50
+      "line": 50,
+      "verdict": "false_positive",
+      "reason": "slugify's 0.60 density counts the `re` module and the `r` raw-string prefix of the pattern as terse identifiers; the only short local is the param `s`, which is 2 of 4 real identifiers, so it does not pass the > 0.50 threshold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "slugify has only `s` as an authored terse name; the other terse hit is the stdlib module `re`, and without it density is 2/4, not above 0.50."
+        }
+      ]
     },
     {
       "id": "EA-d83f177cff0b0b86",
@@ -318,9 +558,19 @@
       "language": "python",
       "path": "redash/utils/__init__.py",
       "message": "Function `to_filename` has terse identifier density 0.61 (> 0.50).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 223
+      "line": 223,
+      "verdict": "false_positive",
+      "reason": "to_filename only gets to 0.61 because the four `re` module references and the two `r\"...\"` string prefixes are counted; with those removed, the single string param `s` is 5 of about 12 identifiers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "to_filename reuses the one-letter parameter/local `s` six times across its three statements, so even excluding module `re` more than half the identifiers are terse."
+        }
+      ]
     },
     {
       "id": "EA-3ea044a21c2fd8b8",
@@ -363,9 +613,19 @@
       "language": "python",
       "path": "zerver/lib/email_notifications.py",
       "message": "Function `fix_plaintext_image_urls` has terse identifier density 0.60 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 268
+      "line": 268,
+      "verdict": "false_positive",
+      "reason": "fix_plaintext_image_urls uses only `content` plus `re.sub`; its 0.60 density comes from counting `re` and the two `r` raw-string prefixes in `re.sub(r\"...\", r\"\\2\", content)` as identifiers, so the function has no terse names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "fix_plaintext_image_urls uses descriptive `content`; the only terse identifier is the stdlib module `re`, so the 0.60 density is miscounted."
+        }
+      ]
     },
     {
       "id": "EA-affdb1d40a5212d6",
@@ -373,9 +633,19 @@
       "language": "python",
       "path": "zerver/lib/emoji.py",
       "message": "Function `check_valid_emoji_name` has terse identifier density 0.54 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 133
+      "line": 133,
+      "verdict": "false_positive",
+      "reason": "check_valid_emoji_name names nothing tersely; its terse count is the `re` module, the `r` prefixes of the two regex literals, and Django's `_` gettext alias, while the only local is `emoji_name`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "check_valid_emoji_name is built on `emoji_name`; its only terse tokens are the gettext alias `_` and module `re`, which are idioms, not authored short names."
+        }
+      ]
     },
     {
       "id": "EA-ad29a51617fcc29a",
@@ -383,9 +653,19 @@
       "language": "python",
       "path": "zerver/lib/markdown/__init__.py",
       "message": "Function `verbose_compile` has terse identifier density 0.57 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 154
+      "line": 154,
+      "verdict": "false_positive",
+      "reason": "verbose_compile's 4/7 terse ratio is the three `re` references (re.compile, re.DOTALL, re.VERBOSE) plus the `rf` f-string prefix, which is misread as an identifier; its only variable is `pattern`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "verbose_compile uses `pattern` and re.compile flags; the only 1-2 char identifier is the `re` module, so density 0.57 is not real terseness."
+        }
+      ]
     },
     {
       "id": "EA-5de5a0242392c457",
@@ -393,9 +673,19 @@
       "language": "python",
       "path": "zerver/lib/markdown/__init__.py",
       "message": "Function `percent_escape_format_string` has terse identifier density 0.60 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2453
+      "line": 2453,
+      "verdict": "false_positive",
+      "reason": "percent_escape_format_string uses only `format_string` and `re.sub`; the 0.60 density counts the `re` module and the `r` prefixes of its pattern and replacement strings as terse names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "percent_escape_format_string has the descriptive `format_string` parameter; only `re` (stdlib module) is short, so the 0.60 density is an artifact."
+        }
+      ]
     },
     {
       "id": "EA-40355715d9784249",
@@ -403,9 +693,19 @@
       "language": "python",
       "path": "zerver/views/alert_words.py",
       "message": "Function `clean_alert_words` has terse identifier density 0.56 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "clean_alert_words' only short name is the comprehension variable `w` in `[w.strip() for w in alert_words]`, which is scoped to one expression. That is the same throwaway-iteration idiom as the allowlisted loop variables, so the readability rationale does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "clean_alert_words uses the conventional one-letter comprehension variable `w` over a descriptive `alert_words` parameter; that is an idiom, not terse naming."
+        }
+      ]
     }
   ]
 }

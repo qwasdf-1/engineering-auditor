@@ -8,9 +8,19 @@
       "language": "c",
       "path": "programs/util.h",
       "message": "Exit call at line 328",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 328
+      "line": 328,
+      "verdict": "true_positive",
+      "reason": "UTIL_getOpenFileSize in programs/util.h calls exit(1) when UTIL_fileno fails, even though it returns 0 for its other failures; the header helper is shared by lz4cli, lz4io, bench and the tests/ tools, so an error return would be easy here.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exit(1) after perror(\"fileno\") in the UTIL_getOpenFileSize helper in programs/util.h kills the process from a reusable utility function."
+        }
+      ]
     },
     {
       "id": "EA-650920cc3d5a6425",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "contrib/minizip/miniunz.c",
       "message": "Exit call at line 395",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 395
+      "line": 395,
+      "verdict": "false_positive",
+      "reason": "exit(EXIT_FAILURE) on scanf EOF is in contrib/minizip/miniunz.c, a contributed sample unzip program under zlib's contrib/ tree that the library build does not ship; out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "contrib/minizip/miniunz.c is a standalone demo utility with its own main() in zlib's contrib directory (contributed sample code), so the exit(EXIT_FAILURE) after a scanf failure is outside production-library scope."
+        }
+      ]
     },
     {
       "id": "EA-35cc71abf7610f39",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "zutil.c",
       "message": "Exit call at line 132",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 132
+      "line": 132,
+      "verdict": "false_positive",
+      "reason": "z_error() is compiled only under #ifdef ZLIB_DEBUG as the failure handler for zlib's Assert macro; an assertion-failure abort in debug builds is the idiom, not production exit handling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "z_error() in zlib's zutil.c calls exit(1) after printing the message from library code; it is compiled only under ZLIB_DEBUG, but it is still a process exit in the library."
+        }
+      ]
     },
     {
       "id": "EA-6ef0b67f9ed7fabb",
@@ -108,9 +138,19 @@
       "language": "go",
       "path": "cmd/hook.go",
       "message": "Exit call at line 313",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 313
+      "line": 313,
+      "verdict": "false_positive",
+      "reason": "os.Exit(1) is in runHookUpdate, a urfave/cli subcommand action in gitea's cmd package (the binary's command layer, used only by main.go), and it deliberately rejects refs/pull updates without output, which is CLI entry-point behaviour.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(1) in runHookUpdate under package cmd (not main) exits the process when the ref is refs/pull/..., outside package main."
+        }
+      ]
     },
     {
       "id": "EA-d51597b6b9f47221",
@@ -118,9 +158,19 @@
       "language": "go",
       "path": "models/unittest/testdb.go",
       "message": "Exit call at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "unittest.MainTest is a reusable TestMain helper that takes *testing.M, and os.Exit(mainTest(m, ...)) is the standard Go TestMain idiom in test-support code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "models/unittest/testdb.go MainTest is a test helper wrapping os.Exit(mainTest(...)), the standard TestMain idiom in test-support code."
+        }
+      ]
     },
     {
       "id": "EA-7d726b79efa09f87",
@@ -128,9 +178,19 @@
       "language": "go",
       "path": "modules/git/git.go",
       "message": "Exit call at line 191",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 191
+      "line": 191,
+      "verdict": "false_positive",
+      "reason": "RunGitTests exists only to be called from TestMain (it wraps m.Run()), and os.Exit(runGitTests(m)) is the TestMain exit idiom, so this is test-support code despite living in modules/git.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "RunGitTests in modules/git/git.go is a TestMain helper doing os.Exit(runGitTests(m)), test infrastructure."
+        }
+      ]
     },
     {
       "id": "EA-45312cdaaa3f41d8",
@@ -138,9 +198,19 @@
       "language": "go",
       "path": "modules/setting/testenv.go",
       "message": "Exit call at line 51",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "os.Exit(0) is inside the log.OsExiter replacement that SetupGiteaTestEnv installs only when tests run (IsInTesting = true), so it is test-environment setup code, not a production exit path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.Exit(0) in modules/setting/testenv.go is inside the test-environment setup's exit-code interception for tests, test-only code."
+        }
+      ]
     },
     {
       "id": "EA-667d1c428511fb78",
@@ -148,9 +218,19 @@
       "language": "go",
       "path": "services/gitproxy/server.go",
       "message": "Exit call at line 128",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 128
+      "line": 128,
+      "verdict": "false_positive",
+      "reason": "MaybeTunnel is called first thing in gitea's main.go, where it lets the binary act as git's GIT_PROXY_COMMAND when run with host and port, so os.Exit(1) after a tunnel error is that alternate program entry's exit status.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(1) in MaybeTunnel (package gitproxy, not main) terminates the process when the tunnel fails, from library code called by main."
+        }
+      ]
     },
     {
       "id": "EA-1879c49257aefdc9",
@@ -158,9 +238,19 @@
       "language": "go",
       "path": "services/gitproxy/server.go",
       "message": "Exit call at line 130",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 130
+      "line": 130,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): os.Exit(0) sits in exported MaybeTunnel in package gitproxy, not package main. main.go and server_test.go both call it, which is the case the rule reports even though the exit is intentional.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(0) at the end of MaybeTunnel in package gitproxy exits the process from a non-main library function."
+        }
+      ]
     },
     {
       "id": "EA-741989a78d7f04d1",
@@ -168,9 +258,19 @@
       "language": "go",
       "path": "src/lib/log/logger.go",
       "message": "Exit call at line 265",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 265
+      "line": 265,
+      "verdict": "false_positive",
+      "reason": "os.Exit(1) is the defining behaviour of Logger.Fatal, matching the standard log.Fatal convention that callers choose on purpose, so the rule should recognise Fatal logging methods as an idiom.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Logger.Fatal in src/lib/log/logger.go calls os.Exit(1) from a library package (not main), killing the process."
+        }
+      ]
     },
     {
       "id": "EA-933458eb5f87fef5",
@@ -178,9 +278,19 @@
       "language": "go",
       "path": "src/lib/log/logger.go",
       "message": "Exit call at line 274",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 274
+      "line": 274,
+      "verdict": "false_positive",
+      "reason": "Logger.Fatalf ends with os.Exit(1) by contract, like the standard library's log.Fatalf, so exiting is the documented purpose of the method rather than an accidental exit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Logger.Fatalf in src/lib/log/logger.go calls os.Exit(1) from a library package, outside main."
+        }
+      ]
     },
     {
       "id": "EA-efa9cee5d6722498",
@@ -188,9 +298,19 @@
       "language": "go",
       "path": "server/opts.go",
       "message": "Exit call at line 5143",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 5143
+      "line": 5143,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): PrintTLSHelpAndDie is an exported function in the embeddable `package server`, and it calls os.Exit(0). The 'AndDie' name shows the exit is intentional, but the documented rule (Go os.Exit outside package main) still applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(0) at the end of the help-print function in server/opts.go exits the process from package server, not main."
+        }
+      ]
     },
     {
       "id": "EA-5c8af9ea1bf5f4cf",
@@ -198,9 +318,19 @@
       "language": "go",
       "path": "server/opts.go",
       "message": "Exit call at line 6634",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 6634
+      "line": 6634,
+      "verdict": "true_positive",
+      "reason": "processSignal, part of the exported server.ConfigureOptions flag parsing in the embeddable server package, calls os.Exit(0) after ProcessSignal succeeds even though it returns error and is followed by a dead `return nil`, so embedders cannot handle the signal outcome themselves.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(0) in the signal-handling path of server/opts.go (after ProcessSignal) exits from package server."
+        }
+      ]
     },
     {
       "id": "EA-9282961af2d16dd2",
@@ -208,9 +338,19 @@
       "language": "go",
       "path": "server/server.go",
       "message": "Exit call at line 1702",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1702
+      "line": 1702,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): PrintAndDie is an exported function in the importable non-main package `server` and calls os.Exit(1), so an embedding program's process is killed; the documented Go scope is os.Exit outside package main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PrintAndDie in package server calls os.Exit(1), exported library function that terminates the host process."
+        }
+      ]
     },
     {
       "id": "EA-7e214cc5e1a1153e",
@@ -218,9 +358,19 @@
       "language": "go",
       "path": "server/server.go",
       "message": "Exit call at line 1708",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1708
+      "line": 1708,
+      "verdict": "false_positive",
+      "reason": "PrintServerAndExit is the version-printing callback that main.go passes to ConfigureOptions, and its name states that it exits, so os.Exit(0) after printing VERSION is the intended --version behaviour.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PrintServerAndExit in package server calls os.Exit(0), an exported library function ending the process."
+        }
+      ]
     },
     {
       "id": "EA-b85a9c3f0f0aa4f3",
@@ -228,9 +378,19 @@
       "language": "go",
       "path": "server/signal.go",
       "message": "Exit call at line 63",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 63
+      "line": 63,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): handleSignals in the embeddable package server calls os.Exit(0) after SIGINT shutdown. Because the handler is installed by default (NoSigs is opt-out), an embedding program's process is killed and its deferred cleanup skipped.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(0) after SIGINT shutdown in server/signal.go handleSignals is in package server, not main."
+        }
+      ]
     },
     {
       "id": "EA-b890916baeaef3c1",
@@ -238,9 +398,19 @@
       "language": "go",
       "path": "server/signal.go",
       "message": "Exit call at line 73",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): Server.handleSignal in the embeddable `package server` calls os.Exit(0) on SIGTERM. Any embedder that leaves Options.NoSigs false has its whole process killed by the library, even though shutdown runs first.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(0) after SIGTERM shutdown in server/signal.go is outside package main in the server library."
+        }
+      ]
     },
     {
       "id": "EA-a3e4cf5ab374f6f6",
@@ -248,9 +418,19 @@
       "language": "go",
       "path": "server/signal_windows.go",
       "message": "Exit call at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): os.Exit(0) is called from a signal-handling goroutine in `package server`, the embeddable nats-server library rather than package main. An embedder that leaves NoSigs unset has its process terminated by the library, even though Shutdown runs first.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "os.Exit(0) on a trapped signal in server/signal_windows.go's goroutine exits from package server."
+        }
+      ]
     },
     {
       "id": "EA-ededb37862159fd0",
@@ -258,9 +438,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.core/src/org/jkiss/dbeaver/core/DesktopPlatform.java",
       "message": "Exit call at line 157",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 157
+      "line": 157,
+      "verdict": "true_positive",
+      "reason": "DesktopPlatform's shutdown watchdog thread calls `System.exit(-2)` outside any main method; it is an intentional force-exit, but the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DesktopPlatform.java line 157 `System.exit(-2)` in a watchdog thread of the platform shutdown logic is a System.exit outside any main method."
+        }
+      ]
     },
     {
       "id": "EA-46772e9ad471d012",
@@ -268,9 +458,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.core/src/org/jkiss/dbeaver/ui/eula/EULAConfirmationDialog.java",
       "message": "Exit call at line 54",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "`EULAConfirmationDialog.buttonPressed` calls `System.exit(0)` from a dialog handler for NO_ID instead of shutting down the workbench.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "EULAConfirmationDialog.buttonPressed calls `System.exit(0)` on NO_ID, a System.exit inside a dialog class rather than main."
+        }
+      ]
     },
     {
       "id": "EA-d6d038f7fa9759e1",
@@ -278,9 +478,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.standalone/src/org/jkiss/dbeaver/ui/app/standalone/ApplicationWorkbenchWindowAdvisor.java",
       "message": "Exit call at line 200",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 200
+      "line": 200,
+      "verdict": "true_positive",
+      "reason": "ApplicationWorkbenchWindowAdvisor calls `System.exit(0)` from a window-advisor method when the ProductConfigWizard is cancelled, outside main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ApplicationWorkbenchWindowAdvisor line 200 `System.exit(0)` runs after the config wizard is cancelled, inside a window advisor, not main."
+        }
+      ]
     },
     {
       "id": "EA-232fab3ace388859",
@@ -288,9 +498,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.standalone/src/org/jkiss/dbeaver/ui/app/standalone/actions/EmergentExitAction.java",
       "message": "Exit call at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "EmergentExitAction.run calls `System.exit(1)` from a UI action handler; the hard exit is the action's purpose, but it is still outside main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "EmergentExitAction line 42 `System.exit(1)` after the user confirms emergency exit is an intentional but real System.exit outside main."
+        }
+      ]
     },
     {
       "id": "EA-62540a7dde655402",
@@ -298,9 +518,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.app.standalone/src/org/jkiss/dbeaver/ui/app/standalone/rpc/DBeaverInstanceServer.java",
       "message": "Exit call at line 240",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 240
+      "line": 240,
+      "verdict": "true_positive",
+      "reason": "DBeaverInstanceServer schedules a Job whose run() calls `System.exit(-1)` when the RPC asks for termination, which is exit from a server component, not main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DBeaverInstanceServer line 240 `System.exit(-1)` inside a Job.run for the RPC termination request is System.exit outside main."
+        }
+      ]
     },
     {
       "id": "EA-68d6bc2723574e8d",
@@ -308,9 +538,19 @@
       "language": "java",
       "path": "dolphinscheduler-master/src/main/java/org/apache/dolphinscheduler/server/master/MasterServer.java",
       "message": "Exit call at line 210",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 210
+      "line": 210,
+      "verdict": "true_positive",
+      "reason": "`MasterServer.stop(String cause)` calls `System.exit(1)` after close(); stop is an instance method, not main, so the documented condition holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MasterServer.stop calls `System.exit(1)` after close(cause); the comment justifies it, but it is still a System.exit in a non-main method."
+        }
+      ]
     },
     {
       "id": "EA-387bb32de732d951",
@@ -318,9 +558,19 @@
       "language": "java",
       "path": "dolphinscheduler-worker/src/main/java/org/apache/dolphinscheduler/server/worker/WorkerServer.java",
       "message": "Exit call at line 140",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 140
+      "line": 140,
+      "verdict": "true_positive",
+      "reason": "`WorkerServer.stop(String cause)` ends with `System.exit(1)` in an ordinary instance method outside main, the same shutdown pattern as the master.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "WorkerServer.stop calls `System.exit(1)` after close(cause), a System.exit outside main in server code."
+        }
+      ]
     },
     {
       "id": "EA-4530e50c13e6b04b",
@@ -328,9 +578,19 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/cli/Picocli.java",
       "message": "Exit call at line 221",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 221
+      "line": 221,
+      "verdict": "false_positive",
+      "reason": "Picocli.exit(int) is the CLI launcher's single overridable exit hook (KeycloakMain, NonRunningPicocli and the junit5 Keycloak class all override it), so System.exit here is the program boundary, deliberately kept replaceable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Picocli.exit(int) calls System.exit(exitCode) in a Keycloak runtime class that is not a main method (though overridable for tests)."
+        }
+      ]
     },
     {
       "id": "EA-962665a385d218a2",
@@ -338,9 +598,19 @@
       "language": "java",
       "path": "embeddedwebserver/src/main/java/org/apache/ranger/server/tomcat/StopEmbeddedServer.java",
       "message": "Exit call at line 48",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "true_positive",
+      "reason": "System.exit(1) sits in StopEmbeddedServer.stop(), a public instance method, not in main; stop() could throw or return a status and let main(), which only calls it, choose the exit code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "StopEmbeddedServer.stop() calls System.exit(1) in its catch block, a non-main method; main only delegates to stop()."
+        }
+      ]
     },
     {
       "id": "EA-e9dd3654be57f868",
@@ -348,9 +618,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/PatchForHBaseDefaultPolicyUpdate_J10045.java",
       "message": "Exit call at line 80",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "PatchForHBaseDefaultPolicyUpdate_J10045.execLoad() calls System.exit(1) when updateHBaseDefaultPolicy() returns false, although main() already wraps loader.load() and exits 0/1 itself; execLoad is not main and could throw instead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PatchForHBaseDefaultPolicyUpdate_J10045.execLoad() calls System.exit(1) when updateHBaseDefaultPolicy() returns false, a non-main method of a shipped DB patch."
+        }
+      ]
     },
     {
       "id": "EA-d2229058afb68fcc",
@@ -358,9 +638,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/PatchForHiveServiceDefUpdate_J10027.java",
       "message": "Exit call at line 108",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 108
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "PatchForHiveServiceDefUpdate_J10027.execLoad() exits with System.exit(1) when updateHiveServiceDef() returns false, skipping main()'s own try/exit handling; the exit is in an overridden BaseLoader hook, not main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PatchForHiveServiceDefUpdate_J10027.execLoad() exits with System.exit(1) at line 108 when updateHiveServiceDef() fails, outside main."
+        }
+      ]
     },
     {
       "id": "EA-af0ff55cec1ba27a",
@@ -368,9 +658,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/PatchForHiveServiceDefUpdate_J10027.java",
       "message": "Exit call at line 112",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 112
+      "line": 112,
+      "verdict": "true_positive",
+      "reason": "The catch block of PatchForHiveServiceDefUpdate_J10027.execLoad() calls System.exit(1) on any Exception instead of rethrowing to main(), which already catches and exits with status 1.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The catch (Exception e) in PatchForHiveServiceDefUpdate_J10027.execLoad() terminates the JVM with System.exit(1) at line 112 instead of propagating."
+        }
+      ]
     },
     {
       "id": "EA-81c1c42c3e98600d",
@@ -378,9 +678,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/cliutil/ChangePasswordUtil.java",
       "message": "Exit call at line 179",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 179
+      "line": 179,
+      "verdict": "true_positive",
+      "reason": "ChangePasswordUtil.updateAdminPassword() calls System.exit(1) on an invalid current password; this helper is not main and could signal failure to main(), which already maps outcomes to exit codes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ChangePasswordUtil.updateAdminPassword() calls System.exit(1) on 'Invalid user password' at line 179, in a non-main method."
+        }
+      ]
     },
     {
       "id": "EA-d8f4f04c04ffff37",
@@ -388,9 +698,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/cliutil/ChangePasswordUtil.java",
       "message": "Exit call at line 184",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 184
+      "line": 184,
+      "verdict": "true_positive",
+      "reason": "The catch (Exception e) in ChangePasswordUtil.updateAdminPassword() terminates the JVM with System.exit(1) rather than propagating the failure to main(); the call is outside main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) in the catch block of ChangePasswordUtil.updateAdminPassword() (line 184) exits from a non-main method."
+        }
+      ]
     },
     {
       "id": "EA-11a85f8bae2889a6",
@@ -398,9 +718,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/cliutil/ChangePasswordUtil.java",
       "message": "Exit call at line 255",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 255
+      "line": 255,
+      "verdict": "true_positive",
+      "reason": "ChangePasswordUtil.updateMultiplePasswords() calls System.exit(2) mid-loop when a default password does not match, aborting remaining users from inside a helper rather than main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "updateMultiplePasswords() in ChangePasswordUtil calls System.exit(2) at line 255 on default-password mismatch, outside main."
+        }
+      ]
     },
     {
       "id": "EA-c429796599e91fa2",
@@ -408,9 +738,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/cliutil/ChangePasswordUtil.java",
       "message": "Exit call at line 266",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 266
+      "line": 266,
+      "verdict": "true_positive",
+      "reason": "ChangePasswordUtil.updateMultiplePasswords() catch block calls System.exit(1) (followed by an unreachable break) inside the per-user loop instead of returning an error to main().",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) at line 266 in the catch of updateMultiplePasswords() is followed by an unreachable break, and sits in a non-main method."
+        }
+      ]
     },
     {
       "id": "EA-8902341863c595aa",
@@ -418,9 +758,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/cliutil/RoleBasedUserSearchUtil.java",
       "message": "Exit call at line 283",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 283
+      "line": 283,
+      "verdict": "true_positive",
+      "reason": "RoleBasedUserSearchUtil.validateUserAndFetchUserList() exits with System.exit(1) on an invalid password; it is a helper method called via execLoad, not main.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RoleBasedUserSearchUtil.validateUserAndFetchUserList() exits with System.exit(1) at line 283 on invalid password, not in main."
+        }
+      ]
     },
     {
       "id": "EA-8909001863cb5bfc",
@@ -428,9 +778,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/patch/cliutil/RoleBasedUserSearchUtil.java",
       "message": "Exit call at line 292",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 292
+      "line": 292,
+      "verdict": "true_positive",
+      "reason": "The else branch of RoleBasedUserSearchUtil.validateUserAndFetchUserList() calls System.exit(1) when the user is missing from the DB, inside a non-main helper method.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) at line 292 in RoleBasedUserSearchUtil's 'User does not exist in DB' branch is a non-main exit."
+        }
+      ]
     },
     {
       "id": "EA-edb5bf0b6840c90d",
@@ -438,9 +798,19 @@
       "language": "java",
       "path": "ugsync/ldapconfigchecktool/ldapconfigcheck/src/main/java/org/apache/ranger/ldapconfigcheck/CommandLineOptions.java",
       "message": "Exit call at line 136",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 136
+      "line": 136,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): CommandLineOptions.help() belongs to the standalone ldapConfigCheck CLI: it is used only by LdapConfigCheckMain's argument parsing and shipped as its own jar plus scripts. Exiting after printing usage is that program's own process control, not library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CommandLineOptions.help() calls System.exit(0) after printing help; it is a helper method (called from parse and LdapConfigCheckMain), not main."
+        }
+      ]
     },
     {
       "id": "EA-7e3e585c881e8053",
@@ -448,9 +818,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 600",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 600
+      "line": 600,
+      "verdict": "true_positive",
+      "reason": "Constant.initializeFilesAndDirectories() (reached from the Constant constructor/getInstance) calls System.exit(1) when zapHome is not a directory; a core class kills the JVM instead of throwing to its caller.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Constant.java line 600 exits via System.exit(1) from library startup code (home dir init) when the path is not a directory, outside main."
+        }
+      ]
     },
     {
       "id": "EA-0a56178983c061a1",
@@ -458,9 +838,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 605",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 605
+      "line": 605,
+      "verdict": "true_positive",
+      "reason": "System.exit(1) when f.mkdir() fails to create the ZAP home directory is inside Constant's initialisation, not main, so embedders and the bootstrap cannot handle it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) at line 605 when mkdir of the ZAP home fails, inside Constant's initialisation method rather than main."
+        }
+      ]
     },
     {
       "id": "EA-0a597d8983c344ca",
@@ -468,9 +858,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 609",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 609
+      "line": 609,
+      "verdict": "true_positive",
+      "reason": "The !f.canWrite() branch of Constant.initializeFilesAndDirectories exits with System.exit(1) from a constructor path rather than raising an error to ZapBootstrap.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Constant.java line 609 exits with System.exit(1) when the home dir is not writable, in non-main init code."
+        }
+      ]
     },
     {
       "id": "EA-0a5ce38983c627f3",
@@ -478,9 +878,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 615",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 615
+      "line": 615,
+      "verdict": "true_positive",
+      "reason": "System.exit(1) when the install dir equals zapHome is in Constant's initialisation code, outside main; it could throw so the bootstrap's start() returns an rc.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) at line 615 when the install dir equals the home dir is a non-main exit in Constant."
+        }
+      ]
     },
     {
       "id": "EA-0a60498983c90b1c",
@@ -488,9 +898,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 620",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 620
+      "line": 620,
+      "verdict": "true_positive",
+      "reason": "System.exit(1) when acquireHomeLock() fails is inside Constant.initializeFilesAndDirectories, a non-main path where an exception would let the caller report the lock conflict.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) at line 620 when acquireHomeLock() fails occurs in Constant's init method, not in main."
+        }
+      ]
     },
     {
       "id": "EA-0a63af8983cbee45",
@@ -498,9 +918,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 666",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 666
+      "line": 666,
+      "verdict": "true_positive",
+      "reason": "The catch-all in Constant's home-directory initialisation prints the stack trace and calls System.exit(1) instead of propagating the Exception from the constructor.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The catch around home-directory setup in Constant ends with System.exit(1) at line 666, a library-level exit outside main."
+        }
+      ]
     },
     {
       "id": "EA-0a67158983ced16e",
@@ -508,9 +938,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/Constant.java",
       "message": "Exit call at line 782",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 782
+      "line": 782,
+      "verdict": "true_positive",
+      "reason": "Constant's config-upgrade block exits with System.exit(1) when upgrading FILE_CONFIG fails, terminating from a core settings class rather than throwing to the bootstrap.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "System.exit(1) at line 782 after a failed config upgrade is in Constant's init path, not main."
+        }
+      ]
     },
     {
       "id": "EA-b63ce53cf70e1f54",
@@ -518,9 +958,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/control/Control.java",
       "message": "Exit call at line 323",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 323
+      "line": 323,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): System.exit(exitStatus) is in Control.exit's ZAP-Shutdown thread, a non-main method reached from MenuFileControl, ExtensionAutoUpdate and ErrorUtils, which is the Java scope the detector documents; graceful intent does not change that.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Control.shutdown's ZAP-Shutdown thread calls System.exit(exitStatus) in a finally block at line 323, a non-main method."
+        }
+      ]
     },
     {
       "id": "EA-0a7ab1492460393b",
@@ -528,9 +978,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/control/Control.java",
       "message": "Exit call at line 377",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 377
+      "line": 377,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): System.exit(getExitStatus()) is called in the public instance method Control.exitAndDeleteSession (called from MainMenuBar), not in main. That is Java exit outside main, the detector's stated scope; doing cleanup first does not exempt it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Control.exitAndDeleteSession() calls System.exit(this.getExitStatus()) at line 377; a public method callable from anywhere, not main."
+        }
+      ]
     },
     {
       "id": "EA-96fc8a3efb867efa",
@@ -538,9 +998,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/GuiBootstrap.java",
       "message": "Exit call at line 146",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 146
+      "line": 146,
+      "verdict": "false_positive",
+      "reason": "GuiBootstrap.init() runs via EventQueue.invokeLater after start() and ZAP.main have returned, so there is no caller to propagate to; System.exit(1) is the only way to stop the EDT on startup failure (as the file's own comment at line 206 notes).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GuiBootstrap's initialisation failure path calls System.exit(1) at line 146, outside main."
+        }
+      ]
     },
     {
       "id": "EA-8de66987446e7251",
@@ -548,9 +1018,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/api/CoreAPI.java",
       "message": "Exit call at line 571",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 571
+      "line": 571,
+      "verdict": "false_positive",
+      "reason": "The CoreAPI ACTION_SHUTDOWN handler starts a ZAP-Shutdown thread that runs Control.shutdown() and then System.exit(...) in finally; the API's shutdown action exists to terminate the process after cleanup.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CoreAPI's shutdown API action thread calls System.exit(Control.getSingleton().getExitStatus()) in a finally block, terminating the JVM from an API handler."
+        }
+      ]
     },
     {
       "id": "EA-4c20e23028e89af1",
@@ -598,9 +1078,19 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "Exit call at line 719",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 719
+      "line": 719,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) is in bootGhost, the Ghost application's top-level boot routine that the entry script calls, and it fires only if installing the unhandled-rejection handler itself throws; this is the program's startup boundary.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.exit(1) in the catch of bootGhost (an exported function in boot.js) terminates the process from a library-style boot function."
+        }
+      ]
     },
     {
       "id": "EA-2b060b16e2e6ce19",
@@ -608,9 +1098,19 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "Exit call at line 816",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 816
+      "line": 816,
+      "verdict": "false_positive",
+      "reason": "In bootGhost, process.exit(0) runs only when GHOST_CI_SHUTDOWN_AFTER_BOOT is set, after awaiting flushLogsAndMetrics(); it is a CI boot-check hook in the application's own entry routine and already flushes before exiting.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.exit(0) under GHOST_CI_SHUTDOWN_AFTER_BOOT inside exported bootGhost() exits the process from non-entry code (env-gated but real)."
+        }
+      ]
     },
     {
       "id": "EA-311c8176a873739f",
@@ -618,9 +1118,19 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "Exit call at line 850",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 850
+      "line": 850,
+      "verdict": "false_positive",
+      "reason": "bootGhost's failure branch awaits flushLogsAndMetrics() and then calls process.exit(2) when the server never started, a graceful startup-failure exit in the application's top-level boot function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.exit(2) in bootGhost's startup-failure branch terminates the process from an exported boot function after flushing logs."
+        }
+      ]
     },
     {
       "id": "EA-b41d21d9908121fb",
@@ -628,9 +1138,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/apps/private-blogging/index.js",
       "message": "Exit call at line 33",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 33
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "checkSubdir() in the private-blogging frontend app calls process.exit(0) (marked '@TODO: why') from the app's activate() when the subdirectory is named 'private', killing the server with a success code from a plugin module instead of throwing a config error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.exit(0) in checkSubdir of the private-blogging app (marked '@TODO: why') kills Ghost from a frontend app module on a URL-config error."
+        }
+      ]
     },
     {
       "id": "EA-2aac8e1fd889bd09",
@@ -638,9 +1158,19 @@
       "language": "javascript",
       "path": "ghost/core/server/data/seeders/data-generator.js",
       "message": "Exit call at line 220",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 220
+      "line": 220,
+      "verdict": "false_positive",
+      "reason": "DataGenerator in server/data/seeders is Ghost's fake-data seeding tool for development, and process.exit(0) after printing the table dependencies for the printDependencies flag is the tool's --help-style exit, outside the production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "process.exit(0) in DataGenerator's printDependencies branch is a developer seeding CLI option (--print-dependencies), dev tooling not shipped runtime behavior."
+        }
+      ]
     },
     {
       "id": "EA-30b331eeb76b842a",
@@ -648,9 +1178,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/build/check-path-length.js",
       "message": "Exit call at line 28",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "false_positive",
+      "reason": "devops/build/check-path-length.js is an Umbraco client build check script whose process.exit(processExitCode) fails CI; build tooling is outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "check-path-length.js is a devops/build CI script under src/Umbraco.Web.UI.Client/devops, so process.exit is in build tooling outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-05e65490be4ed232",
@@ -658,9 +1198,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/build/create-umbraco-package.js",
       "message": "Exit call at line 22",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 22
+      "line": 22,
+      "verdict": "false_positive",
+      "reason": "devops/build/create-umbraco-package.js is a build step writing umbraco-package.json; its process.exit(1) on write failure is build tooling, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/build/create-umbraco-package.js is a build script writing the package manifest; its process.exit(1) on write failure is tooling."
+        }
+      ]
     },
     {
       "id": "EA-e1368602cd22c12f",
@@ -668,9 +1218,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/check-duplicate-class-names/index.js",
       "message": "Exit call at line 171",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 171
+      "line": 171,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) when duplicate class names are found is in devops/check-duplicate-class-names/index.js, a developer/CI lint script, not shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "check-duplicate-class-names/index.js under devops/ is a lint/CI check whose process.exit(1) reports duplicates; tooling, not shipped code."
+        }
+      ]
     },
     {
       "id": "EA-236ccd8f13e4f3b4",
@@ -678,9 +1238,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/check-duplicate-class-names/index.js",
       "message": "Exit call at line 175",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 175
+      "line": 175,
+      "verdict": "false_positive",
+      "reason": "The final process.exit(0) of devops/check-duplicate-class-names/index.js ends a top-level CI check script; tooling is out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The trailing process.exit(0) in devops/check-duplicate-class-names/index.js is the success exit of a dev-time check script."
+        }
+      ]
     },
     {
       "id": "EA-1185f30683fe2852",
@@ -688,9 +1258,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/circular/index.js",
       "message": "Exit call at line 60",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 60
+      "line": 60,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) when circular.length exceeds MAX_CIRCULAR_DEPENDENCIES is the failure result of the devops/circular dependency-check script, build tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/circular/index.js is a CI circular-dependency checker; process.exit(1) on exceeding MAX_CIRCULAR_DEPENDENCIES is tooling."
+        }
+      ]
     },
     {
       "id": "EA-70550af0b517309c",
@@ -698,9 +1278,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/circular/index.js",
       "message": "Exit call at line 68",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 68
+      "line": 68,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) asking to lower MAX_CIRCULAR_DEPENDENCIES is in the devops/circular CI script, which is development tooling rather than production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The process.exit(1) at line 68 of devops/circular/index.js tells maintainers to lower MAX_CIRCULAR_DEPENDENCIES; dev-only script."
+        }
+      ]
     },
     {
       "id": "EA-46cdbd13172a6dfd",
@@ -708,9 +1298,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/circular/index.js",
       "message": "Exit call at line 70",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 70
+      "line": 70,
+      "verdict": "false_positive",
+      "reason": "The process.exit(0) when circular.length equals the allowed maximum is in Umbraco's devops/circular tooling script, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "process.exit(0) at line 70 is the equal-count success path of the devops/circular CI checker, tooling."
+        }
+      ]
     },
     {
       "id": "EA-33588e4b29179fa7",
@@ -718,9 +1318,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/circular/index.js",
       "message": "Exit call at line 75",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 75
+      "line": 75,
+      "verdict": "false_positive",
+      "reason": "Top-level process.exit(0) after 'No circular dependencies detected' ends the devops/circular/index.js check script; tooling, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Final process.exit(0) of devops/circular/index.js is the script's normal termination, in a dev-only tool."
+        }
+      ]
     },
     {
       "id": "EA-4abf1a3c239699e9",
@@ -728,9 +1338,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/icons/index.js",
       "message": "Exit call at line 305",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 305
+      "line": 305,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) under IS_GITHUB_ACTIONS is in devops/icons/index.js, the icon-generation build script; build tooling is out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/icons/index.js is an icon-generation build script; its process.exit(1) on GitHub Actions errors is build tooling."
+        }
+      ]
     },
     {
       "id": "EA-6002c18177613897",
@@ -738,9 +1358,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/localization/compare-languages.js",
       "message": "Exit call at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "devops/localization/compare-languages.js is a developer script comparing language key files; its process.exit(1) when dist-cms/assets/lang is missing is tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/localization/compare-languages.js is a developer comparison script run against dist-cms; its process.exit(1) is tooling."
+        }
+      ]
     },
     {
       "id": "EA-0a207cbee2d6a2b4",
@@ -748,9 +1378,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/localization/unused-language-keys.js",
       "message": "Exit call at line 21",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 21
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "devops/localization/unused-language-keys.js is a dev script scanning for unused keys; process.exit(1) when the built language folder is absent is tooling, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/localization/unused-language-keys.js is a maintainer script; exiting when dist-cms/assets/lang is missing is dev tooling."
+        }
+      ]
     },
     {
       "id": "EA-432e0f25af780f2b",
@@ -758,9 +1398,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/openapi/index.js",
       "message": "Exit call at line 72",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 72
+      "line": 72,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) when no backend serves the Management API is in devops/openapi/index.js, a developer script that regenerates OpenApi.json; tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/openapi/index.js fetches the OpenAPI document for client generation; process.exit(1) there is dev tooling."
+        }
+      ]
     },
     {
       "id": "EA-a3c846710e955039",
@@ -768,9 +1418,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/openapi/index.js",
       "message": "Exit call at line 89",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) after an invalid-JSON response is in the devops/openapi generator script, which leaves OpenApi.json untouched; development tooling, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The process.exit(1) after JSON.parse failure in devops/openapi/index.js is in the same dev-only OpenAPI generator script."
+        }
+      ]
     },
     {
       "id": "EA-4663c02b447b0f82",
@@ -778,9 +1438,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/tsc-override/index.js",
       "message": "Exit call at line 18",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 18
+      "line": 18,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) when ts.findConfigFile finds no tsconfig is in devops/tsc-override/index.js, a build-time override checker; tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "devops/tsc-override/index.js is a build-time tsc wrapper; process.exit(1) for a missing tsconfig is tooling."
+        }
+      ]
     },
     {
       "id": "EA-d9b7dfd476a325cc",
@@ -788,9 +1458,19 @@
       "language": "javascript",
       "path": "src/Umbraco.Web.UI.Client/devops/tsc-override/index.js",
       "message": "Exit call at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) for 'No files in the project.' is in the devops/tsc-override compile check script, build tooling outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "process.exit(1) for an empty project in devops/tsc-override/index.js is in a build helper, not shipped runtime code."
+        }
+      ]
     },
     {
       "id": "EA-d41f3cd3f6424794",
@@ -798,9 +1478,19 @@
       "language": "kotlin",
       "path": "app-tracking-protection/vpn-impl/src/main/java/com/duckduckgo/mobile/android/vpn/integration/NgVpnNetworkStack.kt",
       "message": "Exit call at line 170",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 170
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "NgVpnNetworkStack.onExit calls the injected java.lang.Runtime's runtime.exit(0) to kill the whole app process from the vpn-impl library module instead of restarting the VPN stack gracefully; the claim holds even though it is intentional.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "runtime.exit(0) inside onExit's nested killProcess() deliberately terminates the app process from a native callback in library code, not a main entry point."
+        }
+      ]
     },
     {
       "id": "EA-bdc65f59f956cecd",
@@ -808,9 +1498,19 @@
       "language": "kotlin",
       "path": "app-tracking-protection/vpn-impl/src/main/java/com/duckduckgo/mobile/android/vpn/service/TrackerBlockingVpnService.kt",
       "message": "Exit call at line 110",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 110
+      "line": 110,
+      "verdict": "true_positive",
+      "reason": "TrackerBlockingVpnService calls exitProcess(1) inside the catch around LibraryLoader.loadLibrary(\"netguard\"), so a failed native load kills the whole Android app from a service instead of reporting the error or stopping the service.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exitProcess(1) in the catch around LibraryLoader.loadLibrary(\"netguard\") kills the whole process from inside a VpnService class."
+        }
+      ]
     },
     {
       "id": "EA-af52a4ea77970b77",
@@ -818,9 +1518,19 @@
       "language": "kotlin",
       "path": "app/src/main/java/com/duckduckgo/app/fire/FireActivity.kt",
       "message": "Exit call at line 116",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 116
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "FireActivity's companion killProcess() calls Runtime.getRuntime().exit(0) from app UI code to force a restart after data clearing; this is a real process exit outside any program entry point.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "killProcess() in the FireActivity companion calls Runtime.getRuntime().exit(0), terminating the app from a non-main helper."
+        }
+      ]
     },
     {
       "id": "EA-3bb295777c0c96a0",
@@ -828,9 +1538,19 @@
       "language": "kotlin",
       "path": "app/src/main/java/com/duckduckgo/app/global/view/ClearPersonalDataAction.kt",
       "message": "Exit call at line 135",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 135
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "ClearPersonalDataAction.killProcess() calls System.exit(0) from an injectable data-clearing service class, so the process is killed abruptly rather than through a structured shutdown or restart path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ClearPersonalDataAction.killProcess() calls System.exit(0) in a production Android class, not a main method."
+        }
+      ]
     },
     {
       "id": "EA-1503470e4ade83b4",
@@ -838,9 +1558,19 @@
       "language": "kotlin",
       "path": "duckchat/duckchat-internal/src/main/java/com/duckduckgo/duckchat/internal/DuckAiUrlSettingsActivity.kt",
       "message": "Exit call at line 96",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 96
+      "line": 96,
+      "verdict": "false_positive",
+      "reason": "DuckAiUrlSettingsActivity lives in duckchat-internal, which app/build.gradle adds only as internalImplementation, so this delayed exitProcess(0) is in an internal developer settings screen and is never shipped to users.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exitProcess(0) in the delayed Handler runnable of DuckAiUrlSettingsActivity.processCommand exits the process from an activity (internal dev-settings screen but still shipped app code)."
+        }
+      ]
     },
     {
       "id": "EA-88dee9f800a78608",
@@ -848,9 +1578,19 @@
       "language": "kotlin",
       "path": "network-protection/network-protection-impl/src/main/java/com/wireguard/android/backend/GoBackend.kt",
       "message": "Exit call at line 52",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 52
+      "line": 52,
+      "verdict": "true_positive",
+      "reason": "GoBackend's init block calls exitProcess(1) after LibraryLoader.loadLibrary(context, \"wg-go\") fails, killing the host app from the network-protection library instead of throwing so the caller can disable the VPN feature.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exitProcess(1) in GoBackend's init block after the wg-go library load failure exits the process from a class initializer."
+        }
+      ]
     },
     {
       "id": "EA-0d0e47df7398ac7c",
@@ -858,9 +1598,19 @@
       "language": "kotlin",
       "path": "sync/sync-lib/src/main/java/com/duckduckgo/sync/crypto/SyncNativeLib.kt",
       "message": "Exit call at line 135",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 135
+      "line": 135,
+      "verdict": "true_positive",
+      "reason": "SyncNativeLib kills the whole app with exitProcess(1) when loading the \"ddgcrypto\" library fails, even though the sync crypto wrapper could report the error and let sync be disabled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exitProcess(1) in SyncNativeLib after loadLibrary(\"ddgcrypto\") fails terminates the process from a library module (sync-lib)."
+        }
+      ]
     },
     {
       "id": "EA-4337cc6705733600",
@@ -868,9 +1618,19 @@
       "language": "kotlin",
       "path": "vpn-network/vpn-network-impl/src/main/java/com/duckduckgo/vpn/network/impl/RealVpnNetwork.kt",
       "message": "Exit call at line 242",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 242
+      "line": 242,
+      "verdict": "true_positive",
+      "reason": "RealVpnNetwork's netguard library loader calls exitProcess(1) in its catch block, so the vpn-network-impl module terminates the host app rather than propagating the load failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exitProcess(1) in RealVpnNetwork's netguard load catch kills the process from a library-style network implementation class."
+        }
+      ]
     },
     {
       "id": "EA-518b05b0b30ed85c",
@@ -878,9 +1638,19 @@
       "language": "python",
       "path": "changedetectionio/store/updates.py",
       "message": "Exit call at line 177",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 177
+      "line": 177,
+      "verdict": "true_positive",
+      "reason": "changedetectionio/store/updates.py is datastore migration library code, not an entry point, and calls `sys.exit(1)` when test_watch is not a Watch model.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "updates.py line 177 `sys.exit(1)` in the datastore update class when a Watch is not re-hydrated is in library code, not a __main__ entry point."
+        }
+      ]
     },
     {
       "id": "EA-4207667f8876868a",
@@ -888,9 +1658,19 @@
       "language": "python",
       "path": "changedetectionio/store/updates.py",
       "message": "Exit call at line 186",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 186
+      "line": 186,
+      "verdict": "true_positive",
+      "reason": "The tag re-hydration check in run_updates calls `sys.exit(1)` from store library code instead of raising an exception the app could handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "updates.py line 186 `sys.exit(1)` for a non-Tag model in the schema-update method is library code that could raise an exception instead."
+        }
+      ]
     },
     {
       "id": "EA-4204007f8873a361",
@@ -898,9 +1678,19 @@
       "language": "python",
       "path": "changedetectionio/store/updates.py",
       "message": "Exit call at line 230",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 230
+      "line": 230,
+      "verdict": "true_positive",
+      "reason": "The `except Exception` around `update_{n}` calls `sys.exit(1)` inside the datastore update method, which kills the server from library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "updates.py line 230 calls `sys.exit(1)` in the except block around update_{n}, inside the store's update runner rather than a program entry."
+        }
+      ]
     },
     {
       "id": "EA-c7652f1dc3803e92",
@@ -908,9 +1698,19 @@
       "language": "python",
       "path": "changedetectionio/store/updates.py",
       "message": "Exit call at line 642",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 642
+      "line": 642,
+      "verdict": "true_positive",
+      "reason": "The Phase 4 migration check calls `sys.exit(1)` when changedetection.json is missing; it is in a store updates method, not program entry code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "updates.py line 642 `sys.exit(1)` when changedetection.json is missing after migration is in a store update method, not an entry point."
+        }
+      ]
     },
     {
       "id": "EA-3824502316767e23",
@@ -918,9 +1718,19 @@
       "language": "python",
       "path": "electrum/gui/qt/util.py",
       "message": "Exit call at line 1355",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1355
+      "line": 1355,
+      "verdict": "false_positive",
+      "reason": "os._exit(0) runs only in the child after `if os.fork() == 0:` has opened the URL, and that is the required idiom: a forked child must call os._exit so it does not run the parent Qt process's cleanup and atexit handlers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os._exit(0) sits in the os.fork()==0 child branch of open_browser, which must terminate the forked child without running parent cleanup; it ends only the child, an idiom rather than killing the app."
+        }
+      ]
     },
     {
       "id": "EA-bc89d227b48072fe",
@@ -928,9 +1738,19 @@
       "language": "python",
       "path": "electrum/gui/stdio.py",
       "message": "Exit call at line 33",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 33
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "The stdio ElectrumGui constructor calls the site builtin exit() when storage.file_exists() is false, ending the process from inside a GUI class that the daemon instantiates instead of raising an error for run_gui to handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare exit() in the stdio GUI class constructor ends the whole process when the wallet file is missing, from a module that is not a program entry point."
+        }
+      ]
     },
     {
       "id": "EA-b7f2e072f7ee15d8",
@@ -938,9 +1758,19 @@
       "language": "python",
       "path": "electrum/gui/text.py",
       "message": "Exit call at line 69",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 69
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "The curses ElectrumGui.__init__ in gui/text.py calls the builtin exit() when the wallet is missing, an abrupt exit inside a class constructor rather than an error raised back to the daemon's GUI launcher.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare exit() in the text GUI class constructor ends the process when the wallet is not found, from a non-entry module in electrum/gui."
+        }
+      ]
     },
     {
       "id": "EA-992cc1a0228ebd29",
@@ -988,9 +1818,19 @@
       "language": "python",
       "path": "docker/main/rootfs/usr/local/go2rtc/create_config.py",
       "message": "Exit call at line 129",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 129
+      "line": 129,
+      "verdict": "false_positive",
+      "reason": "create_config.py is a standalone top-level script that the s6 go2rtc run file starts with `python3 /usr/local/go2rtc/create_config.py`, so sys.exit(e) on a bad stream substitution is the program's own exit; the detector misses it only because the script has no shebang or __main__ guard.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "create_config.py is a standalone script that s6 runs directly (python3 /usr/local/go2rtc/create_config.py) and its sys.exit(e) is module-level program code, not library code."
+        }
+      ]
     },
     {
       "id": "EA-538ee32e102cf031",
@@ -998,9 +1838,19 @@
       "language": "python",
       "path": "docker/main/rootfs/usr/local/go2rtc/create_config.py",
       "message": "Exit call at line 148",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 148
+      "line": 148,
+      "verdict": "false_positive",
+      "reason": "The second sys.exit(e) in create_config.py, for a KeyError in a list stream item, is also top-level script code in the program the s6 service runs directly, not library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Same standalone create_config.py startup script run by the go2rtc s6 service; the list-stream KeyError sys.exit(e) is program-level termination at module scope."
+        }
+      ]
     },
     {
       "id": "EA-787140a322458fb5",
@@ -1008,9 +1858,19 @@
       "language": "python",
       "path": "frigate/embeddings/__init__.py",
       "message": "Exit call at line 64",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 64
+      "line": 64,
+      "verdict": "false_positive",
+      "reason": "sys.exit(1) is the last statement of EmbeddingProcess.run(), the entry point of a multiprocessing child process, and the comment says it deliberately sets a non-zero exitcode so the watchdog restarts it, which is the standard way a Process reports failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sys.exit(1) at the end of EmbeddingProcess.run() runs in a dedicated child process and is intentional so the watchdog restarts it; exiting a worker process's run() is the process idiom."
+        }
+      ]
     },
     {
       "id": "EA-a3efcd6ad3b01fe6",
@@ -1018,9 +1878,19 @@
       "language": "python",
       "path": "frigate/service_manager/multiprocessing.py",
       "message": "Exit call at line 153",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 153
+      "line": 153,
+      "verdict": "false_positive",
+      "reason": "This sys.exit() is in the SIGTERM/SIGINT handler that FrigateProcess.before_run installs in its own child process, and it runs only when no stop_event is being watched; raising SystemExit there is the graceful way to unwind that process on a signal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sys.exit() in receiveSignal inside FrigateProcess's service_manager multiprocessing code is invoked from a library base class's signal handler, ending the process from non-entry code."
+        }
+      ]
     },
     {
       "id": "EA-599844d1945a388d",
@@ -1028,9 +1898,19 @@
       "language": "python",
       "path": "frigate/util/classification.py",
       "message": "Exit call at line 148",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 148
+      "line": 148,
+      "verdict": "false_positive",
+      "reason": "exit(0 if success else 1) ends ClassificationTrainingProcess.run(), the main of a dedicated training child process, so the exit code is how the parent learns whether training succeeded, not an exit buried in library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "exit(0 if success else 1) at the end of ClassificationTrainingProcess.run() sets the exit code of a dedicated training child process, the standard multiprocessing worker idiom."
+        }
+      ]
     },
     {
       "id": "EA-d566864fc88d34dc",
@@ -1038,9 +1918,19 @@
       "language": "python",
       "path": "make/photon/prepare/commands/migrate.py",
       "message": "Exit call at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "sys.exit(-1) for an unsupported target is inside the click `migrate` command handler of harbor's prepare CLI, which is the command entry point, so a non-zero exit there is ordinary CLI behaviour.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sys.exit(-1) in the click-decorated migrate command is the CLI command handler of harbor's prepare program, normal exit-status reporting for a CLI."
+        }
+      ]
     },
     {
       "id": "EA-7c80a37cd69087ee",
@@ -1048,9 +1938,19 @@
       "language": "python",
       "path": "make/photon/prepare/commands/migrate.py",
       "message": "Exit call at line 37",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 37
+      "line": 37,
+      "verdict": "false_positive",
+      "reason": "sys.exit(0) when the input harbor.yml is already at the target version is an early successful return from the click migrate command itself, i.e. the CLI command's own entry point.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sys.exit(0) for 'versions identical' in the click migrate command is a CLI command handler returning success to the shell."
+        }
+      ]
     },
     {
       "id": "EA-a93933516030ac00",
@@ -1058,9 +1958,19 @@
       "language": "python",
       "path": "make/photon/prepare/commands/prepare.py",
       "message": "Exit call at line 39",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 39
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "sys.exit(-1) after validate(config_dict) fails is in the click `prepare` command function, the entry point of harbor's prepare CLI, where exiting with an error status is the expected result.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "sys.exit(-1) after config validation failure in the click prepare command is CLI command termination in the prepare program entry chain."
+        }
+      ]
     },
     {
       "id": "EA-bf5d82a95b97d02b",
@@ -1068,9 +1978,19 @@
       "language": "python",
       "path": "make/photon/prepare/utils/migration.py",
       "message": "Exit call at line 38",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 38
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "read_conf in utils/migration.py is a helper that the migrate command calls, and it calls the builtin exit(-1) when the YAML cannot be parsed instead of raising, so callers and migrations cannot handle the error; this prepare code ships with the installer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "exit(-1) in utils/migration.py read_conf is a helper function that kills the process on a parse error instead of raising to its callers."
+        }
+      ]
     },
     {
       "id": "EA-5edd183dffdf53f2",
@@ -1078,9 +1998,19 @@
       "language": "python",
       "path": "make/photon/prepare/utils/misc.py",
       "message": "Exit call at line 150",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 150
+      "line": 150,
+      "verdict": "true_positive",
+      "reason": "The check_wrapper decorator in utils/misc.py calls sys.exit(1) whenever the wrapped func returns non-zero, hiding a process exit inside a generic utility instead of raising an error for the command layer to handle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sys.exit(1) in check_wrapper decorator of utils/misc.py ends the process from a shared helper whenever a wrapped call fails."
+        }
+      ]
     },
     {
       "id": "EA-983a7899e070726e",
@@ -1088,9 +2018,19 @@
       "language": "python",
       "path": "mitmproxy/addons/errorcheck.py",
       "message": "Exit call at line 46",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 46
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "The ErrorCheck addon's shutdown_if_errored coroutine raises sys.exit(1) from inside an asyncio task when startup errors were logged, instead of asking the master to shut down; mitmproxy is also embedded as a library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sys.exit(1) in the ErrorCheck addon's running hook terminates mitmproxy from addon library code (not __main__)."
+        }
+      ]
     },
     {
       "id": "EA-51cd28fad46235a8",
@@ -1098,9 +2038,19 @@
       "language": "python",
       "path": "mitmproxy/addons/save.py",
       "message": "Exit call at line 118",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 118
+      "line": 118,
+      "verdict": "true_positive",
+      "reason": "The Save addon calls sys.exit(1) in its OSError handler when writing a flow to the stream fails; the comment says the crash is deliberate, but it is still an abrupt exit from addon code, and intent does not exempt it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sys.exit(1) in Save addon after an OSError writing flows deliberately crashes the process from library code."
+        }
+      ]
     },
     {
       "id": "EA-0551b94bf6f0e1fb",
@@ -1108,9 +2058,19 @@
       "language": "python",
       "path": "mitmproxy/addons/termlog.py",
       "message": "Exit call at line 50",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 50
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "TermLogHandler.emit calls sys.exit(1) when print() to its file raises OSError, so a logging handler terminates the process (or raises SystemExit in whatever thread logged) instead of dropping the record or signalling shutdown.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sys.exit(1) in the termlog handler's emit() on OSError exits from a logging handler inside the library."
+        }
+      ]
     },
     {
       "id": "EA-99cfb2510b0583ed",
@@ -1118,9 +2078,19 @@
       "language": "python",
       "path": "mitmproxy/utils/debug.py",
       "message": "Exit call at line 125",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 125
+      "line": 125,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): sys.exit(1) is in dump_stacks in the shipped module mitmproxy/utils/debug.py, which is not __main__ or a script entry. It ends the process from a signal handler when MITMPROXY_DEBUG_EXIT is set; being opt-in and intentional does not take it out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "sys.exit(1) in mitmproxy/utils/debug.py dump function, gated on MITMPROXY_DEBUG_EXIT, exits from shipped utility code."
+        }
+      ]
     },
     {
       "id": "EA-7e07fcc27c4a955a",
@@ -1128,9 +2098,19 @@
       "language": "python",
       "path": "release/selftest.py",
       "message": "Exit call at line 51",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "release/selftest.py is a release-pipeline addon used as `mitmdump -s selftest.py` to smoke-test built binaries, so its sys.exit(1) is release tooling, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "release/selftest.py is a release-build self-test addon (used by build.py and CI main.yml), build/release tooling out of scope."
+        }
+      ]
     },
     {
       "id": "EA-4b68178cb7788899",
@@ -1138,9 +2118,19 @@
       "language": "python",
       "path": "migrations/versions/65fc9ede4746_add_is_draft_status_to_queries_and_.py",
       "message": "Exit call at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "The Alembic migration upgrade() for revision 65fc9ede4746 calls bare exit() (status 0) when is_draft already exists, killing the whole `manage.py db upgrade` process from inside a migration function instead of raising.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "upgrade() in the Alembic migration calls bare exit() at line 42, a builtin exit inside a shipped migration function, not in a __main__ block or script entry."
+        }
+      ]
     },
     {
       "id": "EA-25c7eb735733c2ce",
@@ -1148,9 +2138,19 @@
       "language": "python",
       "path": "redash/cli/data_sources.py",
       "message": "Exit call at line 85",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 85
+      "line": 85,
+      "verdict": "false_positive",
+      "reason": "exit(1) after NoResultFound is in the `test` click command of redash.cli.data_sources, a manage.py CLI command handler whose exit status is the command's result; that is program entry code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "redash/cli/data_sources.py delete command calls the builtin exit(1) from a click command function, which is not an exempt __main__ or pyproject entry function."
+        }
+      ]
     },
     {
       "id": "EA-b5ed664361d9ff32",
@@ -1158,9 +2158,19 @@
       "language": "python",
       "path": "redash/cli/data_sources.py",
       "message": "Exit call at line 160",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 160
+      "line": 160,
+      "verdict": "false_positive",
+      "reason": "exit(1) on invalid options is in the `new` click command registered on the redash manage.py AppGroup; exiting with a status from a CLI command handler is the program boundary, not library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The new() command in data_sources.py calls builtin exit(1) on invalid configuration at line 160; it is a click handler, not an exempt entry."
+        }
+      ]
     },
     {
       "id": "EA-a655186c12f108ea",
@@ -1168,9 +2178,19 @@
       "language": "python",
       "path": "redash/cli/users.py",
       "message": "Exit call at line 239",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 239
+      "line": 239,
+      "verdict": "false_positive",
+      "reason": "exit(1) for an unknown email is the failure status of a redash.cli.users click command run via manage.py, a CLI entry handler rather than reusable library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "users.py edit command calls builtin exit(1) when the user is not found; the function is a click command, not a __main__ block."
+        }
+      ]
     },
     {
       "id": "EA-688f38d878053d99",
@@ -1198,9 +2218,19 @@
       "language": "python",
       "path": "zerver/lib/cache.py",
       "message": "Exit call at line 120",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 120
+      "line": 120,
+      "verdict": "true_positive",
+      "reason": "get_or_create_key_prefix() in zerver/lib/cache.py calls sys.exit(1) when the remote cache key prefix file is unreadable, and it runs at import time for KEY_PREFIX in a library module used by the web server and workers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_or_create_key_prefix() in zerver/lib/cache.py calls sys.exit(1) when the remote cache prefix file is unreadable, in a library module evaluated at import (KEY_PREFIX)."
+        }
+      ]
     },
     {
       "id": "EA-221e8c04d40640e8",
@@ -1208,9 +2238,19 @@
       "language": "python",
       "path": "zerver/management/commands/edit_linkifiers.py",
       "message": "Exit call at line 66",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 66
+      "line": 66,
+      "verdict": "false_positive",
+      "reason": "sys.exit(0) after do_remove_linkifier is in the handle() of the edit_linkifiers Django management command, a CLI entry point where ending with status 0 is program boundary code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "edit_linkifiers.py's handle() calls sys.exit(0) after removing a linkifier, in a Django command method that is not a __main__ block."
+        }
+      ]
     },
     {
       "id": "EA-79ef33558bbf920e",
@@ -1218,9 +2258,19 @@
       "language": "python",
       "path": "zerver/management/commands/process_queue.py",
       "message": "Exit call at line 67",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 67
+      "line": 67,
+      "verdict": "false_positive",
+      "reason": "sys.exit(3) in the SIGUSR1 handler of the process_queue management command is a deliberate restart signal to Django's autoreloader, as its docstring states; it is entry-point process control.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process_queue.py's exit_with_three SIGUSR1 handler calls sys.exit(3) inside Command.handle, not in a __main__ block or entry function."
+        }
+      ]
     },
     {
       "id": "EA-783abf2cf9fa8542",
@@ -1228,9 +2278,19 @@
       "language": "python",
       "path": "zerver/management/commands/process_queue.py",
       "message": "Exit call at line 102",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 102
+      "line": 102,
+      "verdict": "false_positive",
+      "reason": "sys.exit(0) in process_queue's SIGTERM/SIGINT signal_handler runs after worker.stop() in the queue-worker command process, the standard graceful-shutdown idiom for a signal handler in a CLI entry point.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The signal_handler in process_queue.py (line 102) calls sys.exit(0) after worker.stop(); a nested handler inside Command.handle, not an exempt entry."
+        }
+      ]
     },
     {
       "id": "EA-c6b17213d16c7a9e",
@@ -1238,9 +2298,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/commands/resume.rs",
       "message": "Exit call at line 830",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 830
+      "line": 830,
+      "verdict": "true_positive",
+      "reason": "atuin-ai is a library crate (src/lib.rs), and its non-unix branch of `exec()` calls `std::process::exit(status.code().unwrap_or(1))` instead of returning the status to the binary.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In resume.rs the non-unix `exec` branch emulates process replacement by exiting with the child's status code (`status.code().unwrap_or(1)`), the contract of the function."
+        }
+      ]
     },
     {
       "id": "EA-74db5a013ecc2ef5",
@@ -1248,9 +2318,19 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/pty_proxy.rs",
       "message": "Exit call at line 89",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "`PtyProxy::run` in the atuin-pty-proxy library crate (has lib.rs, used by atuin through the pty-proxy feature) calls `std::process::exit(2)` when a usage error is found, instead of returning an error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "pty_proxy.rs line 89 calls process::exit(2) inside PtyProxy's method in the atuin-pty-proxy library crate (lib.rs), not in a main function."
+        }
+      ]
     },
     {
       "id": "EA-36c93d051a874d89",
@@ -1258,9 +2338,19 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/pty_proxy.rs",
       "message": "Exit call at line 95",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 95
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "The `init.run()` error path in the library `PtyProxy::run` calls `std::process::exit(1)` rather than propagating the error to the atuin binary.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "pty_proxy.rs line 95 exits with process::exit(1) when `init.run()` fails, from a library-crate method that could return the error."
+        }
+      ]
     },
     {
       "id": "EA-e5f5ef5bb810cd34",
@@ -1268,9 +2358,19 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/runtime.rs",
       "message": "Exit call at line 54",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): runtime::main is the pty-proxy subcommand's process entry (called only from PtyProxy::run); it exits with the proxied shell's code on purpose because, as its comment says, a blocking stdin read never returns and would keep the process alive.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "runtime.rs line 54 `Ok(code) => std::process::exit(code)` terminates the process from the atuin-pty-proxy library's runtime::main rather than returning the code."
+        }
+      ]
     },
     {
       "id": "EA-b457e7d55c6fee56",
@@ -1278,9 +2378,19 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/runtime.rs",
       "message": "Exit call at line 58",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 58
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "The Err arm of the library function `runtime::main` calls `std::process::exit(1)` after disabling raw mode, skipping the caller's cleanup.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "runtime.rs line 58 calls process::exit(1) in the Err arm of runtime::main inside the library crate after printing the error."
+        }
+      ]
     },
     {
       "id": "EA-1469589a6a8749d9",
@@ -1288,9 +2398,19 @@
       "language": "rust",
       "path": "warpgate-common/src/encryption.rs",
       "message": "Exit call at line 264",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 264
+      "line": 264,
+      "verdict": "true_positive",
+      "reason": "warpgate-common is a library crate, and env_keyring() calls std::process::exit(1) inside a OnceLock initializer when parse_env_keyring fails; callers in warpgate-core cannot handle the error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "env_keyring() in warpgate-common, a library crate used by warpgate-core, calls std::process::exit(1) on invalid key env vars instead of returning the Err."
+        }
+      ]
     },
     {
       "id": "EA-dcafceda68d9c4c5",
@@ -1298,9 +2418,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/beforePackHook.ts",
       "message": "Exit call at line 17",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "`process.exit(1)` at line 17 is in packages/desktop-electron/beforePackHook.ts, an electron-builder beforePack build hook, which is build tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "beforePackHook.ts is an electron-builder beforePack hook run only during packaging, so the `process.exit(1)` at line 17 is build tooling."
+        }
+      ]
     },
     {
       "id": "EA-449675da519f024a",
@@ -1308,9 +2438,19 @@
       "language": "typescript",
       "path": "packages/desktop-electron/beforePackHook.ts",
       "message": "Exit call at line 57",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 57
+      "line": 57,
+      "verdict": "false_positive",
+      "reason": "The catch-block `process.exit(1)` (\"unsuccessful build\") is in the electron-builder beforePack hook, which runs only during packaging, so it is out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 57 process.exit(1) in beforePackHook.ts is the failure exit of an electron-builder build hook, i.e. build tooling."
+        }
+      ]
     },
     {
       "id": "EA-f91ae2f4c2b1935f",
@@ -1318,9 +2458,19 @@
       "language": "typescript",
       "path": "ghost/core/server/ghost-server.ts",
       "message": "Exit call at line 168",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 168
+      "line": 168,
+      "verdict": "false_positive",
+      "reason": "GhostServer.shutdown() is the SIGINT/SIGTERM handler documented as a full shutdown, and process.exit(code) runs only after `await this.stop()` and flushLogsAndMetrics(), so it already is the graceful shutdown the recommendation asks for.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.exit(code) in GhostServer.shutdown() exits the process from a server class method rather than a program entry point."
+        }
+      ]
     },
     {
       "id": "EA-f5b9bf07d1fde676",
@@ -1328,9 +2478,19 @@
       "language": "typescript",
       "path": "ghost/core/server/ghost-server.ts",
       "message": "Exit call at line 172",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 172
+      "line": 172,
+      "verdict": "false_positive",
+      "reason": "process.exit(1) in GhostServer.shutdown's catch runs after logging the stop failure and awaiting flushLogsAndMetrics(), the terminal step of the application's signal-driven shutdown rather than an exit hidden in reusable code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "process.exit(1) in the catch of GhostServer.shutdown() ends the process from the same non-entry server class."
+        }
+      ]
     },
     {
       "id": "EA-58f19edba814b3f6",

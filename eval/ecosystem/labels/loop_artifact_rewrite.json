@@ -8,9 +8,19 @@
       "language": "rust",
       "path": "warpgate/src/commands/internal_install_files.rs",
       "message": "Function `install_dir` performs whole-artifact read and write effects inside one loop.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 39
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "install_dir reads `from = source.join(&name)` and writes `to = destination.join(&name)`, both derived from the loop's directory entry, so it is a per-item copy, not a rewrite of one loop-invariant artifact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "install_dir writes each file to `destination.join(&name)`, a per-item destination that varies with the loop entry, so this is a per-item copy and not a rewrite of one fixed artifact."
+        }
+      ]
     }
   ]
 }

@@ -8,9 +8,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/build.go",
       "message": "Go source calls log.Fatal at line 77",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 77
+      "line": 77,
+      "verdict": "false_positive",
+      "reason": "log.Fatal(err) on os.Getwd failure is in buildAutheliaBinaryCI of cmd/authelia-scripts, Authelia's developer/CI build tool, which is out of the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "cmd/authelia-scripts is Authelia's build tooling; the log.Fatal(err) on os.Getwd() failure in buildAutheliaBinaryCI is dev/CI script code."
+        }
+      ]
     },
     {
       "id": "EA-6581733095a0ce34",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/build.go",
       "message": "Go source calls log.Fatal at line 152",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 152
+      "line": 152,
+      "verdict": "false_positive",
+      "reason": "log.Fatal(err) when the swagger-ui wget fails is in buildSwagger of the authelia-scripts build command, a CI/dev tooling program rather than shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "buildSwagger() in cmd/authelia-scripts/cmd/build.go is a build helper; log.Fatal on a failed wget/tar command is tooling, not shipped code."
+        }
+      ]
     },
     {
       "id": "EA-12554befb0163460",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/build.go",
       "message": "Go source calls log.Fatal at line 185",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 185
+      "line": 185,
+      "verdict": "false_positive",
+      "reason": "cmd/authelia-scripts is Authelia's build/CI helper (invoked from .buildkite/pipeline.sh); the logrus log.Fatal after the `mkdir -p internal/server/public_html/api` command failing in build.go is dev tooling, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "build.go line 185 is in authelia-scripts, a developer build tool, so log.Fatal on the mkdir failure is tooling outside scope."
+        }
+      ]
     },
     {
       "id": "EA-37a0062de7234699",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/docker.go",
       "message": "Go source calls log.Fatal at line 88",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 88
+      "line": 88,
+      "verdict": "false_positive",
+      "reason": "docker.go in authelia-scripts is the CI docker-build subcommand (`authelia-scripts docker build` in the Buildkite pipeline); log.Fatal on dockerBuildOfficialImage failure is in build tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "docker.go line 88 sits in the authelia-scripts docker build command, dev/CI tooling where exiting on dockerBuildOfficialImage failure is acceptable."
+        }
+      ]
     },
     {
       "id": "EA-033ac8feed3a1d53",
@@ -48,9 +88,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/docker.go",
       "message": "Go source calls log.Fatal at line 95",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 95
+      "line": 95,
+      "verdict": "false_positive",
+      "reason": "The log.Fatal after docker.Tag(IntermediateDockerImageName, DockerImageName) fails sits in the authelia-scripts CI tool, not shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "docker.go line 95 is the docker.Tag failure path in authelia-scripts' cmdDockerBuildRun, a CI tooling command outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-699564fff56d2213",
@@ -58,9 +108,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/slot.go",
       "message": "Go source calls log.Fatal at line 54",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "false_positive",
+      "reason": "slot.go implements `authelia-scripts suites slot`, used by bootstrap.sh for the dev e2e environment; the log.Fatal rejecting both --list and --release is a dev-tool flag check.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "slot.go line 54 rejects conflicting --list/--release flags in the authelia-scripts suites slot command, a dev tool."
+        }
+      ]
     },
     {
       "id": "EA-6d23a33901e9b46e",
@@ -68,9 +128,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/slot.go",
       "message": "Go source calls log.Fatal at line 59",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 59
+      "line": 59,
+      "verdict": "false_positive",
+      "reason": "log.Fatal on workingTree() error in cmdSuitesSlotRun belongs to the authelia-scripts developer tool, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "slot.go line 59 handles the workingTree() error in the authelia-scripts slot subcommand, which is dev tooling."
+        }
+      ]
     },
     {
       "id": "EA-d5ba6e599c906534",
@@ -78,9 +148,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/suites.go",
       "message": "Go source calls log.Fatal at line 287",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 287
+      "line": 287,
+      "verdict": "false_positive",
+      "reason": "suites.go's log.Fatal on teardownSuite(suiteName) failure is in the e2e-suite runner of authelia-scripts, a CI/dev tool.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "suites.go line 287 is the teardownSuite error path in authelia-scripts' integration-suite runner, development tooling."
+        }
+      ]
     },
     {
       "id": "EA-e7be7c51ffa99eed",
@@ -88,9 +168,19 @@
       "language": "go",
       "path": "cmd/authelia-suites/main.go",
       "message": "Go source calls log.Fatal at line 191",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 191
+      "line": 191,
+      "verdict": "false_positive",
+      "reason": "cmd/authelia-suites is documented as the command that manages an integration suite's environment; the log.Fatal on s.OnSetupTimeout() error is test-infrastructure tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "authelia-suites/main.go line 191 runs a suite's OnSetupTimeout callback inside a cobra test-suite runner binary, test/dev tooling rather than shipped code."
+        }
+      ]
     },
     {
       "id": "EA-9c092a4acd03d2e6",
@@ -138,9 +228,19 @@
       "language": "go",
       "path": "cmd/migrate.go",
       "message": "Go source calls log.Fatal at line 38",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 38
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "runMigrate is a CLI action (not main) calling gitea modules/log.Fatal, which calls OsExiter(1); it exits from a function that returns an error, and the following `return err` is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "cmd/migrate.go line 38 calls log.Fatal in a function that returns error (followed by an unreachable 'return err'), so it kills the process instead of propagating the ORM init failure."
+        }
+      ]
     },
     {
       "id": "EA-5323db8fb7d42cbf",
@@ -148,9 +248,19 @@
       "language": "go",
       "path": "modelmigration/base/db.go",
       "message": "Go source calls log.Fatal at line 307",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 307
+      "line": 307,
+      "verdict": "true_positive",
+      "reason": "RecreateTable in modelmigration/base/db.go, a library function returning error, calls log.Fatal(\"Unrecognized DB\") in its default branch and exits the process instead of returning an error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "base/db.go line 307 calls log.Fatal(\"Unrecognized DB\") in the default case of a helper that returns error, bypassing deferred session cleanup instead of returning an error."
+        }
+      ]
     },
     {
       "id": "EA-960a25e46735c05b",
@@ -158,9 +268,19 @@
       "language": "go",
       "path": "modules/git/gitcmd/env.go",
       "message": "Go source calls log.Fatal at line 44",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 44
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "gitcmd.HomeDir() is a library getter that calls log.Fatal (os exit via OsExiter) when setting.Git.HomePath is empty; deliberate strictness, but the claim and deep-exit rationale hold.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "gitcmd/env.go HomeDir() calls log.Fatal when setting.Git.HomePath is empty in a library function, exiting the process from deep inside a git module with an unreachable return after it."
+        }
+      ]
     },
     {
       "id": "EA-602d1273dc8e3706",
@@ -168,9 +288,19 @@
       "language": "go",
       "path": "modules/indexer/code/indexer.go",
       "message": "Go source calls log.Fatal at line 143",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 143
+      "line": 143,
+      "verdict": "true_positive",
+      "reason": "code indexer Init() calls log.Fatal when queue.CreateUniqueQueue returns nil, terminating the server from inside a module initializer rather than returning an error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "indexer.go line 143 calls log.Fatal when CreateUniqueQueue returns nil inside the indexer initialiser, a library path that should return an error."
+        }
+      ]
     },
     {
       "id": "EA-e3a9986d65a94b12",
@@ -178,9 +308,19 @@
       "language": "go",
       "path": "modules/setting/path.go",
       "message": "Go source calls log.Fatal at line 185",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 185
+      "line": 185,
+      "verdict": "true_positive",
+      "reason": "setting path init calls log.Fatal when WORK_PATH is not absolute, exiting from library config-loading code; claim correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setting/path.go line 185 calls log.Fatal on a non-absolute WORK_PATH in a settings loader, terminating from library code rather than returning an error."
+        }
+      ]
     },
     {
       "id": "EA-e8b46b39d223bad8",
@@ -188,9 +328,19 @@
       "language": "go",
       "path": "modules/setting/server.go",
       "message": "Go source calls log.Fatal at line 230",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 230
+      "line": 230,
+      "verdict": "true_positive",
+      "reason": "loadServerFrom in modules/setting/server.go exits via log.Fatal when UNIX_SOCKET_PERMISSION fails to parse, a deep exit in library config code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setting/server.go line 230 calls log.Fatal on an invalid UNIX_SOCKET_PERMISSION during settings loading, exiting from a library config function."
+        }
+      ]
     },
     {
       "id": "EA-cd7854da543e199c",
@@ -198,9 +348,19 @@
       "language": "go",
       "path": "modules/ssh/ssh.go",
       "message": "Go source calls log.Fatal at line 303",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 303
+      "line": 303,
+      "verdict": "true_positive",
+      "reason": "ssh.Listen calls log.Fatal when no host signers load (`No usable SSH host key`), terminating the process from a library function instead of returning an error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ssh.go line 303 calls log.Fatal when hostSigners is empty inside the built-in SSH server Listen setup, killing the process rather than returning an error."
+        }
+      ]
     },
     {
       "id": "EA-c507ea9ea562a545",
@@ -208,9 +368,19 @@
       "language": "go",
       "path": "routers/common/middleware.go",
       "message": "Go source calls log.Fatal at line 144",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 144
+      "line": 144,
+      "verdict": "true_positive",
+      "reason": "The Sessioner middleware constructor in routers/common/middleware.go calls log.Fatal on session.Sessioner error rather than returning it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "middleware.go line 144 calls log.Fatal if session.Sessioner construction fails in a router middleware factory that could surface the error."
+        }
+      ]
     },
     {
       "id": "EA-643ab165fc266226",
@@ -218,9 +388,19 @@
       "language": "go",
       "path": "services/auth/source/oauth2/providers.go",
       "message": "Go source calls log.Fatal at line 87",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 87
+      "line": 87,
+      "verdict": "true_positive",
+      "reason": "RegisterGothProvider exits the process with log.Fatal on a duplicate provider.Name(); a library registration function terminating via log.Fatal matches the rule.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "oauth2/providers.go RegisterGothProvider calls log.Fatal on a duplicate provider name, exiting from a library registration function."
+        }
+      ]
     },
     {
       "id": "EA-80062c0648da1bb6",
@@ -228,9 +408,19 @@
       "language": "go",
       "path": "src/common/dao/testutils.go",
       "message": "Go source calls log.Fatal at line 80",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "false_positive",
+      "reason": "initDatabaseForTest in harbor src/common/dao/testutils.go is a test-only helper (its siblings are commented `is for test only`); the log.Fatal on getDatabase error is test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "testutils.go line 80 is inside initDatabaseForTest, a test-support helper in harbor's dao package, so test scope applies."
+        }
+      ]
     },
     {
       "id": "EA-0616d1c05a076d90",
@@ -238,9 +428,19 @@
       "language": "go",
       "path": "src/common/dao/testutils.go",
       "message": "Go source calls log.Fatal at line 92",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 92
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "log.Fatal after database.Register(alias) fails is inside harbor's test-only initDatabaseForTest helper, outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "testutils.go line 92 (database.Register failure) is within initDatabaseForTest, a test-only DB setup helper."
+        }
+      ]
     },
     {
       "id": "EA-062103c05a10170b",
@@ -248,9 +448,19 @@
       "language": "go",
       "path": "src/common/dao/testutils.go",
       "message": "Go source calls log.Fatal at line 96",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 96
+      "line": 96,
+      "verdict": "false_positive",
+      "reason": "log.Fatal on database.UpgradeSchema() failure is again in initDatabaseForTest, the harbor test DB bootstrapping helper.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "testutils.go line 96 (UpgradeSchema failure) is within initDatabaseForTest, a test-only DB setup helper."
+        }
+      ]
     },
     {
       "id": "EA-9f3ae5c0a6da5b57",
@@ -258,9 +468,19 @@
       "language": "go",
       "path": "src/jobservice/logger/service.go",
       "message": "Go source calls log.Fatal at line 108",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 108
+      "line": 108,
+      "verdict": "false_positive",
+      "reason": "This is the jobservice logger facade's own exported Fatal(v ...any), which must fall back to log.Fatal when no job logger exists; a logging wrapper's Fatal delegating to Fatal is the idiom, not a deep exit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "jobservice logger.Fatal is a facade whose purpose is to expose a Fatal API and forward to jLogger or stdlib log; the exit decision is the caller's, so the wrapper is not a misuse."
+        }
+      ]
     },
     {
       "id": "EA-99b06cf5d0646dde",
@@ -268,9 +488,19 @@
       "language": "go",
       "path": "src/lib/cache/cache.go",
       "message": "Go source calls log.Fatal at line 165",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 165
+      "line": 165,
+      "verdict": "true_positive",
+      "reason": "cache.LayerCache(), a library accessor in src/lib/cache, calls harbor log.Fatal when url.Parse of the redis URL fails instead of returning an error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "lib/cache/cache.go line 165 calls log.Fatal on a bad _REDIS_URL_CACHE_LAYER inside the cache-layer accessor in a shared library, instead of returning an error."
+        }
+      ]
     },
     {
       "id": "EA-fbf0d95ecfeb90ea",
@@ -278,9 +508,19 @@
       "language": "go",
       "path": "src/registryctl/main.go",
       "message": "Go source calls log.Fatal at line 90",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 90
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "RegistryCtl.Start() is a method, not main, and calls log.Fatal(err) on ListenAndServe failure after the shutdown wait, skipping deferred cleanup.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "registryctl/main.go line 90 calls log.Fatal in RegistryCtl.Start (a method, not main) after the shutdown wait, exiting without propagating the ListenAndServe error."
+        }
+      ]
     },
     {
       "id": "EA-2a723aa76a02be8a",
@@ -288,9 +528,19 @@
       "language": "go",
       "path": "src/registryctl/main.go",
       "message": "Go source calls log.Fatal at line 103",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 103
+      "line": 103,
+      "verdict": "false_positive",
+      "reason": "log.Fatal(\"Config file should be specified\") is directly in registryctl's func main() after flag.Usage(), the standard idiom for exiting a program on bad flags.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "registryctl/main.go line 103 is in main() where log.Fatal on a missing -c config flag is the standard idiom for fatal startup errors."
+        }
+      ]
     },
     {
       "id": "EA-31f7b5113051b880",
@@ -298,9 +548,19 @@
       "language": "go",
       "path": "src/server/v2.0/handler/handler.go",
       "message": "Go source calls log.Fatal at line 75",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 75
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "handler.New() in src/server/v2.0/handler is a library constructor that calls stdlib log.Fatal(err) when restapi.Handler construction fails rather than returning the error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "handler.go line 75 calls log.Fatal on the error from the API handler construction in a library constructor that returns a handler, rather than returning the error."
+        }
+      ]
     },
     {
       "id": "EA-8784fe9140b5f055",
@@ -308,9 +568,19 @@
       "language": "go",
       "path": "logger/syslog.go",
       "message": "Go source calls log.Fatal at line 85",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 85
+      "line": 85,
+      "verdict": "true_positive",
+      "reason": "getNetworkAndAddr in nats-server's logger package calls stdlib log.Fatal on url.Parse error, exiting the server from a library helper.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "nats-server logger/syslog.go line 85 calls log.Fatal on url.Parse failure in getNetworkAndAddr, a library helper, so a bad syslog URL kills the embedding process."
+        }
+      ]
     },
     {
       "id": "EA-2234880823fbb451",
@@ -318,9 +588,19 @@
       "language": "go",
       "path": "cdc/http-endpoint/endpoint.go",
       "message": "Go source calls log.Fatal at line 15",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 15
+      "line": 15,
+      "verdict": "false_positive",
+      "reason": "cdc/http-endpoint/endpoint.go is a standalone throwaway webhook receiver (prints a random localhost port) for exercising CDC, and the log.Fatal on net.Listen is in its func main().",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "rqlite cdc/http-endpoint/endpoint.go is a standalone main used as an e2e test server (system_test cdc_test_server.py), so log.Fatal on Listen failure is test tooling in main."
+        }
+      ]
     },
     {
       "id": "EA-23e35f500302fc2b",
@@ -328,9 +608,19 @@
       "language": "go",
       "path": "cdc/http-endpoint/endpoint.go",
       "message": "Go source calls log.Fatal at line 44",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 44
+      "line": 44,
+      "verdict": "false_positive",
+      "reason": "log.Fatal on srv.Serve(ln) error is at the end of func main() of the rqlite CDC test webhook receiver, the standard main-exit idiom in a dev utility.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "endpoint.go line 44 is in main() of the e2e CDC test endpoint; log.Fatal on a Serve error is idiomatic there and the file is test tooling."
+        }
+      ]
     },
     {
       "id": "EA-b9a05b3fad1e1263",
@@ -338,9 +628,19 @@
       "language": "go",
       "path": "cmd/rqlited/main.go",
       "message": "Go source calls log.Fatal at line 172",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 172
+      "line": 172,
+      "verdict": "false_positive",
+      "reason": "The log.Fatal(b.String()) on auto-restore download failure is inside rqlited's func main(), where exiting on a fatal startup error is the idiomatic use.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "rqlited main.go line 172 is inside main() (line 69), where log.Fatal on a failed auto-restore download is the accepted startup-failure idiom."
+        }
+      ]
     }
   ]
 }

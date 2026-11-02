@@ -8,9 +8,19 @@
       "language": "go",
       "path": "internal/configuration/validator/access_control.go",
       "message": "Function `validateQuery` calls `Compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 185
+      "line": 185,
+      "verdict": "false_positive",
+      "reason": "The pattern `v` is the value of `config.AccessControl.Rules[i].Query[j][k]`, which changes every iteration, so `regexp.Compile(v)` is not loop-invariant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`regexp.Compile(v)` takes `v`, the per-rule query value from the loop, so the pattern differs each iteration and is not loop-invariant."
+        }
+      ]
     },
     {
       "id": "EA-55c4c610d105a7a2",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "internal/suites/kubernetes.go",
       "message": "Function `WaitPodsReady` calls `MustCompile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 92
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "internal/suites/kubernetes.go is part of Authelia's integration test suites (k3d/docker compose harness), outside production scope, even though `MustCompile(`1/1|2/2`)` sits in the loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "WaitPodsReady lives in internal/suites, the Authelia end-to-end test-suite harness, which is test/CI tooling outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-4a35b5bd23c8dc1d",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "server/opts.go",
       "message": "Function `parseTLS` calls `MustCompile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 5316
+      "line": 5316,
+      "verdict": "false_positive",
+      "reason": "The `MustCompile(\"^[A-Fa-f0-9]{64}$\")` sits outside the inner `range ra` loop, in the `case \"pinned_certs\"` branch of the `range tlsm` key switch, which runs once per config, so nothing is recompiled per iteration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `regexp.MustCompile` sits in the `pinned_certs` case of the `for mk, mv := range tlsm` key-dispatch loop, so it runs at most once per config parse and is not recompiled per iteration."
+        }
+      ]
     },
     {
       "id": "EA-c3faaa3da49c4666",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.sql/src/org/jkiss/dbeaver/ui/editors/sql/semantics/SQLBackgroundParsingJob.java",
       "message": "Function `obtainCompletionContext` calls `compile` with a loop-invariant pattern, through `prepareOffquery`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 204
+      "line": 204,
+      "verdict": "false_positive",
+      "reason": "`prepareOffquery` compiles `KEYWORD_FILTER_PATTERN` as a `private static final` field of its anonymous class, so it is compiled once at class init, and the call is a `return` that leaves the loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `Pattern.compile` is a `private static final KEYWORD_FILTER_PATTERN` inside the anonymous class returned by prepareOffquery, initialised once at class load, and the call sits in a `return` that exits the loop."
+        }
+      ]
     },
     {
       "id": "EA-b0628fe3b5e503cc",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/PropertyMapper.java",
       "message": "Function `validateValues` calls `compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 672
+      "line": 672,
+      "verdict": "true_positive",
+      "reason": "`Pattern.compile(\"SRCFG\\\\d+: (.*)$\")` is a constant pattern compiled inside `for (String v : values)` for every failing value, since the thrown PropertyException is caught inside the loop and iteration continues.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Pattern.compile(\"SRCFG\\\\d+: (.*)$\")` is a constant recompiled in the catch block for every value `v` in the loop over `values`, since PropertyException is caught and iteration continues."
+        }
+      ]
     },
     {
       "id": "EA-7314a3fb75d48163",
@@ -58,9 +108,19 @@
       "language": "java",
       "path": "server-spi-private/src/main/java/org/keycloak/utils/ReservedCharValidator.java",
       "message": "Function `validateSecurityHeaders` calls `compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 81
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "`Pattern.compile(\"\\\\n\")` for the header key is recompiled on every iteration over `headers.entrySet()` although the pattern is constant.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Pattern.compile(\"\\\\n\")` for the header key is a constant literal rebuilt on every iteration of the `headers.entrySet()` loop and could be a static final."
+        }
+      ]
     },
     {
       "id": "EA-1238e51f0875ac96",
@@ -68,9 +128,19 @@
       "language": "java",
       "path": "server-spi-private/src/main/java/org/keycloak/utils/ReservedCharValidator.java",
       "message": "Function `validateSecurityHeaders` calls `compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 82
+      "line": 82,
+      "verdict": "true_positive",
+      "reason": "The second `Pattern.compile(\"\\\\n\")` for `entry.getValue()` is another constant-pattern compile on each header entry, hoistable to a static field.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Pattern.compile(\"\\\\n\")` for the header value at line 82 is a constant literal rebuilt on each `headers.entrySet()` iteration, same pattern as the key check."
+        }
+      ]
     },
     {
       "id": "EA-9e62f59992def7b1",
@@ -78,9 +148,19 @@
       "language": "java",
       "path": "jisql/src/main/java/org/apache/util/sql/MySQLPLRunner.java",
       "message": "Function `runScript` calls `compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 143
+      "line": 143,
+      "verdict": "true_positive",
+      "reason": "`Pattern.compile(DELIMITER_LINE_REGEX)` compiles a constant inside the line-reading loop of `runScript`; jisql ships in Ranger's admin package (`jisql/lib`), so it is in scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Pattern.compile(DELIMITER_LINE_REGEX)` uses a `private static final` constant string and is recompiled for every script line in runScript's `while` loop; jisql is packaged in Ranger's admin-web assembly."
+        }
+      ]
     },
     {
       "id": "EA-79ee175db380ee8b",
@@ -88,9 +168,19 @@
       "language": "java",
       "path": "jisql/src/main/java/org/apache/util/sql/MySQLPLRunner.java",
       "message": "Function `runScript` calls `compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 218
+      "line": 218,
+      "verdict": "true_positive",
+      "reason": "The second `Pattern.compile(DELIMITER_LINE_REGEX)` on line 218 also recompiles the constant delimiter regex on every script line and could be a static Pattern.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The second `Pattern.compile(DELIMITER_LINE_REGEX)` at line 218 is the same constant pattern compiled per line in the `while` loop in runScript."
+        }
+      ]
     },
     {
       "id": "EA-c9decfaf8fd0912d",
@@ -118,9 +208,19 @@
       "language": "python",
       "path": "docker/zap_common.py",
       "message": "Function `load_config` calls `compile` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 166
+      "line": 166,
+      "verdict": "true_positive",
+      "reason": "`re.compile(optional)` sits in the inner `for plugin_id in key.split(',')` loop while `optional` is fixed for the line, so the same pattern is compiled once per plugin id; zap_common.py ships in the ZAP Docker images.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`re.compile(optional)` in the inner `for plugin_id in key.split(',')` loop does not depend on plugin_id so it recompiles the same regex per id; zap_common.py is copied into the shipped Docker images via `COPY zap*`."
+        }
+      ]
     },
     {
       "id": "EA-10349f7bb85d4327",
@@ -128,9 +228,19 @@
       "language": "rust",
       "path": "src/config.rs",
       "message": "Function `validate` calls `new` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 653
+      "line": 653,
+      "verdict": "false_positive",
+      "reason": "`Regex::new(regex.as_str())` validates the loop binding `option` taken from the `[shard_id_regex, sharding_key_regex]` array, so the pattern differs on each iteration.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`Regex::new(regex.as_str())` compiles shard_id_regex and sharding_key_regex in turn, so the pattern is a different value on each loop iteration and is not invariant."
+        }
+      ]
     },
     {
       "id": "EA-90a8f0a7e197c2ff",
@@ -138,9 +248,19 @@
       "language": "rust",
       "path": "src/pool.rs",
       "message": "Function `from_config` calls `map` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 544
+      "line": 544,
+      "verdict": "false_positive",
+      "reason": "Line 544 is the `sharding_key_regex: pool_config` field start, and the finding names `map` as the compiler; the real compile is `Regex::new` on line 547, already reported, so this is a mis-attributed duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 544 begins the `sharding_key_regex: pool_config...map(...)` expression and `map` is Option::map, not a regex compiler; the finding names the wrong call and the compile is reported at line 547."
+        }
+      ]
     },
     {
       "id": "EA-00dbf2aa129c2c61",
@@ -148,9 +268,19 @@
       "language": "rust",
       "path": "src/pool.rs",
       "message": "Function `from_config` calls `unwrap` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 547
+      "line": 547,
+      "verdict": "true_positive",
+      "reason": "`Regex::new(pool_config.sharding_key_regex)` runs inside `for user in pool_config.users.values()` although the pattern depends only on the outer `pool_config`, so the same regex is compiled again for every user.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Regex::new(regex.as_str()).unwrap()` for sharding_key_regex is inside the `for user in pool_config.users.values()` loop and depends only on pool_config, so it is recompiled for every user of a pool."
+        }
+      ]
     },
     {
       "id": "EA-dabc746d01d39fd0",
@@ -158,9 +288,19 @@
       "language": "rust",
       "path": "src/pool.rs",
       "message": "Function `from_config` calls `map` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 548
+      "line": 548,
+      "verdict": "false_positive",
+      "reason": "Line 548 is the `shard_id_regex: pool_config` field start, and the finding names `map`; the compile is `Regex::new` on line 551, reported separately, so this duplicates it at the wrong symbol.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 548 starts the `shard_id_regex: ... .map(...)` expression and `map` is Option::map, not a regex compiler; the finding names the wrong call and the compile is reported at line 551."
+        }
+      ]
     },
     {
       "id": "EA-f99c4e9d6bf889fb",
@@ -168,9 +308,19 @@
       "language": "rust",
       "path": "src/pool.rs",
       "message": "Function `from_config` calls `unwrap` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 551
+      "line": 551,
+      "verdict": "true_positive",
+      "reason": "`Regex::new` for `pool_config.shard_id_regex` is compiled again for each user of the pool inside the inner `for user` loop, although the pattern does not change across that loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Regex::new(regex.as_str()).unwrap()` for shard_id_regex is inside the `for user in pool_config.users.values()` loop and depends only on pool_config, so it is recompiled per user."
+        }
+      ]
     },
     {
       "id": "EA-7249cdf5bf04b504",
@@ -203,9 +353,19 @@
       "language": "typescript",
       "path": "web/src/typeahead.ts",
       "message": "Function `triage_raw` calls `RegExp` with a loop-invariant pattern.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 346
+      "line": 346,
+      "verdict": "true_positive",
+      "reason": "`new RegExp(`[${word_boundary_chars}]${_.escapeRegExp(lower_query)}`)` uses only `lower_query`, which is fixed for the call, yet it is rebuilt for every item in the triage loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`new RegExp(...escapeRegExp(lower_query))` depends only on `lower_query` and the constant `word_boundary_chars`, yet is rebuilt for each object in the `objs` loop of triage_raw."
+        }
+      ]
     }
   ]
 }

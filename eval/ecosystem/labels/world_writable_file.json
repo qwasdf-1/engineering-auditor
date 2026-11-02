@@ -8,9 +8,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/build.go",
       "message": "Permissive file permissions (Bandit B103) at line 47",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 47
+      "line": 47,
+      "verdict": "false_positive",
+      "reason": "cmd/authelia-scripts is Authelia's development/build helper CLI; this MkdirAll(OutputDir, os.ModePerm) creates the build output dir and is out of scope as build tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "cmd/authelia-scripts/cmd/build.go is the repository's own dev build tool creating the OutputDir, which is tooling outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-92ff37df6abfea5c",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "cmd/embedded.go",
       "message": "Permissive file permissions (Bandit B103) at line 240",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 240
+      "line": 240,
+      "verdict": "true_positive",
+      "reason": "The shipped `gitea embedded extract` command creates the destination directory with os.MkdirAll(dir, os.ModePerm), requesting 0777 and leaving world-write to the umask.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "embedded.go MkdirAll(dir, os.ModePerm) creates the extraction directory with 0777, which includes the world-write bit the detector documents for os.ModePerm."
+        }
+      ]
     },
     {
       "id": "EA-2d810f8c6c5b85a0",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "cmd/web.go",
       "message": "Permissive file permissions (Bandit B103) at line 102",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 102
+      "line": 102,
+      "verdict": "true_positive",
+      "reason": "createPIDFile in the gitea web command creates the PID file's parent directory with os.ModePerm (0777), so it is world-writable under a permissive umask.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "createPIDFile in cmd/web.go creates the PID directory with MkdirAll(..., os.ModePerm), i.e. 0777 world-writable before umask."
+        }
+      ]
     },
     {
       "id": "EA-1054f6060f9d6135",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "modelmigration/v1_11/v115.go",
       "message": "Permissive file permissions (Bandit B103) at line 153",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 153
+      "line": 153,
+      "verdict": "true_positive",
+      "reason": "The v115 avatar migration, shipped with gitea, writes avatar files via os.WriteFile(..., data, 0o666), a world-writable requested mode.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The v115 avatar migration writes the avatar file with os.WriteFile(..., 0o666), granting world write; the migration ships with gitea."
+        }
+      ]
     },
     {
       "id": "EA-38b74489a57a9c07",
@@ -48,9 +88,19 @@
       "language": "go",
       "path": "modules/assetfs/embed.go",
       "message": "Permissive file permissions (Bandit B103) at line 305",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 305
+      "line": 305,
+      "verdict": "false_positive",
+      "reason": "GenerateEmbedBindata is called only from build/generate-bindata.go (and its test), so this os.ModePerm OpenFile runs at build time, outside the detector's production scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GenerateEmbedBindata is only called from gitea's build/generate-bindata.go (and a test), a build-time generator, so the 0777 output file is tooling."
+        }
+      ]
     },
     {
       "id": "EA-479f4f27bbefe3ac",
@@ -58,9 +108,19 @@
       "language": "go",
       "path": "modules/git/config.go",
       "message": "Permissive file permissions (Bandit B103) at line 20",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 20
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "syncGitConfig creates the git home directory gitcmd.HomeDir() with os.ModePerm (0777) at server runtime, requesting world-write bits.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "syncGitConfig creates the git home directory via MkdirAll(gitcmd.HomeDir(), os.ModePerm), a 0777 mode on a runtime path."
+        }
+      ]
     },
     {
       "id": "EA-d4ecc3190fbb589b",
@@ -68,9 +128,19 @@
       "language": "go",
       "path": "modules/git/localfs.go",
       "message": "Permissive file permissions (Bandit B103) at line 31",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 31
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "RenameRepository creates the destination repository's parent directory with os.MkdirAll(..., os.ModePerm), a 0777 request on repository storage.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RenameRepository creates the destination parent dir with MkdirAll(filepath.Dir(dstDir), os.ModePerm), i.e. 0777."
+        }
+      ]
     },
     {
       "id": "EA-234c97c75eca755d",
@@ -78,9 +148,19 @@
       "language": "go",
       "path": "modules/git/localfs.go",
       "message": "Permissive file permissions (Bandit B103) at line 62",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 62
+      "line": 62,
+      "verdict": "true_positive",
+      "reason": "CreateRepoFile makes the parent directories of a repository file with os.ModePerm before os.Create, requesting world-writable 0777 directories.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateRepoFile makes the parent directory of the repo file with MkdirAll(..., os.ModePerm), a world-writable 0777 mode."
+        }
+      ]
     },
     {
       "id": "EA-70c6341e8fad5f63",
@@ -88,9 +168,19 @@
       "language": "go",
       "path": "modules/git/repo.go",
       "message": "Permissive file permissions (Bandit B103) at line 179",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 179
+      "line": 179,
+      "verdict": "true_positive",
+      "reason": "git.Clone creates the clone target's parent dir path.Dir(to) with os.MkdirAll(toDir, os.ModePerm), i.e. requested mode 0777.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Clone() runs MkdirAll(toDir, os.ModePerm) for the clone target's parent, creating directories as 0777."
+        }
+      ]
     },
     {
       "id": "EA-153b886589709d20",
@@ -98,9 +188,19 @@
       "language": "go",
       "path": "modules/indexer/internal/bleve/util.go",
       "message": "Permissive file permissions (Bandit B103) at line 47",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 47
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "writeIndexMetadataVersion writes the bleve index metadata file with os.WriteFile(..., 0o666), which carries the others-write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "writeIndexMetadataVersion writes the bleve index metadata file with os.WriteFile(..., 0o666), which includes world write."
+        }
+      ]
     },
     {
       "id": "EA-357b4e1a1f17145a",
@@ -108,9 +208,19 @@
       "language": "go",
       "path": "modules/lfs/filesystem_client.go",
       "message": "Permissive file permissions (Bandit B103) at line 70",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 70
+      "line": 70,
+      "verdict": "true_positive",
+      "reason": "The LFS filesystem client creates each object's parent directory with os.MkdirAll(filepath.Dir(objectPath), os.ModePerm), requesting 0777.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The LFS filesystem client creates the object directory with MkdirAll(filepath.Dir(objectPath), os.ModePerm), 0777."
+        }
+      ]
     },
     {
       "id": "EA-4e5e5ce299a87f20",
@@ -118,9 +228,19 @@
       "language": "go",
       "path": "modules/setting/config_provider.go",
       "message": "Permissive file permissions (Bandit B103) at line 331",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 331
+      "line": 331,
+      "verdict": "true_positive",
+      "reason": "When saving a config loaded from empty, SaveTo creates the app.ini parent directory with os.ModePerm, a world-writable requested mode for the config location.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "config_provider.go line 331 creates the config file's directory with os.ModePerm, though the file itself is later chmodded 0o600."
+        }
+      ]
     },
     {
       "id": "EA-d8c862f531ac8cc4",
@@ -128,9 +248,19 @@
       "language": "go",
       "path": "modules/setting/log.go",
       "message": "Permissive file permissions (Bandit B103) at line 107",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 107
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "The log file path helper creates the log directory with os.MkdirAll(filepath.Dir(fileName), os.ModePerm), requesting 0777.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The log file path helper creates the log directory with MkdirAll(filepath.Dir(fileName), os.ModePerm), a 0777 mode."
+        }
+      ]
     },
     {
       "id": "EA-0e9cd033fe30cb10",
@@ -138,9 +268,19 @@
       "language": "go",
       "path": "modules/setting/server.go",
       "message": "Permissive file permissions (Bandit B103) at line 286",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 286
+      "line": 286,
+      "verdict": "false_positive",
+      "reason": "This MkdirAll(AppDataPath, os.ModePerm) sits inside `if IsInTesting && HasInstallLock(...)`, and IsInTesting is only set true by modules/setting/testenv.go, so it runs only in test setup.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "server.go line 286 calls MkdirAll(AppDataPath, os.ModePerm) in production setting code (guarded by IsInTesting), creating a 0777 directory."
+        }
+      ]
     },
     {
       "id": "EA-1a52b2d72fa1c12d",
@@ -148,9 +288,19 @@
       "language": "go",
       "path": "modules/setting/setting.go",
       "message": "Permissive file permissions (Bandit B103) at line 80",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "PrepareAppDataPath creates the production AppDataPath with os.MkdirAll(AppDataPath, os.ModePerm) when it is missing, requesting world-write bits.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The app data path check creates a missing AppDataPath with MkdirAll(AppDataPath, os.ModePerm), i.e. 0777."
+        }
+      ]
     },
     {
       "id": "EA-32275619c5dabf95",
@@ -158,9 +308,19 @@
       "language": "go",
       "path": "modules/ssh/ssh.go",
       "message": "Permissive file permissions (Bandit B103) at line 278",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 278
+      "line": 278,
+      "verdict": "true_positive",
+      "reason": "The built-in SSH server creates the host-key directory filepath.Dir(setting.SSH.ServerHostKeys[0]) with os.ModePerm, a 0777 request on a directory holding private keys.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The SSH server creates the host key directory (which will hold private keys) with MkdirAll(hostKeyDir, os.ModePerm), a 0777 mode."
+        }
+      ]
     },
     {
       "id": "EA-a80c87ed029d7239",
@@ -168,9 +328,19 @@
       "language": "go",
       "path": "modules/storage/local.go",
       "message": "Permissive file permissions (Bandit B103) at line 50",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 50
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "NewLocalStorage creates the storage root with os.MkdirAll(storageRoot, os.ModePerm), requesting world-writable 0777 for attachment/LFS storage.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "NewLocalStorage creates storageRoot with MkdirAll(storageRoot, os.ModePerm), giving the storage directory 0777."
+        }
+      ]
     },
     {
       "id": "EA-fa0cee624e75540e",
@@ -178,9 +348,19 @@
       "language": "go",
       "path": "modules/tempdir/tempdir.go",
       "message": "Permissive file permissions (Bandit B103) at line 31",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 31
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "TempDir.MkdirAllSub creates its sub directory with os.MkdirAll(full, os.ModePerm), a requested mode carrying the others-write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "TempDir.MkdirAllSub creates the managed temp subdirectory with os.ModePerm (0777)."
+        }
+      ]
     },
     {
       "id": "EA-0e9dc05cc565aec9",
@@ -188,9 +368,19 @@
       "language": "go",
       "path": "services/migrations/dump.go",
       "message": "Permissive file permissions (Bandit B103) at line 55",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 55
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "NewRepositoryDumper creates the dump base dir <baseDir>/<owner>/<repo> with os.ModePerm (0777) in the shipped migration dump service.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "NewRepositoryDumper creates the dump baseDir/owner/repo directory with os.ModePerm, a world-writable mode."
+        }
+      ]
     },
     {
       "id": "EA-5a26041f8a0fda6e",
@@ -198,9 +388,19 @@
       "language": "go",
       "path": "services/migrations/dump.go",
       "message": "Permissive file permissions (Bandit B103) at line 144",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 144
+      "line": 144,
+      "verdict": "true_positive",
+      "reason": "CreateRepo in the dumper creates repoAbsPath with os.MkdirAll(repoAbsPath, os.ModePerm), requesting 0777 for the dumped git repo.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The dumper's git clone step creates repoAbsPath with MkdirAll(repoAbsPath, os.ModePerm), 0777."
+        }
+      ]
     },
     {
       "id": "EA-09602ecb1ff93296",
@@ -208,9 +408,19 @@
       "language": "go",
       "path": "services/migrations/dump.go",
       "message": "Permissive file permissions (Bandit B103) at line 301",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 301
+      "line": 301,
+      "verdict": "true_positive",
+      "reason": "CreateReleases makes each release_assets/<uuid> directory with os.ModePerm, a world-writable requested mode.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateReleases makes the release_assets/<uuid> directory with MkdirAll(..., os.ModePerm), 0777."
+        }
+      ]
     },
     {
       "id": "EA-5e8556a474db8bd4",
@@ -218,9 +428,19 @@
       "language": "go",
       "path": "services/migrations/dump.go",
       "message": "Permissive file permissions (Bandit B103) at line 401",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 401
+      "line": 401,
+      "verdict": "true_positive",
+      "reason": "createItems creates the issues/comments item directory dir with os.MkdirAll(dir, os.ModePerm), requesting 0777.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "createItems creates the comments/reviews dir with MkdirAll(dir, os.ModePerm), a world-writable mode."
+        }
+      ]
     },
     {
       "id": "EA-ef808260689531e9",
@@ -228,9 +448,19 @@
       "language": "go",
       "path": "services/migrations/dump.go",
       "message": "Permissive file permissions (Bandit B103) at line 472",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 472
+      "line": 472,
+      "verdict": "true_positive",
+      "reason": "handlePullRequest creates the pulls/ patch directory under gitPath() with os.ModePerm before writing the .patch file.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The pull-request patch download creates pullDir with MkdirAll(pullDir, os.ModePerm), i.e. 0777."
+        }
+      ]
     },
     {
       "id": "EA-7cb3c29c1d631c31",
@@ -238,9 +468,19 @@
       "language": "go",
       "path": "services/migrations/dump.go",
       "message": "Permissive file permissions (Bandit B103) at line 614",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 614
+      "line": 614,
+      "verdict": "true_positive",
+      "reason": "CreatePullRequests creates g.baseDir with os.MkdirAll(g.baseDir, os.ModePerm) before writing pull_request.yml, a 0777 request.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CreatePullRequests creates g.baseDir with MkdirAll(g.baseDir, os.ModePerm) before pull_request.yml, a 0777 mode."
+        }
+      ]
     },
     {
       "id": "EA-2d9569ecfabd72e4",
@@ -248,9 +488,19 @@
       "language": "go",
       "path": "services/packages/container/blob_uploader.go",
       "message": "Permissive file permissions (Bandit B103) at line 60",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 60
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "The container blob uploader opens upload files with os.O_RDWR|os.O_CREATE and mode 0o666, so newly created blobs request the others-write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The container BlobUploader opens its upload file with os.OpenFile(..., O_CREATE, 0o666), creating it world-writable before umask."
+        }
+      ]
     },
     {
       "id": "EA-4850bfa449d9e182",
@@ -258,9 +508,19 @@
       "language": "go",
       "path": "src/jobservice/job/impl/scandataexport/scan_data_export.go",
       "message": "Permissive file permissions (Bandit B103) at line 114",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 114
+      "line": 114,
+      "verdict": "false_positive",
+      "reason": "os.OpenFile(fileName, os.O_RDONLY, os.ModePerm) has no O_CREATE flag, so the perm argument is ignored and nothing is created world-writable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.OpenFile(fileName, os.O_RDONLY, os.ModePerm) opens an existing file read-only; without O_CREATE the perm argument is ignored, so no file is made world-writable."
+        }
+      ]
     },
     {
       "id": "EA-c44cc4eccc9875bd",
@@ -268,9 +528,19 @@
       "language": "go",
       "path": "src/jobservice/job/impl/scandataexport/scan_data_export.go",
       "message": "Permissive file permissions (Bandit B103) at line 184",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 184
+      "line": 184,
+      "verdict": "true_positive",
+      "reason": "writeCsvFile opens the export CSV with os.O_WRONLY|os.O_CREATE|os.O_APPEND and os.ModePerm, so a created file requests mode 0777.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "writeCsvFile opens the export CSV with O_CREATE and os.ModePerm, creating it with 0777 mode bits including world write."
+        }
+      ]
     },
     {
       "id": "EA-001d255996462077",
@@ -278,9 +548,19 @@
       "language": "go",
       "path": "src/pkg/scan/export/digest_calculator.go",
       "message": "Permissive file permissions (Bandit B103) at line 34",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 34
+      "line": 34,
+      "verdict": "false_positive",
+      "reason": "SHA256ArtifactDigestCalculator.Calculate opens fileName read-only (os.O_RDONLY, no O_CREATE), so os.ModePerm never applies to any file.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Calculate opens the file with os.O_RDONLY and no O_CREATE, so os.ModePerm is ignored and nothing is created with world-write."
+        }
+      ]
     },
     {
       "id": "EA-500a3c64568d440d",
@@ -288,9 +568,19 @@
       "language": "go",
       "path": "server/server.go",
       "message": "Permissive file permissions (Bandit B103) at line 4394",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4394
+      "line": 4394,
+      "verdict": "true_positive",
+      "reason": "nats-server writes the ports file with os.WriteFile(portsFile, data, 0666), a requested mode with the world-write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The server writes the ports file with os.WriteFile(portsFile, data, 0666), which includes the world-write bit."
+        }
+      ]
     },
     {
       "id": "EA-fc488297207c252b",
@@ -298,9 +588,19 @@
       "language": "go",
       "path": "db/state.go",
       "message": "Permissive file permissions (Bandit B103) at line 573",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 573
+      "line": 573,
+      "verdict": "false_positive",
+      "reason": "os.OpenFile(path, os.O_RDWR, 0666) in db/state.go has no O_CREATE flag, so the 0666 perm is ignored; it only reopens the existing database file to Sync it and never sets permissions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.OpenFile(path, os.O_RDWR, 0666) has no O_CREATE so the perm argument is never applied to any file; it only reopens the existing DB to fsync it."
+        }
+      ]
     },
     {
       "id": "EA-267e9792e656a1a7",
@@ -308,9 +608,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 316",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 316
+      "line": 316,
+      "verdict": "false_positive",
+      "reason": "os.chmod(initdFn, 0o550) sets r-xr-x---, which has no write bit for others (or anyone), so the world-writable claim is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(initdFn, 0o550) grants r-x to the owner and group and r-x to others; the world-write bit is not set, so the finding's claim is wrong."
+        }
+      ]
     },
     {
       "id": "EA-43de3efc8e4b83c5",
@@ -318,9 +628,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 384",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 384
+      "line": 384,
+      "verdict": "false_positive",
+      "reason": "os.chmod(java_home_setter_fn, 0o750) in tagsync setup.py grants no write bit to others (others get ---), so the world-writable claim is false.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(java_home_setter_fn, 0o750) sets rwxr-x---, no world bits at all, so the permissive-permission claim is wrong."
+        }
+      ]
     },
     {
       "id": "EA-fec537030fb15897",
@@ -328,9 +648,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 484",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 484
+      "line": 484,
+      "verdict": "false_positive",
+      "reason": "os.chmod(root, 0o755) on each walked tagsync directory gives others only r-x; the world-write bit (0o002) is not set.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(root, 0o755) on walked directories gives rwxr-xr-x; others get read/execute only, not write, so it is not world-writable."
+        }
+      ]
     },
     {
       "id": "EA-a99f20eb166ea5e5",
@@ -338,9 +668,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 488",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 488
+      "line": 488,
+      "verdict": "false_positive",
+      "reason": "os.chmod(dn, 0o755) for subdirectories under fixPermList leaves others read/execute only, so nothing is made world-writable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(dn, 0o755) for subdirectory dn is rwxr-xr-x; the world-write bit (0o002) is absent."
+        }
+      ]
     },
     {
       "id": "EA-75597dea3e505fab",
@@ -348,9 +688,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 492",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 492
+      "line": 492,
+      "verdict": "false_positive",
+      "reason": "os.chmod(fn, 0o755) on every walked file is overly broad execute but not world-writable; others lack the write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(fn, 0o755) on files in the walk is rwxr-xr-x; others cannot write, so the finding's claim is incorrect."
+        }
+      ]
     },
     {
       "id": "EA-bceb217d0bb0f003",
@@ -358,9 +708,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 498",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 498
+      "line": 498,
+      "verdict": "false_positive",
+      "reason": "os.chmod on ENV_HADOOP_CONF_FILE with 0o755 sets owner rwx and others r-x; no world-write permission is granted.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_HADOOP_CONF_FILE to 0o755 grants others only r-x, no world-write, after chown to the service user."
+        }
+      ]
     },
     {
       "id": "EA-8013fd902e7f14e2",
@@ -368,9 +728,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 500",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 500
+      "line": 500,
+      "verdict": "false_positive",
+      "reason": "The ENV_PID_FILE chmod uses 0o755, which has no others-write bit, contradicting the world_writable_file claim.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_PID_FILE to 0o755 is owner-writable only; the others triplet is r-x so nothing is world-writable."
+        }
+      ]
     },
     {
       "id": "EA-18ca82cd966b1f49",
@@ -378,9 +748,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 502",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 502
+      "line": 502,
+      "verdict": "false_positive",
+      "reason": "ENV_CONF_FILE is chmodded to 0o755; others get r-x only, so the file is not world-writable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_CONF_FILE to 0o755 leaves the others triplet at r-x, so it is not world-writable."
+        }
+      ]
     },
     {
       "id": "EA-bcc72b7975208360",
@@ -388,9 +768,19 @@
       "language": "python",
       "path": "tagsync/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 517",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 517
+      "line": 517,
+      "verdict": "false_positive",
+      "reason": "os.chmod(tagsync_conf_full_path, 0o750) for the generated core-site.xml gives others no access at all, so it is not world-writable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod(tagsync_conf_full_path, 0o750) is rwxr-x--- with no access for others, the opposite of permissive."
+        }
+      ]
     },
     {
       "id": "EA-f315ed939a7dea71",
@@ -398,9 +788,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 330",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 330
+      "line": 330,
+      "verdict": "false_positive",
+      "reason": "os.chmod(initdFn, 0o550) on the usersync init.d script is read/execute for owner and group only; no write bit for anyone else.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(initdFn, 0o550) is r-xr-x---, read-only even for the owner, and no world access."
+        }
+      ]
     },
     {
       "id": "EA-9160688238e7fb13",
@@ -408,9 +808,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 420",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 420
+      "line": 420,
+      "verdict": "false_positive",
+      "reason": "unixauthservice java_home_setter_fn is set to 0o750, which denies others entirely; the mode lacks the world-write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(java_home_setter_fn, 0o750) in the usersync setup has no world bits, so it is not world-writable."
+        }
+      ]
     },
     {
       "id": "EA-37938c940e6f6854",
@@ -418,9 +828,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 497",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 497
+      "line": 497,
+      "verdict": "false_positive",
+      "reason": "os.chmod(pid_dir_path, 0o755) makes the PID directory others-readable/traversable but not writable by others.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "os.chmod(pid_dir_path, 0o755) gives others r-x only; the pid directory is not world-writable."
+        }
+      ]
     },
     {
       "id": "EA-0ef21f2e3ece738f",
@@ -428,9 +848,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 546",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 546
+      "line": 546,
+      "verdict": "false_positive",
+      "reason": "usersync_conf_full_path is chmodded to 0o750, leaving others with no permissions, so the world-writable claim is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod(usersync_conf_full_path, 0o750) denies others entirely, so the permissive claim is wrong."
+        }
+      ]
     },
     {
       "id": "EA-c5f3d70370c1dbec",
@@ -438,9 +868,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 573",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 573
+      "line": 573,
+      "verdict": "false_positive",
+      "reason": "os.chmod(nativeAuthProgramName, 0o750) on the native auth binary grants others nothing; no world-write bit is present.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod(nativeAuthProgramName, 0o750) restricts the auth binary to owner and group with no world access."
+        }
+      ]
     },
     {
       "id": "EA-8a999d7a279cf0ad",
@@ -448,9 +888,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 583",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 583
+      "line": 583,
+      "verdict": "false_positive",
+      "reason": "os.chmod(pamAuthProgramName, 0o750) on the PAM auth program likewise excludes others, so it is not world-writable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod(pamAuthProgramName, 0o750) is rwxr-x--- with nothing for others, so it is not world-writable."
+        }
+      ]
     },
     {
       "id": "EA-75b49d1bb6f42699",
@@ -458,9 +908,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 595",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 595
+      "line": 595,
+      "verdict": "false_positive",
+      "reason": "ENV_LOGDIR_FILE under confBaseDirName gets 0o755, which has no others-write bit.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_LOGDIR_FILE to 0o755 grants others r-x only; no world-write bit is set."
+        }
+      ]
     },
     {
       "id": "EA-4a8d12c5820b88dc",
@@ -468,9 +928,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 597",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 597
+      "line": 597,
+      "verdict": "false_positive",
+      "reason": "The unixauthservice ENV_HADOOP_CONF_FILE chmod to 0o755 gives others r-x only; the file is not made world-writable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_HADOOP_CONF_FILE to 0o755 in usersync setup leaves others without write permission."
+        }
+      ]
     },
     {
       "id": "EA-38c736b00e19021f",
@@ -478,9 +948,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 599",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 599
+      "line": 599,
+      "verdict": "false_positive",
+      "reason": "The unixauthservice ENV_PID_FILE chmod uses 0o755, lacking the 0o002 bit the detector's world-write rationale requires.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_PID_FILE to 0o755 in usersync setup gives others r-x only, not world-writable."
+        }
+      ]
     },
     {
       "id": "EA-d10c0ca8f112d894",
@@ -488,9 +968,19 @@
       "language": "python",
       "path": "unixauthservice/scripts/setup.py",
       "message": "Permissive file permissions (Bandit B103) at line 601",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 601
+      "line": 601,
+      "verdict": "false_positive",
+      "reason": "The unixauthservice ENV_CONF_FILE chmod to 0o755 grants others no write access.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "chmod of ENV_CONF_FILE to 0o755 gives others r-x only, so the world-writable claim does not hold."
+        }
+      ]
     }
   ]
 }

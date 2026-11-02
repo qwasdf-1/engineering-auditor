@@ -8,9 +8,19 @@
       "language": "cpp",
       "path": "util/env_posix.cc",
       "message": "Hardcoded temp directory (Bandit B108) at line 678",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 678
+      "line": 678,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): PosixEnv::GetTestDirectory in shipped library source util/env_posix.cc falls back to the predictable \"/tmp/leveldbtest-<euid>\" and calls CreateDir while ignoring whether the directory already exists; it is public Env API, not test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "GetTestDirectory in leveldb's util/env_posix.cc builds a fixed \"/tmp/leveldbtest-<uid>\" path, a predictable directory under /tmp in library source."
+        }
+      ]
     },
     {
       "id": "EA-875837e77b3803e8",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "src/pkg/scan/export/constants.go",
       "message": "Hardcoded temp directory (Bandit B108) at line 26",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 26
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "ScanDataExportDir = \"/tmp\" is the default export directory that scan_data_export.go init() assigns to scanDataExportDirPath, so the jobservice writes scan export files under a hardcoded shared /tmp in production.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ScanDataExportDir = \"/tmp\" in Harbor's scan export constants is a hardcoded temp directory for shipped export code, with an explicit comment that it is chosen for permissions."
+        }
+      ]
     },
     {
       "id": "EA-a20613e0175b8701",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "dolphinscheduler-alert/dolphinscheduler-alert-plugins/dolphinscheduler-alert-email/src/main/java/org/apache/dolphinscheduler/plugin/alert/email/MailSender.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 131",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 131
+      "line": 131,
+      "verdict": "true_positive",
+      "reason": "MailSender falls back to xlsFilePath = \"/tmp/xls\" when XLS_FILE_PATH is blank, writing alert attachment files to a predictable path in shared /tmp in shipped plugin code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MailSender.java line 131 defaults the xls attachment directory to the fixed \"/tmp/xls\" when XLS_FILE_PATH is blank, a predictable shared-tmp path in production code."
+        }
+      ]
     },
     {
       "id": "EA-4b467b3739b893b0",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/utils/FileUtils.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 56",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 56
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "FileUtils.DATA_BASEDIR defaults to \"/tmp/dolphinscheduler\" when data.basedir.path is unset, so task data lands in shared /tmp by default.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "FileUtils.DATA_BASEDIR defaults to the hardcoded \"/tmp/dolphinscheduler\" and is used to build task temp file paths in production code."
+        }
+      ]
     },
     {
       "id": "EA-f56e664bcb863673",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "dolphinscheduler-storage-plugin/dolphinscheduler-storage-api/src/main/java/org/apache/dolphinscheduler/plugin/storage/api/local/LocalStorageOperatorFactory.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 37",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 37
+      "line": 37,
+      "verdict": "true_positive",
+      "reason": "LocalStorageOperatorFactory defaults RESOURCE_UPLOAD_PATH to \"/tmp/dolphinscheduler\", placing uploaded resources in world-shared /tmp.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "LocalStorageOperatorFactory defaults RESOURCE_UPLOAD_PATH to the hardcoded \"/tmp/dolphinscheduler\", placing resource storage in a shared tmp dir by default."
+        }
+      ]
     },
     {
       "id": "EA-544101d573a8e74a",
@@ -58,9 +108,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-remoteshell/src/main/java/org/apache/dolphinscheduler/plugin/task/remoteshell/RemoteExecutor.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 57",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 57
+      "line": 57,
+      "verdict": "true_positive",
+      "reason": "RemoteExecutor.REMOTE_SHELL_HOME \"/tmp/dolphinscheduler-remote-shell-%s/\" is a predictable directory in /tmp on the remote host where task scripts are written.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RemoteExecutor.REMOTE_SHELL_HOME hardcodes \"/tmp/dolphinscheduler-remote-shell-%s/\" as the working dir for scripts on the remote host, a predictable shared-tmp path."
+        }
+      ]
     },
     {
       "id": "EA-86c260b7e32c97ba",
@@ -68,9 +128,19 @@
       "language": "java",
       "path": "misc/vuln-to-issues/src/main/java/org/keycloak/misc/TrivyReportParser.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 33",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 33
+      "line": 33,
+      "verdict": "false_positive",
+      "reason": "TrivyReportParser in misc/vuln-to-issues is a CI helper run by .github/workflows/scan-dependencies.yml to turn Trivy reports into GitHub issues; reading /tmp/trivy-logs there is CI tooling, not shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "TrivyReportParser lives under keycloak misc/vuln-to-issues, a maintenance utility that files GitHub issues from Trivy logs, i.e. dev tooling that is not shipped."
+        }
+      ]
     },
     {
       "id": "EA-3b0b4709316276ed",
@@ -78,9 +148,19 @@
       "language": "java",
       "path": "agents-audit/orc-util/src/main/java/org/apache/ranger/audit/utils/ORCFileUtil.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 421",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 421
+      "line": 421,
+      "verdict": "false_positive",
+      "reason": "createWriter(conf, fs, \"/tmp/test.orc\") is inside ORCFileUtil.main, an ad-hoc manual test harness that builds getTestEvent() fixtures; it is test/demo code, not the audit writer path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ORCFileUtil.main writes the ORC output to the literal \"/tmp/test.orc\" in production source, a hardcoded predictable temp file."
+        }
+      ]
     },
     {
       "id": "EA-4c02bd81128b17a4",
@@ -88,9 +168,19 @@
       "language": "java",
       "path": "agents-audit/orc-util/src/main/java/org/apache/ranger/audit/utils/ORCFileUtil.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 440",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 440
+      "line": 440,
+      "verdict": "false_positive",
+      "reason": "\"/tmp/test-audit.log\" is passed to event.setResourcePath as fake audit-event data in the main() test fixture helper; it is a string field value and never used as a file location.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setResourcePath(\"/tmp/test-audit.log\" + ...) in ORCFileUtil's test-event builder embeds a literal /tmp path in production-file code."
+        }
+      ]
     },
     {
       "id": "EA-315cb0268f3dbd33",
@@ -98,9 +188,19 @@
       "language": "java",
       "path": "tagsync/src/main/java/org/apache/ranger/tagsync/process/TagSyncConfig.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 117",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 117
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "DEFAULT_TAGSYNC_METRICS_FILEPATH = \"/tmp/\" makes the production tagsync service write ranger_tagsync_metric.json into shared /tmp by default.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DEFAULT_TAGSYNC_METRICS_FILEPATH = \"/tmp/\" makes tagsync write its metrics JSON into a shared temp directory by default."
+        }
+      ]
     },
     {
       "id": "EA-166a09d3d0c64ba1",
@@ -108,9 +208,19 @@
       "language": "java",
       "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/config/UserGroupSyncConfig.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 267",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 267
+      "line": 267,
+      "verdict": "true_positive",
+      "reason": "DEFAULT_UGSYNC_METRICS_FILEPATH = \"/tmp/\" is the default directory for the usersync daemon's ranger_usersync_metric.json, a hardcoded shared-temp location in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DEFAULT_UGSYNC_METRICS_FILEPATH = \"/tmp/\" makes usersync write ranger_usersync_metric.json into /tmp by default."
+        }
+      ]
     },
     {
       "id": "EA-b911cb1c498784f7",
@@ -118,9 +228,19 @@
       "language": "python",
       "path": "docker/main/rootfs/usr/local/go2rtc/create_config.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 186",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 186
+      "line": 186,
+      "verdict": "true_positive",
+      "reason": "create_config.py ships in the Frigate image (run by the go2rtc s6 service) and writes the generated config with open(\"/dev/shm/go2rtc.yaml\", \"w\"), a fixed path in a shared-memory temp dir.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "create_config.py writes /dev/shm/go2rtc.yaml at a fixed shared-memory path from shipped container startup code."
+        }
+      ]
     },
     {
       "id": "EA-89c24d3f2727da5b",
@@ -128,9 +248,19 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1165",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1165
+      "line": 1165,
+      "verdict": "true_positive",
+      "reason": "The logs endpoint maps \"frigate\" to the hardcoded \"/dev/shm/logs/frigate/current\", a fixed path under /dev/shm in shipped API code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "app.py line 1165 maps the 'frigate' service to /dev/shm/logs/frigate/current, a read-only lookup of a service-owned log directory, not creation of a temp file."
+        }
+      ]
     },
     {
       "id": "EA-14247ef94663928e",
@@ -138,9 +268,19 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1166",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 1166
+      "line": 1166,
+      "verdict": "true_positive",
+      "reason": "log_locations[\"go2rtc\"] = \"/dev/shm/logs/go2rtc/current\" hardcodes the go2rtc log path under /dev/shm.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "app.py line 1166 maps 'go2rtc' to its log under the service-owned /dev/shm/logs tree for reading, not a temp-file creation."
+        }
+      ]
     },
     {
       "id": "EA-4fc49037428220d3",
@@ -148,9 +288,19 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1167",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1167
+      "line": 1167,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): \"/dev/shm/logs/nginx/current\" is the fixed location where the Frigate container's s6 log service writes nginx logs, and the API only reads it for display or download. It creates no file in a shared temp directory.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "app.py line 1167 maps 'nginx' to its log under the service-owned /dev/shm/logs tree for reading, not a temp-file creation."
+        }
+      ]
     },
     {
       "id": "EA-406c3ce402ded968",
@@ -158,9 +308,19 @@
       "language": "python",
       "path": "frigate/app.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 649",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 649
+      "line": 649,
+      "verdict": "true_positive",
+      "reason": "FrigateApp.stop() touches Path(\"/dev/shm/.frigate-is-stopping\") as a healthcheck marker, a hardcoded file in the shared /dev/shm temp dir.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "app.py line 649 touches the fixed /dev/shm/.frigate-is-stopping marker used by the docker healthcheck, a predictable file in shared memory."
+        }
+      ]
     },
     {
       "id": "EA-478efc59dbe13a21",
@@ -168,9 +328,19 @@
       "language": "python",
       "path": "frigate/const.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 15",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 15
+      "line": 15,
+      "verdict": "true_positive",
+      "reason": "BIRDSEYE_PIPE = \"/tmp/cache/birdseye\" in frigate/const.py hardcodes a FIFO location under /tmp/cache in shipped runtime code, exactly the Bandit B108 pattern; relying on the Docker tmpfs mount is intentional but does not change the claim.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "BIRDSEYE_PIPE is a named-pipe path fixed under /tmp/cache in frigate/const.py, a predictable world-visible temp location the B108 rationale targets."
+        }
+      ]
     },
     {
       "id": "EA-6d26b4a82f920485",
@@ -178,9 +348,19 @@
       "language": "python",
       "path": "frigate/const.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 16",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 16
+      "line": 16,
+      "verdict": "true_positive",
+      "reason": "CACHE_DIR = \"/tmp/cache\" is the production cache directory constant Frigate writes recording segments into, a hardcoded shared-temp path in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CACHE_DIR = \"/tmp/cache\" is the hardcoded temp directory that the recording cache and audio files are written under (os.path.join(CACHE_DIR, ...))."
+        }
+      ]
     },
     {
       "id": "EA-18d7ca12fd1e8be7",
@@ -188,9 +368,19 @@
       "language": "python",
       "path": "frigate/stats/util.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 514",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 514
+      "line": 514,
+      "verdict": "false_positive",
+      "reason": "\"/dev/shm\" at stats/util.py:514 is only a dictionary key labelling the shm usage entry in the stats payload (stats[\"service\"][\"storage\"][\"/dev/shm\"]); no file is created or opened at that path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The \"/dev/shm\" key in stats[\"service\"][\"storage\"] is only a label for a disk-usage report; no temp file is created there."
+        }
+      ]
     },
     {
       "id": "EA-a570b478671427c8",
@@ -198,9 +388,19 @@
       "language": "python",
       "path": "frigate/util/services.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1572",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1572
+      "line": 1572,
+      "verdict": "false_positive",
+      "reason": "shutil.disk_usage(\"/dev/shm\") in calculate_shm_requirements only reads filesystem capacity statistics; nothing is written to a predictable temp file, so the insecure-temp-file rationale does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "shutil.disk_usage(\"/dev/shm\") only reads capacity statistics of the shared-memory mount, so there is no insecure temp-file creation."
+        }
+      ]
     },
     {
       "id": "EA-2a93480168563a36",
@@ -208,9 +408,19 @@
       "language": "python",
       "path": "frigate/util/services.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1614",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1614
+      "line": 1614,
+      "verdict": "false_positive",
+      "reason": "get_fs_type(\"/dev/shm\") at services.py:1614 just queries the mount type of shared memory for reporting; no temp file is created there.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "get_fs_type(\"/dev/shm\") merely queries the mount type of the shm filesystem for display; nothing is written to the path."
+        }
+      ]
     },
     {
       "id": "EA-c0aca689138e5907",
@@ -218,9 +428,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 361",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 361
+      "line": 361,
+      "verdict": "true_positive",
+      "reason": "import_ranger_to_ambari.py ships in the migration-util release package (distro assembly migration-util.xml) and defaults ranger.usersync.filesource.file to the predictable '/tmp/usergroup.txt', a user/group source file in world-writable /tmp.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "import_ranger_to_ambari.py defaults ranger.usersync.filesource.file to '/tmp/usergroup.txt'; the migration-util is packaged via distro's migration-util.xml assembly, so it ships."
+        }
+      ]
     },
     {
       "id": "EA-1b86a45aa4c3ba79",
@@ -228,9 +448,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 40",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "fetch_system_logs_from_server(local_path=\"/tmp/\") belongs to ranger_performance_tool, a Python perf-testing utility not included in the ranger-tools assembly; it is benchmark tooling outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fetch_system_logs_from_server defaults local_path to \"/tmp/\" in ranger-tools, which is packaged by distro's ranger-tools.xml assembly, so downloaded logs land in a shared temp directory."
+        }
+      ]
     },
     {
       "id": "EA-8071384bc602f14e",
@@ -238,9 +468,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 57",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 57
+      "line": 57,
+      "verdict": "false_positive",
+      "reason": "The local_path=\"/tmp/\" default on fetch_secondary_system_logs_from_server is in the same unpackaged ranger_performance_tool benchmark helper that scp's server logs for perf analysis.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fetch_secondary_system_logs_from_server also defaults local_path=\"/tmp/\" in the shipped ranger-tools package, a hardcoded temp location for fetched logs."
+        }
+      ]
     },
     {
       "id": "EA-a7c047f4a8b59ac2",
@@ -248,9 +488,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 73",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "false_positive",
+      "reason": "fetch_access_logs_from_server's local_path=\"/tmp/\" default is again part of the perf-test tool under ranger-tools/src/main/python, which the distro does not ship, so it is benchmark tooling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "fetch_access_logs_from_server defaults local_path to \"/tmp/\" in the packaged ranger-tools code, a hardcoded temp directory for copied access logs."
+        }
+      ]
     },
     {
       "id": "EA-2257fc3bb6d14ec1",
@@ -258,9 +508,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 352",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 352
+      "line": 352,
+      "verdict": "false_positive",
+      "reason": "pidfile_path \"/tmp/atuin-daemon.pid\" is in the daemon() fixture of `#[cfg(all(unix, test))] mod unix_tests`, test code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 352 is inside the test helper daemon() used by rstest cases, so the /tmp/atuin-daemon.pid literal is test fixture data."
+        }
+      ]
     },
     {
       "id": "EA-d3a3f712dc356323",
@@ -268,9 +528,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 362",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 362
+      "line": 362,
+      "verdict": "false_positive",
+      "reason": "const DEFAULT \"/tmp/atuin-1234/atuin.sock\" is an expected-value constant inside the cfg(test) unix_tests module.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 362 is the DEFAULT test constant for expected socket paths in the settings tests, not production path use."
+        }
+      ]
     },
     {
       "id": "EA-2f1f5a21d9eaf494",
@@ -278,9 +548,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 380",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 380
+      "line": 380,
+      "verdict": "false_positive",
+      "reason": "tmp_dir: AbsPath::new(\"/tmp\") is in TestCtx's Default impl within the unix_tests test module, a fixed test input.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 380 is TestCtx::default() providing a fake /tmp dir to tests, not a real temp-file creation."
+        }
+      ]
     },
     {
       "id": "EA-93bddadd99ebcfaa",
@@ -288,9 +568,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 381",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 381
+      "line": 381,
+      "verdict": "false_positive",
+      "reason": "envless_tmp_dir: AbsPath::new(\"/tmp\") is the second field of the test-only TestCtx default in unix_tests.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 381 sets envless_tmp_dir in the TestCtx default, a test fixture value."
+        }
+      ]
     },
     {
       "id": "EA-0bd73cd394e787a3",
@@ -298,9 +588,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 412",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 412
+      "line": 412,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::default_tmp_dir(\"/tmp\", DEFAULT)] is an rstest case argument in test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 412 is an rstest #[case] input for the default-socket test, so the literal is test data."
+        }
+      ]
     },
     {
       "id": "EA-43896c01f38835e5",
@@ -308,9 +608,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 430",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 430
+      "line": 430,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::unconfigured(...)] is an rstest parameter for socket_paths_are_tried_in_priority_order, test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 430 is an rstest #[case::unconfigured] parameter, test data only."
+        }
+      ]
     },
     {
       "id": "EA-22b9fdc725841e30",
@@ -318,9 +628,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 431",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 431
+      "line": 431,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::unconfigured_without_runtime_dir(...)] is a test-case input in the cfg(test) module.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 431 is an rstest #[case::unconfigured_without_runtime_dir] parameter, test data only."
+        }
+      ]
     },
     {
       "id": "EA-41b5bb5e38c6fe6b",
@@ -328,9 +648,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 433",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 433
+      "line": 433,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::systemd(...)] is an rstest case value in unix_tests, not production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 433 is an rstest #[case::systemd] parameter, test data only."
+        }
+      ]
     },
     {
       "id": "EA-5d0bfdad0fedd79e",
@@ -338,9 +668,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 434",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 434
+      "line": 434,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::systemd_without_runtime_dir(...)] is a test-case argument, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 434 is an rstest #[case::systemd_without_runtime_dir] parameter, test data only."
+        }
+      ]
     },
     {
       "id": "EA-abd88c70d4131b99",
@@ -348,9 +688,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 436",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 436
+      "line": 436,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::configured(\"/tmp\", Some(CUSTOM), ...)] is a test parameter in the cfg(test) module.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 436 is an rstest #[case::configured] parameter, test data only."
+        }
+      ]
     },
     {
       "id": "EA-79a2562e99ea5fe4",
@@ -358,9 +708,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 437",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 437
+      "line": 437,
+      "verdict": "false_positive",
+      "reason": "\"/tmp\" in #[case::configured_with_systemd(...)] is a test input to the priority-order rstest.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 437 is an rstest #[case::configured_with_systemd] parameter, test data only."
+        }
+      ]
     },
     {
       "id": "EA-bee001298a587929",
@@ -368,9 +728,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 489",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 489
+      "line": 489,
+      "verdict": "false_positive",
+      "reason": "scoped_abs(\"/tmp\") joins the literal under a tempfile::TempDir in the_existing_socket_is_the_first_one_present test, so it never even touches real /tmp.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 489 uses scoped_abs(\"/tmp\") to rebase paths under a TempDir in a test, so no real /tmp is touched."
+        }
+      ]
     },
     {
       "id": "EA-89d9b6598848e2b1",
@@ -378,9 +748,19 @@
       "language": "rust",
       "path": "crates/atuin-client/src/settings/daemon.rs",
       "message": "Hardcoded temp directory (Bandit B108) at line 546",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 546
+      "line": 546,
+      "verdict": "false_positive",
+      "reason": "symlink(\"/tmp\", &default_socket.dir) in a_symlinked_socket_dir_is_rejected is a test that deliberately creates a symlink to check rejection; test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "daemon.rs line 546 symlinks /tmp as the target in the a_symlinked_socket_dir_is_rejected test to exercise rejection, not as a temp-file location."
+        }
+      ]
     },
     {
       "id": "EA-f9dc7f51de457bf8",
@@ -388,9 +768,19 @@
       "language": "typescript",
       "path": "web/src/hooks/use-stats.ts",
       "message": "Hardcoded temp directory (Bandit B108) at line 49",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 49
+      "line": 49,
+      "verdict": "false_positive",
+      "reason": "In use-stats.ts the literal \"/dev/shm\" is a lookup key into memoizedStats.service.storage from the API response, browser code that never touches a filesystem path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "storage[\"/dev/shm\"] in use-stats.ts is a JSON dictionary key looked up from the stats payload, not a filesystem path the web UI uses."
+        }
+      ]
     },
     {
       "id": "EA-79ff0ce648264095",
@@ -398,9 +788,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 107",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 107
+      "line": 107,
+      "verdict": "false_positive",
+      "reason": "stats.service.storage[\"/dev/shm\"]?.shm_frame_count in StorageMetrics.tsx:107 reads a JSON key in the web UI; the string is a label, not a temp file location.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stats.service.storage[\"/dev/shm\"]?.shm_frame_count is a property lookup keyed by a stats label in a React view, not temp-file access."
+        }
+      ]
     },
     {
       "id": "EA-d03710663e208971",
@@ -408,9 +808,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 187",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 187
+      "line": 187,
+      "verdict": "false_positive",
+      "reason": "StorageMetrics.tsx:187 uses \"/tmp/cache\" only to index stats.service.storage for the `used` value of a graph; the frontend makes no file access.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "storage[\"/tmp/cache\"][\"used\"] reads a key from the stats response to draw a graph; the browser UI never touches that directory."
+        }
+      ]
     },
     {
       "id": "EA-4b3ef522e2d12afb",
@@ -418,9 +828,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 188",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 188
+      "line": 188,
+      "verdict": "false_positive",
+      "reason": "Line 188 passes stats.service.storage[\"/tmp/cache\"][\"total\"] to StorageGraph; the literal is a stats dictionary key rendered in React, not a path being written.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "storage[\"/tmp/cache\"][\"total\"] is the same stats-dictionary key lookup in StorageMetrics.tsx, with no file operation."
+        }
+      ]
     },
     {
       "id": "EA-82a7173f0093b323",
@@ -428,9 +848,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 218",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 218
+      "line": 218,
+      "verdict": "false_positive",
+      "reason": "The \"/dev/shm\" at line 218 is a key used to compare the reported shm total in a JSX condition; no temp directory is used by this UI code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The \"/dev/shm\" string is a stats map key in the shm comparison of StorageMetrics.tsx, not a temp path used for file creation."
+        }
+      ]
     },
     {
       "id": "EA-fbef6d6fa5b3bfad",
@@ -438,9 +868,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 219",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 219
+      "line": 219,
+      "verdict": "false_positive",
+      "reason": "Line 219 reads stats.service.storage[\"/dev/shm\"][\"min_shm\"] for the shm warning check; it is a JSON property name, not a filesystem path in use.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "[\"/dev/shm\"][\"min_shm\"] is a dictionary key access for a warning condition in the UI, with no temp-file semantics."
+        }
+      ]
     },
     {
       "id": "EA-16f0c949d7af4edc",
@@ -448,9 +888,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 235",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 235
+      "line": 235,
+      "verdict": "false_positive",
+      "reason": "Line 235 feeds stats.service.storage[\"/dev/shm\"][\"total\"] into the t(\"storage.shm.warning\") interpolation, a display value lookup rather than a temp file.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "stats.service.storage[\"/dev/shm\"][\"total\"] passed to the translation call is only a value lookup by label."
+        }
+      ]
     },
     {
       "id": "EA-a97756babc9fff57",
@@ -458,9 +908,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 236",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 236
+      "line": 236,
+      "verdict": "false_positive",
+      "reason": "Line 236 reads the min_shm field under the \"/dev/shm\" stats key for a translated warning message; the browser never accesses that path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The min_shm lookup under the \"/dev/shm\" key is display data for a translation string, not a filesystem use."
+        }
+      ]
     },
     {
       "id": "EA-dd1c7a7953928b26",
@@ -468,9 +928,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 259",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 259
+      "line": 259,
+      "verdict": "false_positive",
+      "reason": "Line 259 indexes the \"/dev/shm\" stats entry for the general-shared-memory StorageGraph `used` prop; a data key, not a temp path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "used={stats.service.storage[\"/dev/shm\"][\"used\"]} reads a number out of the stats payload for a graph; no file is created."
+        }
+      ]
     },
     {
       "id": "EA-f841de5d426f8251",
@@ -478,9 +948,19 @@
       "language": "typescript",
       "path": "web/src/views/system/StorageMetrics.tsx",
       "message": "Hardcoded temp directory (Bandit B108) at line 260",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 260
+      "line": 260,
+      "verdict": "false_positive",
+      "reason": "Line 260 indexes the \"/dev/shm\" stats entry for the StorageGraph `total` prop; the frontend makes no file operation with it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "total={stats.service.storage[\"/dev/shm\"][\"total\"]} is another stats key lookup feeding StorageGraph, not temp-directory use."
+        }
+      ]
     },
     {
       "id": "EA-5f7c8f7c4e5c0319",
@@ -488,9 +968,19 @@
       "language": "typescript",
       "path": "tools/gx/dev-gc.ts",
       "message": "Hardcoded temp directory (Bandit B108) at line 92",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 92
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "tools/gx/dev-gc.ts is a developer garbage-collection script that lists /tmp inside the local e2e MySQL container (inMysql(['ls', '/tmp'])); it is dev tooling outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "tools/gx/dev-gc.ts is a developer garbage-collection script (lists MySQL e2e database files under /tmp via inMysql ls), tooling outside the production scope."
+        }
+      ]
     }
   ]
 }

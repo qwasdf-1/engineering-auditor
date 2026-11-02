@@ -8,9 +8,19 @@
       "language": "javascript",
       "path": "ghost/core/server/models/base/plugins/bulk-operations.js",
       "message": "Async read-modify-write at line 78 may produce a race condition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 78
+      "line": 78,
+      "verdict": "false_positive",
+      "reason": "`affectedRows` is a local of `bulkWhereOperation` updated only in its own sequential `for...of` loop with no escaping reference, so the += await accumulation is safe.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`affectedRows` is a local counter in `bulkWhereOperation`, updated by sequentially awaited operations in a for-of, so it is not shared state that could race."
+        }
+      ]
     },
     {
       "id": "EA-782cdaad7e87d64d",
@@ -18,9 +28,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/index-DA3bdZbQ.js",
       "message": "Async read-modify-write at line 1 may produce a race condition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1
+      "line": 1,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/tools/web/static/index-DA3bdZbQ.js is a minified Vite build output (hashed filename, imports ./vendor-DXVK1cAY.js), a generated bundle outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`mitmproxy/tools/web/static/index-DA3bdZbQ.js` is a minified built bundle (Vite output), outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-74284f301831988c",
@@ -28,9 +48,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/budget/actions.ts",
       "message": "Async read-modify-write at line 408 may produce a race condition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 408
+      "line": 408,
+      "verdict": "false_positive",
+      "reason": "`sumAmount` is a function-local `let` never captured by a closure, and the `for...of` awaits sequentially, so `sumAmount += await getSheetValue(...)` cannot see a stale value; ESLint's require-atomic-updates skips such non-escaping locals.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sumAmount` is a function-local accumulator in a sequential `for...of` with `await getSheetValue`, so no other code can interleave a write to it; there is no atomicity hazard."
+        }
+      ]
     },
     {
       "id": "EA-9ecf1fbbd261adbe",
@@ -38,9 +68,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/budget/category-template-context.ts",
       "message": "Async read-modify-write at line 139 may produce a race condition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 139
+      "line": 139,
+      "verdict": "false_positive",
+      "reason": "`toBudget` is a local in `runAll` not referenced by any nested function, and each `await this.runTemplatesForPriority(...)` completes before the next add, so no concurrent writer can interleave.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`toBudget` is a local declared in `runAll` and the awaits run sequentially in the for loop, so nothing else can modify it between the read and the write."
+        }
+      ]
     },
     {
       "id": "EA-efb372466c8c2c75",
@@ -48,9 +88,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/budget/category-template-context.ts",
       "message": "Async read-modify-write at line 803 may produce a race condition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 803
+      "line": 803,
+      "verdict": "false_positive",
+      "reason": "`alreadyBudgeted` is declared locally at line 762 and only touched by this sequential loop with no closure capture, so `alreadyBudgeted += await getSheetValue(...)` has no race.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`alreadyBudgeted` is a local in the template-evaluation function and the `await getSheetValue` calls run sequentially in the month loop, so no concurrent writer exists."
+        }
+      ]
     },
     {
       "id": "EA-b1654327ac2e5076",
@@ -58,9 +108,19 @@
       "language": "typescript",
       "path": "ghost/core/server/services/content-import/import/media.ts",
       "message": "Async read-modify-write at line 106 may produce a race condition",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 106
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "`result` in `replaceAsync` is a non-escaping local string built in a sequential `for (const match of input.matchAll(pattern))` loop; nothing else can modify it during the `await replacer(match)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`result` in `replaceAsync` is a function-local string built by sequentially awaiting `replacer(match)` in a for-of, so no interleaving can lose an update."
+        }
+      ]
     },
     {
       "id": "EA-f2bb53789909f36d",

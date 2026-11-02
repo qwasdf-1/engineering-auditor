@@ -8,9 +8,19 @@
       "language": "python",
       "path": "changedetectionio/browser_steps/browser_steps.py",
       "message": "Bare except:pass clause (Bandit B110) at line 555",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 555
+      "line": 555,
+      "verdict": "true_positive",
+      "reason": "A bare `except: pass` around `await self.page.request_gc()` in the screenshot-recovery path of browser_steps.py swallows every exception, including CancelledError, in shipped application code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `self.page.request_gc()` in browser_steps.py swallows every exception including cancellation during recovery, in production code."
+        }
+      ]
     },
     {
       "id": "EA-af46ad5c8bcec55c",
@@ -18,9 +28,19 @@
       "language": "python",
       "path": "changedetectionio/browser_steps/browser_steps.py",
       "message": "Bare except:pass clause (Bandit B110) at line 561",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 561
+      "line": 561,
+      "verdict": "true_positive",
+      "reason": "The final `request_gc()` call before `return (screenshot, xpath_data)` sits in a bare `except: pass` that discards every error silently, which is exactly the bare-except/pass contract.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` after the final `await self.page.request_gc()` in browser_steps.py silently discards all errors including BaseException."
+        }
+      ]
     },
     {
       "id": "EA-e92da5a50239cb6b",
@@ -28,9 +48,19 @@
       "language": "python",
       "path": "changedetectionio/flask_app.py",
       "message": "Bare except:pass clause (Bandit B110) at line 1578",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1578
+      "line": 1578,
+      "verdict": "true_positive",
+      "reason": "The version-check POST in flask_app.py's check_for_new_version thread is wrapped in a bare `except: pass`, so network and other errors (KeyboardInterrupt included) vanish without a log.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around the update-check POST in flask_app.py hides network and programming errors alike in production code."
+        }
+      ]
     },
     {
       "id": "EA-bd00598f19498799",
@@ -38,9 +68,19 @@
       "language": "python",
       "path": "changedetectionio/flask_app.py",
       "message": "Bare except:pass clause (Bandit B110) at line 1584",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1584
+      "line": 1584,
+      "verdict": "true_positive",
+      "reason": "The `if \"new_version\" in r.text` check at flask_app.py:1581-1585 uses a bare `except: pass`, which also hides the NameError raised when the earlier request failed and `r` was never bound.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around the `\"new_version\" in r.text` check in flask_app.py also hides a NameError if `r` was never assigned because the POST failed."
+        }
+      ]
     },
     {
       "id": "EA-b272d8f418bd2f6a",
@@ -48,9 +88,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
       "message": "Bare except:pass clause (Bandit B110) at line 113",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 113
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "In isolated_libvips.py's first subprocess helper, the finally block wraps `parent_conn.close()` in a bare `except: pass`. It is cleanup, but it is still a bare except swallowing everything in production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` in isolated_libvips.py's first handler is a production cleanup that also swallows KeyboardInterrupt/SystemExit."
+        }
+      ]
     },
     {
       "id": "EA-938d0a98141e5d01",
@@ -58,9 +108,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
       "message": "Bare except:pass clause (Bandit B110) at line 198",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 198
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "The calculate-subprocess helper in isolated_libvips.py (line 196-199) closes `parent_conn` inside a bare `except: pass` in its finally block, which matches the B110 contract.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` in the calculate path of isolated_libvips.py swallows every exception in production code."
+        }
+      ]
     },
     {
       "id": "EA-d0ae22194e1ad9a1",
@@ -68,9 +128,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
       "message": "Bare except:pass clause (Bandit B110) at line 321",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 321
+      "line": 321,
+      "verdict": "true_positive",
+      "reason": "The compare helper in isolated_libvips.py silently swallows any exception from `parent_conn.close()` with a bare `except: pass` at line 321 before the timed join.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` in the compare path of isolated_libvips.py is the same silent catch-all in production code."
+        }
+      ]
     },
     {
       "id": "EA-cd176c3eac219a1d",
@@ -78,9 +148,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
       "message": "Bare except:pass clause (Bandit B110) at line 168",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 168
+      "line": 168,
+      "verdict": "true_positive",
+      "reason": "The async isolated_opencv.py helper's finally block at line 166-169 uses a bare `except: pass` around `parent_conn.close()`. Inside a coroutine this also swallows cancellation-related BaseExceptions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` at the first isolated_opencv.py finally block catches BaseException silently."
+        }
+      ]
     },
     {
       "id": "EA-e1869d827ca9d206",
@@ -88,9 +168,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
       "message": "Bare except:pass clause (Bandit B110) at line 324",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 324
+      "line": 324,
+      "verdict": "true_positive",
+      "reason": "The second async opencv subprocess wrapper (line 322-325) repeats a bare `except: pass` on `parent_conn.close()` before `asyncio.to_thread(p.join, 5)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` at the second isolated_opencv.py finally block catches BaseException silently."
+        }
+      ]
     },
     {
       "id": "EA-bd116ce3d655f6cc",
@@ -98,9 +188,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
       "message": "Bare except:pass clause (Bandit B110) at line 455",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 455
+      "line": 455,
+      "verdict": "true_positive",
+      "reason": "In the 3s-timeout opencv wrapper at line 453-456, `parent_conn.close()` is wrapped in a bare `except: pass`, so every error is discarded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` in the third isolated_opencv.py finally block, which also precedes a thread-based join, catches BaseException silently."
+        }
+      ]
     },
     {
       "id": "EA-0aa07c1da9385a0d",
@@ -108,9 +208,19 @@
       "language": "python",
       "path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
       "message": "Bare except:pass clause (Bandit B110) at line 599",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 599
+      "line": 599,
+      "verdict": "true_positive",
+      "reason": "The fourth opencv subprocess wrapper (line 597-600) uses a bare `except: pass` for `parent_conn.close()` in its finally block, in shipped processor code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `parent_conn.close()` in the fourth isolated_opencv.py finally block catches BaseException silently."
+        }
+      ]
     },
     {
       "id": "EA-ac38e43eaa90d477",
@@ -118,9 +228,19 @@
       "language": "python",
       "path": "changedetectionio/store/file_saving_datastore.py",
       "message": "Bare except:pass clause (Bandit B110) at line 146",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 146
+      "line": 146,
+      "verdict": "true_positive",
+      "reason": "In the OSError handler of file_saving_datastore.py's atomic write, `os.close(fd)` is wrapped in a bare `except: pass` (line 144-147), swallowing all exception types during cleanup.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `os.close(fd)` in the OSError cleanup of file_saving_datastore.py hides every failure including interrupts."
+        }
+      ]
     },
     {
       "id": "EA-ea0c079ed9da1cd5",
@@ -128,9 +248,19 @@
       "language": "python",
       "path": "changedetectionio/store/file_saving_datastore.py",
       "message": "Bare except:pass clause (Bandit B110) at line 151",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 151
+      "line": 151,
+      "verdict": "true_positive",
+      "reason": "The temp-file `os.unlink(temp_path)` cleanup in the OSError branch (line 149-152) uses a bare `except:` with only `pass`, so the cleanup can fail silently and leave a stray temp file.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `os.unlink(temp_path)` in the OSError cleanup of file_saving_datastore.py is a silent catch-all in production persistence code."
+        }
+      ]
     },
     {
       "id": "EA-878a518add2cb24c",
@@ -138,9 +268,19 @@
       "language": "python",
       "path": "changedetectionio/store/file_saving_datastore.py",
       "message": "Bare except:pass clause (Bandit B110) at line 167",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 167
+      "line": 167,
+      "verdict": "true_positive",
+      "reason": "In the generic `except Exception` branch, `os.close(fd)` is guarded by a bare `except: pass` at line 167, which matches the bare-except/pass rule.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `os.close(fd)` in the generic Exception cleanup of file_saving_datastore.py swallows all exceptions before `raise e`."
+        }
+      ]
     },
     {
       "id": "EA-51c33fbaa6b85e5b",
@@ -148,9 +288,19 @@
       "language": "python",
       "path": "changedetectionio/store/file_saving_datastore.py",
       "message": "Bare except:pass clause (Bandit B110) at line 172",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 172
+      "line": 172,
+      "verdict": "true_positive",
+      "reason": "The second `os.unlink(temp_path)` cleanup before `raise e` (line 170-173) silently ignores every exception through a bare `except: pass`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `os.unlink(temp_path)` before `raise e` in file_saving_datastore.py silently swallows every exception, including BaseException."
+        }
+      ]
     },
     {
       "id": "EA-8e25f1265d72fe62",
@@ -158,9 +308,19 @@
       "language": "python",
       "path": "changedetectionio/store/updates.py",
       "message": "Bare except:pass clause (Bandit B110) at line 115",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 115
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "After a failed backup tarball in store/updates.py, `os.unlink(backup_path)` is wrapped in a bare `except: pass`, so a leftover partial backup goes unreported in the shipped schema-migration code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Bare `except:` with `pass` around `os.unlink(backup_path)` in updates.py's backup-failure cleanup is a silent catch-all in production code."
+        }
+      ]
     },
     {
       "id": "EA-06e4abce5b2b6cf7",
@@ -168,9 +328,19 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Bare except:pass clause (Bandit B110) at line 196",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 196
+      "line": 196,
+      "verdict": "false_positive",
+      "reason": "logging_utils.py belongs to ranger-tools' Python 'Performance and Scalability Analyzer' (ranger_performance_tool). It is a benchmarking utility that the ranger-tools.xml assembly does not package, so it is out of production scope even though the `pd.to_numeric` bare except is real.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The bare except around `pd.to_numeric` in ranger_perf_utils/logging_utils.py is in the ranger_performance_tool, a performance-benchmark harness, so it is benchmark code outside scope."
+        }
+      ]
     },
     {
       "id": "EA-8f6a43ace04f963e",

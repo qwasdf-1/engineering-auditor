@@ -8,9 +8,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/react-webapp/src/utils/XAUtils.js",
       "message": "Function `` copies growing `allRouter` while adding loop value `key`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "true_positive",
+      "reason": "`allRouter = [...allRouter, ...PathAssociateWithModule[key]]` rebuilds the array by spreading its previous value on every `for...in` iteration, a quadratic copy that `push(...)` or `flatMap` avoids.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`allRouter = [...allRouter, ...PathAssociateWithModule[key]]` re-copies the growing array on each `for...in` iteration where push/concat-in-place would do."
+        }
+      ]
     }
   ]
 }

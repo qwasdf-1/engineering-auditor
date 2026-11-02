@@ -8,9 +8,19 @@
       "language": "go",
       "path": "cluster/client.go",
       "message": "The loop at line 705 retries the operation at line 706 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 705
+      "line": 705,
+      "verdict": "true_positive",
+      "reason": "The `for attempt := 0; attempt <= retries` loop re-dials the same `nodeAddress` with `c.dial` and `continue`s on dial/write/read errors with no time.Sleep or backoff.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The attempt loop in the cluster client redials c.dial(nodeAddress) and rewrites the command with continue on each error and no pause between attempts, hammering a failing node."
+        }
+      ]
     },
     {
       "id": "EA-27608b6ce8494a2d",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/exec/DBExecUtils.java",
       "message": "The loop at line 230 retries the operation at line 231 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 230
+      "line": 230,
+      "verdict": "false_positive",
+      "reason": "Between attempts the loop runs recovery (`InvalidateJob.invalidateTransaction` / `invalidateDataSource` reconnect) only for TRANSACTION_ABORTED or CONNECTION_LOST, so it remediates the cause before retrying rather than hammering a failing peer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DBExecUtils.tryExecute loops up to tryCount, re-running runnable.run(param) after invalidating the connection with no sleep or delay between attempts."
+        }
+      ]
     },
     {
       "id": "EA-f539cd7d48364591",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.connection/src/org/jkiss/dbeaver/ui/dialogs/driver/DriverEditHelpers.java",
       "message": "The loop at line 151 retries the operation at line 152 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 151
+      "line": 151,
+      "verdict": "false_positive",
+      "reason": "exportLibrary only loops again when the user picks RETRY in `showErrorStopRetryIgnore`, a blocking dialog; the user's decision is the wait, so there is no immediate automatic retry.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "exportLibrary retries only when the user picks RETRY in the showErrorStopRetryIgnore dialog, so the modal prompt is the wait and it is not an automatic immediate retry."
+        }
+      ]
     },
     {
       "id": "EA-69bb6c251c738d94",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.search/src/org/jkiss/dbeaver/ui/search/metadata/SearchMetadataPage.java",
       "message": "The loop at line 173 retries the operation at line 175 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 173
+      "line": 173,
+      "verdict": "false_positive",
+      "reason": "`for (DBNNode node = ...; node != null; node = node.getParentNode())` walks up the navigator tree to find a DBNDataSource; it is a traversal, not a retry of `initializeNode`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The for loop walks node.getParentNode() up the tree to find a DBNDataSource; it is an ancestor traversal, not a retry of a failed operation."
+        }
+      ]
     },
     {
       "id": "EA-720862924cf4413c",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/XUserMgr.java",
       "message": "The loop at line 2735 retries the operation at line 2737 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2735
+      "line": 2735,
+      "verdict": "true_positive",
+      "reason": "The do/while retries `daoManager.getXXGlobalState().onGlobalAppDataChange(...)` up to MAX_DB_TRANSACTION_RETRIES=5 times immediately after an exception, with no sleep between DB attempts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The do/while in XUserMgr re-runs onGlobalAppDataChange after each exception with only a logger.warn between attempts and no sleep, up to MAX_DB_TRANSACTION_RETRIES."
+        }
+      ]
     },
     {
       "id": "EA-2901b21a4f4092f8",
@@ -58,9 +108,19 @@
       "language": "python",
       "path": "mitmproxy/net/free_port.py",
       "message": "The loop at line 10 retries the operation at line 15 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 10
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "free_port binds port 0 each pass, so the OS hands out a different ephemeral port and the next attempt does not fail for the same reason; there is no failing peer to back off from.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop binds port 0 so the OS picks a different free port each pass; retrying immediately on a TCP/UDP port clash is the right approach and there is no failing peer."
+        }
+      ]
     },
     {
       "id": "EA-7dccd1377b972d02",
@@ -68,9 +128,19 @@
       "language": "python",
       "path": "zerver/lib/push_registration.py",
       "message": "The loop at line 103 retries the operation at line 105 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 103
+      "line": 103,
+      "verdict": "true_positive",
+      "reason": "`remove_push_device_token` is retried MAX_REQUEST_RETRIES times right after bouncer 5xx/retry-later errors with no sleep; the code's own TODO says 'Retry with backoff'.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The MAX_REQUEST_RETRIES loop calls remove_push_device_token again immediately on bouncer server/retry-later errors, and the in-code TODO admits backoff is missing."
+        }
+      ]
     },
     {
       "id": "EA-3d387f4ac0ceda88",
@@ -78,9 +148,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/opencode/rehydrate.rs",
       "message": "The loop at line 327 retries the operation at line 333 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 327
+      "line": 327,
+      "verdict": "false_positive",
+      "reason": "`for n in 0u32..` builds a new path `atuin-opencode-import-{pid}-{n}.json` each pass and only continues on AlreadyExists; this is unique-filename probing that reads the counter, not a retry.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop in export_file increments n to try a different temp file name after AlreadyExists from create_new(true); each pass uses a new path, so waiting is meaningless."
+        }
+      ]
     },
     {
       "id": "EA-4cb1834dcac3e6f6",
@@ -88,9 +168,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/importers/ynab5.ts",
       "message": "The loop at line 342 retries the operation at line 344 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 342
+      "line": 342,
+      "verdict": "false_positive",
+      "reason": "Each pass sends `api/category-group-create` with a different `name` derived from `count` (`${baseName} (${count})`), so the loop probes for a unique name rather than retrying the same failed operation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop in the YNAB category-group creator changes the name suffix (baseName (count)) on each pass to resolve a name collision with a local api call; it is not a transient-fault retry against a failing peer."
+        }
+      ]
     },
     {
       "id": "EA-7a6f5aa83242dbeb",
@@ -98,9 +188,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/importers/ynab5.ts",
       "message": "The loop at line 367 retries the operation at line 369 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 367
+      "line": 367,
+      "verdict": "false_positive",
+      "reason": "The `api/category-create` loop varies `name` with `count` on every iteration to dodge name collisions; the operation reads the counter, which the detector says is not a retry.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The category-create loop builds a new name from count on every iteration to avoid duplicate names in a local import call, so an immediate retry is the intent and not a missing backoff."
+        }
+      ]
     },
     {
       "id": "EA-e2a1025fc460fd7f",
@@ -108,9 +208,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/importers/ynab5.ts",
       "message": "The loop at line 909 retries the operation at line 910 immediately after it fails, with no wait between attempts",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 909
+      "line": 909,
+      "verdict": "false_positive",
+      "reason": "On failure the loop rewrites `params.name = `${baseName} (${count})`` before resending `api/schedule-create`, so each attempt tries a new name instead of immediately repeating the same call.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The schedule-create loop rewrites params.name to baseName (count) before each retry, a uniqueness-suffix strategy against an in-process call rather than load-sensitive retry."
+        }
+      ]
     }
   ]
 }

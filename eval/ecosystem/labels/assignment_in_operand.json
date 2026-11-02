@@ -8,9 +8,19 @@
       "language": "javascript",
       "path": "changedetectionio/static/js/snippet-to-image.js",
       "message": "Assignment in if/while condition at line 66",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 66
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "`while (textNode = walker.nextNode())` in findLineBoundaryInNode is a bare assignment as the whole condition without the extra parentheses ESLint no-cond-assign accepts, in first-party shipped UI code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`while (textNode = walker.nextNode())` at line 66 is a bare assignment as the whole while condition in the project's own snippet-to-image.js, which the documented rule flags."
+        }
+      ]
     },
     {
       "id": "EA-0709166672baab8d",
@@ -18,9 +28,19 @@
       "language": "javascript",
       "path": "changedetectionio/static/js/snippet-to-image.js",
       "message": "Assignment in if/while condition at line 108",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 108
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "getLastTextNode's `while (textNode = walker.nextNode())` is a condition consisting solely of an unparenthesised assignment, exactly the documented no-cond-assign case, in changedetection's own static JS.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`while (textNode = walker.nextNode())` at line 108 is a condition that is nothing but an assignment in the project's own first-party script, matching the rule."
+        }
+      ]
     },
     {
       "id": "EA-4c94d3ee92996237",
@@ -28,9 +48,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Assignment in if/while condition at line 2494",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2494
+      "line": 2494,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.debug.js is a built debug bundle (simplemde v1.11.2 with bundled CodeMirror); the `while (child = child.parentNode)` in CodeMirror's contains() is vendored third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (child = child.parentNode)` is in koenig/kg-simplemde/debug/simplemde.debug.js, a built bundle of simplemde v1.11.2 with embedded CodeMirror, i.e. generated vendored code."
+        }
+      ]
     },
     {
       "id": "EA-91d2de6387d06d89",
@@ -38,9 +68,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Assignment in if/while condition at line 3924",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3924
+      "line": 3924,
+      "verdict": "false_positive",
+      "reason": "`while (merged = collapsedSpanAtEnd(line))` at 3924 is inside CodeMirror bundled into the generated debug/simplemde.debug.js, which is a build artefact, not Ghost source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (merged = collapsedSpanAtEnd(line))` at line 3924 is CodeMirror code inside the generated simplemde.debug.js bundle, out of scope."
+        }
+      ]
     },
     {
       "id": "EA-ed256cb9586b6230",
@@ -48,9 +88,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Assignment in if/while condition at line 4015",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4015
+      "line": 4015,
+      "verdict": "false_positive",
+      "reason": "The `while (merged = collapsedSpanAtStart(cur))` at 4015 of debug/simplemde.debug.js is CodeMirror's visualLineNo code inside a generated bundle of vendored libraries, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (merged = collapsedSpanAtStart(cur))` at line 4015 sits in the bundled CodeMirror inside simplemde.debug.js, a generated vendored file."
+        }
+      ]
     },
     {
       "id": "EA-f49f84b174707ab2",
@@ -58,9 +108,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Assignment in if/while condition at line 7378",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 7378
+      "line": 7378,
+      "verdict": "false_positive",
+      "reason": "`if (m = prop.match(/^spans_(\\d+)$/))` at 7378 is CodeMirror history-merging code concatenated into the built debug/simplemde.debug.js bundle, vendored third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`if (m = prop.match(...))` at line 7378 is CodeMirror source concatenated into the simplemde.debug.js build artifact, so vendored."
+        }
+      ]
     },
     {
       "id": "EA-98f6c0bd891de720",
@@ -68,9 +128,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Assignment in if/while condition at line 2494",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2494
+      "line": 2494,
+      "verdict": "false_positive",
+      "reason": "debug/simplemde.js line 2494 `} while (child = child.parentNode)` is CodeMirror's contains() helper in a built SimpleMDE distribution bundle (package main is src/js/simplemde.js), so it is generated vendored output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (child = child.parentNode)` at line 2494 is in debug/simplemde.js, a built simplemde v1.11.2 bundle (header says so), generated vendored code."
+        }
+      ]
     },
     {
       "id": "EA-cc038257b0d485fb",
@@ -78,9 +148,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Assignment in if/while condition at line 3917",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3917
+      "line": 3917,
+      "verdict": "false_positive",
+      "reason": "`while (merged = collapsedSpanAtStart(line))` at 3917 of the built debug/simplemde.js comes from bundled CodeMirror visualLine(), not code Ghost authors.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (merged = collapsedSpanAtStart(line))` at 3917 comes from CodeMirror bundled into debug/simplemde.js, a generated third-party artifact."
+        }
+      ]
     },
     {
       "id": "EA-e0ead04fa9221ac4",
@@ -88,9 +168,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Assignment in if/while condition at line 3924",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3924
+      "line": 3924,
+      "verdict": "false_positive",
+      "reason": "`while (merged = collapsedSpanAtEnd(line))` at 3924 of debug/simplemde.js is CodeMirror's visualLineEnd inside a generated distribution bundle of third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (merged = collapsedSpanAtEnd(line))` at 3924 is vendored CodeMirror inside the built debug/simplemde.js bundle."
+        }
+      ]
     },
     {
       "id": "EA-8a619bce0b076809",
@@ -98,9 +188,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Assignment in if/while condition at line 3954",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3954
+      "line": 3954,
+      "verdict": "false_positive",
+      "reason": "The second `while (merged = collapsedSpanAtEnd(line))` at 3954 of debug/simplemde.js is CodeMirror's visualLineEndNo in the bundled build output, outside detector scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (merged = collapsedSpanAtEnd(line))` at 3954 is CodeMirror code in the generated debug/simplemde.js bundle, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-64107b90346b1243",
@@ -108,9 +208,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Assignment in if/while condition at line 4015",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4015
+      "line": 4015,
+      "verdict": "false_positive",
+      "reason": "`while (merged = collapsedSpanAtStart(cur))` at 4015 of debug/simplemde.js belongs to CodeMirror code concatenated into the built SimpleMDE bundle, vendored and generated.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (merged = collapsedSpanAtStart(cur))` at 4015 lives in the vendored CodeMirror portion of the built debug/simplemde.js."
+        }
+      ]
     },
     {
       "id": "EA-1d6f5e88ed362822",
@@ -118,9 +228,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Assignment in if/while condition at line 1",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1
+      "line": 1,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js is a content-hashed Vite vendor chunk of minified third-party libraries (line 1 starts with minified xR helper), a generated bundle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 1 of the hashed bundle mitmproxy/tools/web/static/vendor-DXVK1cAY.js is minified third-party vendor output, generated and out of scope."
+        }
+      ]
     },
     {
       "id": "EA-788a489d223a14a9",
@@ -128,9 +248,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Assignment in if/while condition at line 8",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 8
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "Line 8 of vendor-DXVK1cAY.js is minified React DOM (hi, Sh, vh helpers) in a hashed build chunk; assignments in its conditions are minifier output in vendored code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 8 of the minified, content-hashed vendor-DXVK1cAY.js is built third-party library code, not authored source."
+        }
+      ]
     },
     {
       "id": "EA-9eec7646d69a4cd7",
@@ -138,9 +268,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Assignment in if/while condition at line 9",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 9
+      "line": 9,
+      "verdict": "false_positive",
+      "reason": "Line 9 of the generated vendor-DXVK1cAY.js holds minified React DOM property-setting code (kt, Qm), built third-party output rather than mitmproxy source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 9 of vendor-DXVK1cAY.js is part of a generated vendor bundle (hash in filename), so assignment-in-condition there is not the project's code."
+        }
+      ]
     },
     {
       "id": "EA-5b80f1e5751afbed",
@@ -148,9 +288,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Assignment in if/while condition at line 38",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 38
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "Line 38 of vendor-DXVK1cAY.js is minified CodeMirror style-module/keyname code (styleTag, lo keymap) inside a hashed vendor bundle, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 38 of vendor-DXVK1cAY.js is minified bundled dependency code from the web build, a generated artifact."
+        }
+      ]
     },
     {
       "id": "EA-30ace522a43275b8",
@@ -158,9 +308,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Assignment in if/while condition at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "Line 42 of the built vendor-DXVK1cAY.js is minified CodeMirror special-character code (a3 name table), vendored generated output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 42 of vendor-DXVK1cAY.js belongs to the built vendor bundle of third-party libraries, out of scope."
+        }
+      ]
     },
     {
       "id": "EA-3f98e461d589de2c",
@@ -168,9 +328,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Assignment in if/while condition at line 43",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 43
+      "line": 43,
+      "verdict": "false_positive",
+      "reason": "Line 43 of vendor-DXVK1cAY.js is minified CodeMirror search query code (eq/create/getCursor) bundled by the frontend build, not first-party source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 43 of vendor-DXVK1cAY.js is the same minified vendor bundle output, not hand-written project code."
+        }
+      ]
     },
     {
       "id": "EA-5a2d32f204e8d304",
@@ -178,9 +348,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/backbone-pageable/js/backbone-pageable.js",
       "message": "Assignment in if/while condition at line 452",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 452
+      "line": 452,
+      "verdict": "false_positive",
+      "reason": "`if (nextModel = fullCol.at(pageEnd))` is in security-admin/.../libs/bower/backbone-pageable, a vendored copy of the third-party backbone-pageable library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "backbone-pageable.js lives under security-admin webapp libs/bower/, a vendored third-party Bower library, so line 452 is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-874020acc33b6433",
@@ -188,9 +368,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/backbone-pageable/js/backbone-pageable.js",
       "message": "Assignment in if/while condition at line 964",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 964
+      "line": 964,
+      "verdict": "false_positive",
+      "reason": "`if (qs = (qsi = last.indexOf('?')) ? ...)` at 964 lives in the bower-vendored backbone-pageable.js under libs/bower, third-party code Ranger only redistributes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 964 of libs/bower/backbone-pageable/js/backbone-pageable.js is vendored Bower dependency code."
+        }
+      ]
     },
     {
       "id": "EA-854c5ad8496c4fda",
@@ -198,9 +388,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/jquery/js/core-lib.js",
       "message": "Assignment in if/while condition at line 8574",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 8574
+      "line": 8574,
+      "verdict": "false_positive",
+      "reason": "The `if ( option.selected = ...)` select valHooks code at 8574 is jQuery core in libs/bower/jquery/js/core-lib.js, vendored third-party library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "core-lib.js at libs/bower/jquery is vendored jQuery shipped as a Bower library, so line 8574 is third-party code."
+        }
+      ]
     },
     {
       "id": "EA-328dd7c5f9f605c4",
@@ -208,9 +408,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "Assignment in if/while condition at line 1008",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1008
+      "line": 1008,
+      "verdict": "false_positive",
+      "reason": "`if(container = this.$element.data(this.containerDataName))` is in libs/bower/x-editable/js/bootstrap-editable.js, a vendored copy of the x-editable plugin.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bootstrap-editable.js under libs/bower/x-editable is a vendored third-party Bower library, not Ranger's own source."
+        }
+      ]
     },
     {
       "id": "EA-4306762915dadc6a",
@@ -218,9 +428,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 286",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 286
+      "line": 286,
+      "verdict": "false_positive",
+      "reason": "`if (cap = this.rules.list.exec(src))` at 286 is in web/third/marked/lib/marked.cjs, Zulip's vendored fork of the third-party marked parser kept under web/third.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "web/third/marked/lib/marked.cjs is the vendored third-party marked library under web/third, so line 286 is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-20e91ff676ed6b53",
@@ -228,9 +448,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 444",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 444
+      "line": 444,
+      "verdict": "false_positive",
+      "reason": "The block-lexer `if (cap = this.rules.text.exec(src))` at 444 is upstream marked's exec-and-test pattern in the vendored web/third/marked library.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 444 of the vendored web/third/marked/lib/marked.cjs is third-party library code."
+        }
+      ]
     },
     {
       "id": "EA-a166baa4e84f8b4a",
@@ -238,9 +468,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 616",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 616
+      "line": 616,
+      "verdict": "false_positive",
+      "reason": "`if (cap = regex.exec(src))` at 616 is part of the third-party marked lexer vendored in web/third/marked/lib/marked.cjs, outside first-party scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 616 of web/third/marked/lib/marked.cjs is in the vendored marked parser under web/third."
+        }
+      ]
     },
     {
       "id": "EA-0de0974f4533287e",
@@ -248,9 +488,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 668",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 668
+      "line": 668,
+      "verdict": "false_positive",
+      "reason": "`if (cap = this.rules.autolink.exec(src))` at 668 is the inline lexer of the vendored marked library in web/third, not Zulip application code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 668 sits in vendored web/third/marked/lib/marked.cjs, third-party code Zulip does not author."
+        }
+      ]
     },
     {
       "id": "EA-78f651e79945f1eb",
@@ -258,9 +508,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 700",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 700
+      "line": 700,
+      "verdict": "false_positive",
+      "reason": "`if (cap = this.rules.tag.exec(src))` at 700 is marked's HTML tag tokenizer inside the vendored web/third/marked copy.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 700 of web/third/marked/lib/marked.cjs is part of the vendored marked library."
+        }
+      ]
     },
     {
       "id": "EA-fbcbac032c8c5c36",
@@ -268,9 +528,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 759",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 759
+      "line": 759,
+      "verdict": "false_positive",
+      "reason": "`if (cap = this.rules.stream_topic_message.exec(src))` at 759 is a Zulip patch inside the vendored marked fork under web/third, following that library's exec-in-condition style; the directory is third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 759 of marked.cjs under web/third/ is vendored third-party code."
+        }
+      ]
     },
     {
       "id": "EA-8e2aff4f806f4257",
@@ -278,9 +548,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 780",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 780
+      "line": 780,
+      "verdict": "false_positive",
+      "reason": "`if (cap = this.rules.strong.exec(src))` at 780 is marked's emphasis tokenizer in the vendored web/third/marked/lib/marked.cjs.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 780 of the vendored web/third/marked/lib/marked.cjs is third-party library source."
+        }
+      ]
     },
     {
       "id": "EA-82759db0f02b741c",
@@ -288,9 +568,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 808",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 808
+      "line": 808,
+      "verdict": "false_positive",
+      "reason": "`if (cap = this.rules.del.exec(src))` at 808 is the strikethrough rule of the vendored marked library under web/third.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 808 of web/third/marked/lib/marked.cjs is vendored marked code, out of scope."
+        }
+      ]
     },
     {
       "id": "EA-3091b81087f764a1",
@@ -298,9 +588,19 @@
       "language": "javascript",
       "path": "web/third/marked/lib/marked.cjs",
       "message": "Assignment in if/while condition at line 847",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 847
+      "line": 847,
+      "verdict": "false_positive",
+      "reason": "The inline-lexer `if (cap = this.rules.text.exec(src))` at 847 is in vendored third-party marked (web/third), distinct from the block-lexer one at 444 but equally out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 847 of the web/third/marked/lib/marked.cjs vendored library is not first-party code."
+        }
+      ]
     },
     {
       "id": "EA-b05e28cd0c478c76",
@@ -308,9 +608,19 @@
       "language": "rust",
       "path": "crates/atuin-common/src/harnesstools/sync.rs",
       "message": "Assignment in if/while condition at line 538",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 538
+      "line": 538,
+      "verdict": "false_positive",
+      "reason": "Line 538 `if branch[..=last].iter().any(|m| m.source_id == line)` contains only an `==` comparison inside a closure and no assignment expression at all, so the claim is wrong.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 538 is `branch[..=last].iter().any(|m| m.source_id == line)`; the only `==` is a comparison inside a closure and there is no assignment in the if condition."
+        }
+      ]
     },
     {
       "id": "EA-4a6f03047c7330e2",
@@ -318,9 +628,19 @@
       "language": "rust",
       "path": "warpgate-protocol-postgres/src/client.rs",
       "message": "Assignment in if/while condition at line 237",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 237
+      "line": 237,
+      "verdict": "false_positive",
+      "reason": "The `while { ...; state.is_running() } {}` at line 237 is the Rust do-while idiom; the only assignment inside the block is the statement `is_first_response = false;`, and Rust assignments evaluate to () so no typo-for-== risk exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `while { ...; state.is_running() } { ... }` at line 237 is a block-expression do-while emulation; its inner `is_first_response = false` is an ordinary statement, not an assignment used as an operand."
+        }
+      ]
     }
   ]
 }

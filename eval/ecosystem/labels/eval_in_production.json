@@ -8,9 +8,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyengine/RangerRequestScriptEvaluator.java",
       "message": "Non-test source calls dynamic execution at line 244",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 244
+      "line": 244,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The eval at line 244 runs only preExecScript, which is empty or the static final constant SCRIPT_PREEXEC; request data goes in through bindings and JSON.parse, so no dynamic or injectable text is executed at this site.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 244 evaluates only preExecScript, built solely from the constant SCRIPT_PREEXEC (JSON.parse of the context JSON), not policy-author or user text."
+        }
+      ]
     },
     {
       "id": "EA-74285cdc0c8d0010",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/policyengine/RangerRequestScriptEvaluator.java",
       "message": "Non-test source calls dynamic execution at line 858",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 858
+      "line": 858,
+      "verdict": "true_positive",
+      "reason": "`scriptEngine.eval(preExec + script, bindings)` in evaluateScript runs policy-condition scripts at authorization time in shipped agents-common code; intentional, but the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Line 858 `scriptEngine.eval(preExec + script, bindings)` evaluates policy-supplied condition scripts in Ranger's production policy engine, which is real dynamic code execution."
+        }
+      ]
     },
     {
       "id": "EA-77e83ed172875ee1",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "plugin-nestedstructure/src/main/java/org/apache/ranger/authorization/nestedstructure/authorizer/RecordFilterJavaScript.java",
       "message": "Non-test source calls dynamic execution at line 97",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 97
+      "line": 97,
+      "verdict": "true_positive",
+      "reason": "RecordFilterJavaScript calls `engine.eval(script, bindings)` to evaluate row-filter JavaScript in the production nested-structure authorizer plugin.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "RecordFilterJavaScript.java line 97 evals a script derived from the filterExpr row-filter expression via `engine.eval(script, bindings)` in the shipped authorizer plugin."
+        }
+      ]
     },
     {
       "id": "EA-3004a10b75e38128",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/script/ExtensionScript.java",
       "message": "Non-test source calls dynamic execution at line 1523",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1523
+      "line": 1523,
+      "verdict": "true_positive",
+      "reason": "ExtensionScript.invokeScript calls `se.eval(script.getContents())` (ScriptEngine.eval) in ZAP's production scripting extension.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ExtensionScript.java line 1523 calls `se.eval(script.getContents())` to run user-loaded ZAP scripts in the shipped extension, real script-engine evaluation."
+        }
+      ]
     },
     {
       "id": "EA-b2863c984b616a1a",
@@ -48,9 +88,19 @@
       "language": "javascript",
       "path": ".github/actions/report-boot-benchmark/calibration.js",
       "message": "Non-test source calls dynamic execution at line 18",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 18
+      "line": 18,
+      "verdict": "false_positive",
+      "reason": "`new vm.Script(sources[i])` is in `.github/actions/report-boot-benchmark/calibration.js`, a CI benchmark-calibration action, which is tooling outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "calibration.js is under .github/actions/report-boot-benchmark, a CI workflow script that only compiles generated sources with vm.Script for timing, so it is CI tooling out of scope."
+        }
+      ]
     },
     {
       "id": "EA-a19170a28528f921",
@@ -58,9 +108,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/media-inliner/external-media-inliner.js",
       "message": "Non-test source calls dynamic execution at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "`new vm.Script('Array.from(content.matchAll(regex), ...)')` compiles a fixed literal only to get a `timeout` around regex matching; no code from data is evaluated, so the dynamic-execution risk does not apply.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "external-media-inliner.js compiles a fixed literal script 'Array.from(content.matchAll(regex)...)' with vm.Script inside an empty context with a timeout, so no dynamic input is executed; it is a regex-timeout sandbox idiom."
+        }
+      ]
     },
     {
       "id": "EA-0724e33cdeff19d8",
@@ -68,9 +128,19 @@
       "language": "javascript",
       "path": "web_src/fomantic/build/components/api.js",
       "message": "Non-test source calls dynamic execution at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "web_src/fomantic/build/components/api.js is the vendored Fomantic-UI 2.8.7 build output (MIT header, semantic.json base node_modules/fomantic-ui), and `Function('return this')()` is just its global-object shim.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "api.js is a vendored Fomantic UI build file under web_src/fomantic/build, and `Function('return this')()` is the standard global-object lookup shim."
+        }
+      ]
     },
     {
       "id": "EA-d930b99ffcac672d",
@@ -78,9 +148,19 @@
       "language": "javascript",
       "path": "web_src/fomantic/build/components/dropdown.js",
       "message": "Non-test source calls dynamic execution at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "The `Function('return this')()` global lookup at line 23 of the vendored Fomantic-UI build file fomantic/build/components/dropdown.js is third-party built code, outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "dropdown.js is vendored Fomantic UI build output (with a GITEA-PATCH note aside), and the flagged `Function('return this')()` is just the global-object shim."
+        }
+      ]
     },
     {
       "id": "EA-eff1847bf42e6157",
@@ -88,9 +168,19 @@
       "language": "javascript",
       "path": "web_src/fomantic/build/components/modal.js",
       "message": "Non-test source calls dynamic execution at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "false_positive",
+      "reason": "fomantic/build/components/modal.js is vendored Fomantic-UI build output, and the flagged `Function('return this')()` only resolves the global object; it is third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "modal.js is vendored Fomantic UI build output, and line 23 `Function('return this')()` is the global-object fallback shim, not evaluation of app data."
+        }
+      ]
     },
     {
       "id": "EA-bc3b837b06abcea1",
@@ -98,9 +188,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Non-test source calls dynamic execution at line 13",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js is a minified, hash-named Vite vendor bundle; the hit is lodash's `Function(\"return this\")()` inside built third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js is a minified, hashed vendor bundle in mitmproxy's built web static directory, i.e. generated third-party code."
+        }
+      ]
     },
     {
       "id": "EA-259c82f3086585b4",
@@ -108,9 +208,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/require-handlebars-plugin/js/Handlebars.js",
       "message": "Non-test source calls dynamic execution at line 1074",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1074
+      "line": 1074,
+      "verdict": "false_positive",
+      "reason": "security-admin/.../libs/bower/require-handlebars-plugin/js/Handlebars.js is a vendored bower copy of Handlebars (core-js `Function('return this')()` shim), which is third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Handlebars.js sits in security-admin/.../libs/bower, a vendored webpack bundle, and line 1074 is the core-js `Function('return this')()` global shim."
+        }
+      ]
     },
     {
       "id": "EA-24855466a94a31ee",
@@ -118,9 +228,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/requirejs/js/require.js",
       "message": "Non-test source calls dynamic execution at line 2141",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2141
+      "line": 2141,
+      "verdict": "false_positive",
+      "reason": "`req.exec = function (text) { return eval(text); }` is inside the vendored RequireJS library under libs/bower/requirejs, which is third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "require.js under libs/bower/requirejs is vendored RequireJS, and its `req.exec` eval is the library's own loader-plugin hook, not project code."
+        }
+      ]
     },
     {
       "id": "EA-1ab6f11d0674796e",
@@ -128,9 +248,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/underscore/js/underscore.js",
       "message": "Non-test source calls dynamic execution at line 27",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 27
+      "line": 27,
+      "verdict": "false_positive",
+      "reason": "The `Function('return this')()` root lookup is in vendored underscore.js under libs/bower/underscore, which is third-party code outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "underscore.js under libs/bower is vendored third-party code, and line 27 is the `Function('return this')()` root-object fallback."
+        }
+      ]
     },
     {
       "id": "EA-cb6dc2a75ad43995",
@@ -138,9 +268,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/underscore/js/underscore.js",
       "message": "Non-test source calls dynamic execution at line 965",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 965
+      "line": 965,
+      "verdict": "false_positive",
+      "reason": "`new Function(argument, '_', source)` is underscore's `_.template` compiler inside the vendored libs/bower/underscore copy, not Ranger's own code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "underscore.js's `new Function(argument, '_', source)` at line 965 is _.template compilation inside the vendored bower copy of the library."
+        }
+      ]
     },
     {
       "id": "EA-edc49088ee0509e8",
@@ -148,9 +288,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "Non-test source calls dynamic execution at line 671",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 671
+      "line": 671,
+      "verdict": "false_positive",
+      "reason": "`(new Function('return ' + s))()` at line 671 is in x-editable's tryParseJson inside the vendored libs/bower/x-editable library, which is third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bootstrap-editable.js is a vendored bower library, and line 671 is its tryParseJson `new Function('return ' + s)` (marked jslint evil) in third-party code."
+        }
+      ]
     },
     {
       "id": "EA-9d14f8987c0dbb26",
@@ -158,9 +308,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "Non-test source calls dynamic execution at line 678",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 678
+      "line": 678,
+      "verdict": "false_positive",
+      "reason": "The unsafe-branch `(new Function('return ' + s))()` at line 678 is also in the vendored bower x-editable bootstrap-editable.js, not project code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Line 678 in vendored libs/bower x-editable bootstrap-editable.js is the unsafe branch of tryParseJson, third-party code outside project scope."
+        }
+      ]
     },
     {
       "id": "EA-b7861a45d1c14d25",
@@ -228,9 +388,19 @@
       "language": "python",
       "path": "electrum/gui/qt/console.py",
       "message": "Non-test source calls dynamic execution at line 266",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 266
+      "line": 266,
+      "verdict": "true_positive",
+      "reason": "Electrum's shipped Qt console calls `eval(command, self.namespace, self.namespace)` on user-typed text in production GUI code; it is intentional, but the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "electrum console.py line 266 runs `eval(command, ...)` on user-typed console text in the shipped Qt GUI, which is real dynamic execution (intentional, but the claim holds)."
+        }
+      ]
     },
     {
       "id": "EA-61b0b0d907e90d7c",
@@ -238,9 +408,19 @@
       "language": "python",
       "path": "electrum/gui/qt/console.py",
       "message": "Non-test source calls dynamic execution at line 274",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 274
+      "line": 274,
+      "verdict": "true_positive",
+      "reason": "The SyntaxError fallback in Electrum's console calls `exec(command, self.namespace, self.namespace)` on user input in production code; the inline \"use it wisely\" comment confirms it is real dynamic execution.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "console.py line 274 `exec(command, self.namespace, self.namespace)` is the SyntaxError fallback for the same user-typed command in the shipped Qt console."
+        }
+      ]
     },
     {
       "id": "EA-b884ce8a593241a9",
@@ -288,9 +468,19 @@
       "language": "python",
       "path": "redash/query_runner/python.py",
       "message": "Non-test source calls dynamic execution at line 179",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 179
+      "line": 179,
+      "verdict": "true_positive",
+      "reason": "`custom_inplacevar` runs `exec(\"x\" + op + \"y\", glb)` in the production Python query runner; op is allowlisted, but this is still exec of a built string where `operator.iadd`-style functions would do.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "custom_inplacevar in redash python.py runs `exec(\"x\" + op + \"y\", glb)` only after `op` is checked against the IOPERATOR_TO_STR values, so it executes a fixed operator expression, not arbitrary code."
+        }
+      ]
     },
     {
       "id": "EA-a3575f1fc6c1f803",
@@ -298,9 +488,19 @@
       "language": "python",
       "path": "redash/query_runner/python.py",
       "message": "Non-test source calls dynamic execution at line 382",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 382
+      "line": 382,
+      "verdict": "true_positive",
+      "reason": "The Redash Python query runner calls `exec(code, restricted_globals, self._script_locals)` on user-supplied query code in production; this is the feature itself, but the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Line 382 `exec(code, restricted_globals, self._script_locals)` in redash's Python query runner executes user-authored query scripts in the shipped server (restricted, but still dynamic execution)."
+        }
+      ]
     },
     {
       "id": "EA-9b7323fe08b1c664",
@@ -308,9 +508,19 @@
       "language": "python",
       "path": "scripts/lib/setup_path.py",
       "message": "Non-test source calls dynamic execution at line 23",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 23
+      "line": 23,
+      "verdict": "true_positive",
+      "reason": "scripts/lib/setup_path.py ships with Zulip production installs and calls `exec(f.read(), activate_locals)` on the venv's activate_this.py; `runpy.run_path` would avoid the raw exec.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "zulip scripts/lib/setup_path.py line 23 `exec(f.read(), activate_locals)` runs the virtualenv's activate_this.py contents in deployed Zulip scripts, a real exec of file-read code."
+        }
+      ]
     },
     {
       "id": "EA-532392bae2ce2182",
@@ -318,9 +528,19 @@
       "language": "typescript",
       "path": "viz-lib/src/visualizations/chart/plotly/customChartUtils.ts",
       "message": "Non-test source calls dynamic execution at line 27",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 27
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "customChartUtils.ts builds `new Function(\"x, ys, element, Plotly\", code)` from user custom-chart code in shipped viz-lib code; the eslint-disable for no-new-func confirms it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "customChartUtils.ts line 27 builds `new Function(\"x, ys, element, Plotly\", code)` from user-authored custom chart code in redash's shipped viz-lib."
+        }
+      ]
     }
   ]
 }

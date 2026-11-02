@@ -433,9 +433,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Empty catch/except block at line 353",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 353
+      "line": 353,
+      "verdict": "true_positive",
+      "reason": "The catch (_) {} around inst._zod.run in ~standard validate has an empty body with no comment inside it; the error is swallowed so the call falls back to validateAsync, which the comment after the block only partly explains.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `catch (_) {}` around inst._zod.run in the standard-schema validate has an empty body, silently swallowing the sync error before falling back to validateAsync."
+        }
+      ]
     },
     {
       "id": "EA-3b01e767cee54612",
@@ -443,9 +453,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Empty catch/except block at line 407",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 407
+      "line": 407,
+      "verdict": "true_positive",
+      "reason": "$ZodString's coerce path wraps String(payload.value) in try with an empty, uncommented catch (_) {}, silently discarding the exception from a throwing toString.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `catch (_) {}` after `payload.value = String(payload.value)` for coerce has an empty body, so a throwing String() coercion is swallowed with no comment inside."
+        }
+      ]
     },
     {
       "id": "EA-3b9e7644cb37b6dc",
@@ -453,9 +473,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Empty catch/except block at line 1337",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1337
+      "line": 1337,
+      "verdict": "true_positive",
+      "reason": "$ZodNumber coercion swallows any exception from Number(payload.value) with an empty catch (_) {} at line 1337 that has no explanation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `catch (_) {}` around `Number(payload.value)` in the number parse is empty and swallows any coercion error without a comment."
+        }
+      ]
     },
     {
       "id": "EA-3ba8a844cb406057",
@@ -463,9 +493,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Empty catch/except block at line 1424",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1424
+      "line": 1424,
+      "verdict": "true_positive",
+      "reason": "The $ZodBoolean coerce block's catch (_) {} around Boolean(payload.value) is empty with no comment, matching the empty-catch rule.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The catch block around `Boolean(payload.value)` in the boolean parse is empty with no handling or comment inside."
+        }
+      ]
     },
     {
       "id": "EA-3ba54244cb3d7d2e",
@@ -473,9 +513,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Empty catch/except block at line 1477",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1477
+      "line": 1477,
+      "verdict": "true_positive",
+      "reason": "$ZodBigInt coercion catches the RangeError/SyntaxError from BigInt(payload.value) in an empty catch (_) {} with no justifying comment, relying on the later typeof check.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `catch (_) {}` around `BigInt(payload.value)` is empty, silently discarding the SyntaxError/TypeError from invalid coercion input."
+        }
+      ]
     },
     {
       "id": "EA-e90295d674d9e34b",
@@ -483,9 +533,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Empty catch/except block at line 1804",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1804
+      "line": 1804,
+      "verdict": "true_positive",
+      "reason": "The $ZodDate coerce branch has catch (_err: any) {} around new Date(payload.value), an empty uncommented catch body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `catch (_err: any) {}` around `new Date(payload.value)` is an empty catch body with no comment, so any construction error is swallowed."
+        }
+      ]
     },
     {
       "id": "EA-c130d4cf64115aa4",

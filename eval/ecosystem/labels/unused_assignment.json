@@ -38,9 +38,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Value assigned to `active_screen_buffer` at line 1102 is overwritten before it is read.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 1102
+      "line": 1102,
+      "verdict": "false_positive",
+      "reason": "`HANDLE active_screen_buffer = INVALID_HANDLE_VALUE` is a constant initializer in C, and the dead-store checks in layer1-correctness.md say they skip constant initializers, so this defensive init is a documented exclusion.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`active_screen_buffer = INVALID_HANDLE_VALUE` is overwritten by CreateFileA(\"conout$\") before any read; the early return does not use it."
+        }
+      ]
     },
     {
       "id": "EA-0efb8cc2e9a6b75b",
@@ -48,9 +58,19 @@
       "language": "c",
       "path": "src/win/util.c",
       "message": "Value assigned to `cpu_count` at line 541 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 541
+      "line": 541,
+      "verdict": "true_positive",
+      "reason": "`cpu_count = 0;` at util.c:541 is a plain assignment, overwritten by `system_info.dwNumberOfProcessors` at 547 before the first `goto error` (552), so the `error:` path cannot read the zero.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`cpu_count = 0` is overwritten by system_info.dwNumberOfProcessors at line 547 before use."
+        }
+      ]
     },
     {
       "id": "EA-d09571cc39fd6283",
@@ -58,9 +78,19 @@
       "language": "c",
       "path": "src/win/util.c",
       "message": "Value assigned to `len` at line 1026 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1026
+      "line": 1026,
+      "verdict": "true_positive",
+      "reason": "`len = 0;` at util.c:1026 is immediately overwritten by `len = GetTempPathW(0, NULL);` on 1027, a plain dead assignment rather than an initializer.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`len = 0` is overwritten by GetTempPathW(0, NULL) on the next line."
+        }
+      ]
     },
     {
       "id": "EA-9239e75329c17c4b",
@@ -68,9 +98,19 @@
       "language": "c",
       "path": "contrib/minizip/miniunz.c",
       "message": "Value assigned to `err` at line 310 is overwritten before it is read.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 310
+      "line": 310,
+      "verdict": "false_positive",
+      "reason": "`int err=UNZ_OK;` initializes with the macro `UNZ_OK` defined as `(0)`, the defensive constant initialization the C dead-store check documents as skipped (clang DeadStores), but the literal-only filter misses macro constants.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`err=UNZ_OK` in miniunz.c do_extract_currentfile is overwritten by unzGetCurrentFileInfo64 at line 316; contrib is built via add_subdirectory(contrib) and shipped."
+        }
+      ]
     },
     {
       "id": "EA-601069d43d2cf64e",
@@ -78,9 +118,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Value assigned to `err` at line 1061 is overwritten before it is read.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 1061
+      "line": 1061,
+      "verdict": "false_positive",
+      "reason": "In unzGoToFirstFile, `err=UNZ_OK` is a constant initializer (`#define UNZ_OK (0)`) of the kind the detector documents as excluded, only escaping the filter because it is a macro rather than a number literal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`err=UNZ_OK` in unzGoToFirstFile is overwritten by unz64local_GetCurrentFileInfoInternal at 1068 in library code."
+        }
+      ]
     },
     {
       "id": "EA-e2cc6dcc8d117272",
@@ -88,9 +138,19 @@
       "language": "cpp",
       "path": "include/fmt/ranges.h",
       "message": "Value assigned to `end` at line 717 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 717
+      "line": 717,
+      "verdict": "false_positive",
+      "reason": "`auto end = ctx.begin()` is overwritten only inside `#if FMT_TUPLE_JOIN_SPECIFIERS`, which defaults to 0, so in the default build `return end;` reads the initial value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`end = ctx.begin()` is read by `return end` when FMT_TUPLE_JOIN_SPECIFIERS is 0 (the default); the overwrite exists only in the disabled preprocessor branch."
+        }
+      ]
     },
     {
       "id": "EA-7c20ac58f9184ad3",
@@ -158,9 +218,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Bson/BsonWriter.cs",
       "message": "Value assigned to `s` at line 391 is overwritten before it is read.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 391
+      "line": 391,
+      "verdict": "false_positive",
+      "reason": "`string s = null;` in BsonWriter.WriteValue(char) is a C# constant initializer before the `#if HAVE_CHAR_TO_STRING_WITH_CULTURE` branches, which the documented dead-store exclusion for constant initializers covers.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`string s = null` is overwritten in both branches of the #if/#else (ToString with or without culture), so the initializer is always dead."
+        }
+      ]
     },
     {
       "id": "EA-6404364deda3ffda",
@@ -168,9 +238,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
       "message": "Value assigned to `hasIgnoreDataMemberAttribute` at line 1604 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1604
+      "line": 1604,
+      "verdict": "false_positive",
+      "reason": "`bool hasIgnoreDataMemberAttribute = false;` in DefaultContractResolver is a C# constant initializer, which layer1-correctness.md says the dead-store check skips, even though line 1607 reassigns it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`hasIgnoreDataMemberAttribute = false` is live when HAVE_IGNORE_DATA_MEMBER_ATTRIBUTE is undefined, a conditional-compilation default the rule should recognise."
+        }
+      ]
     },
     {
       "id": "EA-ab7c555a712e4b29",
@@ -178,9 +258,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Server/WexflowService.cs",
       "message": "Value assigned to `res` at line 4147 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4147
+      "line": 4147,
+      "verdict": "true_positive",
+      "reason": "In the .NET Framework `entry-logs` handler, `var res = string.Empty` is replaced by `WexflowEngine.GetEntryLogs(entryId)` at 4151; only `username` is assigned between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var res = string.Empty` in the entry-logs route is overwritten by GetEntryLogs(entryId) before any read."
+        }
+      ]
     },
     {
       "id": "EA-04303d0931b591ab",
@@ -188,9 +278,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Server/WexflowService.cs",
       "message": "Value assigned to `res` at line 4258 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4258
+      "line": 4258,
+      "verdict": "true_positive",
+      "reason": "In the `history-entry-logs` handler, `res = string.Empty` at 4258 is overwritten by `GetHistoryEntryLogs(entryId)` at 4262, and the catch block does not read `res`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var res = string.Empty` in history-entry-logs is overwritten by GetHistoryEntryLogs(entryId) before any read."
+        }
+      ]
     },
     {
       "id": "EA-fd0cba593ebaa718",
@@ -198,9 +298,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Server/WexflowService.cs",
       "message": "Value assigned to `res` at line 3724 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3724
+      "line": 3724,
+      "verdict": "true_positive",
+      "reason": "In the netcore `entry-logs` MapGet, `var res = string.Empty` at 3724 is replaced at 3729 by `GetEntryLogs(entryId)` with only `username`/`user` lookups in between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var res = string.Empty` in the netcore entry-logs endpoint is overwritten by GetEntryLogs at 3729; GetUser in between does not read it."
+        }
+      ]
     },
     {
       "id": "EA-5da3bd53bb5b80a3",
@@ -208,9 +318,19 @@
       "language": "go",
       "path": "src/controller/event/handler/replication/replication.go",
       "message": "Value assigned to `public` at line 66 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 66
+      "line": 66,
+      "verdict": "true_positive",
+      "reason": "In `handlePushArtifact`, `public := false` is overwritten by `prj.IsPublic()` at line 72; the only path in between returns after the `project.Ctl.Get` error without reading it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`public := false` in handlePushArtifact is replaced by `prj.IsPublic()` on line 72, with only an error return between."
+        }
+      ]
     },
     {
       "id": "EA-3e83c8abf0b0c58b",
@@ -218,9 +338,19 @@
       "language": "go",
       "path": "src/controller/event/handler/replication/replication.go",
       "message": "Value assigned to `public` at line 126 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 126
+      "line": 126,
+      "verdict": "true_positive",
+      "reason": "In `handleCreateTag`, `public := false` (126) is dropped on the error return or replaced by `prj.IsPublic()` at 132, so the false value is never read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In handleCreateTag, `public := false` is overwritten by `public = prj.IsPublic()` on line 132 before any read."
+        }
+      ]
     },
     {
       "id": "EA-ab992d7352a4dbc6",
@@ -228,9 +358,19 @@
       "language": "go",
       "path": "src/jobservice/job/tracker.go",
       "message": "Value assigned to `err` at line 357 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 357
+      "line": 357,
+      "verdict": "true_positive",
+      "reason": "`err = conn.Send(\"MULTI\")` at tracker.go:357 is overwritten by `conn.Send(\"HMSET\", ...)` at 358 before the single `if err != nil` check, so a MULTI send error is silently lost.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The error from conn.Send(\"MULTI\") is overwritten by the HMSET Send on the next line without being checked."
+        }
+      ]
     },
     {
       "id": "EA-6d738cc11bb109b6",
@@ -238,9 +378,19 @@
       "language": "go",
       "path": "src/jobservice/job/tracker.go",
       "message": "Value assigned to `err` at line 358 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 358
+      "line": 358,
+      "verdict": "true_positive",
+      "reason": "`err = conn.Send(\"HMSET\", args...)` at 358 is overwritten by the `HSET` send at 360 before any check, so an HMSET error is discarded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The HMSET Send error is overwritten by the HSET Send at line 360 without a check, so a failed HMSET is lost."
+        }
+      ]
     },
     {
       "id": "EA-ea6f256656ecef00",
@@ -248,9 +398,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.altibase/src/org/jkiss/dbeaver/ext/altibase/model/AltibaseMetaModel.java",
       "message": "Value assigned to `depDdl` at line 216 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 216
+      "line": 216,
+      "verdict": "true_positive",
+      "reason": "`String depDdl = null` in `addTableDependentDdl` is overwritten on line 218 by `getDepDDLFromDbmsMetadata(...)` without being read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`String depDdl = null` in addTableDependentDdl is overwritten by getDepDDLFromDbmsMetadata on the next statement without being read."
+        }
+      ]
     },
     {
       "id": "EA-36f0aa2fecb6949b",
@@ -258,9 +418,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.altibase/src/org/jkiss/dbeaver/ext/altibase/model/AltibaseMetaModel.java",
       "message": "Value assigned to `ddl` at line 577 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 577
+      "line": 577,
+      "verdict": "true_positive",
+      "reason": "`String ddl = null` in `getTriggerDDL` is unconditionally replaced at line 586 by `getDDLFromDbmsMetadata(monitor, trigger, schemaName, \"TRIGGER\")` before any read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`String ddl = null` in getTriggerDDL is overwritten by getDDLFromDbmsMetadata before any read, so the null initializer is dead."
+        }
+      ]
     },
     {
       "id": "EA-7eea61bc11f0edc5",
@@ -268,9 +438,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.altibase/src/org/jkiss/dbeaver/ext/altibase/model/AltibaseSQLDialect.java",
       "message": "Value assigned to `sqlDistinctNames` at line 598 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 598
+      "line": 598,
+      "verdict": "true_positive",
+      "reason": "`sqlDistinctNames = null` at AltibaseSQLDialect.java:598 is overwritten at 602 by the `Arrays.stream(sqlProvidedNames).distinct()` result without a read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`sqlDistinctNames = null` in AltibaseSQLDialect.filter is overwritten by the Arrays.stream(...).distinct() assignment before any read."
+        }
+      ]
     },
     {
       "id": "EA-45c89271822e911d",
@@ -278,9 +458,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.altibase/src/org/jkiss/dbeaver/ext/altibase/model/AltibaseSQLDialect.java",
       "message": "Value assigned to `dbDistinctNames` at line 599 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 599
+      "line": 599,
+      "verdict": "true_positive",
+      "reason": "`dbDistinctNames = null` at line 599 is replaced at 603 by `Arrays.stream(dbProvideNames).distinct().toArray(...)` before `List.of(dbDistinctNames)` reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`dbDistinctNames = null` in filter is overwritten by the next distinct() stream assignment before use, so the initializer is dead."
+        }
+      ]
     },
     {
       "id": "EA-831a16f4606f39eb",
@@ -288,9 +478,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.altibase/src/org/jkiss/dbeaver/ext/altibase/model/AltibaseSchema.java",
       "message": "Value assigned to `object` at line 89 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "true_positive",
+      "reason": "`DBSObject object = null` in AltibaseSchema.getChild is overwritten at line 91 by `getTable(monitor, childName)` before the first null check.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`DBSObject object = null` in AltibaseSchema.getChild is immediately overwritten by getTable(monitor, childName) before any read."
+        }
+      ]
     },
     {
       "id": "EA-31ebe1388c434b64",
@@ -298,9 +498,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.altibase/src/org/jkiss/dbeaver/ext/altibase/model/plan/AltibasePlanBuilder.java",
       "message": "Value assigned to `newNode` at line 108 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 108
+      "line": 108,
+      "verdict": "true_positive",
+      "reason": "`AltibasePlanNode newNode = null` in `createNode` is never read before `newNode = new AltibasePlanNode(...)` later in the method; only `parentNode` is used in the branches.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`AltibasePlanNode newNode = null` in createNode is overwritten by `new AltibasePlanNode(...)` and never read before that."
+        }
+      ]
     },
     {
       "id": "EA-8e019b80f5ba9698",
@@ -308,9 +518,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.yashandb/src/org/jkiss/dbeaver/ext/yashandb/model/YashanDBSchema.java",
       "message": "Value assigned to `dbStat` at line 175 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 175
+      "line": 175,
+      "verdict": "true_positive",
+      "reason": "`JDBCPreparedStatement dbStat = null` in YashanDB `prepareLookupStatement` is replaced at line 188 by `session.prepareStatement(sql)` with no read between, and no try block.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`JDBCPreparedStatement dbStat = null` in prepareLookupStatement is replaced by session.prepareStatement(sql) before any read."
+        }
+      ]
     },
     {
       "id": "EA-d463fd92d35852c0",
@@ -318,9 +538,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.erd/src/org/jkiss/dbeaver/ui/editors/erd/router/shortpath/ShortPathRouting.java",
       "message": "Value assigned to `i` at line 393 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 393
+      "line": 393,
+      "verdict": "true_positive",
+      "reason": "`int i = 0` in `ShortPathRouting.getDirection` is overwritten at line 396 by `Math.abs(r.y - p.y)` before `i <= distance` reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`int i = 0` in getDirection is overwritten by `i = Math.abs(r.y - p.y)` before any read, so the initializer is dead."
+        }
+      ]
     },
     {
       "id": "EA-7572ae9133062404",
@@ -328,9 +558,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-datasync/src/main/java/org/apache/dolphinscheduler/plugin/task/datasync/DatasyncTask.java",
       "message": "Value assigned to `isFinishedSuccessfully` at line 124 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 124
+      "line": 124,
+      "verdict": "true_positive",
+      "reason": "`Boolean isFinishedSuccessfully = null` in DatasyncTask.trackApplicationStatus is immediately overwritten by `hook.doubleCheckFinishStatus(...)` on line 125.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Boolean isFinishedSuccessfully = null` in trackApplicationStatus is overwritten by hook.doubleCheckFinishStatus(...) before it is read."
+        }
+      ]
     },
     {
       "id": "EA-833c07c6d4eaba91",
@@ -468,9 +708,19 @@
       "language": "java",
       "path": "model/jpa/src/main/java/org/keycloak/storage/jpa/JpaUserFederatedStorageProvider.java",
       "message": "Value assigned to `num` at line 855 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 855
+      "line": 855,
+      "verdict": "true_positive",
+      "reason": "In `preRemove`, `num` from the `deleteFederatedUserConsentClientScopesByRealm` executeUpdate is overwritten by the next named-query result and never read; the update count is discarded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`num` from deleteFederatedUserConsentClientScopesByRealm is overwritten by the next query result and never read."
+        }
+      ]
     },
     {
       "id": "EA-f517e20d3dc1b5f0",
@@ -478,9 +728,19 @@
       "language": "java",
       "path": "model/jpa/src/main/java/org/keycloak/storage/jpa/JpaUserFederatedStorageProvider.java",
       "message": "Value assigned to `num` at line 865 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 865
+      "line": 865,
+      "verdict": "true_positive",
+      "reason": "`num` holding the `deleteFederatedUserCredentialsByRealm` update count (865) is overwritten at 867 by the `deleteUserFederatedAttributesByRealm` count without being read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The deleteFederatedUserCredentialsByRealm count in `num` is overwritten at line 867 and never read."
+        }
+      ]
     },
     {
       "id": "EA-1f4de35e902fe311",
@@ -488,9 +748,19 @@
       "language": "java",
       "path": "model/jpa/src/main/java/org/keycloak/storage/jpa/JpaUserFederatedStorageProvider.java",
       "message": "Value assigned to `num` at line 867 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 867
+      "line": 867,
+      "verdict": "true_positive",
+      "reason": "The `deleteUserFederatedAttributesByRealm` count stored in `num` at 867 is overwritten at 869 by the group-membership delete count without being read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The deleteUserFederatedAttributesByRealm count in `num` is overwritten at line 869 without a read."
+        }
+      ]
     },
     {
       "id": "EA-8bda8136780b0838",
@@ -498,9 +768,19 @@
       "language": "java",
       "path": "model/jpa/src/main/java/org/keycloak/storage/jpa/JpaUserFederatedStorageProvider.java",
       "message": "Value assigned to `num` at line 869 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 869
+      "line": 869,
+      "verdict": "true_positive",
+      "reason": "The `deleteFederatedUserGroupMembershipByRealm` count assigned to `num` at 869 is overwritten at 871 by the `deleteFederatedUsersByRealm` result unread.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The deleteFederatedUserGroupMembershipByRealm count stored in `num` is overwritten at line 871 without a read."
+        }
+      ]
     },
     {
       "id": "EA-c7027f320b9ea3e4",
@@ -508,9 +788,19 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/processing/api/saml/v2/request/SecurityActions.java",
       "message": "Value assigned to `url` at line 153 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 153
+      "line": 153,
+      "verdict": "true_positive",
+      "reason": "`URL url = null` at SecurityActions.java:153 is overwritten at 155 by `clazzLoader.getResource(resourceName)` before the `url == null` check.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`URL url = null` is overwritten by clazzLoader.getResource(resourceName) at line 155 before any read."
+        }
+      ]
     },
     {
       "id": "EA-5122ed534d5f2250",
@@ -518,9 +808,19 @@
       "language": "java",
       "path": "saml-core/src/main/java/org/keycloak/saml/processing/core/parsers/util/SAML11ParserUtil.java",
       "message": "Value assigned to `startElement` at line 560 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 560
+      "line": 560,
+      "verdict": "true_positive",
+      "reason": "In the X509DATA branch, `startElement = getNextStartElement(...)` at 560 is overwritten at 564 by another `getNextStartElement` before `validate(startElement, X509CERT)` reads it. Only the consuming call matters, not the stored value.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`startElement` from getNextStartElement at 560 is overwritten at 564 without being read, though the call's stream advance is a side effect."
+        }
+      ]
     },
     {
       "id": "EA-1316913d179f2559",
@@ -528,9 +828,19 @@
       "language": "java",
       "path": "server-spi/src/main/java/org/keycloak/models/utils/HmacOTP.java",
       "message": "Value assigned to `result` at line 111 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 111
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "`String result = null` in `HmacOTP.generateOTP` is overwritten at 136 by `Integer.toString(otp)`; the hash computation in between never reads `result`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`String result = null` in generateOTP is assigned Integer.toString(otp) before it is read by the padding loop."
+        }
+      ]
     },
     {
       "id": "EA-6f0df6ac047f1c2b",
@@ -538,9 +848,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/utils/RollingTimeUtil.java",
       "message": "Value assigned to `ret` at line 157 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 157
+      "line": 157,
+      "verdict": "true_positive",
+      "reason": "In `computeTopOfWeekDate`, `Date ret = null` (157) is overwritten by `calendarWeek.getTime()` at 167 before `return ret`, so the null initializer is dead (Java has no documented initializer exclusion).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`Date ret = null` in computeTopOfWeekDate is overwritten by calendarWeek.getTime() before return."
+        }
+      ]
     },
     {
       "id": "EA-5f29192fed80d972",
@@ -548,9 +868,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRESTClient.java",
       "message": "Value assigned to `kmList` at line 428 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 428
+      "line": 428,
+      "verdict": "true_positive",
+      "reason": "In `getKeyManagers()`, `kmList = null` is replaced at 432 by `getKeyManagers(mKeyStoreFile, keyStoreFilepwd)` before it is returned.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`kmList = null` in getKeyManagers is replaced by the getKeyManagers(mKeyStoreFile, keyStoreFilepwd) result before return."
+        }
+      ]
     },
     {
       "id": "EA-23c3810438eaea38",
@@ -558,9 +888,19 @@
       "language": "java",
       "path": "hive-agent/src/main/java/org/apache/ranger/authorization/hive/authorizer/RangerHiveAuthorizer.java",
       "message": "Value assigned to `ret` at line 2773 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2773
+      "line": 2773,
+      "verdict": "true_positive",
+      "reason": "`RangerResourceACLs ret = null` at 2773 is overwritten by `hivePlugin.getResourceACLs(request)` at 2782; the debug log in between does not mention `ret`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`RangerResourceACLs ret = null` is overwritten by hivePlugin.getResourceACLs(request) before its first read in the debug log."
+        }
+      ]
     },
     {
       "id": "EA-22c03183c00294ce",
@@ -568,9 +908,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/XUserMgr.java",
       "message": "Value assigned to `userPermListOld` at line 1146 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1146
+      "line": 1146,
+      "verdict": "true_positive",
+      "reason": "`userPermListOld = new ArrayList<VXUserPermission>()` in XUserMgr is discarded at line 1157 by `vModuleDefPopulateOld.getUserPermList()` with no read in between, wasting an allocation.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`userPermListOld = new ArrayList` in XUserMgr is reassigned at 1157 from vModuleDefPopulateOld.getUserPermList() with no read in between."
+        }
+      ]
     },
     {
       "id": "EA-f3c6e5e5e4a69bfb",
@@ -578,9 +928,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/rest/ServiceREST.java",
       "message": "Value assigned to `policyUpdated` at line 1383 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1383
+      "line": 1383,
+      "verdict": "true_positive",
+      "reason": "In the grant path of ServiceREST, `boolean policyUpdated = false;` is unconditionally overwritten on the next line by `ServiceRESTUtil.processGrantRequest(policy, grantRequest)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`boolean policyUpdated = false` in grant path of ServiceREST is immediately replaced by processGrantRequest on the next line."
+        }
+      ]
     },
     {
       "id": "EA-7d0e1c7441890fa2",
@@ -588,9 +948,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/rest/ServiceREST.java",
       "message": "Value assigned to `policyUpdated` at line 1506 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1506
+      "line": 1506,
+      "verdict": "true_positive",
+      "reason": "In the revoke path, `boolean policyUpdated = false;` at 1506 is replaced on line 1507 by `ServiceRESTUtil.processRevokeRequest(policy, revokeRequest)` before any read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`policyUpdated = false` in the revoke path is immediately replaced by ServiceRESTUtil.processRevokeRequest on the next line."
+        }
+      ]
     },
     {
       "id": "EA-13b6752a71bcddc1",
@@ -598,9 +968,19 @@
       "language": "java",
       "path": "tagsync/src/main/java/org/apache/ranger/tagsync/process/TagSyncMetricsProducer.java",
       "message": "Value assigned to `userMetricFile` at line 76 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 76
+      "line": 76,
+      "verdict": "true_positive",
+      "reason": "`File userMetricFile = null;` in writeJVMMetrics is replaced by `new File(logFileNameWithPath)` on the next line; the variable is scoped to the try block, so the `catch (Throwable t)` handler cannot read it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`File userMetricFile = null` in writeJVMMetrics is replaced by new File(logFileNameWithPath) on the next line."
+        }
+      ]
     },
     {
       "id": "EA-c3ac925441ec10a4",
@@ -608,9 +988,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/extension/history/PopupMenuExportResponse.java",
       "message": "Value assigned to `msg` at line 111 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 111
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "In PopupMenuExportResponse's loop, `HttpMessage msg = null;` is immediately replaced by `href.getHttpMessage()`; `msg` is loop-scoped so the catch handler cannot observe it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`HttpMessage msg = null` in the export loop is replaced by href.getHttpMessage() on the next line."
+        }
+      ]
     },
     {
       "id": "EA-6e14cdaa3b8301ac",
@@ -618,9 +1008,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/HttpInputStream.java",
       "message": "Value assigned to `httpRequestHeader` at line 64 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 64
+      "line": 64,
+      "verdict": "true_positive",
+      "reason": "`HttpRequestHeader httpRequestHeader = null;` in readRequestHeader is never read before `new HttpRequestHeader(msg, isSecure)` at line 72; the only intervening path throws.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`httpRequestHeader = null` in readRequestHeader is only assigned at line 72 with no read before."
+        }
+      ]
     },
     {
       "id": "EA-1c23a5f8b87874c5",
@@ -628,9 +1028,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/HttpInputStream.java",
       "message": "Value assigned to `avail` at line 229 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 229
+      "line": 229,
+      "verdict": "true_positive",
+      "reason": "`int avail = 0;` in HttpInputStream.available() is overwritten at line 233 by `super.available()` before the `avail == 0` test.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`int avail = 0` in available() is replaced by super.available() at line 233 before any read."
+        }
+      ]
     },
     {
       "id": "EA-e010d8f5152a3d70",
@@ -638,9 +1048,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/HttpMessage.java",
       "message": "Value assigned to `result` at line 789 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 789
+      "line": 789,
+      "verdict": "true_positive",
+      "reason": "`boolean result = false;` in queryEquals is never read; every false path does `return false` directly and line 812 sets `result = true` before returning it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`boolean result = false` in queryEquals is only read after `result = true` at the end, so the initial value is dead."
+        }
+      ]
     },
     {
       "id": "EA-4446d9bb95719b60",
@@ -648,9 +1068,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/HttpMessage.java",
       "message": "Value assigned to `set2` at line 792 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 792
+      "line": 792,
+      "verdict": "true_positive",
+      "reason": "`SortedSet<String> set2 = null;` is overwritten at line 795 by `msg.getParamNameSet(HtmlParameter.Type.url)` before `set1.equals(set2)` reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`set2 = null` in queryEquals is replaced by msg.getParamNameSet(url) at 795 before any read."
+        }
+      ]
     },
     {
       "id": "EA-66712670626ec375",
@@ -658,9 +1088,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/HttpMethodHelper.java",
       "message": "Value assigned to `httpMethod` at line 75 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 75
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "`HttpMethod httpMethod = null;` in createRequestMethodNew is replaced at line 81 by `new GenericMethod(method)`; only `method`, `uri` and `version` are computed between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`httpMethod = null` in createRequestMethodNew is replaced by new GenericMethod(method) at line 81 with no read between."
+        }
+      ]
     },
     {
       "id": "EA-d7e1656d934ce30a",
@@ -668,9 +1108,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/network/HttpSenderParos.java",
       "message": "Value assigned to `responseCode` at line 193 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 193
+      "line": 193,
+      "verdict": "true_positive",
+      "reason": "`int responseCode = -1;` in executeMethodImpl is not read before `responseCode = requestClient.executeMethod(hc, method, state)` near line 264; the inner try/catch around URI handling does not touch it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`int responseCode = -1` in executeMethodImpl is only assigned by requestClient.executeMethod before it is returned, with no earlier read."
+        }
+      ]
     },
     {
       "id": "EA-a375476edc2b0a65",
@@ -678,9 +1128,19 @@
       "language": "javascript",
       "path": "packages/sync-server/src/app-simplefin/app-simplefin.js",
       "message": "Value assigned to `baseUrl` at line 319 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 319
+      "line": 319,
+      "verdict": "true_positive",
+      "reason": "`let baseUrl = null` at app-simplefin.js:319 is never read before `baseUrl = `${scheme}//${rest}`` at 327; only a throw intervenes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let baseUrl = null` in parseAccessKey is overwritten by the template-literal assignment before any use, so the null is a dead store."
+        }
+      ]
     },
     {
       "id": "EA-6a77071ddfda5378",
@@ -713,9 +1173,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/services/llms/service.js",
       "message": "Value assigned to `wasTruncated` at line 102 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 102
+      "line": 102,
+      "verdict": "true_positive",
+      "reason": "`wasTruncated = false` at service.js:102 is overwritten by `pageResult.wasTruncated` at 109; the intervening `appendBoundedSectionPaginated` call does not take it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`wasTruncated = false` is overwritten by pageResult.wasTruncated at line 109 before the `if (!wasTruncated)` read."
+        }
+      ]
     },
     {
       "id": "EA-727b6292c22734aa",
@@ -723,9 +1193,19 @@
       "language": "javascript",
       "path": "ghost/core/server/models/user.js",
       "message": "Value assigned to `passwordValidation` at line 774 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 774
+      "line": 774,
+      "verdict": "true_positive",
+      "reason": "`passwordValidation = {}` in user.js is immediately replaced by `validatePassword(userData.password, ...)` at 776 with no read in between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`passwordValidation = {}` is immediately replaced by validatePassword(...) on line 776 with no read between."
+        }
+      ]
     },
     {
       "id": "EA-e16295ec8df40af3",
@@ -733,9 +1213,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/email-renderer.js",
       "message": "Value assigned to `$` at line 594 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 594
+      "line": 594,
+      "verdict": "false_positive",
+      "reason": "`$ = cheerioLoad(html)` at email-renderer.js:594 is read by `$('[data-gh-segment]')` and `$(node).remove()` and then by `$.html()` at 614, before any reassignment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$ = cheerioLoad(html)` at line 594 is read by `$('[data-gh-segment]')` and `$.html()` before any reassignment, so it is not dead."
+        }
+      ]
     },
     {
       "id": "EA-e7a401ae44a65cb0",
@@ -743,9 +1233,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/email-renderer.js",
       "message": "Value assigned to `html` at line 614 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 614
+      "line": 614,
+      "verdict": "false_positive",
+      "reason": "`html = $.html()` at 614 is read at 619, where the shorthand property `html` is passed to `this.getTemplateData({post, newsletter, html, ...})` before line 623 reassigns it. The shorthand property was not counted as a read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`html = $.html()` at line 614 is passed into getTemplateData({html}) on line 618 before html is reassigned at 623."
+        }
+      ]
     },
     {
       "id": "EA-fa4985765dcf82f5",
@@ -753,9 +1253,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/email-renderer.js",
       "message": "Value assigned to `$` at line 709 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 709
+      "line": 709,
+      "verdict": "false_positive",
+      "reason": "`$ = cheerioLoad(html)` at 709 is read straight away by `$('img').get()` for `originalImageSizes` and by `$('figcaption')`/`$.html()` before the reassignment at 733.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$ = cheerioLoad(html)` at line 709 is read on the next statement (`$('img')`) and by `$('figcaption')`, so it is live."
+        }
+      ]
     },
     {
       "id": "EA-7fa3606285b9e11d",
@@ -763,9 +1273,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/email-service/mailgun-email-provider.js",
       "message": "Value assigned to `recipientData` at line 58 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 58
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "`let recipientData = {}` in `#createRecipientData` is overwritten at 60 by `replacements.reduce(...)` before it is returned, so the `{}` initializer is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`recipientData = {}` is overwritten by the replacements.reduce(...) result on line 60 without being read."
+        }
+      ]
     },
     {
       "id": "EA-e97a40d6264ef454",
@@ -773,9 +1293,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/members/members-api/repositories/member-repository.js",
       "message": "Value assigned to `updatedSubscription` at line 2338 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2338
+      "line": 2338,
+      "verdict": "true_positive",
+      "reason": "The result of `updateSubscriptionItemPrice(...)` stored in `updatedSubscription` at 2338 is overwritten at 2343 by `removeCouponFromSubscription(...)` with no read in between. The call is still needed, but the assignment is useless.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`updatedSubscription` from updateSubscriptionItemPrice is overwritten by removeCouponFromSubscription at 2343 without a read."
+        }
+      ]
     },
     {
       "id": "EA-0c87c30591140e8a",
@@ -783,9 +1313,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/milestones/milestones-service.js",
       "message": "Value assigned to `foundExistingMilestone` at line 85 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 85
+      "line": 85,
+      "verdict": "true_positive",
+      "reason": "`foundExistingMilestone = false` at 85 is overwritten unconditionally at 95 (`existingMilestone ? true : false`) after the repository lookups, which never read it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`foundExistingMilestone = false` is overwritten by `existingMilestone ? true : false` on line 95 before the return."
+        }
+      ]
     },
     {
       "id": "EA-cd3e51d2c43aa479",
@@ -793,9 +1333,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/stats/posts-stats-service.js",
       "message": "Value assigned to `cumulativeTotal` at line 1025 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1025
+      "line": 1025,
+      "verdict": "true_positive",
+      "reason": "`cumulativeTotal = 0` at posts-stats-service.js:1025 is replaced at 1042 by `total - totalChange`; the `dailyChanges` loop in between never reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`cumulativeTotal = 0` is replaced by `total - totalChange` at line 1041 before the loop that reads it."
+        }
+      ]
     },
     {
       "id": "EA-dfb748379f6adb62",
@@ -803,9 +1353,19 @@
       "language": "javascript",
       "path": "web_src/fomantic/build/components/dropdown.js",
       "message": "Value assigned to `itemOffset` at line 2528 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2528
+      "line": 2528,
+      "verdict": "false_positive",
+      "reason": "dropdown.js is Gitea's vendored copy of the third-party Fomantic-UI build (its header says Fomantic-UI, MIT), so it is out of scope. The `itemOffset = $item.position().top` store is also only a dead store inside library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "dropdown.js sits under web_src/fomantic/build/, a generated Fomantic UI build output, so it is outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-6e5ca598bd821aff",
@@ -813,9 +1373,19 @@
       "language": "javascript",
       "path": "web_src/fomantic/build/components/dropdown.js",
       "message": "Value assigned to `$label` at line 2810 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2810
+      "line": 2810,
+      "verdict": "false_positive",
+      "reason": "This is in the vendored Fomantic-UI build file web_src/fomantic/build/components/dropdown.js. The claim is also wrong: `$label` from `$('<a />')...` is read by `settings.onLabelCreate.call($label, ...)` on the very next statement.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `$label` store is in the generated web_src/fomantic/build/components/dropdown.js bundle, outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-e118ca3cccd49737",
@@ -823,9 +1393,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Value assigned to `$e` at line 1 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1
+      "line": 1,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js is a built, minified Vite vendor bundle, so the `$e` store on line 1 is generated third-party code and out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The finding is in mitmproxy's minified, built vendor-DXVK1cAY.js bundle in static/, which is generated third-party code outside scope."
+        }
+      ]
     },
     {
       "id": "EA-38b2fcf1d3dd2c43",
@@ -833,9 +1413,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/backbone.marionette/js/backbone.marionette.js",
       "message": "Value assigned to `data` at line 1392 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1392
+      "line": 1392,
+      "verdict": "false_positive",
+      "reason": "backbone.marionette.js under webapp/libs/bower is a vendored third-party Marionette distribution, outside scope even though `var data = {}` in renderModel is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "backbone.marionette.js sits under webapp/libs/bower, a vendored third-party library outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-166ab4d65ea5d1ff",
@@ -843,9 +1433,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/other/backgrid/backgrid.js",
       "message": "Value assigned to `optionValue` at line 1464 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1464
+      "line": 1464,
+      "verdict": "false_positive",
+      "reason": "backgrid.js under webapp/libs/other is the vendored Backgrid library, so its duplicate `var optionValue = null` declarations are third-party code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "backgrid.js under webapp/libs/other is vendored third-party code, out of scope."
+        }
+      ]
     },
     {
       "id": "EA-666f1f0e982f0a09",
@@ -853,9 +1453,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/react-webapp/src/components/structured-filter/react-typeahead/tokenizer/index.js",
       "message": "Value assigned to `selectedCategory` at line 115 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 115
+      "line": 115,
+      "verdict": "true_positive",
+      "reason": "In `_getOptionsForTypeahead`, `let selectedCategory = []` is replaced by the `this.state.selected.map(...).filter(Boolean)` result at line 120 with only `bypassCategory` computed between; the ASF-licensed tokenizer is Ranger's own code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let selectedCategory = []` in _getOptionsForTypeahead is reassigned at line 120 from the mapped state.selected; this is Ranger's own ASF-licensed component, not vendored."
+        }
+      ]
     },
     {
       "id": "EA-7ed0d773540d06c3",
@@ -863,9 +1473,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/react-webapp/src/components/structured-filter/react-typeahead/tokenizer/index.js",
       "message": "Value assigned to `selectedCategory` at line 256 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 256
+      "line": 256,
+      "verdict": "true_positive",
+      "reason": "In `_getOptionsLabel`, the empty array assigned to `selectedCategory` at 256 is discarded at 261 by the mapped/filtered `this.state.selected` value without a read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`selectedCategory = []` in _getOptionsLabel is overwritten at line 261 before any read, in Ranger-owned react-webapp code."
+        }
+      ]
     },
     {
       "id": "EA-6d6f4bb975e2c597",
@@ -873,9 +1493,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/common/AddGroup.js",
       "message": "Value assigned to `valArr` at line 95 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 95
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "`var valArr = []` in AddGroup's editable display callback is overwritten by `_.map(values, ...)` at line 104; the intervening if/else only reassigns `values`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var valArr = []` in AddGroup.js is unconditionally reassigned from _.map at line 104; the if/else between only touches `values`."
+        }
+      ]
     },
     {
       "id": "EA-ac19d7f3a641eb1c",
@@ -883,9 +1513,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/policies/PolicyTimeList.js",
       "message": "Value assigned to `localization` at line 31 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 31
+      "line": 31,
+      "verdict": "true_positive",
+      "reason": "PolicyTimeList.js declares `var localization = require('utils/XALangSupport')` twice in a row, so the line-31 value is replaced at 32 unread.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var localization` is declared twice in PolicyTimeList.js (31 and 32), so the first require result is discarded."
+        }
+      ]
     },
     {
       "id": "EA-47c3be2cdffe88dc",
@@ -893,9 +1533,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/policies/RangerPolicyConditions.js",
       "message": "Value assigned to `PolicyConditionsItem` at line 28 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "`PolicyConditionsItem` is first bound to `require('hbs!tmpl/policies/PolicyConditionsItem_tmpl')` and then redeclared at line 30 as the ItemView, so the template value is never read through that name.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`PolicyConditionsItem` required at line 28 is overwritten by the ItemView.extend declaration at line 30 without a read."
+        }
+      ]
     },
     {
       "id": "EA-91facfe48864b415",
@@ -903,9 +1553,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/reports/LoginSessionDetail.js",
       "message": "Value assigned to `XAEnums` at line 26 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 26
+      "line": 26,
+      "verdict": "true_positive",
+      "reason": "`var XAEnums = require('utils/XAEnums')` is immediately redeclared as `require('utils/XAUtils')` on line 27, leaving the first value unread (and the name misleading).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`XAEnums` is bound to utils/XAEnums at line 26 then rebound to utils/XAUtils at 27, so the first module is lost (a genuine mistake)."
+        }
+      ]
     },
     {
       "id": "EA-5ccc15c31f30edc0",
@@ -913,9 +1573,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/reports/UserAccessLayout.js",
       "message": "Value assigned to `data` at line 820 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 820
+      "line": 820,
+      "verdict": "true_positive",
+      "reason": "In the group select2 `initSelection`, `var data = {}` is overwritten on the next line by `{id: element.val(), text: element.val()}` before `callback(data)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var data = {}` in the groups initSelection callback is overwritten on the next line by {id, text}."
+        }
+      ]
     },
     {
       "id": "EA-01a9a093c270e01e",
@@ -923,9 +1593,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/reports/UserAccessLayout.js",
       "message": "Value assigned to `data` at line 864 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 864
+      "line": 864,
+      "verdict": "true_positive",
+      "reason": "The user-name select2 `initSelection` at line 864 assigns `data = {}` and replaces it at 865 with the id/text object without reading it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var data = {}` in the userName initSelection callback is overwritten on the next line before use."
+        }
+      ]
     },
     {
       "id": "EA-01a63a93c26dfcf5",
@@ -933,9 +1613,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/reports/UserAccessLayout.js",
       "message": "Value assigned to `data` at line 910 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 910
+      "line": 910,
+      "verdict": "true_positive",
+      "reason": "The role-name select2 `initSelection` at 910 has the same dead `var data = {}` replaced at 911 before `callback(data)` reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var data = {}` in the roleName initSelection callback is overwritten on the next line before use."
+        }
+      ]
     },
     {
       "id": "EA-b0b5dd9f362cb3bc",
@@ -943,9 +1633,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/security_zone/ZoneCreate.js",
       "message": "Value assigned to `App` at line 28 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "ZoneCreate.js binds `var App = require('App')` at line 28 and again at 38, with no use of `App` in between, so the first store is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ZoneCreate.js declares `var App = require('App')` at 28 and again at 38 with no use between."
+        }
+      ]
     },
     {
       "id": "EA-4ee0f6e28142c516",
@@ -953,9 +1653,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/security_zone/ZoneCreateForm.js",
       "message": "Value assigned to `App` at line 28 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "ZoneCreateForm.js repeats `var App = require('App')` at line 37 after line 28 with no intervening read of `App`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ZoneCreateForm.js requires `App` at line 28 and re-declares it at 37 with no read in between."
+        }
+      ]
     },
     {
       "id": "EA-ca5632086ce7a9a4",
@@ -963,9 +1673,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/scripts/views/security_zone/ZoneCreateForm.js",
       "message": "Value assigned to `resourceTmp` at line 129 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 129
+      "line": 129,
+      "verdict": "true_positive",
+      "reason": "Inside the `_.map` callback of `editZoneForm`, `var resourceTmp = []` is replaced on line 130 by `_.map(value.resources, ...)` before being read in the returned object.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`var resourceTmp = []` in editZoneForm is overwritten by the _.map call on the next line."
+        }
+      ]
     },
     {
       "id": "EA-5bbb5aa6d72e19df",
@@ -973,9 +1693,19 @@
       "language": "javascript",
       "path": "src/admin/Wexflow.Admin/js/designer.js",
       "message": "Value assigned to `flowyinput` at line 3355 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3355
+      "line": 3355,
+      "verdict": "true_positive",
+      "reason": "`let flowyinput = {}` at designer.js:3355 is overwritten at 3402 with the `{html: canvashtml, blockarr}` object before `flowy.import(flowyinput)`; nothing between reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let flowyinput = {}` in designer.js:3355 is reassigned at 3402 with no read in the intervening lines."
+        }
+      ]
     },
     {
       "id": "EA-33d23eab639cc22d",
@@ -983,9 +1713,19 @@
       "language": "javascript",
       "path": "src/admin/Wexflow.Admin/js/editor.js",
       "message": "Value assigned to `workflowEditor` at line 248 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 248
+      "line": 248,
+      "verdict": "true_positive",
+      "reason": "`var workflowEditor = getEditor(editorWorkflowId)` at editor.js:248 is only referenced in commented-out code and is redeclared with the same call at line 293 before the real read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`workflowEditor = getEditor(...)` at editor.js:248 is only referenced in commented-out code and is reassigned later at about 293 before use."
+        }
+      ]
     },
     {
       "id": "EA-74ad5027b7cd3733",
@@ -1013,9 +1753,19 @@
       "language": "python",
       "path": "changedetectionio/processors/restock_diff/processor.py",
       "message": "Value assigned to `fetched_md5` at line 575 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 575
+      "line": 575,
+      "verdict": "true_positive",
+      "reason": "`fetched_md5 = None` at processor.py:575 has no read and no try/handler before it is reassigned to `hashlib.md5(...).hexdigest()` at line 621.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`fetched_md5 = None` at line 575 is reassigned from the md5 hexdigest at line 621 with no read between, apart from a raise path that doesn't use it."
+        }
+      ]
     },
     {
       "id": "EA-bd3b929b33109f78",
@@ -1023,9 +1773,19 @@
       "language": "python",
       "path": "electrum/gui/qt/plugins_dialog.py",
       "message": "Value assigned to `p` at line 44 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 44
+      "line": 44,
+      "verdict": "true_positive",
+      "reason": "`p = self.plugins.get(name)` at plugins_dialog.py:44 is not read before the identical reassignment `p = self.plugins.get(name)` later in `__init__`, which feeds `is_enabled = p and p.is_enabled()`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`p = self.plugins.get(name)` at line 44 of plugins_dialog.py is reassigned at line 70 with no read in between, so the first lookup is dead."
+        }
+      ]
     },
     {
       "id": "EA-d02aa565e0b79196",
@@ -1033,9 +1793,19 @@
       "language": "python",
       "path": "electrum/lntransport.py",
       "message": "Value assigned to `_p` at line 331 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 331
+      "line": 331,
+      "verdict": "false_positive",
+      "reason": "`_p = aead_decrypt(temp_k1, 0, h, c)` in `handshake` uses the underscore-prefixed throwaway name to discard a call kept for its MAC check (it raises on failure); linters treat `_`-prefixed names as intentional discards.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`_p` is an underscore-named discard for the aead_decrypt call whose purpose is authentication/exception, an intentional-unused idiom that the rule should accept."
+        }
+      ]
     },
     {
       "id": "EA-0968330e94c0f035",
@@ -1043,9 +1813,19 @@
       "language": "python",
       "path": "electrum/plugins/digitalbitbox/digitalbitbox.py",
       "message": "Value assigned to `reply` at line 495 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 495
+      "line": 495,
+      "verdict": "true_positive",
+      "reason": "The first `reply = dbb_client.hid_send_encrypt(msg)` at line 495 is overwritten by the second send at 499 before `'error' in reply`; the echo reply is discarded (intentional, but the claim holds).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`reply = dbb_client.hid_send_encrypt(msg)` at line 495 is overwritten by the second send at line 499 before `reply` is read (the comment says the first is only an echo)."
+        }
+      ]
     },
     {
       "id": "EA-85ef95ac6e14bde7",
@@ -1053,9 +1833,19 @@
       "language": "python",
       "path": "frigate/detectors/plugins/axengine.py",
       "message": "Value assigned to `results` at line 90 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 90
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "`results = None` in axengine `detect_raw` is immediately replaced at line 91 by `self.session.run(None, {\"images\": tensor_input})`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`results = None` in detect_raw is overwritten by `self.session.run(...)` on the next line without being read."
+        }
+      ]
     },
     {
       "id": "EA-4bd2f090553d3352",
@@ -1063,9 +1853,19 @@
       "language": "python",
       "path": "kms/scripts/db_setup.py",
       "message": "Value assigned to `ret` at line 589 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 589
+      "line": 589,
+      "verdict": "true_positive",
+      "reason": "kms/scripts/db_setup.py ships in the KMS distro assembly. In `set_options`, `ret` from the `reserved_keywords` subprocess.call (589) is overwritten at 595 without being checked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The jisql set-option return code in `ret` at line 589 is overwritten at 595 without being checked, in a shipped KMS setup script."
+        }
+      ]
     },
     {
       "id": "EA-b6426c5c2f87539c",
@@ -1073,9 +1873,19 @@
       "language": "python",
       "path": "kms/scripts/db_setup.py",
       "message": "Value assigned to `ret` at line 595 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 595
+      "line": 595,
+      "verdict": "true_positive",
+      "reason": "In KMS `set_options`, the `max_statement_count` exit code in `ret` (595) is overwritten at 601 by the `max_cursor_count` call and never checked.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ret` from the max_statement_count subprocess call is overwritten at line 601 unchecked, in the shipped KMS db_setup.py."
+        }
+      ]
     },
     {
       "id": "EA-a1c2bf2b01826c0d",
@@ -1083,9 +1893,19 @@
       "language": "python",
       "path": "ranger-util/src/scripts/saveVersion.py",
       "message": "Value assigned to `sortedList` at line 92 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 92
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "ranger-util/src/scripts/saveVersion.py is a build script that ranger-util/pom.xml runs to generate version info, so it is tooling and outside scope, even though `sortedList = []` is overwritten at 104.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "saveVersion.py is invoked by ranger-util/pom.xml during the Maven build, so it is build tooling outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-12363d0145b7dfe0",
@@ -1093,9 +1913,19 @@
       "language": "python",
       "path": "security-admin/scripts/db_setup.py",
       "message": "Value assigned to `pre_dict` at line 198 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 198
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "Inside the patch loop of the shipped security-admin db_setup.py, `pre_dict = {}` (198) is overwritten at 204 by `get_pre_post_java_patches(prefix_for_preSql_patch)` before `if pre_dict`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`pre_dict = {}` in the patch loop is overwritten by get_pre_post_java_patches(...) at line 204 before it is read."
+        }
+      ]
     },
     {
       "id": "EA-c6d30805a270a93c",
@@ -1103,9 +1933,19 @@
       "language": "python",
       "path": "security-admin/scripts/db_setup.py",
       "message": "Value assigned to `post_dict` at line 199 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 199
+      "line": 199,
+      "verdict": "true_positive",
+      "reason": "`post_dict = {}` at 199 is overwritten at 210 by `get_pre_post_java_patches(prefix_for_postSql_patch)`; the lines in between only use `pre_dict` and `version`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`post_dict = {}` is overwritten by get_pre_post_java_patches(prefix_for_postSql_patch) at line 210 before use."
+        }
+      ]
     },
     {
       "id": "EA-1d3b8210892fcc04",
@@ -1113,9 +1953,19 @@
       "language": "python",
       "path": "security-admin/scripts/db_setup.py",
       "message": "Value assigned to `version` at line 586 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 586
+      "line": 586,
+      "verdict": "true_positive",
+      "reason": "In `change_admin_default_password`, `version = \"\"` (586) is replaced two lines later by `dbversionBasedOnUserName(userName)` before any comparison reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`version = \"\"` in change_admin_default_password is overwritten by dbversionBasedOnUserName(userName) on line 588."
+        }
+      ]
     },
     {
       "id": "EA-1ff0a31a1ff9d581",
@@ -1123,9 +1973,19 @@
       "language": "python",
       "path": "security-admin/scripts/db_setup.py",
       "message": "Value assigned to `ret` at line 1143 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1143
+      "line": 1143,
+      "verdict": "true_positive",
+      "reason": "In security-admin `set_options`, `ret` from `subprocessCallWithRetry` for `reserved_keywords` (1143) is overwritten at 1149 without being read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The first set-option return code from subprocessCallWithRetry in `ret` is overwritten at line 1149 without a check."
+        }
+      ]
     },
     {
       "id": "EA-8b22237dadb6761b",
@@ -1133,9 +1993,19 @@
       "language": "python",
       "path": "security-admin/scripts/db_setup.py",
       "message": "Value assigned to `ret` at line 1149 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1149
+      "line": 1149,
+      "verdict": "true_positive",
+      "reason": "In the SQL Anywhere `set_options` branch of db_setup.py, `ret = subprocessCallWithRetry(...)` for max_statement_count is replaced by the max_cursor_count call's result at 1155 without being read; db_setup.py ships in Ranger's admin-web assembly, so it is in scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`ret` at db_setup.py:1149 is replaced by the next subprocessCallWithRetry result at 1155 without being read."
+        }
+      ]
     },
     {
       "id": "EA-0d9d9c15668db6a7",
@@ -1143,9 +2013,19 @@
       "language": "python",
       "path": "security-admin/src/bin/ranger_install.py",
       "message": "Value assigned to `newPropertyValue` at line 1108 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 1108
+      "line": 1108,
+      "verdict": "true_positive",
+      "reason": "`newPropertyValue=''` at ranger_install.py:1108 is immediately replaced by `conf_dict['RANGER_LDAP_URL']` at 1111 with only `propertyName` assigned between; security-admin/src/bin is packaged by admin-web.xml.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`newPropertyValue=''` at ranger_install.py:1108 is live code after the closing triple-quote at 1105 and is overwritten at 1111 by conf_dict['RANGER_LDAP_URL']."
+        }
+      ]
     },
     {
       "id": "EA-90c1754c614fe959",
@@ -1153,9 +2033,19 @@
       "language": "python",
       "path": "tagsync/scripts/updatetagadminpassword.py",
       "message": "Value assigned to `KEYSTORE_FILENAME` at line 116 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 116
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "`KEYSTORE_FILENAME=''` at 116 is unconditionally reassigned from `globalDict[FILENAME_PROPERTY_NAME]` at 150 (the else branch returns) with no read between; the script is a shipped tagsync admin utility.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`KEYSTORE_FILENAME=''` at updatetagadminpassword.py:116 is not read before line 150 assigns it from globalDict."
+        }
+      ]
     },
     {
       "id": "EA-f1593073fc35e6a0",
@@ -1163,9 +2053,19 @@
       "language": "python",
       "path": "redash/query_runner/mongodb.py",
       "message": "Value assigned to `parsed_row` at line 116 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 116
+      "line": 116,
+      "verdict": "true_positive",
+      "reason": "In redash's mongodb `parse_results`, `parsed_row = {}` is immediately overwritten by `_parse_dict(row, flatten)` on line 118.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`parsed_row = {}` in mongodb.parse_results is overwritten by _parse_dict(row, flatten) before being read."
+        }
+      ]
     },
     {
       "id": "EA-8d86302e421f7f89",
@@ -1253,9 +2153,19 @@
       "language": "python",
       "path": "corporate/lib/activity.py",
       "message": "Value assigned to `server_id` at line 285 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 285
+      "line": 285,
+      "verdict": "true_positive",
+      "reason": "In the remote plans loop, `server_id = None` is replaced two lines later by `plan.customer.remote_server.id` with only an assert on `remote_server` between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`server_id = None` in the plans loop is overwritten at line 287 by plan.customer.remote_server.id, with only an assert on remote_server between."
+        }
+      ]
     },
     {
       "id": "EA-5041f91dd219c295",
@@ -1263,9 +2173,19 @@
       "language": "python",
       "path": "corporate/lib/stripe.py",
       "message": "Value assigned to `previous_minimum_license_count` at line 1384 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 1384
+      "line": 1384,
+      "verdict": "true_positive",
+      "reason": "`previous_minimum_license_count = None` at stripe.py:1384 is overwritten at 1408 by `customer.minimum_licenses`; all intervening paths either raise SupportRequestError or fall through without reading it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`previous_minimum_license_count = None` at stripe.py:1384 is overwritten at 1408 and every path between either raises or does not read it, so the initialiser is a dead store."
+        }
+      ]
     },
     {
       "id": "EA-43eaa009d4d2c9b6",
@@ -1273,9 +2193,19 @@
       "language": "python",
       "path": "zerver/data_import/mattermost.py",
       "message": "Value assigned to `username_to_user` at line 1127 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1127
+      "line": 1127,
+      "verdict": "true_positive",
+      "reason": "`username_to_user = {}` at line 1127 is never read before `create_username_to_user_mapping(mattermost_data[\"user\"])` replaces it at line 1147; the converter ships via the convert_mattermost_data management command.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The empty-dict initialiser of `username_to_user` in the mattermost import function is unconditionally replaced by `create_username_to_user_mapping(...)` about 20 lines later with no read between."
+        }
+      ]
     },
     {
       "id": "EA-74af3f1e56e3fb63",
@@ -1283,9 +2213,19 @@
       "language": "python",
       "path": "zerver/lib/user_groups.py",
       "message": "Value assigned to `system_groups_info_list` at line 1117 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1117
+      "line": 1117,
+      "verdict": "true_positive",
+      "reason": "The empty list bound to `system_groups_info_list` is replaced wholesale by the list literal built from the group-info dicts before `bulk_create_system_user_groups` reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`system_groups_info_list = []` in user_groups.py is reassigned to the full role-group list before `bulk_create_system_user_groups` reads it, so the empty-list store is dead."
+        }
+      ]
     },
     {
       "id": "EA-639b178c0bf57b4d",
@@ -1293,9 +2233,19 @@
       "language": "python",
       "path": "zerver/migrations/0792_fix_animated_emoji_still_images.py",
       "message": "Value assigned to `still_bytes` at line 105 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 105
+      "line": 105,
+      "verdict": "true_positive",
+      "reason": "In the local-storage loop `still_bytes = None` is overwritten by `extract_still_from_animated(...)` before any read, and the `except SkipImageError` handler only logs and never reads `still_bytes`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`still_bytes: bytes | None = None` in the local-storage emoji migration is overwritten by `extract_still_from_animated(...)` before any use and no except handler reads it."
+        }
+      ]
     },
     {
       "id": "EA-b400f36cec6cec54",
@@ -1303,9 +2253,19 @@
       "language": "python",
       "path": "zerver/migrations/0792_fix_animated_emoji_still_images.py",
       "message": "Value assigned to `still_bytes` at line 170 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 170
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "In the S3 branch `still_bytes = None` is dead: it is reassigned from `extract_still_from_animated` at line 184 before use, and the SkipImageError handler does not touch it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the S3 variant of the migration `still_bytes = None` is replaced by the `extract_still_from_animated` result before the `put(Body=still_bytes)`, and the `SkipImageError` handler never reads it."
+        }
+      ]
     },
     {
       "id": "EA-5812b5a48ea74934",
@@ -1313,9 +2273,19 @@
       "language": "python",
       "path": "zerver/openapi/merge_api_changelogs.py",
       "message": "Value assigned to `new_feature_level` at line 34 is overwritten before it is read.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a10-a",
-      "line": 34
+      "line": 34,
+      "verdict": "true_positive",
+      "reason": "`get_feature_level` assigns `new_feature_level = None` at line 34 and again at line 40 with no read between; the module is also imported by zerver/lib/templates.py at runtime.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`get_feature_level` in merge_api_changelogs.py is a release-time script helper run only via tools/merge-api-changelogs that rewrites version.py, so it is tooling outside the detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-a44c91f7ca3339ff",
@@ -1323,9 +2293,19 @@
       "language": "python",
       "path": "zerver/openapi/merge_api_changelogs.py",
       "message": "Value assigned to `changelogs_merged` at line 71 is overwritten before it is read.",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a10-a",
-      "line": 71
+      "line": 71,
+      "verdict": "true_positive",
+      "reason": "`changelogs_merged = False` at line 71 is repeated verbatim at line 79 with no read in between, so the first store in `merge_changelogs` is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`merge_changelogs` rewrites api_docs/changelog.md and is only driven by tools/merge-api-changelogs, a release/dev tooling path outside the detector's production scope."
+        }
+      ]
     },
     {
       "id": "EA-8fb484fa188ff305",
@@ -1333,9 +2313,19 @@
       "language": "python",
       "path": "zerver/openapi/python_examples.py",
       "message": "Value assigned to `request` at line 1444 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1444
+      "line": 1444,
+      "verdict": "false_positive",
+      "reason": "zerver/openapi/python_examples.py is the API-documentation example suite run by tools/test-api; the `request: dict[str, Any] = {}` placeholder in `send_message` is example/test code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`send_message` in zerver/openapi/python_examples.py is a documentation example function exercised by tools/test-api, and its `request = {}` pre-declaration is part of the example snippet layout, not production code."
+        }
+      ]
     },
     {
       "id": "EA-98fffb45dc2b394a",
@@ -1343,9 +2333,19 @@
       "language": "python",
       "path": "zerver/openapi/python_examples.py",
       "message": "Value assigned to `request` at line 1484 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1484
+      "line": 1484,
+      "verdict": "false_positive",
+      "reason": "The `add_reaction` placeholder `request = {}` sits in the doc-example test harness executed by tools/test-api (code_example markers), which is example/test code, not shipped runtime.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`add_reaction` is an API-docs example (marked with code_example start/end) in python_examples.py run by tools/test-api, so it is example/test code outside scope."
+        }
+      ]
     },
     {
       "id": "EA-1fc3599ce71cadb3",
@@ -1353,9 +2353,19 @@
       "language": "python",
       "path": "zerver/openapi/python_examples.py",
       "message": "Value assigned to `request` at line 1499 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1499
+      "line": 1499,
+      "verdict": "false_positive",
+      "reason": "`remove_reaction` in python_examples.py is an OpenAPI doc example exercised only by tools/test-api, so its typed `request = {}` placeholder is out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`remove_reaction` is another code_example snippet in python_examples.py exercised only by the API test tool, so the redundant `request` initialiser sits in example code outside scope."
+        }
+      ]
     },
     {
       "id": "EA-fb0059aa552544e0",
@@ -1363,9 +2373,19 @@
       "language": "python",
       "path": "zproject/backends.py",
       "message": "Value assigned to `name` at line 3335 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3335
+      "line": 3335,
+      "verdict": "true_positive",
+      "reason": "In the Apple backend's `get_user_details`, `name = response.get(\"name\") or {}` is immediately overwritten by `json.loads(self.data.get(\"user\", \"{}\")).get(\"name\", {})` without being read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In AppleAuthBackend.get_user_details `name = response.get(\"name\") or {}` is immediately overwritten by the json.loads(self.data...) line, so the first assignment is a dead store in production auth code."
+        }
+      ]
     },
     {
       "id": "EA-a0fd170d4a24f6a5",
@@ -1373,9 +2393,19 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/resume_tui/render.rs",
       "message": "Value assigned to `width` at line 1742 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1742
+      "line": 1742,
+      "verdict": "false_positive",
+      "reason": "`width` from `usize::from(prefix_width)` is read on the very next line by the format string `{:>width$}` (a named width capture), so it is not overwritten unread.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`width` at render.rs 1742 is read immediately in `format!(\"{:>width$}\", ...)` on line 1743; the later `let width` closure at 1781 is a separate binding, so the value is not overwritten before being read."
+        }
+      ]
     },
     {
       "id": "EA-2fc4ad7b7674d62a",
@@ -1383,9 +2413,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/components/reports/spreadsheets/custom-spreadsheet.ts",
       "message": "Value assigned to `perIntervalNetAssets` at line 171 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 171
+      "line": 171,
+      "verdict": "true_positive",
+      "reason": "`let perIntervalNetAssets = 0` in the reduce callback is never read before being reassigned at line 241 (`perIntervalTotals > 0 ? perIntervalTotals : 0`); the initializer is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let perIntervalNetAssets = 0` at line 171 is reassigned at line 241 with no read in between, so the initializer is a dead store."
+        }
+      ]
     },
     {
       "id": "EA-c6997c4fb84540a6",
@@ -1393,9 +2433,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/components/reports/spreadsheets/custom-spreadsheet.ts",
       "message": "Value assigned to `perIntervalNetDebts` at line 172 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 172
+      "line": 172,
+      "verdict": "true_positive",
+      "reason": "`perIntervalNetDebts = 0` at line 172 is unconditionally replaced at line 242 before its first read at line 246 (`netDebts += perIntervalNetDebts`).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let perIntervalNetDebts = 0` at line 172 is reassigned at line 242 without any intervening read, so the initial 0 is dead."
+        }
+      ]
     },
     {
       "id": "EA-419f6bc1f0100d33",
@@ -1403,9 +2453,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/accounts/sync.ts",
       "message": "Value assigned to `retVal` at line 307 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 307
+      "line": 307,
+      "verdict": "true_positive",
+      "reason": "In the SimpleFIN/GoCardless download helper, `let retVal = {}` at 307 is immediately replaced by the object literal at 309 before `logger.log` reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In downloadAkahuTransactions-style code at sync.ts 307, `let retVal = {}` is immediately replaced by the object literal assignment, so the empty initializer is never read."
+        }
+      ]
     },
     {
       "id": "EA-f833c5e6c28791a3",
@@ -1413,9 +2473,19 @@
       "language": "typescript",
       "path": "packages/loot-core/src/server/accounts/sync.ts",
       "message": "Value assigned to `retVal` at line 346 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 346
+      "line": 346,
+      "verdict": "true_positive",
+      "reason": "The second `let retVal = {}` at sync.ts:346 is overwritten by the `{transactions, accountBalance, startingBalance}` object at 348 with no read in between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "At sync.ts line 346 `let retVal = {}` is overwritten by the next `retVal = {transactions...}` statement before any read, a dead initializer."
+        }
+      ]
     },
     {
       "id": "EA-43dd51dfd646d6a2",
@@ -1423,9 +2493,19 @@
       "language": "typescript",
       "path": "web/src/components/PasswordMeter.tsx",
       "message": "Value assigned to `passwordScore` at line 25 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 25
+      "line": 25,
+      "verdict": "false_positive",
+      "reason": "`passwordScore = 0` is read by the early returns `return { feedback, feedbackTitle, maxScore, passwordScore }` at lines 32 and 39 before any reassignment at line 89.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`passwordScore = 0` is read by the early `return { ..., passwordScore }` at lines 32 and 39 before line 89 reassigns it, so the initial value is live."
+        }
+      ]
     },
     {
       "id": "EA-1758e9c0469e8e1d",
@@ -1433,9 +2513,19 @@
       "language": "typescript",
       "path": "web/src/utils/zoneEdutUtil.ts",
       "message": "Value assigned to `alertQueries` at line 39 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 39
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "`let alertQueries = \"\"` in zoneEdutUtil.ts is not read before being reassigned at line 53 to the joined `[...alerts].map(...)` query string.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let alertQueries = \"\"` in reviewQueries is overwritten by the `[...alerts].map(...).join(\"\")` assignment before any read."
+        }
+      ]
     },
     {
       "id": "EA-ffbbeab49d5ef9ca",
@@ -1443,9 +2533,19 @@
       "language": "typescript",
       "path": "web/src/utils/zoneEdutUtil.ts",
       "message": "Value assigned to `detectionQueries` at line 40 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "true_positive",
+      "reason": "`let detectionQueries = \"\"` (line 40) is never read before line 66 reassigns it from `[...detections].map(...).join(\"\")`; the empty-string initializer is a dead store.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Initializer `let detectionQueries = \"\"` is reassigned from the `detections` set join before any read."
+        }
+      ]
     },
     {
       "id": "EA-2a363607711fad8d",
@@ -1453,9 +2553,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/growth/components/growth-kpis.tsx",
       "message": "Value assigned to `sanitizedData` at line 192 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 192
+      "line": 192,
+      "verdict": "true_positive",
+      "reason": "In growth-kpis.tsx `sanitizedData` is initialised to `[]` at 192 and unconditionally replaced by `sanitizeChartData(allChartData, range, fieldName, 'exact')` at 210 with only the `fieldName` switch in between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`sanitizedData = []` is replaced by the sanitizeChartData(allChartData, ...) call before the later map reads it."
+        }
+      ]
     },
     {
       "id": "EA-3057eabd2b8ab1ba",
@@ -1463,9 +2573,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/newsletters/components/newsletters-kpis.tsx",
       "message": "Value assigned to `sanitizedData` at line 134 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 134
+      "line": 134,
+      "verdict": "true_positive",
+      "reason": "In newsletters-kpis.tsx `sanitizedData = []` (134) is overwritten at 138 by `sanitizeChartData(allSubscribersData, ...)` with only comments between, so the initial array is never read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`sanitizedData = []` in subscribersData is overwritten by sanitizeChartData(allSubscribersData, ...) on the next statement."
+        }
+      ]
     },
     {
       "id": "EA-f395ac9361a73f2a",
@@ -1473,9 +2593,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/overview/overview.tsx",
       "message": "Value assigned to `sanitizedData` at line 174 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 174
+      "line": 174,
+      "verdict": "true_positive",
+      "reason": "In overview.tsx's first memo, `sanitizedData = []` at 174 is replaced by `sanitizeChartData<GrowthChartDataItem>(...)` at 177 before the `.map` read at 185.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "membersChartData's `sanitizedData = []` is dead; sanitizeChartData<GrowthChartDataItem> reassigns it before the map."
+        }
+      ]
     },
     {
       "id": "EA-b3ab50e136ed0034",
@@ -1483,9 +2613,19 @@
       "language": "typescript",
       "path": "apps/admin/src/analytics/views/stats/overview/overview.tsx",
       "message": "Value assigned to `sanitizedData` at line 203 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 203
+      "line": 203,
+      "verdict": "true_positive",
+      "reason": "In overview.tsx's MRR memo, `sanitizedData = []` at 203 is replaced at 206 by `sanitizeChartData` with `fieldName = 'mrr'`, and nothing reads the empty array first.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "mrrChartData's `sanitizedData = []` initializer is overwritten by sanitizeChartData with fieldName 'mrr' before use."
+        }
+      ]
     },
     {
       "id": "EA-c85320196dc7b7cf",
@@ -1493,9 +2633,19 @@
       "language": "typescript",
       "path": "ghost/core/server/adapters/scheduling/scheduling-default.ts",
       "message": "Value assigned to `keys` at line 47 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 47
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "`keys: string[] = []` in `_addJob` is either abandoned by the emergency-job early return or overwritten by `Object.keys(this.allJobs)` at 69; it is never read in between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`keys: string[] = []` in _addJob is only read after `keys = Object.keys(this.allJobs)`; the early return does not read it."
+        }
+      ]
     },
     {
       "id": "EA-dde3514ffb2a4f45",
@@ -1503,9 +2653,19 @@
       "language": "typescript",
       "path": "ghost/core/server/lib/email-rendering/finalize.ts",
       "message": "Value assigned to `$` at line 8 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 8
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "`$` from `cheerio.load(html, null, false)` at finalize.ts:8 is read right away by `$('figcaption').addClass(...)` and `$.html()` before the later reassignment, so the claim is wrong; the detector misses a local that is called as a function.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The reported `$ = cheerio.load(html...)` is read at line 9 (`$('figcaption')`) before the reassignment at the second cheerio.load, so the store is live."
+        }
+      ]
     },
     {
       "id": "EA-7f1ed0b8ae7624e3",
@@ -1513,9 +2673,19 @@
       "language": "typescript",
       "path": "koenig/koenig-lexical/src/plugins/TKPlugin.tsx",
       "message": "Value assigned to `top` at line 22 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 22
+      "line": 22,
+      "verdict": "true_positive",
+      "reason": "In TKPlugin's `calculatePosition`, `top = 0` (22) is overwritten at 30 by `positioningElementRect.top - rootElementRect.top + 4` before the `return {top, right}`; the zero is never observed.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let top = 0` in calculatePosition is overwritten by the positioningElementRect.top computation before the return reads it."
+        }
+      ]
     },
     {
       "id": "EA-4a92cd80874a8755",
@@ -1523,9 +2693,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/account/sign-in/sign-in.component.ts",
       "message": "Value assigned to `redirect_location` at line 284 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 284
+      "line": 284,
+      "verdict": "true_positive",
+      "reason": "`let redirect_location = ''` in sign-in.component.ts is overwritten on the next statement by the ternary over `error.error.redirect_location`; the empty `catch (error) {}` does not read it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`redirect_location = ''` in the 403 handler is replaced by the ternary/JSON.parse result before window.location.href reads it."
+        }
+      ]
     },
     {
       "id": "EA-d35036b6cded1acd",
@@ -1533,9 +2713,19 @@
       "language": "typescript",
       "path": "src/portal/src/app/shared/components/navigator/navigator.component.ts",
       "message": "Value assigned to `redirect_location` at line 233 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 233
+      "line": 233,
+      "verdict": "true_positive",
+      "reason": "In navigator.component.ts, `redirect_location = ''` at 233 is replaced on line 234 by the `redirect_location` ternary, and the empty catch handler never reads it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the navigator logout error handler, `redirect_location = ''` is overwritten by the ternary assignment before being read."
+        }
+      ]
     },
     {
       "id": "EA-57eae1849a07e960",
@@ -1568,9 +2758,19 @@
       "language": "typescript",
       "path": "js/apps/account-ui/src/account-security/DeviceActivity.tsx",
       "message": "Value assigned to `currentDevice` at line 54 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 54
+      "line": 54,
+      "verdict": "true_positive",
+      "reason": "`let currentDevice = devices[0]` is never read before `devices.splice(index, 1)[0]` replaces it at line 57; the `findIndex` call in between does not use it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`currentDevice = devices[0]` is overwritten by devices.splice(index, 1)[0] before any read."
+        }
+      ]
     },
     {
       "id": "EA-91ed3bde5bf3d2da",
@@ -1578,9 +2778,19 @@
       "language": "typescript",
       "path": "js/apps/admin-ui/src/realm-settings/user-profile/AttributesTab.tsx",
       "message": "Value assigned to `movedAttribute` at line 142 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 142
+      "line": 142,
+      "verdict": "true_positive",
+      "reason": "`let movedAttribute: movedAttributeType = {}` at 142 is replaced by `attributes[fromIndex]` on line 143 before the `splice` read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`movedAttribute = {}` is replaced by attributes[fromIndex] on the next line with no read."
+        }
+      ]
     },
     {
       "id": "EA-eef44b3130c17308",
@@ -1588,9 +2798,19 @@
       "language": "typescript",
       "path": "web/src/compose_paste.ts",
       "message": "Value assigned to `textful_nodes` at line 109 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 109
+      "line": 109,
+      "verdict": "true_positive",
+      "reason": "`let textful_nodes = 0;` in has_single_textful_child_node is replaced on the next line by `count_valid_text_nodes_upto([...], 2)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`textful_nodes = 0` in has_single_textful_child_node is overwritten by count_valid_text_nodes_upto on the next line."
+        }
+      ]
     },
     {
       "id": "EA-bd647e50d3244e9f",
@@ -1598,9 +2818,19 @@
       "language": "typescript",
       "path": "web/src/inbox_ui.ts",
       "message": "Value assigned to `$all_elements` at line 1452 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1452
+      "line": 1452,
+      "verdict": "false_positive",
+      "reason": "The value assigned at inbox_ui.ts:1452 is read on line 1454 by `$all_elements.add(...)`, so the store is live; the detector failed to see the `$`-prefixed identifier as a read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$all_elements = $all_elements.not(...)` at inbox_ui.ts:1452 reads the prior value in its right-hand side and the result is used at 1454, so the store is not dead."
+        }
+      ]
     },
     {
       "id": "EA-5b979d82c8a1ac00",
@@ -1608,9 +2838,19 @@
       "language": "typescript",
       "path": "web/src/loading.ts",
       "message": "Value assigned to `$inner_container` at line 40 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "`$inner_container` created at loading.ts:40 is read by `$container.append($inner_container)` at 41 and `$container = $inner_container` at 42 before being reassigned.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$inner_container` created at loading.ts:40 is read by `$container.append($inner_container)` and `$container = $inner_container` before it is reassigned at 43."
+        }
+      ]
     },
     {
       "id": "EA-d25f1b4107f04231",
@@ -1618,9 +2858,19 @@
       "language": "typescript",
       "path": "web/src/loading.ts",
       "message": "Value assigned to `$container` at line 42 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "`$container = $inner_container` at line 42 is read at 44 via `$container.append($inner_container)` before line 45 reassigns it, so the store is used.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$container = $inner_container` at loading.ts:42 is read at line 44 by `$container.append($inner_container)` before the reassignment at 45."
+        }
+      ]
     },
     {
       "id": "EA-51e53f2aa0451e65",
@@ -1628,9 +2878,19 @@
       "language": "typescript",
       "path": "web/src/pill_typeahead.ts",
       "message": "Value assigned to `source` at line 198 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 198
+      "line": 198,
+      "verdict": "true_positive",
+      "reason": "`let source: GroupSettingTypeaheadItem[] = []` in the pill typeahead source is overwritten by `user_group_pill.typeahead_source(...)` at line 200 before any read.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let source = []` in the typeahead source() is replaced by user_group_pill.typeahead_source on the next line."
+        }
+      ]
     },
     {
       "id": "EA-2a41cd78b0175b75",
@@ -1638,9 +2898,19 @@
       "language": "typescript",
       "path": "web/src/popup_banners.ts",
       "message": "Value assigned to `$banner` at line 167 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 167
+      "line": 167,
+      "verdict": "false_positive",
+      "reason": "`$banner` from `$('#popup_banners_wrapper').find(...)` is read at line 168 by `$banner.length > 0` and in the branch body, so it is not overwritten unread.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$banner` in popup_banners.ts is read immediately at line 168 (`$banner.length`) and again at 171, so the initial value is used."
+        }
+      ]
     },
     {
       "id": "EA-a000e829cbc98b1e",
@@ -1648,9 +2918,19 @@
       "language": "typescript",
       "path": "web/src/settings_profile_fields.ts",
       "message": "Value assigned to `field_data` at line 351 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 351
+      "line": 351,
+      "verdict": "true_positive",
+      "reason": "`let field_data: FieldData | undefined = {}` in create_profile_field is replaced at 355 by `settings_components.read_field_data_from_form(...)` with only `field_type` computed between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`field_data: FieldData | undefined = {}` in create_profile_field is overwritten by read_field_data_from_form at 355 before use."
+        }
+      ]
     },
     {
       "id": "EA-a0ac49dbeaf18787",
@@ -1658,9 +2938,19 @@
       "language": "typescript",
       "path": "web/src/stats/stats.ts",
       "message": "Value assigned to `date_formatter` at line 516 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 516
+      "line": 516,
+      "verdict": "true_positive",
+      "reason": "The `format_date(date, true)` formatter assigned to `date_formatter` at stats.ts:516 is replaced at 522 before `make_traces` reads it, so that closure is never used.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`date_formatter` initial function in stats.ts:516 is replaced at line 522 before it is passed to any make_traces call."
+        }
+      ]
     },
     {
       "id": "EA-4279093c9fc50439",
@@ -1668,9 +2958,19 @@
       "language": "typescript",
       "path": "web/src/stats/stats.ts",
       "message": "Value assigned to `values` at line 519 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 519
+      "line": 519,
+      "verdict": "true_positive",
+      "reason": "`let values = {me: data.user.human, ...}` at 519 is never read; the intermediate uses are `info.values` properties, and `values` is reassigned around line 537 before `get_total_messages_sent(values)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`values` initialised at stats.ts:519 is reassigned at about line 537 before the first read at get_total_messages_sent(values)."
+        }
+      ]
     },
     {
       "id": "EA-424d339d392be3e5",
@@ -1678,9 +2978,19 @@
       "language": "typescript",
       "path": "web/src/stats/stats.ts",
       "message": "Value assigned to `date_formatter` at line 1275 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1275
+      "line": 1275,
+      "verdict": "true_positive",
+      "reason": "In the messages-read chart, the `format_date(date, true)` closure stored in `date_formatter` at 1275 is overwritten at 1281 without any call reading it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`date_formatter` initial function at stats.ts:1275 is replaced at 1281 before it is read."
+        }
+      ]
     },
     {
       "id": "EA-e642899dd41fd690",
@@ -1688,9 +2998,19 @@
       "language": "typescript",
       "path": "web/src/stats/stats.ts",
       "message": "Value assigned to `values` at line 1278 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1278
+      "line": 1278,
+      "verdict": "true_positive",
+      "reason": "`let values = {me: data.user.read, everyone: data.everyone.read}` at 1278 is replaced by the partial_sums object near 1295 before `make_traces(dates, values, ...)`; only `info.values` is read between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`values` in the read-stats chart is reassigned at about line 1295 with partial_sums before it is read by make_traces."
+        }
+      ]
     },
     {
       "id": "EA-74bc10f54c1dd9ab",
@@ -1698,9 +3018,19 @@
       "language": "typescript",
       "path": "web/src/timerender.ts",
       "message": "Value assigned to `$node` at line 400 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 400
+      "line": 400,
+      "verdict": "false_positive",
+      "reason": "`$node` built at timerender.ts:400 is passed to `render_date_span($node, rendered_time)` on line 401, so the initial value is read before reassignment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`$node` at timerender.ts:400 is passed as an argument to render_date_span at line 401, so its value is read before being reassigned."
+        }
+      ]
     }
   ]
 }

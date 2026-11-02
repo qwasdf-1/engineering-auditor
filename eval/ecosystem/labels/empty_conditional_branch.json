@@ -48,9 +48,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Cms.Api.Management/Security/BackOfficeSignInManager.cs",
       "message": "Empty if_statement body at line 175",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 175
+      "line": 175,
+      "verdict": "true_positive",
+      "reason": "The `else if (!result.Succeeded || result.IsNotAllowed) { }` block in BackOfficeSignInManager is truly empty with no comment; it only exists to dodge the trailing `throw new ArgumentOutOfRangeException()` and could be folded into the else condition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `else if (!result.Succeeded || result.IsNotAllowed) { }` branch in BackOfficeSignInManager has an empty body and no comment, and the following else throws ArgumentOutOfRangeException."
+        }
+      ]
     },
     {
       "id": "EA-fdf64632d7f54471",
@@ -58,9 +68,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Core/Services/PublishableContentServiceBase.cs",
       "message": "Empty if_statement body at line 1292",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1292
+      "line": 1292,
+      "verdict": "true_positive",
+      "reason": "`if (!publishing) { }` after `publishing &= tryPublish` has an empty body and no comment, so it is dead code; the real handling happens later at `else if (!publishing)`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (!publishing) { }` in PublishableContentServiceBase after `publishing &= tryPublish` is a dead empty block with no comment; the real handling is in the later `else if (!publishing)`."
+        }
+      ]
     },
     {
       "id": "EA-319b463cbd4d725e",
@@ -68,9 +88,19 @@
       "language": "csharp",
       "path": "src/Umbraco.Infrastructure/ModelsBuilder/AutoModelsNotificationHandler.cs",
       "message": "Empty if_statement body at line 81",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 81
+      "line": 81,
+      "verdict": "true_positive",
+      "reason": "`Install()` contains only `if (!IsEnabled) { }` with an empty body, so the method does nothing; the \"don't run if not enabled\" comment sits outside the block and the branch is leftover dead code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (!IsEnabled) { }` in AutoModelsNotificationHandler.Install() has an empty body with only a stale 'don't run if not enabled' comment above it, so Install() does nothing."
+        }
+      ]
     },
     {
       "id": "EA-287d81dd67fe003c",
@@ -78,9 +108,19 @@
       "language": "go",
       "path": "server/accounts.go",
       "message": "Empty if_statement body at line 4879",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 4879
+      "line": 4879,
+      "verdict": "true_positive",
+      "reason": "`if v, ok := s.accounts.Load(pubKey); !ok { } else if ...` in the DirJWTStore.changed callback has an empty uncommented first arm that just inverts `ok`; it could be written as `if ok { ... }`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if v, ok := s.accounts.Load(pubKey); !ok { }` in the DirResolver changed callback leaves the not-found branch empty without a comment."
+        }
+      ]
     },
     {
       "id": "EA-da15bc9e0adc9f95",
@@ -88,9 +128,19 @@
       "language": "go",
       "path": "server/jwt.go",
       "message": "Empty if_statement body at line 135",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 135
+      "line": 135,
+      "verdict": "false_positive",
+      "reason": "The empty `else if srvMajor > major {}` in validateTrustedOperators deliberately stops the lexicographic version comparison before the minor/update checks; it is an ordering guard, not missing logic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`} else if srvMajor > major {` in the assertServerVersion chain in jwt.go has an empty body with no comment."
+        }
+      ]
     },
     {
       "id": "EA-702eab175573a9fb",
@@ -98,9 +148,19 @@
       "language": "go",
       "path": "server/jwt.go",
       "message": "Empty if_statement body at line 139",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 139
+      "line": 139,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `} else if srvMinor > minor {}` is an empty, uncommented Go if-else block, the documented shape. It works as a stop-checking guard, but the claim holds and intentional code still counts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`} else if srvMinor > minor {` in jwt.go version check has an empty block and no comment."
+        }
+      ]
     },
     {
       "id": "EA-babbcd1cd90aed95",
@@ -108,9 +168,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.data.transfer/src/org/jkiss/dbeaver/tools/transfer/stream/importer/StreamImporterAbstract.java",
       "message": "Empty if_statement body at line 127",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 127
+      "line": 127,
+      "verdict": "true_positive",
+      "reason": "In StreamImporterAbstract, `if (targetObject instanceof DBSEntity) { }` at line 127 has an empty body with no comment, a dead leftover at the end of the method.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In StreamImporterAbstract, `if (targetObject instanceof DBSEntity) { }` has a completely empty body with no comment, a leftover placeholder."
+        }
+      ]
     },
     {
       "id": "EA-d0aec220fff32ce5",
@@ -118,9 +188,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.db2/src/org/jkiss/dbeaver/ext/db2/model/DB2TablePartition.java",
       "message": "Empty if_statement body at line 90",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 90
+      "line": 90,
+      "verdict": "true_positive",
+      "reason": "DB2TablePartition's `if (db2DataSource.isAtLeastV9_5()) { }` contains only a blank line, a no-op version check left unimplemented.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DB2TablePartition has `if (db2DataSource.isAtLeastV9_5()) { }` with an empty body and no comment, dead conditional code."
+        }
+      ]
     },
     {
       "id": "EA-ecfb0abd048938ee",
@@ -128,9 +208,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.mysql/src/org/jkiss/dbeaver/ext/mysql/model/MySQLCatalog.java",
       "message": "Empty if_statement body at line 530",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 530
+      "line": 530,
+      "verdict": "true_positive",
+      "reason": "MySQLCatalog.getObjectDefinitionText has `if (CommonUtils.getOption(options, OPTION_INCLUDE_NESTED_OBJECTS)) { }` with no statements or comment, so the option is checked but ignored.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MySQLCatalog has `if (CommonUtils.getOption(options, OPTION_INCLUDE_NESTED_OBJECTS)) { }` with an empty body, so the option is checked but does nothing."
+        }
+      ]
     },
     {
       "id": "EA-8366e18d263036fa",
@@ -138,9 +228,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.mysql/src/org/jkiss/dbeaver/ext/mysql/model/plan/MySQLPlanNodeJSON.java",
       "message": "Empty if_statement body at line 119",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 119
+      "line": 119,
+      "verdict": "true_positive",
+      "reason": "MySQLPlanNodeJSON.getNodeName's `if (nodeName == null) { } else {...}` has an empty, uncommented then-branch that should be an inverted condition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MySQLPlanNodeJSON.getNodeName has `if (nodeName == null) { } else {...}`, an empty then-branch with no comment that should be inverted to `!= null`."
+        }
+      ]
     },
     {
       "id": "EA-1651be075c205f3e",
@@ -148,9 +248,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ext.postgresql/src/org/jkiss/dbeaver/ext/postgresql/model/PostgreDataTypeCache.java",
       "message": "Empty if_statement body at line 150",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 150
+      "line": 150,
+      "verdict": "true_positive",
+      "reason": "PostgreDataTypeCache.cacheObject uses `if (getCachedObject(object.getName()) != null) { } else {...}`, an empty then-branch with no comment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PostgreDataTypeCache.cacheObject has an empty then-branch for `getCachedObject(...) != null` followed by else; no comment explains the no-op."
+        }
+      ]
     },
     {
       "id": "EA-80c062cfa4031343",
@@ -158,9 +268,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model.sql/src/org/jkiss/dbeaver/model/sql/completion/SQLCompletionAnalyzer.java",
       "message": "Empty if_statement body at line 668",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 668
+      "line": 668,
+      "verdict": "true_positive",
+      "reason": "SQLCompletionAnalyzer's `if (selectedObject instanceof DBSObjectContainer) { }` under hideDups is empty, so the 'Remove duplicates' step it is commented for does nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "SQLCompletionAnalyzer has an empty `if (selectedObject instanceof DBSObjectContainer) { }` inside hideDups, with the comment sitting outside the branch, so it is dead code."
+        }
+      ]
     },
     {
       "id": "EA-24035ef06456c8d4",
@@ -168,9 +288,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/DataSourceRegistry.java",
       "message": "Empty if_statement body at line 823",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 823
+      "line": 823,
+      "verdict": "true_positive",
+      "reason": "DataSourceRegistry's `if (loadDataSources(cfgStorage, manager, dataSourceIds, parseResults)) { } else {...}` has an empty uncommented then-branch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "DataSourceRegistry has `if (loadDataSources(...)) { } else {...}`, an empty then-branch with no comment that should negate the condition."
+        }
+      ]
     },
     {
       "id": "EA-da0cb21627725db9",
@@ -178,9 +308,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.registry/src/org/jkiss/dbeaver/registry/maven/MavenArtifactVersion.java",
       "message": "Empty if_statement body at line 399",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 399
+      "line": 399,
+      "verdict": "true_positive",
+      "reason": "MavenArtifactVersion's `if (osElement != null) { }` for the profile <os> activation element is empty with no comment, so OS activation is silently ignored.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MavenArtifactVersion has `if (osElement != null) { }` with an empty body (os activation never handled), no comment inside."
+        }
+      ]
     },
     {
       "id": "EA-d7752823699f7e6a",
@@ -188,9 +328,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.data/src/org/jkiss/dbeaver/ui/controls/resultset/virtual/VirtualAttributeAddAction.java",
       "message": "Empty if_statement body at line 46",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 46
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "VirtualAttributeAddAction's `if (vAttrConstr != null) { }` after getConstraint(vAttr, false) has an empty body with no comment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "VirtualAttributeAddAction has `if (vAttrConstr != null) { }` with an empty body and no comment, an unfinished placeholder."
+        }
+      ]
     },
     {
       "id": "EA-078bb94cee12587d",
@@ -198,9 +348,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.editors.erd/src/org/jkiss/dbeaver/ui/editors/erd/editor/ERDGraphicalViewer.java",
       "message": "Empty if_statement body at line 492",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 492
+      "line": 492,
+      "verdict": "true_positive",
+      "reason": "ERDGraphicalViewer's `else if (updatedAssociation != null) { }` branch is empty and uncommented, existing only to skip the reloadAttributes else.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ERDGraphicalViewer has `else if (updatedAssociation != null) { }` with an empty body and no comment, silently handling that case by doing nothing."
+        }
+      ]
     },
     {
       "id": "EA-4c85329941bcb324",
@@ -208,9 +368,19 @@
       "language": "java",
       "path": "dolphinscheduler-datasource-plugin/dolphinscheduler-datasource-api/src/main/java/org/apache/dolphinscheduler/plugin/datasource/api/datasource/AbstractDataSourceProcessor.java",
       "message": "Empty if_statement body at line 72",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 72
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "checkHost's `if (InetAddresses.isInetAddress(host)) { } else if (...)` has an empty then-branch with no comment in shipped datasource API code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "checkHost has an empty then-branch for `InetAddresses.isInetAddress(host)` with no comment, and the else-if uses `||` of two pattern misses, so the empty branch hides awkward logic."
+        }
+      ]
     },
     {
       "id": "EA-7cf058227ee13cb4",
@@ -218,9 +388,19 @@
       "language": "java",
       "path": "adapters/saml/core/src/main/java/org/keycloak/adapters/saml/config/parsers/DeploymentBuilder.java",
       "message": "Empty if_statement body at line 291",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 291
+      "line": 291,
+      "verdict": "true_positive",
+      "reason": "`if (!fp.exists()) { }` in DeploymentBuilder.loadKeystore has no body or comment; the missing-file case is only handled later by the FileNotFoundException catch, so the check is dead.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if (!fp.exists()) { }` in DeploymentBuilder after `new File(...)` is a genuinely empty, dead check; the FileNotFoundException handler follows separately."
+        }
+      ]
     },
     {
       "id": "EA-b43455c3c494b6c1",
@@ -228,9 +408,19 @@
       "language": "java",
       "path": "common/src/main/java/org/keycloak/common/util/reflections/Reflections.java",
       "message": "Empty if_statement body at line 514",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 514
+      "line": 514,
+      "verdict": "true_positive",
+      "reason": "`else if (type instanceof TypeVariable<?>) { }` in Reflections.buildTypeMap is an empty uncommented arm that is also the last branch, so it does nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`else if (type instanceof TypeVariable<?>) { }` in Reflections is an empty branch with no comment or action."
+        }
+      ]
     },
     {
       "id": "EA-95be2479a4cd5323",
@@ -238,9 +428,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty for_statement body at line 2807",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2807
+      "line": 2807,
+      "verdict": "false_positive",
+      "reason": "simplemde.debug.js is a gulp-built debug bundle of third-party simplemde/CodeMirror; the `for (end = i$4 + 1; ...types[end] == \"%\"; ++end) {}` scan loop does its work in the header.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty `for (end = i$4 + 1; ...; ++end) {}` is a scan-forward loop idiom inside the CodeMirror bidi code of the built debug bundle simplemde.debug.js."
+        }
+      ]
     },
     {
       "id": "EA-64ae586062efb234",
@@ -248,9 +448,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty for_statement body at line 2832",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2832
+      "line": 2832,
+      "verdict": "false_positive",
+      "reason": "Built simplemde.debug.js bundle (vendored CodeMirror bidi code); `for (end$1 = ...; isNeutral.test(types[end$1]); ++end$1) {}` is an advance-to-end scan idiom, not missing logic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty-body `for (end$1 = ...; isNeutral.test(types[end$1]); ++end$1) {}` is an intentional scan loop in the bundled CodeMirror code of simplemde.debug.js."
+        }
+      ]
     },
     {
       "id": "EA-508593660c3865b9",
@@ -258,9 +468,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty for_statement body at line 2850",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2850
+      "line": 2850,
+      "verdict": "false_positive",
+      "reason": "In the built simplemde.debug.js bundle, `for (++i$7; ...countsAsLeft.test(types[i$7]); ++i$7) {}` is a header-only cursor-advance loop from bundled CodeMirror.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty `for (++i$7; countsAsLeft.test(types[i$7]); ++i$7) {}` advances an index in vendored CodeMirror inside a built bundle."
+        }
+      ]
     },
     {
       "id": "EA-01a6976f2c5426ce",
@@ -268,9 +488,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty for_statement body at line 2854",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2854
+      "line": 2854,
+      "verdict": "false_positive",
+      "reason": "Built third-party bundle simplemde.debug.js; `for (++i$7; i$7 < len && types[i$7] != \"L\"; ++i$7) {}` skips non-L types entirely in its header.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty `for (++i$7; i$7 < len && types[i$7] != \"L\"; ++i$7) {}` is the loop-advance idiom in third-party bundled code."
+        }
+      ]
     },
     {
       "id": "EA-df2f53bee49fe604",
@@ -278,9 +508,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty for_statement body at line 2859",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2859
+      "line": 2859,
+      "verdict": "false_positive",
+      "reason": "simplemde.debug.js is a generated bundle; the nested `for (++j$2; ...countsAsNum.test(types[j$2]); ++j$2) {}` loop intentionally has an empty body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty `for (++j$2; ...countsAsNum.test(types[j$2]); ++j$2) {}` is a scan loop in the vendored CodeMirror build output."
+        }
+      ]
     },
     {
       "id": "EA-db4b32106dec3635",
@@ -288,9 +528,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty while_statement body at line 3199",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3199
+      "line": 3199,
+      "verdict": "false_positive",
+      "reason": "`while (this.eat(match)){}` in the bundled CodeMirror StringStream.eatWhile inside built simplemde.debug.js is a consume-loop whose condition does the work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (this.eat(match)){}` in StringStream.eatWhile is a consume-while idiom, and the file is a vendored built debug bundle."
+        }
+      ]
     },
     {
       "id": "EA-c23463b43136d00d",
@@ -298,9 +548,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty if_statement body at line 6574",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 6574
+      "line": 6574,
+      "verdict": "false_positive",
+      "reason": "`if (lineView.hidden) ; else if (...)` is transpiled CodeMirror output in the built simplemde.debug.js bundle, not Ghost-authored source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`if (lineView.hidden) ; else if ...` is compiler-style output in a built debug bundle of CodeMirror, vendored third-party code."
+        }
+      ]
     },
     {
       "id": "EA-b6e7ae85c7499c38",
@@ -308,9 +568,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "Empty for_statement body at line 13804",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13804
+      "line": 13804,
+      "verdict": "false_positive",
+      "reason": "The ieee754 read loop `for (; nBits > 0; e = e * 256 + buffer[offset + i], ...) {}` is browserified vendored code in simplemde.debug.js with all work in the update clause.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`for (; nBits > 0; e = e * 256 + buffer[offset + i], ...) {}` is the ieee754 read loop, with all work in the update clause, in a bundled npm dependency."
+        }
+      ]
     },
     {
       "id": "EA-7807452470fa5ce7",
@@ -318,9 +588,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty for_statement body at line 2832",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2832
+      "line": 2832,
+      "verdict": "false_positive",
+      "reason": "debug/simplemde.js is the built (non-debug) simplemde bundle; `for (end$1 = i$6 + 1; ...; ++end$1) {}` is a bundled CodeMirror scan loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty-body bidi scan `for (end$1 = i$6 + 1; ...) {}` in simplemde.js, a built bundle of vendored CodeMirror."
+        }
+      ]
     },
     {
       "id": "EA-cd1a7462aa66246e",
@@ -328,9 +608,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty for_statement body at line 2850",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2850
+      "line": 2850,
+      "verdict": "false_positive",
+      "reason": "In the built debug/simplemde.js bundle, `for (++i$7; ...countsAsLeft.test(...); ++i$7) {}` is third-party bidi ordering code with a header-only body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`for (++i$7; countsAsLeft.test(...); ++i$7) {}` in simplemde.js is a scan loop in the generated bundle."
+        }
+      ]
     },
     {
       "id": "EA-499fa64d82979d73",
@@ -338,9 +628,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty for_statement body at line 2859",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2859
+      "line": 2859,
+      "verdict": "false_positive",
+      "reason": "Generated debug/simplemde.js bundle; `for (++j$2; j$2 < i$7 && countsAsNum.test(types[j$2]); ++j$2) {}` advances j$2 by design.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`for (++j$2; ...; ++j$2) {}` at line 2859 of simplemde.js is a scan loop inside a vendored built bundle."
+        }
+      ]
     },
     {
       "id": "EA-c57ce2981d9f8c66",
@@ -348,9 +648,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty while_statement body at line 3199",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3199
+      "line": 3199,
+      "verdict": "false_positive",
+      "reason": "`while (this.eat(match)){}` at debug/simplemde.js:3199 is bundled CodeMirror eatWhile, a built artifact and a standard consume-loop idiom.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while (this.eat(match)){}` in eatWhile of simplemde.js is a consume-loop idiom in bundled third-party code."
+        }
+      ]
     },
     {
       "id": "EA-ecc8f54729d449c6",
@@ -358,9 +668,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty if_statement body at line 6574",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 6574
+      "line": 6574,
+      "verdict": "false_positive",
+      "reason": "debug/simplemde.js:6574 `if (lineView.hidden) ; else if` is compiled vendored CodeMirror patchDisplay code in a built bundle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Semicolon-bodied `if (lineView.hidden) ;` in simplemde.js is generated bundle output (rollup-style) of CodeMirror, not authored code."
+        }
+      ]
     },
     {
       "id": "EA-479d5e0ea2eeb463",
@@ -368,9 +688,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty for_statement body at line 13804",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13804
+      "line": 13804,
+      "verdict": "false_positive",
+      "reason": "debug/simplemde.js:13804 is the browserified ieee754 `read` exponent loop accumulating `e` in the for-update clause; built vendored code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ieee754 `readIEEE754` loop with empty body and work in the update clause, inside the bundled npm package in simplemde.js."
+        }
+      ]
     },
     {
       "id": "EA-210f7e4adbef70b0",
@@ -378,9 +708,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty for_statement body at line 13809",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13809
+      "line": 13809,
+      "verdict": "false_positive",
+      "reason": "debug/simplemde.js:13809 is the ieee754 mantissa loop `m = m * 256 + buffer[offset + i]` in the update clause, bundled third-party code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ieee754 mantissa loop `for (; nBits > 0; m = m * 256 + buffer[...], ...) {}` in a bundled dependency, intentional empty body."
+        }
+      ]
     },
     {
       "id": "EA-c0619fe3ad920669",
@@ -388,9 +728,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "Empty for_statement body at line 13869",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13869
+      "line": 13869,
+      "verdict": "false_positive",
+      "reason": "debug/simplemde.js:13869 is ieee754 `write` storing `buffer[offset + i] = e & 0xff` in the loop header; built vendored bundle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ieee754 `write` loop `for (; eLen > 0; buffer[offset + i] = e & 0xff, ...) {}` in a vendored bundle with the work in the update clause."
+        }
+      ]
     },
     {
       "id": "EA-45c675a22a78ee67",
@@ -398,9 +748,19 @@
       "language": "javascript",
       "path": "web_src/fomantic/build/components/api.js",
       "message": "Empty if_statement body at line 755",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 755
+      "line": 755,
+      "verdict": "false_positive",
+      "reason": "web_src/fomantic/build/components/api.js is the generated Fomantic-UI build output vendored into gitea; the empty `else if( module.is.form() )` is upstream library code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Path is web_src/fomantic/build/components/api.js, built Fomantic UI output (vendored third-party), outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-c3b4e82e9b8d18c2",
@@ -408,9 +768,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/index-DA3bdZbQ.js",
       "message": "Empty for_statement body at line 1",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1
+      "line": 1,
+      "verdict": "false_positive",
+      "reason": "mitmproxy/tools/web/static/index-DA3bdZbQ.js is a hashed, minified Vite build output of the web UI, not source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "mitmproxy/tools/web/static/index-DA3bdZbQ.js is a minified built web bundle, outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-840fe2613b6caec5",
@@ -418,9 +788,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 8",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 8
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js line 8 is inside the minified React vendor chunk that Vite bundles into tools/web/static; third-party built code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 8 is a minified built vendor bundle, outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-842357ad0ac455a3",
@@ -428,9 +808,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 9",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 9
+      "line": 9,
+      "verdict": "false_positive",
+      "reason": "Line 9 of the minified vendor-DXVK1cAY.js (react-dom internals such as `function Of(){}`) is generated vendor output, out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 9 is minified built vendor output, not authored source."
+        }
+      ]
     },
     {
       "id": "EA-0f234359dfa3d87a",
@@ -438,9 +828,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 13",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js:13 is minified lodash/react-redux code inside a built vendor chunk; empty for bodies there are minifier output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 13 is part of the minified vendored bundle, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-bb682fc6ada6ce09",
@@ -448,9 +848,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 38",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 38
+      "line": 38,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js:38 belongs to the bundled CodeMirror 6 view code (styleTag, bidiSpans) in the hashed vendor chunk, which is a built artifact.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 38 is minified bundled third-party output, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-02acdde5e477c8ec",
@@ -458,9 +868,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 40",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js:40 is minified CodeMirror input-handling code (`n.inputState.lastSelectionTime`) from the built vendor bundle.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 40 is a built vendor bundle, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-557cce806be91634",
@@ -468,9 +888,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js:42 holds the bundled CodeMirror special-char table (`a3={0:\"null\",7:\"bell\"...}`); generated third-party output.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 42 is minified third-party bundle content, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-709e53455250adb8",
@@ -478,9 +908,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 43",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 43
+      "line": 43,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js:43 is the bundled @codemirror/search SearchQuery code (`eq(e){return this.search==e.search...`), a minified vendor chunk.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 43 is a built vendor bundle, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-e6533f7e9cead74c",
@@ -488,9 +928,19 @@
       "language": "javascript",
       "path": "mitmproxy/tools/web/static/vendor-DXVK1cAY.js",
       "message": "Empty for_statement body at line 55",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 55
+      "line": 55,
+      "verdict": "false_positive",
+      "reason": "vendor-DXVK1cAY.js:55 contains the bundled JS snippet completions and the qrcode KANJI regex setup, all minified built vendor code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "vendor-DXVK1cAY.js line 55 is a built, minified vendor bundle, outside scope."
+        }
+      ]
     },
     {
       "id": "EA-46516e1bb113da9a",
@@ -498,9 +948,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/jquery/js/core-lib.js",
       "message": "Empty while_statement body at line 749",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 749
+      "line": 749,
+      "verdict": "false_positive",
+      "reason": "libs/bower/jquery/js/core-lib.js is vendored jQuery/Sizzle; `while ( ( target[ j++ ] = els[ i++ ] ) ) {}` is the upstream copy-loop idiom.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while ( ( target[ j++ ] = els[ i++ ] ) ) {}` is jQuery/Sizzle's push-fallback idiom in vendored libs/bower core-lib.js."
+        }
+      ]
     },
     {
       "id": "EA-321fafb0b28675bd",
@@ -508,9 +968,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/jquery/js/core-lib.js",
       "message": "Empty while_statement body at line 3331",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3331
+      "line": 3331,
+      "verdict": "false_positive",
+      "reason": "`while ( ( cur = cur[ dir ] ) && cur.nodeType !== 1 ) {}` is jQuery's vendored `sibling` helper in libs/bower, third-party code with work in the condition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while ( ( cur = cur[ dir ] ) && cur.nodeType !== 1 ) {}` in jQuery's sibling() is vendored third-party code under libs/bower."
+        }
+      ]
     },
     {
       "id": "EA-08d2821799d657c9",
@@ -518,9 +988,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/select2/select2.js",
       "message": "Empty while_statement body at line 30",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 30
+      "line": 30,
+      "verdict": "false_positive",
+      "reason": "select2.js under libs/bower/select2 is vendored third-party Select2; the `while (++i < l && (j.context = j[0] = this[i]) ...)` loop in its $.fn.each2 shim intentionally has an empty body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "select2 `each2` while loop does its work in the condition, in vendored libs/bower/select2/select2.js."
+        }
+      ]
     },
     {
       "id": "EA-ac2718b61af76353",
@@ -528,9 +1008,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/select2/select2.js",
       "message": "Empty if_statement body at line 2425",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2425
+      "line": 2425,
+      "verdict": "false_positive",
+      "reason": "The empty `if (selected.length && choice && choice[0] == selected[0]) { } else {` at select2.js:2425 is upstream Select2 code vendored under libs/bower, not Ranger source.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "Empty `if (selected.length && choice && choice[0] == selected[0]) {}` is in vendored libs/bower/select2/select2.js, third-party code."
+        }
+      ]
     },
     {
       "id": "EA-0596ba244505ddc7",
@@ -558,9 +1048,19 @@
       "language": "python",
       "path": "electrum/channel_db.py",
       "message": "Empty if_statement body at line 262",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 262
+      "line": 262,
+      "verdict": "true_positive",
+      "reason": "In channel_db's address parser, `if atype == 0: pass` has no comment, unlike the commented IPv4/IPv6 elif arms, so the scope's pass-only-without-comment rule applies.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "channel_db.py `if atype == 0: pass` in the address-parsing loop has no comment explaining that type 0 is padding."
+        }
+      ]
     },
     {
       "id": "EA-ce21b7068133c348",
@@ -568,9 +1068,19 @@
       "language": "python",
       "path": "electrum/gui/qt/send_tab.py",
       "message": "Empty if_statement body at line 609",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 609
+      "line": 609,
+      "verdict": "true_positive",
+      "reason": "do_pay_invoice's `if pi.type == PaymentIdentifierType.SPK and not pi.spk_is_address: pass` followed by else show_error is a pass-only uncommented branch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "send_tab.py do_pay_invoice has `if pi.type == SPK and not pi.spk_is_address: pass` with no comment, just to skip the else error path; the condition could be inverted."
+        }
+      ]
     },
     {
       "id": "EA-4d14664ce1b0a04c",
@@ -578,9 +1088,19 @@
       "language": "python",
       "path": "electrum/lnmsg.py",
       "message": "Empty elif_clause body at line 107",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 107
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "_read_primitive_field's `elif count == \"...\": pass` at line 107 is a pass-only elif without a comment, inside the Python scope the reference names.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "lnmsg.py line 107 `elif count == \"...\": pass` in the read-field count validation has no explanatory comment, though the branch is a deliberate accept."
+        }
+      ]
     },
     {
       "id": "EA-edecad4af4f0fa62",
@@ -588,9 +1108,19 @@
       "language": "python",
       "path": "electrum/lnmsg.py",
       "message": "Empty elif_clause body at line 499",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 499
+      "line": 499,
+      "verdict": "true_positive",
+      "reason": "_write_field's `elif count == \"...\": pass` at line 499 again only passes, with no comment, before the else that raises 'unexpected field count'.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "lnmsg.py line 499 `elif count == \"...\": pass` in the write-field count validation is a pass-only elif with no comment."
+        }
+      ]
     },
     {
       "id": "EA-926c606a26b88eb4",
@@ -598,9 +1128,19 @@
       "language": "python",
       "path": "electrum/lnmsg.py",
       "message": "Empty if_statement body at line 699",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 699
+      "line": 699,
+      "verdict": "true_positive",
+      "reason": "In the TLV stream reader, `if row[0] == \"tlvtype\": pass` has no comment (the commented-out print is on the line above the if, not in the branch).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "lnmsg.py line 699 `if row[0] == \"tlvtype\": pass` in the TLV scheme loop is an uncommented pass-only branch."
+        }
+      ]
     },
     {
       "id": "EA-ebc86da9f444a236",
@@ -608,9 +1148,19 @@
       "language": "python",
       "path": "electrum/payment_identifier.py",
       "message": "Empty elif_clause body at line 566",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 566
+      "line": 566,
+      "verdict": "true_positive",
+      "reason": "payment_identifier's `elif self.spk: pass` at line 566 is a pass-only elif without a comment, used only to stop the later bip21 arm from running.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "payment_identifier.py `elif self.spk: pass` in the amount-resolution chain is a pass-only branch without a comment."
+        }
+      ]
     },
     {
       "id": "EA-bd9ec42675c08e5e",
@@ -618,9 +1168,19 @@
       "language": "python",
       "path": "electrum/x509.py",
       "message": "Empty else_clause body at line 267",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 267
+      "line": 267,
+      "verdict": "true_positive",
+      "reason": "The trailing `else: pass` after the OID extension arms in x509.py's certificate parser is a redundant pass-only else with no comment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "x509.py ends the extension OID chain with `else: pass` with no comment, so unknown extensions are ignored implicitly."
+        }
+      ]
     },
     {
       "id": "EA-c6bf691a40c3dd6d",
@@ -648,9 +1208,19 @@
       "language": "python",
       "path": "frigate/comms/ws.py",
       "message": "Empty if_statement body at line 454",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 454
+      "line": 454,
+      "verdict": "true_positive",
+      "reason": "frigate ws.py unhandled_error's `if hasattr(error, \"errno\") and error.errno == errno.ECONNRESET: pass` has a pass-only then-branch; the docstring explains it, but the branch has no comment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "frigate ws.py unhandled_error has `if errno == ECONNRESET: pass else: log exception`, a pass-only branch with no comment that should be written as `!=`."
+        }
+      ]
     },
     {
       "id": "EA-da60ffe7593ee896",
@@ -658,9 +1228,19 @@
       "language": "python",
       "path": "frigate/config/camera/camera.py",
       "message": "Empty if_statement body at line 69",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 69
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "handle_friendly_name's `if isinstance(values, dict) and \"friendly_name\" in values: pass` is followed only by `return values`, so the branch is a dead no-op check with no comment.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "handle_friendly_name validator has `if isinstance(values, dict) and \"friendly_name\" in values: pass` with no else or comment, a dead conditional before `return values`."
+        }
+      ]
     },
     {
       "id": "EA-f38947f85415cb60",
@@ -668,9 +1248,19 @@
       "language": "python",
       "path": "frigate/util/services.py",
       "message": "Empty if_statement body at line 785",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 785
+      "line": 785,
+      "verdict": "true_positive",
+      "reason": "`if p.returncode != 0: pass` with all work in the else is a plain inverted condition in the axcl NPU stats helper; it should be `if p.returncode == 0:`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if p.returncode != 0: pass` in the axcl stats function leaves the failure branch empty and uncommented, with all work in the else."
+        }
+      ]
     },
     {
       "id": "EA-dcbd75358d41965b",
@@ -698,9 +1288,19 @@
       "language": "python",
       "path": "mitmproxy/contentviews/_view_mqtt.py",
       "message": "Empty elif_clause body at line 80",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 80
+      "line": 80,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): The SUBACK arm is a bare `pass` with no comment. No parser sets a payload for SUBACK, so the arm keeps no payload (B's claim is wrong); it only leaves the attribute unset, a stub for a packet type pprint calls 'not supported yet'.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elif self.packet_type == self.SUBACK: pass` in MQTT parser is an empty uncommented branch (finding anchored on the SUBACK condition)."
+        }
+      ]
     },
     {
       "id": "EA-499dd85b52575d5a",
@@ -708,9 +1308,19 @@
       "language": "python",
       "path": "mitmproxy/contentviews/_view_mqtt.py",
       "message": "Empty elif_clause body at line 82",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 82
+      "line": 82,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `elif self.packet_type == self.UNSUBSCRIBE: pass` is an uncommented pass-only elif, exactly the documented Python scope; keeping it out of the else needs an explanatory comment, not an empty body.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elif self.packet_type == self.UNSUBSCRIBE: pass` is an empty uncommented branch in the MQTT packet parser."
+        }
+      ]
     },
     {
       "id": "EA-de65b418ca2214e1",
@@ -718,9 +1328,19 @@
       "language": "python",
       "path": "mitmproxy/http.py",
       "message": "Empty if_statement body at line 596",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 596
+      "line": 596,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `if isinstance(headers, Headers): pass` is a pass-only Python if body with no comment inside it, exactly the documented shape. The comment above the chain describes the whole dispatch, not why this branch is empty.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if isinstance(headers, Headers): pass` in Request.make is an empty uncommented branch used only to skip the later conversions."
+        }
+      ]
     },
     {
       "id": "EA-be2341cae5b3f3ad",
@@ -728,9 +1348,19 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/http/_http2.py",
       "message": "Empty elif_clause body at line 291",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 291
+      "line": 291,
+      "verdict": "false_positive",
+      "reason": "`elif isinstance(event, h2.events.PriorityUpdated): pass` whitelists a known h2 event to ignore before the final `else: raise AssertionError(\"Unexpected event\")`; the empty arm is required.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elif isinstance(event, h2.events.PriorityUpdated): pass` is an empty uncommented branch in the HTTP/2 event dispatch."
+        }
+      ]
     },
     {
       "id": "EA-9223331c34a062d1",
@@ -738,9 +1368,19 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/http/_http2.py",
       "message": "Empty elif_clause body at line 295",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 295
+      "line": 295,
+      "verdict": "false_positive",
+      "reason": "`elif isinstance(event, h2.events.PingAckReceived): pass` is part of the exhaustive h2 event dispatch in _http2.py, where unlisted events hit the raising else, so this pass deliberately ignores the event.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elif isinstance(event, h2.events.PingAckReceived): pass` is an empty uncommented branch in the HTTP/2 event chain."
+        }
+      ]
     },
     {
       "id": "EA-cb2fd96443afb92c",
@@ -748,9 +1388,19 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/quic/_stream_layers.py",
       "message": "Empty elif_clause body at line 237",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 237
+      "line": 237,
+      "verdict": "false_positive",
+      "reason": "The `elif isinstance(event, (ConnectionIdIssued, ConnectionIdRetired, PingAcknowledged, ProtocolNegotiated)): pass` arm ignores known QUIC events ahead of `else: raise AssertionError`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `elif isinstance(event, (ConnectionIdIssued, ...)): pass` branch in QUIC stream layer is empty with no comment."
+        }
+      ]
     },
     {
       "id": "EA-b2f7df0220512e51",
@@ -758,9 +1408,19 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/tls.py",
       "message": "Empty elif_clause body at line 668",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 668
+      "line": 668,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `elif err == \"connection closed early\": pass` is an uncommented pass-only elif arm, the exact documented shape. Its job of skipping the else rewrite could be expressed without an empty branch (`elif err != ...`), and intentional code still counts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elif err == \"connection closed early\": pass` in the TLS handshake-error handler is an empty uncommented branch."
+        }
+      ]
     },
     {
       "id": "EA-c2c19bdc197f5aee",
@@ -768,9 +1428,19 @@
       "language": "python",
       "path": "kms/scripts/db_setup.py",
       "message": "Empty if_statement body at line 616",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 616
+      "line": 616,
+      "verdict": "true_positive",
+      "reason": "kms/scripts/db_setup.py ships in the KMS distro (kms.xml assembly), and `if os.path.isfile(JAVA_BIN): pass else:` is an inverted check that should be `if not os.path.isfile(JAVA_BIN):`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if os.path.isfile(JAVA_BIN): pass` in the KMS db_setup.py installer (shipped via distro kms.xml) has an empty uncommented body."
+        }
+      ]
     },
     {
       "id": "EA-96f0d2910b8c81c8",
@@ -778,9 +1448,19 @@
       "language": "python",
       "path": "kms/scripts/db_setup.py",
       "message": "Empty if_statement body at line 620",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 620
+      "line": 620,
+      "verdict": "true_positive",
+      "reason": "The nested `if os.path.isfile(JAVA_BIN): pass` after falling back to globalDict['JAVA_BIN'] in the shipped KMS db_setup.py only exists so the else can abort; it is a needless inversion.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Nested `if os.path.isfile(JAVA_BIN): pass` after reading globalDict['JAVA_BIN'] in the shipped KMS db_setup.py installer is an empty uncommented branch."
+        }
+      ]
     },
     {
       "id": "EA-05a7edc4852a6070",
@@ -788,9 +1468,19 @@
       "language": "python",
       "path": "kms/scripts/dba_script.py",
       "message": "Empty if_statement body at line 1294",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1294
+      "line": 1294,
+      "verdict": "true_positive",
+      "reason": "kms/scripts/dba_script.py is packaged in kms.xml, and `if os.path.isfile(JAVA_BIN): pass` before the prompt-for-java while loop is an uncommented empty branch whose else does all the work.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if os.path.isfile(JAVA_BIN): pass else: while ...` in shipped kms/scripts/dba_script.py has an empty positive branch."
+        }
+      ]
     },
     {
       "id": "EA-69442cfa978f4177",
@@ -798,9 +1488,19 @@
       "language": "python",
       "path": "ranger-util/src/scripts/saveVersion.py",
       "message": "Empty else_clause body at line 101",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 101
+      "line": 101,
+      "verdict": "false_positive",
+      "reason": "ranger-util/src/scripts/saveVersion.py is a build-time script run from ranger-util/pom.xml to generate version sources, so it is tooling and out of scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "ranger-util/src/scripts/saveVersion.py is invoked from ranger-util/pom.xml during the Maven build, so it is build tooling outside scope."
+        }
+      ]
     },
     {
       "id": "EA-44d67f2018801641",
@@ -808,9 +1508,19 @@
       "language": "python",
       "path": "security-admin/scripts/dba_script.py",
       "message": "Empty if_statement body at line 996",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 996
+      "line": 996,
+      "verdict": "true_positive",
+      "reason": "security-admin/scripts/dba_script.py ships via admin-web.xml, and `if not db_user == audit_db_user: pass else: logFile(...)` is an empty inverted branch that should be `if db_user == audit_db_user:`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if not db_user == audit_db_user: pass else: logFile(...)` in the shipped security-admin dba_script.py has an empty branch that could be inverted."
+        }
+      ]
     },
     {
       "id": "EA-83a2254395942de6",
@@ -818,9 +1528,19 @@
       "language": "python",
       "path": "security-admin/scripts/updateUserAndGroupNamesInJson.py",
       "message": "Empty if_statement body at line 72",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 72
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "updateUserAndGroupNamesInJson.py is included in the admin-web distro assembly, and its `if os.path.isfile(JAVA_BIN): pass` with the work in the else is an uncommented empty branch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if os.path.isfile(JAVA_BIN): pass` in security-admin updateUserAndGroupNamesInJson.py, a shipped admin script, has an empty uncommented body."
+        }
+      ]
     },
     {
       "id": "EA-a543e0759513c2a1",
@@ -828,9 +1548,19 @@
       "language": "python",
       "path": "redash/query_runner/mysql.py",
       "message": "Empty while_statement body at line 220",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 220
+      "line": 220,
+      "verdict": "false_positive",
+      "reason": "`while not ev.wait(1): pass` is a wait loop whose condition does the work (blocking on the Event in 1s slices so KeyboardInterrupt/JobTimeoutException can be delivered); the empty body is inherent to the idiom, not missing branch logic.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`while not ev.wait(1): pass` in mysql.py is a deliberate polling loop whose condition call does the waiting, an idiom with no missing body."
+        }
+      ]
     },
     {
       "id": "EA-9386851804af4726",
@@ -838,9 +1568,19 @@
       "language": "python",
       "path": "zerver/lib/event_schema.py",
       "message": "Empty elif_clause body at line 317",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 317
+      "line": 317,
+      "verdict": "true_positive",
+      "reason": "`elif message_type == \"private\": pass` in event_schema.py is a comment-less pass-only branch, exactly the documented Python scope; it could carry a comment or be merged into the check before the raising else.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `elif message_type == \"private\": pass` arm in event_schema.py is an empty branch with no comment, merely enumerating a case before the AssertionError else."
+        }
+      ]
     },
     {
       "id": "EA-9eae20f9c2c465ce",
@@ -848,9 +1588,19 @@
       "language": "python",
       "path": "zerver/lib/events.py",
       "message": "Empty elif_clause body at line 1916",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1916
+      "line": 1916,
+      "verdict": "true_positive",
+      "reason": "`elif event[\"type\"] == \"invites_changed\": pass` in apply_event has a bare `pass` with no comment explaining why that event leaves state untouched.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`elif event[\"type\"] == \"invites_changed\": pass` in events.py apply_event is an empty elif body with no explanatory comment."
+        }
+      ]
     },
     {
       "id": "EA-dcd115fd2909f4a9",
@@ -858,9 +1608,19 @@
       "language": "python",
       "path": "zerver/lib/export.py",
       "message": "Empty if_statement body at line 1371",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1371
+      "line": 1371,
+      "verdict": "true_positive",
+      "reason": "`if row[\"id\"] in exportable_user_ids: pass` followed by an else holding all the logic is a pass-only branch that should be written as `if row[\"id\"] not in exportable_user_ids:`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if row[\"id\"] in exportable_user_ids: pass else:` in export.py has a commentless pass body on an inverted condition that could be `if not in`."
+        }
+      ]
     },
     {
       "id": "EA-e232c3057242bd76",
@@ -868,9 +1628,19 @@
       "language": "python",
       "path": "zerver/lib/rate_limiter.py",
       "message": "Empty if_statement body at line 406",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 406
+      "line": 406,
+      "verdict": "true_positive",
+      "reason": "`if is_local_addr(ip_addr): pass` followed by `elif ip_addr in get_tor_ips()` is a comment-less pass-only branch (the explanation sits above the if, not in it); it could be written as `elif not is_local_addr(...) and ...`.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if is_local_addr(ip_addr): pass elif ip_addr in get_tor_ips()` in rate_limiter.py has a pass-only if body with no comment inside the branch itself."
+        }
+      ]
     },
     {
       "id": "EA-496c27a3161bb4aa",
@@ -878,9 +1648,19 @@
       "language": "python",
       "path": "zerver/views/users.py",
       "message": "Empty if_statement body at line 571",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 571
+      "line": 571,
+      "verdict": "true_positive",
+      "reason": "`if len(request.FILES) == 0: pass` in patch_bot_backend is a pass-only branch with no comment, used only to set up the `elif len(...) == 1` case.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if len(request.FILES) == 0: pass` in users.py patch_bot has a pass-only branch with no comment, followed by the real elif/else cases."
+        }
+      ]
     },
     {
       "id": "EA-700952cba5a45a33",
@@ -888,9 +1668,19 @@
       "language": "python",
       "path": "zproject/backends.py",
       "message": "Empty if_statement body at line 394",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 394
+      "line": 394,
+      "verdict": "true_positive",
+      "reason": "`if auth_rate_limiting_already_applied(request): pass` with all the work in the else is an inverted-condition pass branch; `if not auth_rate_limiting_already_applied(request):` says the same thing without the empty block.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`if auth_rate_limiting_already_applied(request): pass else:` in backends.py has a pass-only if body; the comment sits above the if, not in the branch, and the condition could be negated."
+        }
+      ]
     },
     {
       "id": "EA-ac2731fe62af5cab",
@@ -918,9 +1708,19 @@
       "language": "typescript",
       "path": "dolphinscheduler-ui/src/views/resource/task-group/queue/use-form.ts",
       "message": "Empty if_statement body at line 39",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 39
+      "line": 39,
+      "verdict": "true_positive",
+      "reason": "The priority validator in task-group queue use-form.ts has `if (value && state.formData.priority >= 0) { } else { return new Error(...) }`, an empty uncommented then-branch in the shipped UI.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "use-form.ts validator has `if (value && state.formData.priority >= 0) { } else { return new Error(...) }`, an empty then-branch with no comment that should be negated."
+        }
+      ]
     },
     {
       "id": "EA-e7c00e965ba839c5",

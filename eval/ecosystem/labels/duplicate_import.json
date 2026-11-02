@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/bytecode.h",
       "message": "Import `opcode_list.h` is repeated 2 times in the same file.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 16
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "bytecode.h includes opcode_list.h twice as an X-macro, each time under a different #define OP(...) (enum names, then +1 counting into NUM_OPCODES); the repeat is the intended idiom, not a mergeable duplicate.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "bytecode.h includes opcode_list.h twice deliberately as an X-macro, redefining OP before each include (enum names, then +1 count), so the repeated include produces different expansions and is not redundant."
+        }
+      ]
     },
     {
       "id": "EA-c23bca700d6a8c99",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/jv_parse.c",
       "message": "Import `jv_dtoa.h` is repeated 2 times in the same file.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 9
+      "line": 9,
+      "verdict": "true_positive",
+      "reason": "jv_parse.c includes \"jv_dtoa.h\" unconditionally at both line 6 and line 9, with no preprocessor branch between them, so line 9 is a plain redundant include.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "jv_parse.c includes jv_dtoa.h at line 6 and again at line 9, both unconditional at file top, so the second include is a plain redundant duplicate."
+        }
+      ]
     },
     {
       "id": "EA-6517ededb0765d65",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/util.c",
       "message": "Import `string.h` is repeated 2 times in the same file.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 454
+      "line": 454,
+      "verdict": "true_positive",
+      "reason": "util.c includes <string.h> unconditionally at line 36 and again at line 454 inside the #ifndef HAVE_STRPTIME branch, which the reference treats as a duplicate re-include inside a branch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "util.c includes string.h at line 36 unconditionally and again at line 454 inside the #ifndef HAVE_STRPTIME block, which the include is re-included after an unconditional include."
+        }
+      ]
     },
     {
       "id": "EA-3a6dce9a2aa5690c",
@@ -1041,9 +1071,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Import `./checks.js` is repeated 2 times in the same file.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3
+      "line": 3,
+      "verdict": "true_positive",
+      "reason": "Lines 2 and 3 are both `import type { ... } from \"./checks.js\"` of the same form, which can merge into one import of $ZodNumberFormats and $ZodBigIntFormats (line 1's namespace import is a different form).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "schemas.ts line 2 and line 3 both do `import type` from \"./checks.js\" ($ZodNumberFormats and $ZodBigIntFormats), which could be merged into one import type statement."
+        }
+      ]
     },
     {
       "id": "EA-3489241479eaa2b4",

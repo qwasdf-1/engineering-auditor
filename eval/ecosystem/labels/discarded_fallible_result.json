@@ -8,9 +8,19 @@
       "language": "go",
       "path": "internal/suites/pngdiff.go",
       "message": "`os.WriteFile` at line 107 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 107
+      "line": 107,
+      "verdict": "false_positive",
+      "reason": "pngdiff.go in `internal/suites` imports `testing` and `testify/require` and writes the `.actual.png` snapshot for the integration test suites; it is test support, outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`_ = os.WriteFile(actualPath, ...)` in internal/suites/pngdiff.go is a snapshot-comparison helper taking `t *testing.T` and using `require`, i.e. e2e test tooling out of scope."
+        }
+      ]
     },
     {
       "id": "EA-90645e7e824a5e30",
@@ -18,9 +28,19 @@
       "language": "go",
       "path": "internal/suites/suite_standalone.go",
       "message": "`os.WriteFile` at line 16 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 16
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "suite_standalone.go's `init` writes the fixture JWT secret `very_important_secret` for the Docker-based Standalone integration suite; this is e2e test harness code, not shipped product.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "suite_standalone.go line 16 writes a `jwt` secret fixture in an `init()` of the internal/suites e2e harness (dummy 'very_important_secret'), which is test tooling not shipped product code."
+        }
+      ]
     },
     {
       "id": "EA-f2749d6256355fb8",
@@ -28,9 +48,19 @@
       "language": "go",
       "path": "internal/suites/suite_standalone.go",
       "message": "`os.WriteFile` at line 17 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "The `os.WriteFile` of `unsecure_session_secret` in the StandaloneSuite `init` sets up an integration-test fixture under `internal/suites`, which is out of scope as test code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "suite_standalone.go line 17 writes the `session` fixture file ('unsecure_session_secret') for the Standalone integration suite, test scaffolding outside scope."
+        }
+      ]
     },
     {
       "id": "EA-e9b1e33e4a8d9c41",
@@ -38,9 +68,19 @@
       "language": "go",
       "path": "internal/suites/suite_two_factor.go",
       "message": "`os.WriteFile` at line 16 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 16
+      "line": 16,
+      "verdict": "false_positive",
+      "reason": "suite_two_factor.go writes the TwoFactorSuite `jwt` fixture for authelia's e2e suites; test-harness setup is excluded from this detector.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "suite_two_factor.go line 16 writes the TwoFactorSuite `jwt` fixture in the internal/suites e2e harness `init()`, test infrastructure rather than production code."
+        }
+      ]
     },
     {
       "id": "EA-a59cabee05382e69",
@@ -48,9 +88,19 @@
       "language": "go",
       "path": "internal/suites/suite_two_factor.go",
       "message": "`os.WriteFile` at line 17 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "The TwoFactorSuite `session` secret written in `init` at line 17 is integration-test fixture setup in `internal/suites`, not production code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "suite_two_factor.go line 17 writes the TwoFactorSuite `session` fixture file for the docker-compose e2e suite, test tooling outside detector scope."
+        }
+      ]
     },
     {
       "id": "EA-5c7d43e5616130f6",
@@ -58,9 +108,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/DBeaverLauncher.java",
       "message": "`configDir.mkdirs` at line 1179 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1179
+      "line": 1179,
+      "verdict": "false_positive",
+      "reason": "`configDir.mkdirs()` is followed immediately by `if (!configDir.exists()) return false;`, so the failure is checked; the boolean is not the only signal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`configDir.mkdirs()` is immediately followed by `if (!configDir.exists()) return false;`, so the boolean outcome is rechecked and not the only failure signal."
+        }
+      ]
     },
     {
       "id": "EA-96036d3f546f8951",
@@ -68,9 +128,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/DBeaverLauncher.java",
       "message": "`new File(logFile.getParent()).mkdirs` at line 3166 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 3166
+      "line": 3166,
+      "verdict": "false_positive",
+      "reason": "After `computeLogFileLocation` drops the `mkdirs()` result, `openLogFile` opens `new FileOutputStream(logFile...)`, which throws IOException if the directory is missing, so the failure still surfaces.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`new File(logFile.getParent()).mkdirs()` is followed by `openLogFile`'s `new FileOutputStream(...)`, which throws IOException if the directory is missing, so a second failure signal exists."
+        }
+      ]
     },
     {
       "id": "EA-462a57aa632f82e9",
@@ -78,9 +148,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.launcher/src/org/jkiss/dbeaver/launcher/LauncherUtils.java",
       "message": "`fileTest.delete` at line 95 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 95
+      "line": 95,
+      "verdict": "true_positive",
+      "reason": "In `LauncherUtils.canWrite`, `fileTest.delete()` in the finally block discards the only signal that the `writableArea*.dll` probe file could not be removed, so a stray file can be left in the install directory without notice.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`fileTest.delete()` in the finally of `canWrite` drops the boolean of removing the probe temp file; nothing else reports a failed deletion and no justifying comment is present."
+        }
+      ]
     },
     {
       "id": "EA-192e25d312cef0bf",
@@ -88,9 +168,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/utils/SecurityManagerUtils.java",
       "message": "`noPermissions.setReadOnly` at line 78 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 78
+      "line": 78,
+      "verdict": "false_positive",
+      "reason": "`noPermissions` is a `java.security.Permissions`, whose `PermissionCollection.setReadOnly()` returns void; the detector confused it with `File.setReadOnly()`, which returns boolean.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`java.security.Permissions.setReadOnly()` returns void, so `noPermissions.setReadOnly()` has no result to discard and the finding misidentifies it as a File boolean."
+        }
+      ]
     },
     {
       "id": "EA-d5665560579c26b0",
@@ -98,9 +188,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.net.ssh.sshj/src/org/jkiss/dbeaver/model/net/ssh/KnownHostsVerifier.java",
       "message": "`this.khFile.getParentFile().mkdirs` at line 96 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 96
+      "line": 96,
+      "verdict": "false_positive",
+      "reason": "In `KnownHostsVerifier.write(KnownHostEntry)`, `khFile.getParentFile().mkdirs()` is followed by `super.write(entry)`, which throws IOException if the directory is missing; mkdirs' false also just means it already exists.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`khFile.getParentFile().mkdirs()` in `write(KnownHostEntry)` precedes `super.write(entry)`, which throws IOException if the directory is absent, so the mkdirs boolean is not the only signal."
+        }
+      ]
     },
     {
       "id": "EA-a5660dc760cca08e",
@@ -108,9 +208,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.net.ssh.sshj/src/org/jkiss/dbeaver/model/net/ssh/KnownHostsVerifier.java",
       "message": "`this.khFile.getParentFile().mkdirs` at line 103 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 103
+      "line": 103,
+      "verdict": "false_positive",
+      "reason": "The no-arg `write()` override calls `mkdirs()` and then `super.write()`, declared `throws IOException`, so a failure to create the known_hosts directory is still reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In `write()`, `khFile.getParentFile().mkdirs()` is followed by `super.write()` declared `throws IOException`, which surfaces a missing directory, so the discarded boolean is redundant."
+        }
+      ]
     },
     {
       "id": "EA-023e3cc68c21075d",
@@ -118,9 +228,19 @@
       "language": "java",
       "path": "dolphinscheduler-alert/dolphinscheduler-alert-plugins/dolphinscheduler-alert-email/src/main/java/org/apache/dolphinscheduler/plugin/alert/email/MailSender.java",
       "message": "`file.getParentFile().mkdirs` at line 341 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 341
+      "line": 341,
+      "verdict": "false_positive",
+      "reason": "The `mkdirs()` in `MailSender` is followed by `ExcelUtils.genExcelFile`, which throws `AlertEmailException(\"Create xlsx directory error\")` and opens a `FileOutputStream`, so a missing directory is still caught.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`file.getParentFile().mkdirs()` in MailSender is guarded by `!exists()` and ExcelUtils.genExcelFile re-checks `!file.exists() && !file.mkdirs()` and throws AlertEmailException."
+        }
+      ]
     },
     {
       "id": "EA-511b7f24e1c7c91c",
@@ -128,9 +248,19 @@
       "language": "java",
       "path": "dolphinscheduler-common/src/main/java/org/apache/dolphinscheduler/common/log/remote/RemoteLogUtils.java",
       "message": "`directory.toFile().mkdirs` at line 74 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 74
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "After `mkdirOfLog` drops the `mkdirs()` result, `remoteLogHandler.getRemoteLog(logPath)` opens `new FileOutputStream(logPath)` and logs any exception, so the failure is not silent.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`directory.toFile().mkdirs()` in `mkdirOfLog` precedes the handler's `new FileOutputStream(logPath)`, which throws if the directory is missing, so failure is still reported."
+        }
+      ]
     },
     {
       "id": "EA-ae64c094e2a6243d",
@@ -138,9 +268,19 @@
       "language": "java",
       "path": "dolphinscheduler-storage-plugin/dolphinscheduler-storage-cos/src/main/java/org/apache/dolphinscheduler/plugin/storage/cos/CosStorageOperator.java",
       "message": "`metadata.setLastModified` at line 265 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 265
+      "line": 265,
+      "verdict": "false_positive",
+      "reason": "`metadata` is a `com.qcloud.cos.model.ObjectMetadata`, whose `setLastModified(Date)` is a void setter, not `java.io.File.setLastModified`; there is no result being discarded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`metadata.setLastModified(summary.getLastModified())` is a COS `ObjectMetadata` setter on a local object, not a `java.io.File` boolean method, so there is no failure result."
+        }
+      ]
     },
     {
       "id": "EA-ede57e8f21f96188",
@@ -148,9 +288,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-flink/src/main/java/org/apache/dolphinscheduler/plugin/task/flink/FileUtils.java",
       "message": "`scriptFile.getParentFile().mkdirs` at line 85 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 85
+      "line": 85,
+      "verdict": "false_positive",
+      "reason": "In the Flink `FileUtils`, `scriptFile.getParentFile().mkdirs()` is followed by `Files.createFile(path, attr)`, which throws NoSuchFileException if the parent is missing, so the boolean is not the only signal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`scriptFile.getParentFile().mkdirs()` sits under `!exists()` and is followed by `Files.createFile(path, attr)` inside a try/catch IOException that rethrows, so a failure surfaces there."
+        }
+      ]
     },
     {
       "id": "EA-c0feae9021f52b82",
@@ -158,9 +308,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-hivecli/src/main/java/org/apache/dolphinscheduler/plugin/task/hivecli/HiveCliTask.java",
       "message": "`file.getParentFile().mkdirs` at line 199 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 199
+      "line": 199,
+      "verdict": "false_positive",
+      "reason": "`HiveCliTask` calls `Files.createFile(path, attr)` right after the discarded `mkdirs()`, and createFile throws if the directory could not be made.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In HiveCliTask, `file.getParentFile().mkdirs()` is followed by `Files.createFile(path, attr)` within try/catch that throws TaskException, so a failed mkdirs is reported downstream."
+        }
+      ]
     },
     {
       "id": "EA-e2e1ab67219bc204",
@@ -168,9 +328,19 @@
       "language": "java",
       "path": "dolphinscheduler-task-plugin/dolphinscheduler-task-spark/src/main/java/org/apache/dolphinscheduler/plugin/task/spark/SparkTask.java",
       "message": "`file.getParentFile().mkdirs` at line 273 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 273
+      "line": 273,
+      "verdict": "false_positive",
+      "reason": "`SparkTask` follows the `mkdirs()` with `Files.createFile(path, attr)` and `Files.write`, both of which throw IOException on a missing parent, so the failure surfaces.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "In SparkTask, `file.getParentFile().mkdirs()` is followed by `Files.createFile(path, attr)` in a try/catch that throws RuntimeException, so the discarded boolean is not the sole signal."
+        }
+      ]
     },
     {
       "id": "EA-41ce4e9001a7da22",
@@ -178,9 +348,19 @@
       "language": "java",
       "path": "distribution/downloads/src/main/java/CopyDependencies.java",
       "message": "`targetDir.toFile().mkdirs` at line 42 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 42
+      "line": 42,
+      "verdict": "false_positive",
+      "reason": "CopyDependencies is run by exec-maven-plugin in distribution/downloads/pom.xml during the package phase to assemble downloads, i.e. build tooling outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`CopyDependencies.java` lives under `distribution/downloads` and runs at build time to assemble download artifacts, so the unchecked `mkdirs` is in build tooling, not shipped runtime."
+        }
+      ]
     },
     {
       "id": "EA-1bcbc3cfa114eec6",
@@ -188,9 +368,19 @@
       "language": "java",
       "path": "model/storage-services/src/main/java/org/keycloak/exportimport/dir/DirExportProvider.java",
       "message": "`rootDirectory.mkdirs` at line 56 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 56
+      "line": 56,
+      "verdict": "true_positive",
+      "reason": "rootDirectory.mkdirs() drops its boolean in DirExportProvider.getRootDirectory and nothing checks the directory afterward, so a failure only shows up later as a FileNotFoundException in writeRealm.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`rootDirectory.mkdirs()` in DirExportProvider ignores its boolean result and nothing checks the directory afterwards, so a failed create only surfaces later as a FileNotFoundException."
+        }
+      ]
     },
     {
       "id": "EA-ac7ad48335a1ff6d",
@@ -198,9 +388,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/encoding/GzipResourceEncodingProviderFactory.java",
       "message": "`cacheDir.mkdirs` at line 85 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 85
+      "line": 85,
+      "verdict": "false_positive",
+      "reason": "cacheDir.mkdirs() is immediately followed by `if (!cacheDir.isDirectory())` that logs a warning and returns null, so the outcome is checked and the boolean is not the only failure signal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`cacheDir.mkdirs()` is immediately followed by `if (!cacheDir.isDirectory())` that logs a warning and returns null, so the result is verified."
+        }
+      ]
     },
     {
       "id": "EA-7867a8eb07d0bd4a",
@@ -208,9 +408,19 @@
       "language": "java",
       "path": "services/src/main/java/org/keycloak/truststore/TruststoreBuilder.java",
       "message": "`file.getParentFile().mkdirs` at line 117 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 117
+      "line": 117,
+      "verdict": "true_positive",
+      "reason": "saveTruststore calls file.getParentFile().mkdirs() and ignores the result before opening FileOutputStream, with no isDirectory check, so the dataDir creation failure is reported only indirectly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`file.getParentFile().mkdirs()` in `saveTruststore` discards the result with no directory check, and the following `FileOutputStream` is the only place a failure shows up."
+        }
+      ]
     },
     {
       "id": "EA-725a4e5a8591c5ad",
@@ -218,9 +428,19 @@
       "language": "java",
       "path": "testsuite/integration-arquillian/servers/auth-server/services/testsuite-providers/src/main/java/org/keycloak/testsuite/rest/TestingResourceProvider.java",
       "message": "`file.getParentFile().mkdirs` at line 256 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 256
+      "line": 256,
+      "verdict": "false_positive",
+      "reason": "TestingResourceProvider lives under testsuite/integration-arquillian/.../testsuite-providers and is a test-only REST provider, which is test code the detector excludes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`TestingResourceProvider` is in the `testsuite-providers` module of the Arquillian testsuite, so this `mkdirs` is test infrastructure."
+        }
+      ]
     },
     {
       "id": "EA-f702a062ef9e51a6",
@@ -228,9 +448,19 @@
       "language": "java",
       "path": "testsuite/utils/src/main/java/org/keycloak/testsuite/KerberosEmbeddedServer.java",
       "message": "`workDir.mkdirs` at line 219 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 219
+      "line": 219,
+      "verdict": "false_positive",
+      "reason": "KerberosEmbeddedServer in testsuite/utils is test infrastructure for an embedded KDC, so its workDir.mkdirs() is test code outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`KerberosEmbeddedServer` is in `testsuite/utils` and starts an embedded KDC for integration tests, so the unchecked `mkdirs` is test code."
+        }
+      ]
     },
     {
       "id": "EA-7067ea1f08dd38ef",
@@ -238,9 +468,19 @@
       "language": "java",
       "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/destination/FileAuditDestination.java",
       "message": "`logFolder.mkdirs` at line 83 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "logFolder.mkdirs() is followed directly by `if (!logFolder.isDirectory())` that logs an error and returns, so the failure is checked another way.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`logFolder.mkdirs()` is followed at line 84 by `if (!logFolder.isDirectory())` that logs an error and returns, so the failure is checked."
+        }
+      ]
     },
     {
       "id": "EA-55d228f014176c71",
@@ -248,9 +488,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/RangerRolesProvider.java",
       "message": "`cacheDirTmp.mkdirs` at line 278 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 278
+      "line": 278,
+      "verdict": "true_positive",
+      "reason": "cacheDirTmp.mkdirs() drops its boolean (the catch only covers SecurityException) and cacheFile is then set unconditionally, so a failed directory creation goes unnoticed until the cache write.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`cacheDirTmp.mkdirs()` has its boolean ignored (the try only catches SecurityException) and `cacheFile` is built regardless, so a failed create goes unnoticed until the cache write."
+        }
+      ]
     },
     {
       "id": "EA-844f4c47370ccc8c",
@@ -258,9 +508,19 @@
       "language": "java",
       "path": "embeddedwebserver/src/main/java/org/apache/ranger/server/tomcat/EmbeddedServer.java",
       "message": "`logDirectory.mkdirs` at line 194 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 194
+      "line": 194,
+      "verdict": "true_positive",
+      "reason": "logDirectory.mkdirs() in EmbeddedServer ignores its result and the path is handed straight to AccessLogValve.setDirectory, so a failed creation of the access log directory is never reported.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`logDirectory.mkdirs()` in EmbeddedServer ignores the result and the AccessLogValve is configured on that directory without any check."
+        }
+      ]
     },
     {
       "id": "EA-88b6418160f6b3b6",
@@ -268,9 +528,19 @@
       "language": "java",
       "path": "pdp/src/main/java/org/apache/ranger/pdp/RangerPdpServer.java",
       "message": "`new File(docBase).mkdirs` at line 131 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 131
+      "line": 131,
+      "verdict": "true_positive",
+      "reason": "new File(docBase).mkdirs() discards the boolean and docBase is then passed to tomcat.addContext without any existence check.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`new File(docBase).mkdirs()` for the PDP's temp webapp directory ignores its result, and `tomcat.addContext` then uses that path unchecked."
+        }
+      ]
     },
     {
       "id": "EA-cb431bc3b365f44f",
@@ -278,9 +548,19 @@
       "language": "java",
       "path": "tagsync/src/main/java/org/apache/ranger/tagsync/process/TagSyncMetricsProducer.java",
       "message": "`userMetricFile.createNewFile` at line 79 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 79
+      "line": 79,
+      "verdict": "false_positive",
+      "reason": "File.createNewFile returns false only when the file already exists (guarded by !exists) and throws IOException on real failure, which the surrounding catch logs and rethrows, so the boolean is not the only failure signal.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`userMetricFile.createNewFile()` returns a boolean that is discarded (and can also return false), and `writeMetricsToFile` runs on the file regardless."
+        }
+      ]
     },
     {
       "id": "EA-109107ad54b12c99",
@@ -288,9 +568,19 @@
       "language": "java",
       "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/process/UnixUserGroupBuilder.java",
       "message": "`unixSyncSourceInfo.setLastModified` at line 198 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 198
+      "line": 198,
+      "verdict": "false_positive",
+      "reason": "unixSyncSourceInfo is a UnixSyncSourceInfo bean, not a java.io.File, so setLastModified(String) is a plain setter with no failure result; the detector matched the File set* name on the wrong type.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`unixSyncSourceInfo.setLastModified` is a bean setter on `UnixSyncSourceInfo` with return type `void`, so there is no result to discard."
+        }
+      ]
     },
     {
       "id": "EA-6dd9c2acd754f560",
@@ -298,9 +588,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/extension/option/OptionsJvmPanel.java",
       "message": "`JVM_PROPERTIES_FILE.getParent().toFile().mkdirs` at line 180 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 180
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "JVM_PROPERTIES_FILE.getParent().toFile().mkdirs() returns false on failure and that boolean is dropped, leaving the following Files.write to fail with a less specific error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "Line 180's File.mkdirs() return value is dropped in saveJvmFile, so a failed creation of the zap parent dir goes unreported until Files.write throws a less specific error."
+        }
+      ]
     },
     {
       "id": "EA-7a5b70c5ed55f4b5",
@@ -308,9 +608,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/api/GoAPIGenerator.java",
       "message": "`dir.mkdirs` at line 197 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 197
+      "line": 197,
+      "verdict": "false_positive",
+      "reason": "GoAPIGenerator is a developer code generator run through the generateGoApiEndpoints Gradle JavaExec task in zap.gradle.kts, i.e. build tooling outside the detector's scope, not code ZAP runs for users.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "GoAPIGenerator is a build-time code generator run only by the generateAllApiEndpoints gradle task in zap.gradle.kts, so it is dev tooling outside shipped scope."
+        }
+      ]
     },
     {
       "id": "EA-1053fbf1ccee6158",
@@ -318,9 +628,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/api/GoAPIGenerator.java",
       "message": "`file.createNewFile` at line 200 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 200
+      "line": 200,
+      "verdict": "false_positive",
+      "reason": "file.createNewFile() runs only after !file.exists() and returns false only when the file already exists (real failures throw IOException), and GoAPIGenerator is Gradle-run generation tooling anyway.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "createNewFile in GoAPIGenerator.createDirAndFile belongs to a generator launched only from zap.gradle.kts's API endpoint tasks, i.e. build tooling out of scope."
+        }
+      ]
     },
     {
       "id": "EA-a07ecacb143789e1",
@@ -328,9 +648,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/PolicyManager.java",
       "message": "`oldFile.delete` at line 106 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 106
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "When a policy is renamed, oldFile.delete() on the previous .policy file drops its boolean, so a failed delete silently leaves the old policy file behind while allPolicyNames removes it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "PolicyManager.savePolicy ignores the boolean from oldFile.delete() when renaming a policy, so a failed delete leaves a stale policy file that is never reported."
+        }
+      ]
     },
     {
       "id": "EA-32e6300472ce2fe2",
@@ -338,9 +668,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/ascan/PolicyManager.java",
       "message": "`file.delete` at line 204 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 204
+      "line": 204,
+      "verdict": "true_positive",
+      "reason": "deletePolicy calls file.delete() and ignores the false result, then removes the name from allPolicyNames, so a policy that could not be deleted reappears on next load with no error.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "deletePolicy in PolicyManager calls file.delete() and discards its boolean, then removes the name from allPolicyNames anyway, so a failed deletion is silent and the policy reappears on restart."
+        }
+      ]
     },
     {
       "id": "EA-d6a004890cf007a9",
@@ -348,9 +688,19 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/compare/ExtensionCompare.java",
       "message": "`outfile.delete` at line 444 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 444
+      "line": 444,
+      "verdict": "true_positive",
+      "reason": "outfile.delete() for the temporary XML file in ExtensionCompare discards File.delete's boolean, the only signal that the temp file was left on disk.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "ExtensionCompare drops the boolean from outfile.delete() on the temporary XSLT output file, so a failed cleanup leaves the temp file with no log."
+        }
+      ]
     },
     {
       "id": "EA-8b83693aa04af60b",
@@ -383,9 +733,19 @@
       "language": "javascript",
       "path": "app/src/main/res/raw/webviewcompat_complex_test_script.js",
       "message": "`this.process` at line 1597 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1597
+      "line": 1597,
+      "verdict": "false_positive",
+      "reason": "The `this.process()` call in the synthetic WebViewCompat load-test script `webviewcompat_complex_test_script.js` targets an async `process` whose loop catches each `executeRequest` failure, so the dropped promise does not reject.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "webviewcompat_complex_test_script.js is a synthetic WebViewCompat test/benchmark payload loaded by `RealWebViewCompatTestHelper`, a test fixture outside scope."
+        }
+      ]
     },
     {
       "id": "EA-895981537fd051b2",
@@ -393,9 +753,19 @@
       "language": "javascript",
       "path": "app/src/main/res/raw/webviewcompat_complex_test_script.js",
       "message": "`featureManager.initFeatures().then` at line 2177 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2177
+      "line": 2177,
+      "verdict": "false_positive",
+      "reason": "`featureManager.initFeatures()` in the experiment payload `webviewcompat_complex_test_script.js` only awaits `initFeature`, which resolves through a `setTimeout` Promise and never rejects; the chain is a simulated load script, not a real failure path.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`featureManager.initFeatures().then(...)` is in webviewcompat_complex_test_script.js, a synthetic test script injected only for WebViewCompat testing, so it is a fixture."
+        }
+      ]
     },
     {
       "id": "EA-7d74d64bac31f7ba",
@@ -403,9 +773,19 @@
       "language": "javascript",
       "path": "app/src/main/res/raw/webviewcompat_large_test_script.js",
       "message": "`this.process` at line 1466 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1466
+      "line": 1466,
+      "verdict": "false_positive",
+      "reason": "In `webviewcompat_large_test_script.js`, the `RequestQueue.process` that `this.process()` drops wraps each `await this.executeRequest(request)` in try/catch with retry counting, so the promise does not reject.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "webviewcompat_large_test_script.js is a generated-style large test payload for WebViewCompat experiments (RequestQueue demo), a test fixture outside scope."
+        }
+      ]
     },
     {
       "id": "EA-dd2de1edf65e9103",
@@ -413,9 +793,19 @@
       "language": "javascript",
       "path": "apps/portal/src/data-attributes.js",
       "message": "`formSubmitHandler` at line 252 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 252
+      "line": 252,
+      "verdict": "false_positive",
+      "reason": "formSubmitHandler wraps every awaited request (integrity token, magic link) in try/catch/finally that calls handleError and restores the submit listener; only synchronous DOM setup precedes the try, so the promise is self-handling.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`formSubmitHandler` is an async function whose fetch and parsing work sits in a try/catch/finally that calls `handleError`, so it handles its own failures and the unawaited call is the self-handling idiom."
+        }
+      ]
     },
     {
       "id": "EA-a9f0398bfb62bbbf",
@@ -423,9 +813,19 @@
       "language": "javascript",
       "path": "apps/portal/src/data-attributes.js",
       "message": "`fetch(`${siteUrl}/members/api/session`, {\u2026.then` at line 419 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 419
+      "line": 419,
+      "verdict": "true_positive",
+      "reason": "The sign-out click handler's fetch(`${siteUrl}/members/api/session`, {method:'DELETE'}).then(...) has no rejection handler, so a network error leaves the element in 'loading' with the click listener removed and an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `fetch(.../members/api/session, {method:'DELETE'}).then(...)` chain has no `.catch`, so a network failure leaves the click handler removed and the rejection unhandled."
+        }
+      ]
     },
     {
       "id": "EA-fc6e080bd0583798",
@@ -433,9 +833,19 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "`initBackgroundServices` at line 811 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 811
+      "line": 811,
+      "verdict": "true_positive",
+      "reason": "initBackgroundServices is async and, besides its try-wrapped job scheduling, has unguarded awaits such as `await activitypub.init()`; calling it bare at line 811 (the comment only says it is not waited for) leaves those rejections unhandled in Node.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`initBackgroundServices` has unguarded awaits such as `await activitypub.init()` and is intentionally unawaited at boot.js:811 with no `.catch`, so a throw becomes an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-f255b3a3328da1fc",
@@ -443,9 +853,19 @@
       "language": "javascript",
       "path": "ghost/core/frontend/src/comment-counts/comment-counts.js",
       "message": "`fetchCounts` at line 105 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 105
+      "line": 105,
+      "verdict": "false_positive",
+      "reason": "fetchCounts() at line 105 is the final statement of the comment-counts script's wrapping async IIFE, i.e. the script's top-level kick-off call, which the detector documents as excluded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`fetchCounts` awaits `fetch(...)` and `rawRes.json()` with no try/catch, and the direct call at line 105 has no `.catch`, so a network error is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-c49f2ca0fbd9b8c4",
@@ -453,9 +873,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/activitypub/activity-pub-service-wrapper.js",
       "message": "`configureActivityPub` at line 53 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 53
+      "line": 53,
+      "verdict": "true_positive",
+      "reason": "configureActivityPub awaits ActivityPubServiceWrapper.instance.enable()/disable() without try/catch and the init-time call at line 53 has no handler, so an enable failure becomes an unhandled rejection in the Ghost server process.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`configureActivityPub` awaits `instance.enable()` or `disable()` without try/catch and the initial call at line 53 has no `.catch`, so a failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-ce9f38aec21d6be1",
@@ -463,9 +893,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/notifications/notifications.js",
       "message": "`this.dangerousDestroyAll` at line 49 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 49
+      "line": 49,
+      "verdict": "false_positive",
+      "reason": "The call to this.dangerousDestroyAll() sits directly under a two-line comment explaining the deliberate \"fire-and-forget\" choice, which is the justifying-comment exemption the detector documents (the keyword is just one line further up than the scan window).",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`dangerousDestroyAll()` returns `SettingsModel.edit(...)`, a DB write, and the fire-and-forget call at line 49 has no `.catch`, so a failed write is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-4d9ae6fe9a3bb902",
@@ -473,9 +913,19 @@
       "language": "javascript",
       "path": "ghost/core/server/services/offers/offer-bookshelf-repository.js",
       "message": "`options.transacting.executionPromise.then` at line 297 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 297
+      "line": 297,
+      "verdict": "true_positive",
+      "reason": "options.transacting.executionPromise.then(() => DomainEvents.dispatch(event)) has no rejection handler, so a rolled-back transaction (rejected executionPromise) produces an unhandled rejection in the offers repository.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`options.transacting.executionPromise.then(...)` builds a derived promise with no rejection handler, so a rolled-back transaction yields an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-b5464b5d9353832b",
@@ -483,9 +933,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.debug.js",
       "message": "`response.then` at line 13987 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13987
+      "line": 13987,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.debug.js is a built debug bundle of third-party SimpleMDE v1.11.2 (with typo.js inlined), vendored/generated code outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This is `koenig/kg-simplemde/debug/simplemde.debug.js`, a checked-in debug build of the vendored SimpleMDE bundle, not first-party source."
+        }
+      ]
     },
     {
       "id": "EA-329593d4d05f2fb0",
@@ -493,9 +953,19 @@
       "language": "javascript",
       "path": "koenig/kg-simplemde/debug/simplemde.js",
       "message": "`response.then` at line 13987 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13987
+      "line": 13987,
+      "verdict": "false_positive",
+      "reason": "koenig/kg-simplemde/debug/simplemde.js is the bundled copy of upstream SimpleMDE (Next Step Webs, MIT header), and its typo.js readDataFile response.then is vendored third-party code outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This is `koenig/kg-simplemde/debug/simplemde.js`, a checked-in debug build of the vendored SimpleMDE bundle (identical to simplemde.debug.js), not first-party source."
+        }
+      ]
     },
     {
       "id": "EA-9ae40c905ec84a32",
@@ -503,9 +973,19 @@
       "language": "javascript",
       "path": "js/apps/create-keycloak-theme/create.js",
       "message": "`simpleGit()\u2026.then` at line 65 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 65
+      "line": 65,
+      "verdict": "true_positive",
+      "reason": "create-keycloak-theme is a published npm bin, and simpleGit().clone(...).then(resolve) inside the Promise executor has no rejection path, so a failed clone never calls reject and surfaces only as an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`simpleGit().clone(...).then(...)` in create-keycloak-theme's `cloneQuickstart` has no `.catch`, so a clone failure leaves the outer promise pending and the rejection unhandled; this npm project scaffolder is shipped."
+        }
+      ]
     },
     {
       "id": "EA-57ee1165b1088bee",
@@ -513,9 +993,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/bootstrap/js/bootstrap.js",
       "message": "`window.Promise.resolve().then` at line 1591 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1591
+      "line": 1591,
+      "verdict": "false_positive",
+      "reason": "security-admin/.../libs/bower/bootstrap/js/bootstrap.js is a vendored Bootstrap (Popper) bundle, and window.Promise.resolve().then is the microtask-debounce idiom the detector exempts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "This is `libs/bower/bootstrap/js/bootstrap.js`, a vendored Bower copy of Bootstrap, and the `Promise.resolve().then` is a microtask-scheduling debounce."
+        }
+      ]
     },
     {
       "id": "EA-281c03cf796b7c54",
@@ -523,9 +1013,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "`$.when(this.input.render())\u2026.then` at line 89 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 89
+      "line": 89,
+      "verdict": "false_positive",
+      "reason": "bootstrap-editable.js under libs/bower/x-editable is vendored third-party x-editable code, and $.when(this.input.render()).then is a jQuery Deferred in its form render, not project code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`bootstrap-editable.js` sits under `libs/bower/x-editable`, a vendored third-party library, so it is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-d150e0e4f0ab4fcc",
@@ -533,9 +1033,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "`$.when(doAutotext ? this.render() : true).then` at line 1557 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1557
+      "line": 1557,
+      "verdict": "false_positive",
+      "reason": "The $.when(doAutotext ? this.render() : true).then at line 1557 is in vendored x-editable's editable init, a third-party bower library outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`bootstrap-editable.js` sits under `libs/bower/x-editable`, a vendored third-party library, so it is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-9d2c3f82d2ef01de",
@@ -543,9 +1053,19 @@
       "language": "javascript",
       "path": "security-admin/src/main/webapp/libs/bower/x-editable/js/bootstrap-editable.js",
       "message": "`$.when(this.render(response))\u2026.then` at line 1895 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1895
+      "line": 1895,
+      "verdict": "false_positive",
+      "reason": "The $.when(this.render(response)).then(... handleEmpty ...) at line 1895 belongs to vendored x-editable's setValue, a third-party bower library, not Ranger code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`bootstrap-editable.js` sits under `libs/bower/x-editable`, a vendored third-party library, so it is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-12676b79586c83e8",
@@ -553,9 +1073,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/dashboard/dashboard_spec.js",
       "message": "`cy.createDashboard(\"Foo Bar\")\u2026.then` at line 73 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 73
+      "line": 73,
+      "verdict": "false_positive",
+      "reason": "dashboard_spec.js is a Cypress test, outside this detector's scope, and cy.createDashboard(...).then is a Cypress chainable queued by the runner, not a floating promise.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`dashboard_spec.js` is a Cypress spec, and `cy.createDashboard(...).then` is a Cypress command chain, not a floating promise, in test code."
+        }
+      ]
     },
     {
       "id": "EA-355f1db3dd677e6c",
@@ -563,9 +1093,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/dashboard/sharing_spec.js",
       "message": "`shareDashboard().then` at line 117 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 117
+      "line": 117,
+      "verdict": "false_positive",
+      "reason": "shareDashboard().then in sharing_spec.js is Cypress test code whose command chain is enqueued and awaited by Cypress itself, and test code is excluded.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`sharing_spec.js` is a Cypress spec, and `shareDashboard().then` is a Cypress command chain in test code."
+        }
+      ]
     },
     {
       "id": "EA-7c12c248d9b98810",
@@ -573,9 +1113,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/dashboard/widget_spec.js",
       "message": "`createQueryAndAddWidget(this.dashboardId, query\u2026` at line 181 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 181
+      "line": 181,
+      "verdict": "false_positive",
+      "reason": "createQueryAndAddWidget(...).then in widget_spec.js is inside a Cypress `it` test, which the detector excludes, and Cypress manages the chain.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`widget_spec.js` is a Cypress spec, and `createQueryAndAddWidget(...).then` is a Cypress command chain in test code."
+        }
+      ]
     },
     {
       "id": "EA-5bca67f7fac4b5f1",
@@ -583,9 +1133,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/destination/create_destination_spec.js",
       "message": "`cy.createDestination(\"Slack Destination\", \"slac\u2026` at line 26 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 26
+      "line": 26,
+      "verdict": "false_positive",
+      "reason": "cy.createDestination(...).then in create_destination_spec.js is a Cypress custom-command chainable in a test file outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`create_destination_spec.js` is a Cypress spec, and `cy.createDestination(...).then` is a Cypress command chain in test code."
+        }
+      ]
     },
     {
       "id": "EA-99306f45e3936353",
@@ -593,9 +1153,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/embed/share_embed_spec.js",
       "message": "`cy.getByTestId(\"EmbedIframe\")\u2026.then` at line 17 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "cy.getByTestId(\"EmbedIframe\").invoke(\"text\").then in share_embed_spec.js is a Cypress chainable in test code, not a discarded promise in shipped code.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`share_embed_spec.js` is a Cypress spec, and the `cy.getByTestId(...).invoke('text').then` is a Cypress command chain in test code."
+        }
+      ]
     },
     {
       "id": "EA-5e9c0f6f0edc07b5",
@@ -603,9 +1173,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/embed/share_embed_spec.js",
       "message": "`cy.getByTestId(\"EmbedIframe\")\u2026.then` at line 91 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 91
+      "line": 91,
+      "verdict": "false_positive",
+      "reason": "share_embed_spec.js is a Cypress test spec, outside discarded_fallible_result's scope (test code excluded), and cy.getByTestId(...).invoke(\"text\").then is a Cypress command chain queued by the runner, not a floating promise.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "share_embed_spec.js is a Cypress e2e spec under client/cypress/integration, and cy.getByTestId(...).invoke(...).then is a Cypress command chain that the runner sequences, not a floating promise; test code is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-bf4235e07594d7f8",
@@ -613,9 +1193,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/query/parameter_spec.js",
       "message": "`cy.createQuery(queryData, false).then` at line 445 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 445
+      "line": 445,
+      "verdict": "false_positive",
+      "reason": "parameter_spec.js is a Cypress e2e spec; cy.createQuery(queryData, false).then in beforeEach is an enqueued Cypress chainable whose failures fail the test, and test code is excluded from this detector.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "parameter_spec.js is Cypress test code, and cy.createQuery(...).then(({id}) => cy.visit(...)) is a command-queue chain inside beforeEach that Cypress awaits itself."
+        }
+      ]
     },
     {
       "id": "EA-7639123ee7ab40c1",
@@ -623,9 +1213,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/visualizations/box_plot_spec.js",
       "message": "`cy.createQuery({ query: SQL })\u2026.then` at line 43 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 43
+      "line": 43,
+      "verdict": "false_positive",
+      "reason": "box_plot_spec.js is Cypress test code; the cy.createQuery({ query: SQL }).then(...).then(...) chain is a Cypress chainable managed by the command queue, not a discarded promise.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "box_plot_spec.js is a Cypress spec, and cy.createQuery({query: SQL}).then(...) is enqueued on Cypress's command chain rather than being a discarded promise."
+        }
+      ]
     },
     {
       "id": "EA-a2216fdd324ba589",
@@ -633,9 +1233,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/visualizations/counter_spec.js",
       "message": "`cy.createQuery({ query: SQL }).then` at line 13 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 13
+      "line": 13,
+      "verdict": "false_positive",
+      "reason": "counter_spec.js is a Cypress spec, so it is excluded test code, and cy.createQuery(...).then inside beforeEach is a queued Cypress command rather than a promise needing a rejection handler.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "counter_spec.js is a Cypress spec file, where cy.createQuery({query: SQL}).then(...) is a command chain run by the Cypress runner; test code is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-679095abc83f66cf",
@@ -643,9 +1253,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/visualizations/funnel_spec.js",
       "message": "`cy.createQuery({ query: SQL }).then` at line 26 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 26
+      "line": 26,
+      "verdict": "false_positive",
+      "reason": "funnel_spec.js sits under client/cypress/integration and is test code; cy.createQuery({ query: SQL }).then is a Cypress chainable whose errors fail the test via the runner.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "funnel_spec.js is a Cypress spec, and the cy.createQuery(...).then call is a Cypress command chain, not a promise whose rejection is lost."
+        }
+      ]
     },
     {
       "id": "EA-8172b87d9182c5f6",
@@ -653,9 +1273,19 @@
       "language": "javascript",
       "path": "client/cypress/integration/visualizations/table/table_spec.js",
       "message": "`prepareVisualization(query, \"TABLE\", \"All cell \u2026` at line 40 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "table_spec.js is a Cypress test file; prepareVisualization(...).then returns a Cypress chain (built from cy.createQuery/createVisualization) that the runner awaits, and test code is outside the detector's scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "table_spec.js is a Cypress spec, and prepareVisualization(query, \"TABLE\", ...) is a helper that issues cy commands, queued by Cypress rather than floating."
+        }
+      ]
     },
     {
       "id": "EA-b617b27fa1eaed1e",
@@ -663,9 +1293,19 @@
       "language": "javascript",
       "path": "web/src/ui_init.js",
       "message": "`initialize_everything` at line 878 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 878
+      "line": 878,
+      "verdict": "true_positive",
+      "reason": "initialize_everything is an export async function (it awaits people.initialize) and the /json/register success callback calls it without await or catch, so initialization failures only reach the global unhandledrejection hook.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "initialize_everything is an async function (it awaits people.initialize) and the register success callback at line 878 calls it without await or catch, so any init failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-9d6312e92214fa36",
@@ -673,9 +1313,19 @@
       "language": "javascript",
       "path": "web/src/ui_init.js",
       "message": "`initialize_everything` at line 905 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 905
+      "line": 905,
+      "verdict": "true_positive",
+      "reason": "In the preloaded-state branch, initialize_everything(state_data) drops the promise from the async initializer inside the jQuery ready callback rather than awaiting it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The non-register branch at line 905 calls the async initialize_everything(state_data) inside the ready handler with no await or .catch, so a rejection is unhandled."
+        }
+      ]
     },
     {
       "id": "EA-8535573b1bc47f47",
@@ -683,9 +1333,19 @@
       "language": "python",
       "path": "electrum/submarine_swaps.py",
       "message": "`asyncio.create_task` at line 673 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 673
+      "line": 673,
+      "verdict": "true_positive",
+      "reason": "`asyncio.create_task(self._claim_to_output(swap, txin))` stores no reference before `return`, so the swap-claim task is only weakly held by the loop and its exceptions are never retrieved.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`asyncio.create_task(self._claim_to_output(swap, txin))` keeps no reference to the task, so the weakly-held task can be garbage collected and its exceptions are lost."
+        }
+      ]
     },
     {
       "id": "EA-d556cfa1c15bfa1f",
@@ -693,9 +1353,19 @@
       "language": "python",
       "path": "electrum/submarine_swaps.py",
       "message": "`asyncio.ensure_future` at line 1365 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1365
+      "line": 1365,
+      "verdict": "true_positive",
+      "reason": "`asyncio.ensure_future(self.lnworker.pay_invoice(fee_invoice_obj))` drops the fee-payment task's only reference, so it can be garbage-collected and any payment error goes unobserved.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`asyncio.ensure_future(self.lnworker.pay_invoice(fee_invoice_obj))` discards the future, so the fee-payment task can be collected mid-run and failures go unobserved."
+        }
+      ]
     },
     {
       "id": "EA-33ce286297f72469",
@@ -703,9 +1373,19 @@
       "language": "python",
       "path": "electrum/submarine_swaps.py",
       "message": "`asyncio.create_task` at line 1815 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1815
+      "line": 1815,
+      "verdict": "true_positive",
+      "reason": "`asyncio.create_task(transport.main_loop())` in `_initialize_transport` discards the long-running Nostr main-loop task without keeping a reference, which is exactly the weak-reference hazard.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`asyncio.create_task(transport.main_loop())` in `_initialize_transport` drops the returned task, leaving the long-running Nostr loop with only a weak event-loop reference."
+        }
+      ]
     },
     {
       "id": "EA-eab4c2de2c932e95",
@@ -713,9 +1393,19 @@
       "language": "python",
       "path": "electrum/submarine_swaps.py",
       "message": "`asyncio.create_task` at line 1818 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1818
+      "line": 1818,
+      "verdict": "true_positive",
+      "reason": "For `HttpTransport`, `asyncio.create_task(transport.get_pairs_just_once())` is fired without storing the task, so the pairs fetch can be collected and its failure is never awaited.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`asyncio.create_task(transport.get_pairs_just_once())` drops the task even though that coroutine may raise SwapServerError, so the error is never retrieved."
+        }
+      ]
     },
     {
       "id": "EA-84799729c82b0491",
@@ -723,9 +1413,19 @@
       "language": "python",
       "path": "electrum/submarine_swaps.py",
       "message": "`asyncio.create_task` at line 1852 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1852
+      "line": 1852,
+      "verdict": "true_positive",
+      "reason": "`HttpTransport.__aenter__` calls `asyncio.create_task(self.get_pairs_just_once())` and returns without keeping the task, leaving it weakly referenced with unobserved exceptions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`asyncio.create_task(self.get_pairs_just_once())` in `HttpTransport.__aenter__` discards the task, so it can be collected early and its SwapServerError goes unobserved."
+        }
+      ]
     },
     {
       "id": "EA-d82423e34a4d36f1",
@@ -733,9 +1433,19 @@
       "language": "python",
       "path": "electrum/txbatcher.py",
       "message": "`asyncio.ensure_future` at line 131 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 131
+      "line": 131,
+      "verdict": "false_positive",
+      "reason": "The ensure_future wrapper only runs OldTaskGroup.spawn (aiorpcx), which creates the run_batch task and registers it in self.taskgroup without awaiting, so the wrapper finishes in its first scheduled step (held by the loop's ready queue) and the real task is strongly owned by the task group.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "txbatcher.py wraps `self.taskgroup.spawn(self.run_batch(...))` in a bare `asyncio.ensure_future` whose task is stored nowhere, so the loop's weak reference can let it be collected before it spawns the batch."
+        }
+      ]
     },
     {
       "id": "EA-c01ddd8983c3c85e",
@@ -743,9 +1453,19 @@
       "language": "python",
       "path": "frigate/api/fastapi_app.py",
       "message": "`asyncio.create_task` at line 121 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 121
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "The startup hook calls asyncio.create_task(debug_replay_auto_stop_watchdog(...)) and keeps no reference, while the watchdog is a `while True` loop that will sit suspended and only weakly referenced by the loop.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`asyncio.create_task(debug_replay_auto_stop_watchdog(...))` in the FastAPI startup handler keeps no reference to a long-lived `while True` watchdog, so the weakly-held task can be garbage collected."
+        }
+      ]
     },
     {
       "id": "EA-e9498212319139a7",
@@ -753,9 +1473,19 @@
       "language": "python",
       "path": "frigate/ptz/autotrack.py",
       "message": "`self._autotracker_setup` at line 1541 creates a coroutine that is never awaited, so its body never runs",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1541
+      "line": 1541,
+      "verdict": "true_positive",
+      "reason": "_autotracker_setup is declared `async def` at line 303 but camera_maintenance calls it at line 1541 without await or run_coroutine_threadsafe (as lines 275/1410 do), so the coroutine is created and never run.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`_autotracker_setup` is declared `async def` (autotrack.py:303) and line 1541 calls it without `await` or scheduling, so the coroutine body never runs; the other call sites use `run_coroutine_threadsafe`."
+        }
+      ]
     },
     {
       "id": "EA-5254a307f24b4c05",
@@ -763,9 +1493,19 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/runtime.rs",
       "message": "`pty_writer.write_all` at line 278 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 278
+      "line": 278,
+      "verdict": "true_positive",
+      "reason": "`let _ = pty_writer.write_all(&[b'\\n', eof]).await` drops the only error from forwarding EOF to the shell, with no justifying comment, so a failed write leaves the session without its end-of-input silently.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let _ = pty_writer.write_all(&[b'\\n', eof]).await` drops the write error with no ignore/best-effort comment (the comment only explains why a newline is sent), so the result is the only signal."
+        }
+      ]
     },
     {
       "id": "EA-768fd5c8603c6695",
@@ -773,9 +1513,19 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/screen.rs",
       "message": "`stream.write_all` at line 188 reports failure only through its result, which is discarded",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 188
+      "line": 188,
+      "verdict": "true_positive",
+      "reason": "In `SocketServer::serve`, `let _ = stream.write_all(&data).await` discards the error from writing the screen snapshot to the client socket; the Result is the only signal and nothing logs it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`let _ = stream.write_all(&data).await` discards the socket write error for the screen snapshot reply; the result is the sole failure signal and no justifying comment is present."
+        }
+      ]
     },
     {
       "id": "EA-64cc16ef6a769ba4",
@@ -783,9 +1533,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/components/transactions/TransactionsTable.tsx",
       "message": "`onUpdate` at line 790 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 790
+      "line": 790,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): PayeeCell's `onUpdate` prop is passed the Transaction component's `async` onUpdate (line 1733, defined at 1136 with an `await aqlQuery` that can reject), so the promise from `onUpdate('payee', id ?? undefined)` is dropped at runtime; the void prop type does not change what is passed in.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`onUpdate('payee', id ?? undefined)` after the await calls the parent's `onUpdate`, declared `async` at line 1136 with an `await aqlQuery`, and the returned promise is dropped without a catch."
+        }
+      ]
     },
     {
       "id": "EA-0835b0d27410a6fc",
@@ -793,9 +1553,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/components/transactions/TransactionsTable.tsx",
       "message": "`onUpdate` at line 1626 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1626
+      "line": 1626,
+      "verdict": "true_positive",
+      "reason": "Inside `Transaction`, `onUpdate` is the same-file `async (name, value)` at line 1136 that awaits `aqlQuery` with no try/catch, and the date cell's `onUpdate('date', value)` drops that promise, so a query rejection goes unhandled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The date cell's `onUpdate={value => { onUpdate('date', value); }}` calls the outer async `onUpdate` (line 1136) and discards its promise, which can reject from `aqlQuery`."
+        }
+      ]
     },
     {
       "id": "EA-674e59f347c4b295",
@@ -803,9 +1573,19 @@
       "language": "typescript",
       "path": "packages/desktop-client/src/components/transactions/TransactionsTable.tsx",
       "message": "`onUpdate` at line 1931 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1931
+      "line": 1931,
+      "verdict": "true_positive",
+      "reason": "The category cell's `onUpdate('category', value)` calls the same async `onUpdate` from line 1136, whose `await aqlQuery(...)` can reject with no catch, and the promise is neither awaited nor handled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In the category cell's `async value =>` handler, `onUpdate('category', value)` is not awaited though the outer `onUpdate` is async and awaits `aqlQuery`, so a rejection goes unhandled."
+        }
+      ]
     },
     {
       "id": "EA-f271cfb38244fdea",
@@ -813,9 +1593,19 @@
       "language": "typescript",
       "path": "web/src/views/ResetPassword/ResetPasswordStep1.tsx",
       "message": "`doInitiateResetPasswordProcess` at line 87 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 87
+      "line": 87,
+      "verdict": "false_positive",
+      "reason": "`doInitiateResetPasswordProcess` wraps its only await, `initiateResetPasswordProcess(username)`, in try/catch and otherwise only sets state, so the promise dropped by `handleResetClick` cannot reject in practice.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`doInitiateResetPasswordProcess` is an async arrow whose awaited `initiateResetPasswordProcess` sits in try/catch that notifies the user, so the floating call cannot produce an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-6e8796bb57798d74",
@@ -823,9 +1613,19 @@
       "language": "typescript",
       "path": "web/src/views/ResetPassword/ResetPasswordStep1.tsx",
       "message": "`doInitiateResetPasswordProcess` at line 109 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 109
+      "line": 109,
+      "verdict": "false_positive",
+      "reason": "The Enter-key handler calls the same self-handling `doInitiateResetPasswordProcess`, whose network call is inside `try { ... } catch { createErrorNotification(...) }`; no rejection escapes.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The Enter-key call to `doInitiateResetPasswordProcess()` targets the same self-handling async function (await wrapped in try/catch with an error notification), so nothing is left unhandled."
+        }
+      ]
     },
     {
       "id": "EA-8a8938ac834ba643",
@@ -833,9 +1633,19 @@
       "language": "typescript",
       "path": "web/src/views/Settings/TwoFactorAuthentication/WebAuthnCredentialsPanel.tsx",
       "message": "`handleElevationRefresh()\u2026.then` at line 97 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 97
+      "line": 97,
+      "verdict": "false_positive",
+      "reason": "Adjudicated (arbiter): The rejection of handleElevationRefresh() is handled by `.catch(console.error)`. The trailing `.then` only calls synchronous React state setters, so no failure signal of the fallible call is dropped.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The chain is `handleElevationRefresh().catch(console.error).then(...)`, so a rejection handler is attached before the `.then`; the claim of no rejection handler is wrong."
+        }
+      ]
     },
     {
       "id": "EA-5b1e3667de061e5e",
@@ -843,9 +1653,19 @@
       "language": "typescript",
       "path": "dolphinscheduler-ui/src/views/projects/task/components/node/detail-modal.tsx",
       "message": "`queryProjectPreferenceByProjectCode(projectCode\u2026` at line 124 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 124
+      "line": 124,
+      "verdict": "true_positive",
+      "reason": "`queryProjectPreferenceByProjectCode(projectCode).then(...)` in `initProjectPreferences` has no catch, and the callback's `JSON.parse(result.preferences)` or a request failure would become an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`queryProjectPreferenceByProjectCode(projectCode).then(cb)` has no catch, and the axios response interceptor does `throw new Error()` on non-zero codes, so failures become unhandled rejections."
+        }
+      ]
     },
     {
       "id": "EA-b4ca20ec8271f9ba",
@@ -853,9 +1673,19 @@
       "language": "typescript",
       "path": "dolphinscheduler-ui/src/views/security/alarm-instance-manage/use-form.ts",
       "message": "`getUiPluginsByType` at line 99 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 99
+      "line": 99,
+      "verdict": "false_positive",
+      "reason": "`getUiPluginsByType` wraps its `await queryUiPluginsByType(...)` in try/catch that resets `state.pluginsLoading`, and before that it only has a guard return, so the promise dropped by `initForm` cannot reject.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`getUiPluginsByType` is an async function whose awaited `queryUiPluginsByType` is wrapped in try/catch that resets `pluginsLoading`, so the floating call in `initForm` cannot reject."
+        }
+      ]
     },
     {
       "id": "EA-4963b9f4bf3b553a",
@@ -863,9 +1693,19 @@
       "language": "typescript",
       "path": "dolphinscheduler-ui/src/views/security/token-manage/components/use-modal.ts",
       "message": "`updateToken(data).then` at line 155 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 155
+      "line": 155,
+      "verdict": "true_positive",
+      "reason": "`updateToken(data).then(() => ctx.emit('confirmModal', ...))` has no rejection handler and is not returned or awaited, so a failed token update request leaves an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`updateToken(data).then(...)` in use-modal.ts has no rejection handler, and the axios interceptor rethrows on error codes, so a failed update yields an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-2bfa0bbf6cb5e204",
@@ -873,9 +1713,19 @@
       "language": "typescript",
       "path": "web/src/components/config-form/sectionExtras/NotificationsSettingsExtras.tsx",
       "message": "`navigator.serviceWorker\u2026.then` at line 656 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 656
+      "line": 656,
+      "verdict": "true_positive",
+      "reason": "Inside the requestPermission().then callback, navigator.serviceWorker.register(...).then(...) is neither returned nor given a .catch, so a registration failure becomes an unhandled rejection and the button silently does nothing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `.then` chain on `navigator.serviceWorker.register(...)` inside the permission callback has no `.catch`, so a registration failure becomes an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-f3fc63387be91daf",
@@ -883,9 +1733,19 @@
       "language": "typescript",
       "path": "web/src/hooks/use-persistence.ts",
       "message": "`update` at line 25 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 25
+      "line": 25,
+      "verdict": "true_positive",
+      "reason": "update() is a same-file async function that awaits idb-keyval setData with no try/catch and is called bare in the setValue callback, so an IndexedDB write failure is an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`update()` in `setValue` awaits idb-keyval `setData` with no try/catch and its promise is dropped, so a storage failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-7d62e050abf61414",
@@ -893,9 +1753,19 @@
       "language": "typescript",
       "path": "web/src/hooks/use-persistence.ts",
       "message": "`load` at line 46 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 46
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "load() awaits idb-keyval getData with no try/catch and is invoked bare in the useEffect, so a failing IndexedDB read rejects unhandled and `loaded` never becomes true.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`load()` awaits `getData(key)` with no try/catch and is called bare in the effect, so an IndexedDB read failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-de9d091eb632d070",
@@ -903,9 +1773,19 @@
       "language": "typescript",
       "path": "koenig/koenig-lexical/src/components/ui/cards/SignupCard.tsx",
       "message": "`new FastAverageColor().getColorAsync(background\u2026` at line 88 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 88
+      "line": 88,
+      "verdict": "true_positive",
+      "reason": "new FastAverageColor().getColorAsync(backgroundImageSrc, ...).then(...) in the SignupCard effect has no catch, and getColorAsync rejects when the image fails to load or is CORS-tainted, leaving an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`new FastAverageColor().getColorAsync(...).then(...)` in the SignupCard effect has no `.catch`, so an image load or decode error rejects unhandled."
+        }
+      ]
     },
     {
       "id": "EA-83a46da8fa64d781",
@@ -913,9 +1793,19 @@
       "language": "typescript",
       "path": "koenig/koenig-lexical/src/nodes/BookmarkNodeComponent.tsx",
       "message": "`fetchMetadata` at line 48 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 48
+      "line": 48,
+      "verdict": "false_positive",
+      "reason": "fetchMetadata wraps its only awaited call, cardConfig.fetchEmbed, in try/catch that sets setUrlError(true) and returns; the remainder is synchronous editor.update, so the bare call in handleUrlSubmit cannot leak the fetch failure.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`fetchMetadata` wraps the `cardConfig.fetchEmbed` await in try/catch and does the rest inside `editor.update`, so it handles its own failures."
+        }
+      ]
     },
     {
       "id": "EA-6797723997c691d8",
@@ -923,9 +1813,19 @@
       "language": "typescript",
       "path": "koenig/koenig-lexical/src/nodes/CallToActionNodeComponent.tsx",
       "message": "`handleImageChange` at line 130 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 130
+      "line": 130,
+      "verdict": "true_positive",
+      "reason": "handleImageChange awaits getImageDimensions and imageUploader.upload inside try/finally with no catch, so onFileChange's bare call leaves an upload failure as an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`handleImageChange` uses try/finally with no catch, so a failed `imageUploader.upload` or `getImageDimensions` rejects, and `onFileChange` drops that promise."
+        }
+      ]
     },
     {
       "id": "EA-079da8276e13f6dd",
@@ -933,9 +1833,19 @@
       "language": "typescript",
       "path": "web_src/js/features/comp/EditorUpload.ts",
       "message": "`handleUploadFiles` at line 145 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 145
+      "line": 145,
+      "verdict": "true_positive",
+      "reason": "handleUploadFiles awaits imageInfo and uploadFile with no try/catch, and the CodeMirror 'drop' handler calls it bare, so an upload failure rejects unhandled and leaves the \"uploading ...\" placeholder.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`handleUploadFiles` awaits `imageInfo` and `uploadFile` with no try/catch, and the drop handler at line 145 neither awaits nor catches it, so an upload failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-a6880d3b037889cf",
@@ -943,9 +1853,19 @@
       "language": "typescript",
       "path": "web_src/js/features/repo-issue.ts",
       "message": "`initCombo` at line 503 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 503
+      "line": 503,
+      "verdict": "true_positive",
+      "reason": "initCombo is a same-file async arrow that awaits initComboMarkdownEditor without try/catch, and the loop at line 503 calls it bare for each combo field.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`initCombo` is async and awaits `initComboMarkdownEditor`, but the loop at line 503 calls it bare, so an editor init failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-cd8612dc74c32f60",
@@ -953,9 +1873,19 @@
       "language": "typescript",
       "path": "web_src/js/modules/fetch-action.ts",
       "message": "`performFetchActionTrigger` at line 389 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 389
+      "line": 389,
+      "verdict": "true_positive",
+      "reason": "performFetchActionTrigger awaits performFetchAction, whose handleFetchActionSuccess (await resp.text(), parsing, DOM updates) runs outside the request's try/catch, and the click listener calls it without a handler.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`performFetchActionTrigger` is called bare in the click listener; `handleFetchActionSuccess` can throw (for example the 'did not find any target element' error), and only the request step has a catch."
+        }
+      ]
     },
     {
       "id": "EA-0bc7f3ebe808f3c4",
@@ -983,9 +1913,19 @@
       "language": "typescript",
       "path": "src/jsx/hooks/index.ts",
       "message": "`Promise.all([\u2026.then` at line 213 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 213
+      "line": 213,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): `update` in dom/render.ts is an `async` function that awaits and then runs updateSync, so a render error rejects it. `Promise.all([...]).then(onFulfilled)` has no rejection handler, which is the documented `.then(onFulfilled)` alone form.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The `Promise.all([update(...), pendingPromise]).then(...)` in hono's `useState` transition path has no rejection handler, so a failed update leaves an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-d743877999635232",
@@ -993,9 +1933,19 @@
       "language": "typescript",
       "path": "js/apps/admin-ui/src/clients/ClientDetails.tsx",
       "message": "`save` at line 106 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 106
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "At line 106 `save` is ClientDetailHeader's prop typed `() => void`, not the same-file async declaration at line 380, and the save passed in wraps adminClient.clients.update in try/catch with addError.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`save` in ClientDetails wraps its `adminClient.clients.update` call in try/catch and reports through `addError`, so the unawaited call is the self-handling idiom."
+        }
+      ]
     },
     {
       "id": "EA-6a0bfab140d71216",
@@ -1003,9 +1953,19 @@
       "language": "typescript",
       "path": "js/apps/admin-ui/src/identity-providers/add/DetailSettings.tsx",
       "message": "`save` at line 244 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 244
+      "line": 244,
+      "verdict": "false_positive",
+      "reason": "Line 244 calls the Header component's `save` prop (typed `() => void` at line 93), not the outer async save at line 376, whose identityProviders.update call is itself wrapped in try/catch.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`save` in DetailSettings wraps its `identityProviders.update` and `findOne` calls in try/catch that calls `addError`, so it handles its own failures."
+        }
+      ]
     },
     {
       "id": "EA-4c04f8c7032f4771",
@@ -1013,9 +1973,19 @@
       "language": "typescript",
       "path": "js/apps/admin-ui/src/realm-settings/PoliciesTab.tsx",
       "message": "`saveStatus` at line 365 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 365
+      "line": 365,
+      "verdict": "false_positive",
+      "reason": "Line 365 invokes the PolicyRow-level `saveStatus` prop typed `() => void` (line 328), and the async saveStatus at line 90 that is passed in catches updatePolicy failures with addError.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`saveStatus` wraps `clientPolicies.updatePolicy` in try/catch with `addError`, so the bare call at line 365 is the self-handling idiom."
+        }
+      ]
     },
     {
       "id": "EA-5564edf2e5b8a39e",
@@ -1023,9 +1993,19 @@
       "language": "typescript",
       "path": "web/src/js/backends/static.tsx",
       "message": "`fetchApi(`./${resource}`)\u2026.then` at line 27 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 27
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "StaticBackend (instantiated in app.tsx for the static viewer) runs fetchApi(...).then(res => res.json()).then(...) in fetchData with no catch, so a missing flows/options file rejects unhandled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "In `static.tsx` `fetchData`, `fetchApi(...).then(res => res.json()).then(...)` has no `.catch`, so a failed fetch or bad JSON is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-e362c9f8b6a10f0c",
@@ -1033,9 +2013,19 @@
       "language": "typescript",
       "path": "web/src/js/components/Header/FilterDocs.tsx",
       "message": "`FilterDocs.xhr.then` at line 41 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 41
+      "line": 41,
+      "verdict": "true_positive",
+      "reason": "The .catch on FilterDocs.xhr only handles the original promise; the derived FilterDocs.xhr.then(...) promise at line 41 still rejects with no handler when /filter-help fails.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`FilterDocs.xhr.then(...)` builds a new derived promise with no rejection handler; the earlier `.catch` is on a different chain, so a failed request still raises an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-b477bf505d149b53",
@@ -1043,9 +2033,19 @@
       "language": "typescript",
       "path": "client/app/components/TagsList.tsx",
       "message": "`getTags(tagsUrl).then` at line 29 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 29
+      "line": 29,
+      "verdict": "true_positive",
+      "reason": "getTags(tagsUrl) returns axios.get(url).then(processTags) and the TagsList effect chains only .then(setAllTags) with no catch, so a failed tags request is an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`getTags(tagsUrl).then(...)` in the TagsList effect has no `.catch`, and `getTags` is a bare `axios.get(url).then(processTags)`, so a request failure is an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-0ea2c33b0a56c132",
@@ -1053,9 +2053,19 @@
       "language": "typescript",
       "path": "viz-lib/src/visualizations/chart/Renderer/PlotlyChart.tsx",
       "message": "`_chart.initialized.then` at line 40 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 40
+      "line": 40,
+      "verdict": "false_positive",
+      "reason": "_chart.initialized is promise.then(() => result) where promise already ends in .catch(handleError) in initChart.ts, so it cannot reject from the Plotly setup and the onFulfilled callback only calls setChart.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "initChart.ts builds `initialized` from a promise chain that ends in .catch(handleError), so _chart.initialized in PlotlyChart.tsx cannot reject with the trivial setChart callback; no unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-35f7fb0271da56c7",
@@ -1063,9 +2073,19 @@
       "language": "typescript",
       "path": "viz-lib/src/visualizations/choropleth/hooks/useLoadGeoJson.ts",
       "message": "`promise.then` at line 21 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 21
+      "line": 21,
+      "verdict": "true_positive",
+      "reason": "cache.get returns axios.get(mapUrl).catch(() => null), so on a failed fetch the .then callback destructures ({ data }) from null and throws a TypeError that nothing handles, leaving setIsLoading(false) unreached.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "useLoadGeoJson's axios.get(mapUrl).catch(() => null) resolves to null on failure, so the floating promise.then(({ data }) => ...) destructures null, throws a TypeError, and nothing handles the rejection."
+        }
+      ]
     },
     {
       "id": "EA-f220679c3d73d923",
@@ -1073,9 +2093,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/elements/publishing/workspace-context/element-publishing.workspace-context.ts",
       "message": "`this.#loadAndProcessLastPublished` at line 447 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 447
+      "line": 447,
+      "verdict": "true_positive",
+      "reason": "#loadAndProcessLastPublished is an async method that throws 'Element workspace context is missing'/'Unique is missing' and awaits #publishingRepository.published, yet the observer callback at line 447 calls it without await or catch, while lines 135 and 372 await it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "#loadAndProcessLastPublished is async and throws 'Unique is missing' or rejects from publishingRepository.published, yet the observer callback at line 447 calls it without await or catch."
+        }
+      ]
     },
     {
       "id": "EA-1dd34c9eb077b2ff",
@@ -1083,9 +2113,19 @@
       "language": "typescript",
       "path": "src/Umbraco.Web.UI.Client/src/packages/media/media/modals/media-picker/media-picker-modal.element.ts",
       "message": "`this.#checkMediaAccess` at line 170 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 170
+      "line": 170,
+      "verdict": "true_positive",
+      "reason": "#checkMediaAccess is async and explicitly throws 'Failed to get ancestors of media item...' when requestTreeItemAncestors errors; updated() calls it without await or .catch, so that rejection is unhandled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "#checkMediaAccess is async and explicitly throws 'Failed to get ancestors of media item' when requestTreeItemAncestors errors, but updated() calls it unawaited with no catch, giving an unhandled rejection."
+        }
+      ]
     },
     {
       "id": "EA-873e72357921900d",
@@ -1093,9 +2133,19 @@
       "language": "typescript",
       "path": "warpgate-web/src/theme/index.ts",
       "message": "`loadTheme` at line 50 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 50
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "loadTheme('dark') inside setCurrentTheme's auto branch drops the promise of an async function that awaits a dynamic import('./theme.dark.scss?inline'), whose chunk-load failure would be an unhandled rejection.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "loadTheme awaits a dynamic loadThemeFile import that can reject, and the matchMedia change listener at line 50 drops the returned promise with no catch."
+        }
+      ]
     },
     {
       "id": "EA-3095e29c7174b6cc",
@@ -1103,9 +2153,19 @@
       "language": "typescript",
       "path": "warpgate-web/src/theme/index.ts",
       "message": "`loadTheme` at line 55 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 55
+      "line": 55,
+      "verdict": "true_positive",
+      "reason": "The else branch's loadTheme(theme) call discards the Promise<void> from the async loadTheme, so a failed dynamic import of the theme stylesheet goes unhandled.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "setCurrentTheme calls the async loadTheme(theme) at line 55 without await or .catch, so a failed theme-file import surfaces only as an unhandled rejection."
+        }
+      ]
     }
   ]
 }

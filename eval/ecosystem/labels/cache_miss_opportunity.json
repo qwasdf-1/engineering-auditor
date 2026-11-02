@@ -8,9 +8,19 @@
       "language": "java",
       "path": "model/storage-private/src/main/java/org/keycloak/storage/UserStorageManager.java",
       "message": "Function `getGroupMembersStream` evaluates `search.toLowerCase()` 4 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 642
+      "line": 642,
+      "verdict": "true_positive",
+      "reason": "The filter lambda in UserStorageManager.getGroupMembersStream calls search.toLowerCase() four times per user on an unchanged String, which one hoisted lowercase local would replace.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The non-exact branch in UserStorageManager lambda calls search.toLowerCase() four times on the unchanged String search, once per field."
+        }
+      ]
     },
     {
       "id": "EA-774376a140a507fb",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "server-spi/src/main/java/org/keycloak/storage/user/UserQueryMethodsProvider.java",
       "message": "Function `getGroupMembersStream` evaluates `search.toLowerCase()` 4 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 191
+      "line": 191,
+      "verdict": "true_positive",
+      "reason": "The default getGroupMembersStream in UserQueryMethodsProvider repeats search.toLowerCase() in all four contains() checks on the same unchanged search parameter.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "UserQueryMethodsProvider's filter lambda recomputes search.toLowerCase() four times on the same unchanged String, which could be hoisted."
+        }
+      ]
     },
     {
       "id": "EA-ad4f6924c389745f",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "agents-common/src/main/java/org/apache/ranger/plugin/util/PasswordUtils.java",
       "message": "Function `needsIv` evaluates `cryptoAlgo.toLowerCase()` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 177
+      "line": 177,
+      "verdict": "true_positive",
+      "reason": "needsIv evaluates cryptoAlgo.toLowerCase() three times in one return expression on an unchanged String parameter.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "needsIv calls cryptoAlgo.toLowerCase() three times on an unchanged String parameter in a single return expression."
+        }
+      ]
     },
     {
       "id": "EA-f6377fcc7f334662",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "credentialbuilder/src/main/java/org/apache/ranger/credentialapi/CredentialReader.java",
       "message": "Function `getDecryptedString` evaluates `CrendentialProviderPath.toLowerCase()` 4 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 51
+      "line": 51,
+      "verdict": "true_positive",
+      "reason": "credentialbuilder CredentialReader.getDecryptedString calls CrendentialProviderPath.toLowerCase() in four startsWith checks after the trim, with no reassignment between them.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "CredentialReader.getDecryptedString calls CrendentialProviderPath.toLowerCase() four times in one condition after its last reassignment at line 49."
+        }
+      ]
     },
     {
       "id": "EA-e8b31816db63cd64",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/DBToAzureKeyVault.java",
       "message": "Function `doExportMKToAzureKeyVault` evaluates `mKeyPass.trim()` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 149
+      "line": 149,
+      "verdict": "true_positive",
+      "reason": "doExportMKToAzureKeyVault computes mKeyPass.trim() three times in one || chain on the unchanged String from conf.get(ENCRYPTION_KEY); the KMS migration utility ships in Ranger's kms assembly.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "doExportMKToAzureKeyVault calls mKeyPass.trim() three times on an unchanged local in the validation condition (short-circuit does not change the repeated pure calls)."
+        }
+      ]
     },
     {
       "id": "EA-e35fed67048c33fc",
@@ -58,9 +108,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/DBToKeySecure.java",
       "message": "Function `doExportMKToKeySecure` evaluates `keySecureMKPassword.trim()` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 94
+      "line": 94,
+      "verdict": "true_positive",
+      "reason": "DBToKeySecure.doExportMKToKeySecure repeats keySecureMKPassword.trim() in three equals() checks on an unchanged local.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "doExportMKToKeySecure repeats keySecureMKPassword.trim() three times on an unchanged String in its guard condition."
+        }
+      ]
     },
     {
       "id": "EA-5189913de8dfe42c",
@@ -68,9 +128,19 @@
       "language": "java",
       "path": "kms/src/main/java/org/apache/hadoop/crypto/key/MigrateDBMKeyToGCP.java",
       "message": "Function `doExportMKToGcp` evaluates `mKeyPass.trim()` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 75
+      "line": 75,
+      "verdict": "true_positive",
+      "reason": "MigrateDBMKeyToGCP.doExportMKToGcp calls mKeyPass.trim() three times in the same null/empty/sentinel guard without mKeyPass changing.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "doExportMKToGcp calls mKeyPass.trim() three times on an unchanged local in a single if condition."
+        }
+      ]
     },
     {
       "id": "EA-143fab768fe3370c",
@@ -78,9 +148,19 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/credentialapi/CredentialReader.java",
       "message": "Function `getDecryptedString` evaluates `CrendentialProviderPath.toLowerCase()` 4 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 49
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "The security-admin copy of CredentialReader.getDecryptedString lowercases CrendentialProviderPath four separate times in one if condition.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The security-admin CredentialReader.getDecryptedString evaluates CrendentialProviderPath.toLowerCase() four times in one condition on an unchanged value."
+        }
+      ]
     },
     {
       "id": "EA-77e3650dbdc15b60",
@@ -88,9 +168,19 @@
       "language": "java",
       "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/config/UserGroupSyncConfig.java",
       "message": "Function `getSSLKeyStorePathPassword` evaluates `password.trim()` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 447
+      "line": 447,
+      "verdict": "true_positive",
+      "reason": "getSSLKeyStorePathPassword calls password.trim() three times in one condition on the String returned by CredentialReader.getDecryptedString, with no change in between.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getSSLKeyStorePathPassword calls password.trim() three times in one condition on a local that is not modified between calls."
+        }
+      ]
     },
     {
       "id": "EA-79a31f153da22ecb",
@@ -98,9 +188,19 @@
       "language": "java",
       "path": "ugsync/src/main/java/org/apache/ranger/unixusersync/config/UserGroupSyncConfig.java",
       "message": "Function `getSSLTrustStorePathPassword` evaluates `password.trim()` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 475
+      "line": 475,
+      "verdict": "true_positive",
+      "reason": "getSSLTrustStorePathPassword repeats password.trim() in its isEmpty/\"none\"/\"_\" checks on the same unchanged local.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "getSSLTrustStorePathPassword repeats password.trim() three times in the same condition on an unmodified local."
+        }
+      ]
     },
     {
       "id": "EA-b528aaf8bbc1ee99",
@@ -108,9 +208,19 @@
       "language": "python",
       "path": "electrum/bolt11.py",
       "message": "Function `tagged5` evaluates `len(data5)` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 113
+      "line": 113,
+      "verdict": "true_positive",
+      "reason": "tagged5 calls len(data5) three times (the assert and twice in the returned list) on an unmodified Sequence[int] parameter, matching the typed Python len case.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "tagged5 evaluates len(data5) in the assert and twice in the returned list on an unchanged Sequence parameter, matching three identical pure len calls."
+        }
+      ]
     },
     {
       "id": "EA-0cebcccfaa3f4e0f",
@@ -118,9 +228,19 @@
       "language": "python",
       "path": "testing-scripts/face_dataset.py",
       "message": "Function `degenerate_embedding_test` evaluates `len(pos)` 3 times.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 555
+      "line": 555,
+      "verdict": "false_positive",
+      "reason": "testing-scripts/face_dataset.py is a standalone face-recognition investigation script for developers, not part of the shipped Frigate service, so it is outside scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "face_dataset.py sits in frigate/testing-scripts, a dev experiment script that is not shipped, so the repeated len(pos) calls are out of scope."
+        }
+      ]
     }
   ]
 }

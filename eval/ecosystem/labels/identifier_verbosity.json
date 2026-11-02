@@ -8,9 +8,19 @@
       "language": "python",
       "path": "electrum/gui/qml/qeconfig.py",
       "message": "Function `userKnowsPressAndHold` averages 3.3 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 257
+      "line": 257,
+      "verdict": "true_positive",
+      "reason": "The userKnowsPressAndHold setter repeats the 5-word `userKnowsPressAndHold`, the 6-word `userKnowsPressAndHoldChanged`, and the 8-word `GUI_QML_USER_KNOWS_PRESS_AND_HOLD`, so a mean of about 3.3 words per identifier is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "userKnowsPressAndHold is a five-word property name repeated as getter, setter parameter and signal, averaging about 3.3 words per identifier."
+        }
+      ]
     },
     {
       "id": "EA-b474b7a7ab5ef463",
@@ -18,9 +28,19 @@
       "language": "python",
       "path": "electrum/plugins/coldcard/coldcard.py",
       "message": "Function `_encode_txin_type` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 435
+      "line": 435,
+      "verdict": "false_positive",
+      "reason": "_encode_txin_type only reaches 3.1 if Bitcoin script-type constants such as `AF_P2WPKH_P2SH` are split at their digits. Read as words (AF, P2WPKH, P2SH), its identifiers average about 2.3, so the claim depends on a mis-split.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "_encode_txin_type is a tiny dict lookup of AF_* constants; recounting its identifiers gives about 2.8-3.0 words, not above 3."
+        }
+      ]
     },
     {
       "id": "EA-207450389c65f17b",
@@ -28,9 +48,19 @@
       "language": "python",
       "path": "electrum/util.py",
       "message": "Function `__init__` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 2153
+      "line": 2153,
+      "verdict": "true_positive",
+      "reason": "NetworkRetryManager.__init__ takes and stores four 4-word names (`max_retry_delay_normal`, `init_retry_delay_urgent`, etc., plus the `_`-prefixed attributes), so the mean is above 3 words once `self` and the float annotations are set aside.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "NetworkRetryManager.__init__ repeats max/init_retry_delay_normal/urgent names (4-5 words) across parameters and attributes, giving mean above 3."
+        }
+      ]
     },
     {
       "id": "EA-b2f4233894c5a083",
@@ -38,9 +68,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "Function `get_ranger_usersync_install_properties` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 343
+      "line": 343,
+      "verdict": "true_positive",
+      "reason": "In the shipped ranger0.40 migration utility (packaged via distro/src/main/assembly/migration-util.xml), get_ranger_usersync_install_properties uses names such as `ranger_usersync_properties_from_file` and `flag_ranger_usersync_present`; I measured a mean of about 3.6 words.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ranger_usersync_install_properties (shipped migration-util in distro assembly) uses names like ranger_usersync_properties_from_file and flag_ranger_usersync_present, well over 3 words."
+        }
+      ]
     },
     {
       "id": "EA-7417aa18f0757b79",
@@ -48,9 +88,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "Function `get_hdfs_plugin_configuration` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 905
+      "line": 905,
+      "verdict": "true_positive",
+      "reason": "The 0.40 get_hdfs_plugin_configuration builds `xasecure_hdfs_security_xml_path`, `xasecure_policy_ssl_xml_path`, and `hdfs_plugin_install_properties`, averaging about 3.2 words per identifier in a shipped migration script.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_hdfs_plugin_configuration in the shipped 2.0 migration script is full of names like xasecure_hdfs_security_xml_path and hdfs_plugin_install_properties."
+        }
+      ]
     },
     {
       "id": "EA-5b0f18771eb9fa94",
@@ -58,9 +108,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "Function `get_hive_plugin_configuration` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 924
+      "line": 924,
+      "verdict": "true_positive",
+      "reason": "The 0.40 get_hive_plugin_configuration repeats `hive_plugin_install_properties`, `xasecure_hive_security_xml_path`, and `hive_server2_xml_properties`; I measured about 3.2 words per identifier, matching the claim.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_hive_plugin_configuration builds on hive_plugin_install_properties, xasecure_policy_ssl_xml_path and similar long snake_case names."
+        }
+      ]
     },
     {
       "id": "EA-edb878e7f9eca134",
@@ -68,9 +128,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "Function `get_knox_plugin_configuration` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 966
+      "line": 966,
+      "verdict": "true_positive",
+      "reason": "The 0.40 get_knox_plugin_configuration uses `xasecure_knox_security_xml_path`, `knox_plugin_install_properties`, and `flag_knox_plugin_installed` throughout, averaging about 3.26 words, consistent with the reported 3.2.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_knox_plugin_configuration chains knox_plugin_install_properties and xasecure_knox_security_xml_path, averaging 3+ words."
+        }
+      ]
     },
     {
       "id": "EA-cc81e4a8ccdc8ba5",
@@ -78,9 +148,19 @@
       "language": "python",
       "path": "migration-util/ambari2.0-hdp2.2-ranger0.40/bin/import_ranger_to_ambari.py",
       "message": "Function `get_storm_plugin_configuration` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 984
+      "line": 984,
+      "verdict": "true_positive",
+      "reason": "The 0.40 get_storm_plugin_configuration uses `xasecure_storm_security_xml_path`, `storm_plugin_install_properties`, and the copy-pasted `base_knox_conf_path`; I measured a mean of about 3.26 words.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_storm_plugin_configuration uses storm_plugin_install_properties and xasecure_storm_security_xml_path with five-plus words each."
+        }
+      ]
     },
     {
       "id": "EA-211d430abb70f29f",
@@ -88,9 +168,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `add_advanced_ranger_configurations` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 237
+      "line": 237,
+      "verdict": "true_positive",
+      "reason": "The 0.50 add_advanced_ranger_configurations has roughly 380 identifier uses dominated by `advanced_ranger_admin_site_properties` and `ranger_service_properties_from_file`, averaging about 3.2 words.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "add_advanced_ranger_configurations declares advanced_ranger_admin_site_properties, ranger_service_properties_from_file and similar multi-word names."
+        }
+      ]
     },
     {
       "id": "EA-68834852b59407c2",
@@ -98,9 +188,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_ranger_usersync_install_properties` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 713
+      "line": 713,
+      "verdict": "true_positive",
+      "reason": "The 0.50 copy of get_ranger_usersync_install_properties repeats `ranger_usersync_current_dir`, `ranger_usersync__installed_version`, and `ranger_usersync_properties_from_file`, averaging about 3.6 words per identifier.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ranger_usersync_install_properties in the 2.1 migration script repeats ranger_usersync_properties_from_file and flag_ranger_usersync_present."
+        }
+      ]
     },
     {
       "id": "EA-4c836573833420a2",
@@ -108,9 +208,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_hdfs_plugin_configuration` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1790
+      "line": 1790,
+      "verdict": "true_positive",
+      "reason": "The 0.50 get_hdfs_plugin_configuration repeats `hdfs_plugin_install_properties` and `ranger_audit_xml_path`-style 4-word path variables, giving a measured mean of about 3.2 words.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_hdfs_plugin_configuration in the 2.1 script uses ranger_hdfs_security_xml_path and hdfs_plugin_install_properties, over 3 words on average."
+        }
+      ]
     },
     {
       "id": "EA-551d88d459acec73",
@@ -118,9 +228,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_yarn_plugin_configuration` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1809
+      "line": 1809,
+      "verdict": "true_positive",
+      "reason": "get_yarn_plugin_configuration uses `ranger_yarn_audit_properties_path`, `yarn_plugin_installed_properties`, and `flag_yarn_plugin_installed`, which I measured at about 3.25 words per identifier.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_yarn_plugin_configuration uses ranger_yarn_security_properties_path and yarn_plugin_installed_properties, averaging above 3 words."
+        }
+      ]
     },
     {
       "id": "EA-a15e5ecc5d0ce623",
@@ -128,9 +248,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_hive_plugin_configuration` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1828
+      "line": 1828,
+      "verdict": "true_positive",
+      "reason": "The 0.50 get_hive_plugin_configuration (conf.server path) uses `hive_server2_xml_properties`, `hive_plugin_install_properties`, and `ranger_audit_xml_path`, averaging about 3.2 words.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_hive_plugin_configuration uses hive_plugin_install_properties and ranger_hive_security_xml_path, genuinely long names."
+        }
+      ]
     },
     {
       "id": "EA-b68c0b64a31c0f40",
@@ -138,9 +268,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_hbase_plugin_configuration` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1884
+      "line": 1884,
+      "verdict": "true_positive",
+      "reason": "get_hbase_plugin_configuration in the 0.50 utility repeats `hbase_plugin_install_properties` and `hbase_site_xml_properties`, which I measured at about 3.2 words per identifier.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_hbase_plugin_configuration is dominated by hbase_plugin_install_properties and ranger_hbase_security_xml_path."
+        }
+      ]
     },
     {
       "id": "EA-513b8051187f00cf",
@@ -148,9 +288,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_knox_plugin_configuration` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1903
+      "line": 1903,
+      "verdict": "true_positive",
+      "reason": "The 0.50 get_knox_plugin_configuration uses `ranger_knox_security_xml_path` and `knox_plugin_install_properties` repeatedly; I measured about 3.26 words, matching the reported 3.2.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_knox_plugin_configuration (2.1) uses ranger_knox_security_xml_path and knox_plugin_install_properties repeatedly."
+        }
+      ]
     },
     {
       "id": "EA-a7137f7d64f52e7c",
@@ -158,9 +308,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_storm_plugin_configuration` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1921
+      "line": 1921,
+      "verdict": "true_positive",
+      "reason": "The 0.50 get_storm_plugin_configuration uses `ranger_storm_security_xml_path`, `base_storm_conf_path`, and `storm_plugin_install_properties`, averaging about 3.26 words per identifier.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_storm_plugin_configuration (2.1) uses storm_plugin_install_properties and ranger_storm_security_xml_path throughout."
+        }
+      ]
     },
     {
       "id": "EA-65cc7ec20b15e933",
@@ -168,9 +328,19 @@
       "language": "python",
       "path": "migration-util/ambari2.1-hdp2.3-ranger0.50/bin/import_ranger_to_ambari.py",
       "message": "Function `get_kafka_plugin_configuration` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1965
+      "line": 1965,
+      "verdict": "true_positive",
+      "reason": "get_kafka_plugin_configuration repeats `ranger_kafka_security_xml_path` and `kafka_plugin_install_properties`; I measured a mean of about 3.17 words, consistent with the reported 3.1.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_kafka_plugin_configuration uses kafka_plugin_install_properties and ranger_policymgr_ssl_xml_path, averaging over 3 words."
+        }
+      ]
     },
     {
       "id": "EA-ac223b607f7c5121",
@@ -178,9 +348,19 @@
       "language": "python",
       "path": "corporate/lib/stripe.py",
       "message": "Function `get_audit_log_event` averages 3.7 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 5077
+      "line": 5077,
+      "verdict": "true_positive",
+      "reason": "get_audit_log_event is an if/elif ladder of names such as `BillingSessionEventType.SPONSORSHIP_PENDING_STATUS_CHANGED` and `AuditLogEventType.REMOTE_SERVER_SPONSORSHIP_APPROVED`, so its identifier mean of about 3.5\u20133.7 words is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_audit_log_event repeats long BillingSessionEventType/AuditLogEventType members like SPONSORSHIP_PENDING_STATUS_CHANGED; my recount gives about 3.5-3.6 words."
+        }
+      ]
     },
     {
       "id": "EA-3ff0168159ee1e9b",
@@ -188,9 +368,19 @@
       "language": "python",
       "path": "corporate/views/portico.py",
       "message": "Function `remote_realm_customer_portal` averages 3.3 words per identifier (> 3).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 457
+      "line": 457,
+      "verdict": "true_positive",
+      "reason": "remote_realm_customer_portal passes `return_to_billing_page`, `setup_payment_by_invoice`, and `review_billing_information_url` to `get_stripe_customer_portal_url`; excluding annotation types, the mean is just over 3 words.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "remote_realm_customer_portal recounts to roughly 2.5-2.7 words per identifier because of short names like request, tier and HttpRequest, below the 3 threshold."
+        }
+      ]
     },
     {
       "id": "EA-2a3190bb50eb7e1c",
@@ -198,9 +388,19 @@
       "language": "python",
       "path": "zerver/data_import/rocketchat.py",
       "message": "Function `convert_direct_message_group_data` averages 3.3 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 362
+      "line": 362,
+      "verdict": "true_positive",
+      "reason": "convert_direct_message_group_data's parameter `direct_message_group_id_to_direct_message_group_map` alone is 9 words, and `rc_direct_message_group_id` and `direct_message_group_id_mapper` push the mean above 3.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "convert_direct_message_group_data is built from direct_message_group_id_to_direct_message_group_map and similar 5-9 word names."
+        }
+      ]
     },
     {
       "id": "EA-fdce521464374996",
@@ -208,9 +408,19 @@
       "language": "python",
       "path": "zerver/lib/email_mirror.py",
       "message": "Function `is_missed_message_address` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 106
+      "line": 106,
+      "verdict": "true_positive",
+      "reason": "is_missed_message_address is short but dominated by the 4-word function name and the 7-word callee `get_email_gateway_message_string_from_address`, so a mean of about 3.2 words per identifier holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "is_missed_message_address pairs with get_email_gateway_message_string_from_address and is_mm_32_format, pushing a 10-identifier body above 3 words."
+        }
+      ]
     },
     {
       "id": "EA-7d86abd690b0b157",
@@ -218,9 +428,19 @@
       "language": "python",
       "path": "zerver/lib/exceptions.py",
       "message": "Function `__init__` averages 3.7 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 655
+      "line": 655,
+      "verdict": "true_positive",
+      "reason": "This exception __init__ takes and stores `first_message_id_allowed_to_move` (6 words), `total_messages_allowed_to_move`, and `total_messages_in_topic`, so the 3.7 mean is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "MoveMessagesPermission __init__ repeats first_message_id_allowed_to_move and total_messages_allowed_to_move (5-6 words) as params and attributes."
+        }
+      ]
     },
     {
       "id": "EA-928c0bd646061537",
@@ -228,9 +448,19 @@
       "language": "python",
       "path": "zerver/lib/push_notifications.py",
       "message": "Function `get_payload_to_encrypt` averages 3.8 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 1334
+      "line": 1334,
+      "verdict": "true_positive",
+      "reason": "The nested get_payload_to_encrypt binds `payload_data_to_encrypt` from `get_remove_payload_data_to_encrypt` (6 words) alongside `truncated_message_ids`; the identifier mean of about 3.8 is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_payload_to_encrypt is a nested closure whose few identifiers (payload_data_to_encrypt, get_remove_payload_data_to_encrypt, truncated_message_ids) are long."
+        }
+      ]
     },
     {
       "id": "EA-33cde7af5bb6800f",
@@ -238,9 +468,19 @@
       "language": "python",
       "path": "zerver/lib/streams.py",
       "message": "Function `validate_can_create_topic_group_setting_for_protected_history_streams` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 162
+      "line": 162,
+      "verdict": "true_positive",
+      "reason": "The function name itself is 11 words, and its parameters and calls (`history_public_to_subscribers`, `get_default_value_for_history_public_to_subscribers`) keep the mean above 3.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "The function name validate_can_create_topic_group_setting_for_protected_history_streams plus history_public_to_subscribers and system_groups_name_dict are very long."
+        }
+      ]
     },
     {
       "id": "EA-5a0aaf8438eecb5f",
@@ -248,9 +488,19 @@
       "language": "python",
       "path": "zerver/lib/streams.py",
       "message": "Function `get_default_value_for_history_public_to_subscribers` averages 3.6 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 190
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "get_default_value_for_history_public_to_subscribers (8 words) mostly reassigns the 4-word `history_public_to_subscribers`, so a mean of 3.6 words per identifier is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_default_value_for_history_public_to_subscribers repeats history_public_to_subscribers, giving a mean near 3.6 words."
+        }
+      ]
     },
     {
       "id": "EA-1f046765c1b9986f",
@@ -258,9 +508,19 @@
       "language": "python",
       "path": "zerver/lib/streams.py",
       "message": "Function `get_user_ids_with_metadata_access_via_permission_groups` averages 3.4 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 344
+      "line": 344,
+      "verdict": "true_positive",
+      "reason": "This 8-word function calls the 10-word `get_users_dict_with_metadata_access_to_streams_via_permission_groups` and binds `users_with_metadata_access_dict`, so the 3.4 mean holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "get_user_ids_with_metadata_access_via_permission_groups and users_with_metadata_access_dict in a 13-identifier body average above 3 words."
+        }
+      ]
     },
     {
       "id": "EA-9eb35580b6b912f7",
@@ -268,9 +528,19 @@
       "language": "python",
       "path": "zerver/lib/subscription_info.py",
       "message": "Function `build_stream_dict_for_never_sub` averages 3.5 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 374
+      "line": 374,
+      "verdict": "true_positive",
+      "reason": "build_stream_dict_for_never_sub unpacks `raw_stream_dict` into dozens of locals such as `history_public_to_subscribers` and `can_remove_subscribers_group`, which I measured at about 3.5 words per identifier.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "build_stream_dict_for_never_sub reads many long locals like history_public_to_subscribers and message_retention_days; over 130 identifiers average about 3.5."
+        }
+      ]
     },
     {
       "id": "EA-415e7b55b7a393db",
@@ -278,9 +548,19 @@
       "language": "python",
       "path": "zerver/lib/subscription_info.py",
       "message": "Function `has_metadata_access_to_previously_subscribed_stream` averages 3.5 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 771
+      "line": 771,
+      "verdict": "true_positive",
+      "reason": "has_metadata_access_to_previously_subscribed_stream takes `can_administer_channel_group_id`, `can_add_subscribers_group_id`, and `user_recursive_group_ids` and compares them repeatedly, so the mean above 3 words holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "has_metadata_access_to_previously_subscribed_stream takes can_administer_channel_group_id and can_add_subscribers_group_id parameters, mean above 3."
+        }
+      ]
     },
     {
       "id": "EA-75e16d305cfdf2be",
@@ -288,9 +568,19 @@
       "language": "python",
       "path": "zerver/migrations/0490_renumber_options_desktop_icon_count_display.py",
       "message": "Function `reverse_code` averages 3.1 words per identifier (> 3).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "a8-a",
-      "line": 38
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "reverse_code in this hand-written data migration (shipped with Zulip) repeatedly uses `desktop_icon_count_display` and constants such as `OLD_DESKTOP_ICON_COUNT_DISPLAY_DM_MENTION`, so a mean of about 3.1 words is correct.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "reverse_code recounts to about 2.7-3.0 words per identifier since the body is mostly short objects/filter/update calls plus a few constants, so it does not exceed 3."
+        }
+      ]
     },
     {
       "id": "EA-f06e25166cd9ede3",
@@ -298,9 +588,19 @@
       "language": "python",
       "path": "zerver/models/alert_words.py",
       "message": "Function `flush_realm_alert_words` averages 3.2 words per identifier (> 3).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 28
+      "line": 28,
+      "verdict": "true_positive",
+      "reason": "flush_realm_alert_words calls `realm_alert_words_cache_key` and `realm_alert_words_automaton_cache_key` (6 words) with `realm_id`; that gives about 25 words over 8 names, or 3.1, matching the claim.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "flush_realm_alert_words with realm_alert_words_automaton_cache_key in an 8-identifier body averages above 3 words."
+        }
+      ]
     }
   ]
 }

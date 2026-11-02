@@ -8,9 +8,19 @@
       "language": "go",
       "path": "internal/commands/debug.go",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 335",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 335
+      "line": 335,
+      "verdict": "false_positive",
+      "reason": "`MinVersion: tls.VersionSSL30` is in the `authelia debug tls` diagnostic probe, which sets InsecureSkipVerify and only reports what the server negotiates; no data relies on this connection's security.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The `tls.VersionSSL30` minimum in authelia's `debug tls` command is a diagnostic probe with InsecureSkipVerify that reports what the server negotiates; no security relies on it."
+        }
+      ]
     },
     {
       "id": "EA-f9fa73c0f08aeb3d",
@@ -18,9 +28,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/net/SSLHandlerTrustStoreImpl.java",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 190",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 190
+      "line": 190,
+      "verdict": "true_positive",
+      "reason": "Adjudicated (arbiter): When forceTLS12 is off, createTrustStoreSslContext calls `SSLContext.getInstance(\"SSL\")`. Asking for the legacy SSL protocol name is exactly the Java arm the contract documents, and protocol safety is then left to the JDK's disabledAlgorithms settings.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`SSLContext.getInstance(\"SSL\")` is used in createTrustStoreSslContext when TLS 1.2 is not forced, for connections validated with the configured trust managers, so a legacy context name governs real protocol negotiation."
+        }
+      ]
     },
     {
       "id": "EA-b252035fab815b14",
@@ -28,9 +48,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/impl/net/SSLHandlerTrustStoreImpl.java",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 226",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 226
+      "line": 226,
+      "verdict": "false_positive",
+      "reason": "`SSLContext.getInstance(\"SSL\")` in createNonValidatingSslSocketFactory picks the JSSE alias for the TLS context with default enabled protocols; the real weakness here is the non-validating trust manager, not a protocol version.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "`createNonValidatingSslSocketFactory` pairs the \"SSL\" context with NON_VALIDATING_TRUST_MANAGERS, an explicit trust-all factory where no security depends on the protocol name."
+        }
+      ]
     },
     {
       "id": "EA-fba3cc8c8679e8be",
@@ -38,9 +68,19 @@
       "language": "java",
       "path": "adapters/saml/core/src/main/java/org/keycloak/adapters/cloned/HttpClientBuilder.java",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 263",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 263
+      "line": 263,
+      "verdict": "false_positive",
+      "reason": "In the keycloak SAML HttpClientBuilder, `SSLContext.getInstance(\"SSL\")` under disableTrustManager returns the standard JSSE TLS context with default protocols; no SSLv3/TLS1.0 version is configured.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "HttpClientBuilder only uses \"SSL\" in the disableTrustManager branch with PassthroughTrustManager and AllowAllHostnameVerifier, a deliberately unverified client where protocol strength is not relied on."
+        }
+      ]
     },
     {
       "id": "EA-038fad63ef30bba1",
@@ -48,9 +88,19 @@
       "language": "java",
       "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 151",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 151
+      "line": 151,
+      "verdict": "false_positive",
+      "reason": "SSLContextManager's constructor uses `SSLContext.getInstance(\"SSL\")` for `_noClientCertContext`, which in JSSE yields the TLS context with JDK-default protocols, not SSLv3.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The SSLContextManager constructor creates the \"SSL\" context with `_trustAllCerts`, a trust-everything context for ZAP's proxy, so protocol strength is not a security dependency."
+        }
+      ]
     },
     {
       "id": "EA-e51c510f790398c0",
@@ -58,9 +108,19 @@
       "language": "java",
       "path": "zap/src/main/java/ch/csnc/extension/httpclient/SSLContextManager.java",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 533",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 533
+      "line": 533,
+      "verdict": "false_positive",
+      "reason": "`sc = SSLContext.getInstance(\"SSL\")` in SSLContextManager's key-unlock path is the JSSE \"SSL\" alias for the default TLS context; no protocol version below TLS 1.2 is enabled by it.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "false_positive",
+          "reason": "The context at line 533 is initialised with `_trustAllCerts` and only an alias key manager for client certificates, so the \"SSL\" name does not carry security the rule protects."
+        }
+      ]
     },
     {
       "id": "EA-ba14fa88373a835f",
@@ -128,9 +188,19 @@
       "language": "rust",
       "path": "warpgate-protocol-rdp/src/client/tls.rs",
       "message": "SSL/TLS with deprecated protocol version (Bandit B502) at line 243",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 243
+      "line": 243,
+      "verdict": "true_positive",
+      "reason": "upgrade_openssl_unsafe calls `set_min_proto_version(Some(SslVersion::TLS1))` with the legacy provider and an unsafe cipher list, so warpgate's RDP client accepts TLS 1.0 to targets; it is intentional legacy support but the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-sonnet-5-5",
+          "verdict": "true_positive",
+          "reason": "`upgrade_openssl_unsafe` sets min protocol TLS1 together with OPENSSL_UNSAFE_CIPHER_LIST and the legacy provider, deliberately enabling deprecated TLS 1.0 for RDP targets, so the claim holds."
+        }
+      ]
     }
   ]
 }
