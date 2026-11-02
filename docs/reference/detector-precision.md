@@ -730,7 +730,7 @@ return silently.
 | `naming_convention` | Constants with digits (`BASE64_VALUE_INVALID`, jackson-core) | Digits are allowed in UPPER_SNAKE_CASE |
 | `too_many_parameters` | Lambda and function-pointer parameters attributed to the enclosing function (Polly, libuv) | Only the function's own signature counts |
 | all (C++) | `class YAML_CPP_API Emitter {` parsed as a function definition spanning the class | Export macros are blanked before parsing |
-| all | Generated files without a generated path (fastify `config-validator.js`, zlib `crc32.h`); `thirdparty/`, `snippets/`, `fuzz/`, `maven-tests/`, `profiling/` paths | Generated-file notices are read in every language; those paths get vendored, example, test, and benchmark roles |
+| all | Generated files without a generated path (fastify `config-validator.js`, zlib `crc32.h`); `thirdparty/`, `snippets/`, `fuzz/`, `maven-tests/`, `profiling/` paths | Generated-file notices in comments are read in every language; those paths get vendored, example, test, and benchmark roles |
 | `magic_literal_cluster` | Prose lines of multi-line `/* .. */` comments (commons-lang) | Block comments are masked |
 | all | Java package `tools.jackson` read as a tooling directory; `single_include/` amalgamations (nlohmann/json) duplicating their sources | Packages below a JVM source root are not tooling directories; `single_include/` and `amalgamation/` are generated |
 | `too_many_returns` | Returns inside lambdas and closures credited to the enclosing function | They belong to the closure |

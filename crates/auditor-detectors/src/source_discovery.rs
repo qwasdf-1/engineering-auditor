@@ -10,7 +10,7 @@ use crate::util;
 mod classification;
 use classification::{
     header_is_cpp, is_generated_output, is_reference_path, is_test_class_file, is_test_project,
-    layout_components,
+    layout_components, LinguistAttributes,
 };
 
 const SKIP_DIR_NAMES: &[&str] = &[
@@ -319,7 +319,7 @@ pub(crate) fn discover_audited_files_with_filter(
     filter: &ScopeFilter,
 ) -> io::Result<Vec<AuditedFile>> {
     let mut files = Vec::new();
-    let attributes = classification::LinguistAttributes::load(root);
+    let attributes = LinguistAttributes::load(root);
     let filter_root = root.to_path_buf();
     let mut walker = ignore::WalkBuilder::new(root);
     walker
@@ -364,7 +364,7 @@ fn audited_file(
     root: &Path,
     path: PathBuf,
     bytes: u64,
-    attributes: &classification::LinguistAttributes,
+    attributes: &LinguistAttributes,
 ) -> Option<AuditedFile> {
     let relative = path.strip_prefix(root).unwrap_or(&path).to_path_buf();
     let Some(language) = language_for_path(&path) else {
