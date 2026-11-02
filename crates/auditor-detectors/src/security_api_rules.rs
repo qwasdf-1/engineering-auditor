@@ -43,6 +43,7 @@ use crate::rust_api_rules::{
 use crate::security_random_context::{random_use, RandomUse};
 use crate::security_random_helpers::{caller_findings, RandomHelpers};
 use crate::security_rules::{rule_finding, Rule};
+use crate::security_yaml_loaders::YamlLoaders;
 use crate::structure_index::StructureIndex;
 use crate::{util, AuditorConfig, Language};
 use auditor_core::Finding;
@@ -113,15 +114,16 @@ const SSH_NO_HOST_KEY_VERIFICATION: Rule = Rule {
 };
 
 pub(crate) fn unsafe_deserialization_findings(
-    scan: AstScan<'_, '_>,
+    mut scan: AstScan<'_, '_>,
     _config: &AuditorConfig,
 ) -> Vec<Finding> {
-    call_findings(
+    let loaders = YamlLoaders::collect(scan.reborrow());
+    call_findings_where(
         scan,
         UNSAFE_DESERIALIZATION,
         |callee, call| match callee {
             "pickle.loads" | "pickle.load" => true,
-            "yaml.load" => !has_safe_yaml_loader(call),
+            "yaml.load" => !loaders.names_safe_loader(call),
             _ => false,
         },
         &[
@@ -131,15 +133,8 @@ pub(crate) fn unsafe_deserialization_findings(
             (Language::Kotlin, kotlin_unsafe_deserialization),
             (Language::CSharp, csharp_unsafe_deserialization),
         ],
+        |path, call| !loaders.is_ruamel_load(path, call),
     )
-}
-
-/// `yaml.load(.., Loader=yaml.SafeLoader)` and the C and base loaders
-/// construct only plain values (Bandit B506 exempts them).
-fn has_safe_yaml_loader(call: &str) -> bool {
-    ["SafeLoader", "CSafeLoader", "BaseLoader"]
-        .iter()
-        .any(|loader| util::count_word(call, loader) > 0)
 }
 
 pub(crate) fn bind_all_interfaces_findings(

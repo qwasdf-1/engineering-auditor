@@ -457,6 +457,61 @@ mod tests {
     }
 
     #[test]
+    fn yaml_load_with_a_repository_safe_loader_subclass_is_not_unsafe_deserialization() {
+        let root = temp_root("yaml_subclass");
+        let files = [
+            make_file(
+                &root,
+                "src/common.py",
+                "import yaml\n\nclass UniqueKeyLoader(yaml.SafeLoader):\n    pass\n\nclass StrictLoader(UniqueKeyLoader):\n    pass\n\ndef _unique(loader, node, deep=False):\n    return loader.construct_mapping(node, deep=deep)\n\nUniqueKeyLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _unique)\n\nclass ObjectLoader(yaml.SafeLoader):\n    pass\n\nObjectLoader.add_multi_constructor(\"tag:yaml.org,2002:python/object\", yaml.constructor.UnsafeConstructor.construct_python_object)\n\nclass Loader(yaml.SafeLoader):\n    pass\n",
+            ),
+            make_file(
+                &root,
+                "src/profiles.py",
+                "import yaml\nfrom common import ObjectLoader, StrictLoader, UniqueKeyLoader\n\na = yaml.load(stream, Loader=UniqueKeyLoader)\nb = yaml.load(stream, Loader=StrictLoader)\nc = yaml.load(stream, Loader=ObjectLoader)\nd = yaml.load(stream, Loader=yaml.Loader)\ne = yaml.load(stream, Loader=yaml.FullLoader)\n",
+            ),
+        ];
+        let cache = util::FileCache::new(&files);
+        let lines = security_findings(&files, &cache, &AuditorConfig::default())
+            .into_iter()
+            .filter(|finding| finding.detector == "unsafe_deserialization")
+            .filter_map(|finding| finding.locations.first().and_then(|location| location.line))
+            .collect::<Vec<_>>();
+        assert_eq!(lines, [6, 7, 8]);
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn yaml_load_on_a_ruamel_round_trip_instance_is_not_unsafe_deserialization() {
+        let root = temp_root("yaml_ruamel");
+        let files = [
+            make_file(
+                &root,
+                "src/round_trip.py",
+                "from ruamel.yaml import YAML\n\nyaml = YAML()\n\ndef read(stream):\n    return yaml.load(stream)\n",
+            ),
+            make_file(
+                &root,
+                "src/safe.py",
+                "import ruamel.yaml\n\nyaml = ruamel.yaml.YAML(typ=\"safe\", pure=True)\ndata = yaml.load(stream)\n",
+            ),
+            make_file(
+                &root,
+                "src/unsafe.py",
+                "from ruamel.yaml import YAML\n\nyaml = YAML(typ=\"unsafe\")\ndata = yaml.load(stream)\n",
+            ),
+        ];
+        let cache = util::FileCache::new(&files);
+        let paths = security_findings(&files, &cache, &AuditorConfig::default())
+            .into_iter()
+            .filter(|finding| finding.detector == "unsafe_deserialization")
+            .filter_map(|finding| finding.locations.first().map(|location| location.path.clone()))
+            .collect::<Vec<_>>();
+        assert_eq!(paths, ["src/unsafe.py"]);
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn sql_injection_detects_f_string_concat() {
         let root = temp_root("sqli");
         let file = make_file(&root, "src/db.go", "selectQuery, err := db.Query(fmt.Sprintf(\"SELECT * FROM users WHERE id = %s\", user_id))\n");

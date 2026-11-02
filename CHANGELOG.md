@@ -82,6 +82,12 @@
   and the sort, traversal, format, regex, unreachable-code, duplicate-import,
   and bind-address rules skip loop headers, per-item receivers, used sort
   orders, X-macro re-includes, and multicast interface selection.
+- `unsafe_deserialization` reads a PyYAML loader the repository derives
+  from `SafeLoader`, `CSafeLoader`, or `BaseLoader` as safe, unless the
+  repository registers a `python/` tag constructor on it, and skips
+  `yaml.load` on a ruamel.yaml `YAML()` instance whose loader is the
+  default round-trip, `safe`, or `base` one. A downstream report and six
+  corpus labels showed both shapes.
 - Source roles: Bower and `third/` trees are vendored, `devops/` is
   tooling, `testsuite/`, `unittest/`, and `*-suites/` trees and Go
   `testutil`/`testenv` helpers are test code, Browserify bundles are
