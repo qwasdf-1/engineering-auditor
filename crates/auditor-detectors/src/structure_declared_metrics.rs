@@ -1,5 +1,6 @@
-//! Function metrics for grammars whose semantic facts do not normalize them:
-//! Kotlin (locals are `val`/`var` properties and loop variables, a return is
+//! Function metrics: locals, returns, and statements counted from semantic
+//! facts, with a switch whose arms each only return counted as one exit;
+//! then, for grammars whose semantic facts do not normalize them, Kotlin (locals are `val`/`var` properties and loop variables, a return is
 //! a `return` jump, all of a dispatch switch's arms one, and statements are the entries of `statements` blocks)
 //! and C/C++ (locals are the declarators of `declaration`s). Nested
 //! functions and lambdas count toward their own owners, not the enclosing
@@ -9,7 +10,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use auditor_ast::{AstNode, SymbolKind};
 
-use super::{StructureFunctionMetrics, StructureSymbol};
+use super::{nearest_function_owner, StructureFunctionMetrics, StructureSymbol};
 use crate::Language;
 
 const NESTED: &[&str] = &[
@@ -19,6 +20,51 @@ const NESTED: &[&str] = &[
     "anonymous_function",
     "lambda_expression",
 ];
+
+pub(super) fn collect_function_metrics(
+    symbols: &[StructureSymbol],
+    facts: &auditor_ast::SemanticFileFacts,
+) -> BTreeMap<u32, StructureFunctionMetrics> {
+    let mut metrics = symbols
+        .iter()
+        .enumerate()
+        .filter(|(_, symbol)| matches!(symbol.kind, SymbolKind::Function | SymbolKind::Method))
+        .map(|(index, _)| (index as u32, StructureFunctionMetrics::default()))
+        .collect::<BTreeMap<_, _>>();
+    for symbol in symbols
+        .iter()
+        .filter(|symbol| symbol.kind == SymbolKind::Variable)
+    {
+        if let Some(metric) =
+            nearest_function_owner(symbols, symbol.parent).and_then(|owner| metrics.get_mut(&owner))
+        {
+            metric.locals += 1;
+        }
+    }
+    // A switch whose arms each only return is one exit, however many arms.
+    let mut dispatches = BTreeSet::new();
+    for fact in facts.returns.iter() {
+        let Some(owner) = nearest_function_owner(symbols, fact.owner) else {
+            continue;
+        };
+        if let Some(metric) = metrics.get_mut(&owner) {
+            if fact
+                .dispatch
+                .is_none_or(|switch| dispatches.insert((owner, switch)))
+            {
+                metric.returns += 1;
+            }
+        }
+    }
+    for fact in facts.statements.iter() {
+        if let Some(metric) =
+            nearest_function_owner(symbols, fact.owner).and_then(|owner| metrics.get_mut(&owner))
+        {
+            metric.statements += 1;
+        }
+    }
+    metrics
+}
 
 pub(super) fn count_declared_metrics(
     language: &Language,

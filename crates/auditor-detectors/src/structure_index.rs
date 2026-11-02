@@ -23,15 +23,19 @@ mod loops;
 mod operands;
 #[path = "structure_spans.rs"]
 mod spans;
+#[path = "structure_value_uses.rs"]
+mod value_uses;
 use build::build_structure_file;
+use declared_metrics::collect_function_metrics;
 #[cfg(test)]
 use imports::normalize_path;
 use imports::{first_quoted, import_bindings, parse_import, resolve_imports};
 use spans::{
-    c_value_references, import_has_documented_reason, module_name, python_guarded_import_spans,
-    python_memoized_spans, python_overload_spans, python_type_checking_spans,
-    rust_associated_spans, rust_implicitly_used_spans, rust_test_spans,
+    import_has_documented_reason, module_name, python_guarded_import_spans, python_memoized_spans,
+    python_overload_spans, python_type_checking_spans, rust_associated_spans,
+    rust_implicitly_used_spans, rust_test_spans,
 };
+use value_uses::c_value_references;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) enum ReferenceResolution {
@@ -414,51 +418,6 @@ fn resolve_reference(
         return ReferenceResolution::Referenced;
     }
     ReferenceResolution::Unresolved
-}
-
-fn collect_function_metrics(
-    symbols: &[StructureSymbol],
-    facts: &auditor_ast::SemanticFileFacts,
-) -> BTreeMap<u32, StructureFunctionMetrics> {
-    let mut metrics = symbols
-        .iter()
-        .enumerate()
-        .filter(|(_, symbol)| matches!(symbol.kind, SymbolKind::Function | SymbolKind::Method))
-        .map(|(index, _)| (index as u32, StructureFunctionMetrics::default()))
-        .collect::<BTreeMap<_, _>>();
-    for symbol in symbols
-        .iter()
-        .filter(|symbol| symbol.kind == SymbolKind::Variable)
-    {
-        if let Some(metric) =
-            nearest_function_owner(symbols, symbol.parent).and_then(|owner| metrics.get_mut(&owner))
-        {
-            metric.locals += 1;
-        }
-    }
-    // A switch whose arms each only return is one exit, however many arms.
-    let mut dispatches = BTreeSet::new();
-    for fact in facts.returns.iter() {
-        let Some(owner) = nearest_function_owner(symbols, fact.owner) else {
-            continue;
-        };
-        if let Some(metric) = metrics.get_mut(&owner) {
-            if fact
-                .dispatch
-                .is_none_or(|switch| dispatches.insert((owner, switch)))
-            {
-                metric.returns += 1;
-            }
-        }
-    }
-    for fact in facts.statements.iter() {
-        if let Some(metric) =
-            nearest_function_owner(symbols, fact.owner).and_then(|owner| metrics.get_mut(&owner))
-        {
-            metric.statements += 1;
-        }
-    }
-    metrics
 }
 
 /// The module of the nearest `go.mod` above a Go file, cached per directory.

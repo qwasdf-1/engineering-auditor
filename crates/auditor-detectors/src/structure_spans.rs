@@ -1,125 +1,12 @@
 //! Per-language source spans and names the structure index attaches to
 //! symbols and imports: Rust test, impl, and attribute-bound items, Python
 //! `@overload` stubs and guarded imports, and the module a file's items are
-//! qualified with; and the C/C++ names a file uses as values.
+//! qualified with.
 
-use std::collections::BTreeSet;
-
-use auditor_ast::{AstNode, SourceSpan};
+use auditor_ast::SourceSpan;
 
 use crate::ast_scan;
 use crate::Language;
-
-/// The names a C or C++ file uses as values: an identifier that is neither
-/// the function position of a call nor a name being declared. A function so
-/// used (a callback argument, a dispatch-table entry, `return name;`,
-/// `&name`) has the signature of the function-pointer type it is used as.
-pub(super) fn c_value_references(
-    file: &crate::AuditedFile,
-    tree: &auditor_ast::AstTree,
-) -> BTreeSet<String> {
-    if !matches!(file.language, Language::C | Language::Cpp) {
-        return BTreeSet::new();
-    }
-    let mut names = ast_scan::nodes_of_kind(tree.root_node(), &["identifier"])
-        .into_iter()
-        .filter(|identifier| is_value_use(*identifier))
-        .map(|identifier| identifier.text().to_string())
-        .collect::<BTreeSet<_>>();
-    // A declaration quarantined for a syntax error is not in the tree, so
-    // its uses are read from its code: an identifier not followed by `(`.
-    for quarantined in tree.quarantined() {
-        names.extend(uncalled_identifiers(&c_code(&quarantined.text)));
-    }
-    names
-}
-
-/// `text` with its comments, string and character literals, and
-/// preprocessor lines blanked, so a name in `/* see f */` is not a use.
-fn c_code(text: &str) -> String {
-    let mut code = String::with_capacity(text.len());
-    let mut chars = text.chars().peekable();
-    let mut line_start = true;
-    while let Some(ch) = chars.next() {
-        let skip_to = match (ch, chars.peek()) {
-            ('#', _) if line_start => Some("\n"),
-            ('/', Some('/')) => Some("\n"),
-            ('/', Some('*')) => Some("*/"),
-            ('"', _) => Some("\""),
-            ('\'', _) => Some("'"),
-            _ => None,
-        };
-        if !ch.is_whitespace() {
-            line_start = false;
-        }
-        let Some(end) = skip_to else {
-            line_start |= ch == '\n';
-            code.push(ch);
-            continue;
-        };
-        if ch == '/' {
-            chars.next();
-        }
-        let mut previous = ' ';
-        while let Some(next) = chars.next() {
-            let escaped = previous == '\\' && matches!(ch, '"' | '\'');
-            if !escaped && (end.ends_with(next) && (end.len() == 1 || previous == '*')) {
-                break;
-            }
-            previous = if escaped { ' ' } else { next };
-        }
-        code.push(if end == "\n" { '\n' } else { ' ' });
-        line_start = end == "\n";
-    }
-    code
-}
-
-fn uncalled_identifiers(text: &str) -> BTreeSet<String> {
-    let is_word = |byte: u8| byte.is_ascii_alphanumeric() || byte == b'_';
-    let bytes = text.as_bytes();
-    let mut names = BTreeSet::new();
-    let mut start = 0;
-    while start < bytes.len() {
-        if !is_word(bytes[start]) {
-            start += 1;
-            continue;
-        }
-        let end = bytes[start..]
-            .iter()
-            .position(|byte| !is_word(*byte))
-            .map_or(bytes.len(), |length| start + length);
-        if !bytes[start].is_ascii_digit() && !text[end..].trim_start().starts_with('(') {
-            names.insert(text[start..end].to_string());
-        }
-        start = end;
-    }
-    names
-}
-
-fn is_value_use(identifier: AstNode<'_>) -> bool {
-    // `Type::name` is one expression: judge its outermost qualifier.
-    let mut node = identifier;
-    while let Some(parent) = node.parent() {
-        if parent.kind() != "qualified_identifier" {
-            break;
-        }
-        node = parent;
-    }
-    let Some(parent) = node.parent() else {
-        return true;
-    };
-    let is_field = |field: &str| {
-        parent
-            .child_by_field_name(field)
-            .is_some_and(|child| child == node)
-    };
-    let declared = is_field("declarator")
-        || parent.kind() == "parenthesized_declarator"
-        // A macro's or conditional's name (`#define name`, `#ifdef name`).
-        || parent.kind().starts_with("preproc_")
-        || (parent.kind() == "enumerator" && is_field("name"));
-    !(declared || parent.kind() == "call_expression" && is_field("function"))
-}
 
 pub(super) fn rust_implicitly_used_spans(
     file: &crate::AuditedFile,
