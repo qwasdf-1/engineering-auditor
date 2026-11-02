@@ -3,6 +3,576 @@
   "detector": "too_many_returns",
   "labels": [
     {
+      "id": "EA-3fa3ddef7a38619a",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/builtin.c",
+      "message": "Function `binop_plus` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 82
+    },
+    {
+      "id": "EA-a350e39dba328982",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/builtin.c",
+      "message": "Function `my_mktime` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1465
+    },
+    {
+      "id": "EA-e50e78607315a578",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/builtin.c",
+      "message": "Function `f_strftime` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1750
+    },
+    {
+      "id": "EA-f528c2254e4284fd",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/execute.c",
+      "message": "Function `jq_format_error` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1005
+    },
+    {
+      "id": "EA-abe655dca8660475",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv.c",
+      "message": "Function `jv_kind_name` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 102
+    },
+    {
+      "id": "EA-27383451977242d5",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv.c",
+      "message": "Function `jvp_number_cmp` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 770
+    },
+    {
+      "id": "EA-7ee3fe1b9a4dfb44",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_parse.c",
+      "message": "Function `stream_token` has 25 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 241
+    },
+    {
+      "id": "EA-da81bff0b1389633",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_parse.c",
+      "message": "Function `scan` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 644
+    },
+    {
+      "id": "EA-561b6b5ca9717f20",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_parse.c",
+      "message": "Function `jv_parser_next` has 14 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 767
+    },
+    {
+      "id": "EA-74a23b84f5f38039",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/stream.c",
+      "message": "Function `uv__stream_try_select` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 274
+    },
+    {
+      "id": "EA-95e994eb5e0f6edd",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/tcp.c",
+      "message": "Function `uv__tcp_keepalive` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 469
+    },
+    {
+      "id": "EA-e750d80c83a55ba1",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/udp.c",
+      "message": "Function `uv_udp_set_source_membership` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 951
+    },
+    {
+      "id": "EA-f15ad2fc483abfa7",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/udp.c",
+      "message": "Function `uv__udp_prep_pkt` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1246
+    },
+    {
+      "id": "EA-1b1a66386183b539",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs.c",
+      "message": "Function `fs__stat_path` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1701
+    },
+    {
+      "id": "EA-751acad04eec44a4",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tcp.c",
+      "message": "Function `uv__tcp_listen` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 549
+    },
+    {
+      "id": "EA-9d1538a8a39f9554",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/udp.c",
+      "message": "Function `uv__udp_set_membership6` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 604
+    },
+    {
+      "id": "EA-b496d171493f3cd8",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/udp.c",
+      "message": "Function `uv__udp_set_source_membership4` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 659
+    },
+    {
+      "id": "EA-8a14b5e3e313688a",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/util.c",
+      "message": "Function `uv_os_tmpdir` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1018
+    },
+    {
+      "id": "EA-7e17f3c4d89d0b5d",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4MID_compress` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 522
+    },
+    {
+      "id": "EA-c25effd3e0b644a4",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/xxhash.c",
+      "message": "Function `XXH64_finalize` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 701
+    },
+    {
+      "id": "EA-731ad2f5213f968c",
+      "repository": "lz4",
+      "language": "c",
+      "path": "programs/util.h",
+      "message": "Function `UTIL_prepareFileList` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 360
+    },
+    {
+      "id": "EA-45d3ae83ec80275f",
+      "repository": "lz4",
+      "language": "c",
+      "path": "programs/util.h",
+      "message": "Function `UTIL_createFileList` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 500
+    },
+    {
+      "id": "EA-ee8cdd96cee6c23b",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/blast/blast.c",
+      "message": "Function `decomp` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 281
+    },
+    {
+      "id": "EA-92b3f29c994b10b9",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/unzip.c",
+      "message": "Function `unz64local_SearchCentralDir64` has 14 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 385
+    },
+    {
+      "id": "EA-ee098133fb474c8d",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/puff/puff.c",
+      "message": "Function `codes` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 436
+    },
+    {
+      "id": "EA-9a46e3891752241b",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/puff/pufftest.c",
+      "message": "Function `main` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 91
+    },
+    {
+      "id": "EA-1fb0bca7f95b8e00",
+      "repository": "zlib",
+      "language": "c",
+      "path": "gzread.c",
+      "message": "Function `gz_fetch` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 248
+    },
+    {
+      "id": "EA-cef7aa4ed27cba21",
+      "repository": "zlib",
+      "language": "c",
+      "path": "gzread.c",
+      "message": "Function `gzread` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 396
+    },
+    {
+      "id": "EA-6ff06b3dccea3038",
+      "repository": "zlib",
+      "language": "c",
+      "path": "gzwrite.c",
+      "message": "Function `gz_comp` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 65
+    },
+    {
+      "id": "EA-5ad61de91d219b80",
+      "repository": "zlib",
+      "language": "c",
+      "path": "gzwrite.c",
+      "message": "Function `gzputc` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 307
+    },
+    {
+      "id": "EA-9e6a46c53719f3b7",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/compile.h",
+      "message": "Function `compile_format_string` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 375
+    },
+    {
+      "id": "EA-0811128e1f7e11a4",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/format-inl.h",
+      "message": "Function `is_printable` has 11 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1799
+    },
+    {
+      "id": "EA-d882a2283ff7043e",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/db_impl.cc",
+      "message": "Function `Recover` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 292
+    },
+    {
+      "id": "EA-e1a6956f0422799d",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/db_impl.cc",
+      "message": "Function `GetProperty` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1387
+    },
+    {
+      "id": "EA-cf8c65db181ff872",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/version_set.cc",
+      "message": "Function `Match` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 341
+    },
+    {
+      "id": "EA-5788a035bd1bc4f4",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/conversions/to_chars.hpp",
+      "message": "Function `find_largest_pow10` has 10 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 492
+    },
+    {
+      "id": "EA-036e38080c97407f",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `parse_bson_element_internal` has 11 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 274
+    },
+    {
+      "id": "EA-e10c2e479033b7f2",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `parse_cbor_internal` has 39 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 428
+    },
+    {
+      "id": "EA-c4785fa09f100b5b",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_cbor_string` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 919
+    },
+    {
+      "id": "EA-c16413b407f1caaf",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_cbor_binary` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1015
+    },
+    {
+      "id": "EA-36ca98c2e45d7ec5",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_cbor_object` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1148
+    },
+    {
+      "id": "EA-23179d62fdf1fb52",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `parse_msgpack_internal` has 25 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1204
+    },
+    {
+      "id": "EA-29c8a5425a5a0171",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_msgpack_string` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1585
+    },
+    {
+      "id": "EA-12e898380d71a939",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_msgpack_binary` has 12 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1668
+    },
+    {
+      "id": "EA-5a74915935a060ca",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_string` has 10 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1857
+    },
+    {
+      "id": "EA-02fcc56bc59ec72c",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_size_value` has 32 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2017
+    },
+    {
+      "id": "EA-b3eabd98346fabb5",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_size_type` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2240
+    },
+    {
+      "id": "EA-9334ef469f1d2998",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_value` has 26 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2307
+    },
+    {
+      "id": "EA-30305fd3a6cc9840",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_array` has 13 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2500
+    },
+    {
+      "id": "EA-0dfd7328f12f43e0",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_object` has 11 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2615
+    },
+    {
+      "id": "EA-c0af7f99da3c11d4",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_high_precision_number` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2698
+    },
+    {
+      "id": "EA-85620de96e1e2c3f",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/json_sax.hpp",
+      "message": "Function `handle_value` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 820
+    },
+    {
+      "id": "EA-bf1c908ae4f4f8ee",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/parser.hpp",
+      "message": "Function `sax_parse_internal` has 27 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 180
+    },
+    {
+      "id": "EA-d7aa8a726d19950a",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Function `calc_bson_element_size` has 10 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1175
+    },
+    {
+      "id": "EA-bf6abd11505ce222",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Function `write_bson_element` has 10 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1223
+    },
+    {
+      "id": "EA-0b339a81db3cf5a5",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Function `ubjson_prefix` has 24 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1515
+    },
+    {
+      "id": "EA-4627f9590f6409b1",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "src/regeximpl.h",
+      "message": "Function `MatchUnchecked` has 8 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 77
+    },
+    {
       "id": "EA-4f97a1da07e249f6",
       "repository": "dapper",
       "language": "csharp",
@@ -26,6 +596,56 @@
           "reason": "Only 2 of the reported 7 returns in `MatchFirstOrDefault` are visible; the function body continues past the excerpt."
         }
       ]
+    },
+    {
+      "id": "EA-61384bbb1efbf5d7",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `LookupDbType` has 11 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 459
+    },
+    {
+      "id": "EA-c0f61c20d1eaf2e6",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `SanitizeParameterValue` has 10 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2389
+    },
+    {
+      "id": "EA-fdb07c9d2c2eef73",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GetSimpleValueDeserializer` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3099
+    },
+    {
+      "id": "EA-3b3b7a066d7bc29c",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `Parse` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3184
+    },
+    {
+      "id": "EA-55afd0b646ec6c80",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `TryConvertDateTimeFamily` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3223
     },
     {
       "id": "EA-04222d216bf10e86",
@@ -76,6 +696,36 @@
           "reason": "Only 1 of the reported 8 returns in `ReadNormal` is visible; the truncated switch prevents verifying the count."
         }
       ]
+    },
+    {
+      "id": "EA-9027a9a851f5858d",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/IsoDateTimeConverter.cs",
+      "message": "Function `ReadJson` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 121
+    },
+    {
+      "id": "EA-65d03da3c3772fcb",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "Function `GetPropertyName` has 12 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1085
+    },
+    {
+      "id": "EA-689b307cfab24189",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonConvert.cs",
+      "message": "Function `ToString` has 22 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 457
     },
     {
       "id": "EA-1ae4448c85cd5975",
@@ -193,6 +843,16 @@
       ]
     },
     {
+      "id": "EA-65c6d5e92a9cd968",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `EnsureType` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 957
+    },
+    {
       "id": "EA-309387b4d8f0a4d9",
       "repository": "newtonsoft-json",
       "language": "csharp",
@@ -293,6 +953,16 @@
       ]
     },
     {
+      "id": "EA-2bacd3614c2204d7",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs",
+      "message": "Function `GetAttributes` has 6 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 785
+    },
+    {
       "id": "EA-b3581b22a25c3368",
       "repository": "newtonsoft-json",
       "language": "csharp",
@@ -336,6 +1006,16 @@
           "reason": "Excerpt cuts off after two visible returns (lines 101, 109), so the claimed 7 returns across the full function cannot be verified."
         }
       ]
+    },
+    {
+      "id": "EA-ac139ff08347f187",
+      "repository": "serilog",
+      "language": "csharp",
+      "path": "src/Serilog/Capturing/PropertyValueConverter.cs",
+      "message": "Function `CreatePropertyValue` has 9 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 121
     },
     {
       "id": "EA-0a7fd0e1de46c5e9",
@@ -3394,6 +4074,26 @@
           "detail": "rca nexits 8 vs budget 5 (EA 8)"
         }
       ]
+    },
+    {
+      "id": "EA-0d0a183d59827346",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `isValidJWT` has 7 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1218
+    },
+    {
+      "id": "EA-8bb2b50a66b981b7",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Function `mergeValues` has 8 return statements (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2826
     },
     {
       "id": "EA-43f046886fd50906",

@@ -3,6 +3,36 @@
   "detector": "duplicate_import",
   "labels": [
     {
+      "id": "EA-dedb6b80bb519903",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/bytecode.h",
+      "message": "Import `opcode_list.h` is repeated 2 times in the same file.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 16
+    },
+    {
+      "id": "EA-c23bca700d6a8c99",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_parse.c",
+      "message": "Import `jv_dtoa.h` is repeated 2 times in the same file.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 9
+    },
+    {
+      "id": "EA-6517ededb0765d65",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/util.c",
+      "message": "Import `string.h` is repeated 2 times in the same file.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 454
+    },
+    {
       "id": "EA-3a6dce9a2aa5690c",
       "repository": "libuv",
       "language": "c",
@@ -1004,6 +1034,16 @@
           "reason": "Lines 5 and 6 both import from './schemas.js', so that module is genuinely imported twice in the file."
         }
       ]
+    },
+    {
+      "id": "EA-c8f4688bafc539c1",
+      "repository": "zod",
+      "language": "typescript",
+      "path": "packages/zod/src/v4/core/schemas.ts",
+      "message": "Import `./checks.js` is repeated 2 times in the same file.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3
     },
     {
       "id": "EA-3489241479eaa2b4",

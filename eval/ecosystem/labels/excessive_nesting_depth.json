@@ -3,6 +3,16 @@
   "detector": "excessive_nesting_depth",
   "labels": [
     {
+      "id": "EA-1b97411939da5dd7",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/main.c",
+      "message": "Function `umain` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 313
+    },
+    {
       "id": "EA-a424ce4f420b7bea",
       "repository": "libuv",
       "language": "c",
@@ -28,6 +38,26 @@
       ]
     },
     {
+      "id": "EA-be4173b31f2077e9",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tty.c",
+      "message": "Function `uv__tty_write_bufs` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1726
+    },
+    {
+      "id": "EA-b28de6405369e66d",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4MID_compress` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 555
+    },
+    {
       "id": "EA-de38d7c92e0037e8",
       "repository": "zlib",
       "language": "c",
@@ -46,6 +76,16 @@
           "reason": "The site is contrib/minizip/minizip.c, contributed sample/tooling code outside the production-source scope."
         }
       ]
+    },
+    {
+      "id": "EA-88ffe4361cc1015b",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/mztools.c",
+      "message": "Function `unzRepair` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 38
     },
     {
       "id": "EA-39fb6a7d9ac181b3",
@@ -73,6 +113,146 @@
       ]
     },
     {
+      "id": "EA-189d16abdc5551a2",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `PackListParameters` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2171
+    },
+    {
+      "id": "EA-030aeec983f52bc1",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `CreateParamInfoGenerator` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2565
+    },
+    {
+      "id": "EA-9854a8301d6b4233",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "Function `SerializeGroupedNodes` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1143
+    },
+    {
+      "id": "EA-e95934fd5f4f4921",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "Function `ReadAttributeElements` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1881
+    },
+    {
+      "id": "EA-a85c6d81a948d6ff",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "Function `DeserializeNode` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2089
+    },
+    {
+      "id": "EA-1b420c61adac63cf",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
+      "message": "Function `ReadStringIntoBufferAsync` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 392
+    },
+    {
+      "id": "EA-7a6ec980d5bce967",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
+      "message": "Function `ReadStringIntoBuffer` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1145
+    },
+    {
+      "id": "EA-dadde3cc9291b35e",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonValidatingReader.cs",
+      "message": "Function `WriteToken` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 619
+    },
+    {
+      "id": "EA-4dae66669e77aa90",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
+      "message": "Function `MergeEnumerableContent` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1186
+    },
+    {
+      "id": "EA-1ccc0c258db756da",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Schema/JsonSchemaBuilder.cs",
+      "message": "Function `ResolveReferences` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 100
+    },
+    {
+      "id": "EA-c065577eb6f56dbc",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `ReadMetadataPropertiesToken` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 618
+    },
+    {
+      "id": "EA-f8a237a16faeb5f3",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `ReadMetadataProperties` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 707
+    },
+    {
+      "id": "EA-5b8e2f1b88527856",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `PopulateMultidimensionalArray` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1507
+    },
+    {
+      "id": "EA-cca58c9960bb95d2",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `CreateObjectUsingCreatorWithParameters` reaches nesting depth 7 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1998
+    },
+    {
       "id": "EA-023a6caf0ed21bbc",
       "repository": "newtonsoft-json",
       "language": "csharp",
@@ -96,6 +276,16 @@
           "reason": "Only shallow if/else levels are visible and the claimed depth-7 line 231 is outside the excerpt."
         }
       ]
+    },
+    {
+      "id": "EA-7043c7049414c4b1",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs",
+      "message": "Function `GetChildPrivateProperties` reaches nesting depth 6 (> 5).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1030
     },
     {
       "id": "EA-4c304f0074723450",

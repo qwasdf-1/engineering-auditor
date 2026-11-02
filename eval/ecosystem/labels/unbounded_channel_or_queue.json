@@ -143,6 +143,16 @@
       "line": 65
     },
     {
+      "id": "EA-16a1ddc2942e4d62",
+      "repository": "keycloak",
+      "language": "java",
+      "path": "model/infinispan/src/main/java/org/keycloak/models/sessions/infinispan/util/InfinispanKeyGenerator.java",
+      "message": "`newSingleThreadExecutor` at line 86 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 86
+    },
+    {
       "id": "EA-3b5658c7301857ae",
       "repository": "keycloak",
       "language": "java",
@@ -211,6 +221,16 @@
       "status": "pending",
       "sampled_from": "a8-a",
       "line": 39
+    },
+    {
+      "id": "EA-7c6ce72db96b4174",
+      "repository": "ranger",
+      "language": "java",
+      "path": "agents-audit/core/src/main/java/org/apache/ranger/audit/queue/AuditAsyncQueue.java",
+      "message": "`LinkedBlockingQueue` at line 38 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 38
     },
     {
       "id": "EA-03f798967a481036",

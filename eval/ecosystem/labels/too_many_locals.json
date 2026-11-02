@@ -3,6 +3,56 @@
   "detector": "too_many_locals",
   "labels": [
     {
+      "id": "EA-99039729cb900b97",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/compile.c",
+      "message": "Function `compile` has 20 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1214
+    },
+    {
+      "id": "EA-a56d3af16171c681",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/execute.c",
+      "message": "Function `jq_next` has 100 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 343
+    },
+    {
+      "id": "EA-44eb7da39619533b",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/linker.c",
+      "message": "Function `process_dependencies` has 18 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 244
+    },
+    {
+      "id": "EA-361884333f172867",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/main.c",
+      "message": "Function `umain` has 34 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 287
+    },
+    {
+      "id": "EA-b72fb9e07fb5bf24",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/util.c",
+      "message": "Function `strptime` has 19 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 615
+    },
+    {
       "id": "EA-59871e361895972f",
       "repository": "libuv",
       "language": "c",
@@ -26,6 +76,36 @@
           "reason": "uv__io_poll at src/unix/aix.c:133 declares more than 15 distinct locals, exceeding the analyzer's threshold."
         }
       ]
+    },
+    {
+      "id": "EA-e16dd24cc927bdff",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/linux.c",
+      "message": "Function `uv__io_poll` has 25 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1350
+    },
+    {
+      "id": "EA-45a4cfde6a133933",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/linux.c",
+      "message": "Function `uv_cpu_info` has 19 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1714
+    },
+    {
+      "id": "EA-ce87a459557fed0b",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/os390.c",
+      "message": "Function `uv__io_poll` has 20 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 811
     },
     {
       "id": "EA-e3cc73692c5d30c9",
@@ -58,6 +138,146 @@
       ]
     },
     {
+      "id": "EA-502d626974ed9671",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs.c",
+      "message": "Function `fs__create_junction` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2707
+    },
+    {
+      "id": "EA-0d4d0a9854af5dd0",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/process.c",
+      "message": "Function `make_program_env` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 645
+    },
+    {
+      "id": "EA-73f1d295de94cfce",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/process.c",
+      "message": "Function `uv_spawn` has 20 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 890
+    },
+    {
+      "id": "EA-f398ac70f588a4e0",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/process.c",
+      "message": "Function `uv__kill` has 18 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1168
+    },
+    {
+      "id": "EA-1787c7fdb09f3a50",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tty.c",
+      "message": "Function `uv__tty_write_bufs` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1691
+    },
+    {
+      "id": "EA-9182c42ad9ba1797",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/util.c",
+      "message": "Function `uv_cpu_info` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 529
+    },
+    {
+      "id": "EA-8baf214c4e4965da",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/util.c",
+      "message": "Function `uv_interface_addresses` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 654
+    },
+    {
+      "id": "EA-f5e20b6fd60f6cc8",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4MID_compress` has 49 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 522
+    },
+    {
+      "id": "EA-9b5a3e598a8c885f",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4HC_compress_hashChain` has 32 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1121
+    },
+    {
+      "id": "EA-088261b9bd76855a",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4HC_compress_optimal` has 57 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1823
+    },
+    {
+      "id": "EA-4cbdbacb31d6475a",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/blast/blast.c",
+      "message": "Function `decomp` has 23 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 281
+    },
+    {
+      "id": "EA-88ab77e211d8618c",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/crc32vx/crc32_vx.c",
+      "message": "Function `crc32_le_vgfm_16` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 38
+    },
+    {
+      "id": "EA-5b84a0679c6d000a",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/miniunz.c",
+      "message": "Function `do_extract_currentfile` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 306
+    },
+    {
+      "id": "EA-f422ba3fc47b6e40",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/miniunz.c",
+      "message": "Function `main` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 524
+    },
+    {
       "id": "EA-1372e77b79f209e8",
       "repository": "zlib",
       "language": "c",
@@ -76,6 +296,96 @@
           "reason": "`contrib/minizip/minizip.c` is the sample minizip CLI (`do_banner`/getopt), i.e. example code outside the detector's scope."
         }
       ]
+    },
+    {
+      "id": "EA-a4a4ac6908bf88df",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/mztools.c",
+      "message": "Function `unzRepair` has 33 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 33
+    },
+    {
+      "id": "EA-c51cbb386a822c2c",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/testzlib/testzlib.c",
+      "message": "Function `main` has 29 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 145
+    },
+    {
+      "id": "EA-4aedf9400824634e",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/format-inl.h",
+      "message": "Function `to_decimal` has 19 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1263
+    },
+    {
+      "id": "EA-e5d52d13aacbc63a",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/db_impl.cc",
+      "message": "Function `DoCompactionWork` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 892
+    },
+    {
+      "id": "EA-7ab50056997bd391",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "db/version_set.cc",
+      "message": "Function `Recover` has 21 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 862
+    },
+    {
+      "id": "EA-40e3447a3259d8ca",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/conversions/to_chars.hpp",
+      "message": "Function `grisu2_digit_gen` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 587
+    },
+    {
+      "id": "EA-d6b04d77f2bfbdc1",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `parse_cbor_internal` has 37 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 428
+    },
+    {
+      "id": "EA-332aec328b358fcf",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `parse_msgpack_internal` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1204
+    },
+    {
+      "id": "EA-67a618926cd0c279",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_value` has 21 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2307
     },
     {
       "id": "EA-20f190631747b7d1",
@@ -173,6 +483,66 @@
       ]
     },
     {
+      "id": "EA-f2ff029b79de7bf5",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GenerateDeserializers` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1747
+    },
+    {
+      "id": "EA-828062a7474e5329",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `PackListParameters` has 25 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2163
+    },
+    {
+      "id": "EA-264506097b34de20",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `CreateParamInfoGenerator` has 43 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2559
+    },
+    {
+      "id": "EA-4c0dc8083a5e2881",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GenerateValueTupleDeserializer` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3412
+    },
+    {
+      "id": "EA-797b7a93b8ce0a8c",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GenerateDeserializerFromMap` has 22 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3514
+    },
+    {
+      "id": "EA-2a2d3fc629f3449a",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
+      "message": "Function `ParseReadNumber` has 18 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1981
+    },
+    {
       "id": "EA-120c6e30df68975c",
       "repository": "newtonsoft-json",
       "language": "csharp",
@@ -196,6 +566,46 @@
           "reason": "Only seven top-level declarations plus `currentCharacter` are visible, so the claimed 20 locals in `ParseArrayIndexer` cannot be confirmed."
         }
       ]
+    },
+    {
+      "id": "EA-3ede93415e898248",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Schema/JsonSchemaGenerator.cs",
+      "message": "Function `GenerateInternal` has 16 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 246
+    },
+    {
+      "id": "EA-37c6e99ebbca5ea2",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
+      "message": "Function `SetExtensionDataDelegates` has 17 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 494
+    },
+    {
+      "id": "EA-7d3011974d590204",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `CreateObjectUsingCreatorWithParameters` has 23 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1987
+    },
+    {
+      "id": "EA-a83661e6968faaaa",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `DecimalTryParse` has 19 local variables (> 15).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1309
     },
     {
       "id": "EA-0e406e5b29583408",

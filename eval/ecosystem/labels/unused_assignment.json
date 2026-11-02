@@ -33,6 +33,66 @@
       ]
     },
     {
+      "id": "EA-9a032b7965cd2a03",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tty.c",
+      "message": "Value assigned to `active_screen_buffer` at line 1102 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1102
+    },
+    {
+      "id": "EA-0efb8cc2e9a6b75b",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/util.c",
+      "message": "Value assigned to `cpu_count` at line 541 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 541
+    },
+    {
+      "id": "EA-d09571cc39fd6283",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/util.c",
+      "message": "Value assigned to `len` at line 1026 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1026
+    },
+    {
+      "id": "EA-9239e75329c17c4b",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/miniunz.c",
+      "message": "Value assigned to `err` at line 310 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 310
+    },
+    {
+      "id": "EA-601069d43d2cf64e",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/unzip.c",
+      "message": "Value assigned to `err` at line 1061 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1061
+    },
+    {
+      "id": "EA-e2cc6dcc8d117272",
+      "repository": "fmt",
+      "language": "cpp",
+      "path": "include/fmt/ranges.h",
+      "message": "Value assigned to `end` at line 717 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 717
+    },
+    {
       "id": "EA-7c20ac58f9184ad3",
       "repository": "yaml-cpp",
       "language": "cpp",
@@ -91,6 +151,26 @@
           "reason": "Same demo block that comments the semantics of each assignment (`subnode` is not instantiated), so this example code is outside the detector's scope."
         }
       ]
+    },
+    {
+      "id": "EA-d2ba9dfcb5d423ce",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonWriter.cs",
+      "message": "Value assigned to `s` at line 391 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 391
+    },
+    {
+      "id": "EA-6404364deda3ffda",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
+      "message": "Value assigned to `hasIgnoreDataMemberAttribute` at line 1604 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1604
     },
     {
       "id": "EA-ab7c555a712e4b29",
@@ -1058,6 +1138,26 @@
       "line": 1149
     },
     {
+      "id": "EA-0d9d9c15668db6a7",
+      "repository": "ranger",
+      "language": "python",
+      "path": "security-admin/src/bin/ranger_install.py",
+      "message": "Value assigned to `newPropertyValue` at line 1108 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 1108
+    },
+    {
+      "id": "EA-90c1754c614fe959",
+      "repository": "ranger",
+      "language": "python",
+      "path": "tagsync/scripts/updatetagadminpassword.py",
+      "message": "Value assigned to `KEYSTORE_FILENAME` at line 116 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 116
+    },
+    {
       "id": "EA-f1593073fc35e6a0",
       "repository": "redash",
       "language": "python",
@@ -1158,6 +1258,16 @@
       "line": 285
     },
     {
+      "id": "EA-5041f91dd219c295",
+      "repository": "zulip",
+      "language": "python",
+      "path": "corporate/lib/stripe.py",
+      "message": "Value assigned to `previous_minimum_license_count` at line 1384 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 1384
+    },
+    {
       "id": "EA-43eaa009d4d2c9b6",
       "repository": "zulip",
       "language": "python",
@@ -1186,6 +1296,36 @@
       "status": "pending",
       "sampled_from": "a8-a",
       "line": 105
+    },
+    {
+      "id": "EA-b400f36cec6cec54",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/migrations/0792_fix_animated_emoji_still_images.py",
+      "message": "Value assigned to `still_bytes` at line 170 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 170
+    },
+    {
+      "id": "EA-5812b5a48ea74934",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/openapi/merge_api_changelogs.py",
+      "message": "Value assigned to `new_feature_level` at line 34 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 34
+    },
+    {
+      "id": "EA-a44c91f7ca3339ff",
+      "repository": "zulip",
+      "language": "python",
+      "path": "zerver/openapi/merge_api_changelogs.py",
+      "message": "Value assigned to `changelogs_merged` at line 71 is overwritten before it is read.",
+      "status": "pending",
+      "sampled_from": "a10-a",
+      "line": 71
     },
     {
       "id": "EA-8fb484fa188ff305",

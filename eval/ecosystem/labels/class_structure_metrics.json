@@ -23,6 +23,16 @@
       ]
     },
     {
+      "id": "EA-382eaa69c678e43a",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "helpers/memenv/memenv.cc",
+      "message": "Class `InMemoryEnv` exceeds a CK/WMC budget (WMC=39, CBO=15, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 221
+    },
+    {
       "id": "EA-becb0dc85d7d1283",
       "repository": "leveldb",
       "language": "cpp",
@@ -43,6 +53,106 @@
       ]
     },
     {
+      "id": "EA-a0adfac4d220f349",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_posix.cc",
+      "message": "Class `PosixWritableFile` exceeds a CK/WMC budget (WMC=45, CBO=2, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 249
+    },
+    {
+      "id": "EA-241ddcc801968198",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_posix.cc",
+      "message": "Class `PosixEnv` exceeds a CK/WMC budget (WMC=66, CBO=12, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 490
+    },
+    {
+      "id": "EA-1fb370398087e3c0",
+      "repository": "leveldb",
+      "language": "cpp",
+      "path": "util/env_windows.cc",
+      "message": "Class `WindowsEnv` exceeds a CK/WMC budget (WMC=75, CBO=13, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 363
+    },
+    {
+      "id": "EA-2a78a5e5ac2358e2",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Class `binary_reader` exceeds a CK/WMC budget (WMC=1039, CBO=2, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 69
+    },
+    {
+      "id": "EA-48b3145c244b7fe7",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/json_sax.hpp",
+      "message": "Class `json_sax_dom_parser` exceeds a CK/WMC budget (WMC=53, CBO=1, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 167
+    },
+    {
+      "id": "EA-cddea6bb05eef433",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/json_sax.hpp",
+      "message": "Class `json_sax_dom_callback_parser` exceeds a CK/WMC budget (WMC=82, CBO=1, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 473
+    },
+    {
+      "id": "EA-7bf6ea3d7a26b962",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/parser.hpp",
+      "message": "Class `parser` exceeds a CK/WMC budget (WMC=110, CBO=4, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 60
+    },
+    {
+      "id": "EA-9fab52a4441776f7",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/iterators/iter_impl.hpp",
+      "message": "Class `iter_impl` exceeds a CK/WMC budget (WMC=179, CBO=0, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 47
+    },
+    {
+      "id": "EA-24acc69026c41a61",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/json_pointer.hpp",
+      "message": "Class `json_pointer` exceeds a CK/WMC budget (WMC=86, CBO=0, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 35
+    },
+    {
+      "id": "EA-944f6b235659e691",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Class `binary_writer` exceeds a CK/WMC budget (WMC=553, CBO=0, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 46
+    },
+    {
       "id": "EA-447a69470c5f7a4b",
       "repository": "nlohmann-json",
       "language": "cpp",
@@ -61,6 +171,16 @@
           "reason": "`serializer` in nlohmann's detail header is hand-written library production code with WMC=148, so the finding is correct and in scope."
         }
       ]
+    },
+    {
+      "id": "EA-b3bc00c7139a3d7e",
+      "repository": "yaml-cpp",
+      "language": "cpp",
+      "path": "include/yaml-cpp/node/detail/node.h",
+      "message": "Class `node` exceeds a CK/WMC budget (WMC=47, CBO=2, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 20
     },
     {
       "id": "EA-7fe2721b44490f37",
@@ -2542,6 +2662,16 @@
       ]
     },
     {
+      "id": "EA-c07d5e39a3931eeb",
+      "repository": "black",
+      "language": "python",
+      "path": "src/black/linegen.py",
+      "message": "Class `LineGenerator` exceeds a CK/WMC budget (WMC=162, CBO=6, DIT=2, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 111
+    },
+    {
       "id": "EA-eca3211a10c79ad4",
       "repository": "black",
       "language": "python",
@@ -3455,6 +3585,16 @@
           "reason": "`class Traceback:` at rich/traceback.py:262 matches the symbol and DIT=0 in production rendering code, so there is no miscount signal or out-of-scope defense."
         }
       ]
+    },
+    {
+      "id": "EA-0a4367df7a57f39e",
+      "repository": "hono",
+      "language": "typescript",
+      "path": "src/context.ts",
+      "message": "Class `Context` exceeds a CK/WMC budget (WMC=70, CBO=1, DIT=0, NOC=0).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 293
     },
     {
       "id": "EA-578a78b3222c9bc8",

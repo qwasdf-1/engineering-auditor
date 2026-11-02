@@ -3,6 +3,56 @@
   "detector": "too_many_statements",
   "labels": [
     {
+      "id": "EA-81e7cb8f177b5397",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/compile.c",
+      "message": "Function `compile` has 72 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1214
+    },
+    {
+      "id": "EA-4a1181376a625e81",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/execute.c",
+      "message": "Function `jq_next` has 235 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 343
+    },
+    {
+      "id": "EA-d11834b7ce7d83bf",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/jv_parse.c",
+      "message": "Function `stream_token` has 88 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 241
+    },
+    {
+      "id": "EA-9827e19fe82a3067",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/main.c",
+      "message": "Function `umain` has 168 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 287
+    },
+    {
+      "id": "EA-205bd2a409035724",
+      "repository": "jq",
+      "language": "c",
+      "path": "src/util.c",
+      "message": "Function `strptime` has 228 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 615
+    },
+    {
       "id": "EA-3fb761e6917264dc",
       "repository": "libuv",
       "language": "c",
@@ -63,6 +113,26 @@
       ]
     },
     {
+      "id": "EA-aae2d1f113a9c5ff",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/linux.c",
+      "message": "Function `uv__io_poll` has 89 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1350
+    },
+    {
+      "id": "EA-0f19cf82b4954133",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/linux.c",
+      "message": "Function `uv_cpu_info` has 58 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1714
+    },
+    {
       "id": "EA-0a59fb561f117c71",
       "repository": "libuv",
       "language": "c",
@@ -81,6 +151,16 @@
           "reason": "`uv_loop_init` (src/unix/loop.c:30) contains many sequential initialization steps and its reported 54 statements are over the 50 threshold."
         }
       ]
+    },
+    {
+      "id": "EA-97fca3fda001f50b",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/unix/os390.c",
+      "message": "Function `uv__io_poll` has 84 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 811
     },
     {
       "id": "EA-c853198572270120",
@@ -193,6 +273,16 @@
       ]
     },
     {
+      "id": "EA-c4bfe0a051bada52",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/fs.c",
+      "message": "Function `fs__open` has 72 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 413
+    },
+    {
       "id": "EA-40898491dbffc816",
       "repository": "libuv",
       "language": "c",
@@ -218,6 +308,66 @@
       ]
     },
     {
+      "id": "EA-24cd2bd5da8f97ce",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/process.c",
+      "message": "Function `uv_spawn` has 70 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 890
+    },
+    {
+      "id": "EA-087bf11a611c710f",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tty.c",
+      "message": "Function `uv_process_tty_read_raw_req` has 62 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 719
+    },
+    {
+      "id": "EA-be04965f0a25c250",
+      "repository": "libuv",
+      "language": "c",
+      "path": "src/win/tty.c",
+      "message": "Function `uv__tty_write_bufs` has 161 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1691
+    },
+    {
+      "id": "EA-7562b329013144c8",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4MID_compress` has 80 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 522
+    },
+    {
+      "id": "EA-fd699bc6339f905f",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4HC_compress_hashChain` has 78 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1121
+    },
+    {
+      "id": "EA-2c7274c06e9a4d5a",
+      "repository": "lz4",
+      "language": "c",
+      "path": "lib/lz4hc.c",
+      "message": "Function `LZ4HC_compress_optimal` has 112 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1823
+    },
+    {
       "id": "EA-fc571be0c5dd51e8",
       "repository": "zlib",
       "language": "c",
@@ -238,6 +388,46 @@
       ]
     },
     {
+      "id": "EA-d95d00c8088c60df",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/mztools.c",
+      "message": "Function `unzRepair` has 88 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 33
+    },
+    {
+      "id": "EA-e7818d2bd0d633fb",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/unzip.c",
+      "message": "Function `unzOpenInternal` has 51 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 490
+    },
+    {
+      "id": "EA-b8582d20cbd99bac",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/minizip/unzip.c",
+      "message": "Function `unz64local_GetCurrentFileInfoInternal` has 59 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 766
+    },
+    {
+      "id": "EA-6b998999c408b42c",
+      "repository": "zlib",
+      "language": "c",
+      "path": "contrib/testzlib/testzlib.c",
+      "message": "Function `main` has 59 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 145
+    },
+    {
       "id": "EA-5fdcc1dab18ff438",
       "repository": "lz4",
       "language": "cpp",
@@ -256,6 +446,66 @@
           "reason": "`contrib/gen_manual/gen_manual.cpp` is a manual-generating tool (build/tooling code), outside the detector's scope."
         }
       ]
+    },
+    {
+      "id": "EA-1b389a9fbc7985c1",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `parse_cbor_internal` has 67 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 428
+    },
+    {
+      "id": "EA-8cd918176c0d9bd7",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/binary_reader.hpp",
+      "message": "Function `get_ubjson_size_value` has 54 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2017
+    },
+    {
+      "id": "EA-eb9dcab3f3967543",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/input/parser.hpp",
+      "message": "Function `sax_parse_internal` has 54 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 180
+    },
+    {
+      "id": "EA-0a918cd35bf768fa",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Function `write_cbor` has 95 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 96
+    },
+    {
+      "id": "EA-7a538691fe10c24a",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Function `write_msgpack` has 84 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 420
+    },
+    {
+      "id": "EA-a43bca280e8e82fd",
+      "repository": "nlohmann-json",
+      "language": "cpp",
+      "path": "include/nlohmann/detail/output/binary_writer.hpp",
+      "message": "Function `write_ubjson` has 51 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 747
     },
     {
       "id": "EA-c3dd48512e95ae1a",
@@ -323,6 +573,46 @@
       ]
     },
     {
+      "id": "EA-fbedac279f6d6b29",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `PackListParameters` has 58 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2163
+    },
+    {
+      "id": "EA-254e1642beb13620",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `CreateParamInfoGenerator` has 196 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 2559
+    },
+    {
+      "id": "EA-31a3f85c942cd28c",
+      "repository": "dapper",
+      "language": "csharp",
+      "path": "Dapper/SqlMapper.cs",
+      "message": "Function `GenerateDeserializerFromMap` has 81 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 3514
+    },
+    {
+      "id": "EA-2688526bb90a4bca",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Bson/BsonBinaryWriter.cs",
+      "message": "Function `WriteTokenInternal` has 55 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 72
+    },
+    {
       "id": "EA-664ca241ce5513f1",
       "repository": "newtonsoft-json",
       "language": "csharp",
@@ -348,6 +638,86 @@
       ]
     },
     {
+      "id": "EA-f1ff840659f15418",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
+      "message": "Function `SerializeNode` has 52 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1295
+    },
+    {
+      "id": "EA-73d45600cf7683b4",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
+      "message": "Function `ParseValueAsync` has 55 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 252
+    },
+    {
+      "id": "EA-e47ae4cacad89c0d",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
+      "message": "Function `ReadStringIntoBufferAsync` has 63 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 383
+    },
+    {
+      "id": "EA-0d1d081330f7d2cf",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
+      "message": "Function `ReadStringIntoBuffer` has 63 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1136
+    },
+    {
+      "id": "EA-9e004cd44c572878",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
+      "message": "Function `ParseValue` has 54 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1693
+    },
+    {
+      "id": "EA-9d5392aee12fdc9a",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
+      "message": "Function `ParseReadNumber` has 70 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1981
+    },
+    {
+      "id": "EA-01149e56d12926fa",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonValidatingReader.cs",
+      "message": "Function `ValidateCurrentToken` has 57 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 500
+    },
+    {
+      "id": "EA-dc9ff923d0f36fda",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/JsonWriter.cs",
+      "message": "Function `WriteValue` has 85 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1478
+    },
+    {
       "id": "EA-c94aee8124d16b5a",
       "repository": "newtonsoft-json",
       "language": "csharp",
@@ -371,6 +741,26 @@
           "reason": "The `ReadContentFromAsync` excerpt is cut off inside its do-loop, so the 51-statement count (just over threshold) cannot be verified."
         }
       ]
+    },
+    {
+      "id": "EA-c79cac44c39b7e5c",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
+      "message": "Function `ReadContentFrom` has 52 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 796
+    },
+    {
+      "id": "EA-6056faaf6b834003",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Linq/JValue.cs",
+      "message": "Function `Operation` has 52 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 421
     },
     {
       "id": "EA-696a318a8ba16f5c",
@@ -421,6 +811,56 @@
           "reason": "Only the first few switch cases of ProcessSchemaProperties are shown, so its 58-statement total is unverifiable from the excerpt."
         }
       ]
+    },
+    {
+      "id": "EA-3120aa280631da48",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Schema/JsonSchemaGenerator.cs",
+      "message": "Function `GenerateInternal` has 54 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 246
+    },
+    {
+      "id": "EA-b6c3a750a7c504c8",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
+      "message": "Function `SetPropertySettingsFromAttributes` has 65 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1477
+    },
+    {
+      "id": "EA-b8af005b724d4884",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
+      "message": "Function `CreateObject` has 55 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 435
+    },
+    {
+      "id": "EA-502a1a4056e5bcce",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `TryConvertInternal` has 53 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 420
+    },
+    {
+      "id": "EA-151e15bfe05382aa",
+      "repository": "newtonsoft-json",
+      "language": "csharp",
+      "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
+      "message": "Function `DecimalTryParse` has 74 statements (> 50).",
+      "status": "pending",
+      "sampled_from": "l10-a",
+      "line": 1309
     },
     {
       "id": "EA-3d4dadf7d22f7c08",
