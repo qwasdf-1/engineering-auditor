@@ -368,12 +368,12 @@
       "language": "python",
       "path": "corporate/views/portico.py",
       "message": "Function `remote_realm_customer_portal` averages 3.3 words per identifier (> 3).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 457,
       "verdict": "true_positive",
       "reason": "remote_realm_customer_portal passes `return_to_billing_page`, `setup_payment_by_invoice`, and `review_billing_information_url` to `get_stripe_customer_portal_url`; excluding annotation types, the mean is just over 3 words.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -568,12 +568,12 @@
       "language": "python",
       "path": "zerver/migrations/0490_renumber_options_desktop_icon_count_display.py",
       "message": "Function `reverse_code` averages 3.1 words per identifier (> 3).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 38,
       "verdict": "true_positive",
       "reason": "reverse_code in this hand-written data migration (shipped with Zulip) repeatedly uses `desktop_icon_count_display` and constants such as `OLD_DESKTOP_ICON_COUNT_DISPLAY_DM_MENTION`, so a mean of about 3.1 words is correct.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -188,12 +188,12 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/configuration/mappers/PropertyMapper.java",
       "message": "Function `validateValues` constructs expensive reusable state inside a loop.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 650,
       "verdict": "true_positive",
       "reason": "`Pattern.compile(\"SRCFG\\\\d+: (.*)$\")` is a constant regex compiled inside the `for (String v : values)` loop; the thrown PropertyException is caught inside the loop, so it recompiles for every failing value and could be a static field.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

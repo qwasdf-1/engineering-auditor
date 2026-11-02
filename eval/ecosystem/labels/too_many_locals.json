@@ -623,12 +623,12 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_chars.hpp",
       "message": "Function `grisu2_digit_gen` has 16 local variables (> 15).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 587,
       "verdict": "true_positive",
       "reason": "grisu2_digit_gen declares delta, dist, one, p1, p2, pow10, k, n, d, r, rest, ten_n, m, d, r and ten_m: exactly 16 locals in the shipped to_chars.hpp header.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -548,12 +548,12 @@
       "language": "java",
       "path": "tagsync/src/main/java/org/apache/ranger/tagsync/process/TagSyncMetricsProducer.java",
       "message": "`userMetricFile.createNewFile` at line 79 reports failure only through its result, which is discarded",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 79,
       "verdict": "false_positive",
       "reason": "File.createNewFile returns false only when the file already exists (guarded by !exists) and throws IOException on real failure, which the surrounding catch logs and rethrows, so the boolean is not the only failure signal.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -853,12 +853,12 @@
       "language": "javascript",
       "path": "ghost/core/frontend/src/comment-counts/comment-counts.js",
       "message": "`fetchCounts` at line 105 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 105,
       "verdict": "false_positive",
       "reason": "fetchCounts() at line 105 is the final statement of the comment-counts script's wrapping async IIFE, i.e. the script's top-level kick-off call, which the detector documents as excluded.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -893,12 +893,12 @@
       "language": "javascript",
       "path": "ghost/core/server/services/notifications/notifications.js",
       "message": "`this.dangerousDestroyAll` at line 49 returns a promise that is neither awaited nor given a rejection handler",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 49,
       "verdict": "false_positive",
       "reason": "The call to this.dangerousDestroyAll() sits directly under a two-line comment explaining the deliberate \"fire-and-forget\" choice, which is the justifying-comment exemption the detector documents (the keyword is just one line further up than the scan window).",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1433,12 +1433,12 @@
       "language": "python",
       "path": "electrum/txbatcher.py",
       "message": "`asyncio.ensure_future` at line 131 drops the only reference to its task; the event loop keeps a weak one, so the task can be collected before it finishes",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 131,
       "verdict": "false_positive",
       "reason": "The ensure_future wrapper only runs OldTaskGroup.spawn (aiorpcx), which creates the run_batch task and registers it in self.taskgroup without awaiting, so the wrapper finishes in its first scheduled step (held by the loop's ready queue) and the real task is strongly owned by the task group.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

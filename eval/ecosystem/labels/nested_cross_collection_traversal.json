@@ -488,12 +488,12 @@
       "language": "java",
       "path": "security-admin/src/main/java/org/apache/ranger/biz/ServiceDBStore.java",
       "message": "Function `updateChildObjectsOfServiceDef` nests `accessTypes` inside `xxAccessTypes` with pair-dependent work.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 973,
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): The nested loops match a single service definition's access types (a handful of entries, such as read/write/execute) against the stored rows by itemId; both lists are small by schema, and the loop is dominated by the per-item DAO calls, so the product-cost rationale does not apply.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

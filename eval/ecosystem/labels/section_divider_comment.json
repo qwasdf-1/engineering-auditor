@@ -573,12 +573,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/parosproxy/paros/extension/option/OptionsCertificatePanel.java",
       "message": "Function `getPanelCertificate` contains 4 section-divider comments (> 2).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 194,
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): The four `// ****` lines are two banners (lines 197-199 and 848-850) that fence a single NetBeans GUI-builder block ('begin/end netbeans code'). They mark generated code, not logical sections the function should be split along.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

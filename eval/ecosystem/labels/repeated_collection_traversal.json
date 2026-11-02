@@ -148,12 +148,12 @@
       "language": "python",
       "path": "frigate/data_processing/common/license_plate/mixin.py",
       "message": "Function `_is_valid_polygon` performs 4 pure terminal traversals of unchanged `point`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 703,
       "verdict": "false_positive",
       "reason": "_is_valid_polygon calls min/max on two different column slices, `point[:, 0]` and `point[:, 1]`, of a 4x2 numpy array, so no single collection is traversed three times; each slice is reduced only twice.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -308,12 +308,12 @@
       "language": "typescript",
       "path": "apps/admin/src/automations/components/canvas/automation-canvas.tsx",
       "message": "Function `` performs 3 pure terminal traversals of unchanged `automation.actions`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 429,
       "verdict": "true_positive",
       "reason": "Each render of AutomationCanvas evaluates `automation.actions.find(...)` for emailModalAction, deleteConfirmationAction and the EmailPerformanceSidebar `email` prop over the same unchanged actions array, so three scans per render hold; an id map such as the existing `actionsById` would serve.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -498,12 +498,12 @@
       "language": "typescript",
       "path": "web/src/portico/showroom.ts",
       "message": "Function `` performs 3 pure terminal traversals of unchanged `buttons`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 243,
       "verdict": "false_positive",
       "reason": "web/src/portico/showroom.ts backs the /devtools/buttons and /devtools/banners pages registered only in zproject/dev_urls.py, so it is development tooling outside the detector's production scope.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

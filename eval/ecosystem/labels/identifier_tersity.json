@@ -428,12 +428,12 @@
       "language": "python",
       "path": "frigate/util/object.py",
       "message": "Function `box_inside` has terse identifier density 1.00 (> 0.50).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 314,
       "verdict": "true_positive",
       "reason": "box_inside(b1, b2) relies on a comment ('check if b2 is inside b1') because the terse parameter names b1/b2 do not say which is the container, confirming the readability cost.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -518,12 +518,12 @@
       "language": "python",
       "path": "redash/settings/helpers.py",
       "message": "Function `parse_boolean` has terse identifier density 0.62 (> 0.50).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 22,
       "verdict": "true_positive",
       "reason": "parse_boolean names its input `s` and reuses it in strip/lower, both membership tests and the error message, so the single-letter name is most of the function's identifiers as reported.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -558,12 +558,12 @@
       "language": "python",
       "path": "redash/utils/__init__.py",
       "message": "Function `to_filename` has terse identifier density 0.61 (> 0.50).",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 223,
       "verdict": "false_positive",
       "reason": "to_filename only gets to 0.61 because the four `re` module references and the two `r\"...\"` string prefixes are counted; with those removed, the single string param `s` is 5 of about 12 identifiers.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

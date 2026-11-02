@@ -68,12 +68,12 @@
       "language": "javascript",
       "path": "ghost/core/server/services/comments/comments-service-emails.js",
       "message": "Function `notifyPostAuthors` formats loop-invariant data inside a loop.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 81,
       "verdict": "false_positive",
       "reason": "`moment(comment.get('created_at')).tz(...).format(...)` is invariant across `post.related('authors')`, but moment's format is not among the documented qualifying calls (fmt.Sprintf/String.format/util.format) and its operands are method-call results, not proven primitives, so the site is outside the detector's stated scope.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -8,12 +8,12 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 457",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 457,
       "verdict": "false_positive",
       "reason": "INADDR_ANY in uv__udp_maybe_deferred_bind is libuv's implicit port-0 bind of a not-yet-bound UDP handle before send/connect/multicast, mirroring kernel autobind; it does not expose a service the caller did not request.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -28,12 +28,12 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Service binds to all network interfaces at line 466",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 466,
       "verdict": "false_positive",
       "reason": "`addr->sin6_addr = in6addr_any` is the AF_INET6 branch of the same deferred ephemeral bind in uv__udp_maybe_deferred_bind (port left 0 by memset), library autobind semantics rather than a listening service.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

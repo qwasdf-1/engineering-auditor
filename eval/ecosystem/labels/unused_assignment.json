@@ -38,12 +38,12 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Value assigned to `active_screen_buffer` at line 1102 is overwritten before it is read.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 1102,
       "verdict": "false_positive",
       "reason": "`HANDLE active_screen_buffer = INVALID_HANDLE_VALUE` is a constant initializer in C, and the dead-store checks in layer1-correctness.md say they skip constant initializers, so this defensive init is a documented exclusion.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -98,12 +98,12 @@
       "language": "c",
       "path": "contrib/minizip/miniunz.c",
       "message": "Value assigned to `err` at line 310 is overwritten before it is read.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 310,
       "verdict": "false_positive",
       "reason": "`int err=UNZ_OK;` initializes with the macro `UNZ_OK` defined as `(0)`, the defensive constant initialization the C dead-store check documents as skipped (clang DeadStores), but the literal-only filter misses macro constants.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -118,12 +118,12 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Value assigned to `err` at line 1061 is overwritten before it is read.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 1061,
       "verdict": "false_positive",
       "reason": "In unzGoToFirstFile, `err=UNZ_OK` is a constant initializer (`#define UNZ_OK (0)`) of the kind the detector documents as excluded, only escaping the filter because it is a macro rather than a number literal.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -218,12 +218,12 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Bson/BsonWriter.cs",
       "message": "Value assigned to `s` at line 391 is overwritten before it is read.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 391,
       "verdict": "false_positive",
       "reason": "`string s = null;` in BsonWriter.WriteValue(char) is a C# constant initializer before the `#if HAVE_CHAR_TO_STRING_WITH_CULTURE` branches, which the documented dead-store exclusion for constant initializers covers.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2273,12 +2273,12 @@
       "language": "python",
       "path": "zerver/openapi/merge_api_changelogs.py",
       "message": "Value assigned to `new_feature_level` at line 34 is overwritten before it is read.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a10-a",
       "line": 34,
       "verdict": "true_positive",
       "reason": "`get_feature_level` assigns `new_feature_level = None` at line 34 and again at line 40 with no read between; the module is also imported by zerver/lib/templates.py at runtime.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2293,12 +2293,12 @@
       "language": "python",
       "path": "zerver/openapi/merge_api_changelogs.py",
       "message": "Value assigned to `changelogs_merged` at line 71 is overwritten before it is read.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a10-a",
       "line": 71,
       "verdict": "true_positive",
       "reason": "`changelogs_merged = False` at line 71 is repeated verbatim at line 79 with no read in between, so the first store in `merge_changelogs` is dead.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

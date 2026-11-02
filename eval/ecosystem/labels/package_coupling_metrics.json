@@ -46,11 +46,11 @@
       "language": "repository",
       "path": "dolphinscheduler-dao",
       "message": "Package `dolphinscheduler-dao` has Ca=6, Ce=4, I=0.400, A=0.418, D=0.182.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "verdict": "false_positive",
       "reason": "dolphinscheduler-dao's own figures (I=0.400, A=0.418) give D=0.182, close to the main sequence; it is labelled 'Painful' only by the I<0.5 and A<0.5 quadrant test, so the 'outside the main sequence' claim does not hold.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -122,11 +122,11 @@
       "language": "repository",
       "path": "dolphinscheduler-task-executor",
       "message": "Package `dolphinscheduler-task-executor` has Ca=4, Ce=3, I=0.429, A=0.311, D=0.260.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "verdict": "false_positive",
       "reason": "dolphinscheduler-task-executor sits at I=0.429, A=0.311, D=0.260, near the main sequence; the quadrant-only 'Painful' label overstates its imbalance.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -540,11 +540,11 @@
       "language": "repository",
       "path": "otlp",
       "message": "Package `otlp` has Ca=1, Ce=1, I=0.500, A=0.000, D=0.500.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): Package otlp imports two local packages in production code (internal/rtls in config.go and internal/rsync in service.go), so Ce is 2, not 1, and the reported I and D are miscounted.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -128,12 +128,12 @@
       "language": "go",
       "path": "server/jwt.go",
       "message": "Empty if_statement body at line 135",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 135,
       "verdict": "false_positive",
       "reason": "The empty `else if srvMajor > major {}` in validateTrustedOperators deliberately stops the lexicographic version comparison before the minor/update checks; it is an ordering guard, not missing logic.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1348,12 +1348,12 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/http/_http2.py",
       "message": "Empty elif_clause body at line 291",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 291,
       "verdict": "false_positive",
       "reason": "`elif isinstance(event, h2.events.PriorityUpdated): pass` whitelists a known h2 event to ignore before the final `else: raise AssertionError(\"Unexpected event\")`; the empty arm is required.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1368,12 +1368,12 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/http/_http2.py",
       "message": "Empty elif_clause body at line 295",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 295,
       "verdict": "false_positive",
       "reason": "`elif isinstance(event, h2.events.PingAckReceived): pass` is part of the exhaustive h2 event dispatch in _http2.py, where unlisted events hit the raising else, so this pass deliberately ignores the event.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1388,12 +1388,12 @@
       "language": "python",
       "path": "mitmproxy/proxy/layers/quic/_stream_layers.py",
       "message": "Empty elif_clause body at line 237",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 237,
       "verdict": "false_positive",
       "reason": "The `elif isinstance(event, (ConnectionIdIssued, ConnectionIdRetired, PingAcknowledged, ProtocolNegotiated)): pass` arm ignores known QUIC events ahead of `else: raise AssertionError`.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

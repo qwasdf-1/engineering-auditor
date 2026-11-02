@@ -148,12 +148,12 @@
       "language": "java",
       "path": "agents-audit/orc-util/src/main/java/org/apache/ranger/audit/utils/ORCFileUtil.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 421",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 421,
       "verdict": "false_positive",
       "reason": "createWriter(conf, fs, \"/tmp/test.orc\") is inside ORCFileUtil.main, an ad-hoc manual test harness that builds getTestEvent() fixtures; it is test/demo code, not the audit writer path.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -168,12 +168,12 @@
       "language": "java",
       "path": "agents-audit/orc-util/src/main/java/org/apache/ranger/audit/utils/ORCFileUtil.java",
       "message": "Hardcoded temp directory (Bandit B108) at line 440",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 440,
       "verdict": "false_positive",
       "reason": "\"/tmp/test-audit.log\" is passed to event.setResourcePath as fake audit-event data in the main() test fixture helper; it is a string field value and never used as a file location.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -248,12 +248,12 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1165",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 1165,
       "verdict": "true_positive",
       "reason": "The logs endpoint maps \"frigate\" to the hardcoded \"/dev/shm/logs/frigate/current\", a fixed path under /dev/shm in shipped API code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -268,12 +268,12 @@
       "language": "python",
       "path": "frigate/api/app.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 1166",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 1166,
       "verdict": "true_positive",
       "reason": "log_locations[\"go2rtc\"] = \"/dev/shm/logs/go2rtc/current\" hardcodes the go2rtc log path under /dev/shm.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -448,12 +448,12 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 40",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 40,
       "verdict": "false_positive",
       "reason": "fetch_system_logs_from_server(local_path=\"/tmp/\") belongs to ranger_performance_tool, a Python perf-testing utility not included in the ranger-tools assembly; it is benchmark tooling outside scope.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -468,12 +468,12 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 57",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 57,
       "verdict": "false_positive",
       "reason": "The local_path=\"/tmp/\" default on fetch_secondary_system_logs_from_server is in the same unpackaged ranger_performance_tool benchmark helper that scp's server logs for perf analysis.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -488,12 +488,12 @@
       "language": "python",
       "path": "ranger-tools/src/main/python/ranger_performance_tool/ranger_perf_utils/logging_utils.py",
       "message": "Hardcoded temp directory (Bandit B108) at line 73",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 73,
       "verdict": "false_positive",
       "reason": "fetch_access_logs_from_server's local_path=\"/tmp/\" default is again part of the perf-test tool under ranger-tools/src/main/python, which the distro does not ship, so it is benchmark tooling.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -468,12 +468,12 @@
       "language": "python",
       "path": "redash/query_runner/python.py",
       "message": "Non-test source calls dynamic execution at line 179",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 179,
       "verdict": "true_positive",
       "reason": "`custom_inplacevar` runs `exec(\"x\" + op + \"y\", glb)` in the production Python query runner; op is allowlisted, but this is still exec of a built string where `operator.iadd`-style functions would do.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

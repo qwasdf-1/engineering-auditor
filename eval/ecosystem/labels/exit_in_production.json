@@ -48,12 +48,12 @@
       "language": "c",
       "path": "zutil.c",
       "message": "Exit call at line 132",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "l10-a",
       "line": 132,
       "verdict": "false_positive",
       "reason": "z_error() is compiled only under #ifdef ZLIB_DEBUG as the failure handler for zlib's Assert macro; an assertion-failure abort in debug builds is the idiom, not production exit handling.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -138,12 +138,12 @@
       "language": "go",
       "path": "cmd/hook.go",
       "message": "Exit call at line 313",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 313,
       "verdict": "false_positive",
       "reason": "os.Exit(1) is in runHookUpdate, a urfave/cli subcommand action in gitea's cmd package (the binary's command layer, used only by main.go), and it deliberately rejects refs/pull updates without output, which is CLI entry-point behaviour.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -218,12 +218,12 @@
       "language": "go",
       "path": "services/gitproxy/server.go",
       "message": "Exit call at line 128",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 128,
       "verdict": "false_positive",
       "reason": "MaybeTunnel is called first thing in gitea's main.go, where it lets the binary act as git's GIT_PROXY_COMMAND when run with host and port, so os.Exit(1) after a tunnel error is that alternate program entry's exit status.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -258,12 +258,12 @@
       "language": "go",
       "path": "src/lib/log/logger.go",
       "message": "Exit call at line 265",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 265,
       "verdict": "false_positive",
       "reason": "os.Exit(1) is the defining behaviour of Logger.Fatal, matching the standard log.Fatal convention that callers choose on purpose, so the rule should recognise Fatal logging methods as an idiom.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -278,12 +278,12 @@
       "language": "go",
       "path": "src/lib/log/logger.go",
       "message": "Exit call at line 274",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 274,
       "verdict": "false_positive",
       "reason": "Logger.Fatalf ends with os.Exit(1) by contract, like the standard library's log.Fatalf, so exiting is the documented purpose of the method rather than an accidental exit.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -358,12 +358,12 @@
       "language": "go",
       "path": "server/server.go",
       "message": "Exit call at line 1708",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 1708,
       "verdict": "false_positive",
       "reason": "PrintServerAndExit is the version-printing callback that main.go passes to ConfigureOptions, and its name states that it exits, so os.Exit(0) after printing VERSION is the intended --version behaviour.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -578,12 +578,12 @@
       "language": "java",
       "path": "quarkus/runtime/src/main/java/org/keycloak/quarkus/runtime/cli/Picocli.java",
       "message": "Exit call at line 221",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 221,
       "verdict": "false_positive",
       "reason": "Picocli.exit(int) is the CLI launcher's single overridable exit hook (KeycloakMain, NonRunningPicocli and the junit5 Keycloak class all override it), so System.exit here is the program boundary, deliberately kept replaceable.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -798,12 +798,12 @@
       "language": "java",
       "path": "ugsync/ldapconfigchecktool/ldapconfigcheck/src/main/java/org/apache/ranger/ldapconfigcheck/CommandLineOptions.java",
       "message": "Exit call at line 136",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 136,
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): CommandLineOptions.help() belongs to the standalone ldapConfigCheck CLI: it is used only by LdapConfigCheckMain's argument parsing and shipped as its own jar plus scripts. Exiting after printing usage is that program's own process control, not library code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -998,12 +998,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/GuiBootstrap.java",
       "message": "Exit call at line 146",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 146,
       "verdict": "false_positive",
       "reason": "GuiBootstrap.init() runs via EventQueue.invokeLater after start() and ZAP.main have returned, so there is no caller to propagate to; System.exit(1) is the only way to stop the EDT on startup failure (as the file's own comment at line 206 notes).",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1018,12 +1018,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/api/CoreAPI.java",
       "message": "Exit call at line 571",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 571,
       "verdict": "false_positive",
       "reason": "The CoreAPI ACTION_SHUTDOWN handler starts a ZAP-Shutdown thread that runs Control.shutdown() and then System.exit(...) in finally; the API's shutdown action exists to terminate the process after cleanup.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1078,12 +1078,12 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "Exit call at line 719",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 719,
       "verdict": "false_positive",
       "reason": "process.exit(1) is in bootGhost, the Ghost application's top-level boot routine that the entry script calls, and it fires only if installing the unhandled-rejection handler itself throws; this is the program's startup boundary.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1098,12 +1098,12 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "Exit call at line 816",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 816,
       "verdict": "false_positive",
       "reason": "In bootGhost, process.exit(0) runs only when GHOST_CI_SHUTDOWN_AFTER_BOOT is set, after awaiting flushLogsAndMetrics(); it is a CI boot-check hook in the application's own entry routine and already flushes before exiting.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1118,12 +1118,12 @@
       "language": "javascript",
       "path": "ghost/core/boot.js",
       "message": "Exit call at line 850",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 850,
       "verdict": "false_positive",
       "reason": "bootGhost's failure branch awaits flushLogsAndMetrics() and then calls process.exit(2) when the server never started, a graceful startup-failure exit in the application's top-level boot function.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1558,12 +1558,12 @@
       "language": "kotlin",
       "path": "duckchat/duckchat-internal/src/main/java/com/duckduckgo/duckchat/internal/DuckAiUrlSettingsActivity.kt",
       "message": "Exit call at line 96",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 96,
       "verdict": "false_positive",
       "reason": "DuckAiUrlSettingsActivity lives in duckchat-internal, which app/build.gradle adds only as internalImplementation, so this delayed exitProcess(0) is in an internal developer settings screen and is never shipped to users.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1878,12 +1878,12 @@
       "language": "python",
       "path": "frigate/service_manager/multiprocessing.py",
       "message": "Exit call at line 153",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 153,
       "verdict": "false_positive",
       "reason": "This sys.exit() is in the SIGTERM/SIGINT handler that FrigateProcess.before_run installs in its own child process, and it runs only when no stop_event is being watched; raising SystemExit there is the graceful way to unwind that process on a signal.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2138,12 +2138,12 @@
       "language": "python",
       "path": "redash/cli/data_sources.py",
       "message": "Exit call at line 85",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 85,
       "verdict": "false_positive",
       "reason": "exit(1) after NoResultFound is in the `test` click command of redash.cli.data_sources, a manage.py CLI command handler whose exit status is the command's result; that is program entry code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2158,12 +2158,12 @@
       "language": "python",
       "path": "redash/cli/data_sources.py",
       "message": "Exit call at line 160",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 160,
       "verdict": "false_positive",
       "reason": "exit(1) on invalid options is in the `new` click command registered on the redash manage.py AppGroup; exiting with a status from a CLI command handler is the program boundary, not library code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2178,12 +2178,12 @@
       "language": "python",
       "path": "redash/cli/users.py",
       "message": "Exit call at line 239",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 239,
       "verdict": "false_positive",
       "reason": "exit(1) for an unknown email is the failure status of a redash.cli.users click command run via manage.py, a CLI entry handler rather than reusable library code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2238,12 +2238,12 @@
       "language": "python",
       "path": "zerver/management/commands/edit_linkifiers.py",
       "message": "Exit call at line 66",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 66,
       "verdict": "false_positive",
       "reason": "sys.exit(0) after do_remove_linkifier is in the handle() of the edit_linkifiers Django management command, a CLI entry point where ending with status 0 is program boundary code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2258,12 +2258,12 @@
       "language": "python",
       "path": "zerver/management/commands/process_queue.py",
       "message": "Exit call at line 67",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 67,
       "verdict": "false_positive",
       "reason": "sys.exit(3) in the SIGUSR1 handler of the process_queue management command is a deliberate restart signal to Django's autoreloader, as its docstring states; it is entry-point process control.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2278,12 +2278,12 @@
       "language": "python",
       "path": "zerver/management/commands/process_queue.py",
       "message": "Exit call at line 102",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 102,
       "verdict": "false_positive",
       "reason": "sys.exit(0) in process_queue's SIGTERM/SIGINT signal_handler runs after worker.stop() in the queue-worker command process, the standard graceful-shutdown idiom for a signal handler in a CLI entry point.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2298,12 +2298,12 @@
       "language": "rust",
       "path": "crates/atuin-ai/src/commands/resume.rs",
       "message": "Exit call at line 830",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 830,
       "verdict": "true_positive",
       "reason": "atuin-ai is a library crate (src/lib.rs), and its non-unix branch of `exec()` calls `std::process::exit(status.code().unwrap_or(1))` instead of returning the status to the binary.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2358,12 +2358,12 @@
       "language": "rust",
       "path": "crates/atuin-pty-proxy/src/runtime.rs",
       "message": "Exit call at line 54",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 54,
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): runtime::main is the pty-proxy subcommand's process entry (called only from PtyProxy::run); it exits with the proxied shell's code on purpose because, as its comment says, a blocking stdin read never returns and would keep the process alive.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2458,12 +2458,12 @@
       "language": "typescript",
       "path": "ghost/core/server/ghost-server.ts",
       "message": "Exit call at line 168",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 168,
       "verdict": "false_positive",
       "reason": "GhostServer.shutdown() is the SIGINT/SIGTERM handler documented as a full shutdown, and process.exit(code) runs only after `await this.stop()` and flushLogsAndMetrics(), so it already is the graceful shutdown the recommendation asks for.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -2478,12 +2478,12 @@
       "language": "typescript",
       "path": "ghost/core/server/ghost-server.ts",
       "message": "Exit call at line 172",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 172,
       "verdict": "false_positive",
       "reason": "process.exit(1) in GhostServer.shutdown's catch runs after logging the stop failure and awaiting flushLogsAndMetrics(), the terminal step of the application's signal-driven shutdown rather than an exit hidden in reusable code.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

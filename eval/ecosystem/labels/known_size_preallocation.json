@@ -48,12 +48,12 @@
       "language": "go",
       "path": "internal/configuration/sources.go",
       "message": "Function `NewDefaultSources` grows `sources` once per item in `fileSources`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 383,
       "verdict": "true_positive",
       "reason": "Adjudicated (arbiter): NewFileSources returns []*FileSource, so each element is appended one at a time into `sources`, which starts as a one-element literal. The final size, len(fileSources)+3+len(additionalSources), is known up front.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -153,12 +153,12 @@
       "language": "go",
       "path": "routers/web/repo/actions/view.go",
       "message": "Function `convertToViewModel` grows `logLines` once per item in `logRows`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 882,
       "verdict": "true_positive",
       "reason": "Within `if validCursor`, `logLines` gets exactly one `&ViewStepLogLine{...}` per row of `logRows` and nothing else, so it could be allocated with `len(logRows)` capacity (still marshalling to `[]`).",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -293,12 +293,12 @@
       "language": "go",
       "path": "src/pkg/blob/dao/dao.go",
       "message": "Function `UpdateBlobStatus` grows `params` once per item in `stats`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 198,
       "verdict": "false_positive",
       "reason": "`params` is a four-element literal `[]any{time.Now(), blob.Status, blob.ID, blob.Version}`, not a zero-capacity slice, so the reported `len(stats)` is not its size; this is outside the detector's zero-capacity scope.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -313,12 +313,12 @@
       "language": "go",
       "path": "src/pkg/blob/dao/dao.go",
       "message": "Function `FindBlobsShouldUnassociatedWithProject` grows `params` once per item in `blobs`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 250,
       "verdict": "false_positive",
       "reason": "`params := []any{projectID}` already holds one element, so the final size is 1+len(blobs), not `len(blobs)`; the slice is not the zero-capacity slice the detector covers.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -773,12 +773,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/sql/SQLUtils.java",
       "message": "Function `collectComments` grows `subpatterns` once per item in `slComments`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 129,
       "verdict": "false_positive",
       "reason": "`subpatterns` gets a conditional add for `mlComments` before the loop, and the `slComments` loop sits inside a null check, so `slComments.length` is not the list's final size; the extra add puts this outside the one-add-per-element shape.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1193,12 +1193,12 @@
       "language": "java",
       "path": "zap/src/main/java/org/zaproxy/zap/extension/script/ExtensionScript.java",
       "message": "Function `getScriptingEngines` grows `engineNames` once per item in `engines`.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 269,
       "verdict": "false_positive",
       "reason": "After the `engines` loop, a second loop over `this.engineWrappers` adds more names conditionally to `engineNames`, so `engines.size()` is not its final size.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

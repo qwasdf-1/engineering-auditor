@@ -248,12 +248,12 @@
       "language": "repository",
       "path": "quarkus/runtime/pom.xml",
       "message": "`com.github.ua-parser:uap-java` is a production dependency in quarkus/runtime/pom.xml, but no source file under `quarkus/runtime/` imports it",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 617,
       "verdict": "false_positive",
       "reason": "quarkus/runtime pulls keycloak-services with `<exclusion>*:*</exclusion>` and re-declares its runtime libraries; uap-java is needed on the server classpath by services' DeviceRepresentationProviderImpl.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -608,12 +608,12 @@
       "language": "structured",
       "path": "packages/api/package.json",
       "message": "`@actual-app/crdt` is a production dependency in packages/api/package.json, but no source file under `packages/api/` imports it",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a10-a",
       "line": 59,
       "verdict": "false_positive",
       "reason": "Adjudicated (arbiter): @actual-app/api publishes @types built from imports of @actual-app/core's types, whose handler types (e.g. sync's Message with `timestamp: Timestamp`) import @actual-app/crdt while core only devDepends on it, so api's crdt dependency is what makes the published types resolve.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -868,12 +868,12 @@
       "language": "structured",
       "path": "koenig/kg-default-nodes/package.json",
       "message": "`@lexical/selection` is a production dependency in koenig/kg-default-nodes/package.json, but no source file under `koenig/kg-default-nodes/` imports it",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 73,
       "verdict": "false_positive",
       "reason": "pnpm-lock.yaml shows @lexical/rich-text@0.13.1 (imported by kg-default-nodes) declares `@lexical/selection: 0.13.1` as a peerDependency, so the package must be declared.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -888,12 +888,12 @@
       "language": "structured",
       "path": "koenig/kg-default-nodes/package.json",
       "message": "`@lexical/utils` is a production dependency in koenig/kg-default-nodes/package.json, but no source file under `koenig/kg-default-nodes/` imports it",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 74,
       "verdict": "false_positive",
       "reason": "`@lexical/utils` satisfies the peerDependencies of @lexical/rich-text@0.13.1 per pnpm-lock.yaml, which kg-default-nodes imports for HeadingNode/QuoteNode.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -1108,12 +1108,12 @@
       "language": "structured",
       "path": "pyproject.toml",
       "message": "`urllib3` is a production dependency in pyproject.toml, but no source file under the repository imports it",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 72,
       "verdict": "true_positive",
       "reason": "redash never imports urllib3; the only mentions are the logger-name strings \"requests.packages.urllib3\" in redash/__init__.py and elasticsearch.py, so the direct pin is not used as an import.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

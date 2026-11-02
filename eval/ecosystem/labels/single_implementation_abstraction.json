@@ -8,12 +8,12 @@
       "language": "go",
       "path": "internal/authentication/ldap_client.go",
       "message": "Interface `ldapDiscoverySetter` at line 23 has one implementation in the repository, `LDAPClient`; the abstraction adds a declaration for a variation nothing uses",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 23,
       "verdict": "true_positive",
       "reason": "ldapDiscoverySetter is unexported and only *LDAPClient defines setDiscovery; its single use, the type assertion in ldap_client_factory.go:527, could assert the concrete type, so the interface adds a variation nothing uses.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

@@ -538,12 +538,12 @@
       "language": "python",
       "path": "kms/scripts/dba_script.py",
       "message": "Functions `create_rangerdb_user` and `create_rangerdb_user` share 5 non-trivial local callees.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 205,
       "verdict": "false_positive",
       "reason": "The create_rangerdb_user overrides in kms/scripts/dba_script.py are per-dialect implementations (MySQL host loop vs Oracle/Postgres CREATE USER syntax) of the BaseDB method; calling the same check_connection/verify_user/jisql primitives is polymorphism.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -578,12 +578,12 @@
       "language": "python",
       "path": "security-admin/scripts/dba_script.py",
       "message": "Functions `create_rangerdb_user` and `create_rangerdb_user` share 5 non-trivial local callees.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 232,
       "verdict": "false_positive",
       "reason": "security-admin dba_script.py's MysqlConf.create_rangerdb_user and its sibling override issue dialect-specific CREATE USER statements; the shared check_connection/get_jisql_cmd/verify_user calls are the BaseDB polymorphic primitives.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -598,12 +598,12 @@
       "language": "python",
       "path": "security-admin/scripts/dba_script.py",
       "message": "Functions `create_auditdb_user` and `create_auditdb_user` share 4 non-trivial local callees.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 367,
       "verdict": "false_positive",
       "reason": "MysqlConf.create_auditdb_user (367) and PostgresConf.create_auditdb_user (974) are per-dialect overrides orchestrating create_rangerdb_user/create_db/grant_xa_db_user differently (Postgres also creates db_user), so the shared callees are the class's own primitives.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
@@ -668,12 +668,12 @@
       "language": "python",
       "path": "corporate/models/stripe_state.py",
       "message": "Functions `to_dict` and `to_dict` share 3 non-trivial local callees.",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 135,
       "verdict": "false_positive",
       "reason": "Session.to_dict, PaymentIntent.to_dict and Invoice.to_dict are separate Django models' serializers that each call their own class's get_status_as_string/get_last_associated_event; the matching names resolve to different methods.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",

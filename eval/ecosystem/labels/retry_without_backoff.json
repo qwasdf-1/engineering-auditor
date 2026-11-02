@@ -28,12 +28,12 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.model/src/org/jkiss/dbeaver/model/exec/DBExecUtils.java",
       "message": "The loop at line 230 retries the operation at line 231 immediately after it fails, with no wait between attempts",
-      "status": "pre_label",
+      "status": "final",
       "sampled_from": "a8-a",
       "line": 230,
       "verdict": "false_positive",
       "reason": "Between attempts the loop runs recovery (`InvalidateJob.invalidateTransaction` / `invalidateDataSource` reconnect) only for TRANSACTION_ABORTED or CONNECTION_LOST, so it remediates the cause before retrying rather than hammering a failing peer.",
-      "labeller": "model:claude-opus-5-5",
+      "labeller": "human:operator",
       "checks": [
         {
           "source": "model:claude-sonnet-5-5",
