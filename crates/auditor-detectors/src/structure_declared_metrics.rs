@@ -140,6 +140,7 @@ mod tests {
                 overload_stub: false,
                 memoized: false,
                 associated: false,
+                typing: Default::default(),
             })
             .collect::<Vec<_>>();
         let mut metrics = (0..symbols.len() as u32)

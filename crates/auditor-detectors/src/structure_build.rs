@@ -77,6 +77,10 @@ fn collect_symbols(
                 .map(|span| clean_name(tree.text_for_span(span)))
                 .unwrap_or_default();
             let source = tree.text_for_span(symbol.span);
+            let node = tree
+                .root_node()
+                .descendant_for_byte_range(symbol.span.start_byte, symbol.span.end_byte)
+                .map(|node| declaration_node(node, symbol.span));
             if name.is_empty() && symbol.kind == SymbolKind::Variable {
                 name = declaration_binding(source).unwrap_or_default();
             }
@@ -169,6 +173,9 @@ fn collect_symbols(
                 associated: associated_spans
                     .iter()
                     .any(|span| span.start_byte == symbol.span.start_byte),
+                typing: node
+                    .map(|node| crate::structure_typing::symbol_typing(&file.language, node))
+                    .unwrap_or_default(),
             }
         })
         .collect()
@@ -196,6 +203,20 @@ fn declared_type(source: &str, type_end: &[char]) -> String {
         (true, Some(constructed), Some(name)) => format!("{constructed} {name}"),
         _ => head.trim().to_string(),
     }
+}
+
+/// The outermost node spanning exactly `span`: a declaration whose only
+/// child covers it whole (`variable_declaration` in C#) reads as itself.
+fn declaration_node(
+    mut node: auditor_ast::AstNode<'_>,
+    span: auditor_ast::SourceSpan,
+) -> auditor_ast::AstNode<'_> {
+    while let Some(parent) = node.parent().filter(|parent| {
+        parent.start_byte() == span.start_byte && parent.end_byte() == span.end_byte
+    }) {
+        node = parent;
+    }
+    node
 }
 
 fn declaration_binding(source: &str) -> Option<String> {

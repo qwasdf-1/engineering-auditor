@@ -527,7 +527,15 @@ fn run_error_owner(
         DetectorOwner::UnhandledTerminationInProduction => {
             errorprone::unhandled_termination_in_production_findings(context.ast_scan())
         }
-        DetectorOwner::SqlInjection => security::sql_injection_findings(context.ast_scan()),
+        DetectorOwner::SqlInjection => security::sql_injection_findings(
+            ast_scan::AstScan::new(
+                context.files,
+                context.method,
+                context.cache,
+                &mut context.repo_ast,
+            ),
+            context.structure.as_ref().expect("structure index"),
+        ),
         DetectorOwner::ShellExecution => security::shell_execution_findings(context.ast_scan()),
         DetectorOwner::InsecureCryptography => {
             security::insecure_cryptography_findings(context.ast_scan())

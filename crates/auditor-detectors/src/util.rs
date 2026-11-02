@@ -639,6 +639,24 @@ pub(crate) fn count_word(text: &str, word: &str) -> usize {
         .count()
 }
 
+/// The byte index of the `)` closing the `(` that `text` opens with.
+pub(crate) fn closing_paren(text: &str) -> Option<usize> {
+    let mut depth = 0usize;
+    for (index, character) in text.char_indices() {
+        match character {
+            '(' => depth += 1,
+            ')' => {
+                depth = depth.checked_sub(1)?;
+                if depth == 0 {
+                    return Some(index);
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
 pub(crate) fn identifiers(text: &str) -> Vec<String> {
     let mut identifiers = Vec::new();
     let mut current = String::new();

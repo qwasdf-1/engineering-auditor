@@ -11,6 +11,7 @@ use crate::csharp_api_identity::csharp_arguments;
 use crate::kotlin_api_identity::kotlin_arguments;
 use crate::security_sql::built_from_values;
 use crate::security_sql_values::is_runtime_value;
+use crate::type_facts::TypeScope;
 
 /// JDBC, JPA, and Spring `JdbcTemplate` methods that run their SQL argument.
 const JVM_SINKS: &[&str] = &[
@@ -32,7 +33,7 @@ const JVM_SINKS: &[&str] = &[
 
 /// Kotlin calls of a JDBC-style sink whose first argument builds SQL from
 /// runtime values.
-pub(crate) fn kotlin_sql_sites(root: AstNode<'_>) -> Vec<AstNode<'_>> {
+pub(crate) fn kotlin_sql_sites<'a>(root: AstNode<'a>, types: TypeScope<'_>) -> Vec<AstNode<'a>> {
     ast_scan::nodes_of_kind(root, &["call_expression"])
         .into_iter()
         .filter(|call| {
@@ -43,7 +44,7 @@ pub(crate) fn kotlin_sql_sites(root: AstNode<'_>) -> Vec<AstNode<'_>> {
             method.is_some_and(|method| JVM_SINKS.contains(&method))
                 && kotlin_arguments(*call)
                     .first()
-                    .is_some_and(|(_, query)| built_from_values(*query, kotlin_builds))
+                    .is_some_and(|(_, query)| built_from_values(*query, kotlin_builds, types))
         })
         .collect()
 }
@@ -77,7 +78,7 @@ fn kotlin_runtime_value(operand: AstNode<'_>) -> bool {
 /// `cmd.CommandText = sql`, `FromSqlRaw(sql)`, `ExecuteSqlRaw(sql)`, and
 /// Dapper's `Query`/`Execute` family, where `sql` is built from runtime
 /// values.
-pub(crate) fn csharp_sql_sites(root: AstNode<'_>) -> Vec<AstNode<'_>> {
+pub(crate) fn csharp_sql_sites<'a>(root: AstNode<'a>, types: TypeScope<'_>) -> Vec<AstNode<'a>> {
     const METHOD_SINKS: &[&str] = &[
         "FromSqlRaw",
         "ExecuteSqlRaw",
@@ -100,7 +101,7 @@ pub(crate) fn csharp_sql_sites(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         "ExecuteReader",
         "ExecuteReaderAsync",
     ];
-    let unsafe_query = |query: AstNode<'_>| built_from_values(query, csharp_builds);
+    let unsafe_query = |query: AstNode<'_>| built_from_values(query, csharp_builds, types);
     let mut sites = ast_scan::nodes_of_kind(
         root,
         &["invocation_expression", "object_creation_expression"],
@@ -179,7 +180,10 @@ mod tests {
             .unwrap()
             .parse(&AstLang::Kotlin, kotlin)
             .unwrap();
-        assert_eq!(kotlin_sql_sites(tree.root_node()).len(), 2);
+        assert_eq!(
+            kotlin_sql_sites(tree.root_node(), Default::default()).len(),
+            2
+        );
         let csharp = r#"class C { void F(SqlConnection c, string id) {
     var cmd = new SqlCommand("SELECT * FROM t WHERE id = " + id, c);
     cmd.CommandText = $"DELETE FROM t WHERE id = {id}";
@@ -191,6 +195,9 @@ mod tests {
             .unwrap()
             .parse(&AstLang::CSharp, csharp)
             .unwrap();
-        assert_eq!(csharp_sql_sites(tree.root_node()).len(), 2);
+        assert_eq!(
+            csharp_sql_sites(tree.root_node(), Default::default()).len(),
+            2
+        );
     }
 }

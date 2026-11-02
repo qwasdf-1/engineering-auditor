@@ -279,6 +279,17 @@ impl<'a> AstNode<'a> {
         })
     }
 
+    /// The smallest node below this one that spans `start..end` bytes.
+    pub fn descendant_for_byte_range(&self, start: usize, end: usize) -> Option<AstNode<'a>> {
+        self.node
+            .descendant_for_byte_range(start, end)
+            .map(|node| AstNode {
+                node,
+                source: self.source,
+                language: self.language,
+            })
+    }
+
     pub fn child_by_field_name(&self, field: &str) -> Option<AstNode<'a>> {
         self.node.child_by_field_name(field).map(|node| AstNode {
             node,

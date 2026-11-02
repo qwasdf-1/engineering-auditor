@@ -8,6 +8,7 @@ use auditor_ast::{AstNode, FunctionFlow, Origin};
 use crate::ast_scan;
 use crate::dataflow_sources::callee_name;
 use crate::security_sql_templates::{CONTENT_KINDS, INTERPOLATION_KINDS, STRING_KINDS};
+use crate::type_facts::{Resolution, TypeScope, NUMERIC_TYPES};
 
 /// Calls whose result cannot carry SQL: numbers converted to text and
 /// identifiers or literals quoted for SQL.
@@ -52,24 +53,32 @@ const PARSED_TYPES: &[&str] = &[
     "int", "long", "short", "uint", "ulong", "decimal", "double", "Int32", "Int64", "Guid",
 ];
 
-/// Declared types whose values render as a number, a boolean, or a GUID.
-const NUMERIC_TYPES: &[&str] = &[
-    "int", "long", "short", "byte", "uint", "ulong", "ushort", "double", "float", "decimal",
-    "bool", "boolean", "Integer", "Long", "Short", "Byte", "Double", "Float", "Boolean", "Guid",
-    "int32", "int64", "uint32", "uint64", "float64", "usize", "isize", "i32", "i64", "u32", "u64",
-];
-
 /// Calls that join a list into a query fragment.
 const JOIN_CALLS: &[&str] = &["join", "Join", "Repeat", "repeat"];
 
 /// A value that cannot carry SQL text: a literal, a constant, a number, or
 /// a generated placeholder list.
-pub(super) fn is_fixed(node: AstNode<'_>) -> bool {
+pub(super) fn is_fixed(node: AstNode<'_>, types: TypeScope<'_>) -> bool {
     !is_runtime_value(node)
         || is_constant(node)
         || is_safe_call(node)
         || is_numeric(node)
         || is_placeholder_list(node)
+        || declared_fixed(types.resolve(node))
+}
+
+/// A value the repository declares a number, a boolean, a GUID, or an
+/// enum's name, or reads from a constant bound to a literal
+/// (`Constants.Aliases.CheckBoxList`, `table.getObjectId()`).
+fn declared_fixed(resolution: Resolution) -> bool {
+    resolution.is_numeric_or_enum()
+        || resolution.constant.is_some_and(|constant| {
+            let constant = constant.trim();
+            constant.starts_with(['"', '\'', '`'])
+                && !constant.contains("${")
+                && !constant.contains('{')
+                || constant.parse::<f64>().is_ok()
+        })
 }
 
 fn is_call(node: AstNode<'_>) -> bool {

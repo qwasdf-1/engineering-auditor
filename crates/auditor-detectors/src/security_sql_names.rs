@@ -22,6 +22,7 @@ use crate::security_sql_templates::{
     INTERPOLATION_KINDS, STRING_KINDS,
 };
 use crate::security_sql_values::{is_fixed, mapped_template};
+use crate::type_facts::TypeScope;
 
 /// Stands for one runtime value in the query's text.
 const SLOT: char = '\u{1}';
@@ -46,15 +47,25 @@ const MAX_INLINE_DEPTH: usize = 4;
 /// The query's text with a [`SLOT`] per runtime value, and the
 /// expressions each slot may hold: the value itself, or a format call's
 /// arguments for its placeholders.
-#[derive(Default)]
-struct Skeleton<'a> {
+struct Skeleton<'a, 't> {
     text: String,
     slots: Vec<Vec<AstNode<'a>>>,
     /// Locals being read through.
     depth: usize,
+    /// What the repository declares its values to be.
+    types: TypeScope<'t>,
 }
 
-impl<'a> Skeleton<'a> {
+impl<'a, 't> Skeleton<'a, 't> {
+    fn new(types: TypeScope<'t>) -> Self {
+        Self {
+            text: String::new(),
+            slots: Vec::new(),
+            depth: 0,
+            types,
+        }
+    }
+
     fn slot(&mut self, values: Vec<AstNode<'a>>) {
         self.text.push(SLOT);
         self.slots.push(values);
@@ -64,15 +75,15 @@ impl<'a> Skeleton<'a> {
 /// Whether every runtime value in `query` only shapes its structure: in a
 /// name, clause, or list position and not from request input. True too when
 /// none remains once constants and safe conversions are read as text.
-pub(crate) fn structure_only(query: AstNode<'_>) -> bool {
-    let mut skeleton = Skeleton::default();
+pub(crate) fn structure_only(query: AstNode<'_>, types: TypeScope<'_>) -> bool {
+    let mut skeleton = Skeleton::new(types);
     build(query, Format::Plain, &[], &mut skeleton);
     skeleton.structural()
 }
 
 /// [`structure_only`] for a query held in a local, given the values bound
 /// to it: each whole value with every part appended after it.
-pub(crate) fn assigned_structure_only(parts: &[Assigned<'_>]) -> bool {
+pub(crate) fn assigned_structure_only(parts: &[Assigned<'_>], types: TypeScope<'_>) -> bool {
     let appended = parts
         .iter()
         .filter_map(|part| match part {
@@ -91,7 +102,7 @@ pub(crate) fn assigned_structure_only(parts: &[Assigned<'_>]) -> bool {
         wholes.into_iter().map(Some).collect()
     };
     starts.into_iter().all(|whole| {
-        let mut skeleton = Skeleton::default();
+        let mut skeleton = Skeleton::new(types);
         whole
             .into_iter()
             .chain(appended.iter().copied())
@@ -100,7 +111,7 @@ pub(crate) fn assigned_structure_only(parts: &[Assigned<'_>]) -> bool {
     })
 }
 
-impl Skeleton<'_> {
+impl Skeleton<'_, '_> {
     fn structural(&self) -> bool {
         self.text
             .match_indices(SLOT)
@@ -114,7 +125,12 @@ impl Skeleton<'_> {
 
 /// Appends `node`'s query text to `out`. `arguments` are the values a
 /// format template's placeholders take.
-fn build<'a>(node: AstNode<'a>, format: Format, arguments: &[AstNode<'a>], out: &mut Skeleton<'a>) {
+fn build<'a>(
+    node: AstNode<'a>,
+    format: Format,
+    arguments: &[AstNode<'a>],
+    out: &mut Skeleton<'a, '_>,
+) {
     if STRING_KINDS.contains(&node.kind()) {
         string_text(node, format, arguments, out);
     } else if let Some((template, format, arguments)) = format_template(node) {
@@ -136,7 +152,7 @@ fn build<'a>(node: AstNode<'a>, format: Format, arguments: &[AstNode<'a>], out: 
     ) {
         node.named_children()
             .for_each(|child| build(child, format, arguments, out));
-    } else if is_fixed(node) {
+    } else if is_fixed(node, out.types) {
         out.text.push('c');
     } else if let Some(template) = mapped_template(node) {
         build(template, format, arguments, out);
@@ -174,7 +190,7 @@ fn string_text<'a>(
     node: AstNode<'a>,
     format: Format,
     arguments: &[AstNode<'a>],
-    out: &mut Skeleton<'a>,
+    out: &mut Skeleton<'a, '_>,
 ) {
     for child in node.named_children() {
         if INTERPOLATION_KINDS.contains(&child.kind()) {
@@ -193,7 +209,12 @@ fn string_text<'a>(
 
 /// Copies `text`, replacing each format placeholder with a [`SLOT`] that
 /// may hold any of `arguments`.
-fn push_text<'a>(text: &str, format: Format, arguments: &[AstNode<'a>], out: &mut Skeleton<'a>) {
+fn push_text<'a>(
+    text: &str,
+    format: Format,
+    arguments: &[AstNode<'a>],
+    out: &mut Skeleton<'a, '_>,
+) {
     let (open, escaped) = match format {
         Format::Plain => return out.text.push_str(text),
         Format::Percent => ('%', "%%"),

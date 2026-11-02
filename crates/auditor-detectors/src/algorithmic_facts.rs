@@ -160,11 +160,17 @@ pub(crate) struct AlgorithmicIndex {
 impl AlgorithmicIndex {
     pub(crate) fn build(structure: &StructureIndex, graph: &CallGraph) -> Self {
         let mut facts = Vec::new();
+        let types = TypeFacts::new(structure);
         for file in structure.files().iter().filter(|file| file.emittable) {
+            let scope = callees::Callees {
+                structure,
+                graph,
+                types: TypeScope::of(&types, &file.path),
+            };
             for (owner, function) in file.symbols.iter().enumerate().filter(|(_, symbol)| {
                 matches!(symbol.kind, SymbolKind::Function | SymbolKind::Method) && !symbol.in_test
             }) {
-                collect_function_facts(file, owner as u32, function, &mut facts);
+                collect_function_facts(file, owner as u32, function, &scope, &mut facts);
             }
         }
         inherited::inherited_facts(structure, graph, &mut facts);
@@ -179,10 +185,18 @@ impl AlgorithmicIndex {
     }
 }
 
+/// What a function's facts are read against: its aliases, and the
+/// repository's declarations and call graph.
+struct Lookups<'a> {
+    aliases: &'a BTreeMap<String, String>,
+    callees: &'a callees::Callees<'a>,
+}
+
 fn collect_function_facts(
     file: &StructureFile,
     owner: u32,
     function: &StructureSymbol,
+    callees: &callees::Callees<'_>,
     facts: &mut Vec<AlgorithmicFact>,
 ) {
     let aliases = aliases_for(file, owner);
@@ -190,10 +204,14 @@ fn collect_function_facts(
     collect_repeated_sorts(file, owner, function, &aliases, facts);
     collect_sort_selections(file, owner, function, &aliases, facts);
     collect_repeated_traversals(file, owner, function, &aliases, facts);
-    collect_linear_membership(file, owner, function, &aliases, facts);
-    collect_membership_tests(file, owner, function, &aliases, facts);
+    let lookups = Lookups {
+        aliases: &aliases,
+        callees,
+    };
+    collect_linear_membership(file, owner, function, &lookups, facts);
+    collect_membership_tests(file, owner, function, &lookups, facts);
     collect_deduplicating_appends(file, owner, function, &aliases, facts);
-    collect_queries_in_loops(file, owner, function, &aliases, facts);
+    collect_queries_in_loops(file, owner, function, &lookups, facts);
     collect_cost_facts(file, owner, function, &aliases, facts);
     collect_front_removals(file, owner, function, &aliases, facts);
 }
@@ -510,14 +528,36 @@ fn searched_sequence(
     file: &StructureFile,
     owner: u32,
     collection: &str,
-    aliases: &BTreeMap<String, String>,
     loop_fact: &StructureLoop,
+    lookups: &Lookups<'_>,
 ) -> Option<(CollectionKind, Cardinality)> {
-    let (collection_kind, cardinality) = collection_shape(file, owner, collection);
+    let (collection_kind, cardinality) = match collection_shape(file, owner, collection) {
+        // A constant declared elsewhere, read directly or through a local
+        // (`List<String> names = NAMES`), is its literal when no code can
+        // grow it (`static final List<String> NAMES = List.of(..)`).
+        (kind, Cardinality::UnknownScalable) => {
+            let source = local_initializer(file, owner, collection).unwrap_or(collection);
+            match lookups
+                .callees
+                .types
+                .resolve_text(owner as usize, source)
+                .constant
+                .as_deref()
+                .and_then(constant_collection)
+            {
+                Some((constant_kind, bounded)) if kind == CollectionKind::Unknown => {
+                    (constant_kind, bounded)
+                }
+                Some((_, bounded)) => (kind, bounded),
+                None => (kind, Cardinality::UnknownScalable),
+            }
+        }
+        shape => shape,
+    };
     let scope = |region| MutationScope {
         owner,
         root: collection,
-        aliases,
+        aliases: lookups.aliases,
         region,
         except: None,
     };
@@ -541,11 +581,11 @@ fn collect_linear_membership(
     file: &StructureFile,
     owner: u32,
     function: &StructureSymbol,
-    aliases: &BTreeMap<String, String>,
+    lookups: &Lookups<'_>,
     facts: &mut Vec<AlgorithmicFact>,
 ) {
     for call in owner_calls(file, owner) {
-        let Some(shape) = call_shape(call, aliases) else {
+        let Some(shape) = call_shape(call, lookups.aliases) else {
             continue;
         };
         if !matches!(shape.method.as_str(), "contains" | "includes") {
@@ -557,7 +597,7 @@ fn collect_linear_membership(
             continue;
         };
         let Some((collection_kind, cardinality)) =
-            searched_sequence(file, owner, &shape.root, aliases, loop_fact)
+            searched_sequence(file, owner, &shape.root, loop_fact, lookups)
         else {
             continue;
         };
@@ -585,7 +625,7 @@ fn collect_membership_tests(
     file: &StructureFile,
     owner: u32,
     function: &StructureSymbol,
-    aliases: &BTreeMap<String, String>,
+    lookups: &Lookups<'_>,
     facts: &mut Vec<AlgorithmicFact>,
 ) {
     for membership in file
@@ -596,7 +636,7 @@ fn collect_membership_tests(
         let Some(collection) = exact_identifier(&membership.collection) else {
             continue;
         };
-        let collection = canonical(&collection, aliases);
+        let collection = canonical(&collection, lookups.aliases);
         let Some(loop_fact) = owner_loops(file, owner)
             .into_iter()
             .filter(|loop_fact| {
@@ -618,7 +658,7 @@ fn collect_membership_tests(
             continue;
         };
         let Some((collection_kind, cardinality)) =
-            searched_sequence(file, owner, &collection, aliases, loop_fact)
+            searched_sequence(file, owner, &collection, loop_fact, lookups)
         else {
             continue;
         };
@@ -644,16 +684,21 @@ fn collect_queries_in_loops(
     file: &StructureFile,
     owner: u32,
     function: &StructureSymbol,
-    aliases: &BTreeMap<String, String>,
+    lookups: &Lookups<'_>,
     facts: &mut Vec<AlgorithmicFact>,
 ) {
     for call in owner_calls(file, owner) {
-        let Some(shape) = call_shape(call, aliases) else {
+        let Some(shape) = call_shape(call, lookups.aliases) else {
             continue;
         };
         let Some(arguments) = store_query_inputs(file, owner, &shape) else {
             continue;
         };
+        // A query-named method the repository implements without a query
+        // (an in-memory registry lookup, a cache-key formatter).
+        if lookups.callees.read_nothing(owner, call) {
+            continue;
+        }
         let Some((loop_span, binding)) = per_item_scope(file, owner, call, &arguments) else {
             continue;
         };
@@ -674,6 +719,8 @@ fn collect_queries_in_loops(
     }
 }
 
+#[path = "algorithmic_facts_callees.rs"]
+mod callees;
 #[path = "algorithmic_facts_collections.rs"]
 mod collections;
 #[path = "algorithmic_facts_cost_collectors.rs"]
@@ -695,6 +742,7 @@ mod semantics;
 #[path = "algorithmic_facts_structure.rs"]
 mod structure;
 
+use crate::type_facts::{TypeFacts, TypeScope};
 use collections::*;
 use cost_collectors::*;
 use dedupe::collect_deduplicating_appends;

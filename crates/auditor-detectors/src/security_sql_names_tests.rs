@@ -12,7 +12,7 @@ fn find<'a>(node: AstNode<'a>, text: &str) -> Option<AstNode<'a>> {
 fn structure_only_in(language: AstLang, source: &str, query: &str) -> bool {
     let tree = AstParser::new().unwrap().parse(&language, source).unwrap();
     let node = find(tree.root_node(), query).unwrap_or_else(|| panic!("no node {query:?}"));
-    structure_only(node)
+    structure_only(node, crate::type_facts::TypeScope::default())
 }
 
 fn java(query: &str) -> bool {
@@ -291,4 +291,62 @@ fn numbers_and_placeholder_lists_cannot_carry_sql() {
         go,
         "fmt.Sprintf(\"DELETE FROM t LIMIT %d\", n)"
     ));
+}
+
+/// The `sql_injection` lines of a scanned repository of `files`.
+fn sql_lines(name: &str, files: &[(&str, &str)]) -> Vec<(String, usize)> {
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let root = std::env::temp_dir().join(format!("ea-sql-{name}-{}-{nanos}", std::process::id()));
+    for (relative, source) in files {
+        let absolute = root.join(relative);
+        std::fs::create_dir_all(absolute.parent().unwrap()).unwrap();
+        std::fs::write(absolute, source).unwrap();
+    }
+    let analysis = crate::analyze_repository(
+        &root,
+        crate::SourceDiscoveryOptions::default(),
+        crate::ScanProfile::Full,
+    )
+    .unwrap();
+    let _ = std::fs::remove_dir_all(root);
+    analysis
+        .findings
+        .into_iter()
+        .filter(|finding| finding.detector == "sql_injection")
+        .map(|finding| {
+            (
+                finding.primary_path().to_string(),
+                finding.primary_line().unwrap_or(0),
+            )
+        })
+        .collect()
+}
+
+#[test]
+fn values_the_repository_declares_numbers_enums_or_constants_cannot_carry_sql() {
+    let table = "package m;\npublic class Table {\n    private long id;\n    private String name;\n    public long getObjectId() { return id; }\n    public String getName() { return name; }\n    public Kind kind() { return Kind.VIEW; }\n}\n";
+    let kind = "package m;\npublic enum Kind { TABLE, VIEW }\n";
+    let reader = "package m;\nimport java.sql.Statement;\nclass Reader {\n    private Table table;\n    void read(Statement st) throws Exception {\n        st.executeQuery(\"SELECT * FROM t WHERE oid = \" + table.getObjectId());\n        st.executeQuery(\"SELECT * FROM t WHERE kind = '\" + table.kind().name() + \"'\");\n        st.executeQuery(\"SELECT * FROM t WHERE name = '\" + table.getName() + \"'\");\n    }\n}\n";
+    let constants = "namespace U;\npublic static class Constants {\n    public static class Aliases {\n        public const string CheckBoxList = \"Umbraco.CheckBoxList\";\n    }\n}\n";
+    let migration = "namespace U;\npublic class Migration {\n    public void Run(IDb db, string alias) {\n        db.Execute($\"UPDATE t SET a = 1 WHERE alias = '{Constants.Aliases.CheckBoxList}'\");\n        db.Execute($\"UPDATE t SET a = 1 WHERE alias = '{alias}'\");\n    }\n}\n";
+    let found = sql_lines(
+        "declared",
+        &[
+            ("src/main/java/m/Table.java", table),
+            ("src/main/java/m/Kind.java", kind),
+            ("src/main/java/m/Reader.java", reader),
+            ("src/Constants.cs", constants),
+            ("src/Migration.cs", migration),
+        ],
+    );
+    assert_eq!(
+        found,
+        [
+            ("src/Migration.cs".to_string(), 5),
+            ("src/main/java/m/Reader.java".to_string(), 8)
+        ]
+    );
 }

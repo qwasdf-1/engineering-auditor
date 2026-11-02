@@ -68,6 +68,8 @@ pub(crate) struct StructureSymbol {
     /// A function defined in a Rust `impl` block: an associated item reached
     /// through its type, not its module.
     pub(crate) associated: bool,
+    /// The declared type, initializer, and immutability its syntax states.
+    pub(crate) typing: crate::structure_typing::SymbolTyping,
 }
 
 #[derive(Clone, Debug)]

@@ -62,12 +62,16 @@ mod tests {
         _repo_ast: &auditor_ast::RepoAst,
     ) -> Vec<Finding> {
         let mut repo_ast = auditor_ast::RepoAst::new();
-        super::sql_injection_findings(crate::ast_scan::AstScan::new(
+        let index = crate::structure_index::StructureIndex::build(crate::ast_scan::AstScan::context(
             files,
             method,
             cache,
             &mut repo_ast,
-        ))
+        ));
+        super::sql_injection_findings(
+            crate::ast_scan::AstScan::new(files, method, cache, &mut repo_ast),
+            &index,
+        )
     }
 
     fn insecure_cryptography_findings(

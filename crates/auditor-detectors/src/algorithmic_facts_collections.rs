@@ -10,6 +10,34 @@ pub(super) fn collection_shape(
     owner: u32,
     collection: &str,
 ) -> (CollectionKind, Cardinality) {
+    let (declaration, value) = local_value(file, owner, collection);
+    let cardinality = value
+        .and_then(literal_cardinality)
+        .map(Cardinality::KnownBounded)
+        .unwrap_or(Cardinality::UnknownScalable);
+    match declaration.or(value) {
+        Some(text) => (value_kind(&file.language, text), cardinality),
+        None => (CollectionKind::Unknown, Cardinality::UnknownScalable),
+    }
+}
+
+/// The value a local of `owner` is bound to (`List<String> names = NAMES`).
+pub(super) fn local_initializer<'f>(
+    file: &'f StructureFile,
+    owner: u32,
+    collection: &str,
+) -> Option<&'f str> {
+    local_value(file, owner, collection).1
+}
+
+/// A local's declaration and the value bound to it: the declaration's
+/// initializer (`var allowed = new[] { A, B };`), or, where a declaration's
+/// text stops at its name, the value assigned to it.
+fn local_value<'f>(
+    file: &'f StructureFile,
+    owner: u32,
+    collection: &str,
+) -> (Option<&'f str>, Option<&'f str>) {
     let declaration = file.symbols.iter().find_map(|symbol| {
         (matches!(symbol.kind, SymbolKind::Parameter | SymbolKind::Variable)
             && symbol.parent == Some(owner)
@@ -23,21 +51,32 @@ pub(super) fn collection_shape(
         .then_some(assignment.value.as_deref())
         .flatten()
     });
-    // `var allowed = new[] { A, B };` declares its literal; a declaration's
-    // text may stop at its name, leaving the literal to the assignment.
     let initializer = declaration.and_then(|declaration| {
         top_level(declaration, |ch, next| ch == '=' && next != Some('='))
-            .map(|index| &declaration[index + 1..])
+            .map(|index| declaration[index + 1..].trim())
     });
-    let cardinality = initializer
-        .or(assigned)
-        .and_then(literal_cardinality)
-        .map(Cardinality::KnownBounded)
-        .unwrap_or(Cardinality::UnknownScalable);
-    match declaration.or(assigned) {
-        Some(text) => (value_kind(&file.language, text), cardinality),
-        None => (CollectionKind::Unknown, Cardinality::UnknownScalable),
+    (declaration, initializer.or(assigned))
+}
+
+/// The shape of a constant's initializer when it is a collection no code
+/// can grow: an array, `List.of(..)`, `Arrays.asList(..)`, Kotlin
+/// `listOf(..)`/`arrayOf(..)`, or a `[..]` literal. `new List<T> { .. }` and
+/// other growable initializers stay unknown, since any method may add to them.
+pub(super) fn constant_collection(initializer: &str) -> Option<(CollectionKind, Cardinality)> {
+    let value = initializer.trim();
+    let growable = value.starts_with("new ")
+        && !value
+            .split('{')
+            .next()
+            .is_some_and(|head| head.contains('['));
+    if growable {
+        return None;
     }
+    let size = literal_cardinality(value)?;
+    Some((
+        CollectionKind::LinearSequence,
+        Cardinality::KnownBounded(size),
+    ))
 }
 
 fn value_kind(language: &Language, text: &str) -> CollectionKind {
@@ -149,4 +188,37 @@ fn literal_cardinality(value: &str) -> Option<usize> {
     } else {
         body.split(',').count()
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn only_collections_no_code_can_grow_are_bounded_constants() {
+        for fixed in [
+            "List.of(\"a\", \"b\")",
+            "Arrays.asList(A, B, C)",
+            "new[] { \"a\" }",
+            "new String[] { a, b }",
+            "[\"a\", \"b\"]",
+            "listOf(1, 2)",
+        ] {
+            assert!(
+                matches!(
+                    constant_collection(fixed),
+                    Some((_, Cardinality::KnownBounded(_)))
+                ),
+                "{fixed}"
+            );
+        }
+        for growable in [
+            "new ArrayList<>()",
+            "new List<string> { \"a\" }",
+            "new HashSet<String>(names)",
+            "loadNames()",
+        ] {
+            assert_eq!(constant_collection(growable), None, "{growable}");
+        }
+    }
 }

@@ -5,9 +5,15 @@ use auditor_ast::{call_arguments, Assigned, FunctionFlow};
 use crate::ast_scan::{self, AstScan};
 use crate::security_sql_names::{assigned_structure_only, structure_only};
 use crate::security_sql_values::is_runtime_value;
+use crate::structure_index::StructureIndex;
+use crate::type_facts::{TypeFacts, TypeScope};
 use crate::{util, Language};
 
-pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
+pub(crate) fn sql_injection_findings(
+    scan: AstScan<'_, '_>,
+    index: &StructureIndex,
+) -> Vec<Finding> {
+    let facts = TypeFacts::new(index);
     let mut findings = Vec::new();
     ast_scan::visit_ast_files(
         scan,
@@ -26,14 +32,15 @@ pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
         },
         |file, tree, _| {
             let relative = util::path_slash(&file.relative);
+            let types = TypeScope::of(&facts, &relative);
             let root = tree.root_node();
             let sites = match file.language {
-                Language::Python => python_sql_sites(root),
-                Language::Kotlin => crate::tier_two_sql::kotlin_sql_sites(root),
-                Language::CSharp => crate::tier_two_sql::csharp_sql_sites(root),
-                Language::Rust => rust_sql_sites(root),
+                Language::Python => python_sql_sites(root, types),
+                Language::Kotlin => crate::tier_two_sql::kotlin_sql_sites(root, types),
+                Language::CSharp => crate::tier_two_sql::csharp_sql_sites(root, types),
+                Language::Rust => rust_sql_sites(root, types),
                 Language::JavaScript | Language::TypeScript | Language::Java => {
-                    built_query_sites(&file.language, root)
+                    built_query_sites(&file.language, root, types)
                 }
                 _ => ast_scan::nodes_of_kind(root, &["call_expression"])
                     .into_iter()
@@ -41,10 +48,11 @@ pub(crate) fn sql_injection_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
                         is_sql_sink(ast_scan::callee(*node))
                             && (has_sql_keyword(node.text())
                                 && has_dynamic_query(*node)
-                                && !first_argument(*node).is_some_and(structure_only)
+                                && !first_argument(*node)
+                                    .is_some_and(|query| structure_only(query, types))
                                 || first_argument(*node).is_some_and(|query| {
                                     query.kind() == "identifier"
-                                        && built_from_values(query, has_dynamic_query)
+                                        && built_from_values(query, has_dynamic_query, types)
                                 }))
                     })
                     .collect(),
@@ -98,7 +106,10 @@ fn is_sql_sink(callee: &str) -> bool {
 /// SQLAlchemy `text` given a query built by f-string, `%`, `+`, or
 /// `.format` (Bandit B608). Only the query argument counts: bound parameters
 /// may be computed freely.
-fn python_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_>> {
+fn python_sql_sites<'a>(
+    root: auditor_ast::AstNode<'a>,
+    types: TypeScope<'_>,
+) -> Vec<auditor_ast::AstNode<'a>> {
     let scope = crate::python_api_identity::PyScope::new(root);
     let mut sites = scope
         .calls(root)
@@ -123,7 +134,7 @@ fn python_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<
                 }
             };
             sink && first_argument(*call)
-                .is_some_and(|query| built_from_values(query, has_dynamic_query))
+                .is_some_and(|query| built_from_values(query, has_dynamic_query, types))
         })
         .map(|(_, call)| call)
         .collect::<Vec<_>>();
@@ -136,7 +147,10 @@ fn python_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<
 /// rusqlite/postgres `execute`/`query*`/`prepare`/`batch_execute` methods
 /// given a query built by `format!` or `+`. The checked `query!` macros are
 /// not calls.
-fn rust_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_>> {
+fn rust_sql_sites<'a>(
+    root: auditor_ast::AstNode<'a>,
+    types: TypeScope<'_>,
+) -> Vec<auditor_ast::AstNode<'a>> {
     ast_scan::nodes_of_kind(root, &["call_expression"])
         .into_iter()
         .filter(|call| {
@@ -158,7 +172,7 @@ fn rust_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_
             ) && !ast_scan::is_inside_rust_test(*call)
                 && first_argument(*call)
                     .map(unreferenced)
-                    .is_some_and(|query| built_from_values(query, has_dynamic_query))
+                    .is_some_and(|query| built_from_values(query, has_dynamic_query, types))
         })
         .collect()
 }
@@ -171,6 +185,7 @@ fn rust_sql_sites(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_
 fn built_query_sites<'a>(
     language: &Language,
     root: auditor_ast::AstNode<'a>,
+    types: TypeScope<'_>,
 ) -> Vec<auditor_ast::AstNode<'a>> {
     let (call_kind, sinks): (&str, &[&str]) = if *language == Language::Java {
         (
@@ -221,7 +236,7 @@ fn built_query_sites<'a>(
             };
             name.is_some_and(|name| sinks.contains(&name))
                 && first_argument(*call)
-                    .is_some_and(|query| built_from_values(query, builds_from_values))
+                    .is_some_and(|query| built_from_values(query, builds_from_values, types))
         })
         .collect()
 }
@@ -233,11 +248,12 @@ fn built_query_sites<'a>(
 pub(crate) fn built_from_values(
     query: auditor_ast::AstNode<'_>,
     builds: impl Fn(auditor_ast::AstNode<'_>) -> bool,
+    types: TypeScope<'_>,
 ) -> bool {
     let parts = FunctionFlow::enclosing(query).assigned(query);
     parts.iter().any(|part| has_sql_keyword(part.node().text()))
         && parts.iter().any(|part| built_part(*part, &builds))
-        && !assigned_structure_only(&parts)
+        && !assigned_structure_only(&parts, types)
 }
 
 fn built_part(part: Assigned<'_>, builds: impl Fn(auditor_ast::AstNode<'_>) -> bool) -> bool {

@@ -158,7 +158,11 @@ set/map inputs are excluded. A local literal is bounded at any size when the
 function binds it once and never grows it; literals include JS/Python
 `[..]`, Rust `vec![..]`, C# and Java `new[] { .. }` and `new List<T> { .. }`
 initializers, and Java and Kotlin `List.of(..)`, `Arrays.asList(..)`,
-`listOf(..)`, and `arrayOf(..)`.
+`listOf(..)`, and `arrayOf(..)`. A local read from a constant declared
+elsewhere (`List<String> names = NAMES`, with `static final List<String>
+NAMES = List.of(..)`) takes that constant's literal, through the
+[repository-local type facts](../architecture.md); a growable constant
+(`new ArrayList<>()`, `new List<T> { .. }`) stays scalable.
 
 It also detects the deduplicating append, where the loop grows the searched
 list itself: the negated membership test (`item not in out`,
@@ -191,7 +195,12 @@ A query method is one of the fixed query names (`query`, `query_row`,
 `fetch_one`, `find_one`, `find_unique`, ...) or a read of one record by key:
 `get`, `find`, `load`, or `fetch`, then `by`, ending in `id`, `uuid`, or `key`
 (`findById`, `getObjectByUuid`, `findUserById`), but not a lookup that writes
-when the record is missing (`getOrCreateById`). A SQL runner (DB-API
+when the record is missing (`getOrCreateById`). A query-named call is not a query when the
+[repository-local type facts](../architecture.md) resolve its receiver to a
+class whose method, with a body, issues no read query, and nor does any
+repository function it calls, followed three calls deep (an in-memory
+registry's `getProjectById`, a cache-key formatter's
+`getResourceByUriCacheKey`). A SQL runner (DB-API
 `execute`, JDBC `executeQuery`) is a read query whatever its receiver is
 called when its first argument is a string literal starting with `SELECT`
 (`cur.execute("SELECT .. WHERE uid = ?", (user.id,))`): the SQL proves the

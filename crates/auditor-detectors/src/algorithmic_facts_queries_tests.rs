@@ -376,3 +376,41 @@ fn utility_classes_named_for_a_store_are_not_stores() {
     assert_eq!(found.len(), 1, "{found:?}");
     assert!(found[0].contains("findById"), "{found:?}");
 }
+
+#[test]
+fn query_named_methods_the_repository_implements_without_a_query_are_not_queries() {
+    let source = "import java.util.*;\n\
+class ProjectRepo {\n\
+    private Map<String, Project> projects = new HashMap<>();\n\
+    private Database db;\n\
+    Project getProjectById(String id) { return projects.get(id); }\n\
+    String getProjectByUriCacheKey(String uri) { return \"project.uri.\" + uri; }\n\
+    Project getStoredById(String id) { return db.query(\"SELECT * FROM p WHERE id = ?\", id); }\n\
+    Project getLoadedById(String id) { return load(id); }\n\
+    private Project load(String id) { return db.query(\"SELECT * FROM p WHERE id = ?\", id); }\n\
+}\n\
+interface RemoteRepo { Project getRemoteById(String id); }\n\
+class Service {\n\
+    private ProjectRepo repo;\n\
+    private RemoteRepo remoteRepo;\n\
+    void touch(List<String> ids) {\n\
+        for (String id : ids) {\n\
+            repo.getProjectById(id);\n\
+            repo.getProjectByUriCacheKey(id);\n\
+            repo.getStoredById(id);\n\
+            repo.getLoadedById(id);\n\
+            remoteRepo.getRemoteById(id);\n\
+        }\n\
+    }\n\
+}\n";
+    let found = messages("callees", "src/main/java/Service.java", source);
+    let reported = |method: &str| found.iter().any(|message| message.contains(method));
+    assert!(
+        !reported("getProjectById") && !reported("getProjectByUriCacheKey"),
+        "{found:?}"
+    );
+    assert!(
+        reported("getStoredById") && reported("getLoadedById") && reported("getRemoteById"),
+        "{found:?}"
+    );
+}

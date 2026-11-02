@@ -172,7 +172,7 @@ pub(super) fn java_fact_capability_files(
         "hot_path_linear_membership" => (
             "import java.util.*;",
             "void choose(List<String> ids, List<String> wanted) {\n        for (String id : ids) {\n            if (wanted.contains(id)) {\n                consume(id);\n            }\n        }\n    }",
-            "void choose(List<String> ids, Set<String> wanted) {\n        for (String id : ids) {\n            if (wanted.contains(id)) {\n                consume(id);\n            }\n        }\n    }",
+            "void choose(List<String> ids, Set<String> wanted) {\n        for (String id : ids) {\n            if (wanted.contains(id)) {\n                consume(id);\n            }\n        }\n    }\n\n    private static final List<String> NAMES = List.of(\"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\", \"j\");\n\n    void pick(List<String> ids) {\n        List<String> names = NAMES;\n        for (String id : ids) {\n            if (names.contains(id)) {\n                consume(id);\n            }\n        }\n    }",
         ),
         "n_plus_one_query_in_loop" => (
             "import java.util.*;",

@@ -172,25 +172,9 @@ fn stubbed_call(side: &str, target: &str) -> bool {
     if side == target {
         return true;
     }
-    side.strip_prefix(target)
-        .is_some_and(|rest| rest.starts_with('(') && closing_paren(rest) == Some(rest.len() - 1))
-}
-
-fn closing_paren(text: &str) -> Option<usize> {
-    let mut depth = 0usize;
-    for (index, character) in text.char_indices() {
-        match character {
-            '(' => depth += 1,
-            ')' => {
-                depth = depth.checked_sub(1)?;
-                if depth == 0 {
-                    return Some(index);
-                }
-            }
-            _ => {}
-        }
-    }
-    None
+    side.strip_prefix(target).is_some_and(|rest| {
+        rest.starts_with('(') && crate::util::closing_paren(rest) == Some(rest.len() - 1)
+    })
 }
 
 /// An operand without calls, mutation, or fresh allocations: evaluating it

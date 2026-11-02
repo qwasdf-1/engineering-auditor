@@ -89,6 +89,26 @@ time, in catalog order. `EA_TRACE_OWNERS=1` prints each owner's time.
 Analysis is syntax-based: there is no type checker, whole-program dataflow, or
 alias analysis. Detectors that would need them stay silent rather than guess.
 
+Repository-local type facts (`type_facts.rs`) stand in for type information
+where a repository states it. Each structure symbol carries what its
+declaration says (`structure_typing.rs`: Java, C#, Go, Kotlin, and
+TypeScript): the declared type or a method's return type, the initializer,
+whether it binds once (`final`, `const`, `readonly`, `val`), and whether a
+method has a body. `TypeFacts` resolves a member chain read inside a
+function (`sessionId`, `table.getObjectId()`, `Constants.Aliases.X`) through
+the function's locals and parameters, its class's fields and first base,
+type names for static members and nested classes, and return types; a name
+several classes declare resolves only when every candidate agrees. It has no
+generics, no inference beyond declared return types, and no library types
+apart from a few members that return a number (`length()`, `size()`,
+`Count`); TypeScript class fields and Go struct members are not symbols, so
+they stay unknown. `sql_injection` reads values declared numbers, enums, or
+literal constants as unable to carry SQL; `hot_path_linear_membership`
+bounds a local read from a constant collection no code can grow; and
+`n_plus_one_query_in_loop` drops a query-named call whose receiver's class
+implements it, and every repository function that implementation calls,
+without a read query.
+
 Within one function, `auditor_ast::FunctionFlow` answers def-use questions
 the same way for every language (all 13 grammars, with a conformance test
 that runs one program shape in each): which bindings (parameters, declarations,
