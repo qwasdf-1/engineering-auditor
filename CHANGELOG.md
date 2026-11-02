@@ -4,8 +4,8 @@
 
 ### Changed
 
-- `hardcoded_credential` is demoted to the `full` profile (54 gating, 70
-  full-only). The 24 new corpus applications measured it at 21 true
+- `hardcoded_credential` is demoted to the `full` profile. The 24 new
+  corpus applications measured it at 21 true
   positives to 142 false positives: placeholder and documentation
   passwords, key and message-key names, and template literals, in six
   languages, so scoping single languages cannot save it.
@@ -47,6 +47,47 @@
 - `unused_assignment` builds each scope's data flow once per file, and the
   class-structure and coupling metrics are counted in one pass; a large
   bundle no longer takes minutes. Findings are unchanged.
+- `package_coupling_metrics` and `stale_link_reference` are demoted to the
+  `full` profile (52 gating, 72 full-only). The coupling metrics count a
+  top-level directory as one package, merging Go's `internal/*` packages,
+  and carry no language to scope by; the link check measured 17 true
+  positives to 5 false positives (documentation-site routes, assembled
+  version trees) in Markdown, its only language.
+- The backlog labelling round scopes ten more gating detectors to `full` in
+  the languages where they hold false positives: `exit_in_production` now
+  gates only in C# and C++; `unused_assignment` adds Python and
+  `stringly_typed_parameter` Java; `bind_all_interfaces` runs full-only in
+  C, Java, and Kotlin, `eval_in_production` and `section_divider_comment`
+  in Java and JavaScript, `loop_invariant_regex_compilation` in Go, Java,
+  and Rust, `repeated_collection_traversal` in C#, Java, Python, and
+  TypeScript, `unreachable_code` in C++, Python, and TypeScript, and
+  `loop_artifact_rewrite` in Rust. `go_log_fatal` and
+  `cache_miss_opportunity` read production code only.
+- Repository-local type facts: a value's declared type, initializer, and
+  immutability (Java, C#, Go, Kotlin, TypeScript) resolve through locals,
+  fields, bases, and return types. `sql_injection` treats a value declared
+  as a number, boolean, GUID, or enum, or a constant bound to a literal, as
+  safe; `hot_path_linear_membership` reads a constant collection no code
+  grows as bounded; and `n_plus_one_query_in_loop` skips a query-named
+  method the repository implements without a read query.
+- False-positive fixes from the backlog labels:
+  `architectural_layering` closes cycles only through runtime imports (not
+  `import type` or lazy `import(..)`); `package_coupling_metrics` skips
+  packages within 0.3 of the main sequence; `exit_in_production` and
+  `go_log_fatal` skip a logger's `Fatal*` method, a `TestMain` helper, and
+  `log.Fatal` in `func main`; `unused_assignment` reads `$name` and
+  shorthand properties and skips literal and `null` initializers;
+  `eval_in_production` skips wholly literal source; `stale_link_reference`
+  skips placeholders, documentation-site routes, and ignored build output;
+  and the sort, traversal, format, regex, unreachable-code, duplicate-import,
+  and bind-address rules skip loop headers, per-item receivers, used sort
+  orders, X-macro re-includes, and multicast interface selection.
+- Source roles: Bower and `third/` trees are vendored, `devops/` is
+  tooling, `testsuite/`, `unittest/`, and `*-suites/` trees and Go
+  `testutil`/`testenv` helpers are test code, Browserify bundles are
+  generated, vendored and generated checks apply inside tooling trees, and
+  a root `.gitattributes` `linguist-vendored` or `linguist-generated` mark
+  sets the role.
 
 ## 1.5.0 - Inline Suppressions And Structural Detectors
 

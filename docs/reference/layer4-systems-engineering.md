@@ -1,6 +1,6 @@
 # Layer 4 - Systems Engineering
 
-Default catalog: 15 detectors (6 gating, 9 full-only). The `graph-analysis`
+Default catalog: 15 detectors (5 gating, 10 full-only). The `graph-analysis`
 feature adds four Layer 4 gating detectors. Language modes are authoritative in
 [`language-support.md`](./language-support.md).
 

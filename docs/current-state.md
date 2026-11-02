@@ -25,7 +25,7 @@ C and C++ skipped tests, and promotes `sql_injection` to the gating profile.
 
 ## Scanning
 
-- **Catalog.** 124 detectors by default (54 gating, 70 full-only); the
+- **Catalog.** 124 detectors by default (52 gating, 72 full-only); the
   `graph-analysis` build feature adds seven. Each detector's languages and
   roles are declared in the catalog and enforced on every finding.
 - **Discovery.** Repository ignore files and `.eaignore` bound the scan;
@@ -132,5 +132,5 @@ ordinary test runs.
 ## Repository Health
 
 The repository scans itself in CI and fails on any finding not in its
-baseline. The full test suite (657 tests, plus the 21 ignored parity groups)
+baseline. The full test suite (697 tests, plus the 21 ignored parity groups)
 passes on stable Rust and on the minimum supported Rust, 1.86.

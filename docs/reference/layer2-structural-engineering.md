@@ -1,7 +1,7 @@
 # Layer 2 — Structural Engineering
 
-Profile: 22 gating (all scans) + 15 full-only (full scans only)
-Detectors: 37 default plus 3 gated behind `graph-analysis`.
+Profile: 22 gating (all scans) + 19 full-only (full scans only)
+Detectors: 41 default plus 3 gated behind `graph-analysis`.
 Full per-language coverage matrix in
 [`language-support.md`](./language-support.md).
 
