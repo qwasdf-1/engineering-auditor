@@ -233,8 +233,8 @@ fn a_language_scoped_to_full_is_dropped_from_gating_scans_and_marked() {
     let root = temp_root("full-profile-language");
     write(
         &root,
-        "src/service.rs",
-        "pub fn stop() {\n    std::process::exit(1);\n}\n",
+        "src/Service.cs",
+        "using System;\n\nclass Service {\n    void Stop() {\n        Environment.Exit(1);\n    }\n}\n",
     );
     write(
         &root,
@@ -255,8 +255,8 @@ fn a_language_scoped_to_full_is_dropped_from_gating_scans_and_marked() {
     };
     let (full, _) = languages(ScanProfile::Full);
     let (gating, detectors) = languages(ScanProfile::Gating);
-    assert_eq!(full, ["javascript", "rust"]);
-    assert_eq!(gating, ["rust"]);
+    assert_eq!(full, ["csharp", "javascript"]);
+    assert_eq!(gating, ["csharp"]);
     let javascript = detectors
         .iter()
         .find(|d| d.id == "exit_in_production")

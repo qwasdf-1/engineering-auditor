@@ -73,7 +73,7 @@ best-case precision is under 90%.
 
 | Detector | Full-profile languages | Reason |
 |---|---|---|
-| `exit_in_production` | Go, Java, JavaScript, Python, TypeScript | Every JavaScript and TypeScript false positive (0/2 each) is a CLI or build entry point's exit; Python's two are vendored docopt exiting after `--help` (2026-10-18). The backlog labels add command and boot exits the path rules cannot tell from a library's: Gitea's `cmd` hook action, Ghost's boot routine, Django management commands, click commands, ZAP's startup failure, Keycloak's `Picocli.exit` hook (Go 10/4, Java 26/4; 2026-11-02) |
+| `exit_in_production` | C, Go, Java, JavaScript, Kotlin, Python, Rust, TypeScript | Every JavaScript and TypeScript false positive (0/2 each) is a CLI or build entry point's exit; Python's two are vendored docopt exiting after `--help` (2026-10-18). The backlog labels add command and boot exits the path rules cannot tell from a library's: Gitea's `cmd` hook action, Ghost's boot routine, Django management commands, click commands, ZAP's startup failure, Keycloak's `Picocli.exit` hook (Go 10/4, Java 26/4); C, Kotlin, and Rust each keep one (zlib's debug assert handler and contributed sample, an internal-only Android settings screen, atuin's subcommand `main` in a library crate), together 13/4 below the bar, so it gates only in C# and C++, which have no labelled finding yet (2026-11-02) |
 | `large_file` | C | Below the bar there (26/3): every false positive is vendored third-party code (zlib `contrib/minizip`, jq's David M. Gay dtoa) that path rules cannot tell from the project's own; the other languages still gate |
 | `class_structure_metrics` | Python | Below the bar there when promoted; Java meets it and the other languages gate |
 | `cognitive_complexity` | C, C++ | Below the bar there when promoted (macro-heavy and vendored code); the other languages gate |
@@ -97,48 +97,53 @@ best-case precision is under 90%.
 ### Gating detectors with a measured standing
 
 Gating detectors absent here produced no labelled corpus finding. TP/FP
-counts only final and corroborated labels on scans `l10-a` and `a10-a` (application slice), in the
+counts only final and corroborated labels on scans `l11-a` and `a11-a` (application slice), in the
 languages the detector gates in. An `insufficient_sample` detector gates
 only with no false positive here.
 
 | Detector | Standing | TP/FP | Accepted | Languages meeting the bar | Full-profile languages |
 |---|---|---:|---:|---|---|
-| `architectural_layering` | insufficient_sample | 6/0 | 0 | — | — |
+| `architectural_layering` | meets_bar | 41/1 | 0 | java | — |
 | `assert_in_production` | meets_bar | 35/1 | 0 | python | — |
+| `assignment_in_operand` | insufficient_sample | 2/0 | 0 | — | — |
+| `bind_all_interfaces` | insufficient_sample | 10/0 | 0 | — | c, java, kotlin |
+| `cache_miss_opportunity` | insufficient_sample | 11/0 | 0 | — | — |
 | `class_structure_metrics` | meets_bar | 107/2 | 0 | java | python |
 | `cognitive_complexity` | meets_bar | 217/1 | 506 | csharp, java, javascript, python, rust, typescript | c, cpp |
-| `duplicate_import` | insufficient_sample | 13/0 | 0 | — | typescript |
+| `debugger_in_production` | insufficient_sample | 1/0 | 0 | — | — |
+| `duplicate_import` | insufficient_sample | 15/0 | 0 | — | typescript |
 | `eager_log_formatting` | meets_bar | 40/0 | 0 | python | — |
-| `empty_catch_block` | insufficient_sample | 18/0 | 0 | — | — |
-| `eval_in_production` | insufficient_sample | 5/0 | 0 | — | — |
+| `empty_catch_block` | meets_bar | 24/0 | 0 | — | — |
+| `eval_in_production` | insufficient_sample | 11/0 | 0 | — | java, javascript |
 | `excessive_nesting_depth` | meets_bar | 41/1 | 0 | — | — |
-| `exit_in_production` | insufficient_sample | 3/0 | 0 | — | javascript, python, typescript |
 | `function_complexity` | meets_bar | 183/2 | 654 | c, cpp, csharp, java, javascript, kotlin, python, rust, typescript | — |
 | `function_local_import` | meets_bar | 30/0 | 38 | python | — |
 | `go_errcheck` | meets_bar | 27/0 | 0 | go | — |
+| `go_log_fatal` | insufficient_sample | 13/0 | 0 | — | — |
 | `halstead_information_density` | meets_bar | 138/3 | 519 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
 | `hot_path_linear_membership` | insufficient_sample | 7/0 | 0 | — | go, java, python, typescript |
+| `identifier_verbosity` | meets_bar | 29/0 | 0 | python | — |
 | `kt_non_null_assertion` | meets_bar | 30/0 | 0 | kotlin | — |
 | `large_file` | meets_bar | 123/4 | 0 | java | c |
-| `loop_invariant_regex_compilation` | insufficient_sample | 1/0 | 0 | — | — |
+| `loop_invariant_regex_compilation` | insufficient_sample | 3/0 | 0 | — | go, java, rust |
 | `naming_convention` | meets_bar | 46/1 | 720 | java | — |
 | `npath_complexity` | meets_bar | 181/0 | 45 | java, python, typescript | c, cpp |
 | `out_parameter` | meets_bar | 81/1 | 0 | java | — |
-| `package_coupling_metrics` | insufficient_sample | 2/0 | 0 | — | — |
-| `repeated_collection_traversal` | insufficient_sample | 1/0 | 0 | — | — |
-| `section_divider_comment` | insufficient_sample | 4/0 | 0 | — | — |
+| `repeated_collection_traversal` | insufficient_sample | 1/0 | 0 | — | csharp, java, python, typescript |
+| `repeated_format_allocation` | insufficient_sample | 1/0 | 0 | — | — |
+| `section_divider_comment` | insufficient_sample | 18/0 | 0 | — | java, javascript |
 | `shell_execution` | insufficient_sample | 5/0 | 0 | — | javascript, python |
+| `sort_for_extremum` | insufficient_sample | 7/0 | 0 | — | — |
 | `source_duplicate_detection` | meets_bar | 163/9 | 36 | c, go, typescript | — |
 | `sql_injection` | insufficient_sample | 3/0 | 0 | — | csharp, go, java |
-| `stale_link_reference` | insufficient_sample | 6/0 | 0 | — | — |
 | `stale_section_anchor` | insufficient_sample | 14/0 | 0 | — | — |
-| `stringly_typed_parameter` | insufficient_sample | 1/0 | 0 | — | python, typescript |
+| `stringly_typed_parameter` | insufficient_sample | 2/0 | 0 | — | java, python, typescript |
 | `todo_unimplemented_in_production` | meets_bar | 143/2 | 0 | java, kotlin, rust | — |
 | `too_many_parameters` | meets_bar | 89/0 | 188 | csharp, java, kotlin, python | — |
 | `too_many_returns` | meets_bar | 128/0 | 398 | c, java, javascript, kotlin, python, typescript | — |
 | `too_many_statements` | meets_bar | 97/2 | 0 | java | — |
-| `unreachable_code` | insufficient_sample | 3/0 | 0 | — | — |
-| `unused_assignment` | insufficient_sample | 4/0 | 0 | — | cpp |
+| `unreachable_code` | insufficient_sample | 5/0 | 0 | — | cpp, python, typescript |
+| `unused_assignment` | meets_bar | 86/2 | 0 | java, typescript | cpp, python |
 
 ## Risk Classes
 

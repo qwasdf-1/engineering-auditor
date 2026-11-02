@@ -825,7 +825,16 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         ExitInProduction
     )
     .with_roles(RoleApplicability::Production)
-    .full_profile_in(&["go", "java", "javascript", "python", "typescript"]),
+    .full_profile_in(&[
+        "c",
+        "go",
+        "java",
+        "javascript",
+        "kotlin",
+        "python",
+        "rust",
+        "typescript",
+    ]),
     spec!(
         "unhandled_termination_in_production",
         "correctness",

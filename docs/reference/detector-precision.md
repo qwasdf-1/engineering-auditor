@@ -17,28 +17,27 @@ at least 22 clean labels, or about 40 with one false positive.
 > label with `labels.py confirm`; every disputed pre-label on a live finding
 > so far (270 in all) was reviewed and confirmed as human-final.
 >
-> On the 40-repository corpus and the application slice (scans `l9-d` and
-> `a9-d`), 19 detectors meet the bar
-> (`assert_in_production`, `class_structure_metrics`,
-> `cognitive_complexity`, `eager_log_formatting`, `excessive_nesting_depth`, `function_complexity`,
-> `function_local_import`, `go_errcheck`, `halstead_information_density`,
+> On the 40-repository corpus and the application slice (scans `l11-a` and
+> `a11-a`, 2026-11-02), 23 detectors meet the bar
+> (`architectural_layering`, `assert_in_production`, `class_structure_metrics`,
+> `cognitive_complexity`, `eager_log_formatting`, `empty_catch_block`,
+> `excessive_nesting_depth`, `function_complexity`, `function_local_import`,
+> `go_errcheck`, `halstead_information_density`, `identifier_verbosity`,
 > `kt_non_null_assertion`, `large_file`, `naming_convention`,
 > `npath_complexity`, `out_parameter`, `source_duplicate_detection`,
 > `todo_unimplemented_in_production`, `too_many_parameters`,
-> `too_many_returns`, `too_many_statements`), 24 are below it, and 64 lack a
-> sample that can decide the bound. The thirteen security and cost
-> detectors the application slice measures for the first time account for
-> the rise below the bar (see [Application Slice
-> Labels](#application-slice-labels)). 3,104 oracle-confirmed findings are
-> accepted through clean agreement audits. Every detector that meets the
-> bar gates; `eager_log_formatting`, measured on the application slice,
-> was promoted from `full` on 2026-10-22. For most of the 58, every corpus finding is already labelled:
-> the corpus cannot decide them. Such a detector gates only with no live
-> false positive where it gates (operator decision, 2026-10-18; see
-> [Precision Gating](./detector-promotion.md#precision-gating)). Cheap
-> mechanisms were fixed first (round eight below); six detectors with
-> residual false positives moved to `full` and four were scoped by
-> language.
+> `too_many_returns`, `too_many_statements`, `unused_assignment`), 53 are
+> below it, 30 lack a sample that can decide the bound, and `too_many_locals`
+> is unverified. The backlog round (see [Backlog Labels](#backlog-labels))
+> gave 43 detectors their first decidable samples, most of them below the
+> bar; the gating ones were fixed where the mechanism was cheap (round
+> fifteen) and otherwise scoped to `full` in the languages that still fail
+> ([Precision Gating](./detector-promotion.md#precision-gating)).
+> `package_coupling_metrics` was demoted. 3,104 oracle-confirmed findings are
+> accepted through clean agreement audits. Every detector that meets the bar
+> gates. A gating detector whose sample cannot decide the bound gates only
+> with no live false positive where it gates (operator decision,
+> 2026-10-18).
 >
 > The new full-only test-quality detectors (`test_without_assertion`,
 > `tautological_assertion`) have every corpus finding pre-labelled (13/1 and
@@ -396,6 +395,32 @@ values, Gitea migration sequence names, DBeaver catalog names);
 `shell_execution` in JavaScript and Python; and `unsafe_deserialization`
 in Java and Python. The other eight were already `full`.
 
+### Backlog Labels
+
+The 2026-10-27 round labelled the backlog: 1,619 findings of 56 detectors on
+scans `l10-a` and `a10-a`, the held-out repositories included, through the
+same three stages as the application slice.
+
+1. **Pre-label.** Claude Opus (`model:claude-opus-5-5`) labelled every
+   finding against the verdict standard, reading the source checkouts.
+2. **Blind check.** Claude Sonnet (`model:claude-sonnet-5-5`) labelled the
+   same findings without seeing the pre-labels; 1,463 agreed and 156 were
+   disputed.
+3. **Blinded arbiter.** A fresh Claude Opus context ruled on each dispute,
+   given both opinions as A and B in random order with nothing naming their
+   source. It upheld the pre-label 90 times, the blind check 65 times, and
+   neither once. It also re-labelled a seeded 10% sample of the agreed
+   labels with no opinions shown: 7 of 146 (4.8%) were mistakes both
+   reviewers shared, and those labels were revised.
+
+The 98 rulings that differ from the blind check were confirmed as final by
+the operator; the rest are corroborated. Two operator rules decided recurring
+cases: a per-item lookup through a read-through cache counts as an N+1 query
+(a false positive only when the keys are provably already cached), and a
+TypeScript cycle that closes only through type imports is not a dependency
+cycle (runtime only). The rulings' false-positive mechanisms drove round
+fifteen of [Fixed Noise Mechanisms](#fixed-noise-mechanisms).
+
 ### Development and Held-Out Repositories
 
 Since 2026-10-23 sixteen seeded repositories are held out (see
@@ -411,15 +436,34 @@ false positives (column-name constants passed in as parameters, raft peer
 lists) are not shapes the round targeted. `sql_injection` in C# stays
 below the bar (14/7) and `full`.
 
+Round fifteen (scans `l11-a`, `a11-a`) was designed from the development
+repositories' backlog rulings. Over the labels both scans share, it removed
+273 of the development repositories' 1,298 false positives (to 1,025) and 16
+of the held-out repositories' 234 (to 218); five true positives left the
+development count and one the held-out count. Three of those are re-keyed,
+not lost: the same sites are reported under new finding IDs, which carry no
+label yet (Actual's and Ghost's cycles, now without their type-only members,
+and Black's `do_transform`, now three dividers). Three are lost: Keycloak's
+`testsuite/DEPRECATED.md` link, now test code, and two Zod contributing-guide
+links to a gitignored `playground.ts`. The held-out gains are small because
+most of the round's mechanisms sit in development repositories (Ranger's
+Bower libraries, Umbraco's `devops/`, Gitea's swagger comments, Zulip's
+jQuery locals). Where they recur held out, they generalize:
+`architectural_layering` went from 3/2 to 3/0, `sort_for_extremum` from 6/2
+to 6/0, `stale_link_reference` from 1/4 to 1/0, and `unreachable_code` from
+6/1 to 6/0. The held-out standings did not change: four detectors meet the
+bar there alone (`eager_log_formatting`, `out_parameter`,
+`todo_unimplemented_in_production`, `too_many_statements`), 14 are below it,
+and 88 lack a deciding sample.
+
 ### Corroborated Standing
 
 The gating standing counts only final and corroborated labels, as a sound
 bound over the unverified rest (see Method). Generated by
-`labels.py precision --scan l10-a a10-a --claims eval/ecosystem/oracle-claims.json`
+`labels.py precision --scan l11-a a11-a --claims eval/ecosystem/oracle-claims.json`
 on the 40-repository library corpus and the 30-repository application slice
-(2026-10-23), after the repository-local type facts and the blind check and arbitration of the application
-slice's security and cost labels (see [Application Slice
-Labels](#application-slice-labels)); stale labels (findings the fixes
+(2026-11-02), after the backlog labels (see [Backlog Labels](#backlog-labels))
+and round fifteen's fixes; stale labels (findings the fixes
 removed) are excluded. The same table is committed as
 `eval/ecosystem/precision.json`, which the detector architecture contract
 reads (see [Precision Gating](./detector-promotion.md#precision-gating)).
@@ -430,113 +474,113 @@ Gating bar: the 95% lower confidence bound of precision >= 85% over final or cor
 
 | Detector | TP | FP | Unclear | Precision | Agreement audit | Accepted | Standing | Final / corroborated | Disputed | Uncorroborated | Oracle agrees | Model agrees |
 |---|---:|---:|---:|---:|---:|---:|---|---:|---:|---|---:|---:|
-| `architectural_layering` | 6 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 6 | 0 | pending 62 | — | 6/6 |
+| `architectural_layering` | 41 | 1 | 0 | 98% | — | 0 | meets_bar | 0 / 42 | 0 | — | — | 42/42 |
 | `assert_in_production` | 35 | 1 | 0 | 97% | 33/1 | 0 | meets_bar | 1 / 35 | 0 | — | 33/33 | 69/70 |
-| `assignment_in_operand` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 32 | — | — |
-| `bind_all_interfaces` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 12 | — | — |
-| `blocking_io_in_async_context` | 27 | 40 | 0 | 40% | — | 0 | below_bar | 3 / 64 | 0 | — | — | 67/68 |
-| `bulk_collection_extension` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 5 | — | — |
-| `cache_miss_opportunity` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 12 | — | — |
-| `catastrophic_backtracking_regex` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 4 | — | — |
-| `class_structure_metrics` | 133 | 5 | 0 | 96% | — | 0 | meets_bar | 15 / 123 | 0 | true_positive 1 | — | 154/167 |
-| `cognitive_complexity` | 266 | 12 | 0 | 96% | 141/0 | 506 | meets_bar | 13 / 265 | 0 | — | 141/143 | 255/265 |
+| `assignment_in_operand` | 2 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 2 | 0 | — | — | 2/2 |
+| `bind_all_interfaces` | 10 | 4 | 0 | 71% | — | 0 | below_bar | 2 / 12 | 0 | — | — | 12/14 |
+| `blocking_io_in_async_context` | 27 | 36 | 0 | 43% | — | 0 | below_bar | 3 / 60 | 0 | — | — | 63/64 |
+| `bulk_collection_extension` | 3 | 2 | 0 | 60% | — | 0 | insufficient_sample | 0 / 5 | 0 | — | — | 5/5 |
+| `cache_miss_opportunity` | 11 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 11 | 0 | — | — | 11/11 |
+| `catastrophic_backtracking_regex` | 1 | 2 | 0 | 33% | — | 0 | insufficient_sample | 0 / 3 | 0 | — | — | 3/3 |
+| `class_structure_metrics` | 133 | 5 | 0 | 96% | — | 0 | meets_bar | 15 / 123 | 0 | pending 14, true_positive 1 | — | 154/167 |
+| `cognitive_complexity` | 266 | 12 | 0 | 96% | 141/0 | 506 | meets_bar | 13 / 265 | 0 | pending 3 | 141/143 | 255/265 |
 | `collection_parameter_mutation` | 13 | 7 | 0 | 65% | — | 0 | below_bar | 5 / 15 | 0 | — | — | 18/23 |
-| `console_output_in_production` | 62 | 20 | 0 | 76% | 46/14 | 0 | below_bar | 20 / 62 | 0 | — | 47/48 | 80/103 |
-| `constant_condition` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 17 | — | — |
+| `console_output_in_production` | 62 | 20 | 0 | 76% | 46/14 | 0 | below_bar | 20 / 62 | 0 | pending 29 | 47/48 | 80/103 |
+| `constant_condition` | 14 | 2 | 0 | 88% | — | 0 | below_bar | 0 / 16 | 0 | — | — | 16/16 |
 | `cpp_raw_ptr_ownership` | 22 | 8 | 0 | 73% | — | 0 | below_bar | 20 / 10 | 0 | — | — | 10/30 |
-| `csharp_linq_enumeration` | 0 | 9 | 0 | 0% | — | 0 | insufficient_sample | 1 / 8 | 0 | pending 30 | — | 8/9 |
-| `dead_code` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 30 | — | — |
-| `debugger_in_production` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 1 | — | — |
-| `discarded_fallible_result` | 2 | 0 | 0 | 100% | — | 0 | insufficient_sample | 1 / 1 | 0 | pending 105 | — | 3/3 |
-| `duplicate_import` | 13 | 1 | 0 | 93% | 0/1 | 0 | insufficient_sample | 10 / 4 | 0 | — | — | 11/26 |
+| `csharp_linq_enumeration` | 0 | 39 | 0 | 0% | — | 0 | below_bar | 1 / 38 | 0 | — | — | 38/39 |
+| `dead_code` | 0 | 30 | 0 | 0% | — | 0 | below_bar | 0 / 30 | 0 | — | — | 30/30 |
+| `debugger_in_production` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 1 | 0 | — | — | 1/1 |
+| `discarded_fallible_result` | 50 | 50 | 0 | 50% | — | 0 | below_bar | 5 / 95 | 0 | — | — | 97/101 |
+| `duplicate_import` | 16 | 1 | 0 | 94% | 0/1 | 0 | insufficient_sample | 10 / 7 | 0 | — | — | 14/29 |
 | `eager_log_formatting` | 40 | 0 | 0 | 100% | — | 0 | meets_bar | 0 / 40 | 0 | — | — | 40/40 |
-| `empty_catch_block` | 18 | 0 | 0 | 100% | 9/0 | 0 | insufficient_sample | 1 / 17 | 0 | — | 9/9 | 21/22 |
-| `empty_conditional_branch` | 7 | 1 | 0 | 88% | — | 0 | insufficient_sample | 2 / 6 | 0 | pending 80 | — | 6/8 |
+| `empty_catch_block` | 24 | 0 | 0 | 100% | 9/0 | 0 | meets_bar | 1 / 23 | 0 | — | 9/9 | 27/28 |
+| `empty_conditional_branch` | 51 | 8 | 0 | 86% | — | 0 | below_bar | 6 / 53 | 0 | — | — | 53/59 |
 | `escape_hatch_type_density` | 12 | 0 | 0 | 100% | — | 0 | insufficient_sample | 1 / 11 | 0 | — | — | 11/12 |
-| `eval_in_production` | 5 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 5 | 0 | pending 22 | — | 5/5 |
-| `excessive_nesting_depth` | 41 | 1 | 0 | 98% | 12/0 | 0 | meets_bar | 1 / 41 | 0 | — | 12/12 | 32/33 |
-| `exit_in_production` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | pending 113 | — | 4/4 |
+| `eval_in_production` | 14 | 2 | 0 | 88% | — | 0 | below_bar | 1 / 15 | 0 | — | — | 15/16 |
+| `excessive_nesting_depth` | 41 | 1 | 0 | 98% | 12/0 | 0 | meets_bar | 1 / 41 | 0 | pending 19 | 12/12 | 32/33 |
+| `exit_in_production` | 65 | 36 | 0 | 64% | — | 0 | below_bar | 23 / 78 | 0 | — | — | 78/101 |
 | `function_complexity` | 183 | 2 | 0 | 99% | 116/0 | 654 | meets_bar | 9 / 176 | 0 | — | 116/116 | 108/117 |
 | `function_local_import` | 30 | 0 | 0 | 100% | 30/0 | 38 | meets_bar | 2 / 28 | 0 | — | 30/30 | 54/56 |
-| `go_errcheck` | 27 | 0 | 0 | 100% | 27/0 | 0 | meets_bar | 10 / 17 | 0 | — | 27/27 | 33/43 |
-| `go_log_fatal` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 30 | — | — |
+| `go_errcheck` | 27 | 0 | 0 | 100% | 27/0 | 0 | meets_bar | 10 / 17 | 0 | pending 1 | 27/27 | 33/43 |
+| `go_log_fatal` | 13 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 13 | 0 | — | — | 13/13 |
 | `go_repeated_string_literal` | 12 | 0 | 0 | 100% | 5/0 | 0 | insufficient_sample | 0 / 12 | 0 | — | 5/5 | 17/17 |
-| `god_module` | 30 | 20 | 0 | 60% | — | 0 | below_bar | 2 / 48 | 0 | — | — | 51/53 |
-| `halstead_information_density` | 138 | 3 | 0 | 98% | 65/0 | 519 | meets_bar | 3 / 138 | 0 | — | 65/65 | 127/130 |
-| `hardcoded_credential` | 21 | 142 | 0 | 13% | — | 0 | below_bar | 0 / 163 | 0 | — | — | 163/163 |
-| `hardcoded_tmp_directory` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 48 | — | — |
-| `hot_path_linear_membership` | 49 | 27 | 0 | 64% | — | 0 | below_bar | 0 / 76 | 0 | — | — | 76/76 |
+| `god_module` | 30 | 20 | 0 | 60% | — | 0 | below_bar | 2 / 48 | 0 | pending 35 | — | 51/53 |
+| `halstead_information_density` | 138 | 3 | 0 | 98% | 65/0 | 519 | meets_bar | 3 / 138 | 0 | pending 1 | 65/65 | 127/130 |
+| `hardcoded_credential` | 21 | 141 | 0 | 13% | — | 0 | below_bar | 0 / 162 | 0 | pending 2 | — | 162/162 |
+| `hardcoded_tmp_directory` | 15 | 34 | 0 | 31% | — | 0 | below_bar | 7 / 42 | 0 | — | — | 42/49 |
+| `hot_path_linear_membership` | 49 | 27 | 0 | 64% | — | 0 | below_bar | 0 / 76 | 0 | pending 3 | — | 76/76 |
 | `identifier_stutter` | 19 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 19 | 0 | — | — | 33/33 |
-| `identifier_tersity` | 1 | 1 | 0 | 50% | — | 0 | insufficient_sample | 1 / 1 | 0 | pending 28 | — | 2/3 |
-| `identifier_verbosity` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 30 | — | — |
+| `identifier_tersity` | 6 | 26 | 0 | 19% | — | 0 | below_bar | 4 / 28 | 0 | — | — | 29/33 |
+| `identifier_verbosity` | 29 | 0 | 0 | 100% | — | 0 | meets_bar | 2 / 27 | 0 | — | — | 27/29 |
 | `insecure_cryptography` | 4 | 108 | 0 | 4% | — | 0 | below_bar | 2 / 110 | 0 | — | — | 110/112 |
-| `intermediate_collection_materialization` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 29 | — | — |
-| `java_inefficient_string_buffer` | 0 | 3 | 0 | 0% | — | 0 | insufficient_sample | 0 / 3 | 0 | pending 23 | — | 3/3 |
-| `known_size_preallocation` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 1 | 0 | pending 61 | — | 2/2 |
+| `intermediate_collection_materialization` | 17 | 10 | 0 | 63% | — | 0 | below_bar | 0 / 27 | 0 | — | — | 27/27 |
+| `java_inefficient_string_buffer` | 13 | 13 | 0 | 50% | — | 0 | below_bar | 0 / 26 | 0 | — | — | 26/26 |
+| `known_size_preallocation` | 47 | 15 | 0 | 76% | — | 0 | below_bar | 6 / 56 | 0 | — | — | 57/63 |
 | `kt_non_null_assertion` | 30 | 0 | 0 | 100% | — | 0 | meets_bar | 0 / 30 | 0 | — | — | 30/30 |
 | `kt_require_check_misuse` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | — | — | — |
 | `large_file` | 149 | 7 | 0 | 96% | 149/7 | 0 | meets_bar | 7 / 149 | 0 | — | 149/149 | 141/148 |
-| `loop_artifact_rewrite` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 1 | — | — |
-| `loop_carried_copy_accumulation` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 1 | — | — |
-| `loop_invariant_regex_compilation` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 1 / 0 | 0 | pending 16 | — | 0/1 |
+| `loop_artifact_rewrite` | 0 | 1 | 0 | 0% | — | 0 | insufficient_sample | 0 / 1 | 0 | — | — | 1/1 |
+| `loop_carried_copy_accumulation` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 1 | 0 | — | — | 1/1 |
+| `loop_invariant_regex_compilation` | 10 | 5 | 0 | 67% | — | 0 | below_bar | 1 / 14 | 0 | — | — | 14/15 |
 | `magic_literal_cluster` | 57 | 20 | 0 | 74% | — | 0 | below_bar | 18 / 59 | 0 | — | — | 71/89 |
-| `manual_collection_copy_loop` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 4 | — | — |
-| `map_entry_opportunity` | 0 | 1 | 0 | 0% | — | 0 | insufficient_sample | 0 / 1 | 0 | pending 8 | — | 1/1 |
-| `mutable_default_argument` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 4 | — | — |
-| `n_plus_one_query_in_loop` | 33 | 16 | 0 | 67% | — | 0 | below_bar | 4 / 45 | 0 | — | — | 45/49 |
+| `manual_collection_copy_loop` | 2 | 2 | 0 | 50% | — | 0 | insufficient_sample | 0 / 4 | 0 | — | — | 4/4 |
+| `map_entry_opportunity` | 7 | 2 | 0 | 78% | — | 0 | insufficient_sample | 0 / 9 | 0 | — | — | 9/9 |
+| `mutable_default_argument` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | — | — | 4/4 |
+| `n_plus_one_query_in_loop` | 45 | 4 | 0 | 92% | — | 0 | insufficient_sample | 16 / 33 | 0 | — | — | 33/49 |
 | `naming_convention` | 46 | 1 | 0 | 98% | 30/0 | 720 | meets_bar | 12 / 35 | 0 | — | 30/30 | 74/87 |
-| `nested_cross_collection_traversal` | 0 | 3 | 0 | 0% | — | 0 | insufficient_sample | 0 / 3 | 0 | pending 37 | — | 3/3 |
+| `nested_cross_collection_traversal` | 24 | 16 | 0 | 60% | — | 0 | below_bar | 1 / 39 | 0 | — | — | 39/40 |
 | `nested_quadratic_iteration` | 8 | 26 | 0 | 24% | — | 0 | below_bar | 1 / 33 | 0 | — | — | 33/34 |
 | `network_call_without_timeout` | 20 | 1 | 0 | 95% | — | 0 | insufficient_sample | 0 / 21 | 0 | true_positive 1 | — | 21/21 |
-| `no_await_in_loop` | 8 | 10 | 0 | 44% | 7/8 | 0 | below_bar | 5 / 13 | 0 | — | 7/7 | 14/19 |
-| `npath_complexity` | 227 | 9 | 0 | 96% | 30/0 | 45 | meets_bar | 8 / 228 | 0 | true_positive 16 | 30/30 | 227/234 |
-| `orphan_symbol` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 10 | — | — |
+| `no_await_in_loop` | 8 | 10 | 0 | 44% | 7/8 | 0 | below_bar | 5 / 13 | 0 | pending 2 | 7/7 | 14/19 |
+| `npath_complexity` | 227 | 9 | 0 | 96% | 30/0 | 45 | meets_bar | 8 / 228 | 0 | pending 1, true_positive 16 | 30/30 | 227/234 |
+| `orphan_symbol` | 0 | 10 | 0 | 0% | — | 0 | below_bar | 0 / 10 | 0 | — | — | 10/10 |
 | `out_parameter` | 81 | 1 | 0 | 99% | — | 0 | meets_bar | 82 / 0 | 0 | — | — | 43/67 |
-| `package_coupling_metrics` | 2 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 2 | 0 | pending 29 | — | 2/2 |
+| `package_coupling_metrics` | 25 | 1 | 0 | 96% | — | 0 | insufficient_sample | 1 / 25 | 0 | — | — | 25/26 |
 | `pass_through_wrapper` | 8 | 3 | 0 | 73% | — | 0 | below_bar | 1 / 10 | 0 | — | — | 11/12 |
-| `per_item_external_io` | 5 | 60 | 0 | 8% | — | 0 | below_bar | 2 / 63 | 0 | — | — | 66/68 |
-| `quadratic_front_removal` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | pending 19 | — | 4/4 |
-| `random_for_security` | 1 | 13 | 0 | 7% | — | 0 | below_bar | 1 / 13 | 0 | — | — | 13/14 |
-| `range_for_each_iteration` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 4 | — | — |
-| `repeated_collection_traversal` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 1 / 0 | 0 | pending 24 | — | 0/1 |
-| `repeated_expensive_initialization` | 0 | 2 | 0 | 0% | — | 0 | insufficient_sample | 0 / 2 | 0 | pending 20 | — | 3/3 |
-| `repeated_format_allocation` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 7 | — | — |
-| `repeated_sort_in_loop` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 5 | — | — |
-| `request_no_cert_verify` | 23 | 9 | 0 | 72% | — | 0 | below_bar | 0 / 32 | 0 | — | — | 32/32 |
-| `require_atomic_updates` | 0 | 1 | 0 | 0% | — | 0 | insufficient_sample | 0 / 1 | 0 | pending 6 | — | 1/1 |
-| `resource_not_closed` | 2 | 0 | 0 | 100% | — | 0 | insufficient_sample | 1 / 1 | 0 | pending 20 | — | 1/2 |
-| `retry_without_backoff` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 11 | — | — |
-| `section_divider_comment` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | pending 38 | — | 4/4 |
-| `shell_execution` | 6 | 21 | 0 | 22% | — | 0 | below_bar | 0 / 27 | 0 | — | — | 27/27 |
-| `sibling_call_redundancy` | 3 | 3 | 0 | 50% | — | 0 | insufficient_sample | 0 / 6 | 0 | pending 30 | — | 6/6 |
-| `single_implementation_abstraction` | 1 | 1 | 0 | 50% | — | 0 | insufficient_sample | 0 / 2 | 0 | pending 18 | — | 2/2 |
+| `per_item_external_io` | 5 | 59 | 0 | 8% | — | 0 | below_bar | 2 / 62 | 0 | pending 3 | — | 65/67 |
+| `quadratic_front_removal` | 16 | 6 | 0 | 73% | — | 0 | below_bar | 0 / 22 | 0 | — | — | 22/22 |
+| `random_for_security` | 1 | 13 | 0 | 7% | — | 0 | below_bar | 1 / 13 | 0 | pending 1 | — | 13/14 |
+| `range_for_each_iteration` | 4 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 4 | 0 | — | — | 4/4 |
+| `repeated_collection_traversal` | 14 | 5 | 0 | 74% | — | 0 | below_bar | 4 / 15 | 0 | — | — | 15/19 |
+| `repeated_expensive_initialization` | 7 | 13 | 0 | 35% | — | 0 | below_bar | 1 / 19 | 0 | — | — | 20/21 |
+| `repeated_format_allocation` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 1 | 0 | — | — | 1/1 |
+| `repeated_sort_in_loop` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | — | — | — |
+| `request_no_cert_verify` | 23 | 8 | 0 | 74% | — | 0 | below_bar | 0 / 31 | 0 | — | — | 31/31 |
+| `require_atomic_updates` | 0 | 6 | 0 | 0% | — | 0 | insufficient_sample | 0 / 6 | 0 | — | — | 6/6 |
+| `resource_not_closed` | 12 | 8 | 0 | 60% | — | 0 | below_bar | 1 / 19 | 0 | — | — | 19/20 |
+| `retry_without_backoff` | 3 | 8 | 0 | 27% | — | 0 | below_bar | 1 / 10 | 0 | — | — | 10/11 |
+| `section_divider_comment` | 20 | 2 | 0 | 91% | — | 0 | insufficient_sample | 1 / 21 | 0 | — | — | 21/22 |
+| `shell_execution` | 6 | 19 | 0 | 24% | — | 0 | below_bar | 0 / 25 | 0 | pending 1 | — | 25/25 |
+| `sibling_call_redundancy` | 14 | 22 | 0 | 39% | — | 0 | below_bar | 4 / 32 | 0 | — | — | 32/36 |
+| `single_implementation_abstraction` | 11 | 9 | 0 | 55% | — | 0 | below_bar | 1 / 19 | 0 | — | — | 19/20 |
 | `skipped_test_without_reason` | 45 | 7 | 0 | 87% | — | 0 | below_bar | 0 / 52 | 0 | — | — | 56/56 |
-| `sort_for_extremum` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 12 | — | — |
-| `source_duplicate_detection` | 163 | 9 | 0 | 95% | 32/0 | 36 | meets_bar | 8 / 164 | 0 | — | 32/32 | 258/266 |
-| `sql_injection` | 17 | 26 | 0 | 40% | — | 0 | below_bar | 4 / 39 | 0 | — | — | 39/43 |
-| `ssh_no_host_key_verification` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 3 | — | — |
-| `ssl_with_bad_defaults` | 2 | 1 | 0 | 67% | — | 0 | insufficient_sample | 0 / 3 | 0 | pending 7 | — | 3/3 |
-| `stale_link_reference` | 6 | 0 | 0 | 100% | — | 0 | insufficient_sample | 4 / 2 | 0 | pending 30 | — | 3/10 |
+| `sort_for_extremum` | 7 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 7 | 0 | — | — | 7/7 |
+| `source_duplicate_detection` | 163 | 9 | 0 | 95% | 32/0 | 36 | meets_bar | 8 / 164 | 0 | pending 8 | 32/32 | 258/266 |
+| `sql_injection` | 17 | 26 | 0 | 40% | — | 0 | below_bar | 4 / 39 | 0 | pending 9 | — | 39/43 |
+| `ssh_no_host_key_verification` | 3 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 3 | 0 | — | — | 3/3 |
+| `ssl_with_bad_defaults` | 4 | 6 | 0 | 40% | — | 0 | below_bar | 0 / 10 | 0 | — | — | 10/10 |
+| `stale_link_reference` | 17 | 5 | 0 | 77% | — | 0 | below_bar | 6 / 16 | 0 | — | — | 16/25 |
 | `stale_section_anchor` | 14 | 0 | 0 | 100% | — | 0 | insufficient_sample | 3 / 11 | 0 | — | — | 11/14 |
-| `stringly_typed_parameter` | 1 | 3 | 0 | 25% | — | 0 | insufficient_sample | 2 / 2 | 0 | pending 21 | — | 2/4 |
+| `stringly_typed_parameter` | 10 | 11 | 0 | 48% | — | 0 | below_bar | 3 / 18 | 0 | — | — | 18/21 |
 | `tautological_assertion` | 11 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 11 | 0 | — | — | 11/11 |
 | `test_without_assertion` | 12 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 12 | 0 | true_positive 1 | — | 12/12 |
-| `todo_unimplemented_in_production` | 143 | 2 | 0 | 99% | — | 0 | meets_bar | 3 / 142 | 0 | — | — | 237/240 |
-| `too_many_locals` | 109 | 12 | 0 | 90% | 18/1 | 0 | insufficient_sample | 2 / 119 | 0 | true_positive 5 | 18/18 | 115/115 |
-| `too_many_parameters` | 89 | 0 | 0 | 100% | 38/0 | 188 | meets_bar | 6 / 83 | 0 | — | 38/42 | 123/125 |
-| `too_many_returns` | 128 | 0 | 0 | 100% | 63/0 | 398 | meets_bar | 12 / 116 | 0 | — | 63/63 | 81/96 |
-| `too_many_statements` | 97 | 2 | 0 | 98% | 11/0 | 0 | meets_bar | 1 / 98 | 0 | — | 11/11 | 87/88 |
-| `try_except_pass` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 17 | — | — |
-| `unbounded_channel_or_queue` | 2 | 3 | 0 | 40% | — | 0 | insufficient_sample | 0 / 5 | 0 | pending 85 | — | 5/5 |
+| `todo_unimplemented_in_production` | 143 | 2 | 0 | 99% | — | 0 | meets_bar | 3 / 142 | 0 | pending 33 | — | 237/240 |
+| `too_many_locals` | 148 | 14 | 0 | 91% | 18/1 | 0 | unverified | 3 / 159 | 0 | true_positive 5 | 18/18 | 155/156 |
+| `too_many_parameters` | 89 | 0 | 0 | 100% | 38/0 | 188 | meets_bar | 6 / 83 | 0 | pending 39 | 38/42 | 123/125 |
+| `too_many_returns` | 128 | 0 | 0 | 100% | 63/0 | 398 | meets_bar | 12 / 116 | 0 | pending 70 | 63/63 | 81/96 |
+| `too_many_statements` | 97 | 2 | 0 | 98% | 11/0 | 0 | meets_bar | 1 / 98 | 0 | pending 44 | 11/11 | 87/88 |
+| `try_except_pass` | 16 | 1 | 0 | 94% | — | 0 | insufficient_sample | 0 / 17 | 0 | — | — | 17/17 |
+| `unbounded_channel_or_queue` | 36 | 51 | 0 | 41% | — | 0 | below_bar | 12 / 75 | 0 | — | — | 75/87 |
 | `unbounded_concurrency` | 15 | 6 | 0 | 71% | — | 0 | below_bar | 2 / 19 | 0 | — | — | 21/23 |
 | `unhandled_termination_in_production` | 0 | 30 | 0 | 0% | — | 0 | below_bar | 18 / 12 | 0 | — | — | 29/56 |
-| `unreachable_code` | 3 | 0 | 0 | 100% | — | 0 | insufficient_sample | 2 / 1 | 0 | pending 44 | — | 1/3 |
+| `unreachable_code` | 19 | 3 | 0 | 86% | — | 0 | below_bar | 2 / 20 | 0 | — | — | 20/22 |
 | `unsafe_deserialization` | 8 | 11 | 0 | 42% | — | 0 | below_bar | 0 / 19 | 0 | — | — | 19/19 |
 | `unsafe_type_cast` | 26 | 4 | 0 | 87% | — | 0 | below_bar | 1 / 29 | 0 | — | — | 29/30 |
-| `unused_assignment` | 4 | 3 | 0 | 57% | — | 0 | insufficient_sample | 2 / 5 | 0 | pending 119 | — | 5/8 |
-| `unused_declared_dependency` | 1 | 0 | 0 | 100% | — | 0 | insufficient_sample | 0 / 1 | 0 | pending 58 | — | 1/1 |
-| `world_writable_file` | 0 | 0 | 0 | — | — | 0 | insufficient_sample | 0 / 0 | 0 | pending 49 | — | — |
-| `xml_xxe_vulnerable` | 0 | 25 | 0 | 0% | — | 0 | below_bar | 1 / 24 | 0 | — | — | 24/24 |
+| `unused_assignment` | 110 | 10 | 0 | 92% | — | 0 | meets_bar | 4 / 116 | 0 | — | — | 116/121 |
+| `unused_declared_dependency` | 23 | 35 | 0 | 40% | — | 0 | below_bar | 5 / 53 | 0 | — | — | 53/58 |
+| `world_writable_file` | 24 | 25 | 0 | 49% | — | 0 | below_bar | 1 / 48 | 0 | — | — | 48/49 |
+| `xml_xxe_vulnerable` | 0 | 22 | 0 | 0% | — | 0 | below_bar | 1 / 21 | 0 | — | — | 21/21 |
 
 ### Oracle Agreement Audit
 
