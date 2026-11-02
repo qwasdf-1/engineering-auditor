@@ -68,6 +68,7 @@ best-case precision is under 90%.
 | `identifier_tersity` | insufficient_sample (1/2) | Domain names (`r1, g1, b1`) and vendored docopt |
 | `package_coupling_metrics` | insufficient_sample (25/1) | A package is a top-level directory, so Go `internal/*` packages count as one and miscount efferent coupling (rqlite `otlp`); findings carry no language to scope by (2026-11-02) |
 | `hardcoded_credential` | below_bar (21/142) | The application slice: placeholder and documentation passwords, key and message-key names, and template literals in six languages, and false positives in C# and Rust too, so scoping cannot save it (2026-10-23) |
+| `stale_link_reference` | below_bar (17/5) | Links into the documentation website's assembled version trees (DolphinScheduler) and Zulip page routes no file names; Markdown is its one language, so scoping it leaves nothing gating (2026-11-02) |
 
 ### Scoped to full in some languages
 
@@ -85,7 +86,6 @@ best-case precision is under 90%.
 | `hot_path_linear_membership` | Go, Java, Python, TypeScript | Lists a domain keeps small (raft peer sets capped by replica count, API-spec parameter lists, a camera frame's QR codes) that no static rule bounds; C#, JavaScript, and Rust hold none (2026-10-23) |
 | `shell_execution` | JavaScript, Python | Literal commands and an Action's own inputs; Java holds none (2026-10-23) |
 | `unsafe_deserialization` | Java, Python | Python's own-data pickles and Java streams of server-written data; JavaScript, TypeScript, Kotlin, and C# hold none (2026-10-23) |
-| `stale_link_reference` | Markdown | Its one language: links into the documentation website's assembled version trees (DolphinScheduler) and Zulip page routes no file names (17/5, 2026-11-02) |
 | `section_divider_comment` | Java, JavaScript | Banners fencing a NetBeans GUI-builder block (ZAP) and commented-out `===` comparisons (Wexflow); the other languages hold none (2026-11-02) |
 | `repeated_collection_traversal` | C#, Java, Python, TypeScript | Traversals under mutually exclusive guards or of distinct bindings (Umbraco), annotation accessors (DBeaver), column slices of one array (Frigate), and a dev-only showroom page (Zulip) (2026-11-02) |
 | `loop_invariant_regex_compilation` | Go, Java, Rust | Patterns from the loop's values (Authelia, pgcat), a compile in a one-key `switch` case (NATS), and a static field of an anonymous class (DBeaver) (2026-11-02) |

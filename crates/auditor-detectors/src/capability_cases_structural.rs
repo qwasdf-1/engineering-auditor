@@ -360,7 +360,7 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         ]),
         CapabilityCase::new(
             "stale_link_reference",
-            ScanProfile::Gating,
+            ScanProfile::Full,
             "docs/README.md",
             "See [guide](missing.md).\n",
             "docs/README.md",

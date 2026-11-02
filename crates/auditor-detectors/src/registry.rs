@@ -70,12 +70,11 @@ pub(crate) static DETECTOR_CATALOG: &[DetectorSpec] = &[
         "stale_link_reference",
         "staleness",
         Low,
-        Gating,
+        Full,
         "L2",
         StaleLinkReference
     )
-    .with_roles(RoleApplicability::Documentation)
-    .full_profile_in(&["markdown"]),
+    .with_roles(RoleApplicability::Documentation),
     spec!(
         "stale_section_anchor",
         "staleness",
