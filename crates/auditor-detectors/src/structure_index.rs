@@ -94,17 +94,26 @@ pub(crate) struct StructureImport {
     pub(crate) reexport: bool,
     pub(crate) module: Option<String>,
     pub(crate) form: ImportForm,
+    /// The names a JavaScript or TypeScript import binds in braces, less
+    /// those marked `type`; `None` when it also binds a default or a
+    /// namespace. An import whose names all resolve to types is erased.
+    pub(crate) value_names: Option<Vec<String>>,
     /// The C/C++ preprocessor branches enclosing the import, outermost
     /// first: two includes in exclusive branches (`#ifdef A` .. `#else`)
     /// never both apply.
     pub(crate) branches: Vec<usize>,
+    /// C/C++: the macro definitions and `#undef`s above the include. A
+    /// header included again after one changes is an X-macro expansion
+    /// (`#define OP(x) ..` then `#include "opcode_list.h"`), not a repeat.
+    pub(crate) macro_epoch: usize,
 }
 
 /// Import shapes that cannot share one declaration: TypeScript keeps
 /// `import type` apart from value imports, and a namespace binding
 /// (`* as ns`) cannot be combined with named bindings. A CommonJS member
 /// require (`require('./utils').methods`) binds one member per line by
-/// design; no lint convention asks to merge those.
+/// design; no lint convention asks to merge those. A lazy `import(..)`
+/// loads its module when called, not when the importer loads.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub(crate) enum ImportForm {
     #[default]
@@ -113,6 +122,14 @@ pub(crate) enum ImportForm {
     Namespace,
     TypeNamespace,
     Member,
+    Lazy,
+}
+
+impl ImportForm {
+    /// Imports TypeScript erases at compile time.
+    pub(crate) fn is_type_only(self) -> bool {
+        matches!(self, Self::Type | Self::TypeNamespace)
+    }
 }
 
 #[derive(Clone, Debug)]

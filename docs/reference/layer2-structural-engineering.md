@@ -60,7 +60,11 @@ Markdown link targets that do not resolve to existing files.
 
 Algorithm: scans each line for markdown link targets, filters out external
 URLs, absolute paths, and anchors-only refs, then resolves against the
-repository root.
+repository root. Template placeholders (`{docs_url}`, a template's `❓`) name
+no path; a page of a Docusaurus or MkDocs site (a `docusaurus.config.*` or
+`mkdocs.yml` above it) links other pages by extensionless route; and a target
+a `.gitignore` on its way ignores is build output (an OpenAPI plugin's
+generated pages).
 
 Language contract: see [`language-support.md`](./language-support.md).
 
@@ -117,7 +121,9 @@ Flags functions that use decorative comment dividers (`// ----`, `# ====`,
 Algorithm: strips comments and counts lines matching divider patterns (>=3
 repeated `-`, `=`, `*`, `_` characters in a comment line). A border framed by
 `+` or `|` (`+---+---+`) draws a table or byte-layout diagram and is not a
-divider.
+divider, nor is a rule quoted in code (`` `---` ``, `"-----"`) or a go-swagger
+`// ---` YAML marker under a `swagger:operation` or `swagger:route`
+annotation.
 
 Language contract: see [`language-support.md`](./language-support.md).
 
@@ -182,7 +188,9 @@ Language contract: see [`language-support.md`](./language-support.md).
 Flags functions where identifiers average more than 3 words per name.
 
 Algorithm: collects all identifiers in a function via `identifier_occurrences()`.
-Splits each identifier on camelCase/snake_case boundaries. Computes mean words
+Splits each identifier on camelCase/snake_case boundaries; an `UPPER_SNAKE`
+constant splits only at underscores, so a code with digits (`AF_P2WPKH_P2SH`)
+stays three words. Computes mean words
 per identifier. Fires when mean > 3.0 and at least 5 identifiers exist.
 
 Language contract: see [`language-support.md`](./language-support.md).
@@ -419,7 +427,9 @@ runtime imports; a runtime re-import in a `__main__` block of a name the
 module already imports is a duplicate (Pylint `reimported`). A C/C++
 `#include` repeats another only when its preprocessor branch encloses the
 other's: the same header under `#ifdef`/`#else` arms is not a duplicate, but a
-header re-included inside a branch after an unconditional include is.
+header re-included inside a branch after an unconditional include is. A
+header included again after a `#define` or `#undef` is an X-macro expansion
+(`#define OP(x) ..` then `#include "opcode_list.h"`), not a duplicate.
 
 Language contract: see [`language-support.md`](./language-support.md).
 

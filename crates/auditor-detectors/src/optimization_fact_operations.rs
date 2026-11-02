@@ -97,7 +97,11 @@ pub(super) fn general_invariant_call(view: &FunctionView<'_>, call: &StructureCa
 pub(super) fn recognized_regex_call(view: &FunctionView<'_>, call: &StructureCall) -> bool {
     let expression = call.expression.to_ascii_lowercase();
     match view.file.language {
-        Language::Rust => expression.contains("regex::new") && file_imports(view.file, "regex"),
+        // The compile itself, not a call (`.map(..)`) whose argument holds one.
+        Language::Rust => {
+            call.callee.to_ascii_lowercase().ends_with("regex::new")
+                && file_imports(view.file, "regex")
+        }
         Language::Python => expression.contains("re.compile") && file_imports(view.file, "re"),
         Language::JavaScript | Language::TypeScript => {
             expression.contains("new regexp")
@@ -120,12 +124,19 @@ pub(super) fn recognized_regex_call(view: &FunctionView<'_>, call: &StructureCal
     }
 }
 
-pub(super) fn format_call(call: &StructureCall) -> bool {
+/// A string-formatting call: a resolved formatter, or a `format` call by
+/// name (Rust `format!`, Python `str.format`). In JavaScript and TypeScript
+/// only Node's `util.format` qualifies: a `.format` method there is a
+/// library's own (moment's formats the date its receiver holds).
+pub(super) fn format_call(language: &Language, call: &StructureCall) -> bool {
     if matches!(
         call.api.as_deref(),
         Some("fmt.Sprintf" | "java.lang.String.format" | "util.format" | "System.String.Format")
     ) {
         return true;
+    }
+    if matches!(language, Language::JavaScript | Language::TypeScript) {
+        return false;
     }
     let expression = call.expression.to_ascii_lowercase();
     call_name(call) == "format"

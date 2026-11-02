@@ -29,7 +29,9 @@ loop-invariant primitive with known formatting behavior. Enclosing calls that
 merely contain a format expression, custom debug/display values, and
 loop-dependent operands are excluded. Go `fmt.Sprintf`, Java
 `String.format`, and Node `util.format` qualify by resolved identity;
-JavaScript template literals are not calls and are not claimed. A call guarded by a switch on, or an equality test of, the key of a
+JavaScript template literals are not calls and are not claimed, and in
+JavaScript and TypeScript only `util.format` qualifies (a `.format` method
+there is a library's own, such as moment's). A call guarded by a switch on, or an equality test of, the key of a
 loop over a map runs at most once per loop (map keys are unique) and is not
 reported.
 
@@ -37,7 +39,8 @@ reported.
 
 Detects a recognized, unshadowed regex compiler inside a loop when the pattern
 is invariant. Rust, Python, JavaScript, TypeScript, and Java arms require the
-expected import or constructor identity; Go matches `regexp.Compile` and
+expected import or constructor identity (a Rust call qualifies only when it
+is `Regex::new` itself, not a call whose argument holds one); Go matches `regexp.Compile` and
 `regexp.MustCompile` by resolved identity. The recommendation uses lazy
 first-use caching so zero-iteration and first-failure behavior are preserved.
 

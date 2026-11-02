@@ -62,8 +62,9 @@ const BENCHMARK_COMPONENTS: &[&str] = &[
 /// syntax, in any directory) are not audited.
 pub const IGNORE_FILENAME: &str = ".eaignore";
 /// Fuzzing harnesses (`fuzz/`, `ossfuzz/`) exercise the code like tests.
-/// `e2e/` holds end-to-end suites and `test-framework/` a test harness
-/// (Keycloak's).
+/// `e2e/` holds end-to-end suites and `test-framework/` and `testsuite/`
+/// test harnesses (Keycloak's); `unittest/` a Go test-support package
+/// (Gitea's `models/unittest/`).
 const TEST_COMPONENTS: &[&str] = &[
     "test",
     "tests",
@@ -73,6 +74,8 @@ const TEST_COMPONENTS: &[&str] = &[
     "ossfuzz",
     "e2e",
     "test-framework",
+    "testsuite",
+    "unittest",
 ];
 /// `snippets/` holds code compiled for documentation (Polly `src/Snippets/`).
 const EXAMPLE_COMPONENTS: &[&str] = &[
@@ -90,6 +93,8 @@ const TOOLING_COMPONENTS: &[&str] = &[
     "tooling",
     "tools",
     "scripts",
+    // Build and CI scripts (Umbraco's `devops/`).
+    "devops",
     ".github",
     // Gradle build logic.
     "build-logic",
@@ -314,6 +319,7 @@ pub(crate) fn discover_audited_files_with_filter(
     filter: &ScopeFilter,
 ) -> io::Result<Vec<AuditedFile>> {
     let mut files = Vec::new();
+    let attributes = classification::LinguistAttributes::load(root);
     let filter_root = root.to_path_buf();
     let mut walker = ignore::WalkBuilder::new(root);
     walker
@@ -345,7 +351,7 @@ pub(crate) fn discover_audited_files_with_filter(
             continue;
         }
         let bytes = fs::metadata(&path)?.len();
-        files.extend(audited_file(root, path, bytes));
+        files.extend(audited_file(root, path, bytes, &attributes));
     }
     files.sort_by(|a, b| a.relative.cmp(&b.relative));
     crate::rust_test_modules::mark_rust_test_modules(&mut files);
@@ -354,7 +360,12 @@ pub(crate) fn discover_audited_files_with_filter(
 
 /// A discovered path as an audited file: a source in its language and role,
 /// or a transient build artifact; `None` for anything else.
-fn audited_file(root: &Path, path: PathBuf, bytes: u64) -> Option<AuditedFile> {
+fn audited_file(
+    root: &Path,
+    path: PathBuf,
+    bytes: u64,
+    attributes: &classification::LinguistAttributes,
+) -> Option<AuditedFile> {
     let relative = path.strip_prefix(root).unwrap_or(&path).to_path_buf();
     let Some(language) = language_for_path(&path) else {
         transient_artifact_kind(root, &path)?;
@@ -372,9 +383,13 @@ fn audited_file(root: &Path, path: PathBuf, bytes: u64) -> Option<AuditedFile> {
         language
     };
     let role = match source_role_for_path(&relative) {
-        SourceRole::Production if language != Language::Markdown && is_generated_output(&path) => {
-            SourceRole::Generated
-        }
+        SourceRole::Production => match attributes.role(&relative) {
+            Some(marked) => marked,
+            None if language != Language::Markdown && is_generated_output(&path) => {
+                SourceRole::Generated
+            }
+            None => SourceRole::Production,
+        },
         SourceRole::Tooling if ships_container_image(root, &relative) => SourceRole::Production,
         role => role,
     };
@@ -519,7 +534,15 @@ fn is_benchmark_stem(stem: &str) -> bool {
 }
 
 fn is_test_file(components: &[String], original: &[&str], stem: &str) -> bool {
+    // Go test helpers built into the package (`testutils.go`, `testenv.go`).
+    let go_test_helper = components.last().is_some_and(|name| name.ends_with(".go"))
+        && matches!(stem, "testutil" | "testutils" | "testenv");
     is_test_stem(stem)
+        || go_test_helper
+        // A project's own suite runner (`cmd/authelia-suites/`).
+        || layout_components(components)
+            .iter()
+            .any(|component| component.ends_with("-suites"))
         || is_test_project(original)
         || is_test_class_file(original)
         || top_level_directory(components, "integration")

@@ -95,6 +95,19 @@ mod tests {
     ast_detector_adapter!(no_await_in_loop_findings);
 
     #[test]
+    fn rust_do_while_blocks_and_inclusive_ranges_are_not_assignments_in_conditions() {
+        let root = temp_root("assign_rust_forms");
+        let file = make_file(
+            &root,
+            "src/lib.rs",
+            "fn f(xs: &[u8], last: usize, mut first: bool, s: &State) -> bool {\n    if xs[..=last].iter().any(|x| *x == 0) {\n        return true;\n    }\n    while {\n        first = false;\n        s.is_running()\n    } {}\n    first\n}\n",
+        );
+        let cache = test_cache(&file);
+        assert!(assignment_in_operand_findings(&[file], &cache).is_empty());
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn errorprone_detects_assignment_in_condition() {
         let root = temp_root("assign");
         let file = make_file(&root, "src/main.rs", "if x = 5 {\n    return;\n}\n");
@@ -281,6 +294,21 @@ mod tests {
         let findings = exit_in_production_findings(&[file], &cache);
         assert!(findings.is_empty());
         fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn go_exit_in_a_function_that_exits_by_contract_is_not_reported() {
+        let lines = |body: &str| {
+            let root = temp_root("exit_go_contract");
+            let file = make_file(&root, "src/log/logger.go", &format!("package log\nimport \"os\"\n{body}\n"));
+            let cache = test_cache(&file);
+            let findings = exit_in_production_findings(&[file], &cache);
+            fs::remove_dir_all(&root).unwrap();
+            findings.len()
+        };
+        assert_eq!(lines("func (l *Logger) Fatalf(f string) {\n    os.Exit(1)\n}"), 0);
+        assert_eq!(lines("func MainTest(m *testing.M) {\n    os.Exit(m.Run())\n}"), 0);
+        assert_eq!(lines("func CheckErr(err error) {\n    os.Exit(1)\n}"), 1);
     }
 
     #[test]

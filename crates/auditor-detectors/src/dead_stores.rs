@@ -105,7 +105,9 @@ fn overwritten_stores<'a>(
         if let Some(previous) = pending.remove(target) {
             stores.push((target.to_string(), previous));
         }
-        if locals.contains(target) && !handler_reads.contains(target) {
+        // Python's `_`-prefixed names are deliberate throwaways.
+        let throwaway = *language == Language::Python && target.starts_with('_');
+        if locals.contains(target) && !handler_reads.contains(target) && !throwaway {
             pending.insert(target.to_string(), statement);
         }
     }
@@ -126,6 +128,57 @@ mod tests {
             .flat_map(|block| overwritten_stores(&language, block, &mut FlowCache::default()))
             .map(|(name, _)| name)
             .collect()
+    }
+
+    fn overwritten_in(
+        language: Language,
+        ast: auditor_ast::AstLang,
+        kind: &str,
+        source: &str,
+    ) -> Vec<String> {
+        let tree = auditor_ast::AstParser::new()
+            .unwrap()
+            .parse(&ast, source)
+            .unwrap();
+        ast_scan::nodes_of_kind(tree.root_node(), &[kind])
+            .into_iter()
+            .flat_map(|block| overwritten_stores(&language, block, &mut FlowCache::default()))
+            .map(|(name, _)| name)
+            .collect()
+    }
+
+    #[test]
+    fn dollar_names_and_shorthand_properties_are_reads() {
+        let source = "function f(html) {\n  let $c = load(html);\n  $c.append(1);\n  $c = other();\n  let n = 0;\n  g({ n });\n  n = 2;\n  let k = 1;\n  k = 2;\n  return [$c, n, k];\n}\n";
+        assert_eq!(
+            overwritten_in(
+                Language::TypeScript,
+                auditor_ast::AstLang::TypeScript,
+                "statement_block",
+                source
+            ),
+            ["k"]
+        );
+    }
+
+    #[test]
+    fn constant_initializers_and_throwaways_are_not_dead_stores() {
+        let c = "int f(void) {\n  int err = UNZ_OK;\n  err = open();\n  int n = count();\n  n = 2;\n  return err + n;\n}\n";
+        assert_eq!(
+            overwritten_in(
+                Language::C,
+                auditor_ast::AstLang::C,
+                "compound_statement",
+                c
+            ),
+            ["n"]
+        );
+        let cs = "class F { int G() {\n  string s = null;\n  s = H();\n  return s.Length;\n} }\n";
+        assert!(overwritten(Language::CSharp, auditor_ast::AstLang::CSharp, cs).is_empty());
+        let py = "def f():\n    _p = check()\n    _p = check()\n    return 1\n";
+        assert!(
+            overwritten_in(Language::Python, auditor_ast::AstLang::Python, "block", py).is_empty()
+        );
     }
 
     #[test]

@@ -225,7 +225,11 @@ fn cycle_findings(index: &SystemsIndex) -> Vec<Finding> {
             let line = index
                 .edges()
                 .iter()
-                .filter(|edge| cycle.contains(&edge.source) && cycle.contains(&edge.target))
+                .filter(|edge| {
+                    edge.kind.is_runtime()
+                        && cycle.contains(&edge.source)
+                        && cycle.contains(&edge.target)
+                })
                 .map(|edge| edge.line)
                 .min();
             Some(
@@ -276,7 +280,8 @@ pub(crate) fn package_coupling_metrics_findings(index: &SystemsIndex) -> Vec<Fin
     let metrics = PackageMetrics::from_index(index);
     packages
         .into_iter()
-        .filter(|package| !incomplete.contains(package))
+        // Loose top-level files share no package of their own.
+        .filter(|package| !incomplete.contains(package) && package != "__root__")
         .filter_map(|package| package_finding(&package, &metrics))
         .collect()
 }
@@ -391,9 +396,15 @@ fn package_finding(package: &str, metrics: &PackageMetrics) -> Option<Finding> {
     )
 }
 
+/// A package within this distance of the main sequence is balanced, though
+/// both metrics fall on one side of 0.5.
+const BALANCED_DISTANCE: f64 = 0.3;
+
 fn classify_zone(instability: f64, abstractness: f64, distance: f64) -> &'static str {
     if distance >= 0.5 {
         "Warning"
+    } else if distance < BALANCED_DISTANCE {
+        "Normal"
     } else if instability > 0.5 && abstractness > 0.5 {
         "Useless"
     } else if instability < 0.5 && abstractness < 0.5 {

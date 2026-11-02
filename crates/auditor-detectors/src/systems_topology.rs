@@ -4,7 +4,7 @@ use std::path::Path;
 use auditor_ast::SymbolKind;
 
 use super::systems_facts::{TopologyEdge, TopologyEdgeKind, TopologyFile};
-use crate::structure_index::{StructureFile, StructureImport, StructureIndex};
+use crate::structure_index::{ImportForm, StructureFile, StructureImport, StructureIndex};
 use crate::Language;
 
 pub(super) struct TopologyParts {
@@ -37,7 +37,15 @@ pub(super) fn build_topology(structure: &StructureIndex) -> TopologyParts {
     collector.edges.dedup();
     apply_unresolved_counts(&mut files, collector.unresolved);
     TopologyParts {
-        cycles: deterministic_cycles(files.keys(), &collector.edges),
+        cycles: deterministic_cycles(
+            files.keys(),
+            &collector
+                .edges
+                .iter()
+                .filter(|edge| edge.kind.is_runtime())
+                .cloned()
+                .collect::<Vec<_>>(),
+        ),
         files,
         edges: collector.edges,
         local_edge_candidates: collector.candidates,
@@ -91,7 +99,26 @@ impl<'a> TopologyCollector<'a> {
             if *target == file.path || doc_only_java_import(file, import) {
                 continue;
             }
-            self.edges.push(import_edge(file, import, target));
+            let kind = self.import_kind(import, target);
+            self.edges.push(import_edge(file, import, target, kind));
+        }
+    }
+
+    fn import_kind(&self, import: &StructureImport, target: &str) -> TopologyEdgeKind {
+        if import.form == ImportForm::Lazy {
+            TopologyEdgeKind::Lazy
+        } else if import.form.is_type_only()
+            || import.value_names.as_ref().is_some_and(|names| {
+                names
+                    .iter()
+                    .all(|name| declares_only_types(self.structure_files, target, name))
+            })
+        {
+            TopologyEdgeKind::TypeOnly
+        } else if import.reexport {
+            TopologyEdgeKind::Reexport
+        } else {
+            TopologyEdgeKind::Import
         }
     }
 
@@ -151,7 +178,12 @@ fn resolved_import_target<'a>(
     exports_symbol.then_some(target)
 }
 
-fn import_edge(file: &StructureFile, import: &StructureImport, target: &str) -> TopologyEdge {
+fn import_edge(
+    file: &StructureFile,
+    import: &StructureImport,
+    target: &str,
+    kind: TopologyEdgeKind,
+) -> TopologyEdge {
     TopologyEdge {
         source: file.path.clone(),
         target: target.to_string(),
@@ -159,12 +191,23 @@ fn import_edge(file: &StructureFile, import: &StructureImport, target: &str) -> 
         target_package: package_name(target),
         line: import.line,
         symbol: import.imported.clone().or_else(|| import.alias.clone()),
-        kind: if import.reexport {
-            TopologyEdgeKind::Reexport
-        } else {
-            TopologyEdgeKind::Import
-        },
+        kind,
     }
+}
+
+/// `name` is declared in `target`, and only as an interface or type alias.
+fn declares_only_types(files: &BTreeMap<&str, &StructureFile>, target: &str, name: &str) -> bool {
+    let Some(file) = files.get(target) else {
+        return false;
+    };
+    let mut declarations = file
+        .symbols
+        .iter()
+        .filter(|symbol| symbol.name == name)
+        .peekable();
+    declarations.peek().is_some()
+        && declarations
+            .all(|symbol| matches!(symbol.kind, SymbolKind::Interface | SymbolKind::TypeAlias))
 }
 
 fn target_exports_symbol(

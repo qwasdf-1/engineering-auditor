@@ -14,10 +14,17 @@ pub(crate) fn go_log_fatal_findings(
     for file in files {
         let rel = util::path_slash(&file.relative);
         let text = cache.text(file);
+        let main_package = text.lines().any(|line| line.trim() == "package main");
+        let mut exiting = false;
         for (line_number, line) in text.lines().enumerate() {
+            if let Some((name, parameters)) = go_function_header(line) {
+                // `log.Fatal` in a program's `func main` is its exit path.
+                exiting = (main_package && name == "main")
+                    || crate::go_api_rules::go_exits_by_contract(name, parameters);
+            }
             let code = util::strip_comments(line);
             let lower = code.to_ascii_lowercase();
-            if lower.contains("log.fatal(") {
+            if lower.contains("log.fatal(") && !exiting {
                 findings.push(
                     auditor_core::finding!(
                         "go_log_fatal",
@@ -36,6 +43,17 @@ pub(crate) fn go_log_fatal_findings(
         }
     }
     findings
+}
+
+/// The name and the rest of a top-level Go `func` line:
+/// `func (l *Logger) Fatal(v ...any) {` gives `Fatal` and `(v ...any) {`.
+fn go_function_header(line: &str) -> Option<(&str, &str)> {
+    let mut rest = line.strip_prefix("func ")?.trim_start();
+    if rest.starts_with('(') {
+        rest = rest[rest.find(')')? + 1..].trim_start();
+    }
+    let open = rest.find(['(', '['])?;
+    Some((rest[..open].trim(), &rest[open..]))
 }
 
 /// golangci-lint inspired: detect repeated string literals that should be constants
@@ -237,10 +255,30 @@ mod tests {
     fn go_detects_log_fatal() {
         let findings = scan_go(
             "gofatal",
-            "package main\nimport \"log\"\nfunc main() {\n    log.Fatal(\"die\")\n}\n",
+            "package config\nimport \"log\"\nfunc Load() {\n    log.Fatal(\"die\")\n}\n",
             |_, file, cache| go_log_fatal_findings(&[file], cache),
         );
         assert!(findings.iter().any(|f| f.detector == "go_log_fatal"));
+    }
+
+    #[test]
+    fn go_log_fatal_skips_exit_by_contract() {
+        let count = |text: &str| {
+            scan_go("gofatalcontract", text, |_, file, cache| {
+                go_log_fatal_findings(&[file], cache)
+            })
+            .len()
+        };
+        assert_eq!(
+            count("package main\nimport \"log\"\nfunc main() {\n    log.Fatal(\"bad flags\")\n}\n"),
+            0
+        );
+        assert_eq!(count("package main\nimport \"log\"\nfunc (s *Srv) Start() {\n    log.Fatal(\"down\")\n}\n"), 1);
+        assert_eq!(count("package logger\nimport \"log\"\nfunc (l *Logger) Fatal(v ...any) {\n    log.Fatal(v...)\n}\n"), 0);
+        assert_eq!(
+            count("package cache\nimport \"log\"\nfunc Layer() {\n    log.Fatal(\"bad url\")\n}\n"),
+            1
+        );
     }
 
     #[test]

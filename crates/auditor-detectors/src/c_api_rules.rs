@@ -244,6 +244,27 @@ pub(crate) fn c_shell_commands(root: AstNode<'_>) -> Vec<AstNode<'_>> {
         .collect()
 }
 
+/// `INADDR_ANY` in a function that sets multicast options and binds
+/// nothing: a membership's or `IP_MULTICAST_IF`'s interface, where it means
+/// "let the kernel choose", not an address to listen on.
+fn selects_multicast_interface(identifier: AstNode<'_>) -> bool {
+    const OPTIONS: &[&str] = &[
+        "IP_MULTICAST_IF",
+        "IPV6_MULTICAST_IF",
+        "IP_ADD_MEMBERSHIP",
+        "IP_DROP_MEMBERSHIP",
+        "IP_ADD_SOURCE_MEMBERSHIP",
+        "IP_DROP_SOURCE_MEMBERSHIP",
+    ];
+    std::iter::successors(Some(identifier), AstNode::parent)
+        .find(|node| node.kind() == "function_definition")
+        .is_some_and(|function| {
+            let names = ast_scan::nodes_of_kind(function, &["identifier"]);
+            names.iter().any(|name| OPTIONS.contains(&name.text()))
+                && !names.iter().any(|name| name.text() == "bind")
+        })
+}
+
 /// A socket bound to every interface: `INADDR_ANY` stored or converted
 /// (`addr.sin_addr.s_addr = htonl(INADDR_ANY)`), `in6addr_any` stored, or
 /// `0.0.0.0` parsed into an address.
@@ -270,7 +291,7 @@ pub(crate) fn c_bind_all_interfaces(root: AstNode<'_>) -> Vec<AstNode<'_>> {
                         })
                         .is_some_and(|value| value.start_byte() == identifier.start_byte())
             });
-            in_htonl || stored
+            (in_htonl || stored) && !selects_multicast_interface(*identifier)
         })
         .collect::<Vec<_>>();
     sites.extend(

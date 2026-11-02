@@ -162,8 +162,9 @@ pub(crate) fn duplicate_import_findings(index: &StructureIndex) -> Vec<Finding> 
             // Includes repeat each other only when one's preprocessor branch
             // encloses the other's.
             let overlapping = |left: &StructureImport, right: &StructureImport| {
-                left.branches.starts_with(&right.branches)
-                    || right.branches.starts_with(&left.branches)
+                left.macro_epoch == right.macro_epoch
+                    && (left.branches.starts_with(&right.branches)
+                        || right.branches.starts_with(&left.branches))
             };
             let lines = group
                 .iter()

@@ -149,12 +149,26 @@ pub(crate) fn js_todo_nodes(root: AstNode<'_>) -> Vec<AstNode<'_>> {
 
 /// Source text executed at runtime: `eval`, the `Function` constructor, the
 /// `vm` module, and `setTimeout`/`setInterval` given a string (ESLint
-/// `no-eval`, `no-new-func`, `no-implied-eval`).
+/// `no-eval`, `no-new-func`, `no-implied-eval`). Source that is wholly
+/// literal executes no data: `Function('return this')()` finds the global
+/// object, and `new vm.Script('..')` runs a fixed script under a timeout.
 pub(crate) fn js_dynamic_evaluation(root: AstNode<'_>) -> Vec<AstNode<'_>> {
+    let literal_source = |call: AstNode<'_>| {
+        let arguments = js_arguments(call);
+        !arguments.is_empty()
+            && arguments
+                .iter()
+                .all(|argument| js_string(*argument).is_some())
+    };
     JsScope::new(root)
         .calls(root)
         .into_iter()
         .filter(|(api, call)| match api.as_str() {
+            "eval" | "Function" | "Function.<init>" | "vm.Script.<init>"
+                if literal_source(*call) =>
+            {
+                false
+            }
             "eval" | "Function" | "Function.<init>" | "vm.Script.<init>" => true,
             "setTimeout" | "setInterval" => js_arguments(*call)
                 .first()

@@ -77,15 +77,32 @@ pub(crate) fn assignment_in_operand_findings(scan: AstScan<'_, '_>) -> Vec<Findi
 }
 
 /// Rust `if`/`while` conditions containing an assignment (not `if let`).
+/// An assignment statement inside a block or closure of the condition (the
+/// `while { step(); more() } {}` do-while idiom) is not the condition's
+/// operand, and an inclusive range (`xs[..=last]`) is no assignment.
 fn rust_assignment_conditions(root: auditor_ast::AstNode<'_>) -> Vec<auditor_ast::AstNode<'_>> {
+    const ASSIGNMENTS: &[&str] = &["assignment_expression", "compound_assignment_expr"];
+    let operand = |condition: auditor_ast::AstNode<'_>, assignment: auditor_ast::AstNode<'_>| {
+        let inside = std::iter::successors(assignment.parent(), auditor_ast::AstNode::parent)
+            .take_while(|node| {
+                node.start_byte() >= condition.start_byte()
+                    && node.end_byte() <= condition.end_byte()
+            })
+            .collect::<Vec<_>>();
+        !assignment.text().contains("..=")
+            && inside
+                .iter()
+                .all(|node| !matches!(node.kind(), "block" | "closure_expression"))
+    };
     ast_scan::nodes_of_kind(root, &["if_expression", "while_expression"])
         .into_iter()
         .filter_map(|owner| owner.child_by_field_name("condition"))
         .filter(|condition| {
-            let assignment = ["assignment_expression", "compound_assignment_expr"];
             condition.kind() != "let_condition"
-                && (assignment.contains(&condition.kind())
-                    || !ast_scan::nodes_of_kind(*condition, &assignment).is_empty())
+                && (ASSIGNMENTS.contains(&condition.kind())
+                    || ast_scan::nodes_of_kind(*condition, ASSIGNMENTS)
+                        .into_iter()
+                        .any(|assignment| operand(*condition, assignment)))
         })
         .collect()
 }
@@ -278,6 +295,9 @@ pub(crate) fn exit_in_production_findings(scan: AstScan<'_, '_>) -> Vec<Finding>
         }
         let exits = if file.language == Language::Go {
             go_calls_to(root, &["os.Exit"])
+                .into_iter()
+                .filter(|call| !crate::go_api_rules::in_go_exiting_function(*call))
+                .collect()
         } else if file.language == Language::Java {
             java_exits(root)
         } else if matches!(file.language, Language::JavaScript | Language::TypeScript) {

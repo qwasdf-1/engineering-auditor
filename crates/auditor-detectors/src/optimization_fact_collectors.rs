@@ -92,7 +92,7 @@ fn collect_loop_calls(
         }
         // Hoisting pays only when the call runs on every iteration; one in a
         // branch (an error message built before `throw`) may never run.
-        if format_call(call)
+        if format_call(&view.file.language, call)
             && format_operands_are_primitive(view, call)
             && !has_nested_control(view.file, call.control_region, loop_info.control_region)
         {

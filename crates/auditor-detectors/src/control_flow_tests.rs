@@ -264,6 +264,33 @@ fn unreachable_code_keeps_generator_marker_yields_and_cfg_gated_returns() {
 }
 
 #[test]
+fn unreachable_code_skips_string_block_comments_and_empty_statements() {
+    let python = "def reader():\n    return Zbar()\n    \"\"\"\n    DEBUG CODE\n    \"\"\"\n";
+    assert!(run(
+        "py-docstring",
+        "pkg/m.py",
+        python,
+        Language::Python,
+        "unreachable_code"
+    )
+    .is_empty());
+    let c = "int bound(int n) {\n    return n + 1;;\n}\n";
+    assert!(run("c-empty", "src/m.c", c, Language::C, "unreachable_code").is_empty());
+    let dead = "def f():\n    return 1\n    print(2)\n";
+    assert_eq!(
+        run(
+            "py-dead",
+            "pkg/m.py",
+            dead,
+            Language::Python,
+            "unreachable_code"
+        )
+        .len(),
+        1
+    );
+}
+
+#[test]
 fn constant_condition_allows_the_for_true_infinite_loop_idiom() {
     let source = "class A {\n  int f(int[] b) {\n    int i = 0;\n    for (; true; i++) {\n      if (b[i] == 0) break;\n    }\n    return i;\n  }\n}\n";
     assert!(run(

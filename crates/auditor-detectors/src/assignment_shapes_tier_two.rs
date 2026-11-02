@@ -77,18 +77,43 @@ fn csharp_store(node: AstNode<'_>) -> Option<(AstNode<'_>, AstNode<'_>)> {
         .named_children()
         .filter(|child| child.start_byte() != name.start_byte())
         .last()?;
+    // A constant initializer (`string s = null;`, `bool found = false;`) is
+    // defensive, as in C.
+    if matches!(
+        value.kind(),
+        "null_literal"
+            | "boolean_literal"
+            | "integer_literal"
+            | "real_literal"
+            | "character_literal"
+    ) || is_constant_name(value)
+    {
+        return None;
+    }
     Some((name, value))
+}
+
+/// An `UPPER_SNAKE` name: a macro or named constant (`UNZ_OK`,
+/// `INVALID_HANDLE_VALUE`).
+fn is_constant_name(value: AstNode<'_>) -> bool {
+    let text = value.text();
+    value.kind() == "identifier"
+        && text.len() > 1
+        && text.starts_with(|c: char| c.is_ascii_uppercase())
+        && text
+            .chars()
+            .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit() || c == '_')
 }
 
 fn c_store(node: AstNode<'_>) -> Option<(AstNode<'_>, AstNode<'_>)> {
     let declarator = ast_scan::sole_child_of_kind(node, "init_declarator")?;
     let value = declarator.child_by_field_name("value")?;
-    // A dead initialization to a constant (`int rc = 0;`, `p = NULL`) is
-    // defensive programming (clang `deadcode.DeadStores`).
+    // A dead initialization to a constant (`int rc = 0;`, `p = NULL`,
+    // `err = UNZ_OK`) is defensive programming (clang `deadcode.DeadStores`).
     if matches!(
         value.kind(),
         "number_literal" | "null" | "nullptr" | "true" | "false" | "char_literal"
-    ) || value.text() == "NULL"
+    ) || is_constant_name(value)
     {
         return None;
     }

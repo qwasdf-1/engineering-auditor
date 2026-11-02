@@ -225,6 +225,31 @@ fn enclosing_go_function_body(mut node: AstNode<'_>) -> Option<AstNode<'_>> {
     None
 }
 
+/// A Go function whose contract is to end the process: a logger's own
+/// `Fatal*` method (`func (l *Logger) Fatalf(..)`, as the standard
+/// `log.Fatalf` is), or a `TestMain` helper taking `*testing.M`, which
+/// exits with the test result.
+pub(crate) fn go_exits_by_contract(name: &str, parameters: &str) -> bool {
+    name.starts_with("Fatal") || parameters.contains("*testing.M")
+}
+
+/// Whether the function enclosing `node` ends the process by contract
+/// ([`go_exits_by_contract`]).
+pub(crate) fn in_go_exiting_function(mut node: AstNode<'_>) -> bool {
+    while let Some(parent) = node.parent() {
+        if matches!(parent.kind(), "function_declaration" | "method_declaration") {
+            let field = |name| {
+                parent
+                    .child_by_field_name(name)
+                    .map_or("", |node| node.text())
+            };
+            return go_exits_by_contract(field("name"), field("parameters"));
+        }
+        node = parent;
+    }
+    false
+}
+
 /// A Go `package main` file is a program entry point: exiting and printing
 /// are its interface, as they are for a Rust `main.rs`.
 pub(crate) fn is_go_main_package(file: &AuditedFile, root: AstNode<'_>) -> bool {

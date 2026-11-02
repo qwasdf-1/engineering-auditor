@@ -259,6 +259,11 @@ fn collect_imports(
     symbols: &[StructureSymbol],
 ) -> Vec<StructureImport> {
     let guarded = python_guarded_import_spans(file, tree);
+    let macro_changes = if matches!(file.language, Language::C | Language::Cpp) {
+        macro_changes(tree)
+    } else {
+        Vec::new()
+    };
     let type_checking = python_type_checking_spans(file, tree);
     if file.language == Language::Go {
         return go_imports(tree);
@@ -281,6 +286,10 @@ fn collect_imports(
             }
             if matches!(file.language, Language::C | Language::Cpp) {
                 parsed.branches = preprocessor_branches(tree, import.span);
+                parsed.macro_epoch = macro_changes
+                    .iter()
+                    .filter(|start| **start < import.span.start_byte)
+                    .count();
             }
             parsed
         })
@@ -301,6 +310,23 @@ fn collect_imports(
             && left.dynamic == right.dynamic
     });
     imports
+}
+
+/// Where a C or C++ file defines or undefines a macro (`#define`, `#undef`).
+fn macro_changes(tree: &auditor_ast::AstTree) -> Vec<usize> {
+    crate::ast_scan::nodes_of_kind(
+        tree.root_node(),
+        &["preproc_def", "preproc_function_def", "preproc_call"],
+    )
+    .into_iter()
+    .filter(|node| {
+        node.kind() != "preproc_call"
+            || node
+                .child_by_field_name("directive")
+                .is_some_and(|directive| directive.text().trim() == "#undef")
+    })
+    .map(|node| node.start_byte())
+    .collect()
 }
 
 /// The preprocessor branches enclosing `span`, outermost first: each
@@ -382,10 +408,14 @@ fn dynamic_imports(
                     module,
                     form: if tree.source()[call.span.end_byte..].starts_with('.') {
                         crate::structure_index::ImportForm::Member
+                    } else if callee == "import" {
+                        crate::structure_index::ImportForm::Lazy
                     } else {
                         crate::structure_index::ImportForm::Value
                     },
+                    value_names: None,
                     branches: Vec::new(),
+                    macro_epoch: 0,
                 }
             })
         })

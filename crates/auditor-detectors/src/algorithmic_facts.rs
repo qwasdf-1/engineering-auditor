@@ -319,7 +319,17 @@ fn repeated_sort(
     root: String,
 ) -> Option<AlgorithmicFactKind> {
     let loop_fact = nearest_loop(file, owner, call.control_region)?;
-    if declared_within(file, &root, loop_fact.span)
+    // A `for (x of items.sort())` header runs once, and a sort of
+    // `byYear[year]` sorts another collection each pass.
+    let in_header = loop_fact.iterable_span.is_some_and(|header| {
+        header.start_byte <= call.span.start_byte && call.span.end_byte <= header.end_byte
+    });
+    let per_item = util::identifiers(&call.callee)
+        .iter()
+        .any(|name| loop_bindings(loop_fact).contains(name) || loop_fact.counters.contains(name));
+    if in_header
+        || per_item
+        || declared_within(file, &root, loop_fact.span)
         || rebound_within(file, owner, &root, loop_fact.span)
         || loop_collection(loop_fact, aliases).as_deref() == Some(&root)
         || loop_bindings(loop_fact)
@@ -377,6 +387,9 @@ fn collect_sort_selections(
         ) else {
             continue;
         };
+        if sorted_order_used_elsewhere(file, owner, &sort.root, sort_call.span, use_span) {
+            continue;
+        }
         push_fact(
             file,
             function,
@@ -391,6 +404,26 @@ fn collect_sort_selections(
         );
     }
     collect_sorted_subscripts(file, owner, function, facts);
+}
+
+/// Whether code after the sort reads `root` other than at the selection:
+/// passed whole on (`addToRedeliverQueue(expired...)`), iterated, or indexed
+/// elsewhere, the order itself is used, not only an endpoint.
+fn sorted_order_used_elsewhere(
+    file: &StructureFile,
+    owner: u32,
+    root: &str,
+    sort: SourceSpan,
+    selection: SourceSpan,
+) -> bool {
+    let name = root.rsplit('.').next().unwrap_or(root);
+    file.references.iter().any(|reference| {
+        reference.owner == Some(owner)
+            && reference.name == name
+            && reference.span.start_byte > sort.end_byte
+            && !(selection.start_byte <= reference.span.start_byte
+                && reference.span.end_byte <= selection.end_byte)
+    })
 }
 
 /// Python `sorted(xs)[0]`, `sorted(xs)[-1]`, and `sorted(xs)[:k]`: a full sort
@@ -471,9 +504,18 @@ fn collect_repeated_traversals(
         let value_search = file.language == crate::Language::Python
             && matches!(shape.method.as_str(), "count" | "index")
             && !shape.arguments.contains('(');
-        if !value_search
-            && (!is_terminal_traversal(&shape.method)
-                || !pure_traversal_arguments(&shape.arguments))
+        // A receiver computed by a call with arguments (`tensor(i)`,
+        // `matcher(url)`) is a new value each time, not one collection.
+        let computed = call
+            .receiver
+            .as_deref()
+            .unwrap_or(&call.callee)
+            .replace("()", "")
+            .contains('(');
+        if computed
+            || !value_search
+                && (!is_terminal_traversal(&shape.method)
+                    || !pure_traversal_arguments(&shape.arguments))
         {
             continue;
         }

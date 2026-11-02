@@ -87,7 +87,9 @@ impl FileReferenceKind {
         match self {
             Self::Backtick => (!root.join(target).exists()).then(|| target.to_string()),
             Self::Link => resolve_markdown_target(root, &file.relative, target)
-                .filter(|(path, _)| existing_doc_target(path).is_none())
+                .filter(|(path, normalized)| {
+                    existing_doc_target(path).is_none() && !built_output(root, normalized)
+                })
                 .map(|(_, normalized)| normalized),
         }
     }
@@ -172,12 +174,17 @@ fn file_stale_references(
     let rel = util::path_slash(&file.relative);
     // A site page with a front-matter `slug:` (Docusaurus, Hugo) links pages
     // by URL route; extensionless targets are not file paths.
-    let routed = declares_slug(lines);
+    // So does every page of a Docusaurus or MkDocs site.
+    let routed = declares_slug(lines) || in_documentation_site(root, &file.relative);
     let mut findings = Vec::new();
     for reference in kind.references(lines) {
         let target = reference.target.as_str();
         let route = Path::new(target).extension().is_none();
-        let resolved = (routed && route)
+        // A template placeholder (`{docs_url}`, a template's `❓`) names no path.
+        let placeholder =
+            target.contains(['{', '}']) || !target.chars().any(|c| c.is_ascii_alphanumeric());
+        let resolved = placeholder
+            || (routed && route)
             || matches!(kind, FileReferenceKind::Link)
                 && (myst_targets.contains(target)
                     || (route && resolves_as_site_route(root, &file.relative, target)));
@@ -217,6 +224,37 @@ fn resolves_as_site_route(root: &Path, source: &Path, target: &str) -> bool {
         .chain(site_root)
         .filter_map(|base| resolve_markdown_target(root, &base, target))
         .any(|(path, _)| existing_doc_target(&path).is_some())
+}
+
+/// A page under a directory holding a documentation-site configuration
+/// (`docusaurus.config.js`, `mkdocs.yml`), which serves pages by route.
+fn in_documentation_site(root: &Path, relative: &Path) -> bool {
+    const CONFIGS: &[&str] = &[
+        "docusaurus.config.js",
+        "docusaurus.config.ts",
+        "docusaurus.config.mjs",
+        "mkdocs.yml",
+    ];
+    relative.ancestors().skip(1).any(|directory| {
+        CONFIGS
+            .iter()
+            .any(|config| root.join(directory).join(config).is_file())
+    })
+}
+
+/// A target inside a path a `.gitignore` on its way ignores: build output
+/// the documentation build writes (an OpenAPI plugin's generated pages).
+fn built_output(root: &Path, normalized: &str) -> bool {
+    let target = Path::new(normalized);
+    target.ancestors().skip(1).any(|directory| {
+        let (ignore, _) =
+            ignore::gitignore::Gitignore::new(root.join(directory).join(".gitignore"));
+        target.strip_prefix(directory).is_ok_and(|inside| {
+            ignore
+                .matched_path_or_any_parents(inside, false)
+                .is_ignore()
+        })
+    })
 }
 
 fn declares_slug(lines: &[&str]) -> bool {

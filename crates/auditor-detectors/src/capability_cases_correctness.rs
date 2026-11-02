@@ -445,10 +445,10 @@ pub(super) fn default_cases() -> Vec<CapabilityCase> {
         CapabilityCase::new(
             "go_log_fatal",
             ScanProfile::Gating,
+            "src/config.go",
+            "package config\nimport \"log\"\nfunc Load() { log.Fatal(\"failed\") }\n",
             "src/main.go",
-            "package main\nimport \"log\"\nfunc main() { log.Fatal(\"failed\") }\n",
-            "src/main.go",
-            "package main\nimport \"log\"\nfunc main() { log.Print(\"failed\") }\n",
+            "package main\nimport \"log\"\nfunc main() { log.Fatal(\"bad flags\") }\n",
         ),
         CapabilityCase::new(
             "go_errcheck",

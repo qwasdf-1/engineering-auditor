@@ -99,7 +99,10 @@ Language contract: see [`language-support.md`](./language-support.md).
 ## `repeated_sort_in_loop`
 
 Detects sorting an invariant collection inside a loop. It rejects sorts of the
-loop binding, the iterated collection, and collections mutated in the loop.
+loop binding, the iterated collection, and collections mutated in the loop; a
+sort in a `for .. of` header runs once, and a sort of a collection indexed by
+the loop binding or counter (`byYear[year]`) sorts another collection each
+pass.
 
 Evidence includes the collection kind, exact loop and sort spans,
 `direct_mutation_count` (zero: no recognized write to the collection in the
@@ -116,7 +119,9 @@ Language contract: see [`language-support.md`](./language-support.md).
 
 Detects a default ascending sort followed by first/last or one-element
 selection on the same unchanged receiver. Comparator sorts are excluded
-because their ordering semantics may not match a direct extremum operation.
+because their ordering semantics may not match a direct extremum operation,
+and so is a sort whose order code after it uses: a receiver passed on whole,
+iterated, or read anywhere but the selection.
 
 Evidence owns the `k = 1` boundary and the `O(n log n) -> O(n)` replacement
 model.
@@ -143,7 +148,8 @@ collection in one function. Direct call arguments and callbacks with unknown
 calls or mutation are rejected; aliases participate in the mutation proof.
 The retained control tree selects the maximum feasible path through
 conditional and match/switch branches, so traversals in mutually exclusive
-arms are not added together.
+arms are not added together. A receiver computed by a call with arguments
+(`tensor(i)`, `matcher(url)`) is a new value each time, not one collection.
 
 Language contract: see [`language-support.md`](./language-support.md).
 

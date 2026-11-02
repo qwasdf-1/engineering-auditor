@@ -133,25 +133,45 @@ fn single_identifier(node: AstNode<'_>) -> Option<&str> {
 }
 
 /// Every name a statement mentions: its identifiers (Kotlin's
-/// `simple_identifier`, and the names of `"$x"` templates), and the `{name}`
-/// captures of Rust format strings (`println!("{total}")`).
+/// `simple_identifier`, the names of `"$x"` templates, and JavaScript's
+/// `{ name }` shorthand properties; a JavaScript `$name` keeps its `$`), and
+/// the `{name}` and `{:width$}` captures of Rust format strings
+/// (`println!("{total:>width$}")`).
 pub(crate) fn mentions(node: AstNode<'_>) -> BTreeSet<String> {
-    const NAMES: &[&str] = &["identifier", "simple_identifier", "interpolated_identifier"];
+    const NAMES: &[&str] = &[
+        "identifier",
+        "simple_identifier",
+        "interpolated_identifier",
+        "shorthand_property_identifier",
+    ];
+    let name = |identifier: AstNode<'_>| {
+        let text = identifier.text();
+        if identifier.kind() == "interpolated_identifier" {
+            text.trim_start_matches('$').to_string()
+        } else {
+            text.to_string()
+        }
+    };
     let mut names = BTreeSet::new();
     if NAMES.contains(&node.kind()) {
-        names.insert(node.text().trim_start_matches('$').to_string());
+        names.insert(name(node));
     }
-    names.extend(
-        ast_scan::nodes_of_kind(node, NAMES)
-            .into_iter()
-            .map(|identifier| identifier.text().trim_start_matches('$').to_string()),
-    );
+    names.extend(ast_scan::nodes_of_kind(node, NAMES).into_iter().map(name));
     for literal in ast_scan::nodes_of_kind(node, &["string_literal", "raw_string_literal"]) {
         for capture in literal.text().split('{').skip(1) {
-            let name = capture.split(['}', ':']).next().unwrap_or_default().trim();
+            let capture = capture.split('}').next().unwrap_or_default();
+            let (name, spec) = capture.split_once(':').unwrap_or((capture, ""));
+            let name = name.trim();
             if !name.is_empty() && util::identifiers(name).len() == 1 {
                 names.insert(name.to_string());
             }
+            // A width or precision taken from a named argument (`{:>width$}`).
+            names.extend(
+                spec.split(|c: char| !(c.is_alphanumeric() || c == '_' || c == '$'))
+                    .filter_map(|part| part.strip_suffix('$'))
+                    .filter(|part| part.starts_with(|c: char| c.is_alphabetic() || c == '_'))
+                    .map(str::to_string),
+            );
         }
     }
     names

@@ -24,6 +24,32 @@ fn main() {
     }
 
     #[test]
+    fn swagger_separators_and_quoted_rules_are_not_dividers() {
+        let source = "\
+func ListProjects(ctx *Context) {
+\t// swagger:operation GET /repos/{owner}/projects repoListProjects
+\t// ---
+\t// summary: List projects
+\t// swagger:operation GET /orgs/{org}/projects orgListProjects
+\t// ---
+\t// swagger:operation GET /users/{user}/projects userListProjects
+\t// ---
+\t// Must start with `---`; find the closing `---`
+\t// and skip the closing `---` line
+\tlist(ctx)
+}
+";
+        let lines: Vec<&str> = source.lines().collect();
+        assert!(section_divider_per_file("routers/project.go", &Language::Go, &lines).is_empty());
+    }
+
+    #[test]
+    fn constants_with_digits_split_only_at_underscores() {
+        assert_eq!(identifier_word_count("AF_P2WPKH_P2SH"), 3);
+        assert_eq!(identifier_word_count("maxRetryCount"), 3);
+    }
+
+    #[test]
     fn section_divider_below_threshold_is_silent() {
         let source = "\
 fn main() {

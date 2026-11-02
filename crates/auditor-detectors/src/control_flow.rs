@@ -242,8 +242,18 @@ fn is_non_executing_after_terminator(node: AstNode<'_>, language: AstLang) -> bo
         AstLang::CSharp => node.kind() == "local_function_statement",
         // `raise ...` followed by `yield` is the idiom that makes a function a
         // generator; the yield is load-bearing even though it never runs.
+        // A bare string after the return is a block comment (`'''DEBUG CODE'''`).
         AstLang::Python => {
-            node.kind() == "expression_statement" && node.text().trim_start().starts_with("yield")
+            node.kind() == "expression_statement"
+                && (node.text().trim_start().starts_with("yield")
+                    || node.named_child_count() == 1
+                        && node
+                            .named_child(0)
+                            .is_some_and(|child| child.kind() == "string"))
+        }
+        // A stray `;` (`return x;;`) is an empty statement, not code.
+        AstLang::C | AstLang::Cpp => {
+            node.kind() == "expression_statement" && node.text().trim() == ";"
         }
         _ => false,
     }

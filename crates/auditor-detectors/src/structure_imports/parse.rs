@@ -8,6 +8,10 @@ pub(crate) fn parse_import(language: &Language, raw: &str) -> StructureImport {
         Language::JavaScript | Language::TypeScript => javascript_import_form(&normalized),
         _ => ImportForm::Value,
     };
+    let value_names = match language {
+        Language::JavaScript | Language::TypeScript => javascript_value_names(&normalized),
+        _ => None,
+    };
     let parts = match language {
         Language::Rust => rust_import_parts(&normalized),
         Language::Python => python_import_parts(&normalized),
@@ -31,8 +35,35 @@ pub(crate) fn parse_import(language: &Language, raw: &str) -> StructureImport {
         reexport: false,
         module: parts.module,
         form,
+        value_names,
         branches: Vec::new(),
+        macro_epoch: 0,
     }
+}
+
+/// The brace-bound names of `import { a, type B, c as d } from '..'`
+/// (`a`, `c`), or `None` when the import also binds a default or namespace.
+fn javascript_value_names(normalized: &str) -> Option<Vec<String>> {
+    let bindings = normalized
+        .strip_prefix("import ")
+        .or_else(|| normalized.strip_prefix("export "))?
+        .split_once(" from ")?
+        .0
+        .trim();
+    let body = bindings.strip_prefix('{')?.strip_suffix('}')?;
+    Some(
+        body.split(',')
+            .map(str::trim)
+            .filter(|binding| !binding.is_empty() && !binding.starts_with("type "))
+            .map(|binding| {
+                binding
+                    .split_once(" as ")
+                    .map_or(binding, |(name, _)| name)
+                    .trim()
+                    .to_string()
+            })
+            .collect(),
+    )
 }
 
 fn javascript_import_form(normalized: &str) -> ImportForm {

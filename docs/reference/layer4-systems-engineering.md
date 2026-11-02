@@ -51,7 +51,10 @@ Applies explicit `auditor.toml` layer collectors and deny rules to resolved
 local import, inheritance, and re-export edges. It can suppress accepted edges
 through a baseline. No layer is inferred from path vocabulary. A Java type
 import named nowhere in code but its own declaration, such as one kept for a
-javadoc `{@link}`, is no edge.
+javadoc `{@link}`, is no edge. A cycle must close through runtime edges: a
+TypeScript `import type`, an import whose names all resolve to interfaces or
+type aliases, and a lazy `import(..)` do not close one (operator decision,
+2026-10-27).
 
 ### `package_coupling_metrics`
 
@@ -60,7 +63,9 @@ distance from the main sequence over resolved local edges and classifiable
 types. Incomplete local topology and packages without classifiable types fail
 closed for the affected metric, and so does a package with fewer than two
 coupling edges: with one edge, instability is 0 or 1 by construction and the
-distance only restates abstractness.
+distance only restates abstractness. A package within 0.3 of the main
+sequence is balanced and not reported, and loose top-level files
+(`__root__`) are no package.
 
 ### `loop_artifact_rewrite`
 

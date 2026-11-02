@@ -80,13 +80,24 @@ pub(crate) enum TopologyEdgeKind {
     Import,
     Reexport,
     Inheritance,
+    /// An import compilation erases: `import type`, or names that resolve
+    /// only to interfaces and type aliases.
+    TypeOnly,
+    /// A lazy `import(..)`, which loads its module when called.
+    Lazy,
 }
 
 impl TopologyEdgeKind {
-    const NAMES: [&'static str; 3] = ["import", "reexport", "inheritance"];
+    const NAMES: [&'static str; 5] = ["import", "reexport", "inheritance", "type_only", "lazy"];
 
     pub(crate) const fn as_str(self) -> &'static str {
         Self::NAMES[self as usize]
+    }
+
+    /// Whether the edge exists when the program runs: a dependency cycle
+    /// is a runtime cycle (operator decision, 2026-10-27).
+    pub(crate) const fn is_runtime(self) -> bool {
+        !matches!(self, Self::TypeOnly | Self::Lazy)
     }
 }
 

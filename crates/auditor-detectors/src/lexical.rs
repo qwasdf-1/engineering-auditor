@@ -18,7 +18,9 @@ fn section_divider_with_spans(
             let divider_lines: Vec<_> = body
                 .iter()
                 .filter_map(|(line_number, line)| {
-                    is_section_divider(language, line).then_some(*line_number)
+                    (is_section_divider(language, line)
+                        && !opens_swagger_spec(lines, *line_number))
+                    .then_some(*line_number)
                 })
                 .collect();
             if divider_lines.len() <= crate::SECTION_DIVIDER_THRESHOLD {
@@ -78,8 +80,9 @@ fn is_section_divider(language: &Language, line: &str) -> bool {
     };
     // Diagram borders and number lines (`+---+`, `<--- delta --->`,
     // `---[---+---]---`) are drawings, not dividers.
+    // A rule quoted in code (`` `---` ``, `"-----"`) is text, not a divider.
     if content.trim_start().starts_with(['+', '|'])
-        || content.contains(['<', '>', '[', ']', '+', '|', '^'])
+        || content.contains(['<', '>', '[', ']', '+', '|', '^', '`', '"'])
     {
         return false;
     }
@@ -87,6 +90,18 @@ fn is_section_divider(language: &Language, line: &str) -> bool {
     chars
         .windows(3)
         .any(|run| matches!(run[0], '-' | '=' | '*' | '_') && run[1] == run[0] && run[2] == run[0])
+}
+
+/// A go-swagger `// ---` line: the YAML document marker that must follow a
+/// `swagger:operation` or `swagger:route` annotation in the same comment.
+fn opens_swagger_spec(lines: &[&str], line_number: usize) -> bool {
+    let index = line_number.saturating_sub(1);
+    lines.get(index).is_some_and(|line| line.trim() == "// ---")
+        && lines[..index]
+            .iter()
+            .rev()
+            .take_while(|line| line.trim_start().starts_with("//"))
+            .any(|line| line.contains("swagger:"))
 }
 
 /// First line of a trailing `#[cfg(test)] mod` block; everything after it
@@ -180,6 +195,20 @@ fn magic_literal_with_spans(
         .collect()
 }
 
+/// Words in a name: an `UPPER_SNAKE` constant splits only at underscores,
+/// so a code with digits (`AF_P2WPKH_P2SH`) stays three words.
+fn identifier_word_count(name: &str) -> usize {
+    let constant = name.chars().any(|c| c.is_ascii_uppercase())
+        && name
+            .chars()
+            .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit() || c == '_');
+    if constant {
+        name.split('_').filter(|word| !word.is_empty()).count()
+    } else {
+        util::split_identifier(name).len()
+    }
+}
+
 fn identifier_verbosity_per_file(
     rel: &str,
     language: &Language,
@@ -198,7 +227,7 @@ fn identifier_verbosity_per_file(
             }
             let total_words: usize = occurrences
                 .iter()
-                .map(|(_, name)| util::split_identifier(name).len().max(MIN_WORDS_PER_NAME))
+                .map(|(_, name)| identifier_word_count(name).max(MIN_WORDS_PER_NAME))
                 .sum();
             let mean = total_words as f64 / occurrences.len() as f64;
             if mean <= VERBOSITY_THRESHOLD {

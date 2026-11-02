@@ -442,6 +442,70 @@ exec("print('ready')")
 }
 
 #[test]
+fn javascript_evaluation_of_literal_source_is_not_reported() {
+    let root = temp_root("eval_literal_js");
+    write(
+        &root,
+        "src/lib.js",
+        "const root = Function('return this')();\nconst run = (code) => eval(code);\nmodule.exports = { root, run };\n",
+    );
+    let lines = analyze_repository(
+        &root,
+        SourceDiscoveryOptions::default(),
+        ScanProfile::Gating,
+    )
+    .unwrap()
+    .findings
+    .iter()
+    .filter(|f| f.detector == "eval_in_production")
+    .filter_map(|f| f.locations.first().and_then(|location| location.line))
+    .collect::<Vec<_>>();
+    assert_eq!(lines, [2]);
+}
+
+#[test]
+fn a_sort_whose_order_is_used_is_not_for_an_extremum() {
+    let count = |body: &str| {
+        let root = temp_root("sort_extremum_order");
+        write(&root, "pkg/paths.go", &format!("package pkg\n\nimport \"sort\"\n\nfunc First(paths []string) string {{\n{body}\n}}\n"));
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full)
+            .unwrap()
+            .findings
+            .iter()
+            .filter(|f| f.detector == "sort_for_extremum")
+            .count()
+    };
+    assert_eq!(count("\tsort.Strings(paths)\n\treturn paths[0]"), 1);
+    assert_eq!(count("\tsort.Strings(paths)\n\tfirst := paths[0]\n\tfor _, p := range paths {\n\t\tuse(p)\n\t}\n\treturn first"), 0);
+}
+
+#[test]
+fn sorts_in_a_loop_header_or_per_item_are_not_repeated() {
+    let count = |body: &str| {
+        let root = temp_root("repeated_sort_forms");
+        write(&root, "src/report.ts", &format!("export function report(keys: string[], byYear: number[][], years: number[]) {{\n{body}\n}}\n"));
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full)
+            .unwrap()
+            .findings
+            .iter()
+            .filter(|f| f.detector == "repeated_sort_in_loop")
+            .count()
+    };
+    assert_eq!(
+        count("  for (const year of years) {\n    use(keys.slice().sort());\n  }"),
+        1
+    );
+    assert_eq!(
+        count("  for (const key of [...keys].sort()) {\n    use(key);\n  }"),
+        0
+    );
+    assert_eq!(
+        count("  for (const year of years) {\n    use(byYear[year].slice().sort());\n  }"),
+        0
+    );
+}
+
+#[test]
 fn eval_in_production_skips_comments() {
     let root = temp_root("eval_comment");
     write(
@@ -1076,6 +1140,80 @@ fn markdown_stale_link_is_detected() {
 }
 
 #[test]
+fn placeholders_site_routes_and_built_pages_are_not_stale_links() {
+    let root = temp_root("md_link_sites");
+    write(
+        &root,
+        "README.md",
+        "See [docs]({docs_url}), [feature](❓), and [gone](docs/missing.md).\n",
+    );
+    write(&root, "site/docusaurus.config.js", "module.exports = {};\n");
+    write(&root, "site/.gitignore", "docs/api/\n");
+    write(
+        &root,
+        "site/docs/guide.md",
+        "Get the [app](../../download) and read the [API](./api/get-user.api.mdx).\n",
+    );
+    let targets = analyze_repository(
+        &root,
+        SourceDiscoveryOptions::default(),
+        ScanProfile::Gating,
+    )
+    .unwrap()
+    .findings
+    .iter()
+    .filter(|f| f.detector == "stale_link_reference")
+    .map(|f| f.message.clone())
+    .collect::<Vec<_>>();
+    assert_eq!(targets.len(), 1, "{targets:?}");
+    assert!(targets[0].contains("docs/missing.md"));
+}
+
+#[test]
+fn x_macro_includes_are_not_duplicate_imports() {
+    let count = |text: &str| {
+        let root = temp_root("c_xmacro");
+        write(&root, "src/bytecode.h", text);
+        write(&root, "src/opcode_list.h", "OP(LOAD)\nOP(STORE)\n");
+        analyze_repository(
+            &root,
+            SourceDiscoveryOptions::default(),
+            ScanProfile::Gating,
+        )
+        .unwrap()
+        .findings
+        .iter()
+        .filter(|f| f.detector == "duplicate_import")
+        .count()
+    };
+    assert_eq!(count("#define OP(x) x,\nenum op {\n#include \"opcode_list.h\"\n};\n#undef OP\n#define OP(x) +1\nenum { N = 0\n#include \"opcode_list.h\"\n};\n"), 0);
+    assert_eq!(
+        count("#include \"opcode_list.h\"\n#include \"opcode_list.h\"\n"),
+        1
+    );
+}
+
+#[test]
+fn c_multicast_interface_selection_is_not_a_bind_to_all_interfaces() {
+    let count = |body: &str| {
+        let root = temp_root("c_multicast");
+        write(
+            &root,
+            "src/udp.c",
+            &format!("#include <netinet/in.h>\n{body}\n"),
+        );
+        analyze_repository(&root, SourceDiscoveryOptions::default(), ScanProfile::Full)
+            .unwrap()
+            .findings
+            .iter()
+            .filter(|f| f.detector == "bind_all_interfaces")
+            .count()
+    };
+    assert_eq!(count("int join(int fd, struct ip_mreq mreq) {\n  mreq.imr_interface.s_addr = htonl(INADDR_ANY);\n  return setsockopt(fd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof mreq);\n}"), 0);
+    assert_eq!(count("int serve(int fd, struct sockaddr_in addr) {\n  addr.sin_addr.s_addr = htonl(INADDR_ANY);\n  return bind(fd, (struct sockaddr *)&addr, sizeof addr);\n}"), 1);
+}
+
+#[test]
 fn markdown_valid_link_is_silent() {
     let root = temp_root("md_link_neg");
     write(&root, "src/helper.rs", "fn help() {}\n");
@@ -1202,6 +1340,50 @@ fn java_import_used_only_in_javadoc_is_not_a_dependency() {
         count("public class Check {\n    Object check() { return new UserService(); }\n}"),
         1
     );
+}
+
+#[test]
+fn typescript_cycles_need_runtime_edges() {
+    let cycles = |back_edge: &str| {
+        let root = temp_root("arch_type_cycle");
+        write(
+            &root,
+            "src/a.ts",
+            "import { make } from './b';\nexport interface Shape { size: number }\nexport type Kind = 'x';\nexport const run = () => make();\n",
+        );
+        write(
+            &root,
+            "src/b.ts",
+            &format!("{back_edge}\nexport function make() {{ return 1; }}\n"),
+        );
+        analyze_repository(
+            &root,
+            SourceDiscoveryOptions::default(),
+            ScanProfile::Gating,
+        )
+        .unwrap()
+        .findings
+        .iter()
+        .filter(|f| f.detector == "architectural_layering")
+        .count()
+    };
+    assert_eq!(
+        cycles("import { run } from './a';\nexport const go = run;"),
+        1
+    );
+    assert_eq!(
+        cycles("import type { Shape } from './a';\nexport let s: Shape;"),
+        0
+    );
+    assert_eq!(
+        cycles("import { type Shape, type Kind } from './a';\nexport let s: Shape;"),
+        0
+    );
+    assert_eq!(
+        cycles("import { Shape, Kind } from './a';\nexport let s: Shape;"),
+        0
+    );
+    assert_eq!(cycles("export const load = () => import('./a');"), 0);
 }
 
 #[test]
