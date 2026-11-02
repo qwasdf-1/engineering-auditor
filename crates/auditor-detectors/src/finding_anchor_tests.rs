@@ -175,9 +175,12 @@ fn c_functions_used_as_values_mirror_a_function_pointer_type() {
          int on_address({six}) {{ return e; }}\n\
          int only_called({six}) {{ return f; }}\n\
          int on_unparsed({six}) {{ return a; }}\n\
+         int mentioned({six}) {{ return b; }}\n\
          static const step_fn table[] = {{ on_table }};\n\
          step_fn select(int fast) {{ return fast ? pick_fast : pick_slow; }}\n\
-         void unparsed(void) {{ foreach_name(on_unparsed, 0); @@@ ### $$$ }}\n\
+         void unparsed(void) {{\n\
+         \x20   /* see mentioned */ log(\"mentioned\"); // mentioned\n\
+         \x20   foreach_name(on_unparsed, 0); @@@ ### $$$\n}}\n\
          int run(void) {{\n\
          \x20   foreach_name(on_match, 0);\n\
          \x20   step_fn fp = &on_address;\n\
@@ -198,7 +201,7 @@ fn c_functions_used_as_values_mirror_a_function_pointer_type() {
     );
     assert_eq!(
         anchors_for(&findings, "too_many_parameters"),
-        ["symbol:called", "symbol:only_called"]
+        ["symbol:called", "symbol:mentioned", "symbol:only_called"]
     );
 }
 

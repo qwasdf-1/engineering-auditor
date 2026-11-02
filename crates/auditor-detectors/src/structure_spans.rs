@@ -27,11 +27,51 @@ pub(super) fn c_value_references(
         .map(|identifier| identifier.text().to_string())
         .collect::<BTreeSet<_>>();
     // A declaration quarantined for a syntax error is not in the tree, so
-    // its uses are read from its text: an identifier not followed by `(`.
+    // its uses are read from its code: an identifier not followed by `(`.
     for quarantined in tree.quarantined() {
-        names.extend(uncalled_identifiers(&quarantined.text));
+        names.extend(uncalled_identifiers(&c_code(&quarantined.text)));
     }
     names
+}
+
+/// `text` with its comments, string and character literals, and
+/// preprocessor lines blanked, so a name in `/* see f */` is not a use.
+fn c_code(text: &str) -> String {
+    let mut code = String::with_capacity(text.len());
+    let mut chars = text.chars().peekable();
+    let mut line_start = true;
+    while let Some(ch) = chars.next() {
+        let skip_to = match (ch, chars.peek()) {
+            ('#', _) if line_start => Some("\n"),
+            ('/', Some('/')) => Some("\n"),
+            ('/', Some('*')) => Some("*/"),
+            ('"', _) => Some("\""),
+            ('\'', _) => Some("'"),
+            _ => None,
+        };
+        if !ch.is_whitespace() {
+            line_start = false;
+        }
+        let Some(end) = skip_to else {
+            line_start |= ch == '\n';
+            code.push(ch);
+            continue;
+        };
+        if ch == '/' {
+            chars.next();
+        }
+        let mut previous = ' ';
+        while let Some(next) = chars.next() {
+            let escaped = previous == '\\' && matches!(ch, '"' | '\'');
+            if !escaped && (end.ends_with(next) && (end.len() == 1 || previous == '*')) {
+                break;
+            }
+            previous = if escaped { ' ' } else { next };
+        }
+        code.push(if end == "\n" { '\n' } else { ' ' });
+        line_start = end == "\n";
+    }
+    code
 }
 
 fn uncalled_identifiers(text: &str) -> BTreeSet<String> {
