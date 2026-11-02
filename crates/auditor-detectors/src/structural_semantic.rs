@@ -21,6 +21,8 @@ mod classes;
 mod metrics;
 #[path = "structural_naming.rs"]
 mod naming;
+#[path = "structural_signatures.rs"]
+mod signatures;
 #[path = "structural_types.rs"]
 mod types;
 

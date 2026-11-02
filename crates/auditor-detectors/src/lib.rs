@@ -103,6 +103,7 @@ mod statement_shapes;
 mod structural;
 mod structural_semantic;
 mod structure_index;
+mod structure_method_heads;
 mod structure_typing;
 mod systems;
 mod systems_binding;

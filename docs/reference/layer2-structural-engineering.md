@@ -107,7 +107,14 @@ excludes receiver parameters such as `self`, `cls`, `this`, and a C#
 extension method's `this T value`. Python
 `*args` and `**kwargs`, typed or not, do not count, as in pylint and ruff
 `R0913`. A Python `@overload` stub restates its implementation's signature and is skipped; the
-implementation is measured once.
+implementation is measured once. A Kotlin `external` or C# `extern` binding
+mirrors a foreign ABI and is skipped. An override (Java `@Override`; Kotlin,
+C#, and TypeScript `override`) restates its supertype's method, which carries
+the finding where the repository declares it, and is skipped; so is a Mixin
+injector callback (`@Inject`, `@Redirect`, `@ModifyVariable`, and the other
+SpongePowered Mixin and MixinExtras injectors) in a file that imports the
+Mixin library, since it must mirror its target method's parameters. A javax
+or Guice `@Inject` method is not a Mixin callback and is still measured.
 
 Language contract: see [`language-support.md`](./language-support.md).
 

@@ -88,6 +88,14 @@
   `yaml.load` on a ruamel.yaml `YAML()` instance whose loader is the
   default round-trip, `safe`, or `base` one. A downstream report and six
   corpus labels showed both shapes.
+- `too_many_parameters` skips an override (Java `@Override`; Kotlin, C#,
+  and TypeScript `override`), whose supertype's declaration carries the
+  finding where the repository declares it, and a Mixin injector callback
+  (`@Inject`, `@Redirect`, `@ModifyVariable`, ..) in a file importing the
+  Mixin library, which must mirror its target method. C# methods now
+  record their modifiers, so a C# `extern` binding is skipped too, and a
+  Java method's annotation arguments no longer hide the `@Override` or
+  modifiers after them.
 - Source roles: Bower and `third/` trees are vendored, `devops/` is
   tooling, `testsuite/`, `unittest/`, and `*-suites/` trees and Go
   `testutil`/`testenv` helpers are test code, Browserify bundles are

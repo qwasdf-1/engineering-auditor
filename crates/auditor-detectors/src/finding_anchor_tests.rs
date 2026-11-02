@@ -111,6 +111,58 @@ fn foreign_bindings_and_kotlin_default_values_do_not_count_as_parameters() {
 }
 
 #[test]
+fn overrides_and_mixin_injectors_mirror_another_signature() {
+    let six = "int a, int b, int c, int d, int e, int f";
+    let java_bow = format!(
+        "import net.minecraft.world.item.BowItem;\n\n\
+         public class StringBow extends BowItem {{\n\
+         \x20   @Override\n    protected void shoot({six}) {{ }}\n\
+         \x20   @SuppressWarnings(\"unused\") @Override\n    public void release({six}) {{ }}\n\
+         \x20   public void aim({six}) {{ }}\n}}\n"
+    );
+    let java_mixin = format!(
+        "import org.spongepowered.asm.mixin.Mixin;\n\
+         import org.spongepowered.asm.mixin.injection.At;\n\
+         import org.spongepowered.asm.mixin.injection.Redirect;\n\n\
+         @Mixin(Stand.class)\npublic class StandMixin {{\n\
+         \x20   @Redirect(method = \"tick\", at = @At(value = \"INVOKE\", target = \"Lx;y(Lz;)Z\"))\n\
+         \x20   private static boolean brewable({six}) {{ return true; }}\n}}\n"
+    );
+    let java_service = format!(
+        "import javax.inject.Inject;\n\npublic class Service {{\n\
+         \x20   @Inject\n    public void wire({six}) {{ }}\n}}\n"
+    );
+    let kotlin = "interface Shape {\n    fun draw(a: Int, b: Int, c: Int, d: Int, e: Int, f: Int)\n}\n\n\
+                  class Circle : Shape {\n    override fun draw(a: Int, b: Int, c: Int, d: Int, e: Int, f: Int) {}\n}\n";
+    let csharp = format!(
+        "public class Job : Base {{\n    [Obsolete(\"use Plan\")]\n    public override int Run({six}) {{ return a; }}\n\
+         \x20   [DllImport(\"libc\")]\n    public static extern int Open({six});\n\
+         \x20   public int Plan({six}) {{ return a; }}\n}}\n"
+    );
+    let typescript = "export class Panel extends Base {\n  override render(a: number, b: number, c: number, d: number, e: number, f: number): void {}\n}\n";
+    let findings = analyze(
+        "mirrored-signatures",
+        &[
+            ("src/StringBow.java", &java_bow),
+            ("src/StandMixin.java", &java_mixin),
+            ("src/Service.java", &java_service),
+            ("src/shapes.kt", kotlin),
+            ("src/Job.cs", &csharp),
+            ("src/panel.ts", typescript),
+        ],
+    );
+    assert_eq!(
+        anchors_for(&findings, "too_many_parameters"),
+        [
+            "symbol:Job::Plan",
+            "symbol:Service::wire",
+            "symbol:Shape::draw",
+            "symbol:StringBow::aim",
+        ]
+    );
+}
+
+#[test]
 fn rust_methods_anchor_on_their_impl_type() {
     let params = "a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8, h: u8, i: u8";
     let source = format!(

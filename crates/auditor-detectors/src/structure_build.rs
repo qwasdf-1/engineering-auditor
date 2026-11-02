@@ -123,7 +123,14 @@ fn collect_symbols(
                     SymbolKind::Function | SymbolKind::Method
                         if file.language == Language::Java =>
                     {
-                        source.split('(').next().map(|head| head.trim().to_string())
+                        Some(crate::structure_method_heads::java_method_head(source))
+                    }
+                    // A C# method's modifiers and return type, after its
+                    // attribute lists (`public override int Run`).
+                    SymbolKind::Function | SymbolKind::Method
+                        if file.language == Language::CSharp =>
+                    {
+                        Some(crate::structure_method_heads::csharp_method_head(source))
                     }
                     // A JavaScript or TypeScript function's leading text, from
                     // the start of its line (`export const load = (`,

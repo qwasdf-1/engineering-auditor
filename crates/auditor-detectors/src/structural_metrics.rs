@@ -1,3 +1,4 @@
+use super::signatures::{is_foreign_binding, mirrors_another_signature};
 use super::*;
 
 pub(crate) fn too_many_parameters_findings(index: &StructureIndex) -> Vec<Finding> {
@@ -5,8 +6,13 @@ pub(crate) fn too_many_parameters_findings(index: &StructureIndex) -> Vec<Findin
     for file in emittable_files(index) {
         for (owner, function) in function_symbols(file) {
             // An `@overload` stub restates its implementation's signature; a
-            // Kotlin `external` or C# `extern` binding mirrors a foreign ABI.
-            if function.in_test || function.overload_stub || is_foreign_binding(file, function) {
+            // Kotlin `external` or C# `extern` binding mirrors a foreign ABI;
+            // an override or a Mixin injector mirrors another method's.
+            if function.in_test
+                || function.overload_stub
+                || is_foreign_binding(file, function)
+                || mirrors_another_signature(file, function)
+            {
                 continue;
             }
             let parameters = child_symbols(file, owner, SymbolKind::Parameter)
@@ -42,18 +48,6 @@ pub(crate) fn too_many_parameters_findings(index: &StructureIndex) -> Vec<Findin
         }
     }
     findings
-}
-
-fn is_foreign_binding(file: &StructureFile, function: &StructureSymbol) -> bool {
-    let keyword = match file.language {
-        Language::Kotlin => "external",
-        Language::CSharp => "extern",
-        _ => return false,
-    };
-    function
-        .declaration
-        .as_deref()
-        .is_some_and(|declaration| declaration.split_whitespace().any(|word| word == keyword))
 }
 
 /// `self`, `cls`, `this`, or a C# extension method's `this T value`: the
