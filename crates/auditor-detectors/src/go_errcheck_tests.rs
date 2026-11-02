@@ -54,6 +54,26 @@ fn go_errcheck_still_reports_fallible_writers() {
 }
 
 #[test]
+fn go_errcheck_skips_writes_to_the_standard_streams() {
+    // chi's panic recoverer shape, `WriteString`, and `fmt.Fprint*` (which
+    // the detector does not report).
+    let source = "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main(debugStack []byte) {\n\tif ok {\n\t\tprint()\n\t} else {\n\t\t// print stdlib output as a fallback\n\t\tos.Stderr.Write(debugStack)\n\t}\n\tos.Stdout.Write(debugStack)\n\tos.Stdout.WriteString(\"done\")\n\tdefer os.Stderr.Write(debugStack)\n\tfmt.Fprintln(os.Stderr, \"x\")\n\tfmt.Fprintf(os.Stdout, \"%d\", 1)\n\tfmt.Fprint(os.Stderr, \"x\")\n}\n";
+    assert_eq!(errcheck_lines("goerrstd", source), Vec::<usize>::new());
+}
+
+#[test]
+fn go_errcheck_still_reports_other_writes_and_stream_methods() {
+    // A file the code opened, a connection, a response writer, a variable
+    // holding `os.Stderr`, and `Close` on a stream stay
+    // reported.
+    let source = "package main\n\nimport (\n\t\"net\"\n\t\"net/http\"\n\t\"os\"\n)\n\nfunc main(conn net.Conn, rw http.ResponseWriter, b []byte) {\n\tf, _ := os.Create(\"x\")\n\tf.Write(b)\n\tconn.Write(b)\n\trw.Write(b)\n\tw := os.Stderr\n\tw.Write(b)\n\tos.Stderr.Close()\n\tos.Stdout.Close()\n}\n";
+    assert_eq!(
+        errcheck_lines("goerrstdkeep", source),
+        [11, 12, 13, 15, 16, 17]
+    );
+}
+
+#[test]
 fn go_errcheck_reads_statements_not_line_text() {
     // A name containing `err` no longer hides a call, and a result passed
     // on, assigned, returned, or tested is used.

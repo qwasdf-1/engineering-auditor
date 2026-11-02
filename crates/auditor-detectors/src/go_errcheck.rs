@@ -56,8 +56,10 @@ const GO_COMMAND_METHODS: &[&str] = &["Run", "Start", "Wait"];
 /// `Run`/`Start`/`Wait` on an `exec.Command` value, or a `Close()`,
 /// `Write(..)`, or `Remove(..)` method the file does not declare without
 /// results. errcheck's default exclusions apply to writes into a
-/// `bytes.Buffer`, `strings.Builder`, or hash. A result that is assigned
-/// (`_ =` included), returned, or tested is used.
+/// `bytes.Buffer`, `strings.Builder`, or hash; a write to `os.Stderr` or
+/// `os.Stdout` is skipped too, since nothing useful can be done when it
+/// fails. A result that is assigned (`_ =` included), returned, or tested is
+/// used.
 pub(crate) fn go_errcheck_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
     let mut findings = Vec::new();
     ast_scan::visit_ast_files(
@@ -139,7 +141,9 @@ fn ignored_error_row(
         };
         fallible
             && !resultless.contains(method)
-            && !(method == "Write" && infallible_writer(&lines[..row], operand.text()))
+            && !(method == "Write"
+                && (infallible_writer(&lines[..row], operand.text())
+                    || is_standard_stream(imports, operand)))
     };
     reported.then_some(row)
 }
@@ -166,6 +170,17 @@ fn is_command(imports: &ImportScope, operand: AstNode<'_>) -> bool {
         operand,
         |origin| matches!(origin, Origin::Call(call) if constructs(*call)),
     )
+}
+
+/// `operand` is exactly `os.Stderr` or `os.Stdout`, through the `os` import.
+/// A write to the process's own standard stream has no recourse when it
+/// fails (reporting the error would need that stream); a variable that holds
+/// one is not resolved.
+fn is_standard_stream(imports: &ImportScope, operand: AstNode<'_>) -> bool {
+    operand.kind() == "selector_expression"
+        && imports
+            .resolve(operand)
+            .is_some_and(|api| matches!(api.as_str(), "os.Stderr" | "os.Stdout"))
 }
 
 /// errcheck's default exclusions: writes to a `bytes.Buffer`, a
