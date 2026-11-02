@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/builtin.c",
       "message": "Function `f_match_name_iter` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 894
+      "line": 894,
+      "verdict": "false_positive",
+      "reason": "f_match_name_iter has the fixed signature required by Oniguruma's onig_foreach_name callback (name, name_end, ngroups, groups, reg, arg), so its six parameters are mandated by the external API.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "f_match_name_iter in jq builtin.c has six parameters, but its signature is fixed by Oniguruma's name-iteration callback type, so the parameter count is imposed by the external API."
+        }
+      ]
     },
     {
       "id": "EA-2b04abb7e375c1e4",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/linker.c",
       "message": "Function `load_library` takes 8 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 331
+      "line": 331,
+      "verdict": "true_positive",
+      "reason": "load_library takes eight parameters (jq, lib_path, is_data, raw, optional, as, out_block, lib_state) including three int flags, which I counted at line 331; it is internal code that could use a struct.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq linker.c load_library takes eight parameters (jq, lib_path, is_data, raw, optional, as, out_block, and the loading state), well above the threshold of five."
+        }
+      ]
     },
     {
       "id": "EA-7acc847e32c02f46",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/unix/fs.c",
       "message": "Function `uv_fs_chown` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1800
+      "line": 1800,
+      "verdict": "true_positive",
+      "reason": "uv_fs_chown takes six parameters (loop, req, path, uid, gid, cb), counted from lines 1800-1805; the claim holds for this public libuv API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv_fs_chown in src/unix/fs.c takes six parameters, which is correct, but it is a public libuv API whose signature follows the loop/req/callback convention and cannot change without breaking ABI."
+        }
+      ]
     },
     {
       "id": "EA-e579413ee28a7e6d",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "src/unix/fs.c",
       "message": "Function `uv_fs_lutime` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1922
+      "line": 1922,
+      "verdict": "true_positive",
+      "reason": "uv_fs_lutime takes six parameters (loop, req, path, atime, mtime, cb), counted at lines 1922-1927; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv_fs_lutime in src/unix/fs.c takes six parameters, matching the claim, but it is a public libuv API declared with a fixed signature."
+        }
+      ]
     },
     {
       "id": "EA-df0d43b2d36d9bb3",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "src/unix/fs.c",
       "message": "Function `uv_fs_read` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 2016
+      "line": 2016,
+      "verdict": "true_positive",
+      "reason": "uv_fs_read takes seven parameters (loop, req, file, bufs, nbufs, off, cb), counted at lines 2016-2021; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv_fs_read in src/unix/fs.c takes seven parameters as claimed, but it is the public libuv read API, so its signature is part of the published interface."
+        }
+      ]
     },
     {
       "id": "EA-b7ef751e286a07eb",
@@ -58,9 +108,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Function `uv__fs_copy_file_range` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 374
+      "line": 374,
+      "verdict": "true_positive",
+      "reason": "uv__fs_copy_file_range takes six parameters (fd_in, off_in, fd_out, off_out, len, flags). It is libuv's own internal shim, declared in src/unix/internal.h and also defined in freebsd.c, not an implementation of a callback type. Mirroring the syscall's argument order is a choice, not an external constraint, so the count stands.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv__fs_copy_file_range in src/unix/linux.c takes six parameters that mirror the kernel copy_file_range syscall prototype it wraps, so the signature is set by the OS contract."
+        }
+      ]
     },
     {
       "id": "EA-e1360fea49ee546a",
@@ -68,9 +128,19 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "Function `uv_fs_symlink` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 3468
+      "line": 3468,
+      "verdict": "true_positive",
+      "reason": "uv_fs_symlink on Windows takes six parameters (loop, req, path, new_path, flags, cb), counted at lines 3468-3469; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv_fs_symlink in src/win/fs.c takes six parameters as claimed, but it is a public libuv API with a fixed published signature."
+        }
+      ]
     },
     {
       "id": "EA-bb3545f633999656",
@@ -78,9 +148,19 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "Function `uv_fs_lchown` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 3542
+      "line": 3542,
+      "verdict": "true_positive",
+      "reason": "uv_fs_lchown on Windows takes six parameters (loop, req, path, uid, gid, cb), counted at lines 3542-3543.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv_fs_lchown in src/win/fs.c takes six parameters as claimed, but it is a public libuv API with a fixed published signature."
+        }
+      ]
     },
     {
       "id": "EA-07933522186b6968",
@@ -88,9 +168,19 @@
       "language": "c",
       "path": "src/win/getaddrinfo.c",
       "message": "Function `uv_getaddrinfo` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 240
+      "line": 240,
+      "verdict": "true_positive",
+      "reason": "uv_getaddrinfo takes six parameters (loop, req, getaddrinfo_cb, node, service, hints), counted at lines 240-245.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv_getaddrinfo in src/win/getaddrinfo.c takes six parameters as claimed, but it is the public libuv getaddrinfo entry point, whose signature is part of the ABI."
+        }
+      ]
     },
     {
       "id": "EA-d5850444b08b9f43",
@@ -98,9 +188,19 @@
       "language": "c",
       "path": "src/win/process.c",
       "message": "Function `path_search_walk_ext` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 246
+      "line": 246,
+      "verdict": "true_positive",
+      "reason": "path_search_walk_ext is a static helper with seven parameters, three of them dir/name/cwd pointer+length pairs, which I counted at lines 246-252.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "path_search_walk_ext in src/win/process.c is a static internal helper that takes seven parameters, which is accurate and not constrained by any external contract."
+        }
+      ]
     },
     {
       "id": "EA-f3590c0c9684a603",
@@ -133,9 +233,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv__tty_make_real_coord` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1180
+      "line": 1180,
+      "verdict": "true_positive",
+      "reason": "uv__tty_make_real_coord takes six parameters (handle, info, x, x_relative, y, y_relative), counted at lines 1180-1182, with the x/y pairs a candidate for a struct.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tty_make_real_coord in src/win/tty.c is a static internal helper with six parameters (handle, info, x, x_relative, y, y_relative), which matches the claim and is internal to the library."
+        }
+      ]
     },
     {
       "id": "EA-a6fcc9f7f3715604",
@@ -143,9 +253,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv__tty_write` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2200
+      "line": 2200,
+      "verdict": "true_positive",
+      "reason": "uv__tty_write takes six parameters (loop, req, handle, bufs, nbufs, cb), counted at lines 2200-2205.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tty_write in src/win/tty.c is an internal (uv__-prefixed) function with six parameters that the claim counts correctly, and no external signature constrains it."
+        }
+      ]
     },
     {
       "id": "EA-b3c42b548e01f920",
@@ -153,9 +273,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv__tty_console_resize_event` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2406
+      "line": 2406,
+      "verdict": "false_positive",
+      "reason": "uv__tty_console_resize_event is a WinEvent hook callback whose seven parameters (hWinEventHook, event, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) are fixed by the WINEVENTPROC signature.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "uv__tty_console_resize_event in src/win/tty.c takes seven parameters because it is a Windows WinEvent hook callback whose signature is fixed by the OS."
+        }
+      ]
     },
     {
       "id": "EA-7c811e39d8730ba8",
@@ -163,9 +293,19 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "Function `uv__send` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 354
+      "line": 354,
+      "verdict": "true_positive",
+      "reason": "uv__send takes seven parameters (req, handle, bufs, nbufs, addr, addrlen, cb), counted at lines 354-360, in an internal static function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__send in src/win/udp.c is a static internal helper with seven parameters as claimed, and nothing external fixes its signature."
+        }
+      ]
     },
     {
       "id": "EA-81195f5f93acc099",
@@ -173,9 +313,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_compressFrame_usingCDict` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 428
+      "line": 428,
+      "verdict": "true_positive",
+      "reason": "LZ4F_compressFrame_usingCDict takes seven parameters (cctx, dst, dstCapacity, src, srcSize, cdict, prefs), counted at lines 428-432.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_compressFrame_usingCDict in lib/lz4frame.c takes seven parameters as claimed, but it is part of the public LZ4 frame API, so its signature is fixed by the published interface."
+        }
+      ]
     },
     {
       "id": "EA-eede25cd67fc67b9",
@@ -183,9 +333,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_makeBlock` takes 8 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 883
+      "line": 883,
+      "verdict": "true_positive",
+      "reason": "LZ4F_makeBlock takes eight parameters (dst, src, srcSize, compress, lz4ctx, level, cdict, crcFlag) at lines 883-887, an internal static helper.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4F_makeBlock in lib/lz4frame.c is a static internal helper whose parameter list runs from dst through crcFlag, eight in total as reported."
+        }
+      ]
     },
     {
       "id": "EA-4b9737017481c5a3",
@@ -193,9 +353,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_compressBlock` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 911
+      "line": 911,
+      "verdict": "false_positive",
+      "reason": "LZ4F_compressBlock (line 911) must match the compressFunc_t function-pointer typedef (line 876) that takes seven parameters, so its signature is dictated by the dispatch table with LZ4F_compressBlockHC_continue and LZ4F_doNotCompressBlock.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_compressBlock at lz4frame.c:911 implements the internal compressFunc_t callback typedef (line 876), so its seven-parameter list is fixed by that function-pointer type."
+        }
+      ]
     },
     {
       "id": "EA-135ce146f8fc45dc",
@@ -203,9 +373,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_compressBlockHC_continue` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 940
+      "line": 940,
+      "verdict": "false_positive",
+      "reason": "LZ4F_compressBlockHC_continue must match the compressFunc_t typedef (7 parameters, line 876) used for table dispatch, and it even voids level and cdict; the signature is dictated by the pointer type.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_compressBlockHC_continue at lz4frame.c:940 must match the compressFunc_t dispatch signature, so its seven parameters are fixed by that callback type."
+        }
+      ]
     },
     {
       "id": "EA-b7275fd8281c3dcd",
@@ -213,9 +393,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_doNotCompressBlock` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 946
+      "line": 946,
+      "verdict": "false_positive",
+      "reason": "LZ4F_doNotCompressBlock exists only to satisfy compressFunc_t and voids all seven parameters (line 948), so the parameter count is forced by the function-pointer type.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_doNotCompressBlock at lz4frame.c:946 is a compressFunc_t implementation whose unused parameters are dictated by the callback type."
+        }
+      ]
     },
     {
       "id": "EA-8a221138c09d0173",
@@ -223,9 +413,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_compressUpdate` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1119
+      "line": 1119,
+      "verdict": "true_positive",
+      "reason": "LZ4F_compressUpdate takes six parameters (cctxPtr, dstBuffer, dstCapacity, srcBuffer, srcSize, compressOptionsPtr), counted at lines 1119-1122; the claim holds for this public API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_compressUpdate at lz4frame.c:1119 is declared with LZ4FLIB_API in lib/lz4frame.h, so its six-parameter signature is part of the public API."
+        }
+      ]
     },
     {
       "id": "EA-053c172b156c5e19",
@@ -233,9 +433,19 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "Function `LZ4F_uncompressedUpdate` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1139
+      "line": 1139,
+      "verdict": "true_positive",
+      "reason": "LZ4F_uncompressedUpdate takes six parameters (cctxPtr, dst, dstCapacity, src, srcSize, options) at lines 1139-1142; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_uncompressedUpdate at lz4frame.c:1139 is declared in lib/lz4frame.h (line 713), so its six-parameter signature is a published interface."
+        }
+      ]
     },
     {
       "id": "EA-b6fac878ba3545ac",
@@ -243,9 +453,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4HC_encodeSequence` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 268
+      "line": 268,
+      "verdict": "true_positive",
+      "reason": "LZ4HC_encodeSequence takes seven parameters (_ip, _op, _anchor, matchLength, offset, limit, oend) at lines 268-275; the three in/out pointer-to-pointer parameters signal missing encoder-state struct.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4HC_encodeSequence in lz4hc.c (line 268) is a force-inlined internal helper with seven parameters (_ip, _op, _anchor, and the rest), and nothing external fixes its signature."
+        }
+      ]
     },
     {
       "id": "EA-67b4dffeeb59bfe0",
@@ -253,9 +473,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4_compress_HC_destSize` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1538
+      "line": 1538,
+      "verdict": "true_positive",
+      "reason": "LZ4_compress_HC_destSize takes six parameters (state, source, dest, sourceSizePtr, targetDestSize, cLevel) at line 1538; the claim holds for this public API.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4_compress_HC_destSize at lz4hc.c:1538 is declared with LZ4LIB_API in lib/lz4hc.h, so its six-parameter signature is public."
+        }
+      ]
     },
     {
       "id": "EA-73cef7d6bcf858ee",
@@ -263,9 +493,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4HC_FindLongerMatch` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1802
+      "line": 1802,
+      "verdict": "true_positive",
+      "reason": "LZ4HC_FindLongerMatch takes seven parameters (ctx, ip, iHighLimit, minLen, nbSearches, dict, favorDecSpeed) at lines 1803-1807, an internal helper.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4HC_FindLongerMatch in lz4hc.c (line 1802) is an internal inline function with seven parameters, not declared in any public header."
+        }
+      ]
     },
     {
       "id": "EA-57d632d63d5b4d96",
@@ -273,9 +513,19 @@
       "language": "c",
       "path": "programs/bench.c",
       "message": "Function `LZ4F_decompress_binding` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 321
+      "line": 321,
+      "verdict": "false_positive",
+      "reason": "LZ4F_decompress_binding is in lz4 programs/bench.c (the benchmark harness) and is chosen at line 516 as an alternative to LZ4_decompress_safe_usingDict, so its signature is fixed by a function-pointer slot in benchmark code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "LZ4F_decompress_binding in programs/bench.c is part of the lz4 benchmark program, which is benchmark code outside this detector's production scope."
+        }
+      ]
     },
     {
       "id": "EA-67c2b7f24619ab03",
@@ -283,9 +533,19 @@
       "language": "c",
       "path": "contrib/blast/blast.c",
       "message": "Function `blast` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 382
+      "line": 382,
+      "verdict": "true_positive",
+      "reason": "blast() takes six parameters (infun, inhow, outfun, outhow, left, in) at lines 382-383 and is the library entry point, so the count claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "blast() in contrib/blast/blast.c is declared in contrib/blast/blast.h (line 46) as the library's public entry point, so its six-parameter signature is part of the published interface."
+        }
+      ]
     },
     {
       "id": "EA-da214e04ddfda248",
@@ -293,9 +553,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Function `unz64local_GetCurrentFileInfoInternal` takes 9 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 766
+      "line": 766,
+      "verdict": "true_positive",
+      "reason": "unz64local_GetCurrentFileInfoInternal takes nine parameters (file, pfile_info, pfile_info_internal, szFileName, fileNameBufferSize, extraField, extraFieldBufferSize, plus comment pair), counted from lines 766-773.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "unz64local_GetCurrentFileInfoInternal in contrib/minizip/unzip.c (line 766) is a file-local helper with nine parameters, none of which are fixed by a public header."
+        }
+      ]
     },
     {
       "id": "EA-be270bc8ad18a65f",
@@ -303,9 +573,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Function `unzGetCurrentFileInfo64` takes 8 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1008
+      "line": 1008,
+      "verdict": "true_positive",
+      "reason": "unzGetCurrentFileInfo64 takes eight parameters (file, pfile_info, szFileName, size, extraField, size, szComment, size) at lines 1008-1012; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "unzGetCurrentFileInfo64 in minizip unzip.c is the public minizip API declared in unzip.h (line 289), so its eight-parameter signature is fixed by the interface."
+        }
+      ]
     },
     {
       "id": "EA-c3b95b6d62799235",
@@ -313,9 +593,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Function `unzGetCurrentFileInfo` takes 8 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1019
+      "line": 1019,
+      "verdict": "true_positive",
+      "reason": "unzGetCurrentFileInfo takes eight parameters (file, pfile_info, and three buffer/size pairs) at lines 1019-1023; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "unzGetCurrentFileInfo in minizip unzip.c is declared in the public unzip.h (line 298), so its eight-parameter signature is part of the published API."
+        }
+      ]
     },
     {
       "id": "EA-a0900fd3fdd3db25",
@@ -323,9 +613,19 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "Function `is_printable` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1767
+      "line": 1767,
+      "verdict": "true_positive",
+      "reason": "is_printable in format-inl.h takes six parameters (x plus two pointer/size table pairs and a pointer for lowers), which I counted from lines 1767-1771; the pointer+size pairs could be one struct.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "is_printable in fmt format-inl.h (lines 1767-1771) takes six parameters, one more than the threshold of five, as reported."
+        }
+      ]
     },
     {
       "id": "EA-ada0f5a04ac71495",
@@ -333,9 +633,19 @@
       "language": "cpp",
       "path": "db/c.cc",
       "message": "Function `leveldb_put` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 184
+      "line": 184,
+      "verdict": "true_positive",
+      "reason": "leveldb_put takes seven parameters (db, options, key, keylen, val, vallen, errptr) in the C wrapper; the count is correct and it is the library's own API design.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "leveldb_put in db/c.cc has seven parameters, but it mirrors the fixed public C API signature for leveldb_put, so the count is dictated by the published ABI."
+        }
+      ]
     },
     {
       "id": "EA-31db43356901652a",
@@ -343,9 +653,19 @@
       "language": "cpp",
       "path": "db/c.cc",
       "message": "Function `leveldb_get` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 201
+      "line": 201,
+      "verdict": "true_positive",
+      "reason": "leveldb_get takes six parameters (db, options, key, keylen, vallen, errptr), counted at lines 201-203; the claim holds.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "leveldb_get in db/c.cc takes six parameters, which is accurate, but it implements the published leveldb C API signature, so the count is fixed by the public ABI and the rule's rationale cannot be acted on here."
+        }
+      ]
     },
     {
       "id": "EA-c0fae120eeccb6a7",
@@ -353,9 +673,19 @@
       "language": "cpp",
       "path": "db/c.cc",
       "message": "Function `leveldb_approximate_sizes` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 248
+      "line": 248,
+      "verdict": "true_positive",
+      "reason": "leveldb_approximate_sizes takes seven parameters including four parallel arrays for range start/limit keys and lengths, which could be one range struct array.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "leveldb_approximate_sizes in db/c.cc has seven parameters that mirror the public C API signature for GetApproximateSizes, so the count is dictated by the published ABI."
+        }
+      ]
     },
     {
       "id": "EA-7300666d5d52bd77",
@@ -388,9 +718,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_chars.hpp",
       "message": "Function `grisu2_round` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 546
+      "line": 546,
+      "verdict": "true_positive",
+      "reason": "grisu2_round takes six parameters (buf, len, dist, delta, rest, ten_k) at lines 546-547, three of them same-typed uint64_t values that are easy to transpose.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "grisu2_round in nlohmann to_chars.hpp (line 546) is an internal detail-namespace helper with six parameters, and nothing external constrains its signature."
+        }
+      ]
     },
     {
       "id": "EA-041ad048e109444e",
@@ -398,9 +738,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_chars.hpp",
       "message": "Function `grisu2_digit_gen` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 587
+      "line": 587,
+      "verdict": "true_positive",
+      "reason": "grisu2_digit_gen takes six parameters (buffer, length, decimal_exponent, M_minus, w, M_plus) at lines 587-588, including two by-reference outputs.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "grisu2_digit_gen in nlohmann to_chars.hpp (line 587) is an internal detail helper with six parameters, consistent with the claim."
+        }
+      ]
     },
     {
       "id": "EA-41ab191a1958224b",
@@ -408,9 +758,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_chars.hpp",
       "message": "Function `grisu2` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 828
+      "line": 828,
+      "verdict": "true_positive",
+      "reason": "grisu2 takes six parameters (buf, len, decimal_exponent, m_minus, v, m_plus) at lines 828-829; the claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "grisu2 in nlohmann to_chars.hpp (line 828) is an internal detail function with six parameters, as the claim counts."
+        }
+      ]
     },
     {
       "id": "EA-0228d4021fccbf2c",
@@ -2679,9 +3039,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `handlePropertyResult` takes 6 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1973
+      "line": 1973,
+      "verdict": "true_positive",
+      "reason": "handlePropertyResult takes six parameters (result, final, key, input, optin, optout) at lines 1973-1980, an internal zod helper.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "handlePropertyResult in zod core/schemas.ts (line 1973) takes six parameters (result, final, key, input, optin, optout), one over the threshold as reported."
+        }
+      ]
     },
     {
       "id": "EA-565c6d3c6b77a2e4",
@@ -2689,9 +3059,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `handleCatchall` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2093
+      "line": 2093,
+      "verdict": "true_positive",
+      "reason": "handleCatchall takes seven parameters (proms, input, payload, ctx, def, inst, abortEarly) at lines 2093-2100, an internal helper.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "handleCatchall in zod core/schemas.ts (line 2093) takes seven parameters (proms, input, payload, ctx, def, inst, abortEarly), matching the claim."
+        }
+      ]
     },
     {
       "id": "EA-46e51b6e87238f97",
@@ -2699,9 +3079,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `handleMapResult` takes 7 parameters (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3485
+      "line": 3485,
+      "verdict": "true_positive",
+      "reason": "handleMapResult takes seven parameters (keyResult, valueResult, final, key, input, inst, ctx) at lines 3485-3492, an internal helper.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "handleMapResult in zod core/schemas.ts (line 3485) takes seven parameters (keyResult, valueResult, final, key, input, inst, ctx), matching the claim."
+        }
+      ]
     }
   ]
 }

@@ -658,9 +658,19 @@
       "language": "typescript",
       "path": "www/og-image/pages/index.tsx",
       "message": "Using random module for security-sensitive purpose (Bandit B311) at line 10",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 10
+      "line": 10,
+      "verdict": "false_positive",
+      "reason": "Math.random() seeds a cache-busting `nonce` for the og-image playground page (www/og-image), which only forces the image URL to reload on window focus; it is not a security token.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The Math.random() at og-image/pages/index.tsx:10 only seeds a cache-busting query parameter (random=${nonce}) for an image URL, so no security-sensitive value depends on it."
+        }
+      ]
     },
     {
       "id": "EA-7a7be65c362bc528",

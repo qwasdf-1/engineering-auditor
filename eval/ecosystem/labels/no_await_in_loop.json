@@ -68,9 +68,19 @@
       "language": "csharp",
       "path": "src/Serilog/Core/Sinks/DisposingAggregateSink.cs",
       "message": "Await expression inside a loop at line 77",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 77
+      "line": 77,
+      "verdict": "false_positive",
+      "reason": "The await in DisposingAggregateSink.DisposeAsync disposes sinks one at a time on purpose, with try/catch per sink and ordered shutdown; parallelising disposal is not appropriate, so the loop-await rationale does not apply.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "DisposingAggregateSink.DisposeAsync awaits each sink's DisposeAsync inside a foreach at line 77, so the await is serialized inside a loop as the claim states."
+        }
+      ]
     },
     {
       "id": "EA-c585de6b0bc03f33",
@@ -78,9 +88,19 @@
       "language": "csharp",
       "path": "src/Serilog/LoggerConfiguration.cs",
       "message": "Await expression inside a loop at line 201",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 201
+      "line": 201,
+      "verdict": "false_positive",
+      "reason": "The awaited DisposeAsync at line 201 in LoggerConfiguration is in a cleanup path (disposing sinks after a configuration failure) and must run sequentially, so there is no parallelisation opportunity.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LoggerConfiguration.cs line 201 awaits asyncDisposable.DisposeAsync() inside a loop over the disposable sinks, which is a serialized await in a loop as claimed."
+        }
+      ]
     },
     {
       "id": "EA-95f001bcdac67f2f",

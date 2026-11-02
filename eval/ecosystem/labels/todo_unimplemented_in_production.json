@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/util.c",
       "message": "Non-test source contains TODO at line 263",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 263
+      "line": 263,
+      "verdict": "true_positive",
+      "reason": "The TODO at util.c line 263 states a real gap: input-stream errors are printed ad hoc with fprintf because err_cb is hard-coded for open errors, so error reporting is acknowledged as unfinished.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq util.c:263 contains a TODO about reporting the error via state->err_cb() in non-test production source, which is the marker the detector targets."
+        }
+      ]
     },
     {
       "id": "EA-113a9d49f9fa6da1",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "include/uv/unix.h",
       "message": "Non-test source contains TODO at line 156",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 156
+      "line": 156,
+      "verdict": "true_positive",
+      "reason": "The TODO(bnoordhuis) at unix.h line 156 notes that the pad member of uv_barrier_t should go in v2; a genuine deferred cleanup comment in a shipped header.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "include/uv/unix.h:156 contains a TODO(bnoordhuis) about removing padding in v2 inside the production uv_barrier_t definition, which is a real TODO in non-test source."
+        }
+      ]
     },
     {
       "id": "EA-c097db8326c211ad",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "include/uv/win.h",
       "message": "Non-test source contains TODO at line 256",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 256
+      "line": 256,
+      "verdict": "true_positive",
+      "reason": "The TODO on the unused_ block of uv_cond_t (win.h line 256) says the struct is kept only for ABI compatibility and should be removed in v2.x, a real deferred-removal note.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "include/uv/win.h:256 has a TODO noting the unused_ member is retained for ABI compatibility, a TODO in public production header code as claimed."
+        }
+      ]
     },
     {
       "id": "EA-a5d1656157c6e9be",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "include/uv/win.h",
       "message": "Non-test source contains TODO at line 261",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 261
+      "line": 261,
+      "verdict": "true_positive",
+      "reason": "The TODO on uv_rwlock_t's padding_ (win.h line 261) records ABI-compat padding to remove in v2.x; the marker is real even though the code is deliberate.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "include/uv/win.h:261 has a TODO about retaining padding_ for ABI compatibility in the uv_rwlock_t definition, a TODO in non-test source."
+        }
+      ]
     },
     {
       "id": "EA-5010ff366544b087",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "include/uv/win.h",
       "message": "Non-test source contains TODO at line 495",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 495
+      "line": 495,
+      "verdict": "true_positive",
+      "reason": "The TODO at win.h line 495 says TTY parser states should be put in a union to save space (read and write are half-duplex), an open design improvement.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "include/uv/win.h:495 has a TODO about putting parser states in a union inside the UV_TTY_PRIVATE_FIELDS macro, a TODO in production header code."
+        }
+      ]
     },
     {
       "id": "EA-64311208c2ac290e",
@@ -58,9 +108,19 @@
       "language": "c",
       "path": "src/fs-poll.c",
       "message": "Non-test source contains TODO at line 45",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 45
+      "line": 45,
+      "verdict": "true_positive",
+      "reason": "The TODO(bnoordhuis) on uv_fs_t fs_req in fs-poll.c line 45 says to mark the request internal, an unresolved item.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/fs-poll.c:45 has TODO(bnoordhuis) about marking fs_req internal on a production struct field, which is accurate."
+        }
+      ]
     },
     {
       "id": "EA-aae1ebda8b6a5232",
@@ -93,9 +153,19 @@
       "language": "c",
       "path": "src/threadpool.c",
       "message": "Non-test source contains TODO at line 165",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 165
+      "line": 165,
+      "verdict": "true_positive",
+      "reason": "The TODO(itodorov) in threadpool.c line 165 defers z/OS destructor handling until the Woz compiler is available, an open platform workaround.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/threadpool.c:165 has a TODO about revisiting z/OS cleanup when the compiler is available, placed in production threadpool cleanup code."
+        }
+      ]
     },
     {
       "id": "EA-b1b8e550bfed61c3",
@@ -253,9 +323,19 @@
       "language": "c",
       "path": "src/unix/kqueue.c",
       "message": "Non-test source contains TODO at line 585",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 585
+      "line": 585,
+      "verdict": "true_positive",
+      "reason": "The TODO in kqueue.c line 585 notes the open() in uv_fs_event_start is synchronous and asks how to report async errors, a real known limitation.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/kqueue.c:585 has an open TODO asking how to report asynchronous open errors, sitting above the synchronous open() in production code."
+        }
+      ]
     },
     {
       "id": "EA-eccffd463495ff4d",
@@ -263,9 +343,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Non-test source contains TODO at line 1632",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1632
+      "line": 1632,
+      "verdict": "true_positive",
+      "reason": "The TODO(bnoordhuis) at linux.c line 1632 describes a possible future use of CLOCK_MONOTONIC_COARSE for UV_CLOCK_PRECISE; it is a genuine, if speculative, deferred item.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/linux.c:1632 has a TODO(bnoordhuis) about CLOCK_MONOTONIC_COARSE above production hrtime-clock code, as claimed."
+        }
+      ]
     },
     {
       "id": "EA-3339940292ce103e",
@@ -273,9 +363,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Non-test source contains TODO at line 1957",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1957
+      "line": 1957,
+      "verdict": "true_positive",
+      "reason": "The TODO(bnoordhuis) at linux.c line 1957 says uv_interface_addresses should be shared with bsd-ifaddrs.c, acknowledging duplicated platform code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/linux.c:1957 has TODO(bnoordhuis) to share uv_interface_addresses with bsd-ifaddrs.c, placed in production code."
+        }
+      ]
     },
     {
       "id": "EA-6a0655fe1b8ba70f",
@@ -308,9 +408,19 @@
       "language": "c",
       "path": "src/unix/os390.c",
       "message": "Non-test source contains TODO at line 267",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 267
+      "line": 267,
+      "verdict": "true_positive",
+      "reason": "The TODO in os390.c line 267 precedes cpu_times.sys/idle/irq/nice being hard-coded to 0, so uv_cpu_info on z/OS reports unimplemented values.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/os390.c:267 has TODO 'implement the following' above cpu_times fields that are hard-coded to zero, which is genuinely unimplemented production behaviour."
+        }
+      ]
     },
     {
       "id": "EA-75546bf088841053",
@@ -318,9 +428,19 @@
       "language": "c",
       "path": "src/unix/os390.c",
       "message": "Non-test source contains TODO at line 770",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 770
+      "line": 770,
+      "verdict": "true_positive",
+      "reason": "The TODO(gabylb) at os390.c line 770 says an unexplained z/OS event (156) is mapped to UV_RENAME and needs investigation, an open issue in production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/os390.c:770 has TODO(gabylb) that the event should not happen and needs investigation, in production fs-event code."
+        }
+      ]
     },
     {
       "id": "EA-1700920bda60459e",
@@ -328,9 +448,19 @@
       "language": "c",
       "path": "src/unix/stream.c",
       "message": "Non-test source contains TODO at line 418",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 418
+      "line": 418,
+      "verdict": "true_positive",
+      "reason": "The TODO in stream.c line 418 says the user-supplied keepalive delay is ignored and a hard-coded 60 is passed to uv__tcp_keepalive, a real unimplemented behaviour.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/stream.c:418 has the TODO 'Use delay the user passed in' while the keepalive delay is hard-coded to 60, a real unimplemented behaviour in production code."
+        }
+      ]
     },
     {
       "id": "EA-71511ad2fbb7d188",
@@ -338,9 +468,19 @@
       "language": "c",
       "path": "src/unix/stream.c",
       "message": "Non-test source contains TODO at line 551",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 551
+      "line": 551,
+      "verdict": "true_positive",
+      "reason": "The `TODO handle error` at stream.c line 551 sits on the uv__stream_open failure path in uv__server_io, a real unfinished error-handling spot.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/unix/stream.c:551 has 'TODO handle error' before uv__close on the accepted fd, an unhandled error path in production code."
+        }
+      ]
     },
     {
       "id": "EA-81d038828a33c326",
@@ -348,9 +488,19 @@
       "language": "c",
       "path": "src/uv-common.c",
       "message": "Non-test source contains TODO at line 978",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 978
+      "line": 978,
+      "verdict": "true_positive",
+      "reason": "The TODO(itodorov) in uv-common.c line 978 defers z/OS cleanup revisiting until the Woz compiler exists, an open platform workaround.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/uv-common.c:978 has TODO(itodorov) to revisit when the Woz compiler is available, placed above production z/OS cleanup code."
+        }
+      ]
     },
     {
       "id": "EA-20f5ed363eeceb46",
@@ -358,9 +508,19 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "Non-test source contains TODO at line 1931",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1931
+      "line": 1931,
+      "verdict": "true_positive",
+      "reason": "The Todo at win/fs.c line 1931 says st_flags is set to 0 and should be made meaningful, an unimplemented field in fs__stat_impl.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/fs.c:1931 has a Todo to set st_flags to something meaningful, while the code hard-codes st_flags to 0, in production stat code."
+        }
+      ]
     },
     {
       "id": "EA-941d5fab58092807",
@@ -368,9 +528,19 @@
       "language": "c",
       "path": "src/win/getaddrinfo.c",
       "message": "Non-test source contains TODO at line 126",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 126
+      "line": 126,
+      "verdict": "true_positive",
+      "reason": "The TODO in win/getaddrinfo.c line 126 notes alignment is wider than needed because sockaddr alignment cannot be obtained portably, a genuine known inefficiency.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/getaddrinfo.c:126 has the TODO about the sockaddr alignment inside production getaddrinfo request-layout code, as claimed."
+        }
+      ]
     },
     {
       "id": "EA-cd887e016c3f7ec5",
@@ -378,9 +548,19 @@
       "language": "c",
       "path": "src/win/pipe.c",
       "message": "Non-test source contains TODO at line 931",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 931
+      "line": 931,
+      "verdict": "true_positive",
+      "reason": "The TODO(bnoordhuis) in win/pipe.c line 931 asks for UTF-8 to UTF-16 converters that take a length, an open API gap in production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/pipe.c:931 has TODO(bnoordhuis) about adding length-taking converters, placed above the production pipe name conversion."
+        }
+      ]
     },
     {
       "id": "EA-553815e6f89a9cc3",
@@ -388,9 +568,19 @@
       "language": "c",
       "path": "src/win/process.c",
       "message": "Non-test source contains TODO at line 755",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 755
+      "line": 755,
+      "verdict": "true_positive",
+      "reason": "The TODO \"handle race condition?\" at win/process.c line 755 sits on the GetEnvironmentVariableW size check that calls uv_fatal_error on mismatch, an acknowledged unhandled race.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/process.c:755 has the TODO 'handle race condition?' on a production environment-variable size check, which is an open concern in non-test code."
+        }
+      ]
     },
     {
       "id": "EA-75a6f7d856059aef",
@@ -398,9 +588,19 @@
       "language": "c",
       "path": "src/win/signal.c",
       "message": "Non-test source contains TODO at line 50",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 50
+      "line": 50,
+      "verdict": "true_positive",
+      "reason": "uv__signal_cleanup in win/signal.c is an empty function whose only body is `TODO(bnoordhuis) Undo effects of uv_signal_init()?`, so cleanup is literally unimplemented.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/signal.c:50 has TODO(bnoordhuis) about undoing uv_signal_init effects in production code, an open cleanup item."
+        }
+      ]
     },
     {
       "id": "EA-4e2fc23910c0a605",
@@ -408,9 +608,19 @@
       "language": "c",
       "path": "src/win/tcp.c",
       "message": "Non-test source contains TODO at line 1353",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1353
+      "line": 1353,
+      "verdict": "true_positive",
+      "reason": "The TODO at win/tcp.c line 1353 says the keepalive delay is not stored when the socket does not exist yet, a known behavioural gap in uv__tcp_keepalive.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/tcp.c:1353 has the TODO 'Store delay if handle->socket isn't created yet' and the function body is a bare return 0, so the delay is indeed unimplemented."
+        }
+      ]
     },
     {
       "id": "EA-0e4acd625ace0280",
@@ -418,9 +628,19 @@
       "language": "c",
       "path": "src/win/tcp.c",
       "message": "Non-test source contains TODO at line 1403",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1403
+      "line": 1403,
+      "verdict": "true_positive",
+      "reason": "The TODO at win/tcp.c line 1403 notes write_reqs are not tracked individually and CancelIo is used as a blunt substitute, a real deferred v2 change.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "src/win/tcp.c:1403 has a TODO about tracking write_reqs explicitly for CancelIoEx in production close/cancel code, as claimed."
+        }
+      ]
     },
     {
       "id": "EA-0a194e062f99bee9",
@@ -428,9 +648,19 @@
       "language": "cpp",
       "path": "db/c.cc",
       "message": "Non-test source contains TODO at line 154",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 154
+      "line": 154,
+      "verdict": "true_positive",
+      "reason": "The TODO(sanjay) at c.cc line 154 notes an unresolved design choice in SaveError (merge with an existing error versus overwrite), left in shipped code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "leveldb db/c.cc:154 has the open TODO(sanjay) 'Merge with existing error?' in non-test production code, which the claim describes accurately."
+        }
+      ]
     },
     {
       "id": "EA-796bbc52bf233107",
@@ -438,9 +668,19 @@
       "language": "cpp",
       "path": "db/db_impl.cc",
       "message": "Non-test source contains TODO at line 593",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 593
+      "line": 593,
+      "verdict": "true_positive",
+      "reason": "The TODO(sanjay) on line 593 in DBImpl::CompactRange records that the memtable compaction is done unconditionally; an acknowledged unoptimised path in production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "db_impl.cc:593 has TODO(sanjay) 'Skip if memtable does not overlap' in production code and the claim holds."
+        }
+      ]
     },
     {
       "id": "EA-579481f30aca1d96",
@@ -448,9 +688,19 @@
       "language": "cpp",
       "path": "db/db_impl.cc",
       "message": "Non-test source contains TODO at line 1450",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1450
+      "line": 1450,
+      "verdict": "true_positive",
+      "reason": "The TODO(opt) at line 1450 flags GetApproximateSizes as needing a better implementation, a genuine open improvement in production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "db_impl.cc:1450 has TODO(opt) 'better implementation' above a production GetApproximateSizes body, a non-test TODO as claimed."
+        }
+      ]
     },
     {
       "id": "EA-0ebe12ae2e1aafcc",
@@ -533,9 +783,19 @@
       "language": "cpp",
       "path": "db/version_set.cc",
       "message": "Non-test source contains TODO at line 1071",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1071
+      "line": 1071,
+      "verdict": "true_positive",
+      "reason": "The TODO in VersionSet::WriteSnapshot (line 1071) acknowledges the snapshot is written as one record and may cost memory on recovery, an open issue in production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "version_set.cc:1071 has an open TODO asking whether to break up the record in production code, consistent with the claim."
+        }
+      ]
     },
     {
       "id": "EA-29ac482e684ce205",
@@ -643,9 +903,19 @@
       "language": "cpp",
       "path": "util/cache.cc",
       "message": "Non-test source contains TODO at line 49",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 49
+      "line": 49,
+      "verdict": "true_positive",
+      "reason": "The TODO(opt) on LRUHandle::charge (line 49) questions the field's type; it is a genuine unresolved note, though low-stakes, in production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "cache.cc:49 has TODO(opt) on the charge field inside production LRU handle code, a non-test TODO as claimed."
+        }
+      ]
     },
     {
       "id": "EA-7a7707d66da71ef6",
@@ -653,9 +923,19 @@
       "language": "cpp",
       "path": "util/env_windows.cc",
       "message": "Non-test source contains TODO at line 637",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 637
+      "line": 637,
+      "verdict": "true_positive",
+      "reason": "The TODO(cmumford) in WindowsEnv::NowMicros says to switch to GetSystemTimePreciseAsFileTime, so the current clock resolution (10-20 ms per the comment above) is a known shortfall.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "env_windows.cc:637 has TODO(cmumford) about switching to GetSystemTimePreciseAsFileTime in production NowMicros code, as claimed."
+        }
+      ]
     },
     {
       "id": "EA-e33e2811193c667e",
@@ -663,9 +943,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Non-test source contains TODO at line 1861",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1861
+      "line": 1861,
+      "verdict": "true_positive",
+      "reason": "The TODO(niels) in get_ubjson_string (line 1861) asks whether the 'N' (no-op) marker may be ignored, an unresolved question about parsing behaviour.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "binary_reader.hpp:1861 has TODO(niels) 'may we ignore N here?' on a production CBOR/BSON parsing path, an open question in non-test code."
+        }
+      ]
     },
     {
       "id": "EA-0325bcb7d30625c0",
@@ -903,9 +1193,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Linq/JObject.cs",
       "message": "Non-test source contains TODO at line 641",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 641
+      "line": 641,
+      "verdict": "true_positive",
+      "reason": "The explicit interface member IDictionary<string, JToken?>.Values on JObject (line 641) is a `throw new NotImplementedException()` stub, so the member is unimplemented in production code.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "JObject.cs:641 contains no TODO; the detector matched an explicit interface member that throws NotImplementedException, so the TODO claim is a misparse."
+        }
+      ]
     },
     {
       "id": "EA-fa069f5c6c10725d",
@@ -963,9 +1263,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Schema/JsonSchemaGenerator.cs",
       "message": "Non-test source contains TODO at line 304",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 304
+      "line": 304,
+      "verdict": "true_positive",
+      "reason": "The `todo: Add GetSchema to JsonConverter` comment at JsonSchemaGenerator.cs line 304 sits on a branch that sets the schema type to Any, so converter-based schema generation is a known gap.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "JsonSchemaGenerator.cs:304 has a 'todo: Add GetSchema to JsonConverter' comment in production schema-generation code."
+        }
+      ]
     },
     {
       "id": "EA-d6d194f06f9b5576",
@@ -3860,9 +4170,19 @@
       "language": "typescript",
       "path": "packages/react-query/src/shared/hooks/createHooksInternal.tsx",
       "message": "Non-test source contains TODO at line 1",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1
+      "line": 1,
+      "verdict": "true_positive",
+      "reason": "The file-level TODO on line 1 of createHooksInternal.tsx says react-compiler support needs fixing, an open known limitation in shipped library code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "createHooksInternal.tsx line 1 has the TODO about react-compiler support in production react-query hooks source."
+        }
+      ]
     },
     {
       "id": "EA-d2e3202eb72b186e",
@@ -3920,9 +4240,19 @@
       "language": "typescript",
       "path": "www/src/theme/BlogPostPage/Metadata/index.tsx",
       "message": "Non-test source contains TODO at line 42",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 42
+      "line": 42,
+      "verdict": "true_positive",
+      "reason": "The TODO at BlogPostPage/Metadata/index.tsx line 42 asks to double-check the OGP array meta syntax for article:author and article:tag; the docs-site component is still non-test source with an unresolved item.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "The trpc www theme BlogPostPage Metadata component at line 42 has a TODO asking to double-check article meta array syntax in production site code."
+        }
+      ]
     }
   ]
 }

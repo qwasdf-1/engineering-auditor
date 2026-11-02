@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 51",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 51
+      "line": 51,
+      "verdict": "false_positive",
+      "reason": "dump_code in jq/src/bytecode.c is the bytecode disassembler used by --debug-dump-disasm; printf of the indent is its intended output, not stray logging.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf at bytecode.c:51 is inside dump_code, a dedicated disassembly printer whose sole purpose is writing the bytecode listing."
+        }
+      ]
     },
     {
       "id": "EA-0cd15cbc7b83962e",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 53",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 53
+      "line": 53,
+      "verdict": "false_positive",
+      "reason": "printf(\"\\n\") on line 53 terminates a disassembly line in dump_code, whose purpose is printing the bytecode listing.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of a newline at bytecode.c:53 is in dump_code, the dedicated bytecode disassembly printer, so the output is the function's product."
+        }
+      ]
     },
     {
       "id": "EA-a85b48ba3d802ae1",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 69",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 69
+      "line": 69,
+      "verdict": "false_positive",
+      "reason": "The printf(\", \") on line 69 formats the parameter list inside dump_disassembly, a debug-dump function whose job is to print.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf at bytecode.c:69 is in dump_disassembly, a dedicated disassembly printer that writes the parameter list to stdout by design."
+        }
+      ]
     },
     {
       "id": "EA-6c36070699ecd2d4",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 71",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 71
+      "line": 71,
+      "verdict": "false_positive",
+      "reason": "printf of the closure parameter name in dump_disassembly (line 71) is part of the disassembler's intended output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of the parameter name at bytecode.c:71 is inside dump_disassembly, a dedicated disassembly dump whose output is its purpose."
+        }
+      ]
     },
     {
       "id": "EA-976674da055f23ec",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 81",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 81
+      "line": 81,
+      "verdict": "false_positive",
+      "reason": "printf of the subfunction header (line 81) is part of the dump_disassembly output format used by the debug-dump option.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf at bytecode.c:81 writes subfunction headers inside dump_disassembly, a dedicated disassembly printer, so the console output is intended."
+        }
+      ]
     },
     {
       "id": "EA-6c8f03ee6ab40f5b",
@@ -58,9 +108,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 120",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 120
+      "line": 120,
+      "verdict": "false_positive",
+      "reason": "printf(\"^%d\", level) on line 120 is part of dump_operation's disassembly formatting, not stray console output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of the closure level at bytecode.c:120 is inside dump_operation, a dedicated per-operation disassembly printer whose output is its job."
+        }
+      ]
     },
     {
       "id": "EA-1bff879a5782e5eb",
@@ -68,9 +128,19 @@
       "language": "c",
       "path": "src/bytecode.c",
       "message": "Console output in production code at line 126",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 126
+      "line": 126,
+      "verdict": "false_positive",
+      "reason": "printf(\" %s\", name) on line 126 prints a CALL_BUILTIN operand inside dump_operation, the disassembler routine.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of the builtin name at bytecode.c:126 is inside dump_operation, a dedicated disassembly printer, so the write to stdout is the function's purpose."
+        }
+      ]
     },
     {
       "id": "EA-02b5b51d3649d7f1",
@@ -78,9 +148,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 374",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 374
+      "line": 374,
+      "verdict": "false_positive",
+      "reason": "The printf(\" | \") on line 374 is inside the jq->debug_trace_enabled block of jq_next, the opt-in execution tracer, so the output is intentional debug-trace output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf at jq execute.c:374 is inside the `if (jq->debug_trace_enabled)` tracing block of the execute loop, so it is gated opt-in debug tracing output."
+        }
+      ]
     },
     {
       "id": "EA-36de6a77b1110339",
@@ -88,9 +168,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 390",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 390
+      "line": 390,
+      "verdict": "false_positive",
+      "reason": "printf(\"\\t<backtracking>\") is part of the same opt-in debug-trace line printing in jq_next (guarded by debug_trace_enabled), not stray logging.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of the backtracking marker at execute.c:390 is part of the debug_trace_enabled-gated trace output in the execute loop."
+        }
+      ]
     },
     {
       "id": "EA-45d3daf6973fda73",
@@ -98,9 +188,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 393",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 393
+      "line": 393,
+      "verdict": "true_positive",
+      "reason": "execute.c:393 is a raw printf(\"\\n\") inside jq_next in src/execute.c, which is part of the libjq interpreter core, not test or tooling code. It sits in the debug_trace_enabled block, which writes straight to stdout. A library writing a trace to stdout with printf is what the rule targets, even though the trace is opt-in.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of a newline at execute.c:393 closes the trace line under the `if (jq->debug_trace_enabled)` guard at line 363, so it is intentional tracing."
+        }
+      ]
     },
     {
       "id": "EA-d1c340afbfe13b77",
@@ -108,9 +208,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 553",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 553
+      "line": 553,
+      "verdict": "false_positive",
+      "reason": "printf(\"V%d = \", v) in LOADV is guarded by if (jq->debug_trace_enabled) on line 552, an intentional opt-in trace.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of the variable name in the LOADV case at execute.c:553 sits inside `if (jq->debug_trace_enabled)` at line 552, an opt-in trace."
+        }
+      ]
     },
     {
       "id": "EA-9e8e2559cef9186a",
@@ -118,9 +228,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 570",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 570
+      "line": 570,
+      "verdict": "false_positive",
+      "reason": "printf(\"\\n\") on line 570 sits in the LOADVN case under if (jq->debug_trace_enabled), an opt-in trace.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The printf of a newline in the LOADVN case at execute.c:570 is inside the `if (jq->debug_trace_enabled)` block at line 567."
+        }
+      ]
     },
     {
       "id": "EA-f8ab76c7639b77ee",
@@ -128,9 +248,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 591",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 591
+      "line": 591,
+      "verdict": "false_positive",
+      "reason": "printf(\"V%d = \", v) in STOREV is guarded by jq->debug_trace_enabled (line 590), an opt-in trace.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The STOREV trace printf at execute.c:591 is inside the `if (jq->debug_trace_enabled)` block at line 590."
+        }
+      ]
     },
     {
       "id": "EA-3a22e45d73b6d049",
@@ -138,9 +268,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 593",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 593
+      "line": 593,
+      "verdict": "false_positive",
+      "reason": "The printf of the refcount on line 593 is part of the debug_trace_enabled-guarded trace in STOREV.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The refcount trace printf at execute.c:593 is inside the debug_trace_enabled-gated block at line 590."
+        }
+      ]
     },
     {
       "id": "EA-f8aedcc7639e5b17",
@@ -148,9 +288,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Console output in production code at line 620",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 620
+      "line": 620,
+      "verdict": "false_positive",
+      "reason": "printf(\"V%d = \", v) on line 620 is guarded by debug_trace_enabled and is intentional trace output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The STOREV trace printf at execute.c:620 is inside the `if (jq->debug_trace_enabled)` block at line 619."
+        }
+      ]
     },
     {
       "id": "EA-44cd4b440234df02",
@@ -158,9 +308,19 @@
       "language": "c",
       "path": "src/jv.c",
       "message": "Console output in production code at line 502",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 502
+      "line": 502,
+      "verdict": "false_positive",
+      "reason": "fprintf(stderr, ...) in jv_tsd_dec_ctx_init is a fatal diagnostic immediately followed by abort() when pthread_key_create fails; a C library with no logger legitimately reports this last-gasp error that way.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "jv.c:502 writes a fatal thread-specific-key error to stderr and then calls abort(); this is the library's fatal-error reporter, not stray logging."
+        }
+      ]
     },
     {
       "id": "EA-9813d06963f26972",
@@ -168,9 +328,19 @@
       "language": "c",
       "path": "src/jv.c",
       "message": "Console output in production code at line 526",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 526
+      "line": 526,
+      "verdict": "false_positive",
+      "reason": "The fprintf on line 526 reports a failed pthread_setspecific and is immediately followed by abort(); fatal last-gasp diagnostic, not debug logging.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "jv.c:526 prints a fatal thread-specific-data error to stderr before abort(), the same fatal-error reporting idiom."
+        }
+      ]
     },
     {
       "id": "EA-93330c92493c8e2a",
@@ -353,9 +523,19 @@
       "language": "c",
       "path": "src/unix/stream.c",
       "message": "Console output in production code at line 992",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 992
+      "line": 992,
+      "verdict": "true_positive",
+      "reason": "uv__stream ancillary-data handling (line 992) writes \"ignoring non-SCM_RIGHTS ancillary data\" to stderr on a non-fatal runtime path and continues, which is real library console output in production.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv unix/stream.c:992 unconditionally writes a diagnostic to stderr for ignored ancillary data and then continues, a non-fatal library-side print with no logger."
+        }
+      ]
     },
     {
       "id": "EA-49a78909bca953e8",
@@ -413,9 +593,19 @@
       "language": "c",
       "path": "src/win/pipe.c",
       "message": "Console output in production code at line 320",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 320
+      "line": 320,
+      "verdict": "false_positive",
+      "reason": "The fprintf on line 320 is inside an #ifndef NDEBUG block (line 311) that validates the pipe mode, so it is debug-build assertion output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "pipe.c:320 is a diagnostic inside the #ifndef NDEBUG validation block, a debug-only assertion report rather than production output."
+        }
+      ]
     },
     {
       "id": "EA-4f356a23a5cffd6c",
@@ -423,9 +613,19 @@
       "language": "c",
       "path": "programs/util.h",
       "message": "Console output in production code at line 378",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 378
+      "line": 378,
+      "verdict": "false_positive",
+      "reason": "The fprintf(stderr, \"Cannot open directory\") on line 378 is in programs/util.h, the lz4 command-line tool, where reporting a failed directory open to the user on stderr is the program's normal interface.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The fprintf at lz4 programs/util.h:378 is a user-facing warning from the lz4 command-line file-list helper (UTIL_prepareFileList), which is the CLI's normal error reporting, not stray logging."
+        }
+      ]
     },
     {
       "id": "EA-149e3b1956c02861",
@@ -433,9 +633,19 @@
       "language": "c",
       "path": "zutil.c",
       "message": "Console output in production code at line 131",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 131
+      "line": 131,
+      "verdict": "false_positive",
+      "reason": "z_error in zutil.c is inside an #ifdef ZLIB_DEBUG block (line 123) and is the debug-build error handler that prints and exits, not production output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "z_error in zutil.c (line 131) is inside `#ifdef ZLIB_DEBUG`, so the stderr write is a debug-build fatal diagnostic, not production console output."
+        }
+      ]
     },
     {
       "id": "EA-a9db7676b5f2ce2f",
@@ -443,9 +653,19 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "Console output in production code at line 39",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 39
+      "line": 39,
+      "verdict": "false_positive",
+      "reason": "assert_fail in fmt is the last-resort assertion handler; the comment on line 37 explains it deliberately uses fprintf(stderr) before abort(), and a logging framework is not available.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "assert_fail in fmt format-inl.h prints the failed-assertion message to stderr before abort(); this is the library's fatal-error reporter, the designed behaviour where no logger is available."
+        }
+      ]
     },
     {
       "id": "EA-0330da79bc6e7bb9",
@@ -453,9 +673,19 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "Console output in production code at line 106",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 106
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "do_report_error is a noexcept error reporter; the comment on line 105 explains fwrite is used deliberately to avoid throwing, so writing to stderr is the function's purpose.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "do_report_error (format-inl.h lines 102-108) is the library's dedicated error reporter that writes the formatted message to stderr; the fwrite there is its purpose."
+        }
+      ]
     },
     {
       "id": "EA-7c7e34ff9a620a83",
@@ -463,9 +693,19 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "Console output in production code at line 107",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 107
+      "line": 107,
+      "verdict": "false_positive",
+      "reason": "The fputc('\\n', stderr) on line 107 is the trailing newline of the same noexcept do_report_error stderr reporter, deliberate low-level error output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The fputc newline at format-inl.h:107 is part of the same do_report_error reporter, which writes the full error line to stderr by design."
+        }
+      ]
     },
     {
       "id": "EA-70e37cd450c44d9a",
@@ -473,9 +713,19 @@
       "language": "cpp",
       "path": "db/version_set.cc",
       "message": "Console output in production code at line 706",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 706
+      "line": 706,
+      "verdict": "false_positive",
+      "reason": "The fprintf at line 706 is inside an #ifndef NDEBUG invariant check in VersionSet::Builder that aborts on overlapping ranges, so it is debug-only assertion output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "version_set.cc:706 is an overlap invariant check inside #ifndef NDEBUG that prints and calls abort(), a debug assertion report rather than production logging."
+        }
+      ]
     },
     {
       "id": "EA-c9c89aafabf2da14",
@@ -483,9 +733,19 @@
       "language": "cpp",
       "path": "util/env_posix.cc",
       "message": "Console output in production code at line 496",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 496
+      "line": 496,
+      "verdict": "false_positive",
+      "reason": "The fwrite in ~PosixEnv prints \"singleton destroyed. Unsupported behavior!\" then std::abort(); this is a deliberate fatal diagnostic in a destructor.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "PosixEnv's destructor writes an unsupported-behaviour message to stderr and calls abort(), a fatal-path report in the Env singleton."
+        }
+      ]
     },
     {
       "id": "EA-e3d1ab960d3b10fe",
@@ -493,9 +753,19 @@
       "language": "cpp",
       "path": "util/env_windows.cc",
       "message": "Console output in production code at line 369",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 369
+      "line": 369,
+      "verdict": "false_positive",
+      "reason": "The fwrite in ~WindowsEnv is the same fatal \"singleton destroyed\" message before std::abort(), a deliberate last-gasp diagnostic.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "WindowsEnv's destructor writes an unsupported-behaviour message to stderr and calls abort(), the same fatal-path report as the POSIX variant."
+        }
+      ]
     },
     {
       "id": "EA-c5168f4366bf8bfe",
@@ -2306,9 +2576,19 @@
       "language": "python",
       "path": "action/main.py",
       "message": "Console output in production code at line 160",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 160
+      "line": 160,
+      "verdict": "false_positive",
+      "reason": "action/main.py is the GitHub Action runner script; the print(\"::error::...\") on line 160 is a workflow command to stderr before sys.exit(1), which is the script's intended interface and not stray logging.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The print to stderr at action/main.py:160 emits a GitHub Actions '::error::' workflow command, which is the intended output channel for this action entrypoint, not stray debug output."
+        }
+      ]
     },
     {
       "id": "EA-25c6fd2811a8350d",
@@ -2766,9 +3046,19 @@
       "language": "python",
       "path": "src/blib2to3/pgen2/grammar.py",
       "message": "Console output in production code at line 167",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 167
+      "line": 167,
+      "verdict": "false_positive",
+      "reason": "Grammar.report() (line 153) is a documented \"Dump the grammar tables to standard output, for debugging\" method; printing is its sole purpose, not stray console output.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The print at grammar.py:167 is the last line of Grammar.report(), a deliberate diagnostic dump of the parser tables, so it is an intended report output rather than leftover debugging."
+        }
+      ]
     },
     {
       "id": "EA-8a9eaabcb59d696c",

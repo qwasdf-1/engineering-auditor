@@ -548,9 +548,19 @@
       "language": "java",
       "path": "plugins/org.jkiss.dbeaver.ui.ai/src/org/jkiss/dbeaver/ui/ai/chat/controls/AIFunctionAllowMenu.java",
       "message": "Function `getAutoApprovedFunctionCalls` checks loop-derived `functionCall` against linear collection `callsToConfirm`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 106
+      "line": 106,
+      "verdict": "false_positive",
+      "reason": "In getAutoApprovedFunctionCalls the `callsToConfirm.contains(functionCall)` loop runs over the handful of LLM tool calls in one chat message inside a UI menu handler, so it is neither hot nor scalable.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "getAutoApprovedFunctionCalls runs once per user confirmation over the short function-call list from one LLM response; it is a UI handler, not a hot path, so the linear contains() rationale does not apply."
+        }
+      ]
     },
     {
       "id": "EA-aefc543286bea25c",
@@ -1618,9 +1628,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `handleIntersectionResults` checks loop-derived `k` against linear collection `aggregated`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2925
+      "line": 2925,
+      "verdict": "false_positive",
+      "reason": "The `aggregated.includes(k)` check at line 2925 runs only on the error path of intersection merging when keys were rejected by both sides, over a small key list, so it is not a hot path.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "In zod core/schemas.ts the aggregated array at line 2925 is the subset of unrecognised keys on the intersection error path, so the linear includes() runs over a small, error-only list rather than a hot path."
+        }
+      ]
     },
     {
       "id": "EA-7d385b56c5c66008",
@@ -1628,9 +1648,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/to-json-schema.ts",
       "message": "Function `compactTypeUnion` appends loop-derived `member` to linear collection `types` only after scanning it for `member`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 458
+      "line": 458,
+      "verdict": "false_positive",
+      "reason": "`types` in compactTypeUnion collects JSON Schema primitive type names (string, number, integer, boolean, null, object, array), so it is bounded at 7 entries and the includes() scan is constant-size.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "compactTypeUnion in to-json-schema.ts (lines 458-464) runs once per schema conversion over a few union members, not on a hot path, so the linear types.includes() is not a performance concern here."
+        }
+      ]
     },
     {
       "id": "EA-34266e8399c9504b",

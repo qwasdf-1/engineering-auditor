@@ -8,9 +8,19 @@
       "language": "cpp",
       "path": "include/fmt/os.h",
       "message": "Shell execution at line 169",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 169
+      "line": 169,
+      "verdict": "true_positive",
+      "reason": "fmt::say on macOS passes format(fmt, args...) straight into std::system via \"say \\\"{}\\\"\", so a message containing a double quote or $(...) executes in the shell; this is real shell execution of interpolated text in a public header.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "fmt os.h:169 passes a formatted user string into std::system via a double-quoted shell command line; the claim that it runs a shell is accurate, and the unescaped interpolation is a real concern even though the call is intentional."
+        }
+      ]
     },
     {
       "id": "EA-a67c8458e981cd77",

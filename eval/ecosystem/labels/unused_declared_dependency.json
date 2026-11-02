@@ -728,9 +728,19 @@
       "language": "structured",
       "path": "crates/atuin-scripts/Cargo.toml",
       "message": "`sql-builder` is a production dependency in crates/atuin-scripts/Cargo.toml, but no source file under `crates/atuin-scripts/` imports it",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 27
+      "line": 27,
+      "verdict": "true_positive",
+      "reason": "crates/atuin-scripts/Cargo.toml lists sql-builder under [dependencies], and grepping the crate (src/database.rs, store, lib.rs etc.) finds no sql_builder reference, so the declared dependency is unused.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "crates/atuin-scripts/Cargo.toml:27 declares sql-builder as a dependency, and grep finds no sql_builder or SqlBuilder reference anywhere under crates/atuin-scripts, so the claim holds."
+        }
+      ]
     },
     {
       "id": "EA-37638911d9f53597",
@@ -738,9 +748,19 @@
       "language": "structured",
       "path": "crates/atuin-scripts/Cargo.toml",
       "message": "`tracing-subscriber` is a production dependency in crates/atuin-scripts/Cargo.toml, but no source file under `crates/atuin-scripts/` imports it",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 32
+      "line": 32,
+      "verdict": "true_positive",
+      "reason": "tracing-subscriber is a production dependency of atuin-scripts, but no .rs file in the crate references tracing_subscriber (the crate only uses tracing), so it is unused.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "crates/atuin-scripts/Cargo.toml:32 declares tracing-subscriber, and grep finds no tracing_subscriber import under crates/atuin-scripts, so the unused-dependency claim holds."
+        }
+      ]
     },
     {
       "id": "EA-fd2923d9439bc786",

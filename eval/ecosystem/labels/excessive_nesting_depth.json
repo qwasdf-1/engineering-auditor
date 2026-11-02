@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/main.c",
       "message": "Function `umain` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 313
+      "line": 313,
+      "verdict": "true_positive",
+      "reason": "In umain the `--argjson` branch of the option loop reaches `if (!jv_is_valid(v))` at line 476, nested six levels below the function body (statement at indent 12 vs body 2).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "umain (main.c from line 287) reaches the argument-parsing loop, while, else-if, if and if blocks at line 476, which is about six brace levels including the body."
+        }
+      ]
     },
     {
       "id": "EA-a424ce4f420b7bea",
@@ -43,9 +53,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv__tty_write_bufs` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1726
+      "line": 1726,
+      "verdict": "true_positive",
+      "reason": "uv__tty_write_bufs nests for i -> for j -> ANSI parser else-if branch -> switch (utf8_codepoint) -> case 'l' -> if (line ~1965); depth 7 is credible for this state machine.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tty_write_bufs (tty.c from line 1691) nests for, for, if, else-if, if and switch down to line 1965, which is depth 7 or deeper as reported."
+        }
+      ]
     },
     {
       "id": "EA-b28de6405369e66d",
@@ -53,9 +73,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4MID_compress` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 555
+      "line": 555,
+      "verdict": "true_positive",
+      "reason": "LZ4MID_compress reaches `if (ml2 > matchLength)` at line 629 (indent 28 vs body 4) inside the main while loop and nested match-search blocks, depth 6 as claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4MID_compress (lz4hc.c from line 554) nests while, a block, if, if, if and if down to line 629, consistent with the reported depth 6."
+        }
+      ]
     },
     {
       "id": "EA-de38d7c92e0037e8",
@@ -83,9 +113,19 @@
       "language": "c",
       "path": "contrib/minizip/mztools.c",
       "message": "Function `unzRepair` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 38
+      "line": 38,
+      "verdict": "true_positive",
+      "reason": "unzRepair in contrib/minizip/mztools.c nests loops and ifs to the fwrite check at line 75 (indent 16 vs body 2); this is shipped library code and depth 7 is accurate.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "unzRepair in contrib/minizip/mztools.c (from line 33) nests if, while, if, if, if, if and if down to line 75, consistent with depth 7 and the function is shipped library code."
+        }
+      ]
     },
     {
       "id": "EA-39fb6a7d9ac181b3",
@@ -118,9 +158,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `PackListParameters` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2171
+      "line": 2171,
+      "verdict": "true_positive",
+      "reason": "PackListParameters nests else (line 2179) -> loop -> else -> if isString -> if at line 2219 (indent 32 vs body 12), giving depth 6 > 5; claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "PackListParameters (SqlMapper.cs lines 2166-2219) nests else, if, foreach, else and if inside the body, reaching the reported depth 6."
+        }
+      ]
     },
     {
       "id": "EA-030aeec983f52bc1",
@@ -128,9 +178,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `CreateParamInfoGenerator` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2565
+      "line": 2565,
+      "verdict": "true_positive",
+      "reason": "In CreateParamInfoGenerator I count if (2893) -> foreach -> if prop -> switch (2928) -> if local (2953) -> else -> if (2962) = 7, matching the evidence.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateParamInfoGenerator (SqlMapper.cs from line 2561) nests if, foreach, if, switch, if and else inside the body, reaching depth 7 at line 2962."
+        }
+      ]
     },
     {
       "id": "EA-9854a8301d6b4233",
@@ -138,9 +198,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
       "message": "Function `SerializeGroupedNodes` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1143
+      "line": 1143,
+      "verdict": "true_positive",
+      "reason": "SerializeGroupedNodes reaches the `for (int j...)` at line 1189 inside switch -> default -> for -> if/else blocks (indent 36 vs body 12), depth 6 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SerializeGroupedNodes (XmlNodeConverter.cs from line 1141) nests switch, for, if, else and if down to line 1189, consistent with depth 6."
+        }
+      ]
     },
     {
       "id": "EA-e95934fd5f4f4921",
@@ -148,9 +218,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
       "message": "Function `ReadAttributeElements` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1881
+      "line": 1881,
+      "verdict": "true_positive",
+      "reason": "ReadAttributeElements: while -> switch -> if -> switch (firstChar) -> case '$' switch -> if (jsonPrefix == null) -> if (attributeNameValues == null) at 1924 is 7 levels; I traced it by reading lines 1881-1924.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadAttributeElements (XmlNodeConverter.cs from line 1875) nests while, switch, if, switch, switch and if down to line 1924, consistent with depth 7."
+        }
+      ]
     },
     {
       "id": "EA-a85c6d81a948d6ff",
@@ -158,9 +238,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
       "message": "Function `DeserializeNode` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2089
+      "line": 2089,
+      "verdict": "true_positive",
+      "reason": "DeserializeNode nests do -> switch -> case PropertyName -> if array -> loop -> if at line 2119 (indent 36 vs body 12); depth 6 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "DeserializeNode (XmlNodeConverter.cs from line 2087) nests do, switch, if, if and foreach down to line 2119, consistent with depth 6."
+        }
+      ]
     },
     {
       "id": "EA-1b420c61adac63cf",
@@ -168,9 +258,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
       "message": "Function `ReadStringIntoBufferAsync` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 392
+      "line": 392,
+      "verdict": "true_positive",
+      "reason": "ReadStringIntoBufferAsync nests while(true) -> switch -> case '\\\\' -> if ... -> if IsLowSurrogate at line 475 (indent 44 vs body 12); depth 7 is accurate.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadStringIntoBufferAsync (JsonTextReader.Async.cs from line 383) nests while, switch, switch, else-if, do and if down to line 475, consistent with depth 7."
+        }
+      ]
     },
     {
       "id": "EA-7a6ec980d5bce967",
@@ -178,9 +278,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
       "message": "Function `ReadStringIntoBuffer` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1145
+      "line": 1145,
+      "verdict": "true_positive",
+      "reason": "ReadStringIntoBuffer is the sync twin with the same while -> switch -> case -> nested ifs down to IsLowSurrogate at line 1227 (indent 44); depth 7 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadStringIntoBuffer (JsonTextReader.cs from line 1136) has the same nested while/switch/else-if/do/if structure down to line 1227, consistent with depth 7."
+        }
+      ]
     },
     {
       "id": "EA-dadde3cc9291b35e",
@@ -188,9 +298,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonValidatingReader.cs",
       "message": "Function `WriteToken` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 619
+      "line": 619,
+      "verdict": "true_positive",
+      "reason": "WriteToken nests foreach -> if isInUniqueArray -> if finished -> if isInUniqueArray -> ... -> if (!schema.Enum.ContainsValue) at line 660 (indent 36 vs body 12), depth 7 plausible.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "WriteToken (JsonValidatingReader.cs from line 617) nests foreach, if, if, else-if, foreach and if down to line 660, consistent with depth 7."
+        }
+      ]
     },
     {
       "id": "EA-4dae66669e77aa90",
@@ -198,9 +318,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
       "message": "Function `MergeEnumerableContent` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1186
+      "line": 1186,
+      "verdict": "true_positive",
+      "reason": "MergeEnumerableContent reaches `if (contentValue.Type != JTokenType.Null)` at line 1254 inside switch -> case -> foreach -> if blocks (indent 36 vs 12), depth 6.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "MergeEnumerableContent (JContainer.cs from line 1185) nests switch, foreach, if, else and if down to line 1254, consistent with depth 6."
+        }
+      ]
     },
     {
       "id": "EA-1ccc0c258db756da",
@@ -208,9 +338,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Schema/JsonSchemaBuilder.cs",
       "message": "Function `ResolveReferences` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 100
+      "line": 100,
+      "verdict": "true_positive",
+      "reason": "ResolveReferences nests if DeferredReference -> if null -> if locationReference -> foreach -> if object/array -> if int.TryParse at line 128 (indent 32 vs body 12), depth 6 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ResolveReferences (JsonSchemaBuilder.cs from line 98) nests if, if, if, foreach and else-if down to line 128, consistent with depth 6."
+        }
+      ]
     },
     {
       "id": "EA-c065577eb6f56dbc",
@@ -218,9 +358,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `ReadMetadataPropertiesToken` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 618
+      "line": 618,
+      "verdict": "true_positive",
+      "reason": "ReadMetadataPropertiesToken reaches an if at line 668 (indent 32 vs body 12) inside a loop/switch/if chain; depth 6 is consistent with the indentation.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadMetadataPropertiesToken (JsonSerializerInternalReader.cs from line 614) nests if, if, if, while and if down to line 668, six brace levels including the body, as reported."
+        }
+      ]
     },
     {
       "id": "EA-f8a237a16faeb5f3",
@@ -228,9 +378,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `ReadMetadataProperties` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 707
+      "line": 707,
+      "verdict": "true_positive",
+      "reason": "ReadMetadataProperties reaches `if (reader.TokenType == JsonToken.PropertyName)` at line 735 (indent 32 vs 12), consistent with depth 6 > 5.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadMetadataProperties (JsonSerializerInternalReader.cs from line 703) nests if, if, do, if and if down to line 735, consistent with the reported depth 6."
+        }
+      ]
     },
     {
       "id": "EA-5b8e2f1b88527856",
@@ -238,9 +398,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `PopulateMultidimensionalArray` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1507
+      "line": 1507,
+      "verdict": "true_positive",
+      "reason": "PopulateMultidimensionalArray reaches the converter check at line 1545 (indent 36 vs body 12) inside nested loops and try blocks; depth 6 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "PopulateMultidimensionalArray (JsonSerializerInternalReader.cs from line 1504) nests do, if, try, if and switch down to line 1545, consistent with depth 6."
+        }
+      ]
     },
     {
       "id": "EA-cca58c9960bb95d2",
@@ -248,9 +418,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `CreateObjectUsingCreatorWithParameters` reaches nesting depth 7 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1998
+      "line": 1998,
+      "verdict": "true_positive",
+      "reason": "CreateObjectUsingCreatorWithParameters reaches `foreach (object newValue in newValues)` at line 2146 at indent 36 inside several nested loops/ifs; depth 7 is consistent.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateObjectUsingCreatorWithParameters (JsonSerializerInternalReader.cs from line 1990) nests foreach, else-if, if, if, if and if down to line 2146, consistent with depth 7."
+        }
+      ]
     },
     {
       "id": "EA-023a6caf0ed21bbc",
@@ -283,9 +463,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs",
       "message": "Function `GetChildPrivateProperties` reaches nesting depth 6 (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1030
+      "line": 1030,
+      "verdict": "true_positive",
+      "reason": "GetChildPrivateProperties reaches `if (!IsPublic(childProperty))` at line 1051 (indent 32 vs body 12), nested inside loops and ifs; depth 6 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "GetChildPrivateProperties (ReflectionUtils.cs from line 1023) nests while, foreach, if, if and else down to line 1051, consistent with depth 6."
+        }
+      ]
     },
     {
       "id": "EA-4c304f0074723450",

@@ -28,9 +28,19 @@
       "language": "cpp",
       "path": "helpers/memenv/memenv.cc",
       "message": "Class `InMemoryEnv` exceeds a CK/WMC budget (WMC=39, CBO=15, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 221
+      "line": 221,
+      "verdict": "true_positive",
+      "reason": "InMemoryEnv implements the whole Env interface (about 59 member functions in a 390-line file) and touches 15 collaborator types, so the WMC=39/CBO=15 claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "InMemoryEnv (memenv.cc lines 221-384) implements about 20 Env overrides with 21 return statements and CBO=15 over the base-env and file-map collaborators, consistent with the reported metrics."
+        }
+      ]
     },
     {
       "id": "EA-becb0dc85d7d1283",
@@ -58,9 +68,19 @@
       "language": "cpp",
       "path": "util/env_posix.cc",
       "message": "Class `PosixWritableFile` exceeds a CK/WMC budget (WMC=45, CBO=2, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 249
+      "line": 249,
+      "verdict": "true_positive",
+      "reason": "PosixWritableFile (line 249) bundles buffering, flush, sync, manifest-sync and close logic with many branches; WMC=45 is plausible and the claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "PosixWritableFile (env_posix.cc lines 249-437) has about 25 branch points and a dozen-plus methods, consistent with WMC=45."
+        }
+      ]
     },
     {
       "id": "EA-241ddcc801968198",
@@ -68,9 +88,19 @@
       "language": "cpp",
       "path": "util/env_posix.cc",
       "message": "Class `PosixEnv` exceeds a CK/WMC budget (WMC=66, CBO=12, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 490
+      "line": 490,
+      "verdict": "true_positive",
+      "reason": "PosixEnv (line 490) is an Env implementation with file, lock, thread-scheduling and time operations; WMC=66/CBO=12 is a correct reading of a broad class.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "PosixEnv (env_posix.cc lines 490-750) has 33 return statements and dozens of Env overrides, consistent with WMC=66 and CBO=12."
+        }
+      ]
     },
     {
       "id": "EA-1fb370398087e3c0",
@@ -78,9 +108,19 @@
       "language": "cpp",
       "path": "util/env_windows.cc",
       "message": "Class `WindowsEnv` exceeds a CK/WMC budget (WMC=75, CBO=13, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 363
+      "line": 363,
+      "verdict": "true_positive",
+      "reason": "WindowsEnv (line 363) mixes file, mmap, lock, scheduling and logging operations; WMC=75/CBO=13 is accurate for this class.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "WindowsEnv (env_windows.cc lines 363-681) has 37 return statements and many Env overrides, consistent with WMC=75."
+        }
+      ]
     },
     {
       "id": "EA-2a78a5e5ac2358e2",
@@ -88,9 +128,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Class `binary_reader` exceeds a CK/WMC budget (WMC=1039, CBO=2, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 69
+      "line": 69,
+      "verdict": "true_positive",
+      "reason": "binary_reader in binary_reader.hpp spans roughly 3000 lines of CBOR, MsgPack, UBJSON and BJData parsing with deep branching, so WMC=1039 is credible and the class is plainly oversized.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "binary_reader (binary_reader.hpp lines 69-2069) is about 2000 lines with a large switch over type markers, so the reported WMC=1039 is clearly well above any reasonable budget."
+        }
+      ]
     },
     {
       "id": "EA-48b3145c244b7fe7",
@@ -98,9 +148,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/json_sax.hpp",
       "message": "Class `json_sax_dom_parser` exceeds a CK/WMC budget (WMC=53, CBO=1, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 167
+      "line": 167,
+      "verdict": "true_positive",
+      "reason": "json_sax_dom_parser has about 15 handler methods with branching on exceptions and lexer position, so WMC=53 exceeds the budget and the claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "json_sax_dom_parser (json_sax.hpp lines 167-470) has about 40 branch tokens and 17 returns across its SAX callbacks, consistent with WMC=53."
+        }
+      ]
     },
     {
       "id": "EA-cddea6bb05eef433",
@@ -108,9 +168,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/json_sax.hpp",
       "message": "Class `json_sax_dom_callback_parser` exceeds a CK/WMC budget (WMC=82, CBO=1, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 473
+      "line": 473,
+      "verdict": "true_positive",
+      "reason": "json_sax_dom_callback_parser has the same handlers plus callback and keep-stack bookkeeping, giving WMC=82; the claim is correct.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "json_sax_dom_callback_parser (json_sax.hpp lines 473-907) spans 435 lines with about 69 branch tokens, consistent with WMC=82."
+        }
+      ]
     },
     {
       "id": "EA-7bf6ea3d7a26b962",
@@ -118,9 +188,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/parser.hpp",
       "message": "Class `parser` exceeds a CK/WMC budget (WMC=110, CBO=4, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 60
+      "line": 60,
+      "verdict": "true_positive",
+      "reason": "parser (recursive descent, line 60) has a long sax_parse_internal and error handling logic; WMC=110 is plausible and the claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "parser (parser.hpp lines 60-469) spans 410 lines with about 68 branch tokens and 35 returns, consistent with WMC=110."
+        }
+      ]
     },
     {
       "id": "EA-9fab52a4441776f7",
@@ -128,9 +208,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/iterators/iter_impl.hpp",
       "message": "Class `iter_impl` exceeds a CK/WMC budget (WMC=179, CBO=0, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 47
+      "line": 47,
+      "verdict": "true_positive",
+      "reason": "iter_impl defines every iterator operator with a type switch on m_object->m_data.m_type in each, so WMC=179 is plausible.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "iter_impl (iter_impl.hpp lines 47-757) spans 711 lines with about 144 branch tokens and 41 returns, consistent with WMC=179."
+        }
+      ]
     },
     {
       "id": "EA-24acc69026c41a61",
@@ -138,9 +228,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/json_pointer.hpp",
       "message": "Class `json_pointer` exceeds a CK/WMC budget (WMC=86, CBO=0, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 35
+      "line": 35,
+      "verdict": "true_positive",
+      "reason": "json_pointer contains many path-manipulation, parsing and escape helpers with branching; WMC=86 is accurate for the class.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "json_pointer (json_pointer.hpp lines 35-926) spans about 890 lines with 50 returns and extensive conditional logic, consistent with WMC=86."
+        }
+      ]
     },
     {
       "id": "EA-944f6b235659e691",
@@ -148,9 +248,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Class `binary_writer` exceeds a CK/WMC budget (WMC=553, CBO=0, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 46
+      "line": 46,
+      "verdict": "true_positive",
+      "reason": "binary_writer implements CBOR, MsgPack, UBJSON and BJData writers with large type switches; WMC=553 is credible.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "binary_writer (binary_writer.hpp lines 46-1851) spans about 1800 lines with about 320 branch tokens, consistent with the reported very large WMC=553."
+        }
+      ]
     },
     {
       "id": "EA-447a69470c5f7a4b",
@@ -178,9 +288,19 @@
       "language": "cpp",
       "path": "include/yaml-cpp/node/detail/node.h",
       "message": "Class `node` exceeds a CK/WMC budget (WMC=47, CBO=2, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 20
+      "line": 20,
+      "verdict": "true_positive",
+      "reason": "yaml-cpp node (node.h) has about 47 small methods and the dependency/set machinery; claim of WMC=47 holds even though most methods are trivial.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "yaml-cpp node (node.h lines 20-173) defines about 30 public member functions plus 21 returns, consistent with WMC=47 and passing a plausible budget."
+        }
+      ]
     },
     {
       "id": "EA-7fe2721b44490f37",
@@ -2667,9 +2787,19 @@
       "language": "python",
       "path": "src/black/linegen.py",
       "message": "Class `LineGenerator` exceeds a CK/WMC budget (WMC=162, CBO=6, DIT=2, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 111
+      "line": 111,
+      "verdict": "true_positive",
+      "reason": "LineGenerator (line 111 to ~934) has about 30 visit_* methods plus a huge __post_init__ (line 715 on), so WMC=162 is plausible and the class does carry many responsibilities.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LineGenerator in linegen.py spans lines 111-753 with about 122 branch tokens and many methods, consistent with the reported WMC=162."
+        }
+      ]
     },
     {
       "id": "EA-eca3211a10c79ad4",
@@ -3592,9 +3722,19 @@
       "language": "typescript",
       "path": "src/context.ts",
       "message": "Class `Context` exceeds a CK/WMC budget (WMC=70, CBO=1, DIT=0, NOC=0).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 293
+      "line": 293,
+      "verdict": "true_positive",
+      "reason": "Context in src/context.ts is a large class with many accessors and response helpers; WMC=70 is a plausible sum over its methods and the claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "Context in src/context.ts has roughly 40 members (getters, setters, arrow-function methods, private fields) plus branches, so the reported WMC=70 is plausible and the class is large."
+        }
+      ]
     },
     {
       "id": "EA-578a78b3222c9bc8",

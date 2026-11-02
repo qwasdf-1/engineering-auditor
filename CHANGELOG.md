@@ -12,6 +12,18 @@
   among them the 10 dispatch functions of the new labels and 14 labelled
   true positives under the old count (gin `MethodColor`, jsoup
   `parsePseudoSelector`); every other labelled finding stays.
+- `too_many_parameters` skips a C or C++ function the file uses as a value
+  (a callback argument, a dispatch-table entry, `return name;`, `&name`):
+  its parameter list is the function-pointer type's. On the corpus this
+  removes the five labelled false positives (jq's Oniguruma callback,
+  libuv's WinEvent hook, lz4's `compressFunc_t` table) and two unlabelled
+  table entries; the C APIs the projects declare themselves stay reported.
+- `go_errcheck` skips a discarded error from a `Write` on `os.Stderr` or
+  `os.Stdout`: nothing useful can follow a failed write to the process's own
+  standard streams (chi's recoverer fallback). A variable holding a stream
+  stays reported.
+- A file whose stem is exactly `bench` is benchmark code (lz4's
+  `programs/bench.c`).
 - `hardcoded_credential` is demoted to the `full` profile. The 24 new
   corpus applications measured it at 21 true
   positives to 142 false positives: placeholder and documentation

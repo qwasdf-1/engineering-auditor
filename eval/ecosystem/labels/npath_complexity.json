@@ -5939,9 +5939,19 @@
       "language": "typescript",
       "path": "src/middleware/bearer-auth/index.ts",
       "message": "Function `bearerAuth` has NPath complexity 500.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 156
+      "line": 156,
+      "verdict": "false_positive",
+      "reason": "Standard NPath for the inner bearerAuth handler is 65. The outer if/else is 1 + (prefix-branch 4 x token-check 16); the verify chain contributes 7 and `!equal` doubles it. Opinion A's figure is correct. Even counting every `||` in the throwHTTPException arguments only reaches about 330-460, so no consistent rule gives the round 500 reported, which looks like a saturated or capped value rather than a real count.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "bearerAuth in hono bearer-auth/index.ts has about 65 paths by the standard NPath rule (conditions and branches, multiplied across sequential blocks), not the reported 500."
+        }
+      ]
     },
     {
       "id": "EA-92776a65c35c89ae",

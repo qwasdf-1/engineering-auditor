@@ -2073,9 +2073,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_gcs.py",
       "message": "Value assigned to `cfg` at line 92 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 92
+      "line": 92,
+      "verdict": "false_positive",
+      "reason": "The overwritten `cfg` assignment at auto_state_gcs.py line 92 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The cfg = None assignment at rqlite system_test/e2e/auto_state_gcs.py:92 is in an end-to-end test method, and unused_assignment is not a test-quality detector, so test code is out of scope."
+        }
+      ]
     },
     {
       "id": "EA-cc865b667496c75e",
@@ -2083,9 +2093,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `node` at line 21 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 21
+      "line": 21,
+      "verdict": "false_positive",
+      "reason": "The overwritten `node` assignment at auto_state_s3.py line 21 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The node = None at system_test/e2e/auto_state_s3.py:21 is inside an end-to-end test method, outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-02365fba018a2095",
@@ -2093,9 +2113,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `path` at line 22 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 22
+      "line": 22,
+      "verdict": "false_positive",
+      "reason": "The overwritten `path` assignment at auto_state_s3.py line 22 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The path = None at auto_state_s3.py:22 is a placeholder in an end-to-end test method, outside the production scope."
+        }
+      ]
     },
     {
       "id": "EA-7b48d013ff85f006",
@@ -2103,9 +2133,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `node` at line 83 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 83
+      "line": 83,
+      "verdict": "false_positive",
+      "reason": "The overwritten `node` at auto_state_s3.py line 83 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The node = None at auto_state_s3.py:83 is inside the Minio end-to-end test method, which is test code outside this detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-db3d09954714baad",
@@ -2113,9 +2153,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `path` at line 84 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 84
+      "line": 84,
+      "verdict": "false_positive",
+      "reason": "The overwritten `path` at auto_state_s3.py line 84 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The path = None at auto_state_s3.py:84 is a placeholder in the Minio end-to-end test method, outside the production scope."
+        }
+      ]
     },
     {
       "id": "EA-622ac258b582b47b",
@@ -2123,9 +2173,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `path` at line 163 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 163
+      "line": 163,
+      "verdict": "false_positive",
+      "reason": "The overwritten `path` at auto_state_s3.py line 163 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The path = None at auto_state_s3.py:163 is an initial placeholder in an end-to-end S3 test, which is test code outside the production scope."
+        }
+      ]
     },
     {
       "id": "EA-b992e8976de28f8a",
@@ -2133,9 +2193,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `node` at line 203 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 203
+      "line": 203,
+      "verdict": "false_positive",
+      "reason": "The overwritten `node` at auto_state_s3.py line 203 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The node = None at auto_state_s3.py:203 is in a compressed-restore end-to-end test method, outside the production scope."
+        }
+      ]
     },
     {
       "id": "EA-0aa396fb25ba24c9",
@@ -2143,9 +2213,19 @@
       "language": "python",
       "path": "system_test/e2e/auto_state_s3.py",
       "message": "Value assigned to `node` at line 311 is overwritten before it is read.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 311
+      "line": 311,
+      "verdict": "false_positive",
+      "reason": "The overwritten `node` at auto_state_s3.py line 311 is in rqlite's system_test/e2e test code, out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The node = None at auto_state_s3.py:311 is in an end-to-end backup test method, which is test code outside this detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-c0aa1192ddb8d3e5",

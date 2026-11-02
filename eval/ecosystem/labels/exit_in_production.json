@@ -68,9 +68,19 @@
       "language": "go",
       "path": "cmd/authelia-scripts/cmd/externalsuites.go",
       "message": "Exit call at line 164",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 164
+      "line": 164,
+      "verdict": "false_positive",
+      "reason": "The os.Exit(130) at line 164 is in cmd/authelia-scripts, the developer/CI scripts CLI, which is build tooling and not production code; exiting with the SIGINT status is also a normal CLI end.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The os.Exit at externalsuites.go:164 is in cmd/authelia-scripts, the project's developer test-runner tooling, which is outside the production-code scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-f47bd124c61394a3",

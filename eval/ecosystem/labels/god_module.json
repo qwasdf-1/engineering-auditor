@@ -8,8 +8,18 @@
       "language": "c",
       "path": "src/builtin.c",
       "message": "File has 98 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "jq builtin.c defines about 98 functions (f_* C builtins, bytecode table, builtin binding) in 2071 lines; the count is credible and the file carries many unrelated builtins.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq src/builtin.c (2072 lines) has about 100-110 top-level function definitions, consistent with the reported 98 and well above 20."
+        }
+      ]
     },
     {
       "id": "EA-9544ab59f954d893",
@@ -17,8 +27,18 @@
       "language": "c",
       "path": "src/compile.c",
       "message": "File has 83 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "jq compile.c has about 83 definitions across 1379 lines covering block construction, linking, constant folding and bytecode generation, so the count holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq src/compile.c has about 84 top-level function definitions by my count, consistent with the reported 83."
+        }
+      ]
     },
     {
       "id": "EA-a152923e11eb1261",
@@ -26,8 +46,18 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "File has 51 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "jq execute.c has about 51 definitions in 1340 lines mixing the stack, frame, path-tracking, and the interpreter loop; the count claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq src/execute.c has about 51 top-level function definitions, exactly matching the reported count and above the threshold."
+        }
+      ]
     },
     {
       "id": "EA-f0a8f48860a46fbe",
@@ -35,8 +65,18 @@
       "language": "c",
       "path": "src/jv.c",
       "message": "File has 127 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "jq jv.c has about 127 definitions in 2070 lines covering numbers, strings, arrays, objects and refcounting for several unrelated value kinds; clearly over threshold.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq src/jv.c (2071 lines) has about 130 top-level function definitions, consistent with the reported 127."
+        }
+      ]
     },
     {
       "id": "EA-b7dae93c33d71b3a",
@@ -44,8 +84,18 @@
       "language": "c",
       "path": "src/jv_parse.c",
       "message": "File has 29 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "I count exactly 29 top-level function definitions in jv_parse.c (parser_init at 69 through jv_parse_custom_flags at 911), which matches the claim and exceeds 20. Opinion A holds. B's cohesion argument is a design judgment, not an error in the count, and the standard counts intentional code when the claim holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq src/jv_parse.c has about 28-29 top-level function definitions, consistent with the reported 29 and above 20."
+        }
+      ]
     },
     {
       "id": "EA-9beafa80bf4edbb6",
@@ -53,8 +103,18 @@
       "language": "c",
       "path": "src/util.c",
       "message": "File has 23 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "jq util.c mixes path expansion, fopen wrappers, memmem, strptime fallback and the whole jq_util_input_* streaming-input API in 1256 lines with about 23 definitions, so it bundles several concerns.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq src/util.c has about 23-24 top-level function definitions in 1257 lines, consistent with the reported 23 and above 20."
+        }
+      ]
     },
     {
       "id": "EA-35198785613e2043",
@@ -86,8 +146,18 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "File has 69 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "libuv unix/linux.c has about 69 definitions across 2761 lines covering epoll, inotify, cpu/memory info, interface addresses and io_uring support; many unrelated concerns.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/unix/linux.c (2762 lines) has about 70 top-level function definitions, consistent with the reported 69."
+        }
+      ]
     },
     {
       "id": "EA-ad46c655b3a26a0b",
@@ -95,8 +165,18 @@
       "language": "c",
       "path": "src/unix/os390.c",
       "message": "File has 25 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "os390.c has about 25 definitions across 1070 lines mixing memory, uptime, cpu info, network interfaces, fs events and polling, so it covers several unrelated platform concerns.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/unix/os390.c has about 25-27 top-level function definitions, consistent with the reported 25."
+        }
+      ]
     },
     {
       "id": "EA-eb6683634f032e86",
@@ -128,8 +208,18 @@
       "language": "c",
       "path": "src/unix/signal.c",
       "message": "File has 22 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "Leaving out the forward prototypes (lines 43-50) and the RB_GENERATE_STATIC macro, src/unix/signal.c has about 24 top-level function definitions, from uv__signal_global_init through uv__signal_stop. That is a little above the reported 22, so the '> 20' claim holds even more strongly. Opinion B holds; A's single-concern argument does not change the count.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/unix/signal.c has about 22-24 top-level function definitions, consistent with the reported 22 and above 20."
+        }
+      ]
     },
     {
       "id": "EA-583e0cce2e827235",
@@ -137,8 +227,18 @@
       "language": "c",
       "path": "src/unix/stream.c",
       "message": "File has 41 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "unix/stream.c has about 41 definitions over 1567 lines for reading, writing, connecting, fd passing and shutdown, so the count holds and the file is large.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/unix/stream.c has 41 top-level function definitions by my count, matching the reported 41."
+        }
+      ]
     },
     {
       "id": "EA-abd1793d55db41dd",
@@ -170,8 +270,18 @@
       "language": "c",
       "path": "src/unix/tcp.c",
       "message": "File has 21 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "I count exactly 21 top-level function definitions in src/unix/tcp.c (maybe_bind_socket at 38 through uv_socketpair at 630), which matches the claim and exceeds 20. Opinion B holds. A's argument that the file is cohesive and only just over is a design judgment, not an error in the count or the scope.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/unix/tcp.c has 21 top-level function definitions, matching the reported 21, just above the threshold."
+        }
+      ]
     },
     {
       "id": "EA-aa9c7103a47ee555",
@@ -203,8 +313,18 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "File has 38 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "unix/udp.c has about 38 definitions over 1434 lines handling send queues, multicast, membership, recv and socket options; the count claim holds and the file is large.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/unix/udp.c has about 38-39 top-level function definitions, consistent with the reported 38."
+        }
+      ]
     },
     {
       "id": "EA-6b10a5e041b71845",
@@ -212,8 +332,18 @@
       "language": "c",
       "path": "src/uv-common.c",
       "message": "File has 60 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "uv-common.c is a grab bag of about 60 definitions in 1051 lines (address helpers, handle walk, loop config, allocators, thread options), a genuinely multi-concern file.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/uv-common.c (1052 lines) has about 60-68 top-level function definitions, above the threshold and consistent with the reported 60."
+        }
+      ]
     },
     {
       "id": "EA-399e66dec344c3b2",
@@ -221,8 +351,18 @@
       "language": "c",
       "path": "src/win/core.c",
       "message": "File has 23 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "I count exactly 23 top-level function definitions in src/win/core.c (uv__crt_dbg_report_handler at 50 through uv__getsockpeername at 662), matching the claim. The file also mixes CRT debug hooks, socket-option helpers, uv_fileno and uv_cpumask_size with the loop code, so B's 'one concern' is not accurate either. Opinion A holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/core.c has 23 top-level function definitions by my count, matching the reported 23."
+        }
+      ]
     },
     {
       "id": "EA-0b1667011076a12a",
@@ -230,8 +370,18 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "File has 102 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/fs.c has about 102 definitions over 3774 lines for every fs operation, the largest file in the group, so the count claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/fs.c (3775 lines) has about 102-104 top-level function definitions, matching the reported 102."
+        }
+      ]
     },
     {
       "id": "EA-26f2a97c8b137e7b",
@@ -239,8 +389,18 @@
       "language": "c",
       "path": "src/win/pipe.c",
       "message": "File has 66 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/pipe.c has about 66 definitions over 2725 lines covering named pipe server, client, read/write and ipc handling; the count holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/pipe.c has 66 top-level function definitions by my count, matching the reported 66."
+        }
+      ]
     },
     {
       "id": "EA-ecad35afecf9fee6",
@@ -248,8 +408,18 @@
       "language": "c",
       "path": "src/win/tcp.c",
       "message": "File has 38 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/tcp.c has about 38 definitions over 1674 lines for connect/accept/read/write and socket options; the count is credible and the file is large.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/tcp.c has 38 top-level function definitions by my count, matching the reported 38."
+        }
+      ]
     },
     {
       "id": "EA-8dcf0f48a2bb258b",
@@ -257,8 +427,18 @@
       "language": "c",
       "path": "src/win/thread.c",
       "message": "File has 45 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/thread.c has about 45 definitions (threads, mutexes, condvars, rwlocks, semaphores, TLS) in 568 lines, more than twice the threshold covering several primitives.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/thread.c has 45 top-level function definitions by my count, matching the reported 45."
+        }
+      ]
     },
     {
       "id": "EA-c48ab2c2474bfaee",
@@ -266,8 +446,18 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "File has 42 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/tty.c has about 42 definitions over 2460 lines including an ANSI escape state machine and console I/O; the count claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/tty.c has about 42-43 top-level function definitions, consistent with the reported 42."
+        }
+      ]
     },
     {
       "id": "EA-44f3ba51470681f6",
@@ -275,8 +465,18 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "File has 30 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/udp.c has about 30 definitions over 1162 lines of UDP handle code; the count exceeds 20 and the file is sizeable.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/udp.c has 30 top-level function definitions by my count, matching the reported 30."
+        }
+      ]
     },
     {
       "id": "EA-e3c50422fba7965b",
@@ -284,8 +484,18 @@
       "language": "c",
       "path": "src/win/util.c",
       "message": "File has 51 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "win/util.c is a grab bag of about 51 definitions in 1750 lines (hrtime, cpu info, memory, passwd, env vars, uname, interface addresses), clearly multi-concern.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "libuv src/win/util.c has 51 top-level function definitions by my count, matching the reported 51."
+        }
+      ]
     },
     {
       "id": "EA-a5da8b853ec9c006",
@@ -293,8 +503,18 @@
       "language": "c",
       "path": "lib/lz4frame.c",
       "message": "File has 49 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "lz4frame.c has about 49 definitions over 2136 lines covering compression contexts, decompression state machine, header parsing and dictionary handling.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "lz4 lib/lz4frame.c (2137 lines) has about 50-57 top-level function definitions, consistent with the reported 49 and above 20."
+        }
+      ]
     },
     {
       "id": "EA-e8b8d9f256f5dc0a",
@@ -302,8 +522,18 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "File has 64 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "lz4hc.c has about 64 definitions over 2192 lines implementing several match finders and optimal parsing; the count holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "lz4 lib/lz4hc.c (2193 lines) has about 64-67 top-level function definitions, consistent with the reported 64."
+        }
+      ]
     },
     {
       "id": "EA-e3a2641a3a6f237b",
@@ -311,8 +541,18 @@
       "language": "c",
       "path": "lib/xxhash.c",
       "message": "File has 46 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "lib/xxhash.c has about 46 definitions in 1030 lines for several hash variants; this is a real library file (not a test or generated), and the count claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "lz4 lib/xxhash.c has about 46-50 top-level function definitions in production library code, consistent with the reported 46."
+        }
+      ]
     },
     {
       "id": "EA-b0f5f10deecc0817",
@@ -320,8 +560,18 @@
       "language": "c",
       "path": "programs/bench.c",
       "message": "File has 28 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "false_positive",
+      "reason": "lz4/programs/bench.c is the benchmark harness (lz4 -b) with about 28 definitions; benchmark code is outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "lz4 programs/bench.c is the benchmarking tool's source, which is benchmark code and outside the production-code scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-feb553d166c8c67c",
@@ -329,8 +579,18 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "File has 24 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "contrib/minizip/unzip.c has about 24 definitions over 1984 lines handling zip central-directory parsing, file opening, reading and CRC; the count claim holds and the file is large.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "zlib contrib/minizip/unzip.c (1985 lines) has about 24-42 top-level function definitions, above the threshold of 20 with the reported 24 consistent."
+        }
+      ]
     },
     {
       "id": "EA-2926a85170fc84f4",
@@ -338,8 +598,18 @@
       "language": "cpp",
       "path": "include/fmt/base.h",
       "message": "File has 83 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "fmt/base.h is a 2994-line header with 83 function-like definitions covering string views, argument storage, formatting contexts and the print API, so the count is plausible and the file is large and multi-concern.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "fmt include/fmt/base.h is about 2995 lines with roughly 85 namespace-level function definitions, well above the reported 83 and the threshold of 20."
+        }
+      ]
     },
     {
       "id": "EA-2d96a9b3afe5cdde",
@@ -347,8 +617,18 @@
       "language": "cpp",
       "path": "include/fmt/compile.h",
       "message": "File has 23 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "fmt/compile.h has about 23-24 free function-template definitions (operator\"\"_cf, first, get, three get_arg_index_by_name overloads, make_text, get_arg_checked, make_concat, parse_text, parse_tail, parse_specs, parse_arg_id, compile_format_string, compile, and the format, format_to, format_to_n, formatted_size and print overloads), consistent with 23 > 20. Opinion B holds. A's single-concern argument does not refute the count.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "fmt include/fmt/compile.h (586 lines) has about 23-24 column-zero function definitions, just above the threshold of 20 as reported."
+        }
+      ]
     },
     {
       "id": "EA-fba8b2cf00b438d2",
@@ -356,8 +636,18 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "File has 43 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "format-inl.h holds 43 definitions over 1953 lines mixing float formatting, locale handling, error reporting and UTF-8 helpers, so the count claim holds and the file is multi-concern.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "fmt format-inl.h (1954 lines) defines roughly 45-50 top-level functions, consistent with the reported 43 and above the threshold."
+        }
+      ]
     },
     {
       "id": "EA-8a2a12abe554c046",
@@ -365,8 +655,18 @@
       "language": "cpp",
       "path": "db/c.cc",
       "message": "File has 69 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "db/c.cc has about 70 namespace-scope function definitions (leveldb_open/put/get, iterator, writebatch, options, comparator, filterpolicy, cache, env and so on), consistent with 69 and far above 20. Opinion A holds. The thin wrappers cover a dozen distinct object types rather than one overload set, so B's 'intended design' argument is a judgment that does not refute the count.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "leveldb db/c.cc is the C API wrapper with about 70 top-level functions, consistent with the reported 69."
+        }
+      ]
     },
     {
       "id": "EA-6a620d6f3ea796f4",
@@ -374,8 +674,18 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/from_json.hpp",
       "message": "File has 29 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "final",
+      "sampled_from": "l10-a",
+      "verdict": "false_positive",
+      "reason": "from_json.hpp's 29 definitions are overloads of from_json/helper functions for each C++ type, forming one ADL customization point in a 577-line file; a single concern.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "nlohmann-json from_json.hpp (578 lines) has about 29-39 top-level function-like definitions, above the threshold of 20 as reported."
+        }
+      ]
     },
     {
       "id": "EA-292fc5fbd3907f05",
@@ -383,8 +693,18 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_json.hpp",
       "message": "File has 23 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "final",
+      "sampled_from": "l10-a",
+      "verdict": "false_positive",
+      "reason": "to_json.hpp's 23 definitions are per-type to_json overloads in a 479-line file, a single customization-point concern barely over the threshold.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "nlohmann-json to_json.hpp (480 lines) has about 23-24 top-level function-like definitions, consistent with the reported 23."
+        }
+      ]
     },
     {
       "id": "EA-341dbc8eb816b215",
@@ -2745,8 +3065,18 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/classic/schemas.ts",
       "message": "File has 97 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "zod v4 classic/schemas.ts holds about 97 definitions in 2937 lines across every schema type plus refinements, preprocess and coercion helpers; the count claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "zod v4 classic/schemas.ts (2938 lines) has about 92-97 top-level function definitions, consistent with the reported 97."
+        }
+      ]
     },
     {
       "id": "EA-5ded965c337dd4a1",
@@ -2802,8 +3132,18 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "File has 43 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "zod v4 core/schemas.ts is 5192 lines with about 43 function-like definitions plus dozens of schema constructors, so the claim holds and the file is huge.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "zod v4 core/schemas.ts (5193 lines) has about 40-43 top-level function definitions, consistent with the reported 43."
+        }
+      ]
     },
     {
       "id": "EA-227c1e23e0992f7d",
@@ -2835,8 +3175,18 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/mini/schemas.ts",
       "message": "File has 103 top-level function-like definitions (> 20).",
-      "status": "pending",
-      "sampled_from": "l10-a"
+      "status": "corroborated",
+      "sampled_from": "l10-a",
+      "verdict": "true_positive",
+      "reason": "zod v4 mini/schemas.ts holds about 103 definitions in 2051 lines, mixing schema constructors with refinements, checks and utilities.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "zod v4 mini/schemas.ts (2052 lines) has about 103 top-level function definitions, matching the reported 103."
+        }
+      ]
     },
     {
       "id": "EA-4d72a610ee59b3af",

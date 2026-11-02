@@ -408,9 +408,19 @@
       "language": "python",
       "path": "system_test/e2e/helpers.py",
       "message": "File or resource opened at line 663 may not be closed.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 663
+      "line": 663,
+      "verdict": "false_positive",
+      "reason": "The open() at rqlite system_test/e2e/helpers.py line 663 is in end-to-end test helper code, outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The open() at rqlite system_test/e2e/helpers.py:663 is in end-to-end system test helper code, which is outside this detector's production scope."
+        }
+      ]
     },
     {
       "id": "EA-b3e1a8d953f6d159",

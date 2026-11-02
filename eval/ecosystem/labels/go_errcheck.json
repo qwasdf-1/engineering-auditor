@@ -516,9 +516,19 @@
       "language": "go",
       "path": "middleware/recoverer.go",
       "message": "Ignored error return from call at line 69",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 69
+      "line": 69,
+      "verdict": "false_positive",
+      "reason": "os.Stderr.Write(debugStack) at line 69 is the best-effort fallback inside a panic recoverer that is already printing a stack trace; there is no meaningful way to handle a failed stderr write there.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "recoverer.go:69 calls os.Stderr.Write(debugStack) as a statement and discards its (int, error) return, so the claim that the error is ignored is accurate."
+        }
+      ]
     },
     {
       "id": "EA-4b93dfd1b91f8592",

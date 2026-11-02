@@ -448,9 +448,19 @@
       "language": "python",
       "path": "testing-scripts/face_dataset.py",
       "message": "Function `l2` has terse identifier density 0.60 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 207
+      "line": 207,
+      "verdict": "false_positive",
+      "reason": "`l2` is a two-line L2-normalise helper in frigate's testing-scripts/face_dataset.py, a test/dev script outside production scope, and `l2`/`v` are standard math names.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "l2 at testing-scripts/face_dataset.py:207 is a two-line helper in a testing script, which is tooling code outside this detector's scope."
+        }
+      ]
     },
     {
       "id": "EA-5909db1f64ede4c2",
@@ -603,9 +613,19 @@
       "language": "python",
       "path": "system_test/e2e/helpers.py",
       "message": "Function `_execute_queued_url` has terse identifier density 0.57 (> 0.50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 692
+      "line": 692,
+      "verdict": "false_positive",
+      "reason": "`_execute_queued_url` is in rqlite's system_test/e2e/helpers.py, end-to-end test support code outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "_execute_queued_url in rqlite system_test/e2e/helpers.py is end-to-end test helper code, outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-21d85b8c5dfdb580",

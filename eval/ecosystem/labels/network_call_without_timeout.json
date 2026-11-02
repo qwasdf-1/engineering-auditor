@@ -8,9 +8,19 @@
       "language": "go",
       "path": "extra/push-examples/go/index.go",
       "message": "`net/http.Get` at line 14 has no timeout; a stalled peer blocks it indefinitely",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a1-a",
-      "line": 14
+      "line": 14,
+      "verdict": "false_positive",
+      "reason": "extra/push-examples/go/index.go is an example snippet for users of uptime-kuma push monitors, so it is outside production scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "extra/push-examples/go/index.go is a sample push-monitor example program, which is example code outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-9ccf27c01c2c0dc3",
@@ -98,9 +108,19 @@
       "language": "python",
       "path": "extra/push-examples/python/index.py",
       "message": "`urllib.request.urlopen` at line 8 has no timeout; a stalled peer blocks it indefinitely",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a1-a",
-      "line": 8
+      "line": 8,
+      "verdict": "false_positive",
+      "reason": "extra/push-examples/python/index.py is a sample push script shipped as documentation, outside production scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "extra/push-examples/python/index.py is an example script for the push API, outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-7c35e73c204700ff",
@@ -228,9 +248,19 @@
       "language": "typescript",
       "path": "packages/hoppscotch-cli/src/utils/request.ts",
       "message": "`axios` at line 114 has no timeout; a stalled peer blocks it indefinitely",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a1-a",
-      "line": 114
+      "line": 114,
+      "verdict": "true_positive",
+      "reason": "The `axios(requestConfig)` call at line 114 in hoppscotch-cli/src/utils/request.ts builds requestConfig without any timeout (grep finds none in the file), so a stalled server hangs the CLI request indefinitely.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "hoppscotch-cli request.ts line 114 calls axios(requestConfig), and nothing in packages/hoppscotch-cli/src sets a timeout, so the claim that the call has no timeout is accurate."
+        }
+      ]
     },
     {
       "id": "EA-66e3a7bbe65e8d47",
@@ -378,9 +408,19 @@
       "language": "typescript",
       "path": "packages/hoppscotch-kernel/src/relay/impl/web/v/1.ts",
       "message": "`axios` at line 209 has no timeout; a stalled peer blocks it indefinitely",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a1-a",
-      "line": 209
+      "line": 209,
+      "verdict": "false_positive",
+      "reason": "The config passed to axios on line 209 sets `timeout: request.meta?.options?.timeout` (line 132) and a cancelToken, so the claim that the call has no timeout is wrong; the timeout is user-configurable.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The config object at kernel relay web v/1.ts line 132 sets timeout from request.meta.options.timeout, so the axios(config) call at line 209 does carry a timeout option."
+        }
+      ]
     },
     {
       "id": "EA-c79bf99a494e9ed4",

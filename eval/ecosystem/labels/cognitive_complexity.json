@@ -7607,9 +7607,19 @@
       "language": "typescript",
       "path": "src/helper/route/index.ts",
       "message": "Function `basePath` has cognitive complexity 16, nesting depth 4.. Breakdown: structural:5 hybrid:2 fundamental:3 nesting_increments:6 recursion:false",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 107
+      "line": 107,
+      "verdict": "true_positive",
+      "reason": "basePath has an if/else, a for loop with a nested if/else, a ternary on line 127 and several || fallbacks; recomputing gives roughly 16, so the cognitive-complexity claim holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "basePath in hono route/index.ts nests a for-loop, an if, an else and a ternary plus two || operators, which sums to roughly 16 cognitive points as reported."
+        }
+      ]
     },
     {
       "id": "EA-3f369bb1592a66a2",
@@ -7617,9 +7627,19 @@
       "language": "typescript",
       "path": "src/jsx/dom/intrinsic-element/components.ts",
       "message": "Function `documentMetadataTag` has cognitive complexity 27, nesting depth 4.. Breakdown: structural:12 hybrid:1 fundamental:4 nesting_increments:10 recursion:false",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 58
+      "line": 58,
+      "verdict": "true_positive",
+      "reason": "documentMetadataTag has labelled LOOP: for-of loops nested over deDupeKeys inside if/continue chains at depth 4; a complexity of 27 is credible for this long function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "documentMetadataTag (components.ts lines 58-256) is a 199-line function with about 52 branch tokens and 9 returns, consistent with the reported cognitive complexity 27."
+        }
+      ]
     },
     {
       "id": "EA-3368c178941cc84d",
@@ -8377,9 +8397,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `inst` has cognitive complexity 16, nesting depth 3.. Breakdown: structural:7 hybrid:0 fundamental:2 nesting_increments:7 recursion:false",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2700
+      "line": 2700,
+      "verdict": "true_positive",
+      "reason": "The arrow callback at line 2700 has nested for-of loops, an if inside an inner loop, a throw guard and a && condition; my count is 16, matching the claim (name `inst` is just the enclosing function).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "The inst callback in zod schemas.ts (lines 2700-2719) nests a for-of, an if, a for-of and an inner if-chain with && and ||, which I count at about 16 as reported."
+        }
+      ]
     },
     {
       "id": "EA-8f6eeda5f97ffaa1",

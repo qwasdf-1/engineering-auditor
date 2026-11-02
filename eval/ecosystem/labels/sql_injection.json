@@ -288,9 +288,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 1816",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 1816
+      "line": 1816,
+      "verdict": "false_positive",
+      "reason": "The MySqlCommand text on line 1816 concatenates only column-name constants (User.COLUMN_NAME_*), a table-name constant and enum integer casts; no user-controlled value reaches the SQL, so there is no injection.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The SQL at wexflow Db.cs:1816 concatenates only constant column and table names and integer enum values, with no external input, so there is no injection risk despite the string construction."
+        }
+      ]
     },
     {
       "id": "EA-b4035435ab2bb621",
@@ -318,9 +328,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 2441",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 2441
+      "line": 2441,
+      "verdict": "true_positive",
+      "reason": "MarkNotificationsAsUnread appends each raw string in notificationIds to an IN (...) list via builder.Append(id) with no escaping or int parsing, so API-supplied ids reach the SQL text.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "MariaDB MarkNotificationsAsRead at net/Wexflow.Core.Db.MariaDB/Db.cs:2441 appends the string[] notificationIds directly into the IN list with no quoting or parsing, so the injection concern is real."
+        }
+      ]
     },
     {
       "id": "EA-7be98b46cc93bcb3",
@@ -408,9 +428,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 1712",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 1712
+      "line": 1712,
+      "verdict": "true_positive",
+      "reason": "UpdateUser concatenates username and email into the UPDATE using only hand-rolled Replace(\"'\", \"''\")/backslash escaping instead of parameters, so user-supplied strings are built into the SQL text.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "MySQL Db.cs:1712 builds an UPDATE from username and email, which are user-supplied, using only Replace-based quote escaping rather than parameters."
+        }
+      ]
     },
     {
       "id": "EA-194fe7533f9d30dd",
@@ -418,9 +448,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 313",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 313
+      "line": 313,
+      "verdict": "true_positive",
+      "reason": "DeleteWorkflows appends each raw string in ids (builder.Append(id), line 309) into the DELETE ... IN (...) clause with no validation, so request-supplied ids are injectable.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SQLServer DeleteWorkflows at Db.cs:313 concatenates the raw string[] ids into the IN clause (the builder appends each id unquoted), so the string construction is a real injection path."
+        }
+      ]
     },
     {
       "id": "EA-ea28995b4f6f0ff4",
@@ -428,9 +468,19 @@
       "language": "csharp",
       "path": "src/net/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 815",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 815
+      "line": 815,
+      "verdict": "true_positive",
+      "reason": "The history search interpolates `keyword` into LIKE '%...%' twice with only a single-quote doubling (lines 824-825) instead of a parameter, so user text is built into the query.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SQLServer history search at Db.cs:815 concatenates the user-supplied keyword into LIKE clauses, protected only by Replace of single quotes rather than parameters."
+        }
+      ]
     },
     {
       "id": "EA-3076d3f91e243386",
@@ -558,9 +608,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MariaDB/Db.cs",
       "message": "SQL query with string construction at line 2441",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 2441
+      "line": 2441,
+      "verdict": "true_positive",
+      "reason": "The netcore MariaDB copy of MarkNotificationsAsUnread has the same raw builder.Append(id) from notificationIds into the IN list, so API-supplied ids are injectable.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "netcore MariaDB MarkNotificationsAsRead at Db.cs:2441 appends the string[] notificationIds unquoted into the IN list, the same injection path as the net/ copy."
+        }
+      ]
     },
     {
       "id": "EA-4db800dfd3e811e2",
@@ -568,9 +628,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.MySQL/Db.cs",
       "message": "SQL query with string construction at line 1815",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 1815
+      "line": 1815,
+      "verdict": "false_positive",
+      "reason": "The query at line 1815 concatenates only User.COLUMN_NAME_* constants, DOCUMENT_NAME and (int)UserProfile enum casts; no external input reaches the SQL, so there is no injection.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The netcore MySQL SELECT at Db.cs:1815-1847 builds the admin-user query only from constant column names and integer enum values, with no external input, so the string construction is not an injection risk."
+        }
+      ]
     },
     {
       "id": "EA-b48cb54580c7cb2f",
@@ -678,9 +748,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 1657",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 1657
+      "line": 1657,
+      "verdict": "true_positive",
+      "reason": "UpdateEntry concatenates entry.JobId directly (line 1664, no Replace) and escapes the other strings only by quote doubling, so a crafted JobId breaks out of the string literal.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SQLServer entry UPDATE at netcore Db.cs:1657-1671 inserts entry.JobId into the SQL text as '\" + (entry.JobId ?? \"\") + \"' with no quote escaping, unlike the neighbouring fields, so it is a real injection path."
+        }
+      ]
     },
     {
       "id": "EA-74ecc9dc6e86ca99",
@@ -708,9 +788,19 @@
       "language": "csharp",
       "path": "src/netcore/Wexflow.Core.Db.SQLServer/Db.cs",
       "message": "SQL query with string construction at line 2509",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a10-a",
-      "line": 2509
+      "line": 2509,
+      "verdict": "true_positive",
+      "reason": "GetNotifications interpolates `keyword` into a LIKE clause with only single-quote doubling and int.Parse for assignedTo, building user text into SQL instead of using parameters.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SQLServer notification search at netcore Db.cs:2509-2539 concatenates the user keyword into a LIKE clause protected only by manual quote doubling, a string-built query with external input."
+        }
+      ]
     },
     {
       "id": "EA-0d83dca440c518b1",

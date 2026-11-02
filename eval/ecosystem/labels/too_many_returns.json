@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/builtin.c",
       "message": "Function `binop_plus` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 82
+      "line": 82,
+      "verdict": "true_positive",
+      "reason": "binop_plus has 7 returns in an if/else-if chain (lines 85-102). Several arms do work before returning (jv_free calls, building r). That makes them ordinary exits, so A holds. 'Flat dispatch' over an if-chain is not one of the rule's exemptions.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "binop_plus in jq builtin.c (lines 82-104) has seven return statements across its if/else-if chain, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-a350e39dba328982",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/builtin.c",
       "message": "Function `my_mktime` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1465
+      "line": 1465,
+      "verdict": "false_positive",
+      "reason": "my_mktime's seven returns are spread over mutually exclusive #ifdef variants (timegm, tm_gmtoff, __tm_gmtoff, _mkgmtime, TZ fallback), so any compiled variant has at most three.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "my_mktime in jq builtin.c (lines 1465-1494) has seven return statements across its preprocessor branches, matching the textual count reported."
+        }
+      ]
     },
     {
       "id": "EA-e50e78607315a578",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/builtin.c",
       "message": "Function `f_strftime` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1750
+      "line": 1750,
+      "verdict": "true_positive",
+      "reason": "f_strftime has 6 returns: four distinct validation errors (lines 1755-1764), a strftime failure return and the final return, scattered through a 45-line function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "f_strftime in jq builtin.c (lines 1750-1795) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-f528c2254e4284fd",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Function `jq_format_error` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1005
+      "line": 1005,
+      "verdict": "true_positive",
+      "reason": "jq_format_error has 7 returns, including three self-recursive calls and nested ifs inside the != INVALID branch (lines 1024-1031), making the exit paths hard to follow.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq_format_error in jq execute.c (lines 1005-1036) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-abe655dca8660475",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "src/jv.c",
       "message": "Function `jv_kind_name` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 102
+      "line": 102,
+      "verdict": "false_positive",
+      "reason": "jv_kind_name is a switch mapping each jv_kind to a name string; 8 of the 9 returns are case arms (lines 104-111) plus the fallback.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jv_kind_name in jv.c (lines 102-115) has nine return statements (eight switch cases plus the trailing return), matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-27383451977242d5",
@@ -58,9 +108,19 @@
       "language": "c",
       "path": "src/jv.c",
       "message": "Function `jvp_number_cmp` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 770
+      "line": 770,
+      "verdict": "true_positive",
+      "reason": "jvp_number_cmp has 6 returns. The USE_DECNUM block is an `#ifdef` with no `#else`, so when it is compiled in, its three returns sit alongside the three in the double-compare ladder. Nothing here is a non-coexisting alternative, and A's count holds. A comparator ladder is not a rule exemption.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jvp_number_cmp in jv.c (lines 770-803) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-7ee3fe1b9a4dfb44",
@@ -68,9 +128,19 @@
       "language": "c",
       "path": "src/jv_parse.c",
       "message": "Function `stream_token` has 25 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 241
+      "line": 241,
+      "verdict": "true_positive",
+      "reason": "stream_token has 25 returns of error strings spread over a 178-line nested state machine (cases '[', '{', ':', ',', ']', '}' each with several), so exits are scattered at many nesting levels.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "stream_token in jv_parse.c (lines 241-419) has 25 return statements, matching the reported count of 25."
+        }
+      ]
     },
     {
       "id": "EA-da81bff0b1389633",
@@ -78,9 +148,19 @@
       "language": "c",
       "path": "src/jv_parse.c",
       "message": "Function `scan` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 644
+      "line": 644,
+      "verdict": "true_positive",
+      "reason": "scan has 6 returns (lines 654, 655, 659, 665, 690, 707) in different branches of the nested newline/state/switch logic over 64 lines.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "scan in jv_parse.c (lines 644-708) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-561b6b5ca9717f20",
@@ -88,9 +168,19 @@
       "language": "c",
       "path": "src/jv_parse.c",
       "message": "Function `jv_parser_next` has 14 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 767
+      "line": 767,
+      "verdict": "true_positive",
+      "reason": "jv_parser_next has 14 returns (jv_invalid, value, make_error) at lines 769-860 in loops and nested ifs over 95 lines, a clear multi-exit function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jv_parser_next in jv_parse.c (lines 767-862) has fourteen return statements, matching the reported 14."
+        }
+      ]
     },
     {
       "id": "EA-74a23b84f5f38039",
@@ -98,9 +188,19 @@
       "language": "c",
       "path": "src/unix/stream.c",
       "message": "Function `uv__stream_try_select` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 274
+      "line": 274,
+      "verdict": "true_positive",
+      "reason": "uv__stream_try_select has 7 plain returns (lines 296, 312, 315, 324, 373, 389, 398) mixed with four goto labels over 125 lines, so there are two competing exit mechanisms.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__stream_try_select in unix/stream.c (lines 274-399) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-95e994eb5e0f6edd",
@@ -108,9 +208,19 @@
       "language": "c",
       "path": "src/unix/tcp.c",
       "message": "Function `uv__tcp_keepalive` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 469
+      "line": 469,
+      "verdict": "true_positive",
+      "reason": "uv__tcp_keepalive has well over 5 returns (UV__ERR(errno) after each setsockopt call at lines 479-572 plus 0/EINVAL), spread through several platform-conditional blocks of a 108-line function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tcp_keepalive in unix/tcp.c has thirteen return statements textually, but on Linux the preprocessor keeps seven (three early plus the TCP_KEEPIDLE, TCP_KEEPINTVL, TCP_KEEPCNT and final returns), matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-e750d80c83a55ba1",
@@ -118,9 +228,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Function `uv_udp_set_source_membership` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 951
+      "line": 951,
+      "verdict": "false_positive",
+      "reason": "The six returns are counted across two preprocessor alternatives that can never coexist. The #if branch (lines 956-988) has five returns (970, 973, 974, 983, 984), and the #else branch has only `return UV_ENOSYS;` (990). No compiled form of uv_udp_set_source_membership has more than five exits, so the '> 5' claim does not hold in any build.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_udp_set_source_membership in unix/udp.c (lines 951-992) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-f15ad2fc483abfa7",
@@ -128,9 +248,19 @@
       "language": "c",
       "path": "src/unix/udp.c",
       "message": "Function `uv__udp_prep_pkt` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1246
+      "line": 1246,
+      "verdict": "true_positive",
+      "reason": "uv__udp_prep_pkt has 6 returns: the NULL guard, four switch arms, and UV_EINVAL. Every arm assigns msg_namelen or msg_name before `return 0`, so these are ordinary exits under the rule. A holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__udp_prep_pkt in unix/udp.c (lines 1246-1271) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-1b1a66386183b539",
@@ -138,9 +268,19 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "Function `fs__stat_path` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1701
+      "line": 1701,
+      "verdict": "true_positive",
+      "reason": "fs__stat_path returns a status enum from six places (lines 1707, 1719, 1721, 1726, 1731, 1735), including inside a nested switch/if, mixing TRY_SLOW and ERROR exits.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "fs__stat_path in win/fs.c (lines 1701-1736) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-751acad04eec44a4",
@@ -148,9 +288,19 @@
       "language": "c",
       "path": "src/win/tcp.c",
       "message": "Function `uv__tcp_listen` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 549
+      "line": 549,
+      "verdict": "true_positive",
+      "reason": "uv__tcp_listen returns at lines 561, 565, 574, 576, 581, 588 and 637 across a 89-line function with nested conditions, matching the count of 7.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tcp_listen in win/tcp.c (lines 549-638) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-9d1538a8a39f9554",
@@ -158,9 +308,19 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "Function `uv__udp_set_membership6` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 604
+      "line": 604,
+      "verdict": "true_positive",
+      "reason": "uv__udp_set_membership6 has 6 returns (614, 622, 628, 644, 652, 655), several nested inside conditional blocks and a switch default, over 49 lines.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__udp_set_membership6 in win/udp.c (lines 604-656) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-b496d171493f3cd8",
@@ -168,9 +328,19 @@
       "language": "c",
       "path": "src/win/udp.c",
       "message": "Function `uv__udp_set_source_membership4` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 659
+      "line": 659,
+      "verdict": "true_positive",
+      "reason": "uv__udp_set_source_membership4 has 6 returns (669, 677, 684, 697, 704, 707) with one nested inside an inner block, over 45 lines.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__udp_set_source_membership4 in win/udp.c (lines 659-708) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-8a14b5e3e313688a",
@@ -178,9 +348,19 @@
       "language": "c",
       "path": "src/win/util.c",
       "message": "Function `uv_os_tmpdir` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1018
+      "line": 1018,
+      "verdict": "true_positive",
+      "reason": "uv_os_tmpdir has 6 returns (lines 1024, 1029, 1034, 1041, 1047, 1060), two of which need uv__free(path) first, so cleanup is easy to miss on the exits.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_os_tmpdir in win/util.c (lines 1018-1061) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-7e17f3c4d89d0b5d",
@@ -188,9 +368,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4MID_compress` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 522
+      "line": 522,
+      "verdict": "true_positive",
+      "reason": "LZ4MID_compress has 6 returns (lines 559, 560, 563, 714, 745, 772) mixed with goto exits (_lz4mid_encode_sequence, _lz4mid_last_literals, _lz4mid_dest_overflow) over a 250-line function, so control flow leaves by two mechanisms.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4MID_compress in lz4hc.c (lines 522-773) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-c25effd3e0b644a4",
@@ -198,9 +388,19 @@
       "language": "c",
       "path": "lib/xxhash.c",
       "message": "Function `XXH64_finalize` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 701
+      "line": 701,
+      "verdict": "true_positive",
+      "reason": "XXH64_finalize has 8 `return XXH64_avalanche(h64)` inside the switch plus the final `return 0`, which makes 9. Each arm runs PROCESS*_64 work before returning, so under the standing rule these are ordinary exits, and B holds. Being a deliberate xxHash unrolling doesn't exempt it: intentional code still counts.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "XXH64_finalize in xxhash.c (lines 701-808) has nine return statements across its switch cases, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-731ad2f5213f968c",
@@ -208,9 +408,19 @@
       "language": "c",
       "path": "programs/util.h",
       "message": "Function `UTIL_prepareFileList` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 360
+      "line": 360,
+      "verdict": "true_positive",
+      "reason": "UTIL_prepareFileList has 6 returns, four of them `{ free(path); FindClose(hFile); return 0; }`-style cleanup-and-return repeated at lines 379-405, in the Windows directory walk.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "UTIL_prepareFileList in lz4 programs/util.h (lines 360-419) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-45d3ae83ec80275f",
@@ -218,9 +428,19 @@
       "language": "c",
       "path": "programs/util.h",
       "message": "Function `UTIL_createFileList` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 500
+      "line": 500,
+      "verdict": "true_positive",
+      "reason": "UTIL_createFileList has 7 returns (lines 510, 518, 527, 532, 535, 545, 551), several repeating `free(buf); return NULL;` cleanup, scattered through nested loops.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "UTIL_createFileList in lz4 programs/util.h (lines 500-552) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-ee8cdd96cee6c23b",
@@ -228,9 +448,19 @@
       "language": "c",
       "path": "contrib/blast/blast.c",
       "message": "Function `decomp` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 281
+      "line": 281,
+      "verdict": "true_positive",
+      "reason": "decomp has 6 returns of distinct codes (-1, -2, -3, 1, 1, 0 at lines 324-378), two of them nested inside the decode loop, so the error/success codes leave from different depths.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "decomp in zlib contrib/blast/blast.c (lines 281-378) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-92b3f29c994b10b9",
@@ -238,9 +468,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Function `unz64local_SearchCentralDir64` has 14 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 385
+      "line": 385,
+      "verdict": "true_positive",
+      "reason": "unz64local_SearchCentralDir64 has 14 returns (twelve are `return CENTRALDIRINVALID` at lines 441-476) after a sequence of seek/read calls, so exit paths are many and repeated.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "unz64local_SearchCentralDir64 in contrib/minizip/unzip.c (lines 385-478) has fourteen return statements, matching the reported 14."
+        }
+      ]
     },
     {
       "id": "EA-ee098133fb474c8d",
@@ -248,9 +488,19 @@
       "language": "c",
       "path": "contrib/puff/puff.c",
       "message": "Function `codes` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 436
+      "line": 436,
+      "verdict": "true_positive",
+      "reason": "puff.c codes() has 7 returns (symbol at 462 and 482, 1 at 467/492, -10, -11, 0) spread through the decode loop's nested branches; the count is correct.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "codes in contrib/puff/puff.c (lines 436-509) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-9a46e3891752241b",
@@ -258,9 +508,19 @@
       "language": "c",
       "path": "contrib/puff/pufftest.c",
       "message": "Function `main` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 91
+      "line": 91,
+      "verdict": "false_positive",
+      "reason": "pufftest.c is the command-line test driver for puff (it reads a file, calls puff() and prints results), so its main with 7 exit codes is test/harness code outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "main in contrib/puff/pufftest.c is the test driver for puff, which is test code outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-1fb0bca7f95b8e00",
@@ -268,9 +528,19 @@
       "language": "c",
       "path": "gzread.c",
       "message": "Function `gz_fetch` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 248
+      "line": 248,
+      "verdict": "true_positive",
+      "reason": "gz_fetch has 7 returns (-1 and 0) from different cases of a switch inside a do-while loop (lines 255-273), so exits are scattered across a state machine.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "gz_fetch in zlib gzread.c (lines 248-277) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-cef7aa4ed27cba21",
@@ -278,9 +548,19 @@
       "language": "c",
       "path": "gzread.c",
       "message": "Function `gzread` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 396
+      "line": 396,
+      "verdict": "true_positive",
+      "reason": "gzread has 7 returns (lines 401-435), five of them `return -1` guard exits at different points, followed by nested error checks before the final length return.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "gzread in zlib gzread.c (lines 396-435) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-6ff06b3dccea3038",
@@ -288,9 +568,19 @@
       "language": "c",
       "path": "gzwrite.c",
       "message": "Function `gz_comp` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 65
+      "line": 65,
+      "verdict": "true_positive",
+      "reason": "gz_comp has 7 returns (lines 72, 85, 90, 98, 120, 137, 147) inside a loop with nested flush/deflate branches over 83 lines.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "gz_comp in zlib gzwrite.c (lines 65-147) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-5ad61de91d219b80",
@@ -298,9 +588,19 @@
       "language": "c",
       "path": "gzwrite.c",
       "message": "Function `gzputc` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 307
+      "line": 307,
+      "verdict": "true_positive",
+      "reason": "gzputc has 6 returns (lines 315, 321, 326, 338, 345, 346) mixing -1 guard exits with two success returns of c & 0xff at different nesting.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "gzputc in zlib gzwrite.c (lines 307-347) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-9e6a46c53719f3b7",
@@ -308,9 +608,19 @@
       "language": "cpp",
       "path": "include/fmt/compile.h",
       "message": "Function `compile_format_string` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 375
+      "line": 375,
+      "verdict": "false_positive",
+      "reason": "compile_format_string is a constexpr function that uses returns in different `if constexpr` branches to produce different result types (parse_tail, parse_replacement_field_then_tail, unknown_format), so multiple returns are how compile-time dispatch is expressed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "compile_format_string in fmt compile.h (lines 375-423) contains only six return statements (at 382, 388, 402, 412, 416, 419), not the nine reported."
+        }
+      ]
     },
     {
       "id": "EA-0811128e1f7e11a4",
@@ -318,9 +628,19 @@
       "language": "cpp",
       "path": "include/fmt/format-inl.h",
       "message": "Function `is_printable` has 11 return statements (> 5).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1799
+      "line": 1799,
+      "verdict": "false_positive",
+      "reason": "is_printable(uint32_t) is a generated Unicode range table whose 11 returns are flat `if (range) return false;` lines (1938-1945) after two table lookups; there is no logic to untangle.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "The cp overload of is_printable in format-inl.h (lines 1799-1946) has eleven return statements, including the early-return range checks, matching the claim."
+        }
+      ]
     },
     {
       "id": "EA-d882a2283ff7043e",
@@ -328,9 +648,19 @@
       "language": "cpp",
       "path": "db/db_impl.cc",
       "message": "Function `Recover` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 292
+      "line": 292,
+      "verdict": "true_positive",
+      "reason": "DBImpl::Recover has 9 returns (lines 302-382) mixing early `return s`, InvalidArgument and Corruption statuses across a 91-line function, so exits are scattered between setup steps.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "DBImpl::Recover in db/db_impl.cc (lines 292-383) has nine return statements, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-e1a6956f0422799d",
@@ -338,9 +668,19 @@
       "language": "cpp",
       "path": "db/db_impl.cc",
       "message": "Function `GetProperty` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1387
+      "line": 1387,
+      "verdict": "true_positive",
+      "reason": "GetProperty has 7 returns (false at 1393/1401, true at 1407/1427/1430/1443, false at 1446) across prefix-parsing and branch logic in a 60-line function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "DBImpl::GetProperty in db/db_impl.cc (lines 1387-1447) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-cf8c65db181ff872",
@@ -348,9 +688,19 @@
       "language": "cpp",
       "path": "db/version_set.cc",
       "message": "Function `Match` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 341
+      "line": 341,
+      "verdict": "false_positive",
+      "reason": "Match's six returns are mostly the arms of the saver.state switch (kNotFound/kFound/kDeleted/kCorrupt) in a callback whose bool result is dictated by the ForEachOverlapping protocol, plus the unreachable fallback at line 378.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "The Match callback in db/version_set.cc (lines 341-379) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-5788a035bd1bc4f4",
@@ -358,9 +708,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/conversions/to_chars.hpp",
       "message": "Function `find_largest_pow10` has 10 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 492
+      "line": 492,
+      "verdict": "true_positive",
+      "reason": "Ten returns in find_largest_pow10. Each if-arm assigns pow10 before it returns, so these are ordinary exits under the standing rule, and an if-ladder is not the exempt return-only switch. A's count holds; B's idiom argument isn't an exemption the rule recognises.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "find_largest_pow10 in to_chars.hpp (lines 492-544) has ten return statements, one per power-of-ten branch, matching the reported 10."
+        }
+      ]
     },
     {
       "id": "EA-036e38080c97407f",
@@ -368,9 +728,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `parse_bson_element_internal` has 11 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 274
+      "line": 274,
+      "verdict": "true_positive",
+      "reason": "Counted 11 returns in parse_bson_element_internal (10 type cases plus default). Most arms declare locals, and default runs snprintf before returning, so the switch is not return-only and every return counts. B holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_bson_element_internal in binary_reader.hpp (lines 274-346) has eleven return statements across its element-type switch, matching the reported 11."
+        }
+      ]
     },
     {
       "id": "EA-e10c2e479033b7f2",
@@ -378,9 +748,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `parse_cbor_internal` has 39 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 428
+      "line": 428,
+      "verdict": "true_positive",
+      "reason": "There are 42 `return` lines in lines 428-906. Taking away the 3 inside the half-float lambda (lines 873-879) leaves 39, exactly as reported. The tagged-item arm has nested switches with several returns and the 0xF9 arm has two eof guards, so this is far from a return-only lookup. A holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_cbor_internal in binary_reader.hpp (lines 428-906) has about 39 return statements across its CBOR type switch, consistent with the reported 39."
+        }
+      ]
     },
     {
       "id": "EA-c4785fa09f100b5b",
@@ -388,9 +768,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_cbor_string` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 919
+      "line": 919,
+      "verdict": "true_positive",
+      "reason": "Counted 9 returns in get_cbor_string: the eof guard, the 0x60-0x77 group, 0x78/79/7A/7B (each declares len first), two in the 0x7F indefinite-length loop, and default. Most arms do work before returning, so A's count stands. B wrongly calls it one return per case: 0x7F has two.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_cbor_string in binary_reader.hpp (lines 919-1002) has nine return statements, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-c16413b407f1caaf",
@@ -398,9 +788,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_cbor_binary` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1015
+      "line": 1015,
+      "verdict": "true_positive",
+      "reason": "Counted 9 returns in get_cbor_binary: the guard, the 0x40-0x57 group, 0x58-0x5B (each declares len), two in the 0x5F loop, and default. The arms do work, so the switch isn't an exempt lookup table, and A's count holds. B's 'return per case' misses the loop's extra return.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_cbor_binary in binary_reader.hpp (lines 1015-1102) has nine return statements, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-36ca98c2e45d7ec5",
@@ -408,9 +808,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_cbor_object` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1148
+      "line": 1148,
+      "verdict": "true_positive",
+      "reason": "get_cbor_object has 6 returns, five of them `return false` repeated at different depths inside the key/value read loop (lines 1153-1187), so exits are scattered in nested control flow.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_cbor_object in binary_reader.hpp (lines 1148-1195) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-23179d62fdf1fb52",
@@ -418,9 +828,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `parse_msgpack_internal` has 25 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1204
+      "line": 1204,
+      "verdict": "true_positive",
+      "reason": "Counted exactly 25 returns in parse_msgpack_internal (eof, fixint, fixmap, fixarray, str, nil/false/true, bin, 2 floats, 8 ints, 4 array/map, negative fixint, default). Many arms declare a local or build an error token before returning, so the switch is not exempt and every return counts. B holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_msgpack_internal in binary_reader.hpp (lines 1204-1573) has about 25 return statements, consistent with the reported 25."
+        }
+      ]
     },
     {
       "id": "EA-29c8a5425a5a0171",
@@ -428,9 +848,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_msgpack_string` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1585
+      "line": 1585,
+      "verdict": "true_positive",
+      "reason": "get_msgpack_string has 6 returns: the eof guard, fixstr, str8/16/32 (each declares len first), and default. The arms do work, so the switch is not exempt and B's count holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_msgpack_string in binary_reader.hpp (lines 1585-1656) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-12e898380d71a939",
@@ -438,9 +868,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_msgpack_binary` has 12 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1668
+      "line": 1668,
+      "verdict": "true_positive",
+      "reason": "get_msgpack_binary has 12 function-level returns: 11 case arms (C4-C9, D4-D8), each declaring locals, plus default. The lambda's `return true` is excluded. B's count holds. A's 'earlier set_subtype return' is the lambda's own return and doesn't count.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_msgpack_binary in binary_reader.hpp (lines 1668-1773) has twelve function-level return statements (one inside a lambda excluded), matching the reported 12."
+        }
+      ]
     },
     {
       "id": "EA-5a74915935a060ca",
@@ -448,9 +888,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_string` has 10 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1857
+      "line": 1857,
+      "verdict": "true_positive",
+      "reason": "Counted 10 returns in get_ubjson_string: the eof guard, U/i/I/l/L, u/m/M (each with a bjdata check and break), and the final parse_error. The arms declare len, and some branch, before returning, so they are ordinary exits. A holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_string in binary_reader.hpp (lines 1857-1946) has ten return statements, matching the reported 10."
+        }
+      ]
     },
     {
       "id": "EA-02fcc56bc59ec72c",
@@ -458,9 +908,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_size_value` has 32 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2017
+      "line": 2017,
+      "verdict": "true_positive",
+      "reason": "get_ubjson_size_value has 32 returns, several per case (e.g. `return false`, parse_error and `return true` inside each of 'i', 'I', 'l', 'L', 'M' at lines 2042-2153) plus nested ndarray loops, so exits are heavily scattered.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_size_value in binary_reader.hpp (lines 2017-2227) has about 32 return statements, consistent with the reported 32."
+        }
+      ]
     },
     {
       "id": "EA-b3eabd98346fabb5",
@@ -468,9 +928,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_size_type` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2240
+      "line": 2240,
+      "verdict": "true_positive",
+      "reason": "get_ubjson_size_type has 9 returns (lines 2255-2300) of parse_error, false, is_error and true in nested conditionals within a 60-line function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_size_type in binary_reader.hpp (lines 2240-2301) has nine return statements, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-9334ef469f1d2998",
@@ -478,9 +948,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_value` has 26 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2307
+      "line": 2307,
+      "verdict": "true_positive",
+      "reason": "Counted 26 function-level returns in get_ubjson_value (lines 2312-2494), leaving out the 3 inside the half-float lambda. The 'h' and 'C' arms hold several guarded returns, and other arms declare locals or check bjdata, so this is not a return-only switch. B holds.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_value in binary_reader.hpp has about 26 return statements once the three lambda-internal returns are excluded, consistent with the reported 26."
+        }
+      ]
     },
     {
       "id": "EA-30305fd3a6cc9840",
@@ -488,9 +968,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_array` has 13 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2500
+      "line": 2500,
+      "verdict": "true_positive",
+      "reason": "get_ubjson_array has about 14 returns, mostly repeated `return false;` after each failed read inside nested loops (lines 2529-2603), a genuine scattered-exit function.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_array in binary_reader.hpp (lines 2500-2609) has thirteen function-level return statements after excluding the comparator lambda return, matching the reported 13."
+        }
+      ]
     },
     {
       "id": "EA-0dfd7328f12f43e0",
@@ -498,9 +988,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_object` has 11 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2615
+      "line": 2615,
+      "verdict": "true_positive",
+      "reason": "get_ubjson_object has 11 returns, mostly `return false;` at nine different points (lines 2636-2685) inside nested loop branches.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_object in binary_reader.hpp (lines 2615-2692) has eleven return statements including the final return sax->end_object(), matching the reported 11."
+        }
+      ]
     },
     {
       "id": "EA-c0af7f99da3c11d4",
@@ -508,9 +1008,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_high_precision_number` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 2698
+      "line": 2698,
+      "verdict": "false_positive",
+      "reason": "Four of get_ubjson_high_precision_number's seven returns are switch arms on the lexer result type (lines 2739-2759); the rest are three early guards, so it is a dispatch with guards.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_high_precision_number in binary_reader.hpp (lines 2698-2762) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-85620de96e1e2c3f",
@@ -518,9 +1028,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/json_sax.hpp",
       "message": "Function `handle_value` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 820
+      "line": 820,
+      "verdict": "true_positive",
+      "reason": "handle_value has 7 returns of `{false, nullptr}` or `{true, ptr}` (lines 828-884) at different nesting levels of the callback parser's keep/skip logic.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "handle_value in json_sax.hpp (lines 820-885) has seven return statements, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-bf1c908ae4f4f8ee",
@@ -528,9 +1048,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/parser.hpp",
       "message": "Function `sax_parse_internal` has 27 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 180
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "sax_parse_internal has 27 returns inside a 289-line state machine with nested switches and loops (`return false` after almost every sax call), so exits are widely scattered.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "sax_parse_internal in parser.hpp (lines 180-468) contains 27 occurrences of the return keyword, consistent with the reported 27."
+        }
+      ]
     },
     {
       "id": "EA-d7aa8a726d19950a",
@@ -538,9 +1068,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Function `calc_bson_element_size` has 10 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 1175
+      "line": 1175,
+      "verdict": "false_positive",
+      "reason": "calc_bson_element_size is a switch on value_t with one `return header_size + ...` per case (lines 1182-1212), a pure type dispatch.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "calc_bson_element_size in binary_writer.hpp (lines 1175-1215) has ten return statements, one per BSON type case, matching the reported 10."
+        }
+      ]
     },
     {
       "id": "EA-bf6abd11505ce222",
@@ -548,9 +1088,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Function `write_bson_element` has 10 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 1223
+      "line": 1223,
+      "verdict": "false_positive",
+      "reason": "write_bson_element is a switch on value_t where each case is `return write_bson_xxx(...)`, a pure dispatch with 10 arms.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "write_bson_element in binary_writer.hpp (lines 1223-1262) has ten return statements across its type switch, matching the reported 10."
+        }
+      ]
     },
     {
       "id": "EA-0b339a81db3cf5a5",
@@ -558,9 +1108,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Function `ubjson_prefix` has 24 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1515
+      "line": 1515,
+      "verdict": "true_positive",
+      "reason": "Counted 24 returns in ubjson_prefix (lines 1520-1612). The number_integer and number_unsigned arms are 8- and 9-step range ladders, not bare `case X: return y;` arms, so the switch is not an exempt lookup table and every return counts. B is right; A's 'lookup' argument is the exemption the rule already limits to return-only arms.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ubjson_prefix in binary_writer.hpp (lines 1515-1614) has twenty-four return statements, matching the reported 24."
+        }
+      ]
     },
     {
       "id": "EA-4627f9590f6409b1",
@@ -568,9 +1128,19 @@
       "language": "cpp",
       "path": "src/regeximpl.h",
       "message": "Function `MatchUnchecked` has 8 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 77
+      "line": 77,
+      "verdict": "false_positive",
+      "reason": "RegEx::MatchUnchecked is a switch over m_op in which each of seven cases returns its MatchOpXxx call, plus the -1 fallback; a pure operator dispatch.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "RegEx::MatchUnchecked in yaml-cpp regeximpl.h (lines 77-95) has eight return statements, matching the reported 8."
+        }
+      ]
     },
     {
       "id": "EA-4f97a1da07e249f6",
@@ -603,9 +1173,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `LookupDbType` has 11 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 459
+      "line": 459,
+      "verdict": "true_positive",
+      "reason": "LookupDbType has 11 returns (confirmed by count) scattered across null checks, map lookups, nested loops (line 507) and a type-name switch, so exits are spread through non-trivial logic.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LookupDbType in Dapper SqlMapper.cs (lines 459-534) has eleven return statements, matching the reported count of 11."
+        }
+      ]
     },
     {
       "id": "EA-c0f61c20d1eaf2e6",
@@ -613,9 +1193,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `SanitizeParameterValue` has 10 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 2389
+      "line": 2389,
+      "verdict": "false_positive",
+      "reason": "8 of SanitizeParameterValue's 10 returns are one-per-case arms of the enum TypeCode switch (lines 2401-2408) that each box to a different primitive type, a flat switch dispatch.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SanitizeParameterValue in Dapper SqlMapper.cs (lines 2389-2412) has ten return statements (guard returns plus eight switch cases), matching the claim."
+        }
+      ]
     },
     {
       "id": "EA-fdb07c9d2c2eef73",
@@ -623,9 +1213,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `GetSimpleValueDeserializer` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3099
+      "line": 3099,
+      "verdict": "true_positive",
+      "reason": "GetSimpleValueDeserializer has 7 returns of its own (lines 3105-3146; the others in the count are returns inside the lambdas), each in a differently nested branch choosing a deserializer.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "GetSimpleValueDeserializer in Dapper SqlMapper.cs has seven top-level return statements (lambda-internal returns excluded), consistent with the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-3b3b7a066d7bc29c",
@@ -633,9 +1233,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `Parse` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3184
+      "line": 3184,
+      "verdict": "true_positive",
+      "reason": "Parse<T> has 7 returns across null check, same-type shortcut, an enum block with two returns, handler lookup, datetime conversion and a fallback, so the exits are scattered through nested logic.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "Parse<T> in Dapper SqlMapper.cs (lines 3184-3208) has seven return statements, matching the reported count."
+        }
+      ]
     },
     {
       "id": "EA-55afd0b646ec6c80",
@@ -643,9 +1253,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `TryConvertDateTimeFamily` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3223
+      "line": 3223,
+      "verdict": "true_positive",
+      "reason": "TryConvertDateTimeFamily has 6 returns, five of them `converted = ...; return true;` buried in nested if/else branches by target type, plus the final false return.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "TryConvertDateTimeFamily in Dapper SqlMapper.cs (lines 3223-3246) has six return statements across its branches, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-04222d216bf10e86",
@@ -703,9 +1323,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Converters/IsoDateTimeConverter.cs",
       "message": "Function `ReadJson` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 121
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "IsoDateTimeConverter.ReadJson has 9 returns (null checks, DateTimeOffset/DateTime paths, ParseExact vs Parse in both types) scattered across nested if/try blocks.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadJson in IsoDateTimeConverter.cs (lines 121-194) has nine return statements across its type-specific branches, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-65d03da3c3772fcb",
@@ -713,9 +1343,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
       "message": "Function `GetPropertyName` has 12 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 1085
+      "line": 1085,
+      "verdict": "false_positive",
+      "reason": "GetPropertyName is a switch on node.NodeType mapping each XML node type to a property-name string; its 12 returns are the case arms (lines 1092-1122).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "GetPropertyName in XmlNodeConverter.cs (lines 1085-1126) returns from twelve separate node-type branches, matching the reported 12."
+        }
+      ]
     },
     {
       "id": "EA-689b307cfab24189",
@@ -723,9 +1363,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonConvert.cs",
       "message": "Function `ToString` has 22 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 457
+      "line": 457,
+      "verdict": "false_positive",
+      "reason": "JsonConvert.ToString(object) is a switch on PrimitiveTypeCode with one `return ToString((T)value)` per primitive type (22 arms), a pure overload dispatch table.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "JsonConvert.ToString(object) at JsonConvert.cs (lines 457-519) has twenty-two return statements in its type-dispatch chain, consistent with the reported 22."
+        }
+      ]
     },
     {
       "id": "EA-1ae4448c85cd5975",
@@ -848,9 +1498,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `EnsureType` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 957
+      "line": 957,
+      "verdict": "true_positive",
+      "reason": "EnsureType has 9 returns (lines 963-1027) in nested if/try/switch blocks around enum, date, BigInteger and Convert paths, so the exit points are spread through branching conversion logic.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "EnsureType in JsonSerializerInternalReader.cs (lines 957-1028) has nine return statements across its conversion branches, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-309387b4d8f0a4d9",
@@ -958,9 +1618,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Utilities/ReflectionUtils.cs",
       "message": "Function `GetAttributes` has 6 return statements (> 5).",
-      "status": "pending",
+      "status": "pre_label",
       "sampled_from": "l10-a",
-      "line": 785
+      "line": 785,
+      "verdict": "false_positive",
+      "reason": "GetAttributes is a type-pattern switch (Type, Assembly, MemberInfo, Module, ParameterInfo, default) where each arm returns the attributes for that provider, so the six returns are case arms.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "GetAttributes in ReflectionUtils.cs (lines 785-829) has six return statements, matching the reported 6."
+        }
+      ]
     },
     {
       "id": "EA-b3581b22a25c3368",
@@ -1013,9 +1683,19 @@
       "language": "csharp",
       "path": "src/Serilog/Capturing/PropertyValueConverter.cs",
       "message": "Function `CreatePropertyValue` has 9 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 121
+      "line": 121,
+      "verdict": "true_positive",
+      "reason": "CreatePropertyValue has 9 returns (null, stringify, scalar, converted, result, enumerable, tuple, structure and final fallback; lines 124-169) in a chain of TryConvert-style checks, each exiting in a different branch.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "CreatePropertyValue in serilog PropertyValueConverter.cs (lines 121-169) has nine return statements, matching the reported 9."
+        }
+      ]
     },
     {
       "id": "EA-0a7fd0e1de46c5e9",
@@ -4081,9 +4761,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `isValidJWT` has 7 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1218
+      "line": 1218,
+      "verdict": "true_positive",
+      "reason": "isValidJWT has 7 returns (six `return false` checks and a final true, plus the catch's false) inside a try block, which I counted at lines 1221-1231.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "isValidJWT in zod core/schemas.ts (lines 1218-1233) has seven return statements across its guard clauses, matching the reported 7."
+        }
+      ]
     },
     {
       "id": "EA-8bb2b50a66b981b7",
@@ -4091,9 +4781,19 @@
       "language": "typescript",
       "path": "packages/zod/src/v4/core/schemas.ts",
       "message": "Function `mergeValues` has 8 return statements (> 5).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2826
+      "line": 2826,
+      "verdict": "true_positive",
+      "reason": "mergeValues has 8 returns of `{valid, data}` objects (lines 2834, 2837, 2849, 2857, 2861, 2871, 2880, 2883) from nested object/array branches, matching the claimed count.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "mergeValues in zod core/schemas.ts (lines 2826-2884) has eight return statements, matching the reported 8."
+        }
+      ]
     },
     {
       "id": "EA-43f046886fd50906",

@@ -608,9 +608,19 @@
       "language": "javascript",
       "path": "scripts/validate-ecosystem-links.js",
       "message": "Function `validateAllLinks` performs an external network operation for each loop item, through `checkGitHubRepo`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 117
+      "line": 117,
+      "verdict": "false_positive",
+      "reason": "scripts/validate-ecosystem-links.js in fastify is a maintenance script that checks GitHub links one by one with a deliberate 200 ms rate-limit sleep (line 124); it is tooling, not production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "validateAllLinks in fastify scripts/validate-ecosystem-links.js is a repository maintenance script, which is tooling outside the production-code scope, and its per-link sleep is deliberate rate limiting."
+        }
+      ]
     },
     {
       "id": "EA-3c31390a2f2ad9c8",
@@ -1308,9 +1318,19 @@
       "language": "typescript",
       "path": "packages/server/src/adapters/ws.ts",
       "message": "Function `` performs an external network operation for each loop item, through `respond`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 344
+      "line": 344,
+      "verdict": "false_positive",
+      "reason": "The while(true) loop in the tRPC ws adapter's subscription handler forwards each value from the async iterator to the client via respond(); sending each yielded item is the streaming behaviour itself, not an N+1 lookup.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The loop at trpc ws.ts:344 consumes an async subscription iterator and sends each yielded item to the client; per-item sends are the streaming behaviour, not a batchable N+1 pattern."
+        }
+      ]
     },
     {
       "id": "EA-c3199fb3d484cc03",
@@ -1363,9 +1383,19 @@
       "language": "typescript",
       "path": "scripts/triage-signal.ts",
       "message": "Function `fetchAll` performs an external network operation for each loop item, through `graphql`.",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 316
+      "line": 316,
+      "verdict": "false_positive",
+      "reason": "fetchAll in zod's scripts/triage-signal.ts is a developer triage script paging GitHub GraphQL with a cursor; pages must be fetched sequentially (cursor depends on the previous page) and it is tooling.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "fetchAll in zod scripts/triage-signal.ts is a GitHub triage script (tooling, not production), and its cursor-based pagination loop must run sequentially."
+        }
+      ]
     },
     {
       "id": "EA-e12b1da25fc7be35",

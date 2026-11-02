@@ -97,7 +97,7 @@ best-case precision is under 90%.
 ### Gating detectors with a measured standing
 
 Gating detectors absent here produced no labelled corpus finding. TP/FP
-counts only final and corroborated labels on scans `l11-a` and `a11-a` (application slice), in the
+counts only final and corroborated labels on scans `fx2-l` and `fx-a` (application slice), in the
 languages the detector gates in. An `insufficient_sample` detector gates
 only with no false positive here.
 
@@ -108,41 +108,41 @@ only with no false positive here.
 | `assignment_in_operand` | insufficient_sample | 2/0 | 0 | — | — |
 | `bind_all_interfaces` | insufficient_sample | 10/0 | 0 | — | c, java, kotlin |
 | `cache_miss_opportunity` | insufficient_sample | 11/0 | 0 | — | — |
-| `class_structure_metrics` | meets_bar | 107/2 | 0 | java | python |
-| `cognitive_complexity` | meets_bar | 217/1 | 506 | csharp, java, javascript, python, rust, typescript | c, cpp |
+| `class_structure_metrics` | meets_bar | 120/2 | 0 | java | python |
+| `cognitive_complexity` | meets_bar | 220/1 | 506 | csharp, java, javascript, python, rust, typescript | c, cpp |
 | `debugger_in_production` | insufficient_sample | 1/0 | 0 | — | — |
 | `duplicate_import` | insufficient_sample | 15/0 | 0 | — | typescript |
 | `eager_log_formatting` | meets_bar | 40/0 | 0 | python | — |
 | `empty_catch_block` | meets_bar | 24/0 | 0 | — | — |
 | `eval_in_production` | insufficient_sample | 11/0 | 0 | — | java, javascript |
-| `excessive_nesting_depth` | meets_bar | 41/1 | 0 | — | — |
-| `function_complexity` | meets_bar | 183/2 | 654 | c, cpp, csharp, java, javascript, kotlin, python, rust, typescript | — |
+| `excessive_nesting_depth` | meets_bar | 60/1 | 0 | — | — |
+| `function_complexity` | meets_bar | 183/2 | 652 | c, cpp, csharp, java, javascript, kotlin, python, rust, typescript | — |
 | `function_local_import` | meets_bar | 30/0 | 38 | python | — |
 | `go_errcheck` | meets_bar | 27/0 | 0 | go | — |
 | `go_log_fatal` | insufficient_sample | 13/0 | 0 | — | — |
-| `halstead_information_density` | meets_bar | 138/3 | 519 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
+| `halstead_information_density` | meets_bar | 138/4 | 518 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
 | `hot_path_linear_membership` | insufficient_sample | 7/0 | 0 | — | go, java, python, typescript |
 | `identifier_verbosity` | meets_bar | 29/0 | 0 | python | — |
 | `kt_non_null_assertion` | meets_bar | 30/0 | 0 | kotlin | — |
 | `large_file` | meets_bar | 123/4 | 0 | java | c |
 | `loop_invariant_regex_compilation` | insufficient_sample | 3/0 | 0 | — | go, java, rust |
 | `naming_convention` | meets_bar | 46/1 | 720 | java | — |
-| `npath_complexity` | meets_bar | 181/0 | 45 | java, python, typescript | c, cpp |
+| `npath_complexity` | meets_bar | 181/1 | 45 | java, python | c, cpp |
 | `out_parameter` | meets_bar | 81/1 | 0 | java | — |
 | `repeated_collection_traversal` | insufficient_sample | 1/0 | 0 | — | csharp, java, python, typescript |
 | `repeated_format_allocation` | insufficient_sample | 1/0 | 0 | — | — |
 | `section_divider_comment` | insufficient_sample | 18/0 | 0 | — | java, javascript |
-| `shell_execution` | insufficient_sample | 5/0 | 0 | — | javascript, python |
+| `shell_execution` | insufficient_sample | 6/0 | 0 | — | javascript, python |
 | `sort_for_extremum` | insufficient_sample | 7/0 | 0 | — | — |
-| `source_duplicate_detection` | meets_bar | 163/9 | 36 | c, go, typescript | — |
+| `source_duplicate_detection` | meets_bar | 170/10 | 36 | go, typescript | — |
 | `sql_injection` | insufficient_sample | 3/0 | 0 | — | csharp, go, java |
 | `stale_section_anchor` | insufficient_sample | 14/0 | 0 | — | — |
 | `stringly_typed_parameter` | insufficient_sample | 2/0 | 0 | — | java, python, typescript |
-| `todo_unimplemented_in_production` | meets_bar | 143/2 | 0 | java, kotlin, rust | — |
-| `too_many_parameters` | meets_bar | 89/0 | 184 | csharp, kotlin, python | — |
-| `too_many_returns` | meets_bar | 128/0 | 398 | c, java, javascript, kotlin, python, typescript | — |
-| `too_many_statements` | meets_bar | 97/2 | 0 | java | — |
-| `unreachable_code` | insufficient_sample | 5/0 | 0 | — | cpp, python, typescript |
+| `todo_unimplemented_in_production` | meets_bar | 176/2 | 0 | c, java, kotlin, rust | — |
+| `too_many_parameters` | meets_bar | 122/0 | 184 | c, csharp, kotlin, python | — |
+| `too_many_returns` | meets_bar | 169/5 | 354 | c, csharp, java, javascript, kotlin, python, typescript | — |
+| `too_many_statements` | meets_bar | 139/4 | 0 | java | — |
+| `unreachable_code` | insufficient_sample | 4/0 | 0 | — | cpp, python, typescript |
 | `unused_assignment` | meets_bar | 86/2 | 0 | java, typescript | cpp, python |
 
 ## Risk Classes

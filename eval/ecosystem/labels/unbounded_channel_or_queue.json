@@ -268,9 +268,19 @@
       "language": "java",
       "path": "test-framework/oauth/src/main/java/org/keycloak/testframework/oauth/KcAdminInvocations.java",
       "message": "`LinkedBlockingQueue` at line 14 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 14
+      "line": 14,
+      "verdict": "false_positive",
+      "reason": "The LinkedBlockingQueue in KcAdminInvocations.java sits under keycloak's test-framework module (oauth test helper), so it is test infrastructure and out of scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The LinkedBlockingQueue at keycloak test-framework/.../KcAdminInvocations.java:14 belongs to the test framework, which is test code outside this detector's production scope."
+        }
+      ]
     },
     {
       "id": "EA-0f6ea6ba7ac85226",
@@ -278,9 +288,19 @@
       "language": "java",
       "path": "test-framework/oauth/src/main/java/org/keycloak/testframework/oauth/KcAdminInvocations.java",
       "message": "`LinkedBlockingQueue` at line 17 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 17
+      "line": 17,
+      "verdict": "false_positive",
+      "reason": "The second LinkedBlockingQueue (line 17) is also in keycloak's test-framework/oauth test helper, outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The LinkedBlockingQueue at KcAdminInvocations.java:17 is a field of the keycloak test-framework helper, which is test infrastructure outside the production scope."
+        }
+      ]
     },
     {
       "id": "EA-fac10fba57f13e29",
@@ -1188,9 +1208,19 @@
       "language": "python",
       "path": "testing-scripts/process_clip.py",
       "message": "`Queue` at line 74 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 74
+      "line": 74,
+      "verdict": "false_positive",
+      "reason": "The Queue at line 74 of frigate's testing-scripts/process_clip.py is in a developer testing script, not production code.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The unbounded mp.Queue at frigate testing-scripts/process_clip.py:74 is in a testing script, which is tooling outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-d9e97ed22ee70dde",
@@ -1198,9 +1228,19 @@
       "language": "python",
       "path": "testing-scripts/process_clip.py",
       "message": "`Queue` at line 75 creates a channel or queue with no capacity, so a producer that outpaces its consumers grows the backlog in memory without limit",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 75
+      "line": 75,
+      "verdict": "false_positive",
+      "reason": "The Queue at line 75 of testing-scripts/process_clip.py is in the same testing script, outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The mp.Queue at frigate testing-scripts/process_clip.py:75 is in a testing script, which is tooling outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-a7231561662ffcf0",

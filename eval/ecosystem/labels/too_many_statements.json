@@ -8,9 +8,19 @@
       "language": "c",
       "path": "src/compile.c",
       "message": "Function `compile` has 72 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1214
+      "line": 1214,
+      "verdict": "true_positive",
+      "reason": "jq compile() runs 133 lines with about 86 semicolon statements plus 25 control statements, above the claimed 72 and 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "compile in jq src/compile.c (lines 1214-1347) has about 98 statement terminators across 134 lines, consistent with the reported 72 statements and above the threshold of 50."
+        }
+      ]
     },
     {
       "id": "EA-4a1181376a625e81",
@@ -18,9 +28,19 @@
       "language": "c",
       "path": "src/execute.c",
       "message": "Function `jq_next` has 235 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 343
+      "line": 343,
+      "verdict": "true_positive",
+      "reason": "jq_next is the 660-line bytecode interpreter loop with a case per opcode and about 350 semicolon statements; far above 50 (claim 235).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "jq_next in jq execute.c (lines 343-1003) spans 661 lines with about 355 statement terminators, consistent with the reported 235 statements."
+        }
+      ]
     },
     {
       "id": "EA-d11834b7ce7d83bf",
@@ -28,9 +48,19 @@
       "language": "c",
       "path": "src/jv_parse.c",
       "message": "Function `stream_token` has 88 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 241
+      "line": 241,
+      "verdict": "true_positive",
+      "reason": "stream_token is a 178-line state machine with about 91 semicolon statements plus 40 control statements, above 50 (claim 88).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "stream_token in jv_parse.c (lines 241-419) is a 179-line function with dozens of branches and returns, consistent with the reported 88 statements."
+        }
+      ]
     },
     {
       "id": "EA-9827e19fe82a3067",
@@ -38,9 +68,19 @@
       "language": "c",
       "path": "src/main.c",
       "message": "Function `umain` has 168 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 287
+      "line": 287,
+      "verdict": "true_positive",
+      "reason": "umain is jq's 435-line main with option parsing and execution; about 212 semicolon statements, well over 50 (claim 168).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "umain in jq main.c starts at line 287 and runs to about line 722 across its #else branch, a long argument-handling function, so the reported 168 statements exceeds the threshold of 50."
+        }
+      ]
     },
     {
       "id": "EA-205bd2a409035724",
@@ -48,9 +88,19 @@
       "language": "c",
       "path": "src/util.c",
       "message": "Function `strptime` has 228 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 615
+      "line": 615,
+      "verdict": "true_positive",
+      "reason": "strptime in jq/src/util.c is a 589-line fallback implementation with about 255 semicolon statements; the claim of 228 holds even though the code is ported.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "strptime in jq util.c (lines 615-1205) is a 591-line function with about 258 statement terminators, consistent with the reported 228 statements."
+        }
+      ]
     },
     {
       "id": "EA-3fb761e6917264dc",
@@ -118,9 +168,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Function `uv__io_poll` has 89 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1350
+      "line": 1350,
+      "verdict": "true_positive",
+      "reason": "uv__io_poll in linux.c spans 270 lines with about 115 semicolon statements, above the claimed 89.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__io_poll in libuv unix/linux.c (lines 1350-1620) is 271 lines with about 121 statement terminators, consistent with the reported 89 statements."
+        }
+      ]
     },
     {
       "id": "EA-0f19cf82b4954133",
@@ -128,9 +188,19 @@
       "language": "c",
       "path": "src/unix/linux.c",
       "message": "Function `uv_cpu_info` has 58 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1714
+      "line": 1714,
+      "verdict": "true_positive",
+      "reason": "uv_cpu_info (linux.c) is a 226-line function with about 95 semicolon statements; the claim of 58 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_cpu_info in libuv unix/linux.c (lines 1714-1940) is 227 lines with conditional platform blocks, consistent with the reported 58 statements."
+        }
+      ]
     },
     {
       "id": "EA-0a59fb561f117c71",
@@ -158,9 +228,19 @@
       "language": "c",
       "path": "src/unix/os390.c",
       "message": "Function `uv__io_poll` has 84 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 811
+      "line": 811,
+      "verdict": "true_positive",
+      "reason": "os390 uv__io_poll spans 248 lines with about 106 semicolon statements, above 84 claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__io_poll in libuv unix/os390.c (lines 811-1059) is 249 lines, consistent with the reported 84 statements and above the threshold of 50."
+        }
+      ]
     },
     {
       "id": "EA-c853198572270120",
@@ -278,9 +358,19 @@
       "language": "c",
       "path": "src/win/fs.c",
       "message": "Function `fs__open` has 72 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 413
+      "line": 413,
+      "verdict": "true_positive",
+      "reason": "fs__open is a 253-line function with about 88 semicolon statements, above the claimed 72.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "fs__open in libuv win/fs.c (lines 413-666) is 254 lines with about 88 statement terminators, consistent with the reported 72 statements."
+        }
+      ]
     },
     {
       "id": "EA-40898491dbffc816",
@@ -313,9 +403,19 @@
       "language": "c",
       "path": "src/win/process.c",
       "message": "Function `uv_spawn` has 70 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 890
+      "line": 890,
+      "verdict": "true_positive",
+      "reason": "uv_spawn on Windows spans 273 lines with about 98 semicolon statements, above 70 claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_spawn in libuv win/process.c (lines 890-1165) is 276 lines with about 102 statement terminators, consistent with the reported 70 statements."
+        }
+      ]
     },
     {
       "id": "EA-087bf11a611c710f",
@@ -323,9 +423,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv_process_tty_read_raw_req` has 62 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 719
+      "line": 719,
+      "verdict": "true_positive",
+      "reason": "uv_process_tty_read_raw_req is a 253-line function with about 77 semicolon statements, above 62 claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv_process_tty_read_raw_req in libuv win/tty.c (lines 719-973) is a 255-line handler, consistent with the reported 62 statements over the threshold of 50."
+        }
+      ]
     },
     {
       "id": "EA-be04965f0a25c250",
@@ -333,9 +443,19 @@
       "language": "c",
       "path": "src/win/tty.c",
       "message": "Function `uv__tty_write_bufs` has 161 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1691
+      "line": 1691,
+      "verdict": "true_positive",
+      "reason": "uv__tty_write_bufs is a 767-line ANSI state machine with about 272 semicolon statements, far above 161 claimed and 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "uv__tty_write_bufs in libuv win/tty.c (lines 1691-2461) is a 771-line function, far above the threshold, consistent with the reported 161 statements."
+        }
+      ]
     },
     {
       "id": "EA-7562b329013144c8",
@@ -343,9 +463,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4MID_compress` has 80 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 522
+      "line": 522,
+      "verdict": "true_positive",
+      "reason": "LZ4MID_compress spans 242 lines with about 137 semicolon statements, above 80 claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4MID_compress in lz4hc.c (lines 522-773) is a 252-line function with many nested statements, consistent with the reported 80 statements."
+        }
+      ]
     },
     {
       "id": "EA-fd699bc6339f905f",
@@ -353,9 +483,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4HC_compress_hashChain` has 78 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1121
+      "line": 1121,
+      "verdict": "true_positive",
+      "reason": "LZ4HC_compress_hashChain spans 231 lines with about 118 semicolon statements, above 78 claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4HC_compress_hashChain in lz4hc.c (lines 1121-1362) is a 242-line function, consistent with the reported 78 statements."
+        }
+      ]
     },
     {
       "id": "EA-2c7274c06e9a4d5a",
@@ -363,9 +503,19 @@
       "language": "c",
       "path": "lib/lz4hc.c",
       "message": "Function `LZ4HC_compress_optimal` has 112 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1823
+      "line": 1823,
+      "verdict": "true_positive",
+      "reason": "LZ4HC_compress_optimal spans 289 lines with about 175 semicolon statements, above 112 claimed.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "LZ4HC_compress_optimal in lz4hc.c (lines 1823-2123) is a 301-line function, consistent with the reported 112 statements."
+        }
+      ]
     },
     {
       "id": "EA-fc571be0c5dd51e8",
@@ -393,9 +543,19 @@
       "language": "c",
       "path": "contrib/minizip/mztools.c",
       "message": "Function `unzRepair` has 88 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 33
+      "line": 33,
+      "verdict": "true_positive",
+      "reason": "unzRepair has about 121 semicolon statements over 261 lines, above the claimed 88.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "unzRepair in contrib/minizip/mztools.c (lines 33-294) is a 262-line function with about 88 statement terminators, consistent with the reported 88 statements."
+        }
+      ]
     },
     {
       "id": "EA-e7818d2bd0d633fb",
@@ -403,9 +563,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Function `unzOpenInternal` has 51 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 490
+      "line": 490,
+      "verdict": "true_positive",
+      "reason": "unzOpenInternal has about 61 semicolon statements over 175 lines; the claim of 51 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "unzOpenInternal in contrib/minizip/unzip.c (lines 490-667) is a 178-line library function, consistent with the reported 51 statements."
+        }
+      ]
     },
     {
       "id": "EA-b8582d20cbd99bac",
@@ -413,9 +583,19 @@
       "language": "c",
       "path": "contrib/minizip/unzip.c",
       "message": "Function `unz64local_GetCurrentFileInfoInternal` has 59 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 766
+      "line": 766,
+      "verdict": "true_positive",
+      "reason": "unz64local_GetCurrentFileInfoInternal has about 72 semicolon statements over 224 lines, above the claimed 59.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "unz64local_GetCurrentFileInfoInternal in contrib/minizip/unzip.c (lines 766-999) is a 234-line function, consistent with the reported 59 statements."
+        }
+      ]
     },
     {
       "id": "EA-6b998999c408b42c",
@@ -423,9 +603,19 @@
       "language": "c",
       "path": "contrib/testzlib/testzlib.c",
       "message": "Function `main` has 59 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 145
+      "line": 145,
+      "verdict": "false_positive",
+      "reason": "main in contrib/testzlib/testzlib.c is a Windows timing/test program for zlib (rdtsc counters, compress-decompress benchmark), so it is test/benchmark code outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "main in contrib/testzlib/testzlib.c is a test driver program, which is test code outside the production scope of this detector."
+        }
+      ]
     },
     {
       "id": "EA-5fdcc1dab18ff438",
@@ -453,9 +643,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `parse_cbor_internal` has 67 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 428
+      "line": 428,
+      "verdict": "true_positive",
+      "reason": "parse_cbor_internal (lines 428-906) has well over 50 statements once case labels are excluded. About 30 case blocks each hold a declaration plus a return, and the function also has a three-way tag_handler switch with nested switches and get_number/set_subtype/break sequences, plus an inline half-float decoding lambda. Opinion B holds. A's 'repetitive one-line arms' does not describe the nested tag and float logic, which is extractable.",
+      "labeller": "model:claude-opus-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "parse_cbor_internal in binary_reader.hpp (lines 428-906) is a 479-line switch over CBOR types, consistent with the reported 67 statements."
+        }
+      ]
     },
     {
       "id": "EA-8cd918176c0d9bd7",
@@ -463,9 +663,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/binary_reader.hpp",
       "message": "Function `get_ubjson_size_value` has 54 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2017
+      "line": 2017,
+      "verdict": "true_positive",
+      "reason": "get_ubjson_size_value has about 66 semicolon statements over 209 lines of per-marker handling, above the claimed 54.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "get_ubjson_size_value in binary_reader.hpp (lines 2017-2227) is a 211-line method with many nested branches, consistent with the reported 54 statements."
+        }
+      ]
     },
     {
       "id": "EA-eb9dcab3f3967543",
@@ -473,9 +683,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/input/parser.hpp",
       "message": "Function `sax_parse_internal` has 54 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 180
+      "line": 180,
+      "verdict": "true_positive",
+      "reason": "sax_parse_internal has about 57 semicolon statements plus 32 control statements over 289 lines; the claim of 54 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "sax_parse_internal in parser.hpp (lines 180-448) is a 269-line loop with many nested branches, consistent with the reported 54 statements."
+        }
+      ]
     },
     {
       "id": "EA-0a918cd35bf768fa",
@@ -483,9 +703,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Function `write_cbor` has 95 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 96
+      "line": 96,
+      "verdict": "true_positive",
+      "reason": "write_cbor has about 100 semicolon statements over 318 lines of per-type byte writing; the claim of 95 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "write_cbor in binary_writer.hpp (lines 96-415) is a 320-line switch over JSON types, consistent with the reported 95 statements."
+        }
+      ]
     },
     {
       "id": "EA-7a538691fe10c24a",
@@ -493,9 +723,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Function `write_msgpack` has 84 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 420
+      "line": 420,
+      "verdict": "true_positive",
+      "reason": "write_msgpack has about 93 semicolon statements over 316 lines; the claim of 84 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "write_msgpack in binary_writer.hpp (lines 420-737) is a 318-line switch over JSON types, consistent with the reported 84 statements."
+        }
+      ]
     },
     {
       "id": "EA-a43bca280e8e82fd",
@@ -503,9 +743,19 @@
       "language": "cpp",
       "path": "include/nlohmann/detail/output/binary_writer.hpp",
       "message": "Function `write_ubjson` has 51 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 747
+      "line": 747,
+      "verdict": "true_positive",
+      "reason": "write_ubjson has about 58 semicolon statements over 209 lines, just above 50 (claim 51).",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "write_ubjson in binary_writer.hpp (starting at line 747) is a long UBJSON serializer, consistent with the reported 51 statements over the threshold of 50."
+        }
+      ]
     },
     {
       "id": "EA-c3dd48512e95ae1a",
@@ -578,9 +828,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `PackListParameters` has 58 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2163
+      "line": 2163,
+      "verdict": "true_positive",
+      "reason": "PackListParameters spans lines 2163-2310 with an array-support branch, a per-item loop, string/DbString handling and size logic; my count of statements (about 40 semicolon statements plus 23 control statements) is above 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "PackListParameters in Dapper SqlMapper.cs (lines 2166-2314) has about 61 statement-terminating semicolons, consistent with the reported 58 statements."
+        }
+      ]
     },
     {
       "id": "EA-254e1642beb13620",
@@ -588,9 +848,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `CreateParamInfoGenerator` has 196 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 2559
+      "line": 2559,
+      "verdict": "true_positive",
+      "reason": "CreateParamInfoGenerator is a 426-line IL emission function with about 193 semicolon statements (claim 196), far above 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateParamInfoGenerator in Dapper SqlMapper.cs (lines 2561-2988) is a 430-line method with a large IL-emission body, consistent with the reported 196 statements."
+        }
+      ]
     },
     {
       "id": "EA-31a3f85c942cd28c",
@@ -598,9 +868,19 @@
       "language": "csharp",
       "path": "Dapper/SqlMapper.cs",
       "message": "Function `GenerateDeserializerFromMap` has 81 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 3514
+      "line": 3514,
+      "verdict": "true_positive",
+      "reason": "GenerateDeserializerFromMap is a 211-line function with about 80 semicolon statements (claim 81), above 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateDeserializerFromMap in Dapper SqlMapper.cs (lines 3514-3726) is a 213-line IL generator with about 82 statement terminators, consistent with the reported 81."
+        }
+      ]
     },
     {
       "id": "EA-2688526bb90a4bca",
@@ -608,9 +888,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Bson/BsonBinaryWriter.cs",
       "message": "Function `WriteTokenInternal` has 55 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 72
+      "line": 72,
+      "verdict": "true_positive",
+      "reason": "WriteTokenInternal has about 55 semicolon statements in a 120-line function, matching the claim of 55.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "WriteTokenInternal in BsonBinaryWriter.cs (lines 72-193) is a 122-line switch over BSON token types, consistent with the reported 55 statements."
+        }
+      ]
     },
     {
       "id": "EA-664ca241ce5513f1",
@@ -643,9 +933,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Converters/XmlNodeConverter.cs",
       "message": "Function `SerializeNode` has 52 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1295
+      "line": 1295,
+      "verdict": "true_positive",
+      "reason": "SerializeNode has about 51 semicolon statements plus 22 control statements over 161 lines; the claim of 52 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SerializeNode in XmlNodeConverter.cs (lines 1295-1457) is a 163-line switch on node type, consistent with the reported 52 statements."
+        }
+      ]
     },
     {
       "id": "EA-73d45600cf7683b4",
@@ -653,9 +953,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
       "message": "Function `ParseValueAsync` has 55 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 252
+      "line": 252,
+      "verdict": "true_positive",
+      "reason": "ParseValueAsync has about 55 semicolon statements in a 128-line function, matching the claim of 55.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ParseValueAsync in JsonTextReader.Async.cs (lines 252-658) is a 407-line method, consistent with the reported 55 statements."
+        }
+      ]
     },
     {
       "id": "EA-e47ae4cacad89c0d",
@@ -663,9 +973,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.Async.cs",
       "message": "Function `ReadStringIntoBufferAsync` has 63 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 383
+      "line": 383,
+      "verdict": "true_positive",
+      "reason": "ReadStringIntoBufferAsync is a ~100-line function (lines 383-480) with a nested switch and about 63 statements as claimed; it is over 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadStringIntoBufferAsync in JsonTextReader.Async.cs (lines 383-538) is a 156-line method with nested switches, consistent with the reported 63 statements."
+        }
+      ]
     },
     {
       "id": "EA-0d1d081330f7d2cf",
@@ -673,9 +993,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
       "message": "Function `ReadStringIntoBuffer` has 63 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1136
+      "line": 1136,
+      "verdict": "true_positive",
+      "reason": "ReadStringIntoBuffer (JsonTextReader.cs line 1136) is the sync twin with about 63 statements across a nested while/switch, above 50.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadStringIntoBuffer in JsonTextReader.cs (lines 1136-1289) is a 154-line method with nested switches, consistent with the reported 63 statements."
+        }
+      ]
     },
     {
       "id": "EA-9e004cd44c572878",
@@ -683,9 +1013,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
       "message": "Function `ParseValue` has 54 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1693
+      "line": 1693,
+      "verdict": "true_positive",
+      "reason": "ParseValue has about 54 semicolon statements in a 126-line function, matching the claim.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ParseValue in JsonTextReader.cs (lines 1693-2455) is a 763-line method, consistent with the reported 54 statements and above 50."
+        }
+      ]
     },
     {
       "id": "EA-9d5392aee12fdc9a",
@@ -693,9 +1033,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonTextReader.cs",
       "message": "Function `ParseReadNumber` has 70 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1981
+      "line": 1981,
+      "verdict": "true_positive",
+      "reason": "ParseReadNumber has about 71 semicolon statements over 261 lines, matching the claim of 70.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ParseReadNumber in JsonTextReader.cs (lines 1981-2243) is a 263-line method, consistent with the reported 70 statements."
+        }
+      ]
     },
     {
       "id": "EA-01149e56d12926fa",
@@ -703,9 +1053,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonValidatingReader.cs",
       "message": "Function `ValidateCurrentToken` has 57 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 500
+      "line": 500,
+      "verdict": "true_positive",
+      "reason": "ValidateCurrentToken has about 57 semicolon statements in a 114-line switch-heavy function, matching the claim.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ValidateCurrentToken in JsonValidatingReader.cs (lines 500-615) is a 116-line method with model building and a long token switch, consistent with the reported 57 statements."
+        }
+      ]
     },
     {
       "id": "EA-dc9ff923d0f36fda",
@@ -713,9 +1073,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/JsonWriter.cs",
       "message": "Function `WriteValue` has 85 statements (> 50).",
-      "status": "pending",
+      "status": "final",
       "sampled_from": "l10-a",
-      "line": 1478
+      "line": 1478,
+      "verdict": "false_positive",
+      "reason": "JsonWriter.WriteValue(writer, typeCode, value) is a flat dispatch table: a switch over about 40 PrimitiveTypeCode values with a two-line `writer.WriteValue((T)value); return;` arm each, so statement count is only from case repetition.",
+      "labeller": "human:operator",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "WriteValue in JsonWriter.cs (lines 1478-1668) is a 191-line method with about thirteen-plus cases, consistent with the reported 85 statements."
+        }
+      ]
     },
     {
       "id": "EA-c94aee8124d16b5a",
@@ -748,9 +1118,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Linq/JContainer.cs",
       "message": "Function `ReadContentFrom` has 52 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 796
+      "line": 796,
+      "verdict": "true_positive",
+      "reason": "ReadContentFrom has about 53 semicolon statements over 111 lines, matching the claim of 52.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "ReadContentFrom in JContainer.cs (lines 796-908) is a 113-line method with many guarded branches, consistent with the reported 52 statements."
+        }
+      ]
     },
     {
       "id": "EA-6056faaf6b834003",
@@ -758,9 +1138,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Linq/JValue.cs",
       "message": "Function `Operation` has 52 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 421
+      "line": 421,
+      "verdict": "true_positive",
+      "reason": "JValue.Operation has about 52 semicolon statements over 143 lines of BigInteger/long/double arithmetic cases; the claim of 52 holds.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "JValue.Operation in JValue.cs (lines 421-565) is a 145-line method with a long chain of operator cases, consistent with the reported 52 statements."
+        }
+      ]
     },
     {
       "id": "EA-696a318a8ba16f5c",
@@ -818,9 +1208,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Schema/JsonSchemaGenerator.cs",
       "message": "Function `GenerateInternal` has 54 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 246
+      "line": 246,
+      "verdict": "true_positive",
+      "reason": "GenerateInternal has about 53 semicolon statements over 139 lines, matching the claim of 54.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "GenerateInternal in JsonSchemaGenerator.cs (lines 246-392) is a 147-line method, consistent with the reported 54 statements."
+        }
+      ]
     },
     {
       "id": "EA-b6c3a750a7c504c8",
@@ -828,9 +1228,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/DefaultContractResolver.cs",
       "message": "Function `SetPropertySettingsFromAttributes` has 65 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1477
+      "line": 1477,
+      "verdict": "true_positive",
+      "reason": "SetPropertySettingsFromAttributes has about 65 semicolon statements over 166 lines, matching the claim exactly.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "SetPropertySettingsFromAttributes in DefaultContractResolver.cs (lines 1477-1644) is a 168-line method with conditional attribute handling, consistent with the reported 65 statements."
+        }
+      ]
     },
     {
       "id": "EA-b8af005b724d4884",
@@ -838,9 +1248,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs",
       "message": "Function `CreateObject` has 55 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 435
+      "line": 435,
+      "verdict": "true_positive",
+      "reason": "CreateObject has about 55 semicolon statements over 171 lines, matching the claim of 55.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "CreateObject in JsonSerializerInternalReader.cs (lines 435-609) is a 175-line method with many branches, consistent with the reported 55 statements."
+        }
+      ]
     },
     {
       "id": "EA-502a1a4056e5bcce",
@@ -848,9 +1268,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
       "message": "Function `TryConvertInternal` has 53 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 420
+      "line": 420,
+      "verdict": "true_positive",
+      "reason": "TryConvertInternal has about 53 semicolon statements over 166 lines of conversion branches, matching the claim of 53.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "TryConvertInternal in ConvertUtils.cs (lines 420-589) is a 170-line method with a long chain of conversion cases, consistent with the reported 53 statements."
+        }
+      ]
     },
     {
       "id": "EA-151e15bfe05382aa",
@@ -858,9 +1288,19 @@
       "language": "csharp",
       "path": "Src/Newtonsoft.Json/Utilities/ConvertUtils.cs",
       "message": "Function `DecimalTryParse` has 74 statements (> 50).",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "l10-a",
-      "line": 1309
+      "line": 1309,
+      "verdict": "true_positive",
+      "reason": "DecimalTryParse has about 76 semicolon statements over 238 lines, matching the claim of 74.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "true_positive",
+          "reason": "DecimalTryParse in ConvertUtils.cs (lines 1309-1548) is a 240-line parser with many return and assignment statements, consistent with the reported 74."
+        }
+      ]
     },
     {
       "id": "EA-3d4dadf7d22f7c08",

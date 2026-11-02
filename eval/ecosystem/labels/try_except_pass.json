@@ -348,9 +348,19 @@
       "language": "python",
       "path": "system_test/e2e/cdc_test_server.py",
       "message": "Bare except:pass clause (Bandit B110) at line 263",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 263
+      "line": 263,
+      "verdict": "false_positive",
+      "reason": "The bare `except: pass` at cdc_test_server.py line 263 is in rqlite's system_test/e2e CDC test server, test support code outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The bare except with pass at rqlite system_test/e2e/cdc_test_server.py:263 is inside an end-to-end test server, which is outside this detector's production scope."
+        }
+      ]
     },
     {
       "id": "EA-c8beeb63fd8a3554",
@@ -358,9 +368,19 @@
       "language": "python",
       "path": "system_test/e2e/cdc_test_server.py",
       "message": "Bare except:pass clause (Bandit B110) at line 267",
-      "status": "pending",
+      "status": "corroborated",
       "sampled_from": "a8-a",
-      "line": 267
+      "line": 267,
+      "verdict": "false_positive",
+      "reason": "The `except: pass` at cdc_test_server.py line 267 is in the same rqlite e2e test server, test code outside the detector's scope.",
+      "labeller": "model:claude-sonnet-5-5",
+      "checks": [
+        {
+          "source": "model:claude-haiku-5-5",
+          "verdict": "false_positive",
+          "reason": "The bare except with pass at rqlite system_test/e2e/cdc_test_server.py:267 is in the end-to-end test server, outside the production scope."
+        }
+      ]
     }
   ]
 }
