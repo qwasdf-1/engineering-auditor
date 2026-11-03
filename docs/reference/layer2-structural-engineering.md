@@ -661,7 +661,9 @@ paper predates:
   per true outcome and each later `else if`/`else` once per false outcome of
   the conditions before it; without a final `else` the false outcomes fall
   through. Ternaries split the same way, and a boolean value outside a
-  condition (`x = a || b`) has one path per operator plus one;
+  condition (`x = a || b`, a call argument `f(a || b)`, `return a && b`) has
+  one path per operator plus one, as in PMD, so a default-value argument
+  such as `header(name || DEFAULT)` doubles the paths of its function;
 - a loop runs its body once per true outcome of its condition and is
   skipped once per false outcome; `while (true)`, Rust `loop`, and Go
   `for {}` cannot be skipped;

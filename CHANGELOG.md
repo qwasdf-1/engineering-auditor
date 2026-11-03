@@ -4,6 +4,39 @@
 
 ### Changed
 
+- `too_many_returns` counts a C or C++ `#if`/`#elif`/`#else` chain as its
+  largest alternative instead of summing the returns of every platform
+  variant (libuv's `uv__sock_reuseaddr`, jq). On the corpus libuv drops from
+  79 to 74 findings and jq from 13 to 12, removing the two labelled false
+  positives.
+- `god_module` counts an overload set (definitions sharing a namespace and
+  name) as one definition. This removes 17 labelled false positives
+  (nlohmann's `to_json`/`from_json`, koin's DSL extensions) and three
+  marginal true positives that fall under the threshold (okio's `Util.kt`
+  and `RealBufferedSink.kt`, fmt's `compile.h`).
+- `no_await_in_loop` skips a C# loop whose await is a `DisposeAsync` call
+  (ordered disposal, Serilog and Polly).
+- Halstead metrics leave JSX markup (tags, attribute names, text) out of the
+  operators and operands; code inside `{..}` still counts. This removes the
+  `halstead_information_density` false positive on zod's documentation
+  page.
+- `network_call_without_timeout` judges an axios config passed by name as
+  the object literal it is bound to in the same function, unless the code
+  assigns its `timeout`, sets a computed key, or passes the config to
+  another call. No corpus finding changes.
+- `unbounded_channel_or_queue` skips unit-signal channels
+  (`channel::<()>`), queues whose producer checks their size before adding,
+  and channels scoped to a single executor call. This removes 16 labelled
+  false positives (warpgate, ranger, electrum, DBeaver) and atuin's
+  unbounded debounce channel, a labelled true positive.
+- `exit_in_production` skips exits inside code that owns the process: CLI
+  command handlers, Django management commands, signal handlers, forked and
+  `multiprocessing` children, and functions named for exiting (`exit`,
+  `*AndExit`, `*_and_exit`). This removes 17 labelled false positives and
+  about 22 unlabelled command-body exits; ZAP's `Control.exit`, labelled a
+  true positive, is no longer reported.
+- The NPath reference states that a call argument such as
+  `f(a || DEFAULT)` counts its operators, as in PMD.
 - `too_many_returns` counts a switch whose arms each consist only of a
   `return` (`case X: return y;`, a lookup table) as one exit, in every
   language with switch, `match`, or `when` arms. Such a function has one

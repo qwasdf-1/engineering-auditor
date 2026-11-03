@@ -48,13 +48,18 @@
       "language": "csharp",
       "path": "src/Polly.Core/Registry/ResiliencePipelineRegistry.cs",
       "message": "Await expression inside a loop at line 245",
-      "status": "corroborated",
+      "status": "final",
       "sampled_from": "t16-e",
       "line": 245,
-      "verdict": "true_positive",
-      "reason": "Independent iterations await one after another; they could run concurrently.",
-      "labeller": "model:claude-opus-5-5",
+      "verdict": "false_positive",
+      "reason": "The await is in ResiliencePipelineRegistry.DisposeAsync, disposing each owned generic registry in turn; ordered sequential disposal is the shutdown idiom, the same shape as the serilog DisposingAggregateSink false positives, so the loop-await rationale does not apply.",
+      "labeller": "human:operator",
       "checks": [
+        {
+          "source": "model:claude-opus-5-5",
+          "verdict": "true_positive",
+          "reason": "Independent iterations await one after another; they could run concurrently."
+        },
         {
           "source": "model:opencode/deepseek-v4.1-flash-free",
           "verdict": "true_positive",

@@ -97,7 +97,7 @@ best-case precision is under 90%.
 ### Gating detectors with a measured standing
 
 Gating detectors absent here produced no labelled corpus finding. TP/FP
-counts only final and corroborated labels on scans `fx2-l` and `fx-a` (application slice), in the
+counts only final and corroborated labels on scans `r17-l` and `r17-a` (application slice), in the
 languages the detector gates in. An `insufficient_sample` detector gates
 only with no false positive here.
 
@@ -120,7 +120,7 @@ only with no false positive here.
 | `function_local_import` | meets_bar | 30/0 | 38 | python | — |
 | `go_errcheck` | meets_bar | 27/0 | 0 | go | — |
 | `go_log_fatal` | insufficient_sample | 13/0 | 0 | — | — |
-| `halstead_information_density` | meets_bar | 138/4 | 518 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
+| `halstead_information_density` | meets_bar | 138/3 | 518 | c, cpp, csharp, java, javascript, kotlin, python, typescript | — |
 | `hot_path_linear_membership` | insufficient_sample | 7/0 | 0 | — | go, java, python, typescript |
 | `identifier_verbosity` | meets_bar | 29/0 | 0 | python | — |
 | `kt_non_null_assertion` | meets_bar | 30/0 | 0 | kotlin | — |
@@ -140,7 +140,7 @@ only with no false positive here.
 | `stringly_typed_parameter` | insufficient_sample | 2/0 | 0 | — | java, python, typescript |
 | `todo_unimplemented_in_production` | meets_bar | 176/2 | 0 | c, java, kotlin, rust | — |
 | `too_many_parameters` | meets_bar | 122/0 | 184 | c, csharp, kotlin, python | — |
-| `too_many_returns` | meets_bar | 169/5 | 354 | c, csharp, java, javascript, kotlin, python, typescript | — |
+| `too_many_returns` | meets_bar | 169/3 | 352 | c, csharp, java, javascript, kotlin, python, typescript | — |
 | `too_many_statements` | meets_bar | 139/4 | 0 | java | — |
 | `unreachable_code` | insufficient_sample | 4/0 | 0 | — | cpp, python, typescript |
 | `unused_assignment` | meets_bar | 86/2 | 0 | java, typescript | cpp, python |
