@@ -63,6 +63,8 @@ pub(crate) use single_implementation::single_implementation_capability_files;
 #[path = "capability_language_unbounded_tests.rs"]
 mod unbounded;
 pub(crate) use unbounded::unbounded_capability_files;
+#[path = "capability_language_unbounded_bounds_tests.rs"]
+mod unbounded_bounds;
 
 #[path = "capability_language_eager_log_tests.rs"]
 mod eager_log;

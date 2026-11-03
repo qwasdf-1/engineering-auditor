@@ -16,6 +16,10 @@
 //!   `Executors.newFixedThreadPool`/`newSingleThreadExecutor`, whose work
 //!   queue is an unbounded `LinkedBlockingQueue`.
 //!
+//! A channel that carries only `()`, a queue whose producers compare its size
+//! against a limit, and a Java executor created and shut down within one
+//! method are not reported.
+//!
 //! Go channels always have a fixed capacity, and JavaScript has no channel
 //! or blocking queue type.
 
@@ -27,6 +31,11 @@ use crate::java_api_identity::JavaScope;
 use crate::python_api_identity::{keyword_argument, positional_arguments, PyScope};
 use crate::rust_api_identity::{rust_arguments, RustScope};
 use crate::Language;
+
+#[path = "unbounded_queue_bounds.rs"]
+mod bounds;
+#[path = "unbounded_queue_signal.rs"]
+mod signal;
 
 fn supported(language: &Language) -> bool {
     matches!(language, Language::Rust | Language::Python | Language::Java)
@@ -88,6 +97,7 @@ fn rust_sites(root: AstNode<'_>) -> Vec<(String, AstNode<'_>)> {
         .filter(|(api, call)| {
             RUST_UNBOUNDED.contains(&api.as_str())
                 && rust_arguments(*call).is_empty()
+                && !signal::is_unit_signal(*call)
                 && !ast_scan::is_inside_rust_test(*call)
         })
         .collect()
@@ -112,6 +122,7 @@ fn python_sites(root: AstNode<'_>) -> Vec<(String, AstNode<'_>)> {
                 .is_some_and(|arguments| arguments.text().contains("**"));
             !splat && size.is_none_or(|size| non_positive_literal(size.text()))
         })
+        .filter(|(_, call)| !bounds::size_checked(*call))
         .collect()
 }
 
@@ -126,6 +137,7 @@ fn java_sites(root: AstNode<'_>) -> Vec<(String, AstNode<'_>)> {
                         .child_by_field_name("arguments")
                         .is_some_and(|arguments| arguments.named_child_count() == 0))
         })
+        .filter(|(_, call)| !bounds::size_checked(*call) && !bounds::scoped_executor(*call))
         .collect()
 }
 
