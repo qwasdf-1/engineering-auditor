@@ -2,7 +2,9 @@
 //! facts, with a switch whose arms each only return counted as one exit;
 //! then, for grammars whose semantic facts do not normalize them, Kotlin (locals are `val`/`var` properties and loop variables, a return is
 //! a `return` jump, all of a dispatch switch's arms one, and statements are the entries of `statements` blocks)
-//! and C/C++ (locals are the declarators of `declaration`s). Nested
+//! and C/C++ (locals are the declarators of `declaration`s; returns are
+//! counted over the tree so that the alternatives of one preprocessor
+//! conditional count as the largest of them, not their sum). Nested
 //! functions and lambdas count toward their own owners, not the enclosing
 //! function.
 
@@ -95,8 +97,8 @@ pub(super) fn count_declared_metrics(
             walk(language, child, &mut counts);
         }
         metric.locals = counts.locals;
+        metric.returns = counts.returns;
         if *language == Language::Kotlin {
-            metric.returns = counts.returns;
             metric.statements = counts.statements;
         }
     }
@@ -110,9 +112,56 @@ struct Counts {
     dispatches: BTreeSet<usize>,
 }
 
+impl Counts {
+    /// Counts the return `node`, unless it is an arm of a dispatch switch
+    /// already counted.
+    fn add_return(&mut self, node: AstNode<'_>) {
+        if auditor_ast::dispatch_switch(node).is_none_or(|switch| self.dispatches.insert(switch)) {
+            self.returns += 1;
+        }
+    }
+}
+
+/// A C or C++ conditional (`#if`, `#ifdef`, `#ifndef`) with an `#elif`,
+/// `#elifdef`, or `#else` alternative.
+fn is_alternative_chain(language: &Language, node: AstNode<'_>) -> bool {
+    matches!(language, Language::C | Language::Cpp)
+        && matches!(node.kind(), "preproc_if" | "preproc_ifdef")
+        && node.child_by_field_name("alternative").is_some()
+}
+
+/// Walks a conditional and its alternatives, which no build compiles
+/// together: the chain's returns are those of its largest alternative, and
+/// chains nested in an alternative resolve the same way. Locals are still
+/// those of every alternative.
+fn walk_chain(language: &Language, chain: AstNode<'_>, counts: &mut Counts) {
+    let mut largest = 0;
+    let mut branch = Some(chain);
+    while let Some(node) = branch {
+        let alternative = node.child_by_field_name("alternative");
+        let mut part = Counts {
+            dispatches: counts.dispatches.clone(),
+            ..Counts::default()
+        };
+        for child in node.named_children() {
+            if alternative.is_none_or(|next| next.start_byte() != child.start_byte()) {
+                walk(language, child, &mut part);
+            }
+        }
+        counts.locals += part.locals;
+        counts.dispatches.extend(part.dispatches);
+        largest = largest.max(part.returns);
+        branch = alternative;
+    }
+    counts.returns += largest;
+}
+
 fn walk(language: &Language, node: AstNode<'_>, counts: &mut Counts) {
     if NESTED.contains(&node.kind()) {
         return;
+    }
+    if is_alternative_chain(language, node) {
+        return walk_chain(language, node, counts);
     }
     match (language, node.kind()) {
         (Language::Kotlin, "property_declaration") => counts.locals += 1,
@@ -128,12 +177,9 @@ fn walk(language: &Language, node: AstNode<'_>, counts: &mut Counts) {
                 .count();
         }
         (Language::Kotlin, "jump_expression") if node.text().starts_with("return") => {
-            if auditor_ast::dispatch_switch(node)
-                .is_none_or(|switch| counts.dispatches.insert(switch))
-            {
-                counts.returns += 1;
-            }
+            counts.add_return(node);
         }
+        (Language::C | Language::Cpp, "return_statement") => counts.add_return(node),
         // Comments are named children of a block, not statements.
         (Language::Kotlin, "statements") => {
             counts.statements += node
@@ -214,7 +260,91 @@ mod tests {
         let c = "int f(int n) {\n    int a = 1, b = 2;\n    char *p;\n    for (int i = 0; i < n; i++) { a += i; }\n    return a + b;\n}\n";
         assert_eq!(
             metrics(Language::C, auditor_ast::AstLang::C, c),
-            [(4, 0, 0)]
+            [(4, 1, 0)]
         );
+    }
+
+    /// The returns of one C function body.
+    fn returns(language: Language, body: &str) -> usize {
+        let (ast, source) = match language {
+            Language::C => (
+                auditor_ast::AstLang::C,
+                format!("int f(int x) {{\n{body}}}\n"),
+            ),
+            _ => (
+                auditor_ast::AstLang::Cpp,
+                format!("int f(int x) {{\n{body}}}\n"),
+            ),
+        };
+        metrics(language, ast, &source)[0].1
+    }
+
+    fn c_returns(body: &str) -> usize {
+        returns(Language::C, body)
+    }
+
+    #[test]
+    fn preprocessor_alternatives_count_as_the_largest_one() {
+        let ret = |n: usize| "  return 1;\n".repeat(n);
+        let chain = |first: usize, second: usize| {
+            format!("#if A\n{}#else\n{}#endif\n", ret(first), ret(second))
+        };
+        // Alternatives never compile together: five and one is five.
+        assert_eq!(c_returns(&chain(5, 1)), 5);
+        assert_eq!(returns(Language::Cpp, &chain(5, 1)), 5);
+        let long_chain = format!(
+            "#ifdef A\n{}#elif B\n{}#elif defined(C)\n{}#else\n{}#endif\n",
+            ret(3),
+            ret(1),
+            ret(2),
+            ret(1)
+        );
+        assert_eq!(c_returns(&long_chain), 3);
+        let elifdef = format!("#ifndef A\n{}#elifdef B\n{}#endif\n", ret(2), ret(4));
+        assert_eq!(c_returns(&elifdef), 4);
+        // Returns outside the chain add to the largest alternative.
+        assert_eq!(c_returns(&format!("{}{}", ret(3), chain(3, 1))), 6);
+        assert_eq!(
+            c_returns(&format!("{}{}{}", ret(1), chain(2, 4), ret(1))),
+            6
+        );
+        // A chain whose one alternative alone exceeds five.
+        assert_eq!(c_returns(&chain(1, 6)), 6);
+        // Two chains in sequence both compile.
+        assert_eq!(c_returns(&format!("{}{}", chain(3, 1), chain(1, 2))), 5);
+    }
+
+    #[test]
+    fn a_conditional_without_an_alternative_adds_in_full() {
+        let ret = "  return 1;\n";
+        assert_eq!(c_returns(&ret.repeat(6)), 6);
+        let lone = format!("{}#ifdef X\n{ret}#endif\n{}", ret.repeat(3), ret.repeat(2));
+        assert_eq!(c_returns(&lone), 6);
+        // A lone conditional inside an alternative adds to that alternative.
+        let nested = format!("#if A\n#ifdef X\n{ret}#endif\n{ret}#else\n{ret}#endif\n");
+        assert_eq!(c_returns(&nested), 2);
+    }
+
+    #[test]
+    fn nested_chains_resolve_inside_their_alternative() {
+        let ret = "  return 1;\n";
+        let inner = format!("#ifdef B\n{}#else\n{}#endif\n", ret.repeat(2), ret);
+        let nested = format!("#if A\n{ret}{inner}#else\n{}#endif\n{ret}", ret.repeat(2));
+        // The first alternative is one return plus two, the second two;
+        // one more follows the chain.
+        assert_eq!(c_returns(&nested), 4);
+    }
+
+    #[test]
+    fn dispatch_switches_still_count_once_inside_an_alternative() {
+        let arms = (0..8)
+            .map(|i| format!("case {i}: return {i};\n"))
+            .collect::<String>();
+        let switch = format!("switch (x) {{\n{arms}}}\n");
+        let source = format!("#if A\n{switch}  return 0;\n#else\n  return 1;\n#endif\n");
+        assert_eq!(c_returns(&source), 2);
+        // The same switch in both alternatives is still one exit each.
+        let both = format!("#if A\n{switch}#else\n{switch}#endif\n  return 2;\n");
+        assert_eq!(c_returns(&both), 2);
     }
 }

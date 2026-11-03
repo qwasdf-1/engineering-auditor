@@ -436,3 +436,43 @@ fn a_switch_of_returns_counts_as_one_exit() {
         ]
     );
 }
+
+/// The returns of a function's mutually exclusive preprocessor alternatives
+/// count as the largest alternative, so only a function whose largest
+/// alternative plus its other returns exceeds five is reported.
+#[test]
+fn preprocessor_alternatives_count_as_the_largest_one() {
+    let ret = |n: usize| "  return 1;\n".repeat(n);
+    let function = |name: &str, before: usize, first: usize, second: usize, lone: usize| {
+        format!(
+            "int {name}(int x) {{\n{}#if A\n{}#else\n{}#endif\n#ifdef X\n{}#endif\n}}\n",
+            ret(before),
+            ret(first),
+            ret(second),
+            ret(lone),
+        )
+    };
+    let source = [
+        function("exclusive_c", 0, 5, 1, 0),
+        function("outside_and_largest_c", 3, 3, 1, 0),
+        function("one_alternative_c", 0, 1, 6, 0),
+        function("lone_conditional_c", 3, 2, 2, 1),
+        function("lone_conditional_five_c", 2, 2, 2, 1),
+    ]
+    .concat();
+    let findings = analyze("ifdef-returns", &[("src/alt.c", &source)]);
+    assert_eq!(
+        anchors_for(&findings, "too_many_returns"),
+        [
+            "symbol:lone_conditional_c",
+            "symbol:one_alternative_c",
+            "symbol:outside_and_largest_c"
+        ]
+    );
+    for finding in findings
+        .iter()
+        .filter(|finding| finding.detector == "too_many_returns")
+    {
+        assert!(finding.message.contains("has 6 return statements"));
+    }
+}
