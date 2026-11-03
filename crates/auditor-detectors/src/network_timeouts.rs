@@ -15,6 +15,11 @@ use crate::python_api_identity::{keyword_argument, positional_arguments, PyScope
 use crate::rust_api_identity::RustScope;
 use crate::{util, AnalysisMethod, AuditedFile, Language};
 
+#[path = "network_timeouts_config.rs"]
+mod config;
+
+use config::{named_config_lacks_timeout, object_may_hold_timeout};
+
 /// A call or client construction that can wait forever, and the API it
 /// resolves to.
 struct Site<'a> {
@@ -290,19 +295,14 @@ fn axios_call_lacks_timeout(api: &str, call: AstNode<'_>) -> bool {
 }
 
 /// Whether the argument at `index` is absent, or an object literal without
-/// a `timeout` (or a spread that may carry one). Any other expression may
+/// a `timeout` (or a spread that may carry one). A name is judged by the
+/// literal it was built from in the same function. Any other expression may
 /// hold a timeout.
 fn lacks_timeout(call: AstNode<'_>, index: usize) -> bool {
     match js_arguments(call).get(index) {
         None => true,
-        Some(config) if config.kind() == "object" => {
-            !config
-                .named_children()
-                .any(|property| property.kind() == "spread_element")
-                && !object_properties(*config)
-                    .iter()
-                    .any(|(key, _)| key == "timeout")
-        }
+        Some(config) if config.kind() == "object" => !object_may_hold_timeout(*config),
+        Some(config) if config.kind() == "identifier" => named_config_lacks_timeout(call, *config),
         Some(_) => false,
     }
 }

@@ -4,7 +4,7 @@
 //! default that is bounded, a timeout set elsewhere in the file, options
 //! the detector cannot see into).
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::ScanProfile;
 
@@ -308,4 +308,125 @@ fn network_timeout_boundaries_report_exactly_the_unbounded_calls() {
         }
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
+/// Axios configs passed by name. Lines marked `// reported` must be the
+/// only findings; the rest are judged silent.
+const NAMED_CONFIG_SOURCE: &str = r#"import axios, { AxiosRequestConfig } from 'axios';
+
+const topLevel = { url: 'https://example.test' };
+await axios(topLevel); // reported
+
+export async function inlineShorthand(url: string) {
+  const timeout = 5000;
+  await axios({ url, timeout });
+}
+
+export async function typedLiteral(url: string) {
+  const config: AxiosRequestConfig = { url, timeout: 5000 };
+  await axios(config);
+}
+
+export async function shorthandTimeout(url: string) {
+  const timeout = 5000;
+  const config = { url, timeout };
+  await axios(config);
+}
+
+export async function castLiteral(url: string) {
+  const config = { url, timeout: 5000 } as AxiosRequestConfig;
+  await axios(config);
+}
+
+export async function satisfiesLiteral(url: string) {
+  const config = { url, timeout: 5000 } satisfies AxiosRequestConfig;
+  await axios(config);
+}
+
+export async function assignedTimeout(url: string) {
+  const config = { url };
+  config.timeout = 5000;
+  await axios(config);
+}
+
+export async function spreadLiteral(url: string, defaults: AxiosRequestConfig) {
+  const config = { ...defaults, url };
+  await axios(config);
+}
+
+export async function reassignedWithTimeout(url: string) {
+  let config = { url };
+  config = { url, timeout: 5000 };
+  await axios(config);
+}
+
+export async function literalWithoutTimeout(url: string) {
+  const config: AxiosRequestConfig = { url, method: 'get' };
+  await axios(config); // reported
+}
+
+export async function castWithoutTimeout(url: string) {
+  const config = { url, method: 'get' } as AxiosRequestConfig;
+  await axios(config); // reported
+}
+
+export async function retryTimeoutOnly(url: string) {
+  const config = { url, retryTimeout: 5000, timeoutErrorMessage: 'slow' };
+  await axios(config); // reported
+}
+
+export async function nestedTimeout(url: string) {
+  const config = { url, proxy: { timeout: 5000 } };
+  await axios(config); // reported
+}
+
+export async function timeoutInValue(url: string) {
+  const config = { url, headers: { note: 'timeout' } };
+  await axios(config); // reported
+}
+
+export async function getWithConfig(url: string) {
+  const config = { headers: {} };
+  await axios.get(url, config); // reported
+}
+
+export function declaredInOuterFunction(url: string) {
+  const config = { url };
+  return () => axios(config);
+}
+
+export async function parameterConfig(url: string, config: AxiosRequestConfig) {
+  await axios(config);
+}
+"#;
+
+/// A `const`, `let`, typed, cast, or assigned config in the call's function
+/// is judged as its literal; names it cannot resolve stay silent.
+#[test]
+fn named_axios_config_is_judged_as_its_literal() {
+    let expected: BTreeSet<usize> = NAMED_CONFIG_SOURCE
+        .lines()
+        .enumerate()
+        .filter(|(_, line)| line.contains("// reported"))
+        .map(|(index, _)| index + 1)
+        .collect();
+    let source = NAMED_CONFIG_SOURCE.to_string();
+    let mut case = CapabilityCase::new(
+        "network_call_without_timeout",
+        ScanProfile::Full,
+        "",
+        "",
+        "",
+        "",
+    );
+    case.positive = vec![("src/named.ts".to_string(), source.clone())];
+    case.negative = vec![("src/named.ts".to_string(), source)];
+    let analysis = analyze_case(&case, true, ScanProfile::Full);
+    let reported: BTreeSet<usize> = analysis
+        .findings
+        .iter()
+        .filter(|finding| finding.detector == "network_call_without_timeout")
+        .filter_map(|finding| finding.locations.first()?.line)
+        .collect();
+    assert_eq!(reported, expected);
 }
