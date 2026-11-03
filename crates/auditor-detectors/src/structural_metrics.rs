@@ -311,24 +311,39 @@ pub(crate) fn excessive_nesting_depth_findings(index: &StructureIndex) -> Vec<Fi
     findings
 }
 
+/// Top-level function definitions, with every overload set (one name in one
+/// scope: C++ overloads, templates, and specialisations, Kotlin overloads,
+/// Python `@overload` stubs and their implementation) counted once, as one
+/// behaviour.
+fn top_level_definition_count(file: &StructureFile) -> usize {
+    let mut sets = BTreeSet::new();
+    let mut unnamed = 0;
+    for symbol in &file.symbols {
+        // Methods belong to their type, however the language attaches them
+        // (Rust `impl`, Go receivers, prototype or object-literal members).
+        let top_level = symbol.kind == SymbolKind::Function
+            && symbol.parent.is_none_or(|parent| {
+                file.symbols
+                    .get(parent as usize)
+                    .is_some_and(|symbol| symbol.kind == SymbolKind::Module)
+            })
+            && !symbol.in_test;
+        if !top_level {
+            continue;
+        }
+        if symbol.overload_set.is_empty() {
+            unnamed += 1;
+        } else {
+            sets.insert((symbol.parent, symbol.overload_set.as_str()));
+        }
+    }
+    sets.len() + unnamed
+}
+
 pub(crate) fn god_module_findings(index: &StructureIndex) -> Vec<Finding> {
     let mut findings = Vec::new();
     for file in emittable_files(index) {
-        let count = file
-            .symbols
-            .iter()
-            // Methods belong to their type, however the language attaches them
-            // (Rust `impl`, Go receivers, prototype or object-literal members).
-            .filter(|symbol| {
-                symbol.kind == SymbolKind::Function
-                    && symbol.parent.is_none_or(|parent| {
-                        file.symbols
-                            .get(parent as usize)
-                            .is_some_and(|symbol| symbol.kind == SymbolKind::Module)
-                    })
-                    && !symbol.in_test
-            })
-            .count();
+        let count = top_level_definition_count(file);
         if count <= 20 {
             continue;
         }

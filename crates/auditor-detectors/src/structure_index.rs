@@ -21,6 +21,8 @@ mod languages;
 mod loops;
 #[path = "structure_operands.rs"]
 mod operands;
+#[path = "structure_overloads.rs"]
+mod overloads;
 #[path = "structure_spans.rs"]
 mod spans;
 #[path = "structure_value_uses.rs"]
@@ -66,6 +68,10 @@ pub(crate) struct StructureSymbol {
     /// A Python `@overload` stub: a typing declaration whose implementation
     /// is a separate, undecorated definition.
     pub(crate) overload_stub: bool,
+    /// Scope-qualified name shared by every overload, template, and
+    /// specialisation of one function (`a::b::f`); empty when unnamed or not
+    /// a function.
+    pub(crate) overload_set: String,
     /// A Python function whose results are cached per argument
     /// (`@functools.cache`, `@lru_cache`).
     pub(crate) memoized: bool,

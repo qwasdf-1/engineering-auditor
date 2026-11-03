@@ -85,6 +85,10 @@ fn collect_symbols(
             if name.is_empty() && symbol.kind == SymbolKind::Variable {
                 name = declaration_binding(source).unwrap_or_default();
             }
+            let overload_set = match symbol.kind {
+                SymbolKind::Function => super::overloads::overload_set(&file.language, node, &name),
+                _ => String::new(),
+            };
             StructureSymbol {
                 kind: symbol.kind,
                 name,
@@ -175,6 +179,7 @@ fn collect_symbols(
                 overload_stub: overload_spans
                     .iter()
                     .any(|span| span.start_byte == symbol.span.start_byte),
+                overload_set,
                 memoized: memoized_spans
                     .iter()
                     .any(|span| span.start_byte == symbol.span.start_byte),

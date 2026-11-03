@@ -235,6 +235,7 @@ mod tests {
                 in_test: false,
                 implicitly_used: false,
                 overload_stub: false,
+                overload_set: String::new(),
                 memoized: false,
                 associated: false,
                 typing: Default::default(),
