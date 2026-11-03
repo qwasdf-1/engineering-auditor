@@ -3,78 +3,15 @@ use std::collections::{BTreeMap, BTreeSet};
 use super::{
     BenefitEvidenceMode, ContextualRecommendation, CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION,
 };
-use crate::{
-    CaseConclusion, ClaimStatus, EngineeringCase, EngineeringClaim, RecommendationFamily, StableId,
-};
+use crate::{ClaimStatus, EngineeringCase, EngineeringClaim, RecommendationFamily, StableId};
 
-pub(crate) fn conclusion_allows_recommendation(
-    conclusion: CaseConclusion,
-    family: RecommendationFamily,
-) -> bool {
-    required_recommendation_family(conclusion) == Some(family)
-}
-
-pub(crate) fn required_recommendation_family(
-    conclusion: CaseConclusion,
-) -> Option<RecommendationFamily> {
-    const FAMILIES: [Option<RecommendationFamily>; 15] = [
-        Some(RecommendationFamily::LifecycleReownership),
-        Some(RecommendationFamily::ExplicitRetentionAvoidance),
-        None,
-        Some(RecommendationFamily::ExplicitRetentionAvoidance),
-        Some(RecommendationFamily::MeasurementBeforeChange),
-        Some(RecommendationFamily::SharedRootRemediation),
-        Some(RecommendationFamily::SharedRootRemediation),
-        Some(RecommendationFamily::PreserveIndependentActions),
-        Some(RecommendationFamily::PreserveIndependentActions),
-        Some(RecommendationFamily::ConsolidatedRemediation),
-        Some(RecommendationFamily::SequencedRemediation),
-        Some(RecommendationFamily::PreserveIndependentActions),
-        Some(RecommendationFamily::NarrowedRemediation),
-        Some(RecommendationFamily::DeferredRemediation),
-        None,
-    ];
-    FAMILIES[conclusion as usize]
-}
-
-pub(crate) fn validate_recommendations_for_conclusion(
-    conclusion: CaseConclusion,
-    recommendations: &[ContextualRecommendation],
-) -> Result<(), String> {
-    let incompatible = recommendations
-        .iter()
-        .filter(|recommendation| {
-            !conclusion_allows_recommendation(conclusion, recommendation.family)
-        })
-        .map(|recommendation| recommendation.recommendation_id.to_string())
-        .collect::<Vec<_>>();
-    if !incompatible.is_empty() {
-        return Err(format!(
-            "case conclusion {conclusion:?} cannot admit recommendation family for: {}",
-            incompatible.join(", ")
-        ));
-    }
-    let Some(required) = required_recommendation_family(conclusion) else {
-        return Ok(());
-    };
-    recommendations
-        .iter()
-        .any(|recommendation| recommendation.family == required)
-        .then_some(())
-        .ok_or_else(|| {
-            format!(
-                "case conclusion {conclusion:?} requires at least one {required:?} recommendation"
-            )
-        })
-}
-
-pub(crate) fn validate_recommendations(
+pub fn validate_recommendations(
     case: &EngineeringCase,
-    allowed_probe_ids: &BTreeSet<StableId>,
+    known_evidence_ids: &BTreeSet<String>,
     claims: &[EngineeringClaim],
     recommendations: &[ContextualRecommendation],
 ) -> Result<(), String> {
-    let context = RecommendationValidationContext::new(case, allowed_probe_ids, claims);
+    let context = RecommendationValidationContext::new(case, known_evidence_ids, claims);
     let mut ids = BTreeSet::new();
     for recommendation in recommendations {
         let duplicate = !ids.insert(recommendation.recommendation_id.clone());
@@ -85,7 +22,7 @@ pub(crate) fn validate_recommendations(
 
 struct RecommendationValidationContext<'a> {
     case: &'a EngineeringCase,
-    allowed_probe_ids: &'a BTreeSet<StableId>,
+    known_evidence_ids: &'a BTreeSet<String>,
     claims: BTreeMap<&'a StableId, &'a EngineeringClaim>,
     allowed_scope: BTreeSet<String>,
 }
@@ -93,12 +30,12 @@ struct RecommendationValidationContext<'a> {
 impl<'a> RecommendationValidationContext<'a> {
     fn new(
         case: &'a EngineeringCase,
-        allowed_probe_ids: &'a BTreeSet<StableId>,
+        known_evidence_ids: &'a BTreeSet<String>,
         claims: &'a [EngineeringClaim],
     ) -> Self {
         Self {
             case,
-            allowed_probe_ids,
+            known_evidence_ids,
             claims: claims
                 .iter()
                 .map(|claim| (&claim.claim_id, claim))
@@ -132,8 +69,8 @@ fn validate_recommendation(
     validate_scope(recommendation, context)?;
     validate_premises(recommendation, &context.claims)?;
     validate_alternative(recommendation)?;
-    validate_benefits(recommendation, context.allowed_probe_ids)?;
-    validate_verification(recommendation, context.allowed_probe_ids)
+    validate_benefits(recommendation, context.known_evidence_ids)?;
+    validate_verification(recommendation, context.known_evidence_ids)
 }
 
 fn validate_recommendation_identity(
@@ -244,23 +181,23 @@ fn validate_alternative(recommendation: &ContextualRecommendation) -> Result<(),
 
 fn validate_benefits(
     recommendation: &ContextualRecommendation,
-    allowed_probe_ids: &BTreeSet<StableId>,
+    known_evidence_ids: &BTreeSet<String>,
 ) -> Result<(), String> {
     for benefit in &recommendation.expected_benefits {
-        validate_benefit(benefit, allowed_probe_ids)?;
+        validate_benefit(benefit, known_evidence_ids)?;
     }
     Ok(())
 }
 
 fn validate_benefit(
     benefit: &super::ExpectedBenefit,
-    allowed_probe_ids: &BTreeSet<StableId>,
+    known_evidence_ids: &BTreeSet<String>,
 ) -> Result<(), String> {
     let invalid = benefit.description.trim().is_empty()
         || benefit
-            .evidence_probe_ids
+            .evidence_ids
             .iter()
-            .any(|id| !allowed_probe_ids.contains(id));
+            .any(|id| !known_evidence_ids.contains(id));
     if invalid {
         return Err("recommendation benefit is invalid".to_string());
     }
@@ -294,79 +231,19 @@ fn validate_numeric_benefit(benefit: &super::ExpectedBenefit) -> Result<(), Stri
 
 fn validate_verification(
     recommendation: &ContextualRecommendation,
-    allowed_probe_ids: &BTreeSet<StableId>,
+    known_evidence_ids: &BTreeSet<String>,
 ) -> Result<(), String> {
     let invalid = recommendation.verification_steps.iter().any(|step| {
         step.method.trim().is_empty()
             || step.expected_observation.trim().is_empty()
             || step
-                .evidence_probe_ids
+                .evidence_ids
                 .iter()
-                .any(|id| !allowed_probe_ids.contains(id))
+                .any(|id| !known_evidence_ids.contains(id))
     });
     if invalid {
         Err("recommendation verification is invalid".to_string())
     } else {
         Ok(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{
-        conclusion_allows_recommendation, required_recommendation_family,
-        validate_recommendations_for_conclusion,
-    };
-    use crate::{CaseConclusion, RecommendationFamily};
-
-    #[test]
-    fn recommendation_family_is_derived_from_the_case_conclusion() {
-        let cases = [
-            (
-                CaseConclusion::LifecycleMismatchSubstantiated,
-                Some(RecommendationFamily::LifecycleReownership),
-            ),
-            (
-                CaseConclusion::RepetitionJustified,
-                Some(RecommendationFamily::ExplicitRetentionAvoidance),
-            ),
-            (
-                CaseConclusion::WiderOwnershipInfeasible,
-                Some(RecommendationFamily::ExplicitRetentionAvoidance),
-            ),
-            (
-                CaseConclusion::InsufficientEvidence,
-                Some(RecommendationFamily::MeasurementBeforeChange),
-            ),
-            (CaseConclusion::ImpactImmaterial, None),
-        ];
-
-        for (conclusion, allowed) in cases {
-            assert_eq!(required_recommendation_family(conclusion), allowed);
-            for family in [
-                RecommendationFamily::LifecycleReownership,
-                RecommendationFamily::ExplicitRetentionAvoidance,
-                RecommendationFamily::MeasurementBeforeChange,
-            ] {
-                assert_eq!(
-                    conclusion_allows_recommendation(conclusion, family),
-                    Some(family) == allowed,
-                    "unexpected admission for {conclusion:?} and {family:?}"
-                );
-            }
-        }
-
-        for conclusion in [
-            CaseConclusion::LifecycleMismatchSubstantiated,
-            CaseConclusion::RepetitionJustified,
-            CaseConclusion::WiderOwnershipInfeasible,
-            CaseConclusion::InsufficientEvidence,
-        ] {
-            let error = validate_recommendations_for_conclusion(conclusion, &[]).unwrap_err();
-            assert!(error.contains("requires at least one"));
-        }
-        assert!(
-            validate_recommendations_for_conclusion(CaseConclusion::ImpactImmaterial, &[]).is_ok()
-        );
     }
 }

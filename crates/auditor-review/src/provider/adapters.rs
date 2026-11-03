@@ -19,8 +19,8 @@ use super::wire_response::{
     extract_usage, http_response_failure, validate_schema,
 };
 
-mod case_tools;
 mod render;
+mod tool_calls;
 
 use render::{
     api_path, apply_prompt_cache_key, lower_tool_schemas, render_dispatch_body,
@@ -64,7 +64,6 @@ pub(super) struct ToolSuccess {
 
 enum ToolDispatchKind {
     ProviderProbe,
-    NamedProbe,
     NativeCase,
 }
 
@@ -317,9 +316,6 @@ impl<'a> BuiltinAdapter<'a> {
             ToolDispatchKind::ProviderProbe => {
                 self.complete_tool_probe(parsed, metadata, completion)
             }
-            ToolDispatchKind::NamedProbe => {
-                self.complete_named_tool_probe(parsed, metadata, completion)
-            }
             ToolDispatchKind::NativeCase => self.complete_native_case_task_calls(
                 parsed,
                 native_assistant_output,
@@ -542,15 +538,7 @@ impl<'a> BuiltinAdapter<'a> {
 fn tool_dispatch_kind(request: &ProviderRequest) -> Option<ToolDispatchKind> {
     if request.stage == "provider_tool_qualification" {
         Some(ToolDispatchKind::ProviderProbe)
-    } else if matches!(
-        request.stage.as_str(),
-        super::CASE_ROLE_TOOL_QUALIFICATION_STAGE | super::CASE_SEMANTIC_QUALIFICATION_STAGE
-    ) {
-        Some(ToolDispatchKind::NamedProbe)
-    } else if matches!(
-        request.output_schema_name.as_str(),
-        "case_task_calls" | "challenge_response_tasks"
-    ) {
+    } else if request.output_schema_name == "case_task_calls" {
         Some(ToolDispatchKind::NativeCase)
     } else {
         None

@@ -157,6 +157,29 @@
   a root `.gitattributes` `linguist-vendored` or `linguist-generated` mark
   sets the role.
 
+### Removed
+
+- The v2 Layer 6 review protocol, as the first pass of the Layer 6 rebuild
+  (a reviewer that reads the repository through typed tools and cites every
+  claim). Gone: probe definitions, resolvers, and admission rules; the
+  single-reviewer probe ledger; the Mode E ensemble, challenge, response, and
+  comparator stages; case conclusions, finalization, the portfolio, and
+  offline verification of v2 review artifacts; the dispositions ledger; v2
+  route qualification; and the `scan --review`, `review plan`,
+  `review inspect-case`, `review run`, `review verify`, `review disposition`,
+  and `review gate` commands with the seven `audit_review_*` MCP tools. Each
+  removed command now says that it was removed. Kept: provider adapters,
+  routes, consent, transport, retry, and transcripts (`review provider
+  discover`, `review transcript`), the repository map and source lookup, the
+  Markdown renderer, the agenda selectors, case templates, evidence packets,
+  and claim and recommendation records. Contracts follow: claims and
+  recommendations (schema 2) cite evidence IDs instead of probe IDs, case
+  templates and cases (schema 2) carry no probe, guard, routing, challenge,
+  or closure policy, routes (schema 3) name only the single reviewer, and the
+  prompt bundle (schema 3) has a core and a reviewer instruction. The
+  schemas of the removed artifacts are deleted, and release archives ship
+  only `review/routes-example.json`.
+
 ## 1.5.0 - Inline Suppressions And Structural Detectors
 
 Three detectors join the catalog, now 124. Inline suppressions arrive:

@@ -1,5 +1,22 @@
 # Layer 6 - Evidence-Constrained Engineering Review
 
+> **Being rebuilt (2026-11-03).** The v2 case protocol described below was
+> removed in the first pass of the Layer 6 rebuild: probe definitions,
+> resolvers, and admission rules; the single-reviewer probe ledger; the Mode E
+> ensemble, challenge, response, and comparator stages; case conclusions,
+> finalization, the portfolio, and offline verification of v2 review
+> artifacts; the dispositions ledger; and the `scan --review`, `review plan`,
+> `review inspect-case`, `review run`, `review verify`, `review disposition`,
+> and `review gate` commands with their MCP tools. What remains is the
+> infrastructure the new reviewer builds on: provider adapters, routes,
+> consent, transport, retry, and transcripts (`review provider discover`,
+> `review transcript`); the repository map and source lookup; the Markdown
+> renderer and projection audit; case templates (without probes), the agenda
+> selectors, and evidence packets; and claim and recommendation records, which
+> now cite evidence IDs instead of probe answers. The rest of this page
+> describes the removed protocol and will be rewritten when the new path
+> ships.
+
 Profile: optional post-scan workflow
 
 Detectors: 0

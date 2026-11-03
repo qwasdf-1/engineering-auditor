@@ -6,4 +6,4 @@ pub use model::{
     ClaimConfidence, ClaimDraft, ClaimStatus, EngineeringClaim, EngineeringClaimKind,
     ENGINEERING_CLAIM_SCHEMA_VERSION,
 };
-pub(crate) use validate::validate_claims;
+pub use validate::validate_claims;

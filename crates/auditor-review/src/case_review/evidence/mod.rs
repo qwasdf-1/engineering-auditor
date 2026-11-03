@@ -7,15 +7,14 @@ mod lookup;
 mod neighborhood;
 mod packet;
 mod packet_compile;
-mod union;
 
 use std::fmt;
 
 use crate::RepositoryMapError;
 
 pub use budget::{
-    EvidencePacketBudget, ABSOLUTE_SOURCE_EXCERPTS, EVIDENCE_UNION_ROUNDS, HARD_PACKET_BYTES,
-    INITIAL_SOURCE_EXCERPTS, MAXIMUM_GRAPH_HOPS, TARGET_PACKET_BYTES,
+    EvidencePacketBudget, ABSOLUTE_SOURCE_EXCERPTS, HARD_PACKET_BYTES, INITIAL_SOURCE_EXCERPTS,
+    MAXIMUM_GRAPH_HOPS, TARGET_PACKET_BYTES,
 };
 pub use compile::EvidenceCompiler;
 pub use lookup::{
@@ -25,10 +24,6 @@ pub use packet::{
     AllowedEvidenceNeighborhood, ClosureState, EvidenceClosure, EvidenceIndexes, EvidenceItem,
     EvidenceItemKind, EvidenceOmission, EvidenceOmissionReason, EvidencePacket,
     EvidenceUnavailable, EVIDENCE_PACKET_SCHEMA_VERSION,
-};
-pub use union::{
-    plan_evidence_union, EvidenceUnionBoundary, EvidenceUnionPlan, ReviewerEvidenceRequest,
-    UnionEvidenceRequest,
 };
 
 #[derive(Clone, Debug, Eq, PartialEq)]

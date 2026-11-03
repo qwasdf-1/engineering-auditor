@@ -62,9 +62,9 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `digest` | stable | Flags only; the digest text is human-oriented. |
 | `catalog` | stable | Output follows `detector-manifest.schema.json`. |
 | `version` | stable | |
-| `scan --review`, all `review` subcommands | experimental | Layer 6 is opt-in and experimental. |
+| `review transcript`, `review provider discover` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed. |
 | `donor check`, `donor sync` | internal | Development provenance tooling. |
-| Exit codes | stable | `0` success; `1` policy failure (`gate`, `review verify`, or `review gate` failed, with the result on stdout); `2` usage, input, or runtime error (message on stderr). |
+| Exit codes | stable | `0` success; `1` policy failure (`gate` failed, with the result on stdout); `2` usage, input, or runtime error (message on stderr). |
 
 ## Artifacts And Identity
 
@@ -79,7 +79,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | SARIF output | stable | SARIF 2.1.0; `partialFingerprints.engineeringAuditor/v3` equals the finding ID. |
 | Evidence graph (embedded in the report) | stable | 2 |
 | Repository-map sidecar | experimental | 1 |
-| Engineering review artifacts | experimental | 2 |
+| Engineering review artifacts | experimental | none while Layer 6 is rebuilt |
 
 ## Configuration
 
@@ -111,27 +111,17 @@ stable CLI.
 | `co-edit-journal.schema.json` | stable |
 | `repository-map.schema.json` | experimental |
 | `review-brief.schema.json` | experimental |
-| `review-dispositions.schema.json` | experimental |
 | `case-template-bundle-v1.schema.json` | experimental |
 | `case-template-v1.schema.json` | experimental |
-| `challenge-record-v1.schema.json` | experimental |
-| `challenge-response-v1.schema.json` | experimental |
 | `contextual-recommendation-v1.schema.json` | experimental |
 | `engineering-case-v1.schema.json` | experimental |
 | `engineering-claim-v1.schema.json` | experimental |
-| `engineering-review-v2.schema.json` | experimental |
-| `ensemble-comparison-v1.schema.json` | experimental |
 | `evidence-packet-v1.schema.json` | experimental |
-| `probe-definition-v1.schema.json` | experimental |
-| `probe-result-v1.schema.json` | experimental |
 | `review-agenda-v1.schema.json` | experimental |
 | `review-candidate-v1.schema.json` | experimental |
-| `review-escalation-suite-v1.schema.json` | experimental |
 | `review-eval-corpus-v2.schema.json` | experimental |
 | `review-prompt-bundle-v2.schema.json` | experimental |
-| `review-qualification-v2.schema.json` | experimental |
 | `review-routes-v2.schema.json` | experimental |
-| `reviewer-case-review-v1.schema.json` | experimental |
 | `donor-manifest.schema.json` | internal |
 | `ecosystem-corpus.schema.json` | internal |
 | `ecosystem-labels.schema.json` | internal |

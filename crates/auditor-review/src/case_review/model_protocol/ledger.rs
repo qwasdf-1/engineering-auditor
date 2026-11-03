@@ -1,15 +1,10 @@
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 use auditor_core::sha256_digest_bytes;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::StableId;
-
-mod challenge;
 mod error;
-mod response;
-mod reviewer;
 
 pub use error::TaskLedgerError;
 
@@ -140,15 +135,6 @@ impl SemanticRecordLedger {
         }
     }
 
-    fn is_active_before(&self, earlier: &str, later: &str) -> bool {
-        let ordered = self.values_in_creation_order();
-        let earlier_position = ordered
-            .iter()
-            .position(|record| record.reference == earlier && record.active);
-        let later_position = ordered.iter().position(|record| record.reference == later);
-        matches!((earlier_position, later_position), (Some(earlier), Some(later)) if earlier < later)
-    }
-
     pub fn revisions(&self) -> &[SemanticRevisionRecord] {
         &self.revisions
     }
@@ -213,87 +199,6 @@ impl SemanticRecordLedger {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ReviewerTaskRequirements {
-    pub probe_ids: BTreeSet<String>,
-    pub claim_slots: BTreeSet<String>,
-    pub recommendation_families: BTreeSet<String>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct TaskDeclineDisposition {
-    pub task_id: String,
-    pub disposition: Option<String>,
-    pub reason: String,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ReviewerTaskCompletion {
-    pub preferred_recommendation_ref: Option<String>,
-    pub unresolved_gaps: Vec<String>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ReviewerTaskLedger {
-    requirements: ReviewerTaskRequirements,
-    probe_answers: SemanticRecordLedger,
-    claims: SemanticRecordLedger,
-    recommendations: SemanticRecordLedger,
-    completion: Option<ReviewerTaskCompletion>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ChallengeTaskRequirements {
-    pub targets: BTreeMap<String, String>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "snake_case", tag = "disposition")]
-pub enum ChallengeTargetDisposition {
-    Cleared,
-    Objections { objection_refs: Vec<String> },
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ChallengeTargetDispositionRecord {
-    pub reviewer_review_id: StableId,
-    pub challenger_run_id: StableId,
-    pub target_id: String,
-    pub target_type: String,
-    pub disposition: ChallengeTargetDisposition,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ChallengeTaskLedger {
-    requirements: ChallengeTaskRequirements,
-    target_dispositions: BTreeMap<String, ChallengeTargetDisposition>,
-    objections: SemanticRecordLedger,
-    common_concerns: SemanticRecordLedger,
-    complete: bool,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ResponseTaskRequirements {
-    pub objection_ids: BTreeSet<String>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ResponseTaskLedger {
-    requirements: ResponseTaskRequirements,
-    responses: SemanticRecordLedger,
-    replacement_recommendations: SemanticRecordLedger,
-    complete: bool,
-}
-
 fn validate_reference(reference: &str) -> Result<(), TaskLedgerError> {
     if reference.trim().is_empty() {
         Err(TaskLedgerError::InvalidReference)
@@ -302,86 +207,8 @@ fn validate_reference(reference: &str) -> Result<(), TaskLedgerError> {
     }
 }
 
-fn reference_array<'a>(value: &'a Value, field: &str) -> Result<Vec<&'a str>, TaskLedgerError> {
-    let Some(values) = value.get(field) else {
-        return Ok(Vec::new());
-    };
-    values
-        .as_array()
-        .ok_or_else(|| TaskLedgerError::InvalidComponent(format!("{field} must be an array")))?
-        .iter()
-        .map(|value| {
-            value.as_str().ok_or_else(|| {
-                TaskLedgerError::InvalidComponent(format!("{field} entries must be strings"))
-            })
-        })
-        .collect()
-}
-
-fn require_member(
-    kind: &'static str,
-    value: &str,
-    allowed: &BTreeSet<String>,
-) -> Result<(), TaskLedgerError> {
-    if allowed.contains(value) {
-        Ok(())
-    } else {
-        Err(TaskLedgerError::UnknownTask {
-            kind,
-            id: value.to_string(),
-        })
-    }
-}
-
-fn missing<'a, I>(required: &BTreeSet<String>, covered: I) -> Vec<String>
-where
-    I: IntoIterator<Item = &'a String>,
-{
-    let covered = covered.into_iter().collect::<BTreeSet<_>>();
-    required
-        .iter()
-        .filter(|value| !covered.contains(value))
-        .cloned()
-        .collect()
-}
-
-fn objection_target_id(
-    records: &SemanticRecordLedger,
-    objection_ref: &str,
-) -> Result<String, TaskLedgerError> {
-    records
-        .get(objection_ref)
-        .ok_or_else(|| TaskLedgerError::UnknownReference(objection_ref.to_string()))?
-        .value
-        .get("target_id")
-        .and_then(Value::as_str)
-        .map(ToString::to_string)
-        .ok_or(TaskLedgerError::ImmutableField {
-            reference: objection_ref.to_string(),
-            field: "target_id",
-        })
-}
-
 fn semantic_record_digest(value: &Value, active: bool) -> String {
     sha256_digest_bytes(
         &serde_json::to_vec(&(value, active)).expect("semantic task records are JSON-serializable"),
     )
-}
-
-fn ensure_unchanged_field(
-    ledger: &SemanticRecordLedger,
-    reference: &str,
-    replacement: &Value,
-    field: &'static str,
-) -> Result<(), TaskLedgerError> {
-    let current = ledger
-        .get(reference)
-        .ok_or_else(|| TaskLedgerError::UnknownReference(reference.to_string()))?;
-    if current.value.get(field) != replacement.get(field) {
-        return Err(TaskLedgerError::ImmutableField {
-            reference: reference.to_string(),
-            field,
-        });
-    }
-    Ok(())
 }

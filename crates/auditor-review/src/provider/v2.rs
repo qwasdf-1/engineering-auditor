@@ -7,40 +7,23 @@ use serde_json::json;
 
 use super::{
     CostClass, ProviderCallRecord, ProviderConfig, ProviderFailureClass, RouteBudget, RouteTarget,
-    Usage, PROVIDER_ADAPTER_VERSION,
+    Usage,
 };
-use crate::{
-    CanonicalIdentity, CaseKind, ContentDigest, ContractKind, DeliberationMode, InputContract,
-    ProbeKind, StableId,
-};
+use crate::{CanonicalIdentity, CaseKind, ContentDigest, ContractKind, InputContract, StableId};
 
-pub const REVIEW_ROUTES_V2_SCHEMA_VERSION: u32 = 2;
-pub const REVIEW_PROMPT_BUNDLE_V2_SCHEMA_VERSION: u32 = 2;
-pub const REVIEW_QUALIFICATION_V2_SCHEMA_VERSION: u32 = 2;
+pub const REVIEW_ROUTES_V2_SCHEMA_VERSION: u32 = 3;
+pub const REVIEW_PROMPT_BUNDLE_V2_SCHEMA_VERSION: u32 = 3;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ReviewRole {
     SingleReviewer,
-    ReviewerA,
-    ReviewerB,
-    ReviewerC,
-    Challenger,
-    AlternativeComparator,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct V2ProviderChain {
     pub targets: Vec<RouteTarget>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct EnsembleRouteChains {
-    pub reviewer_a: V2ProviderChain,
-    pub reviewer_b: V2ProviderChain,
-    pub reviewer_c: V2ProviderChain,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -56,9 +39,6 @@ pub struct ReviewRoutesV2 {
     pub schema_version: u32,
     pub providers: Vec<ProviderConfig>,
     pub single_reviewer: V2ProviderChain,
-    pub ensemble: Option<EnsembleRouteChains>,
-    pub challenger: V2ProviderChain,
-    pub alternative_comparator: Option<V2ProviderChain>,
     pub review_budget: RouteBudget,
     pub case_budgets: CaseBudgetPolicy,
 }
@@ -83,17 +63,7 @@ impl ReviewRoutesV2 {
             validate_tightening(budget, self.case_budgets.defaults)?;
         }
         let providers = provider_registry(&self.providers, self.review_budget)?;
-        validate_chain(&self.single_reviewer, &providers, "single_reviewer")?;
-        validate_chain(&self.challenger, &providers, "challenger")?;
-        if let Some(ensemble) = &self.ensemble {
-            validate_chain(&ensemble.reviewer_a, &providers, "reviewer_a")?;
-            validate_chain(&ensemble.reviewer_b, &providers, "reviewer_b")?;
-            validate_chain(&ensemble.reviewer_c, &providers, "reviewer_c")?;
-        }
-        if let Some(chain) = &self.alternative_comparator {
-            validate_chain(chain, &providers, "alternative_comparator")?;
-        }
-        Ok(())
+        validate_chain(&self.single_reviewer, &providers, "single_reviewer")
     }
 
     pub fn provider(&self, id: &str) -> Option<&ProviderConfig> {
@@ -140,10 +110,6 @@ pub struct ReviewPromptBundleV2 {
     pub bundle_id: StableId,
     pub core_instruction: String,
     pub reviewer_instruction: String,
-    pub shared_evidence_reconsideration_instruction: String,
-    pub challenger_instruction: String,
-    pub bounded_response_instruction: String,
-    pub alternative_comparison_instruction: String,
 }
 
 impl ReviewPromptBundleV2 {
@@ -172,13 +138,8 @@ impl ReviewPromptBundleV2 {
             "review-prompt-bundle",
             REVIEW_PROMPT_BUNDLE_V2_SCHEMA_VERSION,
             &json!({
-                "alternative_comparison_instruction": self.alternative_comparison_instruction,
-                "bounded_response_instruction": self.bounded_response_instruction,
-                "challenger_instruction": self.challenger_instruction,
                 "core_instruction": self.core_instruction,
                 "reviewer_instruction": self.reviewer_instruction,
-                "shared_evidence_reconsideration_instruction":
-                    self.shared_evidence_reconsideration_instruction,
             }),
         )
         .expect("review-prompt-bundle is a valid typed prefix")
@@ -190,15 +151,8 @@ impl ReviewPromptBundleV2 {
         )
     }
 
-    fn instructions(&self) -> [&str; 6] {
-        [
-            &self.core_instruction,
-            &self.reviewer_instruction,
-            &self.shared_evidence_reconsideration_instruction,
-            &self.challenger_instruction,
-            &self.bounded_response_instruction,
-            &self.alternative_comparison_instruction,
-        ]
+    fn instructions(&self) -> [&str; 2] {
+        [&self.core_instruction, &self.reviewer_instruction]
     }
 }
 
@@ -223,90 +177,6 @@ impl InputContract for ReviewPromptBundleV2 {
 
     fn validate_contract(&self) -> Result<(), String> {
         self.validate()
-    }
-}
-
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
-#[serde(rename_all = "snake_case")]
-pub enum SemanticQualificationCase {
-    Positive,
-    Negative,
-    Unknown,
-    ConflictingEvidence,
-    ForbiddenRedesign,
-}
-
-impl SemanticQualificationCase {
-    pub const ALL: [Self; 5] = [
-        Self::Positive,
-        Self::Negative,
-        Self::Unknown,
-        Self::ConflictingEvidence,
-        Self::ForbiddenRedesign,
-    ];
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct CaseQualificationBinding {
-    pub target: RouteTarget,
-    pub role: ReviewRole,
-    pub case_kind: CaseKind,
-    pub probe_kinds: Vec<ProbeKind>,
-    pub prompt_bundle_id: StableId,
-    pub tool_schema_digest: String,
-    pub renderer_version: u32,
-    pub adapter_version: u32,
-}
-
-impl CaseQualificationBinding {
-    pub fn qualification_id(&self) -> StableId {
-        StableId::from_identity(
-            "review-qualification",
-            REVIEW_QUALIFICATION_V2_SCHEMA_VERSION,
-            &serde_json::to_value(self).expect("qualification binding is serializable"),
-        )
-        .expect("review-qualification is a valid typed prefix")
-    }
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct CaseQualificationRecord {
-    pub schema_version: u32,
-    pub qualification_id: StableId,
-    pub binding: CaseQualificationBinding,
-    pub transport_valid: bool,
-    pub native_protocol_valid: bool,
-    pub semantic_output_valid: bool,
-    pub semantic_cases_passed: Vec<SemanticQualificationCase>,
-    pub failure_class: Option<ProviderFailureClass>,
-    pub failure_detail: Option<String>,
-    pub qualified_at_unix_seconds: u64,
-}
-
-impl CaseQualificationRecord {
-    pub fn has_valid_identity(&self) -> bool {
-        self.schema_version == REVIEW_QUALIFICATION_V2_SCHEMA_VERSION
-            && self.qualification_id == self.binding.qualification_id()
-            && self
-                .semantic_cases_passed
-                .windows(2)
-                .all(|pair| pair[0] < pair[1])
-            && self
-                .semantic_cases_passed
-                .iter()
-                .all(|case| SemanticQualificationCase::ALL.contains(case))
-            && self.failure_class.is_some() == self.failure_detail.is_some()
-    }
-
-    pub fn is_qualified(&self) -> bool {
-        self.has_valid_identity()
-            && self.transport_valid
-            && self.native_protocol_valid
-            && self.semantic_output_valid
-            && self.semantic_cases_passed == SemanticQualificationCase::ALL
-            && self.failure_class.is_none()
     }
 }
 
@@ -418,7 +288,6 @@ pub struct CaseProviderCallRecord {
     pub role: ReviewRole,
     pub case_id: StableId,
     pub pass: u8,
-    pub mode: DeliberationMode,
     pub usage: Usage,
     pub failure_class: Option<ProviderFailureClass>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -432,7 +301,6 @@ pub struct CaseCallContext {
     pub role: ReviewRole,
     pub case_id: StableId,
     pub pass: u8,
-    pub mode: DeliberationMode,
 }
 
 impl CaseProviderCallRecord {
@@ -447,58 +315,12 @@ impl CaseProviderCallRecord {
             role: context.role,
             case_id: context.case_id,
             pass: context.pass,
-            mode: context.mode,
         }
     }
 
     pub fn with_failure_detail(mut self, detail: impl Into<String>) -> Self {
         self.failure_detail = Some(detail.into());
         self
-    }
-}
-
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct QualificationScope {
-    role: ReviewRole,
-    case_kind: CaseKind,
-    probe_kinds: Vec<ProbeKind>,
-    prompt_bundle_id: StableId,
-    tool_schema_digest: String,
-}
-
-impl QualificationScope {
-    pub fn new(
-        role: ReviewRole,
-        case_kind: CaseKind,
-        mut probe_kinds: Vec<ProbeKind>,
-        prompt_bundle_id: StableId,
-        tool_schema_digest: String,
-    ) -> Self {
-        probe_kinds.sort();
-        probe_kinds.dedup();
-        Self {
-            role,
-            case_kind,
-            probe_kinds,
-            prompt_bundle_id,
-            tool_schema_digest,
-        }
-    }
-}
-
-pub fn qualification_binding(
-    target: RouteTarget,
-    scope: QualificationScope,
-) -> CaseQualificationBinding {
-    CaseQualificationBinding {
-        target,
-        role: scope.role,
-        case_kind: scope.case_kind,
-        probe_kinds: scope.probe_kinds,
-        prompt_bundle_id: scope.prompt_bundle_id,
-        tool_schema_digest: scope.tool_schema_digest,
-        renderer_version: crate::MODEL_MARKDOWN_RENDERER_VERSION,
-        adapter_version: PROVIDER_ADAPTER_VERSION,
     }
 }
 

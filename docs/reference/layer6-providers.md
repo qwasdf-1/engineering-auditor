@@ -1,5 +1,13 @@
 # Layer 6 Provider And Routing Contract
 
+> **Being rebuilt (2026-11-03).** Routes now name one chain,
+> `single_reviewer` (route schema 3): the challenger, alternative-comparator,
+> and ensemble chains were removed with the v2 review protocol, as was v2 route
+> qualification (see [Layer 6](./layer6-llm-review.md)). Provider adapters,
+> consent, transport, retry, transcripts, and `review provider discover` are
+> unchanged; the sections below that describe the removed roles and
+> qualification are kept for reference until the new path ships.
+
 Provider routing is an explicit operator-controlled boundary. Production code
 does not discover arbitrary endpoints, read credential values into artifacts,
 or send review context without the required consent.

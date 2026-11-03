@@ -8,7 +8,7 @@ today's findings in a baseline and fail CI only on new ones.
 
 This guide covers installing the tool, running a first scan, adopting a
 baseline and gate, wiring it into CI, uploading SARIF, configuring
-detectors, and opting into the experimental AI review layer.
+detectors, and the status of the experimental AI review layer.
 
 ## Install
 
@@ -25,8 +25,8 @@ sudo install auditor-1.5.0-x86_64-unknown-linux-gnu/auditor /usr/local/bin/
 auditor version
 ```
 
-The archive also contains a `review/` directory with the files the optional
-AI review needs (see [Opting into AI review](#opting-into-ai-review)).
+The archive also contains `review/routes-example.json`, a starting point for
+the provider routes of the AI review (see [AI review](#ai-review)).
 
 ### From source
 
@@ -287,52 +287,24 @@ suppresses nothing; one naming an unknown detector; and one that no longer
 matches a finding, so a stale suppression fails the gate instead of lingering.
 Markers inside string literals and in Markdown or data files are ignored.
 
-## Opting into AI review
+## AI review
 
-Layer 6 is an optional, experimental review that sends a bounded package of
-evidence about selected findings to a language model you configure. It
-reviews connected findings as engineering cases, records claims and
-recommendations with citations, and never changes the deterministic
-findings. Nothing is sent anywhere unless you run a review command with an
-explicit consent flag.
+Layer 6, the optional AI review, is being rebuilt as a reviewer that reads a
+scanned repository through typed tools and cites every claim (see
+[`docs/reference/layer6-llm-review.md`](reference/layer6-llm-review.md)).
+While it is rebuilt, the review commands of earlier releases (`scan
+--review`, `review run`, `review plan`, `review verify`, and the
+disposition commands) are gone. Two remain:
 
-You need:
-
-- A full-profile JSON report, written with `--output` so its repository map
-  is saved next to it.
-- The review files from the release archive's `review/` directory (or
-  `config/auditor/` in a source checkout): the case templates, prompt bundle,
-  and review brief. The case templates must be the ones shipped with your
-  `auditor` version.
-- A routes file naming the provider, model, credential environment variable,
-  privacy and cost classes, and request, token, time, and cost limits.
+- `auditor review provider discover --routes routes.json
+  --allow-hosted-review` checks that the providers in a routes file answer.
   `review/routes-example.json` is a starting point for Mistral's API; the
   schema is `contracts/review-routes-v2.schema.json`, described in
   [`docs/reference/layer6-providers.md`](reference/layer6-providers.md).
+- `auditor review transcript --input transcript.json` renders a recorded
+  provider transcript as Markdown.
 
-```sh
-export MISTRAL_API_KEY=...        # the variable your routes file names
-
-auditor scan --repo-root . --profile full --format json --output audit.json --quiet
-auditor review run --repo-root . --report audit.json --output reviewed.json \
-  --case-templates review/review-case-templates-v1.json \
-  --prompt-bundle review/review-prompt-bundle-v2.json \
-  --brief review/review-brief-general-v1.json \
-  --routes routes.json \
-  --allow-hosted-review
-```
-
-`--allow-hosted-review` is your consent to send the evidence package to the
-hosted provider in your routes file. `auditor scan --review` runs the scan and
-review in one command with the same flags. `auditor review verify --report
-reviewed.json --repo-root .` re-checks a reviewed report offline, without
-calling a model. Review surfaces are experimental and may change in any
-release.
-
-Review quality depends on the model. The evaluation behind the shipped
-prompts, and the known limitations of the routes tested so far, are in
-[`docs/reference/layer6-evaluation.md`](reference/layer6-evaluation.md) and
-[`docs/known-gaps.md`](known-gaps.md).
+Nothing is sent to a provider without the explicit consent flag.
 
 ## Stability and upgrades
 

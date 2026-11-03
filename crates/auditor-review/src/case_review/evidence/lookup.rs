@@ -23,7 +23,6 @@ pub enum EvidenceLookupRequestKind {
 #[serde(deny_unknown_fields)]
 pub struct EvidenceLookupRequest {
     pub case_id: StableId,
-    pub probe_id: StableId,
     pub kind: EvidenceLookupRequestKind,
     pub target_id: String,
     pub decision_relevance: String,
@@ -37,21 +36,6 @@ pub struct EvidenceLookupResult {
     pub items: Vec<EvidenceItem>,
 }
 
-impl EvidenceLookupResult {
-    pub(crate) fn from_request(
-        request: &EvidenceLookupRequest,
-        mut items: Vec<EvidenceItem>,
-    ) -> Result<Self, EvidenceError> {
-        let identity = serde_json::to_value(request)
-            .map_err(|error| EvidenceError::InvalidLookup(error.to_string()))?;
-        let request_id = StableId::from_identity("evidence-lookup", 1, &identity)
-            .map_err(|error| EvidenceError::InvalidLookup(error.to_string()))?;
-        items.sort_by(|left, right| left.id.cmp(&right.id));
-        items.dedup_by(|left, right| left.id == right.id);
-        Ok(Self { request_id, items })
-    }
-}
-
 pub struct EvidenceLookup<'a> {
     case: &'a EngineeringCase,
     input: &'a ReviewInput,
@@ -59,7 +43,6 @@ pub struct EvidenceLookup<'a> {
     budget: EvidencePacketBudget,
     allowed_findings: BTreeSet<String>,
     allowed_symbols: BTreeSet<String>,
-    probe_ids: BTreeSet<StableId>,
     seen: BTreeSet<StableId>,
     requests: usize,
 }
@@ -82,11 +65,6 @@ impl<'a> EvidenceLookup<'a> {
             budget,
             allowed_findings: neighborhood.finding_ids.into_iter().collect(),
             allowed_symbols: neighborhood.map_symbol_ids.into_iter().collect(),
-            probe_ids: case
-                .mandatory_probes
-                .iter()
-                .map(|probe| probe.probe_id.clone())
-                .collect(),
             seen: BTreeSet::new(),
             requests: 0,
         })
@@ -179,10 +157,6 @@ impl<'a> EvidenceLookup<'a> {
             (
                 request.case_id != self.case.case_id,
                 "lookup names a different case",
-            ),
-            (
-                !self.probe_ids.contains(&request.probe_id),
-                "lookup names an unknown case probe",
             ),
             (
                 request.decision_relevance.trim().is_empty(),

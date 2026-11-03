@@ -90,13 +90,12 @@ repository in about 14 seconds with the gating profile, using up to about
 
 These are off by default and not covered by the stability policy.
 
-- **AI review (Layer 6).** `auditor review run` sends a bounded,
-  evidence-only package about selected findings to a language model you
-  configure, and records its assessment and recommendations next to the
-  deterministic findings, which it can never change. Nothing is sent without
-  the explicit `--allow-hosted-review` flag. It has not yet passed its own
-  qualification bar on the models tested so far
-  ([known gaps](docs/known-gaps.md)); treat its output as advisory.
+- **AI review (Layer 6).** Being rebuilt as a reviewer that reads a scanned
+  repository through typed tools and cites every claim; until it ships, only
+  provider discovery and transcript rendering remain
+  ([Layer 6](docs/reference/layer6-llm-review.md)). It never changes the
+  deterministic findings, and nothing is sent without an explicit consent
+  flag.
 - **Graph analysis.** A build with `--features graph-analysis` adds seven
   detectors that consume an externally produced repository graph and
   co-edit journal (`--repo-graph`, `--co-edit-journal`).

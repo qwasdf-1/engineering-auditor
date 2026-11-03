@@ -32,14 +32,13 @@ mod tests {
     }
 
     #[test]
-    fn exposes_only_path_bound_v2_review_inputs() {
+    fn exposes_scan_job_and_catalog_tools_without_review_tools() {
         let server = McpServer::default();
         let response: Value = serde_json::from_str(
             &server.handle(r#"{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}"#),
         )
         .expect("tools list response");
         let tools = response["result"]["tools"].as_array().expect("tools");
-        assert_eq!(tools.len(), 10);
         assert!(tools.iter().all(|tool| tool["description"]
             .as_str()
             .is_some_and(|description| description.starts_with("Experimental: "))));
@@ -47,26 +46,12 @@ mod tests {
             .iter()
             .filter_map(|tool| tool["name"].as_str())
             .collect::<BTreeSet<_>>();
-        assert!(names.contains("audit_review_plan"));
-        assert!(names.contains("audit_review_case"));
-
-        let start = tools
-            .iter()
-            .find(|tool| tool["name"] == "audit_review_start")
-            .expect("review start tool");
-        let properties = &start["inputSchema"]["properties"];
-        for path in [
-            "brief",
-            "case_templates",
-            "output",
-            "prompt_bundle",
-            "repo_root",
-            "report",
-            "routes",
-        ] {
-            assert_eq!(properties[path]["type"], "string", "{path} is a path");
-        }
-        assert!(properties.get("protocol").is_none());
+        assert_eq!(
+            names,
+            BTreeSet::from(["audit_catalog", "audit_job_get", "audit_scan_start"])
+        );
+        let removed = call_tool(&server, 2, "audit_review_start", json!({}));
+        assert_eq!(removed["error"]["code"], -32602);
     }
 
     #[test]
@@ -80,26 +65,6 @@ mod tests {
         assert!(text.contains("## Output"));
         assert!(!text.trim_start().starts_with('{'));
         assert!(response["result"]["structuredContent"]["detectors"].is_array());
-    }
-
-    #[test]
-    fn review_start_rejects_inline_v1_objects() {
-        let server = McpServer::default();
-        let response = call_tool(
-            &server,
-            1,
-            "audit_review_start",
-            json!({
-                "brief": {"schema_version": 1},
-                "case_templates": "templates.json",
-                "output": "reviewed.json",
-                "prompt_bundle": "prompts.json",
-                "repo_root": ".",
-                "report": "audit.json",
-                "routes": {"schema_version": 1}
-            }),
-        );
-        assert_eq!(response["error"]["code"], -32602);
     }
 
     #[test]

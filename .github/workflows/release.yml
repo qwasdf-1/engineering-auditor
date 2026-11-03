@@ -68,8 +68,6 @@ jobs:
           cp "target/$TARGET/release/auditor" LICENSE README.md "$name/"
           python3 tooling/release/third_party_licenses.py --target "$TARGET" \
             --output "$name/THIRD-PARTY-LICENSES.txt"
-          cp config/auditor/review-case-templates-v1.json config/auditor/review-prompt-bundle-v2.json \
-            config/auditor/review-brief-general-v1.json "$name/review/"
           cp config/auditor/review-routes-example-mistral-v2.json "$name/review/routes-example.json"
           tar -czf "$name.tar.gz" "$name"
 

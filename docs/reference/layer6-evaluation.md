@@ -1,5 +1,10 @@
 # Layer 6 Evaluation And Prompt Contract
 
+> **Being rebuilt (2026-11-03).** The v2 review protocol this page describes
+> was removed in the first pass of the Layer 6 rebuild; see
+> [Layer 6](./layer6-llm-review.md). The page is kept for reference until the
+> new path ships.
+
 Layer 6 quality is governed by checked-in prompts, a provenance-bearing corpus,
 metric-vector hard gates, repeated runs, and a manual offline-improvement
 process. Runtime review never modifies its own prompts.

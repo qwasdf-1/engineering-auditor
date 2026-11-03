@@ -966,10 +966,6 @@ mod tests {
                 "review-brief",
                 include_str!("../../../contracts/review-brief.schema.json"),
             ),
-            (
-                "review-dispositions",
-                include_str!("../../../contracts/review-dispositions.schema.json"),
-            ),
         ] {
             serde_json::from_str::<serde_json::Value>(schema)
                 .unwrap_or_else(|error| panic!("invalid {name} schema: {error}"));
@@ -979,22 +975,15 @@ mod tests {
         for name in [
             "case-template-bundle-v1",
             "case-template-v1",
-            "challenge-record-v1",
-            "challenge-response-v1",
             "contextual-recommendation-v1",
             "engineering-case-v1",
             "engineering-claim-v1",
-            "engineering-review-v2",
             "evidence-packet-v1",
-            "probe-definition-v1",
-            "probe-result-v1",
             "review-agenda-v1",
             "review-candidate-v1",
             "review-eval-corpus-v2",
             "review-prompt-bundle-v2",
-            "review-qualification-v2",
             "review-routes-v2",
-            "reviewer-case-review-v1",
         ] {
             let schema = fs::read_to_string(contract_root.join(format!("{name}.schema.json")))
                 .unwrap_or_else(|error| panic!("cannot read {name} schema: {error}"));

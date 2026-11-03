@@ -124,34 +124,20 @@ ceilings that a review brief may tighten but never expand. Every read rechecks
 path containment and the mapped content hash; stale or invalid UTF-8 source
 fails closed.
 
-## Engineering Review V2
+## Engineering Review
 
-The reviewed report is a distinct atomic output. Its envelope records schema
-version 2, complete status, review/input identity, the digest-addressed sibling
-artifact, and case, accepted-recommendation, blocked-case, contested-case, and
-challenge-response counts. A sibling review-plan sidecar retains the exact
-input paths and deterministic plan used by offline verification.
+Report v5 keeps its supplemental `engineering_review` envelope (schema 1 or
+2). Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)): no
+command produces a reviewed report until the new path ships, so a report's
+envelope is `absent`, which remains valid because Layer 6 is supplemental
+policy output, not deterministic analysis. The v2 review artifact
+(`engineering-review-v2`), its plan sidecar and offline verification, and the
+probe, challenge, response, ensemble-comparison, reviewer-case-review,
+qualification, and dispositions contracts were removed on 2026-11-03.
 
-The artifact binds the agenda, cases, evidence packet history, probes, reviewer
-runs, claims, recommendations, single-reviewer and comparison-scoped
-challenges, ensemble comparisons, finding dispositions, production portfolio,
-execution truth, qualification/provider/egress records, semantic revisions,
-projection audits, and current offline-verification record. Each ensemble
-challenge binds its reviewer review ID, challenger run ID, and exact comparison
-target set. V1
-artifacts have no compatibility parser and return an explicit unsupported
-version error.
+## Engineering Review Input Foundation
 
-`review verify --report <reviewed-report> --repo-root <root>` derives the v2
-artifact and bound plan from the report, reloads the current inputs, and
-validates them without contacting a provider. A report with an absent review
-remains valid: Layer 6 is supplemental policy output, not deterministic
-analysis.
-
-## Engineering Review V2 Input Foundation
-
-The v2 path constructs an immutable `ReviewInput` before planning or
-provider qualification. Its `InputBinding` binds canonical SHA-256 identities
+The review constructs an immutable `ReviewInput` before planning. Its `InputBinding` binds canonical SHA-256 identities
 for report v5, evidence graph v2, repository map v1, the live source snapshot,
 case-template bundle, prompt bundle, route configuration, an optional operator
 brief, and a sorted set of typed evidence attachments.
@@ -183,48 +169,12 @@ its semantic content to equal the checked-in bundle. Template edits therefore
 change the input and case identities; runtime prompts cannot add or replace a
 template.
 
-## Engineering Review V2
-
-Report v5 supports two mutually exclusive engineering-review envelope shapes.
-Schema 1 retains assessment, material-recommendation, contested, and revision
-counts. Schema 2 instead requires case, accepted-recommendation, blocked-case,
-contested-case, and challenge-response counts; v1 count fields are not emitted
-for a v2 envelope.
-
-The digest-addressed `engineering-review-v2` artifact contains the complete
-case lifecycle, including evidence packets, probe definitions/results,
-reviewer runs with one host-derived typed case conclusion, optional claims and typed
-recommendations, challenge/response outcomes,
-non-mutating finding dispositions, execution truth, qualification/provider
-records, and egress manifests. The artifact ID excludes only its derived
-verification record, avoiding recursive identity while binding every semantic
-and process input.
-
-Reviewer artifacts also contain claim-slot dispositions,
-recommendation-family dispositions, challenge-target dispositions, task
-completion records, typed semantic revision records, and model-projection audit
-records. A projection audit binds renderer version, source digest, rendered
-Markdown digest and bytes, and sorted excluded field paths. A revision record
-binds task identity, monotonically increasing revision, before/after semantic
-digests, non-empty reason, request ID, and provider tool-call ID. Full
-superseded arguments remain transcript material rather than duplicate semantic
-artifact records.
-
-Offline verification reloads no provider and accepts no transport. It
-recomputes the artifact identity and process counts, re-admits case reviews,
-challenges, responses, and host finalizations, and proves that every report
-finding is unchanged and represented by exactly one disposition. Atomic
-publication writes the artifact and Markdown sidecar before replacing the
-reviewed report; rollback preserves pre-existing outputs.
-
 All maintained human-readable report surfaces use the shared typed Markdown
-document engine. `scan --format human` renders a freshly scanned report;
+document engine. `scan --format human` renders a freshly scanned report, and
 `auditor digest --report <report.json>` parses and renders the same complete
-document from persisted machine output; and v2 publication uses the same field,
-section, escaping, list, code-block, and integrity primitives for its review
-sidecar. The JSON report and review artifact remain authoritative. Persisted
-Markdown is deterministic and intended for both operator inspection and the
-same evidence-reading workflow used by the model-facing projections.
+document from persisted machine output. The JSON report remains authoritative.
+Persisted Markdown is deterministic and intended for both operator inspection
+and the same evidence-reading workflow used by the model-facing projections.
 
 An evidence packet binds one engineering case and input binding. Its canonical
 semantic payload contains sorted typed evidence items, required, optional,
@@ -235,27 +185,20 @@ validation rejects stale item digests, duplicate or mistyped IDs, dangling
 indexes, altered case templates, and packets beyond the hard byte ceiling.
 Runtime hard limits are code policy rather than schema compatibility constants.
 
-The v2 case lookup contract is narrower than the production-v1
-`source_requests` compatibility path described below. A lookup names its case,
-probe, typed request kind, target ID, and decision relevance; only selected
+A case lookup names its case, typed request kind, target ID, and decision
+relevance; only selected
 finding IDs and repository-map symbols anchored inside the precomputed two-hop
 case neighborhood are accepted. Raw paths, grep/search expressions, duplicate
 requests, and ambient filesystem authority are absent from the API.
 
-`probe-definition-v1` and `probe-result-v1` remain supplemental v2 contracts.
-Definitions bind their case and template, retain mandatory or optional origin,
-fix result vocabulary and resolver precedence, and carry explicit evidence and
-decision boundaries. Results bind one definition, host-recorded resolver
-identity/version, packet-resident evidence IDs, explanation, limitations, and
-model reviewer-run identity only when model interpretation supplied the
-answer. Unknown fallback is an explicit successful resolution record.
+Claims (`engineering-claim-v1`, schema 2) and recommendations
+(`contextual-recommendation-v1`, schema 2) cite evidence IDs: a claim's
+supporting and counter evidence, and a recommendation's benefit and
+verification evidence, must be IDs the host issued.
 
-`review-routes-v2`, `review-prompt-bundle-v2`, and
-`review-qualification-v2` are also supplemental v2 contracts. They define the
-case-based provider registry and target chains, content-bound prompts, and
-role/case/probe-specific qualification records without changing report v5.
-The v2 qualification contract records native protocol and semantic validity;
-v1 strict-output fields do not authorize a v2 route.
+`review-routes-v2` (schema 3) and `review-prompt-bundle-v2` (schema 3) define
+the provider registry with its single reviewer chain and the content-bound
+prompts, without changing report v5.
 
 ## Provenance And Evidence Graph V2
 

@@ -41,19 +41,7 @@ fn binding_matches(case: &EngineeringCase, input: &ReviewInput) -> bool {
 }
 
 fn template_matches(case: &EngineeringCase, template: &crate::CaseTemplateDefinition) -> bool {
-    let probes_match = case.mandatory_probes.len() == template.mandatory_probes.len()
-        && case
-            .mandatory_probes
-            .iter()
-            .zip(&template.mandatory_probes)
-            .all(|(probe, expected)| probe.slot == expected.slot && probe.kind == expected.kind);
-    probes_match
-        && case.evidence_contract == template.evidence_contract
-        && case.allowed_conclusions == template.closure_policy.allowed_conclusions
+    case.evidence_contract == template.evidence_contract
         && case.claim_slots == template.claim_slots
-        && case.inference_guards == template.inference_guards
         && case.recommendation_families == template.recommendation_families
-        && case.route_policy == template.route_policy
-        && case.challenge_policy == template.challenge_policy
-        && case.closure_policy == template.closure_policy
 }

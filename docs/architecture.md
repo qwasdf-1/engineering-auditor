@@ -27,10 +27,10 @@ deterministic layers depends on it.
 | `auditor-detectors` | Source discovery, the detector catalog, every detector, and the shared indexes. |
 | `auditor-report` | The report v5 contract: construction, JSON and SARIF output, parsing, evidence graph, baselines. |
 | `auditor-scan` | The one scan service used by both the CLI and MCP: runs detectors, assembles and publishes reports atomically. |
-| `auditor-review` | The experimental AI review: repository map, providers, cases, verification, evaluation. |
+| `auditor-review` | The experimental AI review, being rebuilt: repository map, providers, cases, evidence, claim and recommendation records. |
 | `auditor-donors` | The reference-tool ("donor") manifest checks. |
 | `auditor-cli` | The `auditor` binary. |
-| `auditor-mcp` | The `auditor-mcp` binary: JSON-RPC tools over the scan and review services. |
+| `auditor-mcp` | The `auditor-mcp` binary: JSON-RPC tools over the scan service. |
 
 ## Source Discovery
 
@@ -162,9 +162,10 @@ it.
 
 ## AI Review (Experimental)
 
-`auditor-review::case_review` runs the review in fixed stages. Each stage is
-deterministic host code except where a model is called, and model output is
-admitted only through typed tool calls that the host validates.
+The AI review is being rebuilt (v1.6 plan): the v2 case protocol, with its
+probes, ensemble, challenge and response stages, finalization, and offline
+verification, was removed. `auditor-review` keeps the parts the new reviewer
+builds on:
 
 1. **Input.** Validate the report, map, and live source hashes, and the case
    templates, prompts, routes, and brief, into one immutable input.
@@ -172,16 +173,8 @@ admitted only through typed tool calls that the host validates.
    cases from versioned templates.
 3. **Evidence packets.** Compile a bounded, digest-addressed packet of evidence
    per case. Source lookups are limited to mapped symbol neighborhoods.
-4. **Probes.** Answer each case's required questions, deterministically where
-   possible; a model can never override a deterministic answer.
-5. **Deliberation.** One reviewer (Mode S), or three blind reviewers plus a
-   structural comparison (Mode E, currently in shadow), produces claims and
-   recommendations.
-6. **Challenge and response.** An independently routed challenger objects;
-   the reviewer answers each objection once.
-7. **Finalize, verify, publish.** The host decides final status, the verifier
-   replays everything offline, and the reviewed report is published last so a
-   failure leaves the previous report in place.
+4. **Claims and recommendations.** Typed records that cite evidence IDs the
+   host issued, with validators that reject unknown citations.
 
 Providers (OpenAI Responses, Anthropic Messages, Mistral, OpenCode, and
 OpenAI-compatible Chat Completions) are configured by routes that name the
@@ -190,7 +183,8 @@ hard limits. Every request and response is recorded without secrets.
 [`layer6-llm-review.md`](reference/layer6-llm-review.md),
 [`layer6-providers.md`](reference/layer6-providers.md), and
 [`layer6-evaluation.md`](reference/layer6-evaluation.md) describe the
-protocol, the provider boundary, and how quality is measured.
+provider boundary and the removed v2 protocol, kept for reference until the
+new path ships.
 
 ## Tests
 
@@ -201,8 +195,8 @@ protocol, the provider boundary, and how quality is measured.
   require unchanged finding IDs.
 - **Catalog tests** check every default detector-language mode (1,710 today)
   and both role sets against the generated documentation.
-- **Integration tests** run real scans through the CLI and MCP, including
-  scripted-provider reviews, cancellation, and gate exit codes.
+- **Integration tests** run real scans through the CLI and MCP, and gate exit
+  codes.
 - **Donor parity tests** run a locked external tool and Engineering Auditor on
   the same generated project. They are ignored by default and need the tools
   provisioned ([`donor-parity-spec.md`](reference/donor-parity-spec.md)).

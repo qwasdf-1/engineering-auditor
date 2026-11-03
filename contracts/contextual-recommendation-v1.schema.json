@@ -26,7 +26,7 @@
     "confidence"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
+    "schema_version": { "const": 2 },
     "recommendation_id": {
       "type": "string",
       "pattern": "^contextual-recommendation:[0-9a-f]{64}$"
@@ -91,9 +91,9 @@
     "confidence": { "enum": ["low", "medium", "high"] }
   },
   "$defs": {
-    "probe_id": {
+    "evidence_id": {
       "type": "string",
-      "pattern": "^[a-z0-9-]+:[0-9a-f]{64}$"
+      "pattern": "^[a-z][a-z0-9-]*:\\S+$"
     },
     "nonempty_strings": {
       "type": "array",
@@ -109,7 +109,7 @@
         "numeric_value",
         "unit",
         "extrapolation_model",
-        "evidence_probe_ids"
+        "evidence_ids"
       ],
       "properties": {
         "description": { "type": "string", "minLength": 1 },
@@ -132,10 +132,10 @@
         "extrapolation_model": {
           "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
         },
-        "evidence_probe_ids": {
+        "evidence_ids": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "$ref": "#/$defs/probe_id" }
+          "items": { "$ref": "#/$defs/evidence_id" }
         }
       }
     },
@@ -151,14 +151,14 @@
     "verification": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["method", "expected_observation", "evidence_probe_ids"],
+      "required": ["method", "expected_observation", "evidence_ids"],
       "properties": {
         "method": { "type": "string", "minLength": 1 },
         "expected_observation": { "type": "string", "minLength": 1 },
-        "evidence_probe_ids": {
+        "evidence_ids": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "$ref": "#/$defs/probe_id" }
+          "items": { "$ref": "#/$defs/evidence_id" }
         }
       }
     }

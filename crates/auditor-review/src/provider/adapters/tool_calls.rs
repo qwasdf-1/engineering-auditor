@@ -77,65 +77,6 @@ impl BuiltinAdapter<'_> {
         Err(failure)
     }
 
-    pub(super) fn complete_named_tool_probe(
-        &self,
-        parsed: crate::provider::native_tool_adapter::ParsedToolOutput,
-        metadata: ToolMetadata,
-        completion: CallCompletion<'_, '_, '_>,
-    ) -> Result<ProviderResponse, ProviderFailure> {
-        let CallCompletion {
-            model,
-            request,
-            dispatch,
-            call,
-            transcript_response,
-            ..
-        } = completion;
-        let expected_tool_name = dispatch.tools.first().map(|tool| tool.name);
-        let output = parsed
-            .calls
-            .iter()
-            .find(|tool_call| Some(tool_call.tool_name.as_str()) == expected_tool_name)
-            .map(|tool_call| tool_call.arguments.clone());
-        if let Some(structured_output) = output {
-            if validate_schema(&structured_output, &request.output_schema).is_ok() {
-                let structured_output =
-                    if request.stage == crate::provider::CASE_ROLE_TOOL_QUALIFICATION_STAGE {
-                        native_turn(&parsed, &dispatch.tools)
-                    } else {
-                        structured_output
-                    };
-                return Ok(self.finish_tool_success(
-                    FailureCompletion {
-                        model,
-                        call,
-                        transcript_response,
-                        finish_reason: metadata.finish_reason,
-                        usage: metadata.usage,
-                    },
-                    metadata.request_id,
-                    ToolSuccess {
-                        structured_output,
-                        raw_text: parsed.raw_text,
-                        capability: "case_tool_call_v3",
-                        native_assistant_output: None,
-                    },
-                ));
-            }
-        }
-        Err(self.finish_discarded_tool_failure(
-            FailureCompletion {
-                model,
-                call,
-                transcript_response,
-                finish_reason: metadata.finish_reason,
-                usage: metadata.usage,
-            },
-            parsed.raw_text,
-            "provider did not complete the bound case-role tool qualification",
-        ))
-    }
-
     pub(super) fn finish_discarded_tool_failure(
         &self,
         completion: FailureCompletion<'_, '_>,

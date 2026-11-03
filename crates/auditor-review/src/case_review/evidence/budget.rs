@@ -9,7 +9,6 @@ pub const HARD_PACKET_BYTES: usize = 128 * 1024;
 pub const INITIAL_SOURCE_EXCERPTS: usize = 8;
 pub const ABSOLUTE_SOURCE_EXCERPTS: usize = 16;
 pub const MAXIMUM_GRAPH_HOPS: usize = 2;
-pub const EVIDENCE_UNION_ROUNDS: usize = 1;
 
 const MINIMUM_HARD_PACKET_BYTES: usize = 4 * 1024;
 
@@ -21,7 +20,6 @@ pub struct EvidencePacketBudget {
     pub initial_source_excerpts: usize,
     pub absolute_source_excerpts: usize,
     pub maximum_graph_hops: usize,
-    pub evidence_union_rounds: usize,
     pub maximum_lookup_requests: usize,
 }
 
@@ -33,7 +31,6 @@ impl Default for EvidencePacketBudget {
             initial_source_excerpts: INITIAL_SOURCE_EXCERPTS,
             absolute_source_excerpts: ABSOLUTE_SOURCE_EXCERPTS,
             maximum_graph_hops: MAXIMUM_GRAPH_HOPS,
-            evidence_union_rounds: EVIDENCE_UNION_ROUNDS,
             maximum_lookup_requests: INITIAL_SOURCE_EXCERPTS,
         }
     }
@@ -68,7 +65,6 @@ impl EvidencePacketBudget {
             || self.initial_source_excerpts > self.absolute_source_excerpts
             || self.absolute_source_excerpts > ABSOLUTE_SOURCE_EXCERPTS
             || self.maximum_graph_hops > MAXIMUM_GRAPH_HOPS
-            || self.evidence_union_rounds > EVIDENCE_UNION_ROUNDS
             || self.maximum_lookup_requests == 0
         {
             return Err(EvidenceError::InvalidBudget(

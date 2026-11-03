@@ -4,7 +4,7 @@ use super::VerificationStep;
 use crate::case_review::identity::case_draft_id;
 use crate::{ClaimConfidence, RecommendationFamily, StableId};
 
-pub const CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION: u32 = 1;
+pub const CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION: u32 = 2;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -44,7 +44,7 @@ pub struct ExpectedBenefit {
     pub numeric_value: Option<String>,
     pub unit: Option<String>,
     pub extrapolation_model: Option<String>,
-    pub evidence_probe_ids: Vec<StableId>,
+    pub evidence_ids: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -94,13 +94,13 @@ impl ContextualRecommendation {
         normalize(&mut draft.risks);
         normalize(&mut draft.costs);
         for benefit in &mut draft.expected_benefits {
-            normalize(&mut benefit.evidence_probe_ids);
+            normalize(&mut benefit.evidence_ids);
         }
         for alternative in &mut draft.alternatives {
             normalize(&mut alternative.tradeoffs);
         }
         for step in &mut draft.verification_steps {
-            normalize(&mut step.evidence_probe_ids);
+            normalize(&mut step.evidence_ids);
         }
         if draft.summary.trim().is_empty()
             || draft.scope_ids.is_empty()

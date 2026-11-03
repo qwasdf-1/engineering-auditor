@@ -2,9 +2,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 use super::{
-    CaseConclusion, CaseInstantiationError, CaseTemplateDefinition, ChallengePolicy, ClaimSlot,
-    ClosurePolicy, EvidenceContractTemplate, InferenceGuard, ProbeKind, RecommendationFamily,
-    RoutePolicy, TemplateStatus,
+    CaseInstantiationError, CaseTemplateDefinition, ClaimSlot, EvidenceContractTemplate,
+    RecommendationFamily, TemplateStatus,
 };
 use crate::case_review::agenda::validate_case_candidate;
 use crate::case_review::identity::{canonical_json, CanonicalIdentity};
@@ -12,7 +11,7 @@ use crate::{
     CaseKind, ContentDigest, DecisionKind, ReviewCandidate, ReviewInput, RiskPosture, StableId,
 };
 
-pub const ENGINEERING_CASE_SCHEMA_VERSION: u32 = 1;
+pub const ENGINEERING_CASE_SCHEMA_VERSION: u32 = 2;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -20,14 +19,6 @@ pub struct OperatorCaseConstraints {
     pub constraint_ids: Vec<String>,
     pub risk_posture: Option<RiskPosture>,
     pub excluded_domains: Vec<String>,
-}
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ProbeRef {
-    pub probe_id: StableId,
-    pub slot: String,
-    pub kind: ProbeKind,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -45,16 +36,10 @@ pub struct EngineeringCase {
     pub subject_ids: Vec<String>,
     pub finding_ids: Vec<String>,
     pub selection_provenance_refs: Vec<String>,
-    pub allowed_conclusions: Vec<CaseConclusion>,
-    pub mandatory_probes: Vec<ProbeRef>,
     pub evidence_contract: EvidenceContractTemplate,
     pub operator_constraints: OperatorCaseConstraints,
     pub claim_slots: Vec<ClaimSlot>,
-    pub inference_guards: Vec<InferenceGuard>,
     pub recommendation_families: Vec<RecommendationFamily>,
-    pub route_policy: RoutePolicy,
-    pub challenge_policy: ChallengePolicy,
-    pub closure_policy: ClosurePolicy,
 }
 
 impl EngineeringCase {
@@ -100,14 +85,6 @@ impl EngineeringCase {
 
     pub fn to_canonical_json(&self) -> String {
         canonical_json(&serde_json::to_value(self).expect("engineering case is serializable"))
-    }
-
-    pub fn allows_optional_probe(
-        &self,
-        template: &CaseTemplateDefinition,
-        kind: ProbeKind,
-    ) -> bool {
-        self.case_kind == template.kind && template.allows_optional_probe(kind)
     }
 }
 
@@ -194,15 +171,6 @@ pub(super) fn build_case(
         &input_binding_id,
         &operator_constraints,
     );
-    let mandatory_probes = template
-        .mandatory_probes
-        .iter()
-        .map(|probe| ProbeRef {
-            probe_id: probe_id(&case_id, &probe.slot),
-            slot: probe.slot.clone(),
-            kind: probe.kind,
-        })
-        .collect();
     Ok(EngineeringCase {
         schema_version: ENGINEERING_CASE_SCHEMA_VERSION,
         case_id,
@@ -216,16 +184,10 @@ pub(super) fn build_case(
         subject_ids: candidate.subject_ids.clone(),
         finding_ids: candidate.finding_ids.clone(),
         selection_provenance_refs: candidate.selection_evidence_refs.clone(),
-        allowed_conclusions: template.closure_policy.allowed_conclusions.clone(),
-        mandatory_probes,
         evidence_contract: template.evidence_contract.clone(),
         operator_constraints,
         claim_slots: template.claim_slots.clone(),
-        inference_guards: template.inference_guards.clone(),
         recommendation_families: template.recommendation_families.clone(),
-        route_policy: template.route_policy.clone(),
-        challenge_policy: template.challenge_policy.clone(),
-        closure_policy: template.closure_policy.clone(),
     })
 }
 
@@ -308,13 +270,4 @@ fn case_identity(
         "operator_constraints": operator_constraints,
         "template_version": template_version,
     })
-}
-
-fn probe_id(case_id: &StableId, slot: &str) -> StableId {
-    StableId::from_identity(
-        "case-probe",
-        ENGINEERING_CASE_SCHEMA_VERSION,
-        &json!({"case_id": case_id, "slot": slot}),
-    )
-    .expect("case-probe is a valid typed prefix")
 }

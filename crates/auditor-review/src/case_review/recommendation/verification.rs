@@ -5,5 +5,5 @@ use serde::{Deserialize, Serialize};
 pub struct VerificationStep {
     pub method: String,
     pub expected_observation: String,
-    pub evidence_probe_ids: Vec<crate::StableId>,
+    pub evidence_ids: Vec<String>,
 }

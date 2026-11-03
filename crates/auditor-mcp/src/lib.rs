@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 use std::io::{self, BufRead, Write};
-use std::path::{Component, Path, PathBuf};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 use auditor_core::{
@@ -13,12 +12,6 @@ use auditor_detectors::{
     SourceDiscoveryOptions,
 };
 use auditor_report::{ColorMode, ExternalInput, ExternalInputMetadata, NoReviewArtifactLoader};
-use auditor_review::{
-    inspect_engineering_case, parse_disposition_ledger, parse_engineering_review_v2,
-    plan_engineering_review, run_case_engineering_review, validate_disposition_coverage,
-    verify_case_engineering_review, HostedConsent, HttpTransport, ReviewControl, ReviewPlanOutput,
-    ReviewPlanRequest, ReviewRunRequest, ReviewStage, ReviewVerifyRequest, StableId, Transport,
-};
 use auditor_scan::{run_scan as execute_scan, ScanFormat, ScanRequest};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -45,28 +38,12 @@ pub fn serve_stdio() {
     }
 }
 
+#[derive(Default)]
 pub struct McpServer {
     jobs: JobStore,
-    transport: Arc<dyn Transport>,
-}
-
-impl Default for McpServer {
-    fn default() -> Self {
-        Self {
-            jobs: JobStore::default(),
-            transport: Arc::new(HttpTransport::default()),
-        }
-    }
 }
 
 impl McpServer {
-    pub fn with_transport(transport: Arc<dyn Transport>) -> Self {
-        Self {
-            jobs: JobStore::default(),
-            transport,
-        }
-    }
-
     pub fn handle(&self, input: &str) -> String {
         let request = match parse_rpc_request(input) {
             Ok(request) => request,
@@ -105,23 +82,7 @@ impl McpServer {
         match name {
             "audit_scan_start" => self.start_scan_tool(arguments),
             "audit_catalog" => parse_and_run(arguments, catalog),
-            "audit_review_validate" => parse_and_run(arguments, validate_review_artifacts),
-            "audit_review_plan" => parse_and_run(arguments, create_review_plan),
-            "audit_review_case" => parse_and_run(arguments, inspect_review_case),
-            _ => self.dispatch_job_tool(name, arguments),
-        }
-    }
-
-    fn dispatch_job_tool(&self, name: &str, arguments: Value) -> Result<Value, (i64, String)> {
-        match name {
             "audit_job_get" => self.job_get_tool(arguments),
-            "audit_review_start" => self.start_review_tool(arguments),
-            "audit_review_status" => self.review_status_tool(arguments),
-            "audit_review_result" => {
-                let args: ReviewResultArgs = parse_arguments(arguments)?;
-                self.jobs.review_result(&args).map_err(tool_error)
-            }
-            "audit_review_cancel" => self.review_cancel_tool(arguments),
             _ => Err((-32602, format!("unknown tool: {name}"))),
         }
     }
@@ -137,24 +98,6 @@ impl McpServer {
     fn job_get_tool(&self, arguments: Value) -> Result<Value, (i64, String)> {
         let args: JobGetArgs = parse_arguments(arguments)?;
         serialized_tool_result(self.jobs.get(&args.job_id).map_err(tool_error)?)
-    }
-
-    fn start_review_tool(&self, arguments: Value) -> Result<Value, (i64, String)> {
-        let args: ReviewJobArgs = parse_arguments(arguments)?;
-        self.jobs
-            .start_review(args, Arc::clone(&self.transport))
-            .map(queued_job)
-            .map_err(review_start_error)
-    }
-
-    fn review_status_tool(&self, arguments: Value) -> Result<Value, (i64, String)> {
-        let args: JobGetArgs = parse_arguments(arguments)?;
-        serialized_tool_result(self.jobs.review_status(&args.job_id).map_err(tool_error)?)
-    }
-
-    fn review_cancel_tool(&self, arguments: Value) -> Result<Value, (i64, String)> {
-        let args: JobGetArgs = parse_arguments(arguments)?;
-        serialized_tool_result(self.jobs.cancel_review(&args.job_id).map_err(tool_error)?)
     }
 }
 
@@ -204,93 +147,6 @@ fn tool_definitions() -> Vec<Value> {
             json!({"profile": {"enum": ["gating", "full"]}}),
             &[],
         ),
-        tool_definition(
-            "audit_review_validate",
-            "Validate a reviewed report, its digest-addressed review artifact, and optional disposition coverage.",
-            string_properties(&["dispositions", "repo_root", "report"]),
-            &["report", "repo_root"],
-        ),
-        tool_definition(
-            "audit_review_plan",
-            "Build a deterministic provider-free engineering review plan.",
-            review_job_properties(),
-            review_job_required(),
-        ),
-        tool_definition(
-            "audit_review_case",
-            "Inspect one bound case from a deterministic engineering review plan.",
-            review_case_properties(),
-            &["plan", "case_id"],
-        ),
-        tool_definition(
-            "audit_review_start",
-            "Start one bounded asynchronous engineering review using the canonical review service.",
-            review_start_properties(),
-            review_job_required(),
-        ),
-        job_tool_definition(
-            "audit_review_status",
-            "Read queued, running-stage, complete, failed, or cancelled review state.",
-        ),
-        tool_definition(
-            "audit_review_result",
-            "Read completed review artifact metadata and optionally the canonical reviewed report.",
-            json!({
-                    "include_report": {"type": "boolean"},
-                    "job_id": {"type": "string"}
-            }),
-            &["job_id"],
-        ),
-        job_tool_definition(
-            "audit_review_cancel",
-            "Cancel a queued review or prevent a running review from entering later stages.",
-        ),
-    ]
-}
-
-fn review_job_properties() -> Value {
-    json!({
-        "brief": {"type": "string"},
-        "case_templates": {"type": "string"},
-        "evidence": {"items": {"type": "string"}, "type": "array"},
-        "output": {"type": "string"},
-        "prompt_bundle": {"type": "string"},
-        "repo_root": {"type": "string"},
-        "report": {"type": "string"},
-        "routes": {"type": "string"}
-    })
-}
-
-fn string_properties(names: &[&str]) -> Value {
-    Value::Object(
-        names
-            .iter()
-            .map(|name| ((*name).to_string(), json!({"type": "string"})))
-            .collect(),
-    )
-}
-
-fn review_case_properties() -> Value {
-    let mut properties = string_properties(&["case_id", "plan"]);
-    properties["case_id"]["pattern"] = json!("^engineering-case:[0-9a-f]{64}$");
-    properties
-}
-
-fn review_start_properties() -> Value {
-    let mut properties = review_job_properties();
-    properties["allow_anonymous_provider"] = json!({"type": "boolean"});
-    properties["allow_hosted_review"] = json!({"type": "boolean"});
-    properties
-}
-
-fn review_job_required() -> &'static [&'static str] {
-    &[
-        "report",
-        "repo_root",
-        "case_templates",
-        "routes",
-        "prompt_bundle",
-        "output",
     ]
 }
 
@@ -354,67 +210,11 @@ struct CatalogArgs {
     profile: String,
 }
 
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ReviewValidateArgs {
-    report: PathBuf,
-    repo_root: PathBuf,
-    dispositions: Option<PathBuf>,
-}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ReviewPlanArgs {
-    report: PathBuf,
-    repo_root: PathBuf,
-    case_templates: PathBuf,
-    routes: PathBuf,
-    prompt_bundle: PathBuf,
-    brief: Option<PathBuf>,
-    #[serde(default)]
-    evidence: Vec<PathBuf>,
-    output: PathBuf,
-}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ReviewCaseArgs {
-    plan: PathBuf,
-    case_id: StableId,
-}
-
-#[derive(Clone, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ReviewJobArgs {
-    report: PathBuf,
-    repo_root: PathBuf,
-    output: PathBuf,
-    case_templates: PathBuf,
-    routes: PathBuf,
-    prompt_bundle: PathBuf,
-    brief: Option<PathBuf>,
-    #[serde(default)]
-    evidence: Vec<PathBuf>,
-    #[serde(default)]
-    allow_hosted_review: bool,
-    #[serde(default)]
-    allow_anonymous_provider: bool,
-}
-
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ReviewResultArgs {
-    job_id: String,
-    #[serde(default)]
-    include_report: bool,
-}
-
 #[derive(Clone, Debug, Serialize)]
 struct JobRecord {
     job_id: String,
     kind: JobKind,
     status: JobStatus,
-    stage: Option<ReviewStage>,
     result: Option<Value>,
     error: Option<JobFailure>,
 }
@@ -426,14 +226,12 @@ enum JobStatus {
     Running,
     Complete,
     Failed,
-    Cancelled,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 enum JobKind {
     Scan,
-    Review,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -446,7 +244,6 @@ struct JobFailure {
 struct JobState {
     next_id: u64,
     jobs: BTreeMap<String, JobRecord>,
-    cancellations: BTreeMap<String, Arc<AtomicBool>>,
 }
 
 #[derive(Clone, Default)]
@@ -464,96 +261,18 @@ impl JobStore {
         std::thread::Builder::new()
             .name(spawned_id.clone())
             .spawn(move || {
-                jobs.update(&spawned_id, JobStatus::Running, None, None, None);
+                jobs.update(&spawned_id, JobStatus::Running, None, None);
                 match run_scan_job(args) {
-                    Ok(result) => {
-                        jobs.update(&spawned_id, JobStatus::Complete, None, Some(result), None)
-                    }
+                    Ok(result) => jobs.update(&spawned_id, JobStatus::Complete, Some(result), None),
                     Err(error) => jobs.update(
                         &spawned_id,
                         JobStatus::Failed,
-                        None,
                         None,
                         Some(job_failure("scan", error)),
                     ),
                 }
             })
             .map_err(|error| format!("failed to start audit job: {error}"))?;
-        Ok(job_id)
-    }
-
-    fn start_review(
-        &self,
-        args: ReviewJobArgs,
-        transport: Arc<dyn Transport>,
-    ) -> Result<String, String> {
-        validate_review_args(&args)?;
-        let cancellation = Arc::new(AtomicBool::new(false));
-        let job_id = {
-            let mut state = self.0.lock().map_err(|_| "job store lock failed")?;
-            prune_jobs(&mut state.jobs);
-            if state.jobs.values().any(|record| {
-                record.kind == JobKind::Review
-                    && matches!(record.status, JobStatus::Queued | JobStatus::Running)
-            }) {
-                return Err("review worker is busy with another active review".to_string());
-            }
-            let job_id = reserve_job(&mut state, JobKind::Review, "review-job")?;
-            state
-                .cancellations
-                .insert(job_id.clone(), Arc::clone(&cancellation));
-            job_id
-        };
-        let jobs = self.clone();
-        let spawned_id = job_id.clone();
-        std::thread::Builder::new()
-            .name(spawned_id.clone())
-            .spawn(move || {
-                let control = McpReviewControl {
-                    jobs: jobs.clone(),
-                    job_id: spawned_id.clone(),
-                    cancellation,
-                };
-                if !control.checkpoint(ReviewStage::Preparing) {
-                    jobs.finish_cancelled(&spawned_id);
-                    return;
-                }
-                let request = ReviewRunRequest {
-                    plan: ReviewPlanRequest {
-                        report: args.report,
-                        repo_root: args.repo_root,
-                        case_templates: args.case_templates,
-                        routes: args.routes,
-                        prompt_bundle: args.prompt_bundle,
-                        brief: args.brief,
-                        evidence: args.evidence,
-                    },
-                    output: args.output,
-                    consent: HostedConsent {
-                        allow_hosted: args.allow_hosted_review,
-                        allow_anonymous: args.allow_anonymous_provider,
-                    },
-                };
-                match run_case_engineering_review(&request, transport.as_ref(), &control) {
-                    Ok(result) => jobs.update(
-                        &spawned_id,
-                        JobStatus::Complete,
-                        Some(ReviewStage::Publishing),
-                        serde_json::to_value(result).ok(),
-                        None,
-                    ),
-                    Err(error) if error.is_cancelled() => jobs.finish_cancelled(&spawned_id),
-                    Err(error) => jobs.update(
-                        &spawned_id,
-                        JobStatus::Failed,
-                        None,
-                        None,
-                        Some(job_failure("review", error.to_string())),
-                    ),
-                }
-                jobs.release_cancellation(&spawned_id);
-            })
-            .map_err(|error| format!("failed to start review job: {error}"))?;
         Ok(job_id)
     }
 
@@ -567,105 +286,20 @@ impl JobStore {
             .ok_or_else(|| format!("unknown audit job: {job_id}"))
     }
 
-    fn review_status(&self, job_id: &str) -> Result<JobRecord, String> {
-        let mut record = self.get(job_id)?;
-        if record.kind != JobKind::Review {
-            return Err(format!("audit job is not a review: {job_id}"));
-        }
-        record.result = None;
-        Ok(record)
-    }
-
-    fn review_result(&self, args: &ReviewResultArgs) -> Result<Value, String> {
-        let record = self.get(&args.job_id)?;
-        if record.kind != JobKind::Review {
-            return Err(format!("audit job is not a review: {}", args.job_id));
-        }
-        if record.status != JobStatus::Complete {
-            return Err(format!(
-                "review result is unavailable while status is {:?}",
-                record.status
-            ));
-        }
-        let mut result = record
-            .result
-            .ok_or_else(|| "completed review has no result metadata".to_string())?;
-        if args.include_report {
-            let path = result["reviewed_report_path"]
-                .as_str()
-                .ok_or_else(|| "review result omitted its report path".to_string())?;
-            let report = std::fs::read_to_string(path)
-                .map_err(|error| format!("failed to read canonical reviewed report: {error}"))?;
-            result["reviewed_report"] = serde_json::from_str(&report)
-                .map_err(|error| format!("canonical reviewed report is invalid: {error}"))?;
-        }
-        Ok(result)
-    }
-
-    fn cancel_review(&self, job_id: &str) -> Result<JobRecord, String> {
-        let mut state = self.0.lock().map_err(|_| "job store lock failed")?;
-        let record = state
-            .jobs
-            .get(job_id)
-            .ok_or_else(|| format!("unknown audit job: {job_id}"))?;
-        if record.kind != JobKind::Review {
-            return Err(format!("audit job is not a review: {job_id}"));
-        }
-        if let Some(cancellation) = state.cancellations.get(job_id) {
-            cancellation.store(true, Ordering::Release);
-        }
-        let record = state.jobs.get_mut(job_id).expect("review record exists");
-        if record.status == JobStatus::Queued {
-            record.status = JobStatus::Cancelled;
-            record.stage = None;
-        }
-        Ok(record.clone())
-    }
-
     fn update(
         &self,
         job_id: &str,
         status: JobStatus,
-        stage: Option<ReviewStage>,
         result: Option<Value>,
         error: Option<JobFailure>,
     ) {
         if let Ok(mut state) = self.0.lock() {
             if let Some(record) = state.jobs.get_mut(job_id) {
                 record.status = status;
-                record.stage = stage;
                 record.result = result;
                 record.error = error;
             }
         }
-    }
-
-    fn finish_cancelled(&self, job_id: &str) {
-        self.update(job_id, JobStatus::Cancelled, None, None, None);
-        self.release_cancellation(job_id);
-    }
-
-    fn release_cancellation(&self, job_id: &str) {
-        if let Ok(mut state) = self.0.lock() {
-            state.cancellations.remove(job_id);
-        }
-    }
-}
-
-struct McpReviewControl {
-    jobs: JobStore,
-    job_id: String,
-    cancellation: Arc<AtomicBool>,
-}
-
-impl ReviewControl for McpReviewControl {
-    fn checkpoint(&self, stage: ReviewStage) -> bool {
-        if self.cancellation.load(Ordering::Acquire) {
-            return false;
-        }
-        self.jobs
-            .update(&self.job_id, JobStatus::Running, Some(stage), None, None);
-        !self.cancellation.load(Ordering::Acquire)
     }
 }
 
@@ -674,13 +308,6 @@ fn validate_scan_args(args: &ScanJobArgs) -> Result<(), String> {
     AnalysisMethod::parse(&args.method)?;
     if args.output.as_os_str().is_empty() {
         return Err("audit scan job requires an output path".to_string());
-    }
-    Ok(())
-}
-
-fn validate_review_args(args: &ReviewJobArgs) -> Result<(), String> {
-    if args.report == args.output {
-        return Err("review output must differ from its input report".to_string());
     }
     Ok(())
 }
@@ -744,90 +371,11 @@ fn catalog(args: CatalogArgs) -> Result<Value, String> {
     }))
 }
 
-fn validate_review_artifacts(args: ReviewValidateArgs) -> Result<Value, String> {
-    let verified = verify_case_engineering_review(&ReviewVerifyRequest {
-        repo_root: args.repo_root,
-        report: args.report.clone(),
-    })
-    .map_err(|error| error.to_string())?;
-    let report_json = std::fs::read_to_string(&args.report)
-        .map_err(|error| format!("failed to read reviewed report: {error}"))?;
-    let report: Value = serde_json::from_str(&report_json)
-        .map_err(|error| format!("invalid reviewed report: {error}"))?;
-    let review = &report["engineering_review"];
-    let relative = review["path"]
-        .as_str()
-        .ok_or_else(|| "reviewed report has no review artifact path".to_string())?;
-    let artifact_path = args
-        .report
-        .parent()
-        .unwrap_or_else(|| Path::new("."))
-        .join(safe_sibling(relative)?);
-    let artifact_json = std::fs::read_to_string(&artifact_path)
-        .map_err(|error| format!("failed to read review artifact: {error}"))?;
-    let artifact =
-        parse_engineering_review_v2(&artifact_json).map_err(|error| error.to_string())?;
-    let disposition_complete = if let Some(path) = args.dispositions {
-        let ledger = parse_disposition_ledger(
-            &std::fs::read_to_string(path)
-                .map_err(|error| format!("failed to read disposition ledger: {error}"))?,
-        )?;
-        validate_disposition_coverage(&artifact, &ledger)?;
-        true
-    } else {
-        false
-    };
-    Ok(json!({
-        "accepted_recommendation_count": verified.accepted_recommendation_count,
-        "blocked_case_count": verified.blocked_case_count,
-        "case_count": verified.case_count,
-        "challenge_response_count": verified.challenge_response_count,
-        "contested_case_count": verified.contested_case_count,
-        "disposition_complete": disposition_complete,
-        "review_id": verified.review_id,
-        "valid": verified.valid,
-    }))
-}
-
-fn create_review_plan(args: ReviewPlanArgs) -> Result<Value, String> {
-    if args.output == args.report {
-        return Err("review plan output must differ from its input report".to_string());
-    }
-    let plan = plan_engineering_review(&ReviewPlanRequest {
-        report: args.report,
-        repo_root: args.repo_root,
-        case_templates: args.case_templates,
-        routes: args.routes,
-        prompt_bundle: args.prompt_bundle,
-        brief: args.brief,
-        evidence: args.evidence,
-    })
-    .map_err(|error| error.to_string())?;
-    let text = serde_json::to_string_pretty(&plan)
-        .map_err(|error| format!("failed to serialize review plan: {error}"))?;
-    auditor_scan::atomic_write(&args.output, &text)?;
-    serde_json::to_value(plan).map_err(|error| error.to_string())
-}
-
-fn inspect_review_case(args: ReviewCaseArgs) -> Result<Value, String> {
-    let text = std::fs::read_to_string(&args.plan)
-        .map_err(|error| format!("failed to read review plan: {error}"))?;
-    let plan = ReviewPlanOutput::parse(&text).map_err(|error| error.to_string())?;
-    let inspection =
-        inspect_engineering_case(&plan, &args.case_id).map_err(|error| error.to_string())?;
-    serde_json::to_value(inspection).map_err(|error| error.to_string())
-}
-
 fn prune_jobs(jobs: &mut BTreeMap<String, JobRecord>) {
     while jobs.len() >= MAX_JOB_RECORDS {
         let removable = jobs
             .iter()
-            .find(|(_, record)| {
-                matches!(
-                    record.status,
-                    JobStatus::Complete | JobStatus::Failed | JobStatus::Cancelled
-                )
-            })
+            .find(|(_, record)| matches!(record.status, JobStatus::Complete | JobStatus::Failed))
             .map(|(id, _)| id.clone());
         let Some(removable) = removable else {
             break;
@@ -849,26 +397,11 @@ fn reserve_job(state: &mut JobState, kind: JobKind, prefix: &str) -> Result<Stri
             job_id: job_id.clone(),
             kind,
             status: JobStatus::Queued,
-            stage: None,
             result: None,
             error: None,
         },
     );
     Ok(job_id)
-}
-
-fn safe_sibling(value: &str) -> Result<PathBuf, String> {
-    let path = Path::new(value);
-    if value.is_empty()
-        || path.is_absolute()
-        || path.components().count() != 1
-        || path
-            .components()
-            .any(|component| !matches!(component, Component::Normal(_)))
-    {
-        return Err("artifact path must be a safe report sibling".to_string());
-    }
-    Ok(path.to_path_buf())
 }
 
 fn render_tool_result(tool_name: &str, result: &Value) -> Result<String, String> {
@@ -941,19 +474,11 @@ fn tool_error(message: String) -> (i64, String) {
     (-32000, message)
 }
 
-fn review_start_error(message: String) -> (i64, String) {
-    if message.contains("worker is busy") {
-        (-32001, message)
-    } else {
-        tool_error(message)
-    }
-}
-
 fn job_failure(class: &str, message: String) -> JobFailure {
     let message = message
         .lines()
         .next()
-        .unwrap_or("review job failed")
+        .unwrap_or("audit job failed")
         .chars()
         .take(512)
         .collect();

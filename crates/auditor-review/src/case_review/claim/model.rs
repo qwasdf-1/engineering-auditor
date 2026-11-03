@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::case_review::identity::case_draft_id;
 use crate::{ClaimSlot, StableId};
 
-pub const ENGINEERING_CLAIM_SCHEMA_VERSION: u32 = 1;
+pub const ENGINEERING_CLAIM_SCHEMA_VERSION: u32 = 2;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -39,8 +39,8 @@ pub struct ClaimDraft {
     pub kind: EngineeringClaimKind,
     pub proposition: String,
     pub status: ClaimStatus,
-    pub supporting_probe_ids: Vec<StableId>,
-    pub counter_probe_ids: Vec<StableId>,
+    pub supporting_evidence_ids: Vec<String>,
+    pub counter_evidence_ids: Vec<String>,
     pub dependency_claim_ids: Vec<StableId>,
     pub assumptions: Vec<String>,
     pub confidence: ClaimConfidence,
@@ -58,16 +58,16 @@ pub struct EngineeringClaim {
 
 impl EngineeringClaim {
     pub fn from_draft(case_id: StableId, mut draft: ClaimDraft) -> Result<Self, String> {
-        normalize(&mut draft.supporting_probe_ids);
-        normalize(&mut draft.counter_probe_ids);
+        normalize(&mut draft.supporting_evidence_ids);
+        normalize(&mut draft.counter_evidence_ids);
         normalize(&mut draft.dependency_claim_ids);
         draft.assumptions.sort();
         draft.assumptions.dedup();
         if draft.proposition.trim().is_empty()
-            || (draft.supporting_probe_ids.is_empty() && draft.dependency_claim_ids.is_empty())
+            || (draft.supporting_evidence_ids.is_empty() && draft.dependency_claim_ids.is_empty())
         {
             return Err(
-                "claim requires a proposition and at least one supporting probe or dependency"
+                "claim requires a proposition and at least one cited evidence ID or dependency"
                     .to_string(),
             );
         }
@@ -99,7 +99,7 @@ impl std::ops::Deref for EngineeringClaim {
     }
 }
 
-fn normalize(values: &mut Vec<StableId>) {
+fn normalize<T: Ord>(values: &mut Vec<T>) {
     values.sort();
     values.dedup();
 }

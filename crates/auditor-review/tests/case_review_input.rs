@@ -9,24 +9,14 @@ use auditor_detectors::{
 };
 use auditor_report::{ColorMode, ExternalInput, ExternalInputMetadata, NoReviewArtifactLoader};
 use auditor_review::{
-    AgendaPlanner, AgendaPolicy, AgendaPolicyDecision, BenefitEvidenceMode, CandidateSelection,
-    CandidateSelector, CanonicalIdentity, CaseClosure, CaseClosureReason, CaseEvidenceRequest,
-    CaseExecutionState, CaseFailure, CaseInstantiationError, CaseInstantiationResult, CaseKind,
-    CasePosition, CaseProviderTurn, CaseStateLedger, CaseTemplateBundle, CaseTemplateRegistry,
-    ClaimConfidence, ClaimDraft, ClaimStatus, ContextualRecommendation, ContractKind, DecisionKind,
-    DecisionMagnitude, DeliberationMode, DeliberationRouter, DetectorAdviceRelationship,
-    DeterministicDisposition, EvidenceAttachmentAdapter, EvidenceAttachmentKind, EvidenceCompiler,
-    EvidenceError, EvidenceItemKind, EvidenceLookup, EvidenceLookupRequest,
-    EvidenceLookupRequestKind, EvidencePacketBudget, ExpectedBenefit, InputContract, InputError,
-    InputVerificationRequest, InputVerifier, Materiality, ModeAvailability, OptionalProbeRequest,
-    PlanningPriority, PolicySuppressionReason, ProbeAnswer, ProbeDecisionTarget, ProbeDefinition,
-    ProbeKind, ProbeLookupPlanner, ProbePlanner, ProbeResolution, ProbeResolutionError,
-    ProbeResolver, ProbeResolverRegistry, RecommendationAlternative, RecommendationDraft,
-    RecommendationFamily, ResolverKind, ResolverRegistration, ReviewBrief, ReviewCandidate,
-    ReviewerAdmissionContext, ReviewerCaseReview, ReviewerCaseReviewPayload, RoutePredicate,
-    RoutePredicateEvidence, RouteTarget, RoutingFacts, RoutingInput, SelectionReason,
-    SelectorRegistry, SingleReviewerError, SingleReviewerSession, SingleReviewerTurn, SkippedStage,
-    StageSkipReason, SuppressionReason, SuppressionSignal, TrustLabel, VerificationStep,
+    AgendaPlanner, AgendaPolicy, AgendaPolicyDecision, CandidateSelection, CandidateSelector,
+    CanonicalIdentity, CaseInstantiationError, CaseInstantiationResult, CaseKind,
+    CaseTemplateBundle, CaseTemplateRegistry, ContractKind, DecisionKind,
+    EvidenceAttachmentAdapter, EvidenceAttachmentKind, EvidenceCompiler, EvidenceError,
+    EvidenceItemKind, EvidenceLookup, EvidenceLookupRequest, EvidenceLookupRequestKind,
+    EvidencePacketBudget, InputContract, InputError, InputVerificationRequest, InputVerifier,
+    PlanningPriority, PolicySuppressionReason, ReviewBrief, ReviewCandidate, SelectionReason,
+    SelectorRegistry, SuppressionReason, SuppressionSignal, TrustLabel,
 };
 use auditor_scan::{run_scan, ScanFormat, ScanRequest};
 use serde_json::{json, Value};
@@ -119,15 +109,6 @@ impl Fixture {
             "// deterministic large-file fixture\n".repeat(1_005)
         );
         Self::from_source(source)
-    }
-
-    fn lifecycle_only() -> Self {
-        Self::from_source(
-            "pub fn repeated_sort(values: &mut Vec<i32>) {\n\
-                 for _ in 0..values.len() { values.sort(); }\n\
-             }\n"
-            .to_string(),
-        )
     }
 
     fn from_source(source: String) -> Self {
@@ -708,16 +689,7 @@ fn real_agenda_builds_stable_production_and_shadow_cases() {
             _ => None,
         })
         .expect("real full scan should produce a lifecycle case");
-    assert_eq!(lifecycle.mandatory_probes.len(), 8);
     assert_eq!(lifecycle.finding_ids.len(), 1);
-    assert!(lifecycle.allows_optional_probe(
-        registry.bundle().entries[0].template.as_ref().unwrap(),
-        ProbeKind::Counterexample,
-    ));
-    assert!(!lifecycle.allows_optional_probe(
-        registry.bundle().entries[0].template.as_ref().unwrap(),
-        ProbeKind::Mutation,
-    ));
     assert!(auditor_review::EngineeringCase::from_json(
         &lifecycle.to_canonical_json(),
         registry.bundle().entries[0].template.as_ref().unwrap(),
@@ -910,10 +882,8 @@ fn evidence_lookup_is_case_scoped_deduplicated_and_digest_order_independent() {
     .unwrap();
     let case = instantiated_lifecycle_case(&input);
     let packet = EvidenceCompiler.compile(&case, &input).unwrap();
-    let probe_id = case.mandatory_probes[0].probe_id.clone();
     let finding_request = EvidenceLookupRequest {
         case_id: case.case_id.clone(),
-        probe_id: probe_id.clone(),
         kind: EvidenceLookupRequestKind::FindingSource,
         target_id: format!("finding:{}", case.finding_ids[0]),
         decision_relevance: "inspect the selected repetition evidence".to_string(),
@@ -940,7 +910,6 @@ fn evidence_lookup_is_case_scoped_deduplicated_and_digest_order_independent() {
         .clone();
     let symbol_request = EvidenceLookupRequest {
         case_id: case.case_id.clone(),
-        probe_id,
         kind: EvidenceLookupRequestKind::SymbolNeighborhood,
         target_id: symbol_id,
         decision_relevance: "inspect the potential wider owner".to_string(),
@@ -963,7 +932,6 @@ fn evidence_lookup_is_case_scoped_deduplicated_and_digest_order_independent() {
 
     let path_request = EvidenceLookupRequest {
         case_id: case.case_id.clone(),
-        probe_id: case.mandatory_probes[0].probe_id.clone(),
         kind: EvidenceLookupRequestKind::SymbolNeighborhood,
         target_id: "../src/lib.rs".to_string(),
         decision_relevance: "attempt a path escape".to_string(),
@@ -1035,7 +1003,6 @@ fn evidence_lookup_rejects_stale_source_and_required_items_survive_pressure() {
     .unwrap();
     let request = EvidenceLookupRequest {
         case_id: case.case_id.clone(),
-        probe_id: case.mandatory_probes[0].probe_id.clone(),
         kind: EvidenceLookupRequestKind::FindingSource,
         target_id: format!("finding:{}", case.finding_ids[0]),
         decision_relevance: "verify the source snapshot before relying on it".to_string(),
@@ -1099,553 +1066,5 @@ fn evidence_packet_reports_required_over_budget_and_rejects_mutated_case_contrac
     ));
 }
 
-struct StaticProbeResolver {
-    id: &'static str,
-    answer: ProbeAnswer,
-    evidence_id: Option<String>,
-    model: bool,
-}
-
-impl ProbeResolver for StaticProbeResolver {
-    fn id(&self) -> &'static str {
-        self.id
-    }
-
-    fn version(&self) -> u32 {
-        1
-    }
-
-    fn supports(&self, _probe: &ProbeDefinition) -> bool {
-        true
-    }
-
-    fn resolve(
-        &self,
-        _case: &auditor_review::EngineeringCase,
-        _probe: &ProbeDefinition,
-        _packet: &auditor_review::EvidencePacket,
-    ) -> Result<ProbeResolution, ProbeResolutionError> {
-        let evidence = self.evidence_id.iter().cloned().collect();
-        if self.model {
-            let reviewer_run_id = auditor_review::StableId::from_identity(
-                "reviewer-run",
-                1,
-                &json!({"resolver": self.id}),
-            )
-            .unwrap();
-            Ok(ProbeResolution::model(
-                self.answer,
-                evidence,
-                format!("{} model answer", self.id),
-                Vec::new(),
-                reviewer_run_id,
-            ))
-        } else {
-            Ok(ProbeResolution::new(
-                self.answer,
-                evidence,
-                format!("{} deterministic answer", self.id),
-                Vec::new(),
-            ))
-        }
-    }
-}
-
-#[test]
-fn probe_planner_builds_all_mandatory_paths_and_bounds_optional_requests() {
-    let fixture = Fixture::new();
-    let (templates, prompts, routes) = contracts();
-    let input = verify(
-        &fixture,
-        Some(&templates),
-        Some(&prompts),
-        Some(&routes),
-        &[],
-        &[],
-        None,
-    )
-    .unwrap();
-    let case = instantiated_lifecycle_case(&input);
-    let packet = EvidenceCompiler.compile(&case, &input).unwrap();
-    let template = templates.entries[0].template.as_ref().unwrap();
-    let mandatory = ProbePlanner.plan(&case, template, &packet, &[]).unwrap();
-    assert_eq!(mandatory.len(), 8);
-    assert!(mandatory
-        .iter()
-        .all(|definition| definition.origin == auditor_review::ProbeOrigin::Mandatory));
-    let registry = ProbeResolverRegistry::built_in().unwrap();
-    let results = mandatory
-        .iter()
-        .map(|definition| registry.resolve(&case, definition, &packet).unwrap())
-        .collect::<Vec<_>>();
-    assert_eq!(results.len(), 8);
-    assert_eq!(
-        results
-            .iter()
-            .map(|result| result.probe_id.clone())
-            .collect::<BTreeSet<_>>()
-            .len(),
-        8
-    );
-    assert!(results
-        .iter()
-        .all(|result| result.resolver.kind != ResolverKind::ModelInterpretation));
-    assert!(results
-        .iter()
-        .all(|result| result.answer == ProbeAnswer::Unknown));
-    let lookup_plan = ProbeLookupPlanner.plan(&case, &mandatory, &packet).unwrap();
-    assert!(!lookup_plan.requests.is_empty());
-    assert!(lookup_plan.requests.iter().all(|request| {
-        request.case_id == case.case_id
-            && mandatory
-                .iter()
-                .any(|definition| definition.probe_id == request.probe_id)
-    }));
-    assert!(
-        lookup_plan.requests.len() + lookup_plan.unscheduled_probe_ids.len() <= mandatory.len()
-    );
-
-    let request = OptionalProbeRequest {
-        slot: "lifecycle_counterexample".to_string(),
-        kind: ProbeKind::Counterexample,
-        question: "Is there a case-bounded counterexample?".to_string(),
-        required_evidence_classes: vec![auditor_review::EvidenceClass::Finding],
-        positive_boundary: "A selected finding supplies a concrete counterexample.".to_string(),
-        negative_boundary: "No selected evidence contradicts the candidate.".to_string(),
-        blocked_claim_slots: vec![auditor_review::ClaimSlot::LifecycleConclusion],
-        target_ids: vec![format!("finding:{}", case.finding_ids[0])],
-        decision_target: ProbeDecisionTarget::Recommendation(
-            RecommendationFamily::LifecycleReownership,
-        ),
-        decision_relevance: "could block lifecycle reownership".to_string(),
-    };
-    let with_optional = ProbePlanner
-        .plan(&case, template, &packet, std::slice::from_ref(&request))
-        .unwrap();
-    assert_eq!(with_optional.len(), 9);
-    assert_eq!(
-        with_optional.last().unwrap().origin,
-        auditor_review::ProbeOrigin::Optional
-    );
-
-    let mut escaped = request.clone();
-    escaped.target_ids = vec!["symbol:outside-case".to_string()];
-    assert!(matches!(
-        ProbePlanner.plan(&case, template, &packet, &[escaped]),
-        Err(auditor_review::ProbeError::InvalidOptionalProbe(_))
-    ));
-    let mut unsupported = request;
-    unsupported.kind = ProbeKind::Mutation;
-    assert!(matches!(
-        ProbePlanner.plan(&case, template, &packet, &[unsupported]),
-        Err(auditor_review::ProbeError::InvalidOptionalProbe(_))
-    ));
-
-    let definition_schema: Value = serde_json::from_str(include_str!(
-        "../../../contracts/probe-definition-v1.schema.json"
-    ))
-    .unwrap();
-    let result_schema: Value = serde_json::from_str(include_str!(
-        "../../../contracts/probe-result-v1.schema.json"
-    ))
-    .unwrap();
-    assert_eq!(definition_schema["additionalProperties"], false);
-    assert_eq!(result_schema["additionalProperties"], false);
-}
-
-#[test]
-fn probe_registry_preserves_precedence_states_conflict_and_evidence_integrity() {
-    let fixture = Fixture::new();
-    let (templates, prompts, routes) = contracts();
-    let input = verify(
-        &fixture,
-        Some(&templates),
-        Some(&prompts),
-        Some(&routes),
-        &[],
-        &[],
-        None,
-    )
-    .unwrap();
-    let case = instantiated_lifecycle_case(&input);
-    let packet = EvidenceCompiler.compile(&case, &input).unwrap();
-    let definition = ProbePlanner
-        .plan(
-            &case,
-            templates.entries[0].template.as_ref().unwrap(),
-            &packet,
-            &[],
-        )
-        .unwrap()
-        .remove(0);
-    let evidence_id = packet.indexes.required["finding_records"][0].clone();
-
-    for answer in [
-        ProbeAnswer::Yes,
-        ProbeAnswer::No,
-        ProbeAnswer::NotApplicable,
-        ProbeAnswer::ConflictingEvidence,
-    ] {
-        let registry = ProbeResolverRegistry::new(vec![ResolverRegistration::new(
-            ResolverKind::ExistingDeterministicFact,
-            Box::new(StaticProbeResolver {
-                id: "state-resolver",
-                answer,
-                evidence_id: Some(evidence_id.clone()),
-                model: false,
-            }),
-        )])
-        .unwrap();
-        assert_eq!(
-            registry
-                .resolve(&case, &definition, &packet)
-                .unwrap()
-                .answer,
-            answer
-        );
-    }
-    let unknown = ProbeResolverRegistry::new(Vec::new())
-        .unwrap()
-        .resolve(&case, &definition, &packet)
-        .unwrap();
-    assert_eq!(unknown.answer, ProbeAnswer::Unknown);
-    assert_eq!(unknown.resolver.kind, ResolverKind::UnknownFallback);
-
-    let precedence = ProbeResolverRegistry::new(vec![
-        ResolverRegistration::new(
-            ResolverKind::ModelInterpretation,
-            Box::new(StaticProbeResolver {
-                id: "model-no",
-                answer: ProbeAnswer::No,
-                evidence_id: Some(evidence_id.clone()),
-                model: true,
-            }),
-        ),
-        ResolverRegistration::new(
-            ResolverKind::ExistingDeterministicFact,
-            Box::new(StaticProbeResolver {
-                id: "fact-yes",
-                answer: ProbeAnswer::Yes,
-                evidence_id: Some(evidence_id.clone()),
-                model: false,
-            }),
-        ),
-    ])
-    .unwrap()
-    .resolve(&case, &definition, &packet)
-    .unwrap();
-    assert_eq!(precedence.answer, ProbeAnswer::Yes);
-    assert_eq!(
-        precedence.resolver.kind,
-        ResolverKind::ExistingDeterministicFact
-    );
-
-    let conflict_registrations = |reversed: bool| {
-        let yes = ResolverRegistration::new(
-            ResolverKind::ExistingDeterministicFact,
-            Box::new(StaticProbeResolver {
-                id: "a-yes",
-                answer: ProbeAnswer::Yes,
-                evidence_id: Some(evidence_id.clone()),
-                model: false,
-            }),
-        );
-        let no = ResolverRegistration::new(
-            ResolverKind::ExistingDeterministicFact,
-            Box::new(StaticProbeResolver {
-                id: "b-no",
-                answer: ProbeAnswer::No,
-                evidence_id: Some(evidence_id.clone()),
-                model: false,
-            }),
-        );
-        if reversed {
-            vec![no, yes]
-        } else {
-            vec![yes, no]
-        }
-    };
-    let first = ProbeResolverRegistry::new(conflict_registrations(false))
-        .unwrap()
-        .resolve(&case, &definition, &packet)
-        .unwrap();
-    let second = ProbeResolverRegistry::new(conflict_registrations(true))
-        .unwrap()
-        .resolve(&case, &definition, &packet)
-        .unwrap();
-    assert_eq!(first.answer, ProbeAnswer::ConflictingEvidence);
-    assert_eq!(first, second);
-
-    let invalid = ProbeResolverRegistry::new(vec![ResolverRegistration::new(
-        ResolverKind::ExistingDeterministicFact,
-        Box::new(StaticProbeResolver {
-            id: "dangling",
-            answer: ProbeAnswer::Yes,
-            evidence_id: Some("finding:missing".to_string()),
-            model: false,
-        }),
-    )])
-    .unwrap();
-    assert!(matches!(
-        invalid.resolve(&case, &definition, &packet),
-        Err(auditor_review::ProbeError::InvalidResult(_))
-    ));
-
-    let mut incompatible_template = templates.entries[0].template.clone().unwrap();
-    incompatible_template.mandatory_probes[0].required_evidence_classes =
-        vec![auditor_review::EvidenceClass::RetentionConstraint];
-    assert!(incompatible_template.validate().is_err());
-}
-
-fn routing_facts(disposition: DeterministicDisposition) -> RoutingFacts {
-    RoutingFacts {
-        deterministic_disposition: disposition,
-        predicate_evidence: Vec::new(),
-        operator_intent_known: true,
-        local_and_reversible: true,
-        credible_action_families: 1,
-        higher_order_inference_required: false,
-        consequence: DecisionMagnitude::Low,
-        uncertainty: DecisionMagnitude::Low,
-        scope: DecisionMagnitude::Low,
-        magnitude_evidence_ids: Vec::new(),
-    }
-}
-
-#[test]
-fn deliberation_routing_is_predicate_based_and_never_downgrades_ensemble() {
-    let fixture = Fixture::new();
-    let (templates, prompts, routes) = contracts();
-    let input = verify(
-        &fixture,
-        Some(&templates),
-        Some(&prompts),
-        Some(&routes),
-        &[],
-        &[],
-        None,
-    )
-    .unwrap();
-    let case = instantiated_lifecycle_case(&input);
-    let packet = EvidenceCompiler.compile(&case, &input).unwrap();
-    let template = templates.entries[0].template.as_ref().unwrap();
-    let definitions = ProbePlanner.plan(&case, template, &packet, &[]).unwrap();
-    let registry = ProbeResolverRegistry::built_in().unwrap();
-    let results = definitions
-        .iter()
-        .map(|definition| registry.resolve(&case, definition, &packet).unwrap())
-        .collect::<Vec<_>>();
-
-    let deterministic = routing_facts(DeterministicDisposition::EvidenceUnavailable);
-    let deterministic_outcome = DeliberationRouter::default()
-        .route(RoutingInput {
-            case: &case,
-            packet: &packet,
-            definitions: &definitions,
-            results: &results,
-            facts: &deterministic,
-        })
-        .unwrap();
-    assert_eq!(
-        deterministic_outcome.selection.mode,
-        DeliberationMode::Deterministic
-    );
-    assert!(deterministic_outcome.is_ready());
-    assert!(results
-        .iter()
-        .all(|result| result.resolver.kind != ResolverKind::ModelInterpretation));
-
-    let single = routing_facts(DeterministicDisposition::Unresolved);
-    let single_outcome = DeliberationRouter::default()
-        .route(RoutingInput {
-            case: &case,
-            packet: &packet,
-            definitions: &definitions,
-            results: &results,
-            facts: &single,
-        })
-        .unwrap();
-    assert_eq!(
-        single_outcome.selection.mode,
-        DeliberationMode::SingleReviewer
-    );
-
-    let mut combined = single.clone();
-    combined.consequence = DecisionMagnitude::Medium;
-    combined.uncertainty = DecisionMagnitude::Medium;
-    combined.scope = DecisionMagnitude::Medium;
-    combined.magnitude_evidence_ids = vec![packet.items[0].id.clone()];
-    let combined_outcome = DeliberationRouter::default()
-        .route(RoutingInput {
-            case: &case,
-            packet: &packet,
-            definitions: &definitions,
-            results: &results,
-            facts: &combined,
-        })
-        .unwrap();
-    assert_eq!(combined_outcome.selection.mode, DeliberationMode::Ensemble);
-
-    let mut ensemble = single;
-    ensemble.predicate_evidence = vec![RoutePredicateEvidence {
-        predicate: RoutePredicate::ResourceLifetimeChange,
-        evidence_ids: vec![packet.items[0].id.clone()],
-    }];
-    ensemble.local_and_reversible = false;
-    let unavailable = DeliberationRouter::default()
-        .route(RoutingInput {
-            case: &case,
-            packet: &packet,
-            definitions: &definitions,
-            results: &results,
-            facts: &ensemble,
-        })
-        .unwrap();
-    assert_eq!(unavailable.selection.mode, DeliberationMode::Ensemble);
-    let blocked = unavailable.closure.unwrap();
-    assert_eq!(blocked.failure, Some(CaseFailure::ModeUnavailable));
-    assert_eq!(blocked.reason, CaseClosureReason::BlockedByModeUnavailable);
-
-    let available = DeliberationRouter::new(ModeAvailability {
-        single_reviewer: true,
-        ensemble: true,
-    })
-    .route(RoutingInput {
-        case: &case,
-        packet: &packet,
-        definitions: &definitions,
-        results: &results,
-        facts: &ensemble,
-    })
-    .unwrap();
-    assert_eq!(available.selection.mode, DeliberationMode::Ensemble);
-    assert!(available.is_ready());
-
-    let mut unknown_operator = routing_facts(DeterministicDisposition::Unresolved);
-    unknown_operator.operator_intent_known = false;
-    let blocked = DeliberationRouter::default()
-        .route(RoutingInput {
-            case: &case,
-            packet: &packet,
-            definitions: &definitions,
-            results: &results,
-            facts: &unknown_operator,
-        })
-        .unwrap()
-        .closure
-        .unwrap();
-    assert_eq!(blocked.failure, Some(CaseFailure::OperatorInputRequired));
-}
-
-#[test]
-fn case_state_is_append_only_records_skips_and_isolates_failure() {
-    let case_id = auditor_review::StableId::from_identity(
-        "engineering-case",
-        1,
-        &json!({"fixture": "state-ledger"}),
-    )
-    .unwrap();
-    let mut deterministic = CaseStateLedger::new(case_id.clone(), DeliberationMode::Deterministic);
-    deterministic
-        .advance(CaseExecutionState::EvidenceCompiling, Vec::new())
-        .unwrap();
-    deterministic
-        .advance(CaseExecutionState::ProbesResolving, Vec::new())
-        .unwrap();
-    deterministic
-        .advance(
-            CaseExecutionState::Finalizing,
-            [
-                CaseExecutionState::Reviewing,
-                CaseExecutionState::Reconsidering,
-                CaseExecutionState::Comparing,
-                CaseExecutionState::Challenging,
-                CaseExecutionState::Responding,
-            ]
-            .into_iter()
-            .map(|state| SkippedStage {
-                state,
-                reason: StageSkipReason::DeterministicMode,
-            })
-            .collect(),
-        )
-        .unwrap();
-    deterministic
-        .close(
-            CaseClosure::terminal(
-                case_id.clone(),
-                CaseClosureReason::NotSubstantiated,
-                vec!["mandatory_probe_negative".to_string()],
-            )
-            .unwrap(),
-        )
-        .unwrap();
-    assert_eq!(deterministic.current(), CaseExecutionState::Closed);
-    assert_eq!(
-        deterministic
-            .transitions()
-            .iter()
-            .map(|transition| transition.sequence)
-            .collect::<Vec<_>>(),
-        (0..deterministic.transitions().len()).collect::<Vec<_>>()
-    );
-    assert!(matches!(
-        deterministic.advance(CaseExecutionState::Finalizing, Vec::new()),
-        Err(auditor_review::CaseTransitionError::AlreadyClosed)
-    ));
-
-    let mut illegal = CaseStateLedger::new(case_id.clone(), DeliberationMode::SingleReviewer);
-    assert!(matches!(
-        illegal.advance(
-            CaseExecutionState::ProbesResolving,
-            vec![SkippedStage {
-                state: CaseExecutionState::EvidenceCompiling,
-                reason: StageSkipReason::NotApplicableToMode,
-            }]
-        ),
-        Err(auditor_review::CaseTransitionError::InvalidSkippedStages)
-    ));
-
-    let other_case_id = auditor_review::StableId::from_identity(
-        "engineering-case",
-        1,
-        &json!({"fixture": "independent-case"}),
-    )
-    .unwrap();
-    let mut failed = CaseStateLedger::new(case_id.clone(), DeliberationMode::Ensemble);
-    failed
-        .advance(CaseExecutionState::EvidenceCompiling, Vec::new())
-        .unwrap();
-    failed
-        .fail(CaseClosure::failed(
-            case_id,
-            CaseFailure::EvidencePacketInvalid,
-            vec!["packet_digest_mismatch".to_string()],
-        ))
-        .unwrap();
-    let independent = CaseStateLedger::new(other_case_id, DeliberationMode::SingleReviewer);
-    assert_eq!(failed.current(), CaseExecutionState::Closed);
-    assert_eq!(independent.current(), CaseExecutionState::Planned);
-    assert!(failed.transitions().iter().any(|transition| {
-        transition
-            .skipped_stages
-            .iter()
-            .any(|skipped| skipped.reason == StageSkipReason::FailureShortCircuit)
-    }));
-}
-
-#[path = "case_review_input/spec09_tests.rs"]
-mod spec09_tests;
-
-#[path = "case_review_input/spec10_tests.rs"]
-mod spec10_tests;
-#[path = "case_review_input/spec11_tests.rs"]
-mod spec11_tests;
-#[path = "case_review_input/spec13_tests.rs"]
-mod spec13_tests;
-#[path = "case_review_input/spec14_tests.rs"]
-mod spec14_tests;
 #[path = "case_review_input/spec15_tests.rs"]
 mod spec15_tests;
-#[path = "case_review_input/spec16_tests.rs"]
-mod spec16_tests;
