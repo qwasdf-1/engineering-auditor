@@ -11,8 +11,9 @@ use crate::js_api_identity::object_properties;
 /// Whether the config passed as `name` to `call` is built only from object
 /// literals with no `timeout` key and no spread, in the call's function, and
 /// no `name.timeout = ..` follows in that function. Parameters, imports,
-/// reassigned names and literals from another function resolve to nothing,
-/// so they are not judged here.
+/// reassigned names, literals from another function, and configs handed to
+/// another call or written through a computed key (either may set the
+/// timeout) are not judged here.
 pub(super) fn named_config_lacks_timeout(call: AstNode<'_>, name: AstNode<'_>) -> bool {
     let flow = FunctionFlow::enclosing(name);
     let function = enclosing_function(call);
@@ -23,6 +24,29 @@ pub(super) fn named_config_lacks_timeout(call: AstNode<'_>, name: AstNode<'_>) -
             Assigned::Appended(_) | Assigned::Outside(_) => false,
         })
         && !timeout_assigned(flow.scope(), name.text(), function)
+        && !passed_elsewhere(flow.scope(), name.text(), call, function)
+}
+
+/// Whether `function` passes `name` as an argument to a call other than
+/// `call`, as in `applyDefaults(config)` or `Object.assign(config, ..)`.
+fn passed_elsewhere(
+    scope: AstNode<'_>,
+    name: &str,
+    call: AstNode<'_>,
+    function: Option<AstNode<'_>>,
+) -> bool {
+    let own = call
+        .child_by_field_name("arguments")
+        .map(|args| args.start_byte());
+    ast_scan::nodes_of_kind(scope, &["arguments"])
+        .into_iter()
+        .any(|arguments| {
+            Some(arguments.start_byte()) != own
+                && enclosing_function(arguments) == function
+                && arguments
+                    .named_children()
+                    .any(|argument| argument.kind() == "identifier" && argument.text() == name)
+        })
 }
 
 /// Whether `value`, looked through type casts, is an object literal in
@@ -57,7 +81,7 @@ pub(super) fn object_may_hold_timeout(object: AstNode<'_>) -> bool {
 }
 
 /// Whether `function` (or the file's top level, when `None`) assigns
-/// `name.timeout` with `=` or a logical assignment.
+/// `name.timeout` or `name[key]` with `=` or a logical assignment.
 fn timeout_assigned(scope: AstNode<'_>, name: &str, function: Option<AstNode<'_>>) -> bool {
     ast_scan::nodes_of_kind(
         scope,
@@ -66,9 +90,9 @@ fn timeout_assigned(scope: AstNode<'_>, name: &str, function: Option<AstNode<'_>
     .into_iter()
     .any(|assignment| {
         enclosing_function(assignment) == function
-            && assignment
-                .child_by_field_name("left")
-                .is_some_and(|left| is_member_of(left, name, "timeout"))
+            && assignment.child_by_field_name("left").is_some_and(|left| {
+                is_member_of(left, name, "timeout") || is_subscript_of(left, name)
+            })
     })
 }
 
@@ -81,6 +105,14 @@ fn is_member_of(target: AstNode<'_>, name: &str, property: &str) -> bool {
         && target
             .child_by_field_name("property")
             .is_some_and(|field| field.text() == property)
+}
+
+/// Whether `target` is `name[key]`, whose key may be `"timeout"`.
+fn is_subscript_of(target: AstNode<'_>, name: &str) -> bool {
+    target.kind() == "subscript_expression"
+        && target
+            .child_by_field_name("object")
+            .is_some_and(|object| object.kind() == "identifier" && object.text() == name)
 }
 
 /// The function whose body holds `node`, or `None` at the file's top level.

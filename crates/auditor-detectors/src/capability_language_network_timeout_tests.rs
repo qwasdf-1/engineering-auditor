@@ -398,6 +398,23 @@ export function declaredInOuterFunction(url: string) {
 export async function parameterConfig(url: string, config: AxiosRequestConfig) {
   await axios(config);
 }
+
+export async function helperMaySetTimeout(url: string) {
+  const config: AxiosRequestConfig = { url };
+  applyDefaults(config);
+  await axios(config);
+}
+
+export async function computedKeyMaySetTimeout(url: string, key: string) {
+  const config: Record<string, unknown> = { url };
+  config[key] = 5000;
+  await axios(config);
+}
+
+export async function plainLocalConfig(url: string) {
+  const config = { url };
+  await axios(config); // reported
+}
 "#;
 
 /// A `const`, `let`, typed, cast, or assigned config in the call's function
