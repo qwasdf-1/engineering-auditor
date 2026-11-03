@@ -417,6 +417,15 @@
       "path": "crates/auditor-review/src/provider/native_tool_adapter.rs",
       "reason": "Reviewed 2026-10-18 (operator approved): duplicate-detector false positive, same skeleton with different predicates or types: sharing it would add indirection without removing behavior.",
       "title": "Normalized source clone class exceeds budget"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-2e892e9f9259bc48",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/lib.rs is complex and growing (CCX=59, growth=+68 LOC).",
+      "path": "crates/auditor-detectors/src/lib.rs",
+      "reason": "Reviewed 2026-11-03: the file did not change; removing the v2 Layer 6 review crate (about 36k lines of complex, growing files) lowered the growth and complexity quartiles this hotspot is measured against. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
