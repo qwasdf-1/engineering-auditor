@@ -22,6 +22,9 @@ use crate::tier_two_statement_shapes::{
 use crate::util;
 use crate::{AuditedFile, Language};
 
+#[path = "exit_entry_points.rs"]
+pub(crate) mod exit_entry_points;
+
 pub(crate) use crate::async_rules::{no_await_in_loop_findings, require_atomic_updates_findings};
 pub(crate) use crate::errorprone_language_rules::{
     cpp_raw_ptr_ownership_findings, csharp_linq_enumeration_findings, kotlin_empty_when_findings,
@@ -313,7 +316,7 @@ pub(crate) fn exit_in_production_findings(scan: AstScan<'_, '_>) -> Vec<Finding>
         } else {
             rust_exits(root)
         };
-        for node in exits {
+        for node in exit_entry_points::outside_entry_points(file, root, exits) {
             let line = node.start_position().0 + 1;
             findings.push(
                 auditor_core::finding!(

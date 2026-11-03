@@ -228,9 +228,12 @@ fn enclosing_go_function_body(mut node: AstNode<'_>) -> Option<AstNode<'_>> {
 /// A Go function whose contract is to end the process: a logger's own
 /// `Fatal*` method (`func (l *Logger) Fatalf(..)`, as the standard
 /// `log.Fatalf` is), or a `TestMain` helper taking `*testing.M`, which
-/// exits with the test result.
+/// exits with the test result, or a function named for exiting
+/// (`PrintVersionAndExit`).
 pub(crate) fn go_exits_by_contract(name: &str, parameters: &str) -> bool {
-    name.starts_with("Fatal") || parameters.contains("*testing.M")
+    name.starts_with("Fatal")
+        || parameters.contains("*testing.M")
+        || crate::errorprone::exit_entry_points::names_an_exit(name)
 }
 
 /// Whether the function enclosing `node` ends the process by contract
