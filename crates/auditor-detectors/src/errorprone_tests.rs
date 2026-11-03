@@ -24,6 +24,8 @@ mod tests {
             crate::Language::JavaScript
         } else if rel.ends_with(".go") {
             crate::Language::Go
+        } else if rel.ends_with(".cs") {
+            crate::Language::CSharp
         } else {
             crate::Language::Python
         };
@@ -563,6 +565,54 @@ mod tests {
             !findings.iter().any(|f| f.detector == "no_await_in_loop"),
             "a while loop is not a collection loop"
         );
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    fn no_await_lines(file: AuditedFile) -> Vec<usize> {
+        let cache = test_cache(&file);
+        let mut lines: Vec<usize> = no_await_in_loop_findings(&[file], &cache)
+            .iter()
+            .filter(|f| f.detector == "no_await_in_loop")
+            .filter_map(|f| f.locations.first().and_then(|location| location.line))
+            .collect();
+        lines.sort_unstable();
+        lines
+    }
+
+    #[test]
+    fn no_await_in_loop_skips_csharp_dispose_async_loops() {
+        let root = temp_root("await_csharp_dispose");
+        let file = make_file(
+            &root,
+            "src/Sinks.cs",
+            "class Sinks {\n    async ValueTask DisposeAsync() {\n        foreach (var sink in _sinks) {\n            await sink.DisposeAsync().ConfigureAwait(false);\n        }\n        foreach (var sink in _sinks) {\n            await ((IAsyncDisposable)_closer).DisposeAsync();\n        }\n        foreach (var sink in _sinks) {\n            await DisposeAsync();\n        }\n    }\n}\n",
+        );
+        // Ordered shutdown: each disposal waits for the previous one, by design.
+        assert_eq!(no_await_lines(file), Vec::<usize>::new());
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn no_await_in_loop_keeps_csharp_other_awaits_reported() {
+        let root = temp_root("await_csharp_other");
+        let file = make_file(
+            &root,
+            "src/Pump.cs",
+            "class Pump {\n    async Task Run(IEnumerable<Event> events) {\n        foreach (var e in events) {\n            await sink.EmitAsync(e);\n        }\n        foreach (var e in events) {\n            await stream.FlushAsync();\n        }\n        foreach (var item in items) {\n            await DisposeAllAsync(items);\n        }\n    }\n}\n",
+        );
+        assert_eq!(no_await_lines(file), vec![4, 7, 10]);
+        fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn no_await_in_loop_keeps_js_dispose_async_reported() {
+        let root = temp_root("await_js_dispose");
+        let file = make_file(
+            &root,
+            "src/close.js",
+            "async function closeAll(items) {\n    for (const item of items) {\n        await sink.DisposeAsync(item);\n    }\n}\n",
+        );
+        assert_eq!(no_await_lines(file), vec![3]);
         fs::remove_dir_all(&root).unwrap();
     }
 }

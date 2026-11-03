@@ -126,8 +126,47 @@ const JS_AWAITS: AwaitGrammar = AwaitGrammar {
     ],
 };
 
+/// The same boundary for C#, except that awaiting a `DisposeAsync()` call
+/// (directly or through `.ConfigureAwait(..)`) is not reported: disposing
+/// owned resources one at a time is the ordered-shutdown idiom, and running
+/// the disposals concurrently would change their shutdown and flush order.
 pub(crate) fn csharp_awaits_in_loops(root: AstNode<'_>) -> Vec<AstNode<'_>> {
     awaits_in_loops(root, &CSHARP_AWAITS)
+        .into_iter()
+        .filter(|await_node| !csharp_awaits_disposal(*await_node))
+        .collect()
+}
+
+/// Whether an `await` operand is a call to a method named `DisposeAsync`,
+/// optionally wrapped in `.ConfigureAwait(..)`, whatever its receiver.
+fn csharp_awaits_disposal(await_node: AstNode<'_>) -> bool {
+    let Some(mut call) = await_node.named_child(0) else {
+        return false;
+    };
+    if csharp_call_name(call) == Some("ConfigureAwait") {
+        let Some(inner) = call
+            .child_by_field_name("function")
+            .and_then(|function| function.child_by_field_name("expression"))
+        else {
+            return false;
+        };
+        call = inner;
+    }
+    csharp_call_name(call) == Some("DisposeAsync")
+}
+
+/// The method a C# `invocation_expression` calls: `Dispose` in both
+/// `sink.Dispose()` and `Dispose()`. Any other node yields `None`.
+fn csharp_call_name(node: AstNode<'_>) -> Option<&str> {
+    if node.kind() != "invocation_expression" {
+        return None;
+    }
+    let function = node.child_by_field_name("function")?;
+    let name = match function.kind() {
+        "member_access_expression" => function.child_by_field_name("name")?,
+        _ => function,
+    };
+    Some(name.text())
 }
 
 const CSHARP_AWAITS: AwaitGrammar = AwaitGrammar {
