@@ -1,8 +1,10 @@
 use crate::AstNode;
 
+mod jsx;
 mod operands;
 mod operators;
 
+use jsx::is_jsx_markup;
 use operands::is_halstead_operand;
 use operators::is_halstead_operator;
 
@@ -104,6 +106,9 @@ pub(super) fn record_halstead_leaf(
     total_operators: &mut usize,
     total_operands: &mut usize,
 ) {
+    if is_jsx_markup(node) {
+        return;
+    }
     let kind = node.kind();
     let text = node.text().to_string();
     if is_halstead_operator(node.language(), kind) {

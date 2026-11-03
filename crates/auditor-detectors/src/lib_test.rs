@@ -8,6 +8,8 @@ use std::path::PathBuf;
 mod capability_contract;
 #[path = "finding_anchor_tests.rs"]
 mod finding_anchor_contract;
+#[path = "halstead_jsx_tests.rs"]
+mod halstead_jsx_contract;
 #[path = "test_support.rs"]
 mod test_support;
 

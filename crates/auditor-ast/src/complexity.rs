@@ -1032,3 +1032,7 @@ pub struct FunctionComplexity {
 #[cfg(test)]
 #[path = "complexity_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "complexity_jsx_tests.rs"]
+mod jsx_tests;
