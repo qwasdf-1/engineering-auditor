@@ -453,6 +453,15 @@
       "path": "crates/auditor-detectors/src/source_discovery.rs",
       "reason": "Reviewed 2026-11-04: the largest growth is the patch checker (e07bbaa, about 39 net lines that split out the repository walk and list every file it visits for a scratch copy) over the 2026-11-02 false-positive fixes. History-dependent hotspot accepted under the operator-approved precedent until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-a740de446883aeaf",
+      "identity": {},
+      "message": "crates/auditor-review/src/reviewer/view.rs is complex and growing (CCX=81, growth=+57 LOC).",
+      "path": "crates/auditor-review/src/reviewer/view.rs",
+      "reason": "Reviewed 2026-11-04: the file is new in the window (9369327); the growth is the history digest (e07bbaa, 48 lines) and the findings_in detail row (b2ddc9f, 9 lines). History-dependent hotspot accepted under the operator-approved precedent until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
