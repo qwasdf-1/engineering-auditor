@@ -17,6 +17,8 @@ pub(crate) struct SymbolTyping {
     pub(crate) initializer: Option<String>,
     /// Bound once: `final`, `const`, `readonly`, Kotlin `val`, TS `const`.
     pub(crate) immutable: bool,
+    /// Fixed at compile time whatever its initializer: C# `const`.
+    pub(crate) compile_time: bool,
     /// The one name the declaration binds, where its symbol's name is not
     /// it (a C# field, a Go `const`, a Kotlin property).
     pub(crate) binding: Option<String>,
@@ -85,9 +87,13 @@ fn csharp_typing(node: AstNode<'_>) -> SymbolTyping {
                 .filter(|child| child.kind() == "modifier")
                 .map(|modifier| modifier.text())
                 .collect::<Vec<_>>();
-            let immutable = modifiers.contains(&"const") || modifiers.contains(&"readonly");
+            let compile_time = modifiers.contains(&"const");
+            let immutable = compile_time || modifiers.contains(&"readonly");
             child_of_kind(node, "variable_declaration")
-                .map(|declaration| declarator_typing(declaration, immutable))
+                .map(|declaration| SymbolTyping {
+                    compile_time,
+                    ..declarator_typing(declaration, immutable)
+                })
                 .unwrap_or_default()
         }
         "variable_declaration" => declarator_typing(node, false),
@@ -123,6 +129,7 @@ fn go_typing(node: AstNode<'_>) -> SymbolTyping {
                     .map(|value| value.text().to_string()),
                 immutable: node.kind() == "const_declaration",
                 binding: Some(name.text().to_string()),
+                ..SymbolTyping::default()
             }
         }
         "parameter_declaration" | "field_declaration" => SymbolTyping {
@@ -170,6 +177,7 @@ fn kotlin_typing(node: AstNode<'_>) -> SymbolTyping {
                 binding: declaration
                     .and_then(|declaration| child_of_kind(declaration, "simple_identifier"))
                     .map(|name| name.text().to_string()),
+                ..SymbolTyping::default()
             }
         }
         "parameter" | "function_declaration" => SymbolTyping {
@@ -202,6 +210,7 @@ fn typescript_typing(node: AstNode<'_>) -> SymbolTyping {
                 binding: declarator
                     .child_by_field_name("name")
                     .map(|name| name.text().to_string()),
+                ..SymbolTyping::default()
             }
         }
         "required_parameter"
@@ -244,6 +253,7 @@ fn declarator_typing(node: AstNode<'_>, immutable: bool) -> SymbolTyping {
         initializer,
         immutable,
         binding,
+        ..SymbolTyping::default()
     }
 }
 

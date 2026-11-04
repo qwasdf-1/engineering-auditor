@@ -96,6 +96,11 @@ pub(crate) struct Resolution {
     /// A constant of a repository enum, or a member of one that renders its
     /// name or ordinal.
     pub(crate) enum_value: bool,
+    /// A declared member bound at compile time (C# `const`).
+    pub(crate) compile_time: bool,
+    /// The expression names a declaration of the repository, a member or a
+    /// local, whatever it is bound to.
+    pub(crate) declared: bool,
 }
 
 impl Resolution {
@@ -328,7 +333,7 @@ impl<'i> TypeFacts<'i> {
     fn next_step(&self, step: &Step, segment: &Segment<'_>) -> Option<Step> {
         match step {
             Step::Types(classes) => {
-                self.across(classes, |class| self.class_member(class, segment, 0))
+                self.across_declaring(classes, |class| self.class_member(class, segment, 0))
             }
             Step::Value(resolution) => {
                 if resolution.enum_value && ENUM_MEMBERS.contains(&segment.name) {
@@ -359,6 +364,21 @@ impl<'i> TypeFacts<'i> {
         let first = steps.next()??;
         steps
             .all(|other| other.is_some_and(|other| same_step(&first, &other)))
+            .then_some(first)
+    }
+
+    /// The one step every candidate class that has it agrees on: a type
+    /// named in code and declared in several files (C# `partial`) has some
+    /// members in each.
+    fn across_declaring(
+        &self,
+        classes: &[SymbolRef],
+        step: impl Fn(SymbolRef) -> Option<Step>,
+    ) -> Option<Step> {
+        let mut steps = classes.iter().filter_map(|class| step(*class));
+        let first = steps.next()?;
+        steps
+            .all(|other| same_step(&first, &other))
             .then_some(first)
     }
 
@@ -417,6 +437,8 @@ impl<'i> TypeFacts<'i> {
                 .then(|| typing.initializer.clone())
                 .flatten(),
             enum_value,
+            compile_time: typing.compile_time,
+            declared: true,
         })
     }
 

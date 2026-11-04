@@ -72,6 +72,7 @@ fn file(root: &Path, relative: &str, language: Language, source: &str) -> crate:
 fn typed(name: &str) -> Resolution {
     Resolution {
         type_name: Some(name.to_string()),
+        declared: true,
         ..Resolution::default()
     }
 }
@@ -136,7 +137,8 @@ fn java_values_resolve_through_locals_fields_bases_and_return_types() {
     assert_eq!(resolved[5], typed("String"));
     assert!(resolved[6].enum_value);
     assert!(resolved[7].enum_value);
-    assert_eq!(resolved[8], typed("int"));
+    // A standard member's number is not a declaration of the repository.
+    assert_eq!(resolved[8].type_name.as_deref(), Some("int"));
     assert_eq!(resolved[9].constant.as_deref(), Some("\"Umb.Alias\""));
     assert_eq!(resolved[10], Resolution::default());
     assert!(resolved[0].is_numeric_or_enum() && !resolved[2].is_numeric_or_enum());
@@ -188,6 +190,32 @@ fn ambiguous_type_names_resolve_only_where_every_candidate_agrees() {
     );
     assert_eq!(resolved[0], typed("long"));
     assert_eq!(resolved[1], Resolution::default());
+}
+
+#[test]
+fn a_class_declared_in_several_files_resolves_members_from_the_file_that_has_them() {
+    let first = "namespace U;\npublic static partial class Constants {\n    public const string Plain = \"p\";\n}\n";
+    let second = "namespace U;\npublic static partial class Constants {\n    public static class Aliases {\n        public const string Both = Plain + \"!\";\n        public static readonly string Env = Get();\n    }\n}\n";
+    let user = "namespace U;\nclass User {\n    void F() {\n        Execute(1);\n    }\n}\n";
+    let sources = [
+        ("src/Constants-A.cs", Language::CSharp, first),
+        ("src/Constants-B.cs", Language::CSharp, second),
+        ("src/User.cs", Language::CSharp, user),
+    ];
+    let at = |expression| ("src/User.cs", "Execute(1)", expression);
+    let resolved = resolve(
+        "partial",
+        &sources,
+        &[
+            at("Constants.Plain"),
+            at("Constants.Aliases.Both"),
+            at("Constants.Aliases.Env"),
+        ],
+    );
+    assert!(resolved[0].compile_time);
+    assert!(resolved[1].compile_time && resolved[1].declared);
+    // A `readonly` field is bound once, at run time.
+    assert!(resolved[2].declared && !resolved[2].compile_time);
 }
 
 #[test]

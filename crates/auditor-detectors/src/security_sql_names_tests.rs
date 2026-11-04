@@ -350,3 +350,94 @@ fn values_the_repository_declares_numbers_enums_or_constants_cannot_carry_sql() 
         ]
     );
 }
+
+/// The lines of `source` (a C# class `M` with a method `Run` taking
+/// `string input`, beside `declarations`) that `sql_injection` reports.
+fn csharp_reported(declarations: &str, body: &str) -> Vec<usize> {
+    let member = "namespace U;\npublic class M {\n    public void Run(IDb db, ISyntax syntax, string input) {\n";
+    let source = format!("{member}{body}\n    }}\n}}\n");
+    sql_lines(
+        "csharp",
+        &[("src/M.cs", &source), ("src/Declarations.cs", declarations)],
+    )
+    .into_iter()
+    .filter(|(path, _)| path == "src/M.cs")
+    .map(|(_, line)| line)
+    .collect()
+}
+
+const SPLIT_CONSTANTS: &str = "namespace U;\npublic static partial class Constants {\n    public const string Plain = \"p\";\n}\npublic static partial class Constants {\n    public static class Editors {\n        public static class Aliases {\n            public const string Box = \"Box\";\n            public const string Both = Plain + \"!\";\n            public static readonly string Env = System.Environment.GetEnvironmentVariable(\"A\");\n            public static readonly string ENV = System.Environment.GetEnvironmentVariable(\"A\");\n            public static string Mutable = \"m\";\n            public static string Prop { get; } = \"p\";\n        }\n    }\n}\npublic class Dto {\n    public const string TableName = Constants.Plain;\n    public const string ColumnName = \"col\";\n}\npublic enum Kind { Ntext, Date }\n";
+
+#[test]
+fn constants_cannot_carry_sql_however_they_are_reached() {
+    let safe = [
+        // A nested constant of a class declared in several files.
+        "db.Execute($\"UPDATE t SET a = '{Constants.Editors.Aliases.Box}' WHERE b IN (@0)\", ids);",
+        "db.Execute($\"UPDATE t SET a = '{Constants.Plain}'\");",
+        // A constant initialized from other constants.
+        "db.Execute($\"UPDATE t SET a = '{Constants.Editors.Aliases.Both}'\");",
+        "db.Execute($\"UPDATE {Dto.TableName} SET a = 1\");",
+        // `nameof` and enum members, bare or cast to a number.
+        "db.Execute($\"UPDATE t SET a = '{nameof(Kind.Ntext)}'\");",
+        "db.Execute($\"UPDATE t SET a = '{Kind.Ntext}'\");",
+        "db.Execute($\"UPDATE t SET a = {(int)Kind.Date}\");",
+        // A quoting call over a constant.
+        "db.Execute($\"UPDATE {syntax.GetQuotedTableName(Dto.TableName)} SET a = {syntax.GetQuotedColumnName(Dto.ColumnName)}\");",
+    ];
+    for body in safe {
+        assert_eq!(
+            csharp_reported(SPLIT_CONSTANTS, body),
+            Vec::<usize>::new(),
+            "{body}"
+        );
+    }
+}
+
+#[test]
+fn values_that_are_not_constants_stay_reported() {
+    let reported = [
+        "db.Execute($\"UPDATE t SET a = '{Constants.Editors.Aliases.Env}'\");",
+        "db.Execute($\"UPDATE t SET a = '{Constants.Editors.Aliases.ENV}'\");",
+        "db.Execute($\"UPDATE t SET a = '{Constants.Editors.Aliases.Mutable}'\");",
+        "db.Execute($\"UPDATE t SET a = '{Constants.Editors.Aliases.Prop}'\");",
+        "var COLUMN = input; db.Execute($\"UPDATE t SET a = '{COLUMN}'\");",
+        "db.Execute($\"UPDATE t SET a = '{Constants.Plain}{input}'\");",
+        "db.Execute($\"UPDATE t SET a = '{syntax.Describe(Dto.TableName)}'\");",
+        "db.Execute($\"UPDATE t SET a = '{syntax.GetQuotedTableName(Dto.TableName)}{input}'\");",
+        "db.Execute($\"UPDATE t SET a = {syntax.GetQuotedColumnName(input)}\");",
+    ];
+    for body in reported {
+        assert_eq!(csharp_reported(SPLIT_CONSTANTS, body), [4], "{body}");
+    }
+}
+
+#[test]
+fn only_final_fields_bound_to_literals_are_java_constants() {
+    let names = "package m;\npublic class Names {\n    public static final String table = \"t\";\n    public static final String lookedUp = System.getenv(\"T\");\n}\n";
+    let reader = |expression: &str| {
+        format!("package m;\nimport java.sql.Statement;\nclass Reader {{\n    static final String local = \"c\";\n    void read(Statement st, String arg) throws Exception {{\n        st.executeQuery({expression});\n    }}\n}}\n")
+    };
+    let lines = |expression: &str| {
+        let source = reader(expression);
+        sql_lines(
+            "java-final",
+            &[
+                ("src/main/java/m/Names.java", names),
+                ("src/main/java/m/Reader.java", &source),
+            ],
+        )
+    };
+    for safe in [
+        "\"SELECT * FROM t WHERE x = '\" + Names.table + \"'\"",
+        "\"SELECT * FROM t WHERE x = '\" + local + \"'\"",
+    ] {
+        assert_eq!(lines(safe), [], "{safe}");
+    }
+    let reported = ("src/main/java/m/Reader.java".to_string(), 6);
+    for stays in [
+        "\"SELECT * FROM t WHERE x = '\" + Names.lookedUp + \"'\"",
+        "\"SELECT * FROM t WHERE x = '\" + arg + \"'\"",
+    ] {
+        assert_eq!(lines(stays), std::slice::from_ref(&reported), "{stays}");
+    }
+}

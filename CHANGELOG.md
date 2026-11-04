@@ -262,6 +262,16 @@
   generated, vendored and generated checks apply inside tooling trees, and
   a root `.gitattributes` `linguist-vendored` or `linguist-generated` mark
   sets the role.
+- `sql_injection` reads a C# value as fixed when the repository's type
+  facts resolve it to a `const` field (across partial and nested classes,
+  qualified or not, whatever its case), a `nameof(..)`, an enum member or
+  its numeric cast, or a quoting call (`GetQuotedColumnName`,
+  `GetQuotedTableName`, `GetQuotedName`) over such values. A local,
+  parameter, property, or non-`const` field stays reported even when named
+  like a constant. Umbraco's three labelled migration false positives
+  leave; on the held-out wexflow, 3 of its 5 labelled false positives and
+  3 unlabelled copies of the same queries leave, and all 20 labelled true
+  positives stay.
 
 ### Removed
 

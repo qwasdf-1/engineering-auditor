@@ -1,6 +1,7 @@
 //! Values spliced into a built SQL query that cannot carry SQL text:
-//! literals and constants, numbers (`int.Parse(s)`, a `long` parameter),
-//! identifiers quoted for SQL, and generated bind-placeholder lists; and the
+//! literals and constants, numbers (`int.Parse(s)`, a `long` parameter,
+//! `(int)Kind.Date`), identifiers quoted for SQL (also `syntax.GetQuotedColumnName(
+//! Dto.Column)` over a constant), and generated bind-placeholder lists; and the
 //! template a joined list's callback returns, read as its elements' text.
 
 use auditor_ast::{AstNode, FunctionFlow, Origin};
@@ -53,26 +54,42 @@ const PARSED_TYPES: &[&str] = &[
     "int", "long", "short", "uint", "ulong", "decimal", "double", "Int32", "Int64", "Guid",
 ];
 
+/// Calls that quote their argument as an identifier; the result cannot
+/// carry SQL when the argument is fixed too.
+const QUOTING_CALLS: &[&str] = &["GetQuotedColumnName", "GetQuotedTableName", "GetQuotedName"];
+
 /// Calls that join a list into a query fragment.
 const JOIN_CALLS: &[&str] = &["join", "Join", "Repeat", "repeat"];
 
 /// A value that cannot carry SQL text: a literal, a constant, a number, or
 /// a generated placeholder list.
 pub(super) fn is_fixed(node: AstNode<'_>, types: TypeScope<'_>) -> bool {
-    !is_runtime_value(node)
+    let resolution = types.resolve(node);
+    (!is_runtime_value(node) && !is_variable(node, &resolution))
         || is_constant(node)
         || is_safe_call(node)
         || is_numeric(node)
+        || is_numeric_cast(node)
         || is_placeholder_list(node)
-        || declared_fixed(types.resolve(node))
+        || is_quoted_fixed(node, types)
+        || declared_fixed(&resolution)
+}
+
+/// A name shaped like a constant that the code declares as something else:
+/// a local or parameter, or a field that is not bound to a literal.
+fn is_variable(node: AstNode<'_>, resolution: &Resolution) -> bool {
+    let local = matches!(node.kind(), "identifier" | "simple_identifier")
+        && !FunctionFlow::enclosing(node).reaching(node).is_empty();
+    (local || resolution.declared) && !declared_fixed(resolution)
 }
 
 /// A value the repository declares a number, a boolean, a GUID, or an
-/// enum's name, or reads from a constant bound to a literal
-/// (`Constants.Aliases.CheckBoxList`, `table.getObjectId()`).
-fn declared_fixed(resolution: Resolution) -> bool {
+/// enum's name, or reads from a constant: a C# `const`, or one bound to a
+/// literal (`Constants.Aliases.CheckBoxList`, `table.getObjectId()`).
+fn declared_fixed(resolution: &Resolution) -> bool {
     resolution.is_numeric_or_enum()
-        || resolution.constant.is_some_and(|constant| {
+        || resolution.compile_time
+        || resolution.constant.as_deref().is_some_and(|constant| {
             let constant = constant.trim();
             constant.starts_with(['"', '\'', '`'])
                 && !constant.contains("${")
@@ -99,6 +116,32 @@ fn is_safe_call(node: AstNode<'_>) -> bool {
             && crate::dataflow_sources::callee_text(node)
                 .rsplit_once('.')
                 .is_some_and(|(owner, _)| PARSED_TYPES.contains(&owner))
+}
+
+/// A cast to a number type (`(int)Kind.Date`).
+fn is_numeric_cast(node: AstNode<'_>) -> bool {
+    node.kind() == "cast_expression"
+        && node
+            .child_by_field_name("type")
+            .is_some_and(|cast| NUMERIC_TYPES.contains(&cast.text()))
+}
+
+/// A call to an identifier-quoting function whose arguments are all fixed
+/// (`syntax.GetQuotedColumnName(Dto.ColumnName)`).
+fn is_quoted_fixed(node: AstNode<'_>, types: TypeScope<'_>) -> bool {
+    if !is_call(node) || !QUOTING_CALLS.contains(&callee_name(node)) {
+        return false;
+    }
+    let Some(arguments) = node.child_by_field_name("arguments") else {
+        return false;
+    };
+    arguments.named_children().all(|argument| {
+        let value = argument
+            .named_children()
+            .last()
+            .filter(|_| matches!(argument.kind(), "argument" | "value_argument"));
+        is_fixed(value.unwrap_or(argument), types)
+    })
 }
 
 /// A name every reaching binding declares with a numeric type (`long
