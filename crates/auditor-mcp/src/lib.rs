@@ -330,6 +330,7 @@ fn run_scan_job(args: ScanJobArgs) -> Result<Value, String> {
                 scope: ScanScope::All,
                 repository_map_output: map_output,
                 excluded_paths: std::iter::once(args.output.clone()).collect(),
+                history_root: None,
             },
             external_inputs: vec![ExternalInput::from_text(
                 ExternalInputMetadata::analysis("scan_request", "mcp", 1, "complete"),

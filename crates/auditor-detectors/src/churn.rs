@@ -25,26 +25,20 @@ pub fn collect_file_churn(root: &Path) -> HashMap<PathBuf, FileChurn> {
         return HashMap::new();
     };
     let since = head_time - CHURN_WINDOW_DAYS * 86_400;
-    let output = Command::new("git")
-        .arg("log")
-        .arg("HEAD")
-        .arg("--first-parent")
-        .arg("--diff-merges=first-parent")
-        .arg(format!("--since=@{since}"))
-        .arg("--numstat")
-        .arg("--summary")
-        .arg("--pretty=format:commit")
-        .arg("--diff-filter=AMCR")
-        .current_dir(root)
-        .output();
-
-    let output = match output {
-        Ok(o) if o.status.success() => o,
-        _ => return HashMap::new(),
+    let Ok(stdout) = first_parent_log(
+        root,
+        since,
+        &[
+            "--numstat",
+            "--summary",
+            "--pretty=format:commit",
+            "--diff-filter=AMCR",
+        ],
+    ) else {
+        return HashMap::new();
     };
 
     let mut churn: HashMap<PathBuf, FileChurn> = HashMap::new();
-    let stdout = String::from_utf8_lossy(&output.stdout);
     for (rows, created) in stdout.split("commit\n").map(numstat_rows) {
         for (path, delta) in discount_moves(rows) {
             // A file's initial size is not growth; only later commits grow it.
@@ -59,7 +53,7 @@ pub fn collect_file_churn(root: &Path) -> HashMap<PathBuf, FileChurn> {
 
 /// One commit's `--numstat` rows as (path, lines added, lines removed), and
 /// the paths its `--summary` reports created.
-fn numstat_rows(block: &str) -> (Vec<(PathBuf, i64, i64)>, Vec<PathBuf>) {
+pub(crate) fn numstat_rows(block: &str) -> (Vec<(PathBuf, i64, i64)>, Vec<PathBuf>) {
     let rows = block
         .lines()
         .filter_map(|line| {
@@ -99,12 +93,44 @@ fn discount_moves(mut rows: Vec<(PathBuf, i64, i64)>) -> Vec<(PathBuf, i64)> {
         .collect()
 }
 
-fn head_commit_time(root: &Path) -> Option<i64> {
+/// `git log` of `HEAD`'s first-parent line since `since` (Unix seconds),
+/// each merge diffed against its first parent; `format` selects the output.
+pub(crate) fn first_parent_log(root: &Path, since: i64, format: &[&str]) -> Result<String, String> {
+    let since = format!("--since=@{since}");
+    let mut args = vec![
+        "log",
+        "HEAD",
+        "--first-parent",
+        "--diff-merges=first-parent",
+        since.as_str(),
+    ];
+    args.extend_from_slice(format);
+    git_output(root, &args)
+}
+
+pub(crate) fn head_commit_time(root: &Path) -> Option<i64> {
+    git_output(root, &["log", "-1", "--format=%ct", "HEAD"])
+        .ok()?
+        .trim()
+        .parse()
+        .ok()
+}
+
+/// A git command's standard output, or why it failed.
+pub(crate) fn git_output(root: &Path, args: &[&str]) -> Result<String, String> {
     let output = Command::new("git")
-        .args(["log", "-1", "--format=%ct", "HEAD"])
+        .arg("-c")
+        .arg("core.quotePath=false")
+        .args(args)
         .current_dir(root)
         .output()
-        .ok()
-        .filter(|output| output.status.success())?;
-    String::from_utf8_lossy(&output.stdout).trim().parse().ok()
+        .map_err(|error| format!("cannot run git: {error}"))?;
+    if !output.status.success() {
+        return Err(format!(
+            "git {} failed: {}",
+            args.first().copied().unwrap_or_default(),
+            String::from_utf8_lossy(&output.stderr).trim()
+        ));
+    }
+    Ok(String::from_utf8_lossy(&output.stdout).into_owned())
 }

@@ -14,8 +14,9 @@
 > renderer and projection audit; case templates (without probes), the agenda
 > selectors, and evidence packets; and claim and recommendation records, which
 > now cite evidence IDs instead of probe answers. The new path's first
-> parts, a repository orientation pack and retrieval tools over the report
-> and map, are a library API with no command yet
+> parts are a repository orientation pack and retrieval tools over the report
+> and map (a library API with no command yet), a history digest
+> (`review history`), and a patch checker (`review check-patch`)
 > ([`architecture.md`](../architecture.md#ai-review-experimental)). The rest
 > of this page describes the removed protocol and will be rewritten when the
 > new path ships.

@@ -6,7 +6,7 @@ use auditor_core::sha256_digest_bytes;
 
 use super::document::{BoundedDocument, Item, Row, Section};
 use super::retrieval::{ReadSource, RetrievalHost, SearchQuery};
-use super::view::{count, RepositoryView, LOCAL_KINDS};
+use super::view::{co_change_id, count, RepositoryView, LOCAL_KINDS};
 use crate::repository_map::checked_source_path;
 
 impl RetrievalHost<'_, '_> {
@@ -375,6 +375,91 @@ impl RetrievalHost<'_, '_> {
                     ],
                 ),
             ],
+        ))
+    }
+}
+
+impl RetrievalHost<'_, '_> {
+    pub(super) fn history(&self, query: &str) -> Result<BoundedDocument, String> {
+        let view = self.view;
+        let digest = view
+            .history
+            .ok_or("no history digest was supplied for this review")?;
+        let query = query.trim();
+        let file = view
+            .file_by_id(query)
+            .or_else(|| view.file_by_path(query.trim_start_matches("./")))
+            .ok_or_else(|| format!("`{query}` is not a mapped file"))?;
+        let mapped = view.file(file);
+        let mut window = format!(
+            "{} to {} ({}-day window",
+            digest.covered_from, digest.head_date, digest.window_days
+        );
+        window.push_str(if digest.complete {
+            ")"
+        } else {
+            ", cut short by a shallow clone)"
+        });
+        let mut items = vec![
+            Item::rows(
+                "File",
+                [Row::new(mapped.path.clone(), [mapped.id.clone()])],
+                1,
+            ),
+            Item::text("Window", window),
+        ];
+        let Some(history) = view.file_history(file) else {
+            items.push(Item::text("Changes", "no commit in the window touched it"));
+            return Ok(BoundedDocument::new(
+                format!("History of {}", mapped.path),
+                vec![Section::new("History", items)],
+            ));
+        };
+        let created = if history.created_in_window {
+            "created in the window; "
+        } else {
+            ""
+        };
+        let changes = Row::new(
+            format!(
+                "{} ({} in the last {} days) by {}; +{}/-{} lines; {created}first change {}, last {}",
+                count(history.commits, "commit"),
+                history.recent_commits,
+                digest.recent_days,
+                count(history.authors, "author"),
+                history.lines_added,
+                history.lines_removed,
+                history.first_change,
+                history.last_change
+            ),
+            [format!("history:{}", mapped.path)],
+        );
+        let partners = history.co_changes.iter().map(|partner| {
+            let link = match view
+                .file_by_path(&partner.path)
+                .map(|other| view.import_links(file, other))
+            {
+                Some((true, true)) => "they import each other",
+                Some((true, false)) => "this file imports it",
+                Some((false, true)) => "it imports this file",
+                Some((false, false)) => "no import links them",
+                None => "not in the map",
+            };
+            Row::new(
+                format!(
+                    "{}: {} together ({}% of this file's), {link}",
+                    partner.path,
+                    count(partner.commits, "commit"),
+                    partner.commits * 100 / history.commits.max(1)
+                ),
+                [co_change_id(&mapped.path, &partner.path)],
+            )
+        });
+        items.push(Item::rows("Changes", [changes], 1));
+        items.push(Item::rows("Changed with", partners, 8));
+        Ok(BoundedDocument::new(
+            format!("History of {}", mapped.path),
+            vec![Section::new("History", items)],
         ))
     }
 }

@@ -8,6 +8,7 @@ use serde_json::Value;
 
 use super::document::Row;
 use super::modules::{cycles, Modules};
+use crate::history::{FileHistory, HistoryDigest};
 use crate::repository_map::{MapEdge, MapFile, MapSymbol, RepositoryMap};
 
 /// Map symbol kinds that enclose code; a finding is attributed to the
@@ -79,6 +80,8 @@ pub struct RepositoryView<'a> {
     /// Repository-internal imports between modules, by count.
     pub(super) module_imports: BTreeMap<(usize, usize), usize>,
     pub(super) module_cycles: Vec<Vec<usize>>,
+    pub(super) history: Option<&'a HistoryDigest>,
+    history_by_file: Vec<Option<usize>>,
     file_by_id: HashMap<&'a str, usize>,
     file_by_path: HashMap<&'a str, usize>,
     symbol_by_id: HashMap<&'a str, usize>,
@@ -113,6 +116,8 @@ impl<'a> RepositoryView<'a> {
             detectors: detector_runs(report),
             module_imports,
             module_cycles,
+            history: None,
+            history_by_file: Vec::new(),
             file_by_id,
             file_by_path: index_by(&map.files, |file| file.path.as_str()),
             symbol_by_id,
@@ -135,6 +140,23 @@ impl<'a> RepositoryView<'a> {
         }
         view.findings = findings;
         Ok(view)
+    }
+
+    /// Joins a history digest (`load_history_digest` checked it against the
+    /// repository): its files by path, its bytes bound into every
+    /// projection.
+    pub fn with_history(mut self, history: &'a HistoryDigest) -> Self {
+        let mut by_file = vec![None; self.map.files.len()];
+        for (index, entry) in history.files.iter().enumerate() {
+            if let Some(file) = self.file_by_path(&entry.path) {
+                by_file[file] = Some(index);
+            }
+        }
+        let bound = format!("{}\n{}", self.source_digest, history.sha256);
+        self.source_digest = sha256_digest_bytes(bound.as_bytes());
+        self.history = Some(history);
+        self.history_by_file = by_file;
+        self
     }
 
     fn report_finding(
@@ -289,6 +311,22 @@ impl<'a> RepositoryView<'a> {
             distinct(self.edges_to(id, "imports"), |edge| edge.from.as_str()),
             distinct(self.edges_from(id, "imports"), |edge| edge.to.as_str()),
         )
+    }
+
+    /// A file's changes in the history digest's window.
+    pub(super) fn file_history(&self, file: usize) -> Option<&'a FileHistory> {
+        let index = (*self.history_by_file.get(file)?)?;
+        Some(&self.history?.files[index])
+    }
+
+    /// Whether `left` imports `right`, and whether `right` imports `left`.
+    pub(super) fn import_links(&self, left: usize, right: usize) -> (bool, bool) {
+        let imports = |from: usize, to: usize| {
+            self.edges_from(&self.file(from).id, "imports")
+                .iter()
+                .any(|(_, edge)| edge.to == self.file(to).id)
+        };
+        (imports(left, right), imports(right, left))
     }
 
     pub(super) fn module_lines(&self, module: usize) -> usize {
@@ -565,6 +603,16 @@ impl RepositoryView<'_> {
         });
         selected.into_iter()
     }
+}
+
+/// The evidence ID of two files changing together, the paths in order.
+pub(super) fn co_change_id(left: &str, right: &str) -> String {
+    let (first, second) = if left <= right {
+        (left, right)
+    } else {
+        (right, left)
+    };
+    format!("co-change:{first}+{second}")
 }
 
 /// `1 file`, `2 files`.

@@ -407,7 +407,7 @@ fn run_system_economics_owner(
 fn run_churn_owner(owner: DetectorOwner, context: &DetectorContext<'_>) -> Option<Vec<Finding>> {
     Some(match owner {
         DetectorOwner::ChurnComplexityHotspot => {
-            let churn = churn::collect_file_churn(context.root);
+            let churn = churn::collect_file_churn(context.history_root);
             systems::churn_complexity_hotspot_findings(
                 context.files,
                 &churn,

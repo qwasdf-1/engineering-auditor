@@ -39,6 +39,7 @@ fn scanned_fixture(name: &str, populate: impl FnOnce(&std::path::Path)) -> Fixtu
                 scope: ScanScope::All,
                 repository_map_output: Some(report.clone()),
                 excluded_paths: BTreeSet::from([report.clone()]),
+                history_root: None,
             },
             external_inputs: Vec::new(),
             baseline: None,

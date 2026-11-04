@@ -138,6 +138,7 @@ impl Fixture {
                     scope: ScanScope::All,
                     repository_map_output: Some(report.clone()),
                     excluded_paths: BTreeSet::from([report.clone()]),
+                    history_root: None,
                 },
                 external_inputs: vec![ExternalInput::from_text(
                     ExternalInputMetadata::analysis("case_review_input", "spec-02", 1, "complete"),

@@ -264,4 +264,39 @@ pub fn hotspot_fn(data: &[u8]) {
     );
     assert!(evidence.evidence.contains_key("loc_delta"));
     assert!(evidence.evidence.contains_key("sum_ccx"));
+
+    // A copy without `.git` (a patch checker's scratch copy) finds the
+    // hotspot only when churn reads the original's history.
+    let copy = temp_root("churn-hotspot-copy");
+    for entry in std::fs::read_dir(root.join("src")).unwrap() {
+        let path = entry.unwrap().path();
+        let name = path.file_name().unwrap().to_str().unwrap().to_string();
+        write(&copy, &format!("src/{name}"), &std::fs::read_to_string(&path).unwrap());
+    }
+    let hotspots = |history_root: Option<std::path::PathBuf>| {
+        analyze_repository_with_request(
+            &copy,
+            AnalysisRequest {
+                discovery: SourceDiscoveryOptions::default(),
+                profile: ScanProfile::Gating,
+                scope: ScanScope::All,
+                repository_map_output: None,
+                excluded_paths: BTreeSet::new(),
+                history_root,
+            },
+            &NoGraphProvider,
+        )
+        .unwrap()
+        .findings
+        .iter()
+        .filter(|finding| finding.detector == "churn_complexity_hotspot")
+        .map(|finding| finding.id.clone())
+        .collect::<Vec<_>>()
+    };
+    assert!(hotspots(None).is_empty());
+    assert_eq!(
+        hotspots(Some(root.to_path_buf())),
+        std::slice::from_ref(&evidence.id),
+        "the copy's hotspot is the original's"
+    );
 }

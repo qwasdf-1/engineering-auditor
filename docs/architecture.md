@@ -203,6 +203,17 @@ a call and byte budget. Every row cites an evidence ID (`finding:`, `file:`,
 `symbol:`, `module:`, `edge:`, `entry:`, `source-span:`, and others) that
 only a shown row issues, and source reads re-check the file's hash.
 
+Two commands feed the reviewer. `review history` writes a history digest:
+per-file commits, growth, and co-change partners over a window of `HEAD`'s
+first-parent line, so a review can rank change hotspots and coupling no
+import shows after the clone is gone. With a digest of the repository's
+`HEAD`, the pack adds those rankings, and a sixth tool, `history`, answers
+for one file (`history:` and `co-change:` IDs). `review check-patch` judges
+a recommendation's patch in `auditor-scan`: it applies the diff to a scratch
+copy, re-scans it against a scan of an unpatched copy, and runs the brief's
+test command in a cleared environment. The verdict is verified only when the
+cited findings are gone, none is added, and the tests pass.
+
 Providers (OpenAI Responses, Anthropic Messages, Mistral, OpenCode, and
 OpenAI-compatible Chat Completions) are configured by routes that name the
 model, the credential's environment variable, privacy and cost classes, and

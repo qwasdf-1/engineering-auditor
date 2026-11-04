@@ -45,6 +45,7 @@ mod finding_via;
 mod go_api_rules;
 mod go_errcheck;
 mod golang;
+mod history_digest;
 mod java;
 mod java_api_identity;
 mod java_api_rules;
@@ -125,6 +126,9 @@ mod unbounded_queue;
 pub(crate) mod util;
 
 pub use config::AuditorConfig;
+pub use history_digest::{
+    history_digest, DEFAULT_HISTORY_WINDOW_DAYS, HISTORY_DIGEST_SCHEMA_VERSION,
+};
 pub use registry::detector_registry;
 pub(crate) use registry::{support_policy_for, SupportPolicy};
 pub use repository_graph::{
@@ -139,9 +143,9 @@ pub(crate) use source_discovery::{
     discover_audited_files_with_filter, generated_vs_source_findings, AuditedFile,
 };
 pub use source_discovery::{
-    discover_sources, discover_sources_with_filter, language_for_path, source_role_for_path,
-    AnalysisMethod, Language, ScopeFilter, SourceDiscoveryOptions, SourceFile, SourceRole,
-    SOURCE_ROLE_VERSION,
+    discover_sources, discover_sources_with_filter, language_for_path, repository_files,
+    source_role_for_path, AnalysisMethod, Language, ScopeFilter, SourceDiscoveryOptions,
+    SourceFile, SourceRole, SOURCE_ROLE_VERSION,
 };
 
 const LARGE_FILE_ADVISORY_LINES: usize = 1000;
@@ -271,6 +275,7 @@ type FunctionSpan = auditor_ast::FunctionSpan;
 
 struct DetectorContext<'a> {
     root: &'a Path,
+    history_root: &'a Path,
     /// Files on which this owner may emit findings.
     files: &'a [AuditedFile],
     /// Files the owner may inspect to resolve repository context.
@@ -382,6 +387,9 @@ pub struct AnalysisRequest {
     pub scope: ScanScope,
     pub repository_map_output: Option<std::path::PathBuf>,
     pub excluded_paths: std::collections::BTreeSet<std::path::PathBuf>,
+    /// The git repository whose history churn reads; the scanned root when
+    /// `None`. A scan of a scratch copy reads the original's history.
+    pub history_root: Option<std::path::PathBuf>,
 }
 
 struct ScanRun<'a> {
@@ -631,6 +639,7 @@ pub fn analyze_repository(
             scope: ScanScope::All,
             repository_map_output: None,
             excluded_paths: std::collections::BTreeSet::new(),
+            history_root: None,
         },
         &NoGraphProvider,
     )
@@ -650,6 +659,7 @@ pub fn analyze_repository_with_provider(
             scope: ScanScope::All,
             repository_map_output: None,
             excluded_paths: std::collections::BTreeSet::new(),
+            history_root: None,
         },
         provider,
     )
@@ -712,6 +722,7 @@ fn analyze_repository_run(
     let active_specs: Vec<_> = registry::detector_catalog(profile).collect();
     let context = DetectorContext {
         root,
+        history_root: request.history_root.as_deref().unwrap_or(root),
         files: role_views.code,
         context_files: role_views.code,
         method,

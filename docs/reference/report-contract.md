@@ -208,7 +208,13 @@ requests, and ambient filesystem authority are absent from the API.
 Claims (`engineering-claim-v1`, schema 2) and recommendations
 (`contextual-recommendation-v1`, schema 2) cite evidence IDs: a claim's
 supporting and counter evidence, and a recommendation's benefit and
-verification evidence, must be IDs the host issued.
+verification evidence, must be IDs the host issued. A recommendation may
+carry a unified-diff `patch`, which `review check-patch` judges.
+
+`history-digest` (schema 1) summarizes a window of `HEAD`'s first-parent
+history per file: commits, recent commits, authors, lines added and removed,
+and co-change partners. It names its `HEAD` commit, and a review refuses a
+digest of another commit.
 
 `review-routes-v2` (schema 3) and `review-prompt-bundle-v2` (schema 3) define
 the provider registry with its single reviewer chain and the content-bound

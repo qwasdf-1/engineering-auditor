@@ -11,10 +11,11 @@ use auditor_detectors::{
 };
 use auditor_report::{parse_repository_map_reference, ColorMode, NoReviewArtifactLoader};
 use auditor_review::{
-    load_and_validate_repository_map, render_native_conversation, retrieval_tool_specs,
-    translate_tool_spec, NativeConversationMessage, NativeToolCall, ProviderProtocol,
-    RepositoryMap, RepositoryView, RetrievalBudget, RetrievalHost, RetrievalOutcome, ReviewBrief,
-    ToolChoice, MINIMUM_ORIENTATION_BYTES, RETRIEVAL_TOOL_NAMES, TARGET_ORIENTATION_BYTES,
+    load_and_validate_repository_map, load_history_digest, render_native_conversation,
+    retrieval_tool_specs, translate_tool_spec, HistoryDigest, NativeConversationMessage,
+    NativeToolCall, ProviderProtocol, RepositoryMap, RepositoryView, RetrievalBudget,
+    RetrievalHost, RetrievalOutcome, ReviewBrief, ToolChoice, MINIMUM_ORIENTATION_BYTES,
+    RETRIEVAL_TOOL_NAMES, TARGET_ORIENTATION_BYTES,
 };
 use auditor_scan::{run_scan, ScanFormat, ScanRequest};
 use serde_json::{json, Value};
@@ -102,6 +103,7 @@ impl Fixture {
                     scope: ScanScope::All,
                     repository_map_output: Some(report_path.clone()),
                     excluded_paths: BTreeSet::from([report_path.clone()]),
+                    history_root: None,
                 },
                 external_inputs: Vec::new(),
                 baseline: None,
@@ -145,8 +147,19 @@ impl Drop for Fixture {
     }
 }
 
+/// The graph-analysis build adds opt-in detectors that the pack's coverage
+/// lists, so it has its own goldens.
 fn golden(name: &str, actual: &str) {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/reviewer/{name}.md"));
+    let graph_analysis = auditor_detectors::detector_registry(ScanProfile::Full)
+        .iter()
+        .any(|detector| detector.id == "repo_graph_import_cycle");
+    let build = if graph_analysis {
+        ".graph-analysis"
+    } else {
+        ""
+    };
+    let path =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("tests/reviewer/{name}{build}.md"));
     if std::env::var_os("EA_BLESS_ORIENTATION").is_some() {
         std::fs::create_dir_all(path.parent().unwrap()).unwrap();
         std::fs::write(&path, actual).unwrap();
@@ -350,7 +363,7 @@ fn a_scripted_reviewer_navigates_from_the_pack_through_every_tool() {
         .to_string();
         assert!(rendered.contains("source-span:app/store/db.py#L8-L10"));
         let declared =
-            translate_tool_spec(&retrieval_tool_specs(), ToolChoice::Auto, protocol).unwrap();
+            translate_tool_spec(&retrieval_tool_specs(true), ToolChoice::Auto, protocol).unwrap();
         for name in RETRIEVAL_TOOL_NAMES {
             assert!(declared.tool_block.to_string().contains(name));
         }
@@ -458,4 +471,114 @@ fn the_retrieval_budget_bounds_calls_and_result_size() {
         }
     )
     .is_err());
+}
+
+fn git(repo: &Path, args: &[&str], date: &str) {
+    let status = std::process::Command::new("git")
+        .args(["-c", "user.name=t", "-c", "user.email=t@example.com"])
+        .args(args)
+        .env("GIT_AUTHOR_DATE", date)
+        .env("GIT_COMMITTER_DATE", date)
+        .current_dir(repo)
+        .status()
+        .unwrap();
+    assert!(status.success(), "git {args:?}");
+}
+
+/// The Python fixture with history: `main.py` and `base.py` change
+/// together in every commit, and nothing imports one from the other.
+fn python_history(fixture: &Fixture) -> HistoryDigest {
+    let repo = &fixture.repo;
+    git(repo, &["init", "-q"], "2026-01-01T00:00:00Z");
+    git(repo, &["add", "-A"], "2026-01-01T00:00:00Z");
+    git(repo, &["commit", "-qm", "start"], "2026-01-01T00:00:00Z");
+    for (round, date) in ["2026-02-01T00:00:00Z", "2026-03-01T00:00:00Z"]
+        .iter()
+        .enumerate()
+    {
+        for path in ["app/main.py", "app/store/base.py"] {
+            let mut text = std::fs::read_to_string(repo.join(path)).unwrap();
+            text.push_str(&format!("# revision {round}\n"));
+            std::fs::write(repo.join(path), text).unwrap();
+        }
+        git(repo, &["commit", "-qam", "together"], date);
+    }
+    let digest = auditor_detectors::history_digest(repo, 365).unwrap();
+    let path = fixture.root.join("history.json");
+    std::fs::write(&path, digest.to_string()).unwrap();
+    load_history_digest(&path, repo).unwrap()
+}
+
+#[test]
+fn a_history_digest_ranks_change_and_answers_the_history_tool() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    // The map hashes the scanned tree; history commits after the scan
+    // change two files, so only map-level facts are read, not source.
+    let digest = python_history(&fixture);
+    let view = fixture.view();
+    let plain = view.orientation_pack(None).unwrap();
+    let view = fixture.view().with_history(&digest);
+    let pack = view.orientation_pack(None).unwrap();
+    assert_cites_only_issued(&pack.markdown, &pack.evidence_ids);
+    for expected in [
+        "Changed most (commits × lines)",
+        "history:app/main.py",
+        "co-change:app/main.py+app/store/base.py",
+        "on the first-parent line from",
+    ] {
+        assert!(
+            pack.markdown.contains(expected),
+            "missing {expected}:\n{}",
+            pack.markdown
+        );
+    }
+    assert!(!pack.markdown.contains("no history digest was supplied"));
+    assert!(plain.markdown.contains("no history digest was supplied"));
+    assert_ne!(pack.audit.source_digest, plain.audit.source_digest);
+
+    let mut host = RetrievalHost::new(&view, &fixture.repo, RetrievalBudget::default()).unwrap();
+    assert!(host.tool_specs().iter().any(|spec| spec.name == "history"));
+    let answers = play(
+        &mut host,
+        vec![vec![
+            call("h1", "history", json!({"path": "app/main.py"})),
+            call("h2", "history", json!({"path": "app/core/audit.py"})),
+        ]],
+    );
+    let main = result_text(&answers[1]);
+    assert!(main.contains("3 commits"), "{main}");
+    assert!(
+        main.contains("app/store/base.py: 3 commits together"),
+        "{main}"
+    );
+    assert!(main.contains("no import links them"), "{main}");
+    assert!(
+        main.contains("[co-change:app/main.py+app/store/base.py]"),
+        "{main}"
+    );
+    let audit = result_text(&answers[2]);
+    assert!(audit.contains("1 commit"), "{audit}");
+    assert_cites_only_issued(&format!("{main}{audit}"), host.issued_evidence_ids());
+
+    let without = fixture.view();
+    let mut plain_host =
+        RetrievalHost::new(&without, &fixture.repo, RetrievalBudget::default()).unwrap();
+    assert!(!plain_host
+        .tool_specs()
+        .iter()
+        .any(|spec| spec.name == "history"));
+    let refused = plain_host.answer(&call("h3", "history", json!({"path": "app/main.py"})));
+    assert!(result_text(&refused).contains("no history digest was supplied"));
+}
+
+#[test]
+fn a_history_digest_of_another_commit_is_refused() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let digest = python_history(&fixture);
+    let mut text = serde_json::to_value(&digest).unwrap();
+    text["head_commit"] = json!("0".repeat(40));
+    let path = fixture.root.join("other.json");
+    std::fs::write(&path, text.to_string()).unwrap();
+    let error = load_history_digest(&path, &fixture.repo).unwrap_err();
+    assert!(error.contains("not the repository's HEAD"), "{error}");
 }

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/history-digest.schema.json",
+  "title": "Engineering Auditor History Digest",
+  "description": "Per-file change counts, growth, and co-change partners over a window of HEAD's first-parent line, for the engineering review. Only files present at HEAD appear; a shallow clone's boundary commits are left out.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "head_commit", "head_date", "window_days", "window_start",
+    "recent_days", "commits", "oldest_commit_date", "shallow", "complete",
+    "covered_from", "max_changeset_files", "large_changesets", "files"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "head_commit": { "type": "string", "pattern": "^[0-9a-f]{40,64}$" },
+    "head_date": { "$ref": "#/$defs/date" },
+    "window_days": { "type": "integer", "minimum": 1 },
+    "window_start": { "$ref": "#/$defs/date" },
+    "recent_days": { "type": "integer", "minimum": 1 },
+    "commits": { "type": "integer", "minimum": 0, "description": "First-parent commits in the window, boundary commits excluded." },
+    "oldest_commit_date": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+    "shallow": { "type": "boolean" },
+    "complete": { "type": "boolean", "description": "False when a shallow boundary falls inside the window." },
+    "covered_from": { "$ref": "#/$defs/date" },
+    "max_changeset_files": { "type": "integer", "minimum": 1, "description": "Commits touching more files count toward each file's commits but not toward co-change." },
+    "large_changesets": { "type": "integer", "minimum": 0 },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path", "commits", "recent_commits", "authors", "lines_added", "lines_removed",
+          "created_in_window", "first_change", "last_change", "co_changes"
+        ],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "commits": { "type": "integer", "minimum": 1 },
+          "recent_commits": { "type": "integer", "minimum": 0 },
+          "authors": { "type": "integer", "minimum": 1 },
+          "lines_added": { "type": "integer", "minimum": 0 },
+          "lines_removed": { "type": "integer", "minimum": 0 },
+          "created_in_window": { "type": "boolean" },
+          "first_change": { "$ref": "#/$defs/date" },
+          "last_change": { "$ref": "#/$defs/date" },
+          "co_changes": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "commits"],
+              "properties": {
+                "path": { "type": "string", "minLength": 1 },
+                "commits": { "type": "integer", "minimum": 2 }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+  }
+}

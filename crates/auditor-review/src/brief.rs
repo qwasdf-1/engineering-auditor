@@ -79,6 +79,23 @@ pub struct BriefBudgets {
     pub max_lookup_hops: Option<usize>,
 }
 
+/// The operator's command for checking a recommendation's patch: it runs
+/// the repository's code, so it is opt-in, fixed here, and never chosen by
+/// the model. The checker runs it in a scratch copy with a timeout, a
+/// cleared environment (plus `pass_env`), and no network where the
+/// platform allows.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ReviewTestCommand {
+    pub argv: Vec<String>,
+    pub timeout_seconds: u64,
+    #[serde(default)]
+    pub pass_env: Vec<String>,
+}
+
+/// The longest a test command may run: a day.
+pub const MAX_TEST_TIMEOUT_SECONDS: u64 = 86_400;
+
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ReviewBrief {
@@ -93,6 +110,8 @@ pub struct ReviewBrief {
     pub excluded_domains: Vec<String>,
     #[serde(default)]
     pub budgets: BriefBudgets,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub test_command: Option<ReviewTestCommand>,
 }
 
 impl ReviewBrief {
@@ -114,6 +133,7 @@ impl ReviewBrief {
             documents: Vec::new(),
             excluded_domains: Vec::new(),
             budgets: BriefBudgets::default(),
+            test_command: None,
         }
     }
 
@@ -166,6 +186,14 @@ impl ReviewBrief {
                 budgets.into_iter().flatten().any(|value| value == 0),
                 "review brief budget overrides must be positive",
             ),
+            (
+                self.test_command.as_ref().is_some_and(|command| {
+                    command.argv.first().is_none_or(|program| program.is_empty())
+                        || !(1..=MAX_TEST_TIMEOUT_SECONDS).contains(&command.timeout_seconds)
+                        || !unique_nonempty(command.pass_env.iter().map(String::as_str))
+                }),
+                "review brief test command needs a program, a timeout of 1 to 86400 seconds, and unique pass_env names",
+            ),
         ];
         checks
             .into_iter()
@@ -180,4 +208,32 @@ fn unique_nonempty<'a>(values: impl IntoIterator<Item = &'a str>) -> bool {
     values
         .into_iter()
         .all(|value| !value.is_empty() && seen.insert(value))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_test_command_needs_a_program_a_bounded_timeout_and_unique_pass_env() {
+        let with = |command: serde_json::Value| {
+            let mut brief = serde_json::to_value(ReviewBrief::general()).unwrap();
+            brief["test_command"] = command;
+            ReviewBrief::parse(&brief.to_string())
+        };
+        let brief =
+            with(serde_json::json!({"argv": ["cargo", "test"], "timeout_seconds": 600})).unwrap();
+        assert_eq!(brief.test_command.unwrap().argv, ["cargo", "test"]);
+        for invalid in [
+            serde_json::json!({"argv": [], "timeout_seconds": 60}),
+            serde_json::json!({"argv": [""], "timeout_seconds": 60}),
+            serde_json::json!({"argv": ["make"], "timeout_seconds": 0}),
+            serde_json::json!({"argv": ["make"], "timeout_seconds": 86_401}),
+            serde_json::json!({"argv": ["make"], "timeout_seconds": 60, "pass_env": ["A", "A"]}),
+        ] {
+            assert!(with(invalid.clone()).is_err(), "{invalid}");
+        }
+        let general = serde_json::to_value(ReviewBrief::general()).unwrap();
+        assert!(general.get("test_command").is_none());
+    }
 }

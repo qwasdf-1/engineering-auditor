@@ -71,6 +71,26 @@
         "max_lookup_requests": { "type": ["integer", "null"], "minimum": 1 },
         "max_lookup_hops": { "type": ["integer", "null"], "minimum": 1, "maximum": 2 }
       }
+    },
+    "test_command": {
+      "description": "Opt-in command that checks a recommendation's patch. It runs in a scratch copy with a timeout, a cleared environment plus pass_env, and no network where the platform allows; the model never chooses it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argv", "timeout_seconds"],
+      "properties": {
+        "argv": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "prefixItems": [{ "type": "string", "minLength": 1 }]
+        },
+        "timeout_seconds": { "type": "integer", "minimum": 1, "maximum": 86400 },
+        "pass_env": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
     }
   },
   "$defs": {

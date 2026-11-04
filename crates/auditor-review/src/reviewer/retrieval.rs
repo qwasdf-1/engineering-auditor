@@ -14,12 +14,13 @@ use super::document::BoundedDocument;
 use super::view::RepositoryView;
 use crate::{NativeConversationMessage, NativeToolCall, ReviewBrief, ToolSpec};
 
-pub const RETRIEVAL_TOOL_NAMES: [&str; 5] = [
+pub const RETRIEVAL_TOOL_NAMES: [&str; 6] = [
     "read_source",
     "symbol_info",
     "search_symbols",
     "findings_in",
     "module_overview",
+    "history",
 ];
 
 const DEFAULT_CALLS: usize = 32;
@@ -83,8 +84,9 @@ pub struct RetrievalRecord {
     pub evidence_ids: Vec<String>,
 }
 
-/// The tools' definitions, as provider adapters declare them.
-pub fn retrieval_tool_specs() -> Vec<ToolSpec> {
+/// The tools' definitions, as provider adapters declare them; `history`
+/// only when the review has a history digest.
+pub fn retrieval_tool_specs(with_history: bool) -> Vec<ToolSpec> {
     let string = |description: &str| json!({"type": "string", "description": description});
     let object = |properties: Value, required: &[&str]| {
         json!({
@@ -147,7 +149,19 @@ pub fn retrieval_tool_specs() -> Vec<ToolSpec> {
             ),
             strict: true,
         },
+        ToolSpec {
+            name: "history",
+            description: "Change history of a mapped file over the history digest's window: commits in all and recently, authors, lines added and removed, and the files most often changed in the same commits, with whether an import links them.",
+            parameters: object(
+                json!({"path": string("Repository-relative path or file ID of a mapped file.")}),
+                &["path"],
+            ),
+            strict: true,
+        },
     ]
+    .into_iter()
+    .filter(|spec| with_history || spec.name != "history")
+    .collect()
 }
 
 #[derive(Deserialize)]
@@ -181,6 +195,12 @@ pub(super) struct ScopeQuery {
 #[serde(deny_unknown_fields)]
 pub(super) struct ModuleQuery {
     pub(super) module: String,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct HistoryQuery {
+    pub(super) path: String,
 }
 
 /// Answers the reviewer's tool calls over one repository view.
@@ -251,6 +271,11 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
         }
     }
 
+    /// The tools this review offers.
+    pub fn tool_specs(&self) -> Vec<ToolSpec> {
+        retrieval_tool_specs(self.view.history.is_some())
+    }
+
     /// Every evidence ID an answered call returned.
     pub fn issued_evidence_ids(&self) -> &BTreeSet<String> {
         &self.issued
@@ -285,6 +310,7 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
             "search_symbols" => self.search_symbols(&arguments(call)?)?,
             "findings_in" => self.findings_in(&arguments::<ScopeQuery>(call)?.scope)?,
             "module_overview" => self.module_overview(&arguments::<ModuleQuery>(call)?.module)?,
+            "history" => self.history(&arguments::<HistoryQuery>(call)?.path)?,
             other => return Err(format!("unknown tool `{other}`")),
         };
         let rendered = render(document, limit, &self.view.source_digest)?;

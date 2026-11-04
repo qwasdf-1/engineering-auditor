@@ -955,6 +955,10 @@ mod tests {
                 include_str!("../../../contracts/evidence-graph.schema.json"),
             ),
             (
+                "history-digest",
+                include_str!("../../../contracts/history-digest.schema.json"),
+            ),
+            (
                 "repository-graph",
                 include_str!("../../../contracts/repository-graph.schema.json"),
             ),

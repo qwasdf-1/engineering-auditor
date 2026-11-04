@@ -88,6 +88,7 @@ impl ScanOptions {
             scope: scope.clone(),
             repository_map_output: self.repository_map_output(profile, &scope),
             excluded_paths,
+            history_root: None,
         };
         Ok(PreparedScan {
             request,

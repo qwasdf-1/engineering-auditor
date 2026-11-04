@@ -294,7 +294,7 @@ scanned repository through typed tools and cites every claim (see
 [`docs/reference/layer6-llm-review.md`](reference/layer6-llm-review.md)).
 While it is rebuilt, the review commands of earlier releases (`scan
 --review`, `review run`, `review plan`, `review verify`, and the
-disposition commands) are gone. Two remain:
+disposition commands) are gone. These remain or are new:
 
 - `auditor review provider discover --routes routes.json
   --allow-hosted-review` checks that the providers in a routes file answer.
@@ -303,6 +303,13 @@ disposition commands) are gone. Two remain:
   [`docs/reference/layer6-providers.md`](reference/layer6-providers.md).
 - `auditor review transcript --input transcript.json` renders a recorded
   provider transcript as Markdown.
+- `auditor review history --repo-root . --output history.json` summarizes
+  the last year (`--window-days`) of the repository's history: commits,
+  growth, and the files changed together.
+- `auditor review check-patch --repo-root . --patch fix.diff --resolves
+  EA-…` applies a patch to a scratch copy, re-scans it, and prints whether
+  the cited findings are gone without new ones. With `--brief`, the brief's
+  `test_command` must also pass. Your tree is never written.
 
 Nothing is sent to a provider without the explicit consent flag.
 

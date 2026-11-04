@@ -1,6 +1,7 @@
 mod brief;
 mod case_review;
 mod context;
+mod history;
 mod provider;
 mod repository_map;
 mod reviewer;
@@ -8,7 +9,8 @@ mod transcript_output;
 
 pub use brief::{
     BriefBudgets, ConstraintKind, DocumentIntent, GoalPriority, ReviewBrief, ReviewConstraint,
-    ReviewDocument, ReviewGoal, RiskLevel, RiskPosture, REVIEW_BRIEF_SCHEMA_VERSION,
+    ReviewDocument, ReviewGoal, ReviewTestCommand, RiskLevel, RiskPosture,
+    MAX_TEST_TIMEOUT_SECONDS, REVIEW_BRIEF_SCHEMA_VERSION,
 };
 pub use case_review::{
     model_value_from_json, render_model_document, render_structured_model_document,
@@ -48,6 +50,9 @@ pub use context::{
     EgressManifest, EgressManifestEntry, EgressPolicy, EvidenceBrief, EvidenceGraphOutline,
     FindingBrief, ProviderContext, ProviderContextBudgets, QueryableSymbol, TrustLabel,
     MAX_QUERYABLE_SYMBOLS,
+};
+pub use history::{
+    load_history_digest, CoChange, FileHistory, HistoryDigest, HISTORY_DIGEST_SCHEMA_VERSION,
 };
 pub use provider::{
     discover_provider, render_native_conversation, render_transcript_markdown, translate_tool_spec,

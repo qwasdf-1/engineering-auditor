@@ -62,7 +62,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `digest` | stable | Flags only; the digest text is human-oriented. |
 | `catalog` | stable | Output follows `detector-manifest.schema.json`. |
 | `version` | stable | |
-| `review transcript`, `review provider discover` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed. |
+| `review transcript`, `review provider discover`, `review history`, `review check-patch` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed. |
 | `donor check`, `donor sync` | internal | Development provenance tooling. |
 | Exit codes | stable | `0` success; `1` policy failure (`gate` failed, with the result on stdout); `2` usage, input, or runtime error (message on stderr). |
 
@@ -111,6 +111,7 @@ stable CLI.
 | `co-edit-journal.schema.json` | stable |
 | `repository-map.schema.json` | experimental |
 | `review-brief.schema.json` | experimental |
+| `history-digest.schema.json` | experimental |
 | `case-template-bundle-v1.schema.json` | experimental |
 | `case-template-v1.schema.json` | experimental |
 | `contextual-recommendation-v1.schema.json` | experimental |

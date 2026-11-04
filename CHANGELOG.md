@@ -29,8 +29,37 @@
   `search_symbols`, `findings_in`, `module_overview`) with call and byte
   budgets. Every row cites an evidence ID the host issues only for rows it
   shows.
+- A patch checker for review recommendations (`review check-patch`,
+  experimental). It applies a unified diff to a scratch copy of the files
+  the scan reads, re-scans the copy (churn still reads the original's
+  history), and records a verdict: verified when every cited finding is
+  gone, none is added anywhere, and the brief's optional `test_command`
+  still passes; refuted, with the step (apply, rescan, tests) that failed;
+  or unchecked when the unpatched copy does not reproduce the cited
+  findings or its tests already fail. A finding silenced by an inline
+  `auditor-ignore` comment still counts as reported, and a patch that edits
+  ignore rules or auditor configuration is refused. The test command runs
+  with a cleared environment, a timeout that kills its process group, and
+  no network where unprivileged `unshare` allows it; the record says which.
+  A recommendation may carry its `patch`.
+- A history digest (`review history`, experimental; schema
+  `history-digest.schema.json`): per-file commits, recent commits, authors,
+  growth, and co-change partners over a window (365 days by default) of
+  `HEAD`'s first-parent line. A shallow clone's boundary commits are left
+  out, and the digest says when the boundary cuts the window. Given a
+  digest of the repository's `HEAD`, the orientation pack ranks the files
+  changed most and the production files changed together without an import
+  between them, and a sixth retrieval tool, `history`, answers for one
+  file.
+- `tooling/ecosystem/review_inputs.py prepare` fetches each corpus
+  repository with only the window's history, scans it with a map, writes
+  its history digest, optionally runs a review command, and deletes the
+  checkout.
 
 ### Changed
+
+- Churn reads non-ASCII paths as written: git quoted them, so their files
+  never matched and had no churn.
 
 - The call graph resolves dotted calls in every language. Python,
   JavaScript, TypeScript, Go, Rust, and C++ calls carried their receiver in

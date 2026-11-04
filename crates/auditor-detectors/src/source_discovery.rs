@@ -313,13 +313,9 @@ pub fn discover_sources_with_filter(
         .collect())
 }
 
-pub(crate) fn discover_audited_files_with_filter(
-    root: &Path,
-    options: SourceDiscoveryOptions,
-    filter: &ScopeFilter,
-) -> io::Result<Vec<AuditedFile>> {
-    let mut files = Vec::new();
-    let attributes = LinguistAttributes::load(root);
+/// The walk discovery makes: ignore files honored, hidden files kept, and
+/// skipped directories (`.git`, vendored trees, archives) pruned.
+fn repository_walk(root: &Path, options: SourceDiscoveryOptions) -> ignore::Walk {
     let filter_root = root.to_path_buf();
     let mut walker = ignore::WalkBuilder::new(root);
     walker
@@ -335,7 +331,42 @@ pub(crate) fn discover_audited_files_with_filter(
                 .is_some_and(|file_type| file_type.is_dir())
                 || !should_skip_dir(&filter_root, entry.path(), options)
         });
-    for entry in walker.build() {
+    walker.build()
+}
+
+/// Every regular file the scan's walk visits, relative to `root` and
+/// sorted, sources or not: what a copy of the repository needs to scan the
+/// same.
+pub fn repository_files(root: &Path, options: SourceDiscoveryOptions) -> io::Result<Vec<PathBuf>> {
+    let mut files = Vec::new();
+    for entry in repository_walk(root, options) {
+        let entry = entry.map_err(ignore_error)?;
+        if entry.depth() > 0
+            && entry
+                .file_type()
+                .is_some_and(|file_type| file_type.is_file())
+        {
+            files.push(
+                entry
+                    .path()
+                    .strip_prefix(root)
+                    .unwrap_or(entry.path())
+                    .to_path_buf(),
+            );
+        }
+    }
+    files.sort();
+    Ok(files)
+}
+
+pub(crate) fn discover_audited_files_with_filter(
+    root: &Path,
+    options: SourceDiscoveryOptions,
+    filter: &ScopeFilter,
+) -> io::Result<Vec<AuditedFile>> {
+    let mut files = Vec::new();
+    let attributes = LinguistAttributes::load(root);
+    for entry in repository_walk(root, options) {
         let entry = entry.map_err(ignore_error)?;
         if entry.depth() == 0
             || !entry

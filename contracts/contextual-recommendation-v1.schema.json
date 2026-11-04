@@ -27,6 +27,11 @@
   ],
   "properties": {
     "schema_version": { "const": 2 },
+    "patch": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional unified diff that carries the recommendation out; EA checks it in a scratch copy (applies, re-scans, optionally runs the brief's test command)."
+    },
     "recommendation_id": {
       "type": "string",
       "pattern": "^contextual-recommendation:[0-9a-f]{64}$"

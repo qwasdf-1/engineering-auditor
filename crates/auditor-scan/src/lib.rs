@@ -11,6 +11,12 @@ use auditor_report::{
     ReviewArtifactLoader,
 };
 
+mod patch_check;
+
+pub use patch_check::{
+    AddedFinding, CheckStep, PatchCheck, PatchChecker, PatchVerdict, TestCommand, TestRun,
+};
+
 static TEMPORARY_ID: AtomicU64 = AtomicU64::new(0);
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -250,6 +256,7 @@ mod tests {
                 scope: ScanScope::All,
                 repository_map_output: Some(report.to_path_buf()),
                 excluded_paths: BTreeSet::from([report.to_path_buf()]),
+                history_root: None,
             },
             external_inputs: vec![ExternalInput::from_text(
                 ExternalInputMetadata::analysis("scan_request", "test", 1, "complete"),
@@ -326,6 +333,7 @@ mod tests {
                 scope: ScanScope::All,
                 repository_map_output: Some(report.clone()),
                 excluded_paths: BTreeSet::from([report.clone()]),
+                history_root: None,
             },
             external_inputs: vec![ExternalInput::from_text(
                 ExternalInputMetadata::analysis("scan_request", "test", 1, "complete"),
@@ -396,6 +404,7 @@ mod tests {
                 scope: ScanScope::All,
                 repository_map_output: Some(report.clone()),
                 excluded_paths: BTreeSet::from([report.clone()]),
+                history_root: None,
             },
             external_inputs: vec![ExternalInput::from_text(
                 ExternalInputMetadata::analysis("scan_request", "test", 1, "complete"),

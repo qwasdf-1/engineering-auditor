@@ -73,6 +73,10 @@ pub struct RecommendationDraft {
     pub materiality: Materiality,
     pub materiality_basis: String,
     pub confidence: ClaimConfidence,
+    /// A unified diff that carries the recommendation out, making it
+    /// checkable: EA applies it to a scratch copy and re-scans.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub patch: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]

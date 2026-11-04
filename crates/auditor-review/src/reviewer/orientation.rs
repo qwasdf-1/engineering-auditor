@@ -7,7 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde_json::Value;
 
 use super::document::{BoundedDocument, Item, Row, Section};
-use super::view::{count, severity_rank, RepositoryView};
+use super::view::{co_change_id, count, severity_rank, RepositoryView};
 use crate::{ModelProjectionAudit, ReviewBrief};
 
 pub const TARGET_ORIENTATION_BYTES: usize = 24 * 1024;
@@ -320,15 +320,79 @@ fn hotspots(view: &RepositoryView<'_>) -> Section {
             "no history-weighted hotspot in the report (see Coverage)",
         )
     };
-    Section::new(
-        "Hotspots",
-        vec![
-            churn_item,
-            Item::rows("Largest production files", largest_rows, 10),
-            Item::rows("Most-coupled production files", coupled_rows, 10),
-            Item::rows("Files with the most findings", dense_rows, 10),
-        ],
-    )
+    let mut items = vec![churn_item];
+    items.extend(history_items(view, &code_files));
+    items.extend([
+        Item::rows("Largest production files", largest_rows, 10),
+        Item::rows("Most-coupled production files", coupled_rows, 10),
+        Item::rows("Files with the most findings", dense_rows, 10),
+    ]);
+    Section::new("Hotspots", items)
+}
+
+/// With a history digest: the production files that change most, weighted
+/// by size, and the pairs that change together with no import between
+/// them.
+fn history_items(view: &RepositoryView<'_>, code_files: &[usize]) -> Vec<Item> {
+    let Some(digest) = view.history else {
+        return Vec::new();
+    };
+    let mut changed = code_files
+        .iter()
+        .filter_map(|file| Some((*file, view.file_history(*file)?)))
+        .collect::<Vec<_>>();
+    changed.sort_by_key(|(file, history)| {
+        (
+            std::cmp::Reverse(history.commits * view.file(*file).lines),
+            *file,
+        )
+    });
+    let changed_rows = changed.iter().map(|(file, history)| {
+        let path = &view.file(*file).path;
+        Row::new(
+            format!(
+                "{path}: {} ({} in the last {} days), {}, +{}/-{}, {}",
+                count(history.commits, "commit"),
+                history.recent_commits,
+                digest.recent_days,
+                count(view.file(*file).lines, "line"),
+                history.lines_added,
+                history.lines_removed,
+                count(view.findings_in_file(*file).len(), "finding")
+            ),
+            [format!("history:{path}")],
+        )
+    });
+    let mut pairs = BTreeMap::new();
+    for (file, history) in &changed {
+        for partner in &history.co_changes {
+            let Some(other) = view
+                .file_by_path(&partner.path)
+                .filter(|other| code_files.contains(other))
+            else {
+                continue;
+            };
+            if view.import_links(*file, other) == (false, false) {
+                pairs.insert((*file.min(&other), *file.max(&other)), partner.commits);
+            }
+        }
+    }
+    let mut pairs = pairs.into_iter().collect::<Vec<_>>();
+    pairs.sort_by_key(|(pair, shared)| (std::cmp::Reverse(*shared), *pair));
+    let pair_rows = pairs.into_iter().map(|((left, right), shared)| {
+        let (left, right) = (&view.file(left).path, &view.file(right).path);
+        Row::new(
+            format!(
+                "{left} and {right}: changed together in {}",
+                count(shared, "commit")
+            ),
+            [co_change_id(left, right)],
+        )
+    });
+    vec![
+        Item::rows("Changed most (commits × lines)", changed_rows, 10),
+        Item::rows("Changed together, no import between them", pair_rows, 8),
+    ]
 }
 
 fn findings(view: &RepositoryView<'_>) -> Section {
@@ -456,10 +520,11 @@ fn coverage(view: &RepositoryView<'_>) -> Section {
         .iter()
         .filter(|file| file.source_role == "test")
         .count();
-    let mut unknowns = vec![
-        "History: no history digest was supplied, so change frequency, growth, and co-change are unknown; only the report's complexity × churn findings carry history.".to_string(),
-        "Runtime: no measurements; cost judgments rest on structure alone.".to_string(),
-    ];
+    let mut unknowns = Vec::new();
+    if view.history.is_none() {
+        unknowns.push("History: no history digest was supplied, so change frequency, growth, and co-change are unknown; only the report's complexity × churn findings carry history.".to_string());
+    }
+    unknowns.push("Runtime: no measurements; cost judgments rest on structure alone.".to_string());
     unknowns.push(if tests == 0 {
         "Tests: the repository has no test files.".to_string()
     } else {
@@ -468,9 +533,7 @@ fn coverage(view: &RepositoryView<'_>) -> Section {
             count(tests, "test file")
         )
     });
-    Section::new(
-        "Coverage",
-        vec![
+    let mut items = vec![
             Item::text(
                 "Detectors",
                 format!(
@@ -494,7 +557,32 @@ fn coverage(view: &RepositoryView<'_>) -> Section {
                     completeness.truncated_call_edges,
                 ),
             ),
-            Item::notes("Unknown", unknowns),
-        ],
-    )
+    ];
+    items.extend(history_coverage(view));
+    items.push(Item::notes("Unknown", unknowns));
+    Section::new("Coverage", items)
+}
+
+fn history_coverage(view: &RepositoryView<'_>) -> Option<Item> {
+    let digest = view.history?;
+    let extent = if digest.complete {
+        format!("the whole {}-day window", digest.window_days)
+    } else {
+        format!(
+            "a shallow clone cuts the {}-day window short",
+            digest.window_days
+        )
+    };
+    Some(Item::text(
+        "History",
+        format!(
+            "{} on the first-parent line from {} to {} at {}, {extent}; {} touching over {} files left out of co-change",
+            count(digest.commits, "commit"),
+            digest.covered_from,
+            digest.head_date,
+            &digest.head_commit[..digest.head_commit.len().min(12)],
+            count(digest.large_changesets, "commit"),
+            digest.max_changeset_files
+        ),
+    ))
 }
