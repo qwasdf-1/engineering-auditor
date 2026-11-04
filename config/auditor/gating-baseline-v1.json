@@ -435,6 +435,15 @@
       "path": "crates/auditor-detectors/src/structure_index.rs",
       "reason": "Reviewed 2026-11-03: the growth is the shared repository facts pass (c575497), which made the structure index own the type hierarchy and entry points; about half of it is a test-only fixture helper. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-8443fce73dcaacba",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/repository_map.rs is complex and growing (CCX=44, growth=+109 LOC).",
+      "path": "crates/auditor-detectors/src/repository_map.rs",
+      "reason": "Reviewed 2026-11-04: the growth is the map v2 pass (c575497, about 79 net lines) and the orientation pack (9369327, about 30 lines that read each file's digest and line count in one pass). History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
