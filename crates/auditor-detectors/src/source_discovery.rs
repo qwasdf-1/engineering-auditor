@@ -9,8 +9,8 @@ use crate::util;
 #[path = "source_classification.rs"]
 mod classification;
 use classification::{
-    header_is_cpp, is_generated_output, is_reference_path, is_test_class_file, is_test_project,
-    layout_components, LinguistAttributes,
+    header_is_cpp, is_generated_output, is_reference_path, is_test_class_file,
+    is_test_kind_directory, is_test_project, layout_components, LinguistAttributes,
 };
 
 const SKIP_DIR_NAMES: &[&str] = &[
@@ -582,6 +582,7 @@ fn is_test_file(components: &[String], original: &[&str], stem: &str) -> bool {
             .iter()
             .any(|component| component.ends_with("-suites"))
         || is_test_project(original)
+        || is_test_kind_directory(components)
         || is_test_class_file(original)
         || top_level_directory(components, "integration")
 }

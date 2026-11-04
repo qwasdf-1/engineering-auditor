@@ -40,6 +40,37 @@ pub(super) fn is_test_project(components: &[&str]) -> bool {
     })
 }
 
+/// Kinds of test a directory can be named for (`system_test/`,
+/// `integration-tests/`). A feature name is not one: `ab_test/` and
+/// `split_test/` hold A/B testing code.
+const TEST_KINDS: &[&str] = &[
+    "system",
+    "integration",
+    "functional",
+    "acceptance",
+    "e2e",
+    "end_to_end",
+    "smoke",
+    "regression",
+    "load",
+    "perf",
+    "performance",
+    "stress",
+];
+
+/// A directory named for a kind of test (`system_test/`, `e2e-tests/`):
+/// its files are test code. `components` are lowercased.
+pub(super) fn is_test_kind_directory(components: &[String]) -> bool {
+    let directories = &components[..components.len().saturating_sub(1)];
+    directories.iter().any(|directory| {
+        let name = directory.trim_matches('_');
+        ["_tests", "_test", "-tests", "-test"]
+            .iter()
+            .find_map(|suffix| name.strip_suffix(suffix))
+            .is_some_and(|kind| TEST_KINDS.contains(&kind.replace('-', "_").as_str()))
+    })
+}
+
 /// The project-layout part of a lowercased path: directories below a JVM
 /// source root (`src/main/java/`, `src/commonMain/kotlin/`) spell the package
 /// (`tools/jackson/core/`), so tooling keywords there do not apply.

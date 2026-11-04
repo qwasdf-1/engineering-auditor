@@ -272,6 +272,14 @@
   leave; on the held-out wexflow, 3 of its 5 labelled false positives and
   3 unlabelled copies of the same queries leave, and all 20 labelled true
   positives stay.
+- Source roles: a directory named for a kind of test (`system_test/`,
+  `integration_tests/`, `e2e-tests/`, `perf_test/`, and the like for
+  functional, acceptance, end-to-end, smoke, regression, load, performance,
+  and stress) holds test code; `ab_test/` and `split_test/` stay
+  production. rqlite's `system_test/` leaves production with 74 findings,
+  among them the labelled `request_no_cert_verify` false positive. Its
+  `store` package loses an importer and leaves `package_coupling_metrics`,
+  so that labelled true positive reads as stale.
 
 ### Removed
 

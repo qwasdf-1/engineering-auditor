@@ -131,6 +131,58 @@ fn source_roles_follow_stable_path_precedence() {
 }
 
 #[test]
+fn directories_named_for_a_kind_of_test_hold_test_code() {
+    for path in [
+        "system_test/helpers.go",
+        "system_test/e2e/cluster.py",
+        "pkg/integration_tests/db.go",
+        "src/functional_test/util.rs",
+        "acceptance_test/steps.rb",
+        "e2e_tests/setup.ts",
+        "end_to_end_test/run.py",
+        "end-to-end-tests/run.py",
+        "perf_test/driver.go",
+        "stress_tests/pool.cc",
+        "smoke_test/boot.sh",
+        "regression_tests/case.c",
+        "load_test/client.go",
+        "performance_test/loop.rs",
+        "System_Test/Helpers.cs",
+    ] {
+        assert_eq!(
+            source_role_for_path(Path::new(path)),
+            SourceRole::Test,
+            "{path}"
+        );
+    }
+}
+
+#[test]
+fn directories_named_for_a_feature_stay_production() {
+    for path in [
+        "ab_test/experiment.go",
+        "src/abtest/assign.py",
+        "split_test/buckets.rs",
+        "src/contest/entry.go",
+        "latest/index.ts",
+        "system/helpers.go",
+        "pkg/test_system/main.go",
+    ] {
+        assert_eq!(
+            source_role_for_path(Path::new(path)),
+            SourceRole::Production,
+            "{path}"
+        );
+    }
+    // A file named for a kind of test keeps the file rules: `_test` stems
+    // are test files, whatever the directory.
+    assert_eq!(
+        source_role_for_path(Path::new("pkg/system_test.go")),
+        SourceRole::Test
+    );
+}
+
+#[test]
 fn ordinary_names_containing_test_are_production() {
     assert_eq!(
         source_role_for_path(Path::new("src/latest_state.rs")),
