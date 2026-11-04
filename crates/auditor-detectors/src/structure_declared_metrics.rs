@@ -349,4 +349,45 @@ mod tests {
         let both = format!("#if A\n{switch}#else\n{switch}#endif\n  return 2;\n");
         assert_eq!(c_returns(&both), 2);
     }
+
+    /// A switch of the arms before a preprocessor conditional, the
+    /// conditional, and the arms after it, then a final return.
+    fn split_switch(before: &str, conditional: &str, after: &str) -> String {
+        format!("switch (x) {{\n{before}{conditional}{after}}}\n  return 0;\n")
+    }
+
+    #[test]
+    fn a_dispatch_switch_split_by_a_conditional_counts_once() {
+        let arms = |from: usize, to: usize| {
+            (from..to)
+                .map(|i| format!("case {i}: return {i};\n"))
+                .collect::<String>()
+        };
+        // Arms before, inside both alternatives, and after the chain.
+        let both = format!("#ifdef A\n{}#else\n{}#endif\n", arms(2, 4), arms(4, 6));
+        assert_eq!(c_returns(&split_switch(&arms(0, 2), &both, &arms(6, 8))), 2);
+        // Arms only inside the chain.
+        assert_eq!(c_returns(&split_switch("", &both, "")), 2);
+        // Arms outside and inside one alternative of a chain with no other.
+        let lone = format!("#ifdef A\n{}#endif\n", arms(2, 4));
+        assert_eq!(c_returns(&split_switch(&arms(0, 2), &lone, "")), 2);
+        let chain_then = format!(
+            "#if A\n{}#elif B\n{}#else\n{}#endif\n",
+            arms(0, 2),
+            arms(2, 4),
+            arms(4, 6)
+        );
+        assert_eq!(c_returns(&split_switch("", &chain_then, &arms(6, 8))), 2);
+    }
+
+    #[test]
+    fn a_switch_whose_arms_do_more_counts_each_return_with_alternatives_at_their_largest() {
+        let arm = |i: usize| format!("case {i}: x++; return {i};\n");
+        let arms = |from: usize, to: usize| (from..to).map(arm).collect::<String>();
+        let chain = format!("#ifdef A\n{}#else\n{}#endif\n", arms(2, 5), arms(5, 7));
+        // Two before, the larger alternative's three, one after, and the
+        // final return.
+        let source = split_switch(&arms(0, 2), &chain, &arms(7, 8));
+        assert_eq!(c_returns(&source), 2 + 3 + 1 + 1);
+    }
 }

@@ -38,9 +38,20 @@ const WRAPPER_KINDS: &[&str] = &[
     "expression_statement",
 ];
 
+/// C and C++ preprocessor conditionals, which can wrap some arms of a
+/// switch (`#ifdef X case 1: return a; #endif`).
+const PREPROCESSOR_KINDS: &[&str] = &[
+    "preproc_if",
+    "preproc_ifdef",
+    "preproc_elif",
+    "preproc_elifdef",
+    "preproc_else",
+];
+
 /// The start byte of the switch whose arm `node`, a return, is the whole
 /// body of; `None` when the arm does anything else first. Every arm of one
-/// switch shares its parent, so the byte names the switch.
+/// switch shares its parent, so the byte names the switch; an arm inside a
+/// preprocessor conditional names the switch the conditional sits in.
 pub fn dispatch_switch(node: AstNode<'_>) -> Option<usize> {
     let mut body = node;
     let mut parent = node.parent()?;
@@ -58,9 +69,13 @@ pub fn dispatch_switch(node: AstNode<'_>) -> Option<usize> {
         .filter(|child| child.start_byte() != body.start_byte())
         .all(|child| !holds_statements(child.kind()));
     only_body.then(|| {
-        parent
-            .parent()
-            .map_or(parent.start_byte(), |switch| switch.start_byte())
+        let mut switch = parent.parent();
+        while let Some(conditional) =
+            switch.filter(|node| PREPROCESSOR_KINDS.contains(&node.kind()))
+        {
+            switch = conditional.parent();
+        }
+        switch.map_or(parent.start_byte(), |switch| switch.start_byte())
     })
 }
 

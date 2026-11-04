@@ -280,6 +280,11 @@
   among them the labelled `request_no_cert_verify` false positive. Its
   `store` package loses an importer and leaves `package_coupling_metrics`,
   so that labelled true positive reads as stale.
+- `too_many_returns` counts a C/C++ dispatch switch once when some of its
+  arms sit inside `#if`/`#ifdef` blocks. Each conditional was read as a
+  switch of its own, so libuv's `uv__getaddrinfo_translate_error`, one
+  switch with 16 guarded arms, counted 17 returns; it now leaves. jq and
+  zlib are unchanged.
 
 ### Removed
 
