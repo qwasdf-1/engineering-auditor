@@ -6,6 +6,17 @@ impl DetectorContext<'_> {
     fn ast_scan(&mut self) -> ast_scan::AstScan<'_, '_> {
         ast_scan::AstScan::new(self.files, self.method, self.cache, &mut self.repo_ast)
     }
+
+    /// The parsed-file scan with the structure index, for detectors that
+    /// read both.
+    fn ast_scan_with_structure(
+        &mut self,
+    ) -> (ast_scan::AstScan<'_, '_>, &structure_index::StructureIndex) {
+        (
+            ast_scan::AstScan::new(self.files, self.method, self.cache, &mut self.repo_ast),
+            self.structure.as_ref().expect("structure index"),
+        )
+    }
 }
 
 pub(super) fn run_detector_owner(
@@ -521,27 +532,17 @@ fn run_error_owner(
         DetectorOwner::KotlinEmptyWhen => {
             errorprone::kotlin_empty_when_findings(context.files, context.cache)
         }
-        DetectorOwner::ExitInProduction => errorprone::exit_in_production_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.structure.as_ref().expect("structure index"),
-        ),
+        DetectorOwner::ExitInProduction => {
+            let (scan, structure) = context.ast_scan_with_structure();
+            errorprone::exit_in_production_findings(scan, structure)
+        }
         DetectorOwner::UnhandledTerminationInProduction => {
             errorprone::unhandled_termination_in_production_findings(context.ast_scan())
         }
-        DetectorOwner::SqlInjection => security::sql_injection_findings(
-            ast_scan::AstScan::new(
-                context.files,
-                context.method,
-                context.cache,
-                &mut context.repo_ast,
-            ),
-            context.structure.as_ref().expect("structure index"),
-        ),
+        DetectorOwner::SqlInjection => {
+            let (scan, structure) = context.ast_scan_with_structure();
+            security::sql_injection_findings(scan, structure)
+        }
         DetectorOwner::ShellExecution => security::shell_execution_findings(context.ast_scan()),
         DetectorOwner::InsecureCryptography => {
             security::insecure_cryptography_findings(context.ast_scan())
