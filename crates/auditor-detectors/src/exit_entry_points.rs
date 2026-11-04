@@ -2,14 +2,18 @@
 //! management commands, signal handlers, forked children, `multiprocessing`
 //! entry points, and functions that say they exit. Ending the process is the
 //! contract of these functions, not a library bailing out on its caller.
+//!
+//! The CLI and signal recognizers are shared with the repository's entry
+//! point facts ([`process_entries`]); a `multiprocessing.Process` subclass's
+//! `run` comes from those facts, which follow its bases across files.
 
-use std::collections::BTreeSet;
 use std::ops::Range;
 
 use auditor_ast::AstNode;
 
 use crate::api_identity::ImportScope;
 use crate::ast_scan::nodes_of_kind;
+use crate::entry_points::EntryKind;
 use crate::js_api_identity::{js_arguments, js_string, JsScope};
 use crate::python_api_identity::{positional_arguments, PyScope};
 use crate::{AuditedFile, Language};
@@ -18,16 +22,20 @@ use crate::{AuditedFile, Language};
 #[path = "exit_entry_points_tests.rs"]
 mod tests;
 
-/// The exits that are not inside an entry point of their file.
+/// The exits that are not inside an entry point of their file, nor inside
+/// one of the `owned` spans the repository's entry points add (a process
+/// subclass's `run`).
 pub(crate) fn outside_entry_points<'a>(
     file: &AuditedFile,
     root: AstNode<'a>,
     exits: Vec<AstNode<'a>>,
+    owned: &[Range<usize>],
 ) -> Vec<AstNode<'a>> {
     if exits.is_empty() {
         return exits;
     }
-    let spans = entry_spans(file, root);
+    let mut spans = entry_spans(file, root);
+    spans.extend_from_slice(owned);
     let scope = (file.language == Language::Python).then(|| PyScope::new(root));
     exits
         .into_iter()
@@ -59,17 +67,71 @@ fn enclosing<'a>(node: AstNode<'a>, kinds: &[&str]) -> Option<AstNode<'a>> {
 /// Byte spans of the functions whose exits are their own business.
 fn entry_spans(file: &AuditedFile, root: AstNode<'_>) -> Vec<Range<usize>> {
     let mut spans = if file.language == Language::Go {
-        Vec::new()
+        go_test_runners(root)
     } else {
         exit_named_functions(root)
     };
-    match file.language {
-        Language::Python => spans.extend(python_entry_spans(file, root)),
-        Language::JavaScript | Language::TypeScript => spans.extend(js_signal_handlers(root)),
-        Language::Go => spans.extend(go_entry_functions(root)),
-        _ => {}
-    }
+    spans.extend(
+        process_entries(file, root)
+            .into_iter()
+            .map(|(span, _, _)| span),
+    );
     spans
+}
+
+/// The functions and classes a file marks as owning their process: CLI
+/// commands and signal handlers, with their kind and a description.
+pub(crate) fn process_entries(
+    file: &AuditedFile,
+    root: AstNode<'_>,
+) -> Vec<(Range<usize>, EntryKind, &'static str)> {
+    let tag = |spans: Vec<Range<usize>>, kind: EntryKind, detail: &'static str| {
+        spans
+            .into_iter()
+            .map(move |span| (span, kind, detail))
+            .collect::<Vec<_>>()
+    };
+    let text = root.text();
+    match file.language {
+        Language::Python => {
+            let mut entries = tag(
+                management_command_classes(file, root),
+                EntryKind::CliCommand,
+                "Django management command",
+            );
+            let cli = text.contains("command") || text.contains("group");
+            let signals = text.contains("signal");
+            if cli || signals {
+                let scope = PyScope::new(root);
+                if cli {
+                    entries.extend(tag(
+                        cli_commands(root, &scope),
+                        EntryKind::CliCommand,
+                        "click/typer command",
+                    ));
+                }
+                if signals {
+                    entries.extend(tag(
+                        py_signal_handlers(root, &scope),
+                        EntryKind::SignalHandler,
+                        "signal.signal handler",
+                    ));
+                }
+            }
+            entries
+        }
+        Language::JavaScript | Language::TypeScript if text.contains("SIG") => tag(
+            js_signal_handlers(root),
+            EntryKind::SignalHandler,
+            "process signal handler",
+        ),
+        Language::Go if text.contains("urfave/cli") => tag(
+            urfave_actions(root),
+            EntryKind::CliCommand,
+            "urfave/cli action",
+        ),
+        _ => Vec::new(),
+    }
 }
 
 /// Functions and methods named for exiting ([`names_an_exit`]).
@@ -97,17 +159,13 @@ fn exit_named_functions(root: AstNode<'_>) -> Vec<Range<usize>> {
 
 // ---------------------------------------------------------------- Python
 
-fn python_entry_spans(file: &AuditedFile, root: AstNode<'_>) -> Vec<Range<usize>> {
-    let scope = PyScope::new(root);
-    let mut spans = nodes_of_kind(root, &["function_definition"])
+/// Functions decorated as click/typer commands or groups.
+fn cli_commands(root: AstNode<'_>, scope: &PyScope) -> Vec<Range<usize>> {
+    nodes_of_kind(root, &["function_definition"])
         .into_iter()
-        .filter(|function| is_cli_command(*function, &scope))
+        .filter(|function| is_cli_command(*function, scope))
         .map(span)
-        .collect::<Vec<_>>();
-    spans.extend(management_command_classes(file, root));
-    spans.extend(process_run_methods(root, &scope));
-    spans.extend(py_signal_handlers(root, &scope));
-    spans
+        .collect()
 }
 
 /// A function decorated as a click/typer command or group: `@click.command()`,
@@ -152,10 +210,6 @@ fn base_classes(class: AstNode<'_>) -> Vec<AstNode<'_>> {
         .unwrap_or_default()
 }
 
-fn class_name(class: AstNode<'_>) -> Option<&str> {
-    class.child_by_field_name("name").map(|name| name.text())
-}
-
 fn base_name(base: AstNode<'_>) -> &str {
     base.child_by_field_name("attribute").unwrap_or(base).text()
 }
@@ -175,39 +229,6 @@ fn management_command_classes(file: &AuditedFile, root: AstNode<'_>) -> Vec<Rang
                 .into_iter()
                 .any(|base| base_name(base).ends_with("Command"))
         })
-        .map(span)
-        .collect()
-}
-
-/// `run` methods of classes whose base resolves to `multiprocessing.Process`
-/// within this file, directly or through another class of the file.
-fn process_run_methods(root: AstNode<'_>, scope: &PyScope) -> Vec<Range<usize>> {
-    let classes = nodes_of_kind(root, &["class_definition"]);
-    let is_process_base = |base: AstNode<'_>, known: &BTreeSet<&str>| {
-        matches!(
-            scope.resolve(base).as_deref(),
-            Some("multiprocessing.Process" | "multiprocessing.context.Process")
-        ) || (base.kind() == "identifier" && known.contains(base.text()))
-    };
-    let mut known = BTreeSet::new();
-    loop {
-        let before = known.len();
-        for class in &classes {
-            if base_classes(*class)
-                .into_iter()
-                .any(|base| is_process_base(base, &known))
-            {
-                known.extend(class_name(*class));
-            }
-        }
-        if known.len() == before {
-            break;
-        }
-    }
-    classes
-        .into_iter()
-        .filter(|class| class_name(*class).is_some_and(|name| known.contains(name)))
-        .flat_map(|class| methods_named(class, "run"))
         .map(span)
         .collect()
 }
@@ -499,12 +520,26 @@ fn js_functions_named<'a>(owner: AstNode<'a>, name: &str) -> Vec<AstNode<'a>> {
 
 // -------------------------------------------------------------------- Go
 
-/// Go functions whose parameters make them a program's command or test
-/// entry: a urfave/cli action (`*cli.Context`, `*cli.Command`) or a
-/// `TestMain` helper taking the `interface{ Run() int }` shape of
-/// `*testing.M`.
-fn go_entry_functions(root: AstNode<'_>) -> Vec<Range<usize>> {
+/// Go functions taking a urfave/cli `*cli.Context` or `*cli.Command`: a
+/// command's action.
+fn urfave_actions(root: AstNode<'_>) -> Vec<Range<usize>> {
     let scope = ImportScope::go(root);
+    go_functions_with_parameter(root, |kind| is_urfave_type(kind, &scope))
+}
+
+/// Go `TestMain` helpers taking the `interface{ Run() int }` shape of
+/// `*testing.M`: they end the test binary.
+fn go_test_runners(root: AstNode<'_>) -> Vec<Range<usize>> {
+    if !root.text().contains("Run() int") && !root.text().contains("Run()int") {
+        return Vec::new();
+    }
+    go_functions_with_parameter(root, is_test_runner_type)
+}
+
+fn go_functions_with_parameter(
+    root: AstNode<'_>,
+    matches: impl Fn(AstNode<'_>) -> bool,
+) -> Vec<Range<usize>> {
     nodes_of_kind(
         root,
         &["function_declaration", "method_declaration", "func_literal"],
@@ -517,7 +552,7 @@ fn go_entry_functions(root: AstNode<'_>) -> Vec<Range<usize>> {
                 parameters
                     .named_children()
                     .filter_map(|parameter| parameter.child_by_field_name("type"))
-                    .any(|kind| is_urfave_type(kind, &scope) || is_test_runner_type(kind))
+                    .any(&matches)
             })
     })
     .map(span)

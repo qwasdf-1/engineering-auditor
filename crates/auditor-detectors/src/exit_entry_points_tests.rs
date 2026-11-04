@@ -6,6 +6,14 @@ use crate::{util, AnalysisMethod, AuditedFile, Language, SourceRole};
 
 /// The lines of the exit findings in one file written at `rel`.
 fn exit_lines(rel: &str, source: &str) -> Vec<usize> {
+    exit_sites(&[(rel, source)])
+        .into_iter()
+        .map(|(_, line)| line)
+        .collect()
+}
+
+/// `(path, line)` of the exit findings in the files written at their paths.
+fn exit_sites(sources: &[(&str, &str)]) -> Vec<(String, usize)> {
     let nanos = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -14,32 +22,50 @@ fn exit_lines(rel: &str, source: &str) -> Vec<usize> {
         "engineering-auditor-exit-entry-{}-{nanos}",
         std::process::id()
     ));
-    let path = root.join(rel);
-    fs::create_dir_all(path.parent().unwrap()).unwrap();
-    fs::write(&path, source).unwrap();
-    let language = match rel.rsplit('.').next() {
-        Some("go") => Language::Go,
-        Some("ts") => Language::TypeScript,
-        Some("js") => Language::JavaScript,
-        Some("java") => Language::Java,
-        _ => Language::Python,
-    };
-    let files = [AuditedFile {
-        absolute: path,
-        relative: std::path::PathBuf::from(rel),
-        language,
-        bytes: source.len() as u64,
-        role: SourceRole::Production,
-    }];
+    let files = sources
+        .iter()
+        .map(|(rel, source)| {
+            let path = root.join(rel);
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(&path, source).unwrap();
+            let language = match rel.rsplit('.').next() {
+                Some("go") => Language::Go,
+                Some("ts") => Language::TypeScript,
+                Some("js") => Language::JavaScript,
+                Some("java") => Language::Java,
+                _ => Language::Python,
+            };
+            AuditedFile {
+                absolute: path,
+                relative: std::path::PathBuf::from(rel),
+                language,
+                bytes: source.len() as u64,
+                role: SourceRole::Production,
+            }
+        })
+        .collect::<Vec<_>>();
     let cache = util::FileCache::new(&files);
     let mut repo_ast = auditor_ast::RepoAst::new();
+    let structure = crate::structure_index::StructureIndex::build(AstScan::context(
+        &files,
+        AnalysisMethod::Ast,
+        &cache,
+        &mut repo_ast,
+    ));
     let scan = AstScan::new(&files, AnalysisMethod::Ast, &cache, &mut repo_ast);
-    let findings = super::super::exit_in_production_findings(scan);
+    let findings = super::super::exit_in_production_findings(scan, &structure);
     fs::remove_dir_all(&root).unwrap();
-    findings
+    let mut sites = findings
         .iter()
-        .map(|finding| finding.primary_line().unwrap())
-        .collect()
+        .map(|finding| {
+            (
+                finding.primary_path().to_string(),
+                finding.primary_line().unwrap(),
+            )
+        })
+        .collect::<Vec<_>>();
+    sites.sort();
+    sites
 }
 
 /// A library function body that exits; reported unless the shape owns it.
@@ -354,4 +380,19 @@ func Other(m interface{ Stop() }) {
 }
 "#;
     assert_eq!(exit_lines("git/git.go", source), [17, 21]);
+}
+
+#[test]
+fn process_run_methods_own_their_exits_through_bases_in_other_files() {
+    let sites = exit_sites(&[
+        (
+            "app/util/process.py",
+            "import multiprocessing as mp\n\n\nclass BaseProcess(mp.Process):\n    pass\n\n\nclass AppProcess(BaseProcess):\n    pass\n",
+        ),
+        (
+            "app/embeddings.py",
+            "import sys\n\nfrom app.util.process import AppProcess\n\n\nclass EmbeddingProcess(AppProcess):\n    def run(self):\n        sys.exit(1)\n\n    def stop(self):\n        sys.exit(2)\n",
+        ),
+    ]);
+    assert_eq!(sites, [("app/embeddings.py".to_string(), 11)]);
 }

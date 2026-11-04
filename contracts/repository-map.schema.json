@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://engineering-auditor.local/contracts/repository-map.schema.json",
-  "title": "Engineering Auditor Repository Map V1",
+  "title": "Engineering Auditor Repository Map V2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,10 +13,11 @@
     "files",
     "symbols",
     "edges",
+    "entry_points",
     "completeness"
   ],
   "properties": {
-    "schema_version": { "type": "integer", "const": 1 },
+    "schema_version": { "type": "integer", "const": 2 },
     "extractor_version": { "type": "integer", "minimum": 1 },
     "profile": { "const": "full" },
     "analysis_method": { "enum": ["auto", "ast"] },
@@ -32,6 +33,10 @@
     "edges": {
       "type": "array",
       "items": { "$ref": "#/$defs/edge" }
+    },
+    "entry_points": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry_point" }
     },
     "completeness": { "$ref": "#/$defs/completeness" }
   },
@@ -148,7 +153,8 @@
             { "$ref": "#/$defs/metrics" },
             { "type": "null" }
           ]
-        }
+        },
+        "external_base": { "type": "string", "minLength": 1 }
       }
     },
     "edge": {
@@ -157,9 +163,28 @@
       "required": ["from", "kind", "to"],
       "properties": {
         "from": { "type": "string", "minLength": 1 },
-        "kind": { "enum": ["contains", "imports", "calls"] },
+        "kind": { "enum": ["contains", "imports", "calls", "inherits"] },
         "to": { "type": "string", "minLength": 1 },
         "line": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "entry_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "file_id", "symbol_id", "line", "detail"],
+      "properties": {
+        "kind": {
+          "enum": ["main", "cli_command", "http_handler", "process_run", "signal_handler"]
+        },
+        "file_id": { "type": "string", "pattern": "^file:[0-9a-f]{64}$" },
+        "symbol_id": {
+          "anyOf": [
+            { "type": "string", "pattern": "^symbol:[0-9a-f]{64}$" },
+            { "type": "null" }
+          ]
+        },
+        "line": { "type": "integer", "minimum": 1 },
+        "detail": { "type": "string" }
       }
     },
     "completeness": {
@@ -167,16 +192,16 @@
       "additionalProperties": false,
       "required": [
         "complete",
-        "ambiguous_calls",
         "dynamic_imports",
         "truncated_call_edges",
+        "unresolved_calls",
         "unresolved_imports"
       ],
       "properties": {
         "complete": { "const": true },
-        "ambiguous_calls": { "type": "integer", "minimum": 0 },
         "dynamic_imports": { "type": "integer", "minimum": 0 },
         "truncated_call_edges": { "type": "integer", "minimum": 0 },
+        "unresolved_calls": { "type": "integer", "minimum": 0 },
         "unresolved_imports": { "type": "integer", "minimum": 0 }
       }
     }

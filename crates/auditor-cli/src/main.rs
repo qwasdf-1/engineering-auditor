@@ -156,8 +156,9 @@ mod tests {
         let map_path = report_path.parent().unwrap().join(map_name);
         let first_map = std::fs::read_to_string(&map_path).unwrap();
         let map: serde_json::Value = serde_json::from_str(&first_map).unwrap();
-        assert_eq!(map["schema_version"], 1);
+        assert_eq!(map["schema_version"], 2);
         assert_eq!(map["profile"], "full");
+        assert!(map["entry_points"].is_array());
         assert_eq!(map["files"].as_array().unwrap().len(), 1);
         assert!(map["symbols"].as_array().unwrap().len() >= 2);
         assert!(map["edges"]

@@ -2,7 +2,59 @@
 
 ## Unreleased
 
+### Added
+
+- Shared repository facts, owned by the structure index. A type hierarchy
+  resolves each type's first written base once, across files: a type of the
+  same file, then through the import that binds the name or its qualifier
+  (`mp.Process`, `models.Base`), to a repository type or to an external
+  one by canonical name (`multiprocessing.Process`), then, in Java, Kotlin,
+  and C#, the only type of that name in the package directory or the
+  repository. Entry points record each program `main`, CLI command (click,
+  typer, Django management commands, urfave/cli), HTTP route handler
+  (Flask/FastAPI, Django `urls.py`, Express-style routers, NestJS, Next.js
+  route modules, Spring, JAX-RS, ASP.NET attributes and minimal APIs, Go
+  muxes and routers, Ktor, actix, Rocket, axum), signal handler, and the
+  `run` of a `multiprocessing.Process` subclass.
+- Repository map v2: call edges come from the call graph instead of a
+  repository-unique callee name; `inherits` edges, a type's
+  `external_base`, and an `entry_points` list are new; `ambiguous_calls` is
+  replaced by `unresolved_calls`. Version 1 maps are no longer read.
+
 ### Changed
+
+- The call graph resolves dotted calls in every language. Python,
+  JavaScript, TypeScript, Go, Rust, and C++ calls carried their receiver in
+  the callee text, so `self.load()`, `this.load()`, `pkg.Func()`, and
+  `Type::new()` never resolved; only Java receivers did. A `self`/`this`/
+  `cls`, implicit-`this`, or `super`/`base` call now resolves through the
+  type hierarchy to the nearest declaring class, `Type.method` through the
+  type's ancestors, and a Go `pkg.Func` to any file of the imported package.
+  A function nested in a method no longer resolves `self.x` to a sibling
+  nested function. Effects, sorts, queries, and regex compilations that the
+  algorithmic, systems, and optimization owners inherit through calls follow
+  these edges. On the application corpus this adds 17
+  `n_plus_one_query_in_loop` findings (gitea's `convert.ToRepo` loading
+  each repository's mirror, a pattern labelled true positive), 18
+  `per_item_external_io`, and 7 `random_for_security` found through
+  helper calls; the library corpus is unchanged.
+- `class_structure_metrics` (DIT, NOC), type facts, and the topology's
+  inheritance edges read the shared type hierarchy. A Python or JavaScript
+  base no longer resolves to a same-named class the file does not import,
+  and an imported base resolves even when another file declares a class of
+  the same name. Flask's `JSONTag` and `MethodView` leave
+  `class_structure_metrics`: their NOC of 12 counted test classes that
+  import them through the `src` layout, which does not resolve.
+- `exit_in_production` exempts the `run` of a `multiprocessing.Process`
+  subclass whose bases reach `Process` through other files (frigate's
+  `EmbeddingProcess` and `ClassificationTrainingProcess` derive from a
+  `FrigateProcess` declared in `util/process.py`).
+- Systems effect classification gives a called expression
+  (`(async () => { .. })()`) no effect. Its callee text is the function
+  body, where `fs.readFile` and the `sync` in `async` made it blocking
+  file I/O; a blocking read or write now needs a `..sync` method
+  (`readFileSync`). Ghost's `GiftEmailRenderer.getTemplate` made five such
+  false positives once `this.getTemplate()` resolved.
 
 - `too_many_returns` counts a C or C++ `#if`/`#elif`/`#else` chain as its
   largest alternative instead of summing the returns of every platform

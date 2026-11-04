@@ -7,10 +7,13 @@ use auditor_ast::{SourceSpan, SymbolKind};
 use auditor_core::{sha256_digest_bytes, RepositoryMapArtifact, Sha256, EXTRACTOR_VERSION};
 use serde_json::{json, Value};
 
+use crate::call_graph::CallGraph;
+use crate::entry_points::entry_points;
+use crate::structure_index::hierarchy::BaseTarget;
 use crate::structure_index::{StructureFile, StructureIndex, StructureSymbol};
 use crate::{AnalysisMethod, AuditedFile, ScanProfile};
 
-const REPOSITORY_MAP_SCHEMA_VERSION: u32 = 1;
+const REPOSITORY_MAP_SCHEMA_VERSION: u32 = 2;
 const MAX_CALL_EDGES_PER_SYMBOL: usize = 32;
 const SYMBOL_KIND_NAMES: [&str; 16] = [
     "function",
@@ -31,9 +34,16 @@ const SYMBOL_KIND_NAMES: [&str; 16] = [
     "field",
 ];
 
+/// What a repository map is written from: the scanned files, their
+/// structure index, and the call graph built on it.
+pub(crate) struct MapSources<'a> {
+    pub(crate) files: &'a [AuditedFile],
+    pub(crate) structure: &'a StructureIndex,
+    pub(crate) graph: &'a CallGraph,
+}
+
 pub(crate) fn write_repository_map(
-    files: &[AuditedFile],
-    structure: &StructureIndex,
+    sources: &MapSources<'_>,
     report_output: &Path,
     profile: ScanProfile,
     method: AnalysisMethod,
@@ -46,7 +56,7 @@ pub(crate) fn write_repository_map(
         .filter(|value| !value.is_empty())
         .unwrap_or("audit");
     let temporary = parent.join(format!(".{stem}.repository-map.{}.tmp", std::process::id()));
-    let metadata = match write_temporary_map(files, structure, &temporary, profile, method) {
+    let metadata = match write_temporary_map(sources, &temporary, profile, method) {
         Ok(metadata) => metadata,
         Err(error) => {
             let _ = fs::remove_file(&temporary);
@@ -87,12 +97,16 @@ struct MapMetadata {
 }
 
 fn write_temporary_map(
-    files: &[AuditedFile],
-    structure: &StructureIndex,
+    sources: &MapSources<'_>,
     path: &Path,
     profile: ScanProfile,
     method: AnalysisMethod,
 ) -> io::Result<MapMetadata> {
+    let MapSources {
+        files,
+        structure,
+        graph,
+    } = *sources;
     let mut ordered_files = files.iter().collect::<Vec<_>>();
     ordered_files.sort_by(|left, right| left.relative.cmp(&right.relative));
     let file_hashes = ordered_files
@@ -124,12 +138,15 @@ fn write_temporary_map(
         unresolved_imports += imports.unresolved;
         dynamic_imports += imports.dynamic;
     }
-    let (call_edges, ambiguous_calls, truncated_calls) =
-        write_call_edges(&mut writer, &mut first, structure, &symbol_ids)?;
-    edge_count += call_edges;
+    let calls = write_call_edges(&mut writer, &mut first, structure, graph, &symbol_ids)?;
+    edge_count += calls.emitted;
+    edge_count += write_inheritance_edges(&mut writer, &mut first, structure, &symbol_ids)?;
+    writer.write_all(b"],\"entry_points\":[")?;
+    write_entry_points(&mut writer, structure, &symbol_ids)?;
     write!(
         writer,
-        "],\"completeness\":{{\"complete\":true,\"ambiguous_calls\":{ambiguous_calls},\"dynamic_imports\":{dynamic_imports},\"truncated_call_edges\":{truncated_calls},\"unresolved_imports\":{unresolved_imports}}}}}"
+        "],\"completeness\":{{\"complete\":true,\"dynamic_imports\":{dynamic_imports},\"truncated_call_edges\":{},\"unresolved_calls\":{},\"unresolved_imports\":{unresolved_imports}}}}}",
+        calls.truncated, calls.unresolved,
     )?;
     writer.flush()?;
     Ok(MapMetadata {
@@ -164,7 +181,8 @@ fn write_file_entries(
     Ok(())
 }
 
-/// Writes every symbol with its function metrics; returns the count.
+/// Writes every symbol with its function metrics, and a type's base outside
+/// the repository; returns the count.
 fn write_symbol_entries(
     writer: &mut impl Write,
     structure: &StructureIndex,
@@ -185,20 +203,25 @@ fn write_symbol_entries(
                         "statements": metrics.statements,
                     })
                 });
-            write_json(
-                writer,
-                &json!({
-                    "async": symbol.is_async,
-                    "file_id": file_id(&file.path),
-                    "id": symbol_ids[&(file_index, symbol_index)],
-                    "kind": symbol_kind(symbol.kind),
-                    "metrics": metrics,
-                    "name": symbol.name,
-                    "parent_id": symbol.parent.and_then(|parent| symbol_ids.get(&(file_index, parent as usize))),
-                    "span": span_value(symbol.span),
-                    "visibility": if symbol.is_public { "public" } else { "non_public" },
-                }),
-            )?;
+            let mut entry = json!({
+                "async": symbol.is_async,
+                "file_id": file_id(&file.path),
+                "id": symbol_ids[&(file_index, symbol_index)],
+                "kind": symbol_kind(symbol.kind),
+                "metrics": metrics,
+                "name": symbol.name,
+                "parent_id": symbol.parent.and_then(|parent| symbol_ids.get(&(file_index, parent as usize))),
+                "span": span_value(symbol.span),
+                "visibility": if symbol.is_public { "public" } else { "non_public" },
+            });
+            if let Some(BaseTarget::External(base)) = structure
+                .hierarchy()
+                .base((file_index, symbol_index))
+                .map(|base| &base.target)
+            {
+                entry["external_base"] = json!(base);
+            }
+            write_json(writer, &entry)?;
             count += 1;
         }
     }
@@ -272,42 +295,42 @@ fn write_containment_edges(
     Ok(count)
 }
 
+struct CallCounts {
+    emitted: usize,
+    unresolved: usize,
+    truncated: usize,
+}
+
+/// Writes the call graph's edges, at most [`MAX_CALL_EDGES_PER_SYMBOL`]
+/// per caller, and counts the calls inside functions it leaves unresolved.
 fn write_call_edges(
     writer: &mut impl Write,
     first: &mut bool,
     structure: &StructureIndex,
+    graph: &CallGraph,
     symbol_ids: &BTreeMap<(usize, usize), String>,
-) -> io::Result<(usize, usize, usize)> {
-    let mut symbols_by_name: BTreeMap<&str, Vec<(usize, usize)>> = BTreeMap::new();
+) -> io::Result<CallCounts> {
+    let mut emitted_by_owner: BTreeMap<&str, usize> = BTreeMap::new();
+    let mut counts = CallCounts {
+        emitted: 0,
+        unresolved: 0,
+        truncated: 0,
+    };
     for (file_index, file) in structure.files().iter().enumerate() {
-        for (symbol_index, symbol) in file.symbols.iter().enumerate() {
-            symbols_by_name
-                .entry(&symbol.name)
-                .or_default()
-                .push((file_index, symbol_index));
-        }
-    }
-    let mut emitted_by_owner: BTreeMap<String, usize> = BTreeMap::new();
-    let mut emitted = 0;
-    let mut ambiguous = 0;
-    let mut truncated = 0;
-    for (file_index, file) in structure.files().iter().enumerate() {
-        for call in &file.calls {
-            let (Some(owner), Some(targets)) =
-                (call.owner, symbols_by_name.get(call.callee.as_str()))
+        for (call_index, call) in file.calls.iter().enumerate() {
+            let Some(from) = call
+                .owner
+                .and_then(|owner| symbol_ids.get(&(file_index, owner as usize)))
             else {
                 continue;
             };
-            if targets.len() != 1 {
-                ambiguous += 1;
-                continue;
-            }
-            let Some(from) = symbol_ids.get(&(file_index, owner as usize)) else {
+            let Some(target) = graph.target(file_index, call_index) else {
+                counts.unresolved += 1;
                 continue;
             };
-            let owner_count = emitted_by_owner.entry(from.clone()).or_default();
+            let owner_count = emitted_by_owner.entry(from).or_default();
             if *owner_count >= MAX_CALL_EDGES_PER_SYMBOL {
-                truncated += 1;
+                counts.truncated += 1;
                 continue;
             }
             write_separator(writer, first)?;
@@ -317,14 +340,70 @@ fn write_call_edges(
                     "from": from,
                     "kind": "calls",
                     "line": call.line,
-                    "to": symbol_ids[&targets[0]],
+                    "to": symbol_ids[&target],
                 }),
             )?;
             *owner_count += 1;
-            emitted += 1;
+            counts.emitted += 1;
         }
     }
-    Ok((emitted, ambiguous, truncated))
+    Ok(counts)
+}
+
+/// Writes an `inherits` edge from each type to the repository type its
+/// first base resolves to ([`crate::structure_index::hierarchy`]).
+fn write_inheritance_edges(
+    writer: &mut impl Write,
+    first: &mut bool,
+    structure: &StructureIndex,
+    symbol_ids: &BTreeMap<(usize, usize), String>,
+) -> io::Result<usize> {
+    let mut count = 0;
+    for (file_index, file) in structure.files().iter().enumerate() {
+        for (symbol_index, symbol) in file.symbols.iter().enumerate() {
+            let Some(base) = structure
+                .hierarchy()
+                .repository_base((file_index, symbol_index))
+            else {
+                continue;
+            };
+            write_separator(writer, first)?;
+            write_json(
+                writer,
+                &json!({
+                    "from": symbol_ids[&(file_index, symbol_index)],
+                    "kind": "inherits",
+                    "line": symbol.line,
+                    "to": symbol_ids[&base],
+                }),
+            )?;
+            count += 1;
+        }
+    }
+    Ok(count)
+}
+
+/// Writes the repository's entry points ([`crate::entry_points`]).
+fn write_entry_points(
+    writer: &mut impl Write,
+    structure: &StructureIndex,
+    symbol_ids: &BTreeMap<(usize, usize), String>,
+) -> io::Result<()> {
+    let mut first = true;
+    for entry in entry_points(structure) {
+        write_separator(writer, &mut first)?;
+        write_json(
+            writer,
+            &json!({
+                "detail": entry.detail,
+                "file_id": file_id(&structure.files()[entry.file].path),
+                "kind": entry.kind.as_str(),
+                "line": entry.line,
+                "symbol_id": entry.symbol.map(|symbol| &symbol_ids[&symbol]),
+            }),
+        )?;
+    }
+    Ok(())
 }
 
 fn symbol_ids(index: &StructureIndex) -> BTreeMap<(usize, usize), String> {

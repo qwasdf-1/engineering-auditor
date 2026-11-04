@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use auditor_ast::SymbolKind;
 use auditor_core::{Confidence, Finding, Severity};
@@ -123,31 +123,10 @@ fn assignment_targets_parameter(language: &Language, target: &str, parameter: &s
     })
 }
 
-fn inheritance_depth(
-    file_index: usize,
-    class: &StructureSymbol,
-    classes: &ClassIndex<'_>,
-) -> usize {
-    let mut depth = 0;
-    let mut cursor = (file_index, class.base.as_deref());
-    let mut seen = BTreeSet::new();
-    while let (file, Some(base)) = cursor {
-        if !seen.insert(base) {
-            break;
-        }
-        depth += 1;
-        let Some((base_file, _, base_class)) = classes.resolve(file, base) else {
-            break;
-        };
-        cursor = (*base_file, base_class.base.as_deref());
-    }
-    depth
-}
-
 /// A repository's classes as (file, symbol, class), indexed by name.
 pub(super) struct ClassIndex<'a> {
     pub(super) classes: Vec<(usize, usize, &'a StructureSymbol)>,
-    by_name: HashMap<&'a str, Vec<usize>>,
+    names: HashSet<&'a str>,
 }
 
 impl<'a> ClassIndex<'a> {
@@ -165,57 +144,27 @@ impl<'a> ClassIndex<'a> {
                     })
                     .map(move |(symbol_index, symbol)| (file_index, symbol_index, symbol))
             })
-            .collect::<Vec<_>>();
-        Self::new(classes)
+            .collect::<Vec<(usize, usize, &StructureSymbol)>>();
+        let names = classes
+            .iter()
+            .map(|(_, _, class)| class.name.as_str())
+            .collect();
+        Self { classes, names }
     }
 
-    /// NOC: each class's children, every base resolved once.
-    pub(super) fn child_counts(&self) -> HashMap<(usize, usize), usize> {
+    /// NOC: each class's children, through the shared type hierarchy.
+    pub(super) fn child_counts(&self, index: &StructureIndex) -> HashMap<(usize, usize), usize> {
         let mut children = HashMap::new();
-        for (file, _, class) in &self.classes {
-            let resolved = class
-                .base
-                .as_deref()
-                .and_then(|base| self.resolve(*file, base));
-            if let Some((base_file, base_symbol, _)) = resolved {
-                *children.entry((*base_file, *base_symbol)).or_default() += 1;
+        for (file, symbol, _) in &self.classes {
+            if let Some(base) = index.hierarchy().repository_base((*file, *symbol)) {
+                *children.entry(base).or_default() += 1;
             }
         }
         children
     }
 
-    fn new(classes: Vec<(usize, usize, &'a StructureSymbol)>) -> Self {
-        let mut by_name: HashMap<&'a str, Vec<usize>> = HashMap::new();
-        for (position, (_, _, class)) in classes.iter().enumerate() {
-            by_name
-                .entry(class.name.as_str())
-                .or_default()
-                .push(position);
-        }
-        Self { classes, by_name }
-    }
-
     pub(super) fn contains_name(&self, name: &str) -> bool {
-        self.by_name.contains_key(name)
-    }
-
-    /// The class a base name in `file` refers to: one declared in the same
-    /// file, else the only class of that name. A common name (`State`)
-    /// declared in several files resolves to none of them.
-    pub(super) fn resolve(
-        &self,
-        file: usize,
-        name: &str,
-    ) -> Option<&(usize, usize, &'a StructureSymbol)> {
-        let named = self.by_name.get(name)?;
-        let local = named
-            .iter()
-            .map(|position| &self.classes[*position])
-            .find(|(candidate_file, _, _)| *candidate_file == file);
-        local.or_else(|| match named.as_slice() {
-            [only] => Some(&self.classes[*only]),
-            _ => None,
-        })
+        self.names.contains(name)
     }
 }
 

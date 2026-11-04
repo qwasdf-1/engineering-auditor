@@ -229,6 +229,7 @@ mod tests {
                 parent: None,
                 declaration: None,
                 base: None,
+                base_qualifier: None,
                 is_async: false,
                 is_public: false,
                 visibility_restricted: false,

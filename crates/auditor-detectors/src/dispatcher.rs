@@ -521,9 +521,15 @@ fn run_error_owner(
         DetectorOwner::KotlinEmptyWhen => {
             errorprone::kotlin_empty_when_findings(context.files, context.cache)
         }
-        DetectorOwner::ExitInProduction => {
-            errorprone::exit_in_production_findings(context.ast_scan())
-        }
+        DetectorOwner::ExitInProduction => errorprone::exit_in_production_findings(
+            ast_scan::AstScan::new(
+                context.files,
+                context.method,
+                context.cache,
+                &mut context.repo_ast,
+            ),
+            context.structure.as_ref().expect("structure index"),
+        ),
         DetectorOwner::UnhandledTerminationInProduction => {
             errorprone::unhandled_termination_in_production_findings(context.ast_scan())
         }

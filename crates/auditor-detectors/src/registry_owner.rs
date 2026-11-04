@@ -221,6 +221,7 @@ impl DetectorOwner {
             || matches!(
                 self,
                 Self::RandomForSecurity
+                    | Self::ExitInProduction
                     | Self::SqlInjection
                     | Self::TooManyParameters
                     | Self::SiblingCallRedundancy

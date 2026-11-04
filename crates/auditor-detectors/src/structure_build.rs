@@ -39,6 +39,7 @@ pub(super) fn build_structure_file(
         go_module: None,
         async_spans: java_async_spans(file, tree),
         value_references: c_value_references(file, tree),
+        entries: crate::entry_points::local_entries(file, tree.root_node()),
         symbols,
     }
 }
@@ -85,6 +86,9 @@ fn collect_symbols(
             if name.is_empty() && symbol.kind == SymbolKind::Variable {
                 name = declaration_binding(source).unwrap_or_default();
             }
+            let (base_qualifier, base) = written_class_base(&file.language, source)
+                .map(|written| split_type_name(&written))
+                .map_or((None, None), |(qualifier, name)| (qualifier, Some(name)));
             let overload_set = match symbol.kind {
                 SymbolKind::Function => super::overloads::overload_set(&file.language, node, &name),
                 _ => String::new(),
@@ -159,7 +163,8 @@ fn collect_symbols(
                         .map(|header| header.trim().to_string()),
                     _ => None,
                 },
-                base: class_base(&file.language, source),
+                base,
+                base_qualifier,
                 is_async: declaration_is_async(&file.language, source),
                 is_public: declaration_is_public(&file.language, source),
                 visibility_restricted: file.language == crate::Language::Rust

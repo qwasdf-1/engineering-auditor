@@ -29,9 +29,11 @@ pub(super) fn build_topology(structure: &StructureIndex) -> TopologyParts {
         .filter(|file| file.emittable)
         .map(|file| (file.path.as_str(), file))
         .collect::<BTreeMap<_, _>>();
-    let mut collector = TopologyCollector::new(&roots, &known_paths, &structure_files);
-    for file in structure.files().iter().filter(|file| file.emittable) {
-        collector.collect_file(file);
+    let mut collector = TopologyCollector::new(&roots, &known_paths, &structure_files, structure);
+    for (file_index, file) in structure.files().iter().enumerate() {
+        if file.emittable {
+            collector.collect_file(file_index, file);
+        }
     }
     collector.edges.sort();
     collector.edges.dedup();
@@ -56,6 +58,7 @@ struct TopologyCollector<'a> {
     roots: &'a BTreeSet<String>,
     known_paths: &'a BTreeSet<String>,
     structure_files: &'a BTreeMap<&'a str, &'a StructureFile>,
+    structure: &'a StructureIndex,
     edges: Vec<TopologyEdge>,
     candidates: usize,
     unresolved: BTreeMap<String, usize>,
@@ -66,20 +69,22 @@ impl<'a> TopologyCollector<'a> {
         roots: &'a BTreeSet<String>,
         known_paths: &'a BTreeSet<String>,
         structure_files: &'a BTreeMap<&'a str, &'a StructureFile>,
+        structure: &'a StructureIndex,
     ) -> Self {
         Self {
             roots,
             known_paths,
             structure_files,
+            structure,
             edges: Vec::new(),
             candidates: 0,
             unresolved: BTreeMap::new(),
         }
     }
 
-    fn collect_file(&mut self, file: &StructureFile) {
+    fn collect_file(&mut self, file_index: usize, file: &StructureFile) {
         self.collect_imports(file);
-        self.collect_inheritance(file);
+        self.collect_inheritance(file_index, file);
     }
 
     fn collect_imports(&mut self, file: &StructureFile) {
@@ -122,27 +127,29 @@ impl<'a> TopologyCollector<'a> {
         }
     }
 
-    fn collect_inheritance(&mut self, file: &StructureFile) {
-        for symbol in file.symbols.iter().filter(|symbol| symbol.base.is_some()) {
-            let base = symbol.base.as_deref().unwrap_or_default();
-            let Some(import) = file.imports.iter().find(|item| import_matches(item, base)) else {
-                continue;
-            };
-            self.candidates += 1;
-            let Some(target) = import
-                .resolved_path
-                .as_ref()
-                .filter(|target| self.known_paths.contains(*target))
+    /// A file depends on the repository file whose import binds a base of
+    /// one of its types ([`crate::structure_index::hierarchy`]).
+    fn collect_inheritance(&mut self, file_index: usize, file: &StructureFile) {
+        let hierarchy = self.structure.hierarchy();
+        for (symbol_index, symbol) in file.symbols.iter().enumerate() {
+            let Some(import_file) = hierarchy
+                .base((file_index, symbol_index))
+                .and_then(|base| base.import_file)
             else {
                 continue;
             };
+            self.candidates += 1;
+            let target = &self.structure.files()[import_file].path;
+            if !self.known_paths.contains(target) {
+                continue;
+            }
             self.edges.push(TopologyEdge {
                 source: file.path.clone(),
                 target: target.clone(),
                 source_package: package_name(&file.path),
                 target_package: package_name(target),
                 line: symbol.line,
-                symbol: Some(base.to_string()),
+                symbol: symbol.base.clone(),
                 kind: TopologyEdgeKind::Inheritance,
             });
         }
@@ -242,15 +249,6 @@ fn topology_file(file: &StructureFile) -> TopologyFile {
     result.type_names.sort();
     result.type_names.dedup();
     result
-}
-
-fn import_matches(import: &StructureImport, name: &str) -> bool {
-    import.imported.as_deref() == Some(name)
-        || import.alias.as_deref() == Some(name)
-        || import
-            .canonical
-            .as_deref()
-            .is_some_and(|canonical| canonical.ends_with(name))
 }
 
 fn local_roots<'a>(paths: impl Iterator<Item = &'a str>) -> BTreeSet<String> {

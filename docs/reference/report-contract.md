@@ -101,7 +101,7 @@ the same explicit output path produces byte-identical report and map content.
 Managed report, map, review, and temporary output artifacts are excluded from
 source discovery so a scan cannot ingest its own products.
 
-## Repository Map V1
+## Repository Map V2
 
 A full-profile, full-scope, AST-capable JSON scan with explicit `--output`
 streams a digest-addressed sibling map. The report reference records its
@@ -109,9 +109,22 @@ relative path, digest, source-snapshot digest, completeness, and file, symbol,
 and edge counts. The map contains:
 
 - normalized repo-relative paths, language, role, byte count, and source hash;
-- compact symbol identity, kind, visibility, parent, span, and metrics;
-- containment, resolved-import, and bounded call edges;
-- explicit unresolved import/call counts and complete map accounting.
+- compact symbol identity, kind, visibility, parent, span, and metrics, and a
+  type's `external_base` when its first base is declared outside the
+  repository (`multiprocessing.Process`);
+- `contains`, resolved-import (`imports`), `calls`, and `inherits` edges:
+  calls are the call graph's resolved targets, at most 32 per caller, and
+  `inherits` links a type to the repository type its first base resolves to;
+- `entry_points`: each `main`, `cli_command`, `http_handler`, `process_run`,
+  or `signal_handler` with its file, line, symbol (null for a block, a
+  lambda, or an unresolved handler), and a detail such as `GET /users`;
+- explicit unresolved import and call, dynamic import, and truncated call
+  edge counts, and complete map accounting.
+
+Version 2 (2026-11-03) replaced v1's calls, which matched a callee name
+unique in the repository, with the call graph's, renamed
+`ambiguous_calls` to `unresolved_calls`, and added `inherits` edges,
+`external_base`, and `entry_points`.
 
 It contains no source bodies. Loading rejects path traversal, a sidecar outside
 the report directory, digest/count mismatch, duplicate IDs or paths, invalid
@@ -138,7 +151,7 @@ qualification, and dispositions contracts were removed on 2026-11-03.
 ## Engineering Review Input Foundation
 
 The review constructs an immutable `ReviewInput` before planning. Its `InputBinding` binds canonical SHA-256 identities
-for report v5, evidence graph v2, repository map v1, the live source snapshot,
+for report v5, evidence graph v2, repository map v2, the live source snapshot,
 case-template bundle, prompt bundle, route configuration, an optional operator
 brief, and a sorted set of typed evidence attachments.
 

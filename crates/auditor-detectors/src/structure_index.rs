@@ -13,6 +13,8 @@ mod batches;
 mod build;
 #[path = "structure_declared_metrics.rs"]
 mod declared_metrics;
+#[path = "type_hierarchy.rs"]
+pub(crate) mod hierarchy;
 #[path = "structure_imports.rs"]
 mod imports;
 #[path = "structure_languages.rs"]
@@ -29,6 +31,7 @@ mod spans;
 mod value_uses;
 use build::build_structure_file;
 use declared_metrics::collect_function_metrics;
+use hierarchy::TypeHierarchy;
 #[cfg(test)]
 use imports::normalize_path;
 use imports::{first_quoted, import_bindings, parse_import, resolve_imports};
@@ -55,7 +58,11 @@ pub(crate) struct StructureSymbol {
     pub(crate) name_span: Option<SourceSpan>,
     pub(crate) parent: Option<u32>,
     pub(crate) declaration: Option<String>,
+    /// The simple name of the first base type the declaration writes.
     pub(crate) base: Option<String>,
+    /// The qualifier written before `base` (`mp` in `mp.Process`,
+    /// `java.util` in `java.util.AbstractList`), with `::` read as `.`.
+    pub(crate) base_qualifier: Option<String>,
     pub(crate) is_async: bool,
     pub(crate) is_public: bool,
     /// Rust `pub(crate)`, `pub(super)`, or `pub(in ..)`: public inside the
@@ -277,6 +284,9 @@ pub(crate) struct StructureFile {
     /// The names a C or C++ file uses as values (a callback argument, a
     /// table entry, `return name;`, `&name`); empty for other languages.
     pub(crate) value_references: BTreeSet<String>,
+    /// What the file's syntax marks as entered from outside
+    /// ([`crate::entry_points`]).
+    pub(crate) entries: Vec<crate::entry_points::LocalEntry>,
 }
 
 /// A Go module: its import path and its directory relative to the scan root.
@@ -289,6 +299,7 @@ pub(crate) struct GoModule {
 pub(crate) struct StructureIndex {
     files: Vec<StructureFile>,
     symbols_by_name: BTreeMap<String, Vec<(usize, usize)>>,
+    hierarchy: TypeHierarchy,
 }
 
 #[derive(Clone, Copy)]
@@ -326,14 +337,21 @@ impl StructureIndex {
                 }
             }
         }
+        let hierarchy = TypeHierarchy::build(&files);
         Self {
             files,
             symbols_by_name,
+            hierarchy,
         }
     }
 
     pub(crate) fn files(&self) -> &[StructureFile] {
         &self.files
+    }
+
+    /// Every repository type's resolved base.
+    pub(crate) fn hierarchy(&self) -> &TypeHierarchy {
+        &self.hierarchy
     }
 
     #[cfg(test)]
@@ -424,6 +442,46 @@ fn resolve_reference(
         return ReferenceResolution::Referenced;
     }
     ReferenceResolution::Unresolved
+}
+
+/// The index of `sources` (path, language, text), written under a fresh
+/// temporary root that is removed once the index is built.
+#[cfg(test)]
+pub(crate) fn index_sources(name: &str, sources: &[(&str, Language, &str)]) -> StructureIndex {
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock precedes Unix epoch")
+        .as_nanos();
+    let root = std::env::temp_dir().join(format!(
+        "ea-structure-{name}-{}-{nanos}",
+        std::process::id()
+    ));
+    let files = sources
+        .iter()
+        .map(|(relative, language, text)| {
+            let absolute = root.join(relative);
+            std::fs::create_dir_all(absolute.parent().expect("file parent"))
+                .expect("create fixture directory");
+            std::fs::write(&absolute, text).expect("write fixture file");
+            crate::AuditedFile {
+                absolute,
+                relative: PathBuf::from(relative),
+                language: language.clone(),
+                bytes: text.len() as u64,
+                role: SourceRole::Production,
+            }
+        })
+        .collect::<Vec<_>>();
+    let cache = util::FileCache::new(&files);
+    let mut repo_ast = auditor_ast::RepoAst::new();
+    let index = StructureIndex::build(AstScan::context(
+        &files,
+        crate::AnalysisMethod::Ast,
+        &cache,
+        &mut repo_ast,
+    ));
+    let _ = std::fs::remove_dir_all(&root);
+    index
 }
 
 /// The module of the nearest `go.mod` above a Go file, cached per directory.
@@ -554,25 +612,33 @@ fn declaration_is_public(language: &Language, source: &str) -> bool {
     }
 }
 
+/// The simple name of a class's first written base type.
+#[cfg(test)]
 fn class_base(language: &Language, source: &str) -> Option<String> {
+    written_class_base(language, source).map(|written| split_type_name(&written).1)
+}
+
+/// The first base type a class declaration writes, as written
+/// (`mp.Process`, `SqlMapper.ITypeHandler`).
+fn written_class_base(language: &Language, source: &str) -> Option<String> {
     let header = class_header(source);
     let header = header.as_str();
     match language {
         Language::Python => header
             .split_once('(')
             .and_then(|(_, tail)| tail.split(')').next())
-            .and_then(simple_type_name),
+            .and_then(written_type_name),
         // `extends` outside the type parameters: `class A<T extends X> extends B`.
         Language::JavaScript | Language::TypeScript | Language::Java => {
             let (index, _) =
                 top_level(header).find(|(index, _)| header[*index..].starts_with(" extends "))?;
-            simple_type_name(&header[index + " extends ".len()..])
+            written_type_name(&header[index + " extends ".len()..])
         }
         // `class A(..) : B(), C` and `class A : B, IC`: the first supertype
         // after the colon that follows the primary constructor.
         Language::Kotlin | Language::CSharp => {
             let (index, _) = top_level(header).find(|(_, character)| *character == ':')?;
-            simple_type_name(&header[index + 1..]).filter(|name| name != "where")
+            written_type_name(&header[index + 1..]).filter(|name| name != "where")
         }
         _ => None,
     }
@@ -619,20 +685,34 @@ fn top_level(header: &str) -> impl Iterator<Item = (usize, char)> + '_ {
     })
 }
 
-/// The simple name of the type that `text` starts with: the last segment of
-/// a qualified name (`SqlMapper.ITypeHandler`, `models.Base`, `global::X`),
-/// so a nested interface is not taken for its enclosing class.
-fn simple_type_name(text: &str) -> Option<String> {
+/// The qualified type name that `text` starts with, without a C#
+/// `global::` prefix.
+fn written_type_name(text: &str) -> Option<String> {
     let text = text.trim_start();
     let end = text
         .find(|character: char| {
             !(character.is_alphanumeric() || matches!(character, '_' | '.' | ':' | '$'))
         })
         .unwrap_or(text.len());
-    text[..end]
-        .rsplit(['.', ':'])
-        .find(|segment| !segment.is_empty())
-        .map(str::to_string)
+    let written = text[..end].trim_end_matches(['.', ':']);
+    let written = written.strip_prefix("global::").unwrap_or(written);
+    (!written.is_empty()).then(|| written.to_string())
+}
+
+/// `(qualifier, simple name)` of a written type name. The last segment names
+/// the type (`SqlMapper.ITypeHandler` is `ITypeHandler`), so a nested
+/// interface is not taken for its enclosing class.
+pub(crate) fn split_type_name(written: &str) -> (Option<String>, String) {
+    match written.rfind(['.', ':']) {
+        Some(index) => {
+            let qualifier = written[..index]
+                .trim_end_matches(['.', ':'])
+                .replace("::", ".");
+            let name = written[index + 1..].to_string();
+            ((!qualifier.is_empty()).then_some(qualifier), name)
+        }
+        None => (None, written.to_string()),
+    }
 }
 
 #[cfg(test)]

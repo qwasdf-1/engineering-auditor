@@ -3,7 +3,7 @@ use super::*;
 pub(crate) fn class_structure_metrics_findings(index: &StructureIndex) -> Vec<Finding> {
     let mut findings = Vec::new();
     let classes = ClassIndex::of(index);
-    let children = classes.child_counts();
+    let children = classes.child_counts(index);
     for (file_index, symbol_index, class) in &classes.classes {
         let file = &index.files()[*file_index];
         // A Kotlin interface or `expect` class declares an API surface that
@@ -44,7 +44,7 @@ pub(crate) fn class_structure_metrics_findings(index: &StructureIndex) -> Vec<Fi
         let mut owners = method_owners.clone();
         owners.insert(class_owner);
         let cbo = coupled_classes(file, class, &owners, &classes);
-        let dit = inheritance_depth(*file_index, class, &classes);
+        let dit = index.hierarchy().depth((*file_index, *symbol_index));
         let noc = children
             .get(&(*file_index, *symbol_index))
             .copied()

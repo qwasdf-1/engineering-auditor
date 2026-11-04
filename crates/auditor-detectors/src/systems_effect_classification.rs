@@ -343,6 +343,11 @@ const C_FAMILY_EFFECTS: &[(&str, &[EffectKind])] = &[
 ];
 
 pub(super) fn classify_call(call: &CallSignature) -> Vec<EffectKind> {
+    // A called expression (`(async () => { .. })()`) names no API; its text
+    // is the function body, not an identity.
+    if call.method.contains(['(', ')', '{', '}', ';']) {
+        return Vec::new();
+    }
     if matches!(call.language, Language::C | Language::Cpp) {
         let callee = call.qualified.replace(' ', "");
         if let Some((_, kinds)) = C_FAMILY_EFFECTS.iter().find(|(name, _)| *name == callee) {
@@ -413,7 +418,7 @@ fn is_blocking_io(call: &CallSignature) -> bool {
     let qualified = call.qualified.to_ascii_lowercase();
     (is_artifact_read(call) || is_artifact_write(call))
         && (qualified.contains("std::fs")
-            || qualified.contains("sync")
+            || call.method.ends_with("sync")
             || matches!(
                 call.method.as_str(),
                 "read_to_string" | "read_text" | "read_bytes" | "write_text" | "write_all" | "open"

@@ -278,7 +278,7 @@ impl<'i> TypeFacts<'i> {
             .unwrap_or_default()
     }
 
-    /// The method `class` declares or inherits through its one base.
+    /// The method `class` declares or inherits through its resolved base.
     fn class_method(&self, class: SymbolRef, method: &str, depth: usize) -> Option<SymbolRef> {
         if depth > MAX_DEPTH {
             return None;
@@ -293,11 +293,8 @@ impl<'i> TypeFacts<'i> {
             })
             .map(|candidate| (file, *candidate));
         declared.or_else(|| {
-            let base = self.file_symbol(class).base.as_deref()?;
-            let [base] = self.types.get(base)?.as_slice() else {
-                return None;
-            };
-            self.class_method(*base, method, depth + 1)
+            let base = self.index.hierarchy().repository_base(class)?;
+            self.class_method(base, method, depth + 1)
         })
     }
 
@@ -393,9 +390,8 @@ impl<'i> TypeFacts<'i> {
             }
         }
         self.member(file, Some(symbol as u32), segment).or_else(|| {
-            let base = declared.base.as_deref()?;
-            let bases = self.types.get(base)?.clone();
-            self.across(&bases, |base| self.class_member(base, segment, depth + 1))
+            let base = self.index.hierarchy().repository_base(class)?;
+            self.class_member(base, segment, depth + 1)
         })
     }
 

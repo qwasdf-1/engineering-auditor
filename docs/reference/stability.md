@@ -78,7 +78,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | Gate result | stable | 2 |
 | SARIF output | stable | SARIF 2.1.0; `partialFingerprints.engineeringAuditor/v3` equals the finding ID. |
 | Evidence graph (embedded in the report) | stable | 2 |
-| Repository-map sidecar | experimental | 1 |
+| Repository-map sidecar | experimental | 2 |
 | Engineering review artifacts | experimental | none while Layer 6 is rebuilt |
 
 ## Configuration

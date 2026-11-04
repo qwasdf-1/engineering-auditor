@@ -284,8 +284,14 @@ fn is_empty_body(body: &auditor_ast::AstNode<'_>) -> bool {
             && body.named_child_count() == 0
 }
 
-/// Exit-in-production detection (absorbs go_os_exit, java_system_exit)
-pub(crate) fn exit_in_production_findings(scan: AstScan<'_, '_>) -> Vec<Finding> {
+/// Exit-in-production detection (absorbs go_os_exit, java_system_exit). A
+/// `multiprocessing.Process` subclass's `run`, its bases followed across
+/// files by the structure index, owns its process.
+pub(crate) fn exit_in_production_findings(
+    scan: AstScan<'_, '_>,
+    structure: &crate::structure_index::StructureIndex,
+) -> Vec<Finding> {
+    let process_runs = crate::entry_points::process_run_spans(structure);
     let mut findings = Vec::new();
     ast_scan::visit_ast_files(scan, Language::is_tiered, |file, tree, _| {
         let relative = util::path_slash(&file.relative);
@@ -316,7 +322,11 @@ pub(crate) fn exit_in_production_findings(scan: AstScan<'_, '_>) -> Vec<Finding>
         } else {
             rust_exits(root)
         };
-        for node in exit_entry_points::outside_entry_points(file, root, exits) {
+        let owned = process_runs
+            .get(relative.as_str())
+            .map(Vec::as_slice)
+            .unwrap_or_default();
+        for node in exit_entry_points::outside_entry_points(file, root, exits, owned) {
             let line = node.start_position().0 + 1;
             findings.push(
                 auditor_core::finding!(

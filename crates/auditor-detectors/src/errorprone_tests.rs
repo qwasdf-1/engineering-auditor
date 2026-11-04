@@ -90,7 +90,16 @@ mod tests {
         };
     }
 
-    ast_detector_adapter!(exit_in_production_findings);
+    fn exit_in_production_findings(files: &[AuditedFile], cache: &util::FileCache) -> Vec<Finding> {
+        let mut repo_ast = auditor_ast::RepoAst::new();
+        let structure = crate::structure_index::StructureIndex::build(ast_scan(
+            files,
+            cache,
+            &mut repo_ast,
+        ));
+        super::exit_in_production_findings(ast_scan(files, cache, &mut repo_ast), &structure)
+    }
+
     ast_detector_adapter!(console_output_in_production_findings);
     ast_detector_adapter!(debugger_in_production_findings);
     ast_detector_adapter!(empty_catch_block_findings);

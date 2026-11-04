@@ -24,6 +24,7 @@ pub struct RepositoryMap {
     pub files: Vec<MapFile>,
     pub symbols: Vec<MapSymbol>,
     pub edges: Vec<MapEdge>,
+    pub entry_points: Vec<MapEntryPoint>,
     pub completeness: MapCompleteness,
 }
 
@@ -49,6 +50,10 @@ pub struct MapSymbol {
     #[serde(rename = "async")]
     pub is_async: bool,
     pub metrics: Option<MapMetrics>,
+    /// The type's first base, when it is declared outside the repository
+    /// (`multiprocessing.Process`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub external_base: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
@@ -101,12 +106,23 @@ pub struct MapEdge {
     pub line: Option<usize>,
 }
 
+/// Where control enters the repository: a `main`, a CLI command, an HTTP
+/// handler, a child process's `run`, or a signal handler.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct MapEntryPoint {
+    pub kind: String,
+    pub file_id: String,
+    pub symbol_id: Option<String>,
+    pub line: usize,
+    pub detail: String,
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct MapCompleteness {
     pub complete: bool,
-    pub ambiguous_calls: usize,
     pub dynamic_imports: usize,
     pub truncated_call_edges: usize,
+    pub unresolved_calls: usize,
     pub unresolved_imports: usize,
 }
 
@@ -236,12 +252,36 @@ fn validate_contract(
         ));
     }
     if map.edges.iter().any(|edge| {
-        !matches!(edge.kind.as_str(), "contains" | "imports" | "calls")
-            || !nodes.contains(edge.from.as_str())
+        !matches!(
+            edge.kind.as_str(),
+            "contains" | "imports" | "calls" | "inherits"
+        ) || !nodes.contains(edge.from.as_str())
             || !nodes.contains(edge.to.as_str())
     }) {
         return Err(RepositoryMapError::Contract(
             "repository map edge references an unknown node".to_string(),
+        ));
+    }
+    validate_entry_points(map, &nodes)
+}
+
+fn validate_entry_points(
+    map: &RepositoryMap,
+    nodes: &BTreeSet<&str>,
+) -> Result<(), RepositoryMapError> {
+    let invalid = map.entry_points.iter().any(|entry| {
+        !matches!(
+            entry.kind.as_str(),
+            "main" | "cli_command" | "http_handler" | "process_run" | "signal_handler"
+        ) || !nodes.contains(entry.file_id.as_str())
+            || entry
+                .symbol_id
+                .as_ref()
+                .is_some_and(|symbol| !nodes.contains(symbol.as_str()))
+    });
+    if invalid {
+        return Err(RepositoryMapError::Contract(
+            "repository map entry point references an unknown node".to_string(),
         ));
     }
     Ok(())

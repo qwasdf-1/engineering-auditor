@@ -179,3 +179,89 @@ fn go_calls_resolve_within_the_package_directory_only() {
         ["service/service.go:details -> service/remote.go:details"]
     );
 }
+
+#[test]
+fn python_self_and_super_calls_resolve_through_the_class_hierarchy() {
+    let root = root("python-hierarchy");
+    let files = vec![
+        file(
+            &root,
+            "app/base.py",
+            Language::Python,
+            "class Base:\n    def helper(self):\n        return 1\n\n    def run(self):\n        return self.helper()\n",
+        ),
+        file(
+            &root,
+            "app/child.py",
+            Language::Python,
+            "from .base import Base\n\n\nclass Child(Base):\n    def helper(self):\n        return super().helper()\n\n    def work(self, other):\n        def nested():\n            return self.helper()\n\n        other.helper()\n        return self.run()\n",
+        ),
+    ];
+    assert_eq!(
+        resolved(&files),
+        [
+            "app/base.py:self.helper -> app/base.py:helper",
+            "app/child.py:self.helper -> app/child.py:helper",
+            "app/child.py:self.run -> app/base.py:run",
+            "app/child.py:super().helper -> app/base.py:helper",
+        ],
+        "`other.helper` on an instance must stay unresolved"
+    );
+}
+
+#[test]
+fn typescript_this_and_super_calls_reach_an_imported_base() {
+    let root = root("ts-hierarchy");
+    let files = vec![
+        file(
+            &root,
+            "src/base.ts",
+            Language::TypeScript,
+            "export class Base {\n  g() {\n    return 1;\n  }\n}\n",
+        ),
+        file(
+            &root,
+            "src/b.ts",
+            Language::TypeScript,
+            "import { Base } from './base';\n\nexport class B extends Base {\n  f() {\n    return this.g() + super.g();\n  }\n}\n",
+        ),
+    ];
+    assert_eq!(
+        resolved(&files),
+        [
+            "src/b.ts:super.g -> src/base.ts:g",
+            "src/b.ts:this.g -> src/base.ts:g",
+        ]
+    );
+}
+
+#[test]
+fn go_package_qualified_calls_resolve_in_any_file_of_the_imported_package() {
+    let root = root("go-package");
+    std::fs::create_dir_all(&root).unwrap();
+    std::fs::write(root.join("go.mod"), "module example.com/app\n").unwrap();
+    let files = vec![
+        file(
+            &root,
+            "cmd/main.go",
+            Language::Go,
+            "package main\n\nimport \"example.com/app/store\"\n\nfunc run() int {\n\treturn store.Load(1)\n}\n",
+        ),
+        file(
+            &root,
+            "store/a.go",
+            Language::Go,
+            "package store\n\nfunc helper() int {\n\treturn 1\n}\n",
+        ),
+        file(
+            &root,
+            "store/b.go",
+            Language::Go,
+            "package store\n\nfunc Load(id int) int {\n\treturn id\n}\n",
+        ),
+    ];
+    assert_eq!(
+        resolved(&files),
+        ["cmd/main.go:store.Load -> store/b.go:Load"]
+    );
+}

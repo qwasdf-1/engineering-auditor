@@ -120,6 +120,22 @@ tree on demand, follows anonymous functions inside their enclosing function,
 and takes a `CallFlow` policy for how calls pass values through. It has no
 flow through fields or aliases. Between functions, owners carry what a
 function returns through the call graph's certain targets.
+
+The structure index also owns the repository facts that owners and the map
+share. `type_hierarchy.rs` resolves each type's first written base once: a
+type of the same file, then through the import that binds the name or its
+qualifier (a repository type, or an external one by canonical name such as
+`multiprocessing.Process`), then, in Java, Kotlin, and C#, the only type of
+that name in the package directory or the repository. Class metrics (DIT,
+NOC), type facts, and the topology's inheritance edges read it. `call_graph.rs`
+splits a dotted callee into receiver and name (`self.load`, `pkg.Func`,
+`Type::new`) and resolves `self`/`this`, implicit-`this`, and `super` calls
+through the hierarchy, `Type.method` through a type's ancestors, and
+`module.function` through imports (in Go, any file of the imported package);
+dispatch is static. `entry_points.rs` records where control enters the
+repository: mains, CLI commands, HTTP route handlers, signal handlers, and
+the `run` of a process subclass, its bases followed across files.
+`exit_in_production` and the repository map read it.
 `dataflow_sources.rs` names request input (framework request members and
 accessors, request-bound parameters) and security sinks for the owners that
 use the layer (`sql_injection`, `random_for_security`). `bound_reads.rs`
@@ -153,10 +169,10 @@ change IDs. A baseline v2 stores accepted IDs with their reasons, titles, and
 messages; comparison carries an entry across a renamed symbol or moved file
 only on a unique match with the same message.
 
-A full JSON scan written with `--output` also streams a repository map v1 to
+A full JSON scan written with `--output` also streams a repository map v2 to
 a digest-named sibling file: paths, content hashes, roles, symbols, spans,
-metrics, imports, and bounded calls, never source text. The AI review needs
-it.
+metrics, imports, the call graph's bounded calls, inheritance, and entry
+points, never source text. The AI review needs it.
 
 [`report-contract.md`](reference/report-contract.md) is the full contract.
 

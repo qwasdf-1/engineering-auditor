@@ -4,7 +4,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::ast_scan::AstScan;
 use crate::call_graph::CallGraph;
 use crate::structure_index::StructureIndex;
-use crate::systems::loop_artifact_rewrite_findings;
+use crate::systems::{blocking_io_in_async_context_findings, loop_artifact_rewrite_findings};
 use crate::systems_facts::SystemsIndex;
 use crate::{util, Language, SourceRole};
 
@@ -19,23 +19,27 @@ fn root(name: &str) -> PathBuf {
     ))
 }
 
-fn file(root: &Path, relative: &str, source: &str) -> crate::AuditedFile {
+fn file(root: &Path, relative: &str, language: Language, source: &str) -> crate::AuditedFile {
     let absolute = root.join(relative);
     std::fs::create_dir_all(absolute.parent().unwrap()).unwrap();
     std::fs::write(&absolute, source).unwrap();
     crate::AuditedFile {
         absolute,
         relative: relative.into(),
-        language: Language::Python,
+        language,
         bytes: source.len() as u64,
         role: SourceRole::Production,
     }
 }
 
-/// The `loop_artifact_rewrite` messages for one Python file.
-fn rewrites(name: &str, source: &str) -> Vec<String> {
+/// One detector's messages for one file.
+fn messages(
+    name: &str,
+    (relative, language, source): (&str, Language, &str),
+    detector: fn(&SystemsIndex) -> Vec<crate::Finding>,
+) -> Vec<String> {
     let root = root(name);
-    let files = vec![file(&root, "app/service.py", source)];
+    let files = vec![file(&root, relative, language, source)];
     let cache = util::FileCache::new(&files);
     let mut repo_ast = auditor_ast::RepoAst::new();
     let structure = StructureIndex::build(AstScan::context(
@@ -44,7 +48,7 @@ fn rewrites(name: &str, source: &str) -> Vec<String> {
         &cache,
         &mut repo_ast,
     ));
-    let messages = loop_artifact_rewrite_findings(&SystemsIndex::build(
+    let messages = detector(&SystemsIndex::build(
         &structure,
         &CallGraph::build(&structure),
     ))
@@ -53,6 +57,15 @@ fn rewrites(name: &str, source: &str) -> Vec<String> {
     .collect();
     let _ = std::fs::remove_dir_all(root);
     messages
+}
+
+/// The `loop_artifact_rewrite` messages for one Python file.
+fn rewrites(name: &str, source: &str) -> Vec<String> {
+    messages(
+        name,
+        ("app/service.py", Language::Python, source),
+        loop_artifact_rewrite_findings,
+    )
 }
 
 #[test]
@@ -135,4 +148,33 @@ def rewrite(paths, summary):
         save(summary)
 ";
     assert!(rewrites("unrelated", source).is_empty());
+}
+
+#[test]
+fn an_async_function_literal_called_through_a_method_is_not_blocking() {
+    let source = "import { promises as fs } from 'node:fs';\n\
+class Renderer {\n\
+  async render() {\n\
+    return await this.template('a');\n\
+  }\n\
+  async template(name) {\n\
+    return (async () => {\n\
+      return await fs.readFile(name, 'utf8');\n\
+    })();\n\
+  }\n\
+  async load(name) {\n\
+    return this.read(name);\n\
+  }\n\
+  read(name) {\n\
+    return require('fs').readFileSync(name, 'utf8');\n\
+  }\n\
+}\n";
+    assert_eq!(
+        messages(
+            "iife",
+            ("src/renderer.js", Language::JavaScript, source),
+            blocking_io_in_async_context_findings,
+        ),
+        vec!["Function `load` makes a blocking call from an async function, through `read`."]
+    );
 }

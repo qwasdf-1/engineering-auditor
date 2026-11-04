@@ -36,6 +36,8 @@ mod dependency_usage;
 mod discarded_results;
 mod dispatcher;
 mod duplication;
+mod entry_points;
+mod entry_points_http;
 mod errorprone;
 mod errorprone_language_rules;
 mod finding_anchor;
@@ -563,12 +565,25 @@ impl<'a> ScanRun<'a> {
         profile: ScanProfile,
     ) -> std::io::Result<RepositoryMapArtifact> {
         self.ensure_structure_index();
+        let structure = self
+            .context
+            .structure
+            .as_ref()
+            .expect("reserved repository map structure index");
+        let built;
+        let graph = match self.context.call_graph.as_ref() {
+            Some(graph) => graph,
+            None => {
+                built = call_graph::CallGraph::build(structure);
+                &built
+            }
+        };
         let artifact = repository_map::write_repository_map(
-            files,
-            self.context
-                .structure
-                .as_ref()
-                .expect("reserved repository map structure index"),
+            &repository_map::MapSources {
+                files,
+                structure,
+                graph,
+            },
             report_output,
             profile,
             self.context.method,
