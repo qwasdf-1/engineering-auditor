@@ -7,6 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde_json::Value;
 
 use super::document::{BoundedDocument, Item, Row, Section};
+use super::rankings::STRUCTURE_DETECTORS;
 use super::view::{co_change_id, count, severity_rank, RepositoryView};
 use crate::{ModelProjectionAudit, ReviewBrief};
 
@@ -16,11 +17,6 @@ pub const MINIMUM_ORIENTATION_BYTES: usize = 4 * 1024;
 /// Entry kinds the pack lists per program, in this order; HTTP routes are
 /// counted per file instead.
 const ENTRY_KINDS: [&str; 4] = ["main", "cli_command", "process_run", "signal_handler"];
-
-/// Detectors whose findings describe module structure.
-const STRUCTURE_DETECTORS: [&str; 2] = ["architectural_layering", "package_coupling_metrics"];
-
-const CHURN_DETECTOR: &str = "churn_complexity_hotspot";
 
 /// Finding IDs one cluster row lists.
 const CLUSTER_FINDINGS: usize = 6;
@@ -228,46 +224,37 @@ fn structure(view: &RepositoryView<'_>) -> Section {
 }
 
 fn hotspots(view: &RepositoryView<'_>) -> Section {
-    let mut churn = view
-        .findings
-        .iter()
-        .filter(|finding| finding.detector == CHURN_DETECTOR)
-        .map(|finding| {
-            let number = |key: &str| finding.evidence[key].as_u64().unwrap_or(0);
-            (
-                finding,
-                number("sum_ccx"),
-                number("commit_count"),
-                number("loc_delta"),
-            )
-        })
-        .collect::<Vec<_>>();
-    churn.sort_by_key(|(finding, ccx, commits, _)| {
-        (std::cmp::Reverse(ccx * commits), finding.location())
-    });
-    let churn_rows = churn.into_iter().map(|(finding, ccx, commits, delta)| {
-        let mut ids = vec![finding.evidence_id()];
-        ids.extend(finding.file.map(|file| view.file(file).id.clone()));
-        Row::new(
-            format!(
-                "{}: complexity {ccx}, {commits} commits, +{delta} lines",
-                finding.path.as_deref().unwrap_or("?")
-            ),
-            ids,
+    let churn = view.churn_hotspots();
+    let churn_item = if churn.is_empty() {
+        Item::text(
+            "Complexity × churn",
+            "no history-weighted hotspot in the report (see Coverage)",
         )
-    });
-    let code_files = (0..view.map.files.len())
-        .filter(|file| view.is_production_code(*file))
-        .collect::<Vec<_>>();
+    } else {
+        let rows = churn.into_iter().map(|hotspot| {
+            let finding = &view.findings[hotspot.finding];
+            let mut ids = vec![finding.evidence_id()];
+            ids.extend(finding.file.map(|file| view.file(file).id.clone()));
+            Row::new(
+                format!(
+                    "{}: complexity {}, {} commits, +{} lines",
+                    finding.path.as_deref().unwrap_or("?"),
+                    hotspot.complexity,
+                    hotspot.commits,
+                    hotspot.growth
+                ),
+                ids,
+            )
+        });
+        Item::rows("Complexity × churn", rows, 10)
+    };
     let file_row = |file: usize, detail: String| {
         Row::new(
             format!("{}: {detail}", view.file(file).path),
             [view.file(file).id.clone()],
         )
     };
-    let mut largest = code_files.clone();
-    largest.sort_by_key(|file| (std::cmp::Reverse(view.file(*file).lines), *file));
-    let largest_rows = largest.into_iter().map(|file| {
+    let largest_rows = view.largest_files().into_iter().map(|file| {
         file_row(
             file,
             format!(
@@ -277,23 +264,16 @@ fn hotspots(view: &RepositoryView<'_>) -> Section {
             ),
         )
     });
-    let mut coupled = code_files
-        .iter()
-        .map(|file| (*file, view.import_degree(*file)))
-        .filter(|(_, (fan_in, fan_out))| fan_in + fan_out > 0)
-        .collect::<Vec<_>>();
-    coupled.sort_by_key(|(file, (fan_in, fan_out))| (std::cmp::Reverse(fan_in + fan_out), *file));
-    let coupled_rows = coupled.into_iter().map(|(file, (fan_in, fan_out))| {
-        file_row(
-            file,
-            format!("imported by {}, imports {fan_out}", count(fan_in, "file")),
-        )
-    });
-    let mut dense = (0..view.map.files.len())
-        .filter(|file| !view.findings_in_file(*file).is_empty())
-        .collect::<Vec<_>>();
-    dense.sort_by_key(|file| (std::cmp::Reverse(view.findings_in_file(*file).len()), *file));
-    let dense_rows = dense.into_iter().map(|file| {
+    let coupled_rows = view
+        .most_coupled_files()
+        .into_iter()
+        .map(|(file, (fan_in, fan_out))| {
+            file_row(
+                file,
+                format!("imported by {}, imports {fan_out}", count(fan_in, "file")),
+            )
+        });
+    let dense_rows = view.densest_files().into_iter().map(|file| {
         let detectors = view
             .findings_in_file(file)
             .iter()
@@ -308,20 +288,8 @@ fn hotspots(view: &RepositoryView<'_>) -> Section {
             ),
         )
     });
-    let churn_item = if view
-        .findings
-        .iter()
-        .any(|finding| finding.detector == CHURN_DETECTOR)
-    {
-        Item::rows("Complexity × churn", churn_rows, 10)
-    } else {
-        Item::text(
-            "Complexity × churn",
-            "no history-weighted hotspot in the report (see Coverage)",
-        )
-    };
     let mut items = vec![churn_item];
-    items.extend(history_items(view, &code_files));
+    items.extend(history_items(view));
     items.extend([
         Item::rows("Largest production files", largest_rows, 10),
         Item::rows("Most-coupled production files", coupled_rows, 10),
@@ -333,62 +301,42 @@ fn hotspots(view: &RepositoryView<'_>) -> Section {
 /// With a history digest: the production files that change most, weighted
 /// by size, and the pairs that change together with no import between
 /// them.
-fn history_items(view: &RepositoryView<'_>, code_files: &[usize]) -> Vec<Item> {
+fn history_items(view: &RepositoryView<'_>) -> Vec<Item> {
     let Some(digest) = view.history else {
         return Vec::new();
     };
-    let mut changed = code_files
-        .iter()
-        .filter_map(|file| Some((*file, view.file_history(*file)?)))
-        .collect::<Vec<_>>();
-    changed.sort_by_key(|(file, history)| {
-        (
-            std::cmp::Reverse(history.commits * view.file(*file).lines),
-            *file,
-        )
-    });
-    let changed_rows = changed.iter().map(|(file, history)| {
-        let path = &view.file(*file).path;
-        Row::new(
-            format!(
-                "{path}: {} ({} in the last {} days), {}, +{}/-{}, {}",
-                count(history.commits, "commit"),
-                history.recent_commits,
-                digest.recent_days,
-                count(view.file(*file).lines, "line"),
-                history.lines_added,
-                history.lines_removed,
-                count(view.findings_in_file(*file).len(), "finding")
-            ),
-            [format!("history:{path}")],
-        )
-    });
-    let mut pairs = BTreeMap::new();
-    for (file, history) in &changed {
-        for partner in &history.co_changes {
-            let Some(other) = view
-                .file_by_path(&partner.path)
-                .filter(|other| code_files.contains(other))
-            else {
-                continue;
-            };
-            if view.import_links(*file, other) == (false, false) {
-                pairs.insert((*file.min(&other), *file.max(&other)), partner.commits);
-            }
-        }
-    }
-    let mut pairs = pairs.into_iter().collect::<Vec<_>>();
-    pairs.sort_by_key(|(pair, shared)| (std::cmp::Reverse(*shared), *pair));
-    let pair_rows = pairs.into_iter().map(|((left, right), shared)| {
-        let (left, right) = (&view.file(left).path, &view.file(right).path);
-        Row::new(
-            format!(
-                "{left} and {right}: changed together in {}",
-                count(shared, "commit")
-            ),
-            [co_change_id(left, right)],
-        )
-    });
+    let changed_rows = view
+        .most_changed_files()
+        .into_iter()
+        .map(|(file, history)| {
+            let path = &view.file(file).path;
+            Row::new(
+                format!(
+                    "{path}: {} ({} in the last {} days), {}, +{}/-{}, {}",
+                    count(history.commits, "commit"),
+                    history.recent_commits,
+                    digest.recent_days,
+                    count(view.file(file).lines, "line"),
+                    history.lines_added,
+                    history.lines_removed,
+                    count(view.findings_in_file(file).len(), "finding")
+                ),
+                [format!("history:{path}")],
+            )
+        });
+    let pair_rows = view
+        .unlinked_co_changes()
+        .into_iter()
+        .map(|((left, right), shared)| {
+            let (left, right) = (&view.file(left).path, &view.file(right).path);
+            Row::new(
+                format!(
+                    "{left} and {right}: changed together in {}",
+                    count(shared, "commit")
+                ),
+                [co_change_id(left, right)],
+            )
+        });
     vec![
         Item::rows("Changed most (commits × lines)", changed_rows, 10),
         Item::rows("Changed together, no import between them", pair_rows, 8),
@@ -398,15 +346,11 @@ fn history_items(view: &RepositoryView<'_>, code_files: &[usize]) -> Vec<Item> {
 fn findings(view: &RepositoryView<'_>) -> Section {
     let mut severities: BTreeMap<(u8, &str), usize> = BTreeMap::new();
     let mut layers: BTreeMap<&str, usize> = BTreeMap::new();
-    let mut symbols: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
-    for (index, finding) in view.findings.iter().enumerate() {
+    for finding in &view.findings {
         *severities
             .entry((severity_rank(&finding.severity), finding.severity.as_str()))
             .or_default() += 1;
         *layers.entry(finding.layer.as_str()).or_default() += 1;
-        if let Some(symbol) = finding.symbol {
-            symbols.entry(symbol).or_default().push(index);
-        }
     }
     let joined = |counts: Vec<String>| {
         if counts.is_empty() {
@@ -415,43 +359,33 @@ fn findings(view: &RepositoryView<'_>) -> Section {
             counts.join(", ")
         }
     };
-    let mut clusters = symbols
+    let cluster_rows = view
+        .finding_clusters()
         .into_iter()
-        .filter(|(_, findings)| findings.len() > 1)
-        .collect::<Vec<_>>();
-    clusters.sort_by_key(|(symbol, findings)| (std::cmp::Reverse(findings.len()), *symbol));
-    let cluster_rows = clusters.into_iter().map(|(symbol, mut findings)| {
-        findings.sort_by_key(|finding| {
-            let finding = &view.findings[*finding];
-            (
-                severity_rank(&finding.severity),
-                finding.line,
-                finding.id.clone(),
+        .map(|(symbol, findings)| {
+            let detectors = findings
+                .iter()
+                .map(|finding| view.findings[*finding].detector.as_str())
+                .collect::<BTreeSet<_>>();
+            let mut ids = vec![view.symbol(symbol).id.clone()];
+            ids.extend(
+                findings
+                    .iter()
+                    .take(CLUSTER_FINDINGS)
+                    .map(|finding| view.findings[*finding].evidence_id()),
+            );
+            Row::new(
+                format!(
+                    "`{}` ({}, {}): {} from {}",
+                    view.qualified_name(symbol),
+                    view.symbol(symbol).kind,
+                    view.symbol_location(symbol),
+                    count(findings.len(), "finding"),
+                    count(detectors.len(), "detector")
+                ),
+                ids,
             )
         });
-        let detectors = findings
-            .iter()
-            .map(|finding| view.findings[*finding].detector.as_str())
-            .collect::<BTreeSet<_>>();
-        let mut ids = vec![view.symbol(symbol).id.clone()];
-        ids.extend(
-            findings
-                .iter()
-                .take(CLUSTER_FINDINGS)
-                .map(|finding| view.findings[*finding].evidence_id()),
-        );
-        Row::new(
-            format!(
-                "`{}` ({}, {}): {} from {}",
-                view.qualified_name(symbol),
-                view.symbol(symbol).kind,
-                view.symbol_location(symbol),
-                count(findings.len(), "finding"),
-                count(detectors.len(), "detector")
-            ),
-            ids,
-        )
-    });
     Section::new(
         "Findings",
         vec![

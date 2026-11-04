@@ -90,7 +90,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `.slop.toml` compatibility mapping | experimental | Read only when `auditor.toml` is absent. |
 | `.eaignore` audit-scope files (gitignore syntax, any directory) | experimental | Matched paths are not discovered. |
 | `auditor.toml` `[exclusions.<name>]` keys `paths`, `detectors` (comma-separated) | experimental | Drops the listed detectors' findings under the listed path prefixes. |
-| Layer 6 route, prompt-bundle, case-template, brief, and evidence files | experimental | |
+| Layer 6 route, prompt-bundle, case-template, question-template, brief, and evidence files | experimental | |
 
 ## MCP
 

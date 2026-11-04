@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "bundle_version": 1,
+  "templates": [
+    {
+      "kind": "hotspot_assessment",
+      "version": 1,
+      "max_questions": 1,
+      "max_subjects": 8,
+      "question": "These files rank highest on complexity weighted by change, change history, size, coupling, or finding count. For each one, decide whether it carries real maintenance or defect risk or whether the signal is benign (generated code, a stable table, a deliberate facade), and read what you need to tell. Record at least one hotspot_risk claim per file, citing the evidence it rests on, then rank every file from most to least risky. Recommend a change only where the evidence supports one.",
+      "claim_slots": ["hotspot_risk", "coupling_risk"],
+      "recommendation_families": [
+        "structural_refactor",
+        "narrowed_remediation",
+        "measurement_before_change",
+        "deferred_remediation"
+      ]
+    },
+    {
+      "kind": "shared_root_cause",
+      "version": 1,
+      "max_questions": 5,
+      "max_subjects": 1,
+      "question": "These findings sit in one symbol and come from different detectors. Decide whether one cause explains several of them. If one does, record it as a root_cause claim that cites the findings it explains, and at most one shared_root_remediation recommendation that fixes them together. If they are independent, say so and recommend keeping the separate fixes.",
+      "claim_slots": [
+        "responsibility",
+        "causal_overlap",
+        "independent_actionability",
+        "coupling_risk",
+        "remediation_boundary"
+      ],
+      "recommendation_families": [
+        "shared_root_remediation",
+        "preserve_independent_actions",
+        "measurement_before_change"
+      ]
+    },
+    {
+      "kind": "architecture_review",
+      "version": 1,
+      "max_questions": 1,
+      "max_subjects": 8,
+      "question": "These are the module cycles and structure findings in the repository. Infer the intended structure from names, documentation, and the module dependencies, and record it in intended_structure claims. Compare the actual dependencies with it and record each departure as a structural_violation claim that cites its evidence. Every subject needs at least one claim, even one that finds it acceptable. Recommend a direction for the structure where the evidence supports one.",
+      "claim_slots": ["intended_structure", "structural_violation", "coupling_risk"],
+      "recommendation_families": [
+        "structural_refactor",
+        "sequenced_remediation",
+        "measurement_before_change",
+        "deferred_remediation"
+      ]
+    },
+    {
+      "kind": "remediation_plan",
+      "version": 1,
+      "max_questions": 1,
+      "max_subjects": 0,
+      "question": "Using the earlier answers and the findings, write an ordered plan. Each step is one recommendation that names the findings it resolves; its premises may be your claims here or claims from the earlier answers. Rank every step in the order to carry them out. A step with a patch is checked by applying it and scanning again; prefer few steps that matter over many small ones, and defer what the evidence does not justify.",
+      "claim_slots": ["required_ordering", "proportionality", "deferral"],
+      "recommendation_families": [
+        "structural_refactor",
+        "shared_root_remediation",
+        "preserve_independent_actions",
+        "consolidated_remediation",
+        "sequenced_remediation",
+        "narrowed_remediation",
+        "deferred_remediation",
+        "measurement_before_change"
+      ]
+    }
+  ]
+}

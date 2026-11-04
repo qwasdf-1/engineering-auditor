@@ -11,8 +11,8 @@ use crate::{
 
 /// One rendered fact and the evidence IDs it summarizes.
 pub(super) struct Row {
-    text: String,
-    ids: Vec<String>,
+    pub(super) text: String,
+    pub(super) ids: Vec<String>,
 }
 
 impl Row {

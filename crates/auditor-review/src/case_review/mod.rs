@@ -50,5 +50,6 @@ pub use model_protocol::{
 pub use recommendation::{
     validate_recommendations, BenefitEvidenceMode, ContextualRecommendation,
     DetectorAdviceRelationship, ExpectedBenefit, Materiality, RecommendationAlternative,
-    RecommendationDraft, VerificationStep, CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION,
+    RecommendationBounds, RecommendationDraft, VerificationStep,
+    CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION,
 };

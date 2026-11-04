@@ -55,6 +55,22 @@
   repository with only the window's history, scans it with a map, writes
   its history digest, optionally runs a review command, and deletes the
   checkout.
+- Question templates for the rebuilt review (library API;
+  `config/auditor/review-question-templates-v1.json`, experimental). Each
+  kind has checked-in wording, limits, claim slots, and recommendation
+  families, and a trigger over the report, map, and history:
+  `hotspot_assessment` takes the top production files of every hotspot
+  ranking in turn; `shared_root_cause` asks once per symbol whose findings
+  come from two or more detectors, most layers first;
+  `architecture_review` asks about module cycles and structure findings,
+  a detector at a time; `remediation_plan` is always asked, last, and may
+  build on the other answers. An answer is typed claims and
+  recommendations checked against the question: hotspot and architecture
+  answers cite every subject, hotspots and plan steps are ranked, a root
+  cause explains at least two findings with at most one shared fix, and
+  every plan step resolves a finding. New claim slots `hotspot_risk`,
+  `intended_structure`, and `structural_violation`, and recommendation
+  family `structural_refactor`.
 
 ### Changed
 

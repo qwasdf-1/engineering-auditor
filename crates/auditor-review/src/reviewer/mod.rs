@@ -6,11 +6,17 @@
 mod document;
 mod modules;
 mod orientation;
+mod questions;
+mod rankings;
 mod retrieval;
 mod retrieval_render;
 mod view;
 
 pub use orientation::{OrientationPack, MINIMUM_ORIENTATION_BYTES, TARGET_ORIENTATION_BYTES};
+pub use questions::{
+    Question, QuestionAnswer, QuestionKind, QuestionSubject, QuestionTemplate,
+    QuestionTemplateBundle, QUESTION_SCHEMA_VERSION, QUESTION_TEMPLATE_BUNDLE_SCHEMA_VERSION,
+};
 pub use retrieval::{
     retrieval_tool_specs, RetrievalBudget, RetrievalHost, RetrievalOutcome, RetrievalRecord,
     RETRIEVAL_TOOL_NAMES,

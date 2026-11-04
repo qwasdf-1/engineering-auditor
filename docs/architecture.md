@@ -214,6 +214,18 @@ copy, re-scans it against a scan of an unpatched copy, and runs the brief's
 test command in a cleared environment. The verdict is verified only when the
 cited findings are gone, none is added, and the tests pass.
 
+Questions come from checked-in templates
+(`config/auditor/review-question-templates-v1.json`: wording, limits, claim
+slots, recommendation families) and triggers over the same view: the top
+production files of each hotspot ranking, symbols whose findings come from
+two or more detectors, module cycles and structure findings, and always,
+last, a remediation plan that depends on the other questions. A question
+renders its subjects with evidence IDs, and `Question::check_answer` holds
+an answer to it: the claim and recommendation validators within the
+question's slots, families, and scope, then the kind's shape (every subject
+cited, rankings complete, a shared cause explaining two or more findings,
+every plan step resolving one).
+
 Providers (OpenAI Responses, Anthropic Messages, Mistral, OpenCode, and
 OpenAI-compatible Chat Completions) are configured by routes that name the
 model, the credential's environment variable, privacy and cost classes, and

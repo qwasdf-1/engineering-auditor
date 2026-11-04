@@ -5,13 +5,32 @@ use super::{
 };
 use crate::{ClaimStatus, EngineeringCase, EngineeringClaim, RecommendationFamily, StableId};
 
+/// What a case or a question lets its recommendations touch.
+pub struct RecommendationBounds<'a> {
+    pub case_id: &'a StableId,
+    pub subject_ids: &'a [String],
+    pub finding_ids: &'a [String],
+    pub families: &'a [RecommendationFamily],
+}
+
+impl EngineeringCase {
+    pub fn recommendation_bounds(&self) -> RecommendationBounds<'_> {
+        RecommendationBounds {
+            case_id: &self.case_id,
+            subject_ids: &self.subject_ids,
+            finding_ids: &self.finding_ids,
+            families: &self.recommendation_families,
+        }
+    }
+}
+
 pub fn validate_recommendations(
-    case: &EngineeringCase,
+    bounds: &RecommendationBounds<'_>,
     known_evidence_ids: &BTreeSet<String>,
     claims: &[EngineeringClaim],
     recommendations: &[ContextualRecommendation],
 ) -> Result<(), String> {
-    let context = RecommendationValidationContext::new(case, known_evidence_ids, claims);
+    let context = RecommendationValidationContext::new(bounds, known_evidence_ids, claims);
     let mut ids = BTreeSet::new();
     for recommendation in recommendations {
         let duplicate = !ids.insert(recommendation.recommendation_id.clone());
@@ -21,30 +40,29 @@ pub fn validate_recommendations(
 }
 
 struct RecommendationValidationContext<'a> {
-    case: &'a EngineeringCase,
+    bounds: &'a RecommendationBounds<'a>,
     known_evidence_ids: &'a BTreeSet<String>,
     claims: BTreeMap<&'a StableId, &'a EngineeringClaim>,
-    allowed_scope: BTreeSet<String>,
+    allowed_scope: BTreeSet<&'a String>,
 }
 
 impl<'a> RecommendationValidationContext<'a> {
     fn new(
-        case: &'a EngineeringCase,
+        bounds: &'a RecommendationBounds<'a>,
         known_evidence_ids: &'a BTreeSet<String>,
         claims: &'a [EngineeringClaim],
     ) -> Self {
         Self {
-            case,
+            bounds,
             known_evidence_ids,
             claims: claims
                 .iter()
                 .map(|claim| (&claim.claim_id, claim))
                 .collect(),
-            allowed_scope: case
+            allowed_scope: bounds
                 .subject_ids
                 .iter()
-                .chain(&case.finding_ids)
-                .cloned()
+                .chain(bounds.finding_ids)
                 .collect(),
         }
     }
@@ -55,12 +73,8 @@ fn validate_recommendation(
     duplicate: bool,
     context: &RecommendationValidationContext<'_>,
 ) -> Result<(), String> {
-    validate_recommendation_identity(recommendation, duplicate, context.case)?;
-    if !context
-        .case
-        .recommendation_families
-        .contains(&recommendation.family)
-    {
+    validate_recommendation_identity(recommendation, duplicate, context.bounds.case_id)?;
+    if !context.bounds.families.contains(&recommendation.family) {
         return Err(format!(
             "recommendation {} field family is outside decision.recommendation_families",
             recommendation.recommendation_id
@@ -76,10 +90,9 @@ fn validate_recommendation(
 fn validate_recommendation_identity(
     recommendation: &ContextualRecommendation,
     duplicate: bool,
-    case: &EngineeringCase,
+    case_id: &StableId,
 ) -> Result<(), String> {
-    let rebuilt =
-        ContextualRecommendation::from_draft(case.case_id.clone(), recommendation.to_draft())?;
+    let rebuilt = ContextualRecommendation::from_draft(case_id.clone(), recommendation.to_draft())?;
     if recommendation.schema_version != CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION {
         return Err(format!(
             "recommendation {} has schema_version {}; expected {}",
@@ -88,7 +101,7 @@ fn validate_recommendation_identity(
             CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION
         ));
     }
-    if recommendation.case_id != case.case_id {
+    if &recommendation.case_id != case_id {
         return Err(format!(
             "recommendation {} field case_id is outside the admitted case",
             recommendation.recommendation_id
@@ -117,7 +130,7 @@ fn validate_scope(
     let invalid_scope = recommendation
         .scope_ids
         .iter()
-        .filter(|id| !context.allowed_scope.contains(*id))
+        .filter(|id| !context.allowed_scope.contains(id))
         .cloned()
         .collect::<Vec<_>>();
     if !invalid_scope.is_empty() {
@@ -130,7 +143,7 @@ fn validate_scope(
     let invalid_findings = recommendation
         .affected_finding_ids
         .iter()
-        .filter(|id| !context.case.finding_ids.contains(*id))
+        .filter(|id| !context.bounds.finding_ids.contains(*id))
         .cloned()
         .collect::<Vec<_>>();
     if invalid_findings.is_empty() {

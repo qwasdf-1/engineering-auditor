@@ -30,9 +30,9 @@ pub use case_review::{
     FoundationAgendaPolicy, IdentityError, InputBinding, InputBindingDigests, InputContract,
     InputError, InputVerificationRequest, InputVerifier, Materiality, ModelDocument, ModelField,
     ModelProjection, ModelProjectionAudit, ModelSection, ModelValue, OperatorCaseConstraints,
-    PlanningPriority, PolicySuppressionReason, RecommendationAlternative, RecommendationDraft,
-    RecommendationFamily, ReviewAgenda, ReviewCandidate, ReviewInput, SelectionReason,
-    SelectorManifestEntry, SelectorRegistry, SemanticRecord, SemanticRecordLedger,
+    PlanningPriority, PolicySuppressionReason, RecommendationAlternative, RecommendationBounds,
+    RecommendationDraft, RecommendationFamily, ReviewAgenda, ReviewCandidate, ReviewInput,
+    SelectionReason, SelectorManifestEntry, SelectorRegistry, SemanticRecord, SemanticRecordLedger,
     SemanticRevisionRecord, SourceCandidateRef, StableId, SubjectPolicy, SuppressionReason,
     SuppressionRecord, SuppressionSignal, TaskCallProvenance, TaskLedgerError,
     TemplateNotEnabledReason, TemplateNotEnabledRecord, TemplateStatus, TriggerPolicy,
@@ -73,7 +73,8 @@ pub use repository_map::{
     SourceExcerpt, SourceLookup,
 };
 pub use reviewer::{
-    retrieval_tool_specs, OrientationPack, RepositoryView, RetrievalBudget, RetrievalHost,
-    RetrievalOutcome, RetrievalRecord, MINIMUM_ORIENTATION_BYTES, RETRIEVAL_TOOL_NAMES,
-    TARGET_ORIENTATION_BYTES,
+    retrieval_tool_specs, OrientationPack, Question, QuestionAnswer, QuestionKind, QuestionSubject,
+    QuestionTemplate, QuestionTemplateBundle, RepositoryView, RetrievalBudget, RetrievalHost,
+    RetrievalOutcome, RetrievalRecord, MINIMUM_ORIENTATION_BYTES, QUESTION_SCHEMA_VERSION,
+    QUESTION_TEMPLATE_BUNDLE_SCHEMA_VERSION, RETRIEVAL_TOOL_NAMES, TARGET_ORIENTATION_BYTES,
 };

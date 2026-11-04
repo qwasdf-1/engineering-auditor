@@ -47,6 +47,9 @@ pub enum ClaimSlot {
     RequiredOrdering,
     Proportionality,
     Deferral,
+    HotspotRisk,
+    IntendedStructure,
+    StructuralViolation,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
@@ -61,6 +64,7 @@ pub enum RecommendationFamily {
     SequencedRemediation,
     NarrowedRemediation,
     DeferredRemediation,
+    StructuralRefactor,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]

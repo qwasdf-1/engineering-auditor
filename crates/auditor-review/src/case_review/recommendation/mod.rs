@@ -7,5 +7,5 @@ pub use model::{
     Materiality, RecommendationAlternative, RecommendationDraft,
     CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION,
 };
-pub use validate::validate_recommendations;
+pub use validate::{validate_recommendations, RecommendationBounds};
 pub use verification::VerificationStep;
