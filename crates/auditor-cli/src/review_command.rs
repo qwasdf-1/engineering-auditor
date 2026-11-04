@@ -16,15 +16,10 @@ use crate::arg_cursor::ArgCursor;
 
 /// The engineering review is being rebuilt (v1.6 plan): the subcommands of
 /// the v2 case protocol are gone. Provider discovery and transcript
-/// rendering remain, beside the new path's history digest and patch check.
-const REMOVED_REVIEW_COMMANDS: [&str; 6] = [
-    "plan",
-    "inspect-case",
-    "run",
-    "verify",
-    "disposition",
-    "gate",
-];
+/// rendering remain, beside the new path's history digest, patch check, and
+/// `review run --experimental-reviewer`.
+const REMOVED_REVIEW_COMMANDS: [&str; 5] =
+    ["plan", "inspect-case", "verify", "disposition", "gate"];
 
 pub(crate) fn run_review(args: &[String]) -> Result<String, String> {
     match args.first().map(String::as_str) {
@@ -32,11 +27,14 @@ pub(crate) fn run_review(args: &[String]) -> Result<String, String> {
         Some("provider") => run_provider_command(&args[1..]),
         Some("history") => run_review_history(&args[1..]),
         Some("check-patch") => run_check_patch(&args[1..]),
+        Some("run") => crate::review_run::run(&args[1..]),
         Some(removed) if REMOVED_REVIEW_COMMANDS.contains(&removed) => Err(format!(
             "review {removed} was removed while the engineering review is rebuilt; see docs/reference/layer6-llm-review.md"
         )),
         Some(other) => Err(format!("unknown review command `{other}`")),
-        None => Err("review requires transcript, provider, history, or check-patch".to_string()),
+        None => Err(
+            "review requires transcript, provider, history, check-patch, or run".to_string(),
+        ),
     }
 }
 
@@ -149,7 +147,10 @@ fn run_check_patch(args: &[String]) -> Result<String, String> {
 }
 
 /// Pretty JSON, written atomically to `output` or returned.
-fn publish(output: Option<PathBuf>, value: &impl serde::Serialize) -> Result<String, String> {
+pub(crate) fn publish(
+    output: Option<PathBuf>,
+    value: &impl serde::Serialize,
+) -> Result<String, String> {
     let text = serde_json::to_string_pretty(value)
         .map_err(|error| format!("failed to serialize: {error}"))?;
     match output {
@@ -161,7 +162,7 @@ fn publish(output: Option<PathBuf>, value: &impl serde::Serialize) -> Result<Str
     }
 }
 
-fn consume_arguments(
+pub(crate) fn consume_arguments(
     args: &[String],
     mut consume: impl FnMut(&str, &mut ArgCursor<'_>) -> Result<(), String>,
 ) -> Result<(), String> {
@@ -172,7 +173,7 @@ fn consume_arguments(
     Ok(())
 }
 
-fn apply_consent(argument: &str, consent: &mut HostedConsent) -> bool {
+pub(crate) fn apply_consent(argument: &str, consent: &mut HostedConsent) -> bool {
     match argument {
         "--allow-hosted-review" | "--allow-hosted" => consent.allow_hosted = true,
         "--allow-anonymous-provider" | "--allow-anonymous" => consent.allow_anonymous = true,
@@ -181,7 +182,7 @@ fn apply_consent(argument: &str, consent: &mut HostedConsent) -> bool {
     true
 }
 
-fn parse_file<T, E>(
+pub(crate) fn parse_file<T, E>(
     path: &Path,
     label: &str,
     parser: impl FnOnce(&str) -> Result<T, E>,

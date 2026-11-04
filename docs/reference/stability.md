@@ -62,7 +62,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `digest` | stable | Flags only; the digest text is human-oriented. |
 | `catalog` | stable | Output follows `detector-manifest.schema.json`. |
 | `version` | stable | |
-| `review transcript`, `review provider discover`, `review history`, `review check-patch` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed. |
+| `review transcript`, `review provider discover`, `review history`, `review check-patch`, `review run --experimental-reviewer` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed, and `review run` refuses to start without its flag. |
 | `donor check`, `donor sync` | internal | Development provenance tooling. |
 | Exit codes | stable | `0` success; `1` policy failure (`gate` failed, with the result on stdout); `2` usage, input, or runtime error (message on stderr). |
 
@@ -117,6 +117,7 @@ stable CLI.
 | `contextual-recommendation-v1.schema.json` | experimental |
 | `engineering-case-v1.schema.json` | experimental |
 | `engineering-claim-v1.schema.json` | experimental |
+| `engineering-review-v1.schema.json` | experimental |
 | `evidence-packet-v1.schema.json` | experimental |
 | `review-agenda-v1.schema.json` | experimental |
 | `review-candidate-v1.schema.json` | experimental |

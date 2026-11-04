@@ -189,6 +189,11 @@ fn a_scripted_reviewer_navigates_from_the_pack_through_every_tool() {
         answers[3].contains("inside `Store`")
             && answers[3].contains("`record` (app/core/audit.py:4-8) at line 16")
     );
+    assert!(
+        answers[4].contains("(evidence: ") && answers[4].contains("finding:EA-"),
+        "{}",
+        answers[4]
+    );
     assert!(answers[5].contains("source-span:app/store/db.py#L8-L10"));
     assert!(answers[5].contains("class Store(BaseStore):\n    def __init__(self, path=\"app.db\"):\n        self.connection"));
     let issued = host.issued_evidence_ids();

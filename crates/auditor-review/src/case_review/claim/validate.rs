@@ -21,8 +21,8 @@ pub fn validate_claims(
         errors.extend(identity_error(case_id, claim, duplicate));
         if !allowed_slots.contains(&claim.slot) {
             errors.push(format!(
-                "claim slot {:?} is not allowed by the case",
-                claim.slot
+                "claim {} slot {:?} is not allowed by the case",
+                claim.claim_id, claim.slot
             ));
         }
         errors.extend(citation_error(claim, known_evidence_ids));
@@ -57,8 +57,8 @@ fn identity_error(case_id: &StableId, claim: &EngineeringClaim, duplicate: bool)
         && !duplicate;
     (!valid).then(|| {
         format!(
-            "claim slot {:?} has an invalid or duplicate identity",
-            claim.slot
+            "claim {} (slot {:?}) has an invalid or duplicate identity",
+            claim.claim_id, claim.slot
         )
     })
 }
@@ -72,8 +72,8 @@ fn citation_error(claim: &EngineeringClaim, known: &BTreeSet<String>) -> Option<
         .collect::<BTreeSet<_>>();
     (!unknown.is_empty()).then(|| {
         format!(
-            "claim slot {:?} cites unknown evidence: {:?}",
-            claim.slot, unknown
+            "claim {} (slot {:?}) cites unknown evidence: {:?}",
+            claim.claim_id, claim.slot, unknown
         )
     })
 }
@@ -116,8 +116,8 @@ fn status_error(
     };
     (!valid).then(|| {
         format!(
-            "claim slot {:?} status {:?} is not supported by its citations and dependencies {:?}",
-            claim.slot, claim.status, dependencies
+            "claim {} (slot {:?}) status {:?} is not supported by its citations and dependencies {:?}",
+            claim.claim_id, claim.slot, claim.status, dependencies
         )
     })
 }

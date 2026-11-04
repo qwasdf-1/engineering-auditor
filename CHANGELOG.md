@@ -21,8 +21,7 @@
   `external_base`, and an `entry_points` list are new; `ambiguous_calls` is
   replaced by `unresolved_calls`, and each file records its line count.
   Version 1 maps are no longer read.
-- The rebuilt AI review's first parts, a library API not yet driven by a
-  command: a repository orientation pack (languages, roles, modules by
+- The rebuilt AI review's first parts: a repository orientation pack (languages, roles, modules by
   size, programs and HTTP routes, module dependencies and cycles, hotspots,
   findings by layer, detector, and symbol, and coverage gaps) rendered
   within 24 KiB, and five retrieval tools (`read_source`, `symbol_info`,
@@ -55,8 +54,8 @@
   repository with only the window's history, scans it with a map, writes
   its history digest, optionally runs a review command, and deletes the
   checkout.
-- Question templates for the rebuilt review (library API;
-  `config/auditor/review-question-templates-v1.json`, experimental). Each
+- Question templates for the rebuilt review
+  (`config/auditor/review-question-templates-v1.json`, experimental). Each
   kind has checked-in wording, limits, claim slots, and recommendation
   families, and a trigger over the report, map, and history:
   `hotspot_assessment` takes the top production files of every hotspot
@@ -71,11 +70,32 @@
   every plan step resolves a finding. New claim slots `hotspot_risk`,
   `intended_structure`, and `structural_violation`, and recommendation
   family `structural_refactor`.
+- The rebuilt review runs (`review run --experimental-reviewer`; record
+  schema `engineering-review-v1.schema.json`). Each question is one
+  conversation over the route's provider chain that opens with the
+  orientation pack, the brief, and the question; the plan also sees the
+  earlier answers' claims. The reviewer answers with one `answer_question`
+  call whose claims and recommendations carry refs of its own; the host
+  turns them into IDs and checks the answer, and a rejected answer goes
+  back with its reasons. With `--check-patches`, a `check_patch` tool runs
+  the patch checker on a proposed diff, and every accepted recommendation
+  with a patch is checked (at most 8 checks by default). A request that
+  returned no model output is retried, a failing target gives way to the
+  next, and a spent budget or failed route leaves questions unanswered
+  with the reason; the command fails when it answered nothing. The record
+  keeps every answer, call, retrieval, check, and what was spent.
+- `findings_in` shows each finding's evidence values (counts, thresholds,
+  matched patterns, clone locations) after its message, strings as code
+  spans.
 
 ### Changed
 
 - Churn reads non-ASCII paths as written: git quoted them, so their files
   never matched and had no churn.
+- The review prompt bundle is rewritten for the rebuilt reviewer, and claim
+  validation errors name the claim's ID.
+- An API key environment variable that is set but empty counts as unset, so
+  no request is sent without a credential.
 
 - The call graph resolves dotted calls in every language. Python,
   JavaScript, TypeScript, Go, Rust, and C++ calls carried their receiver in

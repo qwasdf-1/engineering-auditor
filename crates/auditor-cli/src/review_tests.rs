@@ -1,13 +1,6 @@
 #[test]
 fn removed_review_commands_name_the_rebuild() {
-    for command in [
-        "plan",
-        "inspect-case",
-        "run",
-        "verify",
-        "disposition",
-        "gate",
-    ] {
+    for command in ["plan", "inspect-case", "verify", "disposition", "gate"] {
         let error = super::review_command::run_review(&[command.to_string()])
             .expect_err("the v2 review commands are removed");
         assert!(
@@ -15,6 +8,12 @@ fn removed_review_commands_name_the_rebuild() {
             "{command}: {error}"
         );
     }
+    let run = super::review_command::run_review(&["run".to_string()])
+        .expect_err("review run needs the experimental flag");
+    assert!(
+        run.contains("removed while the engineering review is rebuilt")
+            && run.contains("--experimental-reviewer")
+    );
     let unknown = super::review_command::run_review(&["probe".to_string()])
         .expect_err("an unknown review command stays unknown");
     assert!(unknown.contains("unknown review command `probe`"));
@@ -36,6 +35,17 @@ fn kept_review_commands_still_validate_their_arguments() {
         super::review_command::run_review(&["provider".to_string(), "discover".to_string()])
             .expect_err("provider discovery requires routes");
     assert!(provider.contains("review provider requires --routes"));
+    let run = super::review_command::run_review(&strings(&["run", "--experimental-reviewer"]))
+        .expect_err("review run requires a report");
+    assert!(run.contains("review run requires --report"));
+    let run = super::review_command::run_review(&strings(&[
+        "run",
+        "--experimental-reviewer",
+        "--report",
+        "audit.json",
+    ]))
+    .expect_err("review run requires routes");
+    assert!(run.contains("review run requires --routes"));
 }
 
 fn temp_dir(name: &str) -> std::path::PathBuf {

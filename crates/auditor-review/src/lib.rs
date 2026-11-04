@@ -73,8 +73,11 @@ pub use repository_map::{
     SourceExcerpt, SourceLookup,
 };
 pub use reviewer::{
-    retrieval_tool_specs, OrientationPack, Question, QuestionAnswer, QuestionKind, QuestionSubject,
-    QuestionTemplate, QuestionTemplateBundle, RepositoryView, RetrievalBudget, RetrievalHost,
-    RetrievalOutcome, RetrievalRecord, MINIMUM_ORIENTATION_BYTES, QUESTION_SCHEMA_VERSION,
+    retrieval_tool_specs, run_engineering_review, CheckRequester, EngineeringReview,
+    OrientationPack, PatchCheckRecord, ProjectionSummary, Question, QuestionAnswer, QuestionKind,
+    QuestionRecord, QuestionStatus, QuestionSubject, QuestionTemplate, QuestionTemplateBundle,
+    RecommendationChecker, RepositoryView, RetrievalBudget, RetrievalHost, RetrievalOutcome,
+    RetrievalRecord, ReviewCall, ReviewSetup, Spend, DEFAULT_PATCH_CHECKS,
+    ENGINEERING_REVIEW_SCHEMA_VERSION, MINIMUM_ORIENTATION_BYTES, QUESTION_SCHEMA_VERSION,
     QUESTION_TEMPLATE_BUNDLE_SCHEMA_VERSION, RETRIEVAL_TOOL_NAMES, TARGET_ORIENTATION_BYTES,
 };

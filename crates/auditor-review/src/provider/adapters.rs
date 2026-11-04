@@ -523,22 +523,25 @@ impl<'a> BuiltinAdapter<'a> {
                 "provider API key environment variable is not configured",
             )
         })?;
-        std::env::var_os(variable).map(|_| variable).ok_or_else(|| {
-            ProviderFailure::new(
-                &self.config.id,
-                model,
-                ProviderFailureClass::Configuration,
-                false,
-                format!("provider API key environment variable is unset: {variable}"),
-            )
-        })
+        std::env::var_os(variable)
+            .filter(|value| !value.is_empty())
+            .map(|_| variable)
+            .ok_or_else(|| {
+                ProviderFailure::new(
+                    &self.config.id,
+                    model,
+                    ProviderFailureClass::Configuration,
+                    false,
+                    format!("provider API key environment variable is unset: {variable}"),
+                )
+            })
     }
 }
 
 fn tool_dispatch_kind(request: &ProviderRequest) -> Option<ToolDispatchKind> {
     if request.stage == "provider_tool_qualification" {
         Some(ToolDispatchKind::ProviderProbe)
-    } else if request.output_schema_name == "case_task_calls" {
+    } else if request.output_schema_name == crate::reviewer::REVIEWER_TURN {
         Some(ToolDispatchKind::NativeCase)
     } else {
         None

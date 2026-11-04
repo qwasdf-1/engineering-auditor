@@ -192,8 +192,8 @@ builds on:
 4. **Claims and recommendations.** Typed records that cite evidence IDs the
    host issued, with validators that reject unknown citations.
 
-The new reviewer's first parts are in `reviewer/`, not yet driven by a
-command. `RepositoryView` joins the report's findings with the map and
+The new reviewer is in `reviewer/`, run by `review run
+--experimental-reviewer` until a route qualifies on it. `RepositoryView` joins the report's findings with the map and
 divides the repository into modules (directories, split while one holds more
 than a third of the files). From it, the orientation pack renders shape,
 module structure and cycles, hotspots, finding distribution, and coverage
@@ -225,6 +225,22 @@ an answer to it: the claim and recommendation validators within the
 question's slots, families, and scope, then the kind's shape (every subject
 cited, rankings complete, a shared cause explaining two or more findings,
 every plan step resolving one).
+
+The driver asks the questions in order, one conversation each, over the
+route's provider chain. A conversation opens with the pack, the operator's
+brief, and the question; the plan also sees the earlier answers, with their
+claim IDs, so its steps can rest on them. The reviewer reads with the
+retrieval tools (`findings_in` shows each finding's evidence values) and
+answers with one `answer_question` call: claims and recommendations named by
+refs of its own, which the host turns into content-derived IDs before
+`check_answer`. A rejected answer goes back with its reasons. With a
+checker, `check_patch` runs the patch checker on a proposed diff, and the
+host checks every accepted recommendation that carries one. A request that
+returns no model output is retried, a target that fails for good gives way
+to the next, and a spent question or review budget leaves questions
+unanswered with the reason. The review record
+(`contracts/engineering-review-v1.schema.json`) holds each answer, every
+provider call and retrieval, the checks, and what the review spent.
 
 Providers (OpenAI Responses, Anthropic Messages, Mistral, OpenCode, and
 OpenAI-compatible Chat Completions) are configured by routes that name the

@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/engineering-review-v1.schema.json",
+  "title": "Engineering Auditor Engineering Review v1",
+  "description": "The rebuilt engineering review's record (`review run --experimental-reviewer`): each question with its checked answer or the reason it has none, the patch checks, every retrieval and provider call, and what the review spent. Advisory; it never changes a finding.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "source_digest", "template_bundle_digest", "prompt_bundle_id",
+    "orientation", "questions", "patch_checks", "retrieval", "calls", "spend", "stopped"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "source_digest": { "type": "string", "description": "The report, map, and history digest the review read." },
+    "template_bundle_digest": { "type": "string" },
+    "prompt_bundle_id": { "type": "string", "pattern": "^review-prompt-bundle:" },
+    "orientation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["markdown_digest", "markdown_bytes", "evidence_ids", "truncated"],
+      "properties": {
+        "markdown_digest": { "type": "string" },
+        "markdown_bytes": { "type": "integer", "minimum": 0 },
+        "evidence_ids": { "type": "integer", "minimum": 0 },
+        "truncated": { "type": "boolean" }
+      }
+    },
+    "questions": { "type": "array", "items": { "$ref": "#/$defs/question" } },
+    "patch_checks": { "type": "array", "items": { "$ref": "#/$defs/patch_check" } },
+    "retrieval": { "type": "array", "items": { "$ref": "#/$defs/retrieval" } },
+    "calls": { "type": "array", "items": { "$ref": "#/$defs/call" } },
+    "spend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requests", "input_bytes", "input_tokens", "cached_input_tokens", "output_tokens",
+        "cost_microusd", "patch_checks"
+      ],
+      "properties": {
+        "requests": { "type": "integer", "minimum": 0 },
+        "input_bytes": { "type": "integer", "minimum": 0, "description": "Bytes sent, counted per request: each request resends its conversation." },
+        "input_tokens": { "type": "integer", "minimum": 0 },
+        "cached_input_tokens": { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 },
+        "cost_microusd": { "type": "integer", "minimum": 0, "description": "From the routes' per-request estimates." },
+        "patch_checks": { "type": "integer", "minimum": 0, "description": "Checker runs; a repeated patch reuses its verdict." }
+      }
+    },
+    "stopped": { "type": ["string", "null"], "description": "Why the review stopped before its last question." }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider_id", "model"],
+      "properties": {
+        "provider_id": { "type": "string" },
+        "model": { "type": "string" }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_id", "kind", "template_version", "subject_ids", "finding_count", "depends_on",
+        "markdown_digest", "status", "reason", "target", "requests", "rejected_answers", "answer"
+      ],
+      "properties": {
+        "question_id": { "type": "string", "pattern": "^engineering-case:" },
+        "kind": { "enum": ["hotspot_assessment", "shared_root_cause", "architecture_review", "remediation_plan"] },
+        "template_version": { "type": "integer", "minimum": 1 },
+        "subject_ids": { "type": "array", "items": { "type": "string" } },
+        "finding_count": { "type": "integer", "minimum": 0 },
+        "depends_on": { "type": "array", "items": { "type": "string" } },
+        "markdown_digest": { "type": "string" },
+        "status": { "enum": ["answered", "unanswered"] },
+        "reason": { "type": ["string", "null"] },
+        "target": { "oneOf": [{ "$ref": "#/$defs/target" }, { "type": "null" }] },
+        "requests": { "type": "integer", "minimum": 0 },
+        "rejected_answers": { "type": "array", "items": { "type": "string" } },
+        "answer": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["question_id", "claims", "recommendations", "ranking"],
+              "properties": {
+                "question_id": { "type": "string" },
+                "claims": { "type": "array", "items": { "$ref": "engineering-claim-v1.schema.json" } },
+                "recommendations": { "type": "array", "items": { "$ref": "contextual-recommendation-v1.schema.json" } },
+                "ranking": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "patch_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_id", "requested_by", "recommendation_id", "cited_findings", "check"],
+      "properties": {
+        "question_id": { "type": "string" },
+        "requested_by": { "enum": ["reviewer", "host"] },
+        "recommendation_id": { "type": ["string", "null"] },
+        "cited_findings": { "type": "array", "items": { "type": "string" } },
+        "check": {
+          "type": "object",
+          "required": ["verdict"],
+          "properties": { "verdict": { "enum": ["verified", "refuted", "unchecked"] } },
+          "description": "The patch checker's record, as `review check-patch` writes it."
+        }
+      }
+    },
+    "retrieval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["call_id", "tool", "arguments", "status", "result_bytes", "evidence_ids"],
+      "properties": {
+        "call_id": { "type": "string" },
+        "tool": { "type": "string" },
+        "arguments": {},
+        "status": { "enum": ["answered", "rejected"] },
+        "reason": { "type": "string" },
+        "result_bytes": { "type": "integer", "minimum": 0 },
+        "evidence_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_id", "request_id", "target", "retry", "input_bytes", "usage",
+        "finish_reason", "failure", "failure_detail"
+      ],
+      "properties": {
+        "question_id": { "type": "string" },
+        "request_id": { "type": "string" },
+        "target": { "$ref": "#/$defs/target" },
+        "retry": { "type": "integer", "minimum": 0 },
+        "input_bytes": { "type": "integer", "minimum": 0 },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input_tokens", "output_tokens", "cached_input_tokens"],
+          "properties": {
+            "input_tokens": { "type": "integer", "minimum": 0 },
+            "output_tokens": { "type": "integer", "minimum": 0 },
+            "cached_input_tokens": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "finish_reason": { "type": ["string", "null"] },
+        "failure": { "type": ["string", "null"] },
+        "failure_detail": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

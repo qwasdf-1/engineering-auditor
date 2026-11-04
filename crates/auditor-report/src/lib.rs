@@ -982,6 +982,7 @@ mod tests {
             "contextual-recommendation-v1",
             "engineering-case-v1",
             "engineering-claim-v1",
+            "engineering-review-v1",
             "evidence-packet-v1",
             "review-agenda-v1",
             "review-candidate-v1",

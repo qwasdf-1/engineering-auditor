@@ -5,10 +5,7 @@ mod native;
 mod native_tool;
 mod native_tool_adapter;
 mod repair;
-// The review driver being rebuilt (v1.6 plan, Phase A step 5) retries
-// provider calls that return no model output through this module.
-#[allow(dead_code)]
-mod retry;
+pub(crate) mod retry;
 mod schema_validation;
 mod transcript;
 mod transcript_markdown;

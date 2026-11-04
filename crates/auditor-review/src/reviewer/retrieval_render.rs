@@ -303,7 +303,7 @@ impl RetrievalHost<'_, '_> {
                         "Findings",
                         findings
                             .into_iter()
-                            .map(|finding| view.finding_row(finding)),
+                            .map(|finding| view.finding_detail_row(finding)),
                         40,
                     ),
                 ],

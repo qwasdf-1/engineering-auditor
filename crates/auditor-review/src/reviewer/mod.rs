@@ -4,6 +4,8 @@
 //! they render cites an evidence ID the host issued.
 
 mod document;
+mod driver;
+mod evidence;
 mod modules;
 mod orientation;
 mod questions;
@@ -12,6 +14,12 @@ mod retrieval;
 mod retrieval_render;
 mod view;
 
+pub(crate) use driver::REVIEWER_TURN;
+pub use driver::{
+    run_engineering_review, CheckRequester, EngineeringReview, PatchCheckRecord, ProjectionSummary,
+    QuestionRecord, QuestionStatus, RecommendationChecker, ReviewCall, ReviewSetup, Spend,
+    DEFAULT_PATCH_CHECKS, ENGINEERING_REVIEW_SCHEMA_VERSION,
+};
 pub use orientation::{OrientationPack, MINIMUM_ORIENTATION_BYTES, TARGET_ORIENTATION_BYTES};
 pub use questions::{
     Question, QuestionAnswer, QuestionKind, QuestionSubject, QuestionTemplate,

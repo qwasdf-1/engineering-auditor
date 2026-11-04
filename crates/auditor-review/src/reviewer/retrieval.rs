@@ -133,7 +133,7 @@ pub fn retrieval_tool_specs(with_history: bool) -> Vec<ToolSpec> {
         },
         ToolSpec {
             name: "findings_in",
-            description: "List the findings in a file, module, or symbol, most severe first.",
+            description: "List the findings in a file, module, or symbol, most severe first, each with the values its detector measured or matched.",
             parameters: object(
                 json!({"scope": string("A file path or ID, module name or ID, or symbol ID.")}),
                 &["scope"],

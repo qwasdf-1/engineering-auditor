@@ -416,6 +416,15 @@ impl RepositoryView<'_> {
         )
     }
 
+    /// A finding row with the detector's evidence values after the message.
+    pub(super) fn finding_detail_row(&self, finding: usize) -> Row {
+        let mut row = self.finding_row(finding);
+        if let Some(evidence) = super::evidence::evidence_line(&self.findings[finding].evidence) {
+            row.text.push_str(&format!(" (evidence: {evidence})"));
+        }
+        row
+    }
+
     pub(super) fn detector_row(&self, detector: &str, findings: &[usize]) -> Row {
         let highest = findings
             .iter()
