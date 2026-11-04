@@ -426,6 +426,15 @@
       "path": "crates/auditor-detectors/src/lib.rs",
       "reason": "Reviewed 2026-11-03: the file did not change; removing the v2 Layer 6 review crate (about 36k lines of complex, growing files) lowered the growth and complexity quartiles this hotspot is measured against. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-6da0ab48379146d9",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/structure_index.rs is complex and growing (CCX=54, growth=+98 LOC).",
+      "path": "crates/auditor-detectors/src/structure_index.rs",
+      "reason": "Reviewed 2026-11-03: the growth is the shared repository facts pass (c575497), which made the structure index own the type hierarchy and entry points; about half of it is a test-only fixture helper. History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
