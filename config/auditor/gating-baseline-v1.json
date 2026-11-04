@@ -444,6 +444,15 @@
       "path": "crates/auditor-detectors/src/repository_map.rs",
       "reason": "Reviewed 2026-11-04: the growth is the map v2 pass (c575497, about 79 net lines) and the orientation pack (9369327, about 30 lines that read each file's digest and line count in one pass). History-dependent hotspot accepted (operator approved) until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-b7259791775ea7ab",
+      "identity": {},
+      "message": "crates/auditor-detectors/src/source_discovery.rs is complex and growing (CCX=89, growth=+73 LOC).",
+      "path": "crates/auditor-detectors/src/source_discovery.rs",
+      "reason": "Reviewed 2026-11-04: the largest growth is the patch checker (e07bbaa, about 39 net lines that split out the repository walk and list every file it visits for a scratch copy) over the 2026-11-02 false-positive fixes. History-dependent hotspot accepted under the operator-approved precedent until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
