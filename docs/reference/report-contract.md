@@ -108,7 +108,8 @@ streams a digest-addressed sibling map. The report reference records its
 relative path, digest, source-snapshot digest, completeness, and file, symbol,
 and edge counts. The map contains:
 
-- normalized repo-relative paths, language, role, byte count, and source hash;
+- normalized repo-relative paths, language, role, byte and line counts, and
+  source hash;
 - compact symbol identity, kind, visibility, parent, span, and metrics, and a
   type's `external_base` when its first base is declared outside the
   repository (`multiprocessing.Process`);
@@ -124,7 +125,7 @@ and edge counts. The map contains:
 Version 2 (2026-11-03) replaced v1's calls, which matched a callee name
 unique in the repository, with the call graph's, renamed
 `ambiguous_calls` to `unresolved_calls`, and added `inherits` edges,
-`external_base`, and `entry_points`.
+`external_base`, `entry_points`, and each file's `lines`.
 
 It contains no source bodies. Loading rejects path traversal, a sidecar outside
 the report directory, digest/count mismatch, duplicate IDs or paths, invalid

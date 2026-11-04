@@ -111,7 +111,7 @@ fn write_temporary_map(
     ordered_files.sort_by(|left, right| left.relative.cmp(&right.relative));
     let file_hashes = ordered_files
         .iter()
-        .map(|file| Ok((slash(&file.relative), digest_file(&file.absolute)?)))
+        .map(|file| Ok((slash(&file.relative), read_source_file(&file.absolute)?)))
         .collect::<io::Result<BTreeMap<_, _>>>()?;
     let source_snapshot_digest = source_snapshot_digest(&ordered_files, &file_hashes);
     let mut writer = BufWriter::new(File::create(path)?);
@@ -160,7 +160,7 @@ fn write_temporary_map(
 fn write_file_entries(
     writer: &mut impl Write,
     files: &[&AuditedFile],
-    file_hashes: &BTreeMap<String, String>,
+    file_hashes: &BTreeMap<String, SourceFileFacts>,
 ) -> io::Result<()> {
     let mut first = true;
     for file in files {
@@ -172,7 +172,8 @@ fn write_file_entries(
                 "bytes": file.bytes,
                 "id": file_id(&path),
                 "language": file.language.as_str(),
-                "sha256": file_hashes[&path],
+                "lines": file_hashes[&path].lines,
+                "sha256": file_hashes[&path].sha256,
                 "path": path,
                 "source_role": file.role.as_str(),
             }),
@@ -422,20 +423,49 @@ fn symbol_ids(index: &StructureIndex) -> BTreeMap<(usize, usize), String> {
         .collect()
 }
 
-fn source_snapshot_digest(files: &[&AuditedFile], hashes: &BTreeMap<String, String>) -> String {
+fn source_snapshot_digest(
+    files: &[&AuditedFile],
+    hashes: &BTreeMap<String, SourceFileFacts>,
+) -> String {
     let mut digest = Sha256::new();
     for file in files {
         let path = slash(&file.relative);
         let bytes = file.bytes.to_string();
         digest.update_record([
             path.as_str(),
-            hashes[&path].as_str(),
+            hashes[&path].sha256.as_str(),
             file.language.as_str(),
             file.role.as_str(),
             bytes.as_str(),
         ]);
     }
     digest.finalize()
+}
+
+/// A source file's digest and line count, read in one pass.
+struct SourceFileFacts {
+    sha256: String,
+    lines: usize,
+}
+
+fn read_source_file(path: &Path) -> io::Result<SourceFileFacts> {
+    let mut reader = BufReader::new(File::open(path)?);
+    let mut digest = Sha256::new();
+    let mut buffer = [0u8; 64 * 1024];
+    let (mut newlines, mut last) = (0, b'\n');
+    loop {
+        let read = reader.read(&mut buffer)?;
+        if read == 0 {
+            break;
+        }
+        digest.update(&buffer[..read]);
+        newlines += buffer[..read].iter().filter(|byte| **byte == b'\n').count();
+        last = buffer[read - 1];
+    }
+    Ok(SourceFileFacts {
+        sha256: digest.finalize(),
+        lines: newlines + usize::from(last != b'\n'),
+    })
 }
 
 fn digest_file(path: &Path) -> io::Result<String> {

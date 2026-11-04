@@ -35,6 +35,7 @@ pub struct MapFile {
     pub language: String,
     pub source_role: String,
     pub bytes: u64,
+    pub lines: usize,
     pub sha256: String,
 }
 
@@ -587,7 +588,10 @@ pub(crate) fn safe_relative_path(
     Ok(path.to_path_buf())
 }
 
-fn checked_source_path(root: &Path, relative: &str) -> Result<PathBuf, RepositoryMapError> {
+pub(crate) fn checked_source_path(
+    root: &Path,
+    relative: &str,
+) -> Result<PathBuf, RepositoryMapError> {
     let path = root.join(safe_relative_path(relative, "repository map")?);
     let canonical = path
         .canonicalize()
@@ -600,7 +604,7 @@ fn checked_source_path(root: &Path, relative: &str) -> Result<PathBuf, Repositor
     Ok(canonical)
 }
 
-fn digest_file(path: &Path) -> Result<String, RepositoryMapError> {
+pub(crate) fn digest_file(path: &Path) -> Result<String, RepositoryMapError> {
     let mut reader = BufReader::new(
         File::open(path).map_err(|error| RepositoryMapError::Io(error.to_string()))?,
     );

@@ -19,7 +19,16 @@
 - Repository map v2: call edges come from the call graph instead of a
   repository-unique callee name; `inherits` edges, a type's
   `external_base`, and an `entry_points` list are new; `ambiguous_calls` is
-  replaced by `unresolved_calls`. Version 1 maps are no longer read.
+  replaced by `unresolved_calls`, and each file records its line count.
+  Version 1 maps are no longer read.
+- The rebuilt AI review's first parts, a library API not yet driven by a
+  command: a repository orientation pack (languages, roles, modules by
+  size, programs and HTTP routes, module dependencies and cycles, hotspots,
+  findings by layer, detector, and symbol, and coverage gaps) rendered
+  within 24 KiB, and five retrieval tools (`read_source`, `symbol_info`,
+  `search_symbols`, `findings_in`, `module_overview`) with call and byte
+  budgets. Every row cites an evidence ID the host issues only for rows it
+  shows.
 
 ### Changed
 

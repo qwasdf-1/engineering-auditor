@@ -61,13 +61,14 @@
     "file": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "path", "language", "source_role", "bytes", "sha256"],
+      "required": ["id", "path", "language", "source_role", "bytes", "lines", "sha256"],
       "properties": {
         "id": { "type": "string", "pattern": "^file:[0-9a-f]{64}$" },
         "path": { "type": "string", "minLength": 1 },
         "language": { "type": "string", "minLength": 1 },
         "source_role": { "$ref": "#/$defs/source_role" },
         "bytes": { "type": "integer", "minimum": 0 },
+        "lines": { "type": "integer", "minimum": 0 },
         "sha256": { "$ref": "#/$defs/sha256" }
       }
     },

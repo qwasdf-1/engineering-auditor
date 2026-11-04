@@ -3,6 +3,7 @@ mod case_review;
 mod context;
 mod provider;
 mod repository_map;
+mod reviewer;
 mod transcript_output;
 
 pub use brief::{
@@ -65,4 +66,9 @@ pub use provider::{
 pub use repository_map::{
     load_and_validate_repository_map, LookupBudget, RepositoryMap, RepositoryMapError,
     SourceExcerpt, SourceLookup,
+};
+pub use reviewer::{
+    retrieval_tool_specs, OrientationPack, RepositoryView, RetrievalBudget, RetrievalHost,
+    RetrievalOutcome, RetrievalRecord, MINIMUM_ORIENTATION_BYTES, RETRIEVAL_TOOL_NAMES,
+    TARGET_ORIENTATION_BYTES,
 };
