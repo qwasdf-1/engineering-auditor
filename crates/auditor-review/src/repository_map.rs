@@ -153,6 +153,18 @@ pub fn load_and_validate_repository_map(
     repo_root: &Path,
     reference: &RepositoryMapReference,
 ) -> Result<RepositoryMap, RepositoryMapError> {
+    let map = load_repository_map(report_path, reference)?;
+    validate_live_snapshot(repo_root, &map)?;
+    Ok(map)
+}
+
+/// Loads the report's map sibling and checks its digest and contract, but
+/// not the tree it was built from: for reading a review's inputs after the
+/// checkout is gone.
+pub fn load_repository_map(
+    report_path: &Path,
+    reference: &RepositoryMapReference,
+) -> Result<RepositoryMap, RepositoryMapError> {
     if reference.status != "present" {
         return Err(RepositoryMapError::Contract(
             "review requires an available repository map".to_string(),
@@ -185,7 +197,6 @@ pub fn load_and_validate_repository_map(
         RepositoryMapError::Contract(format!("invalid repository map: {error}"))
     })?;
     validate_contract(&map, reference)?;
-    validate_live_snapshot(repo_root, &map)?;
     Ok(map)
 }
 

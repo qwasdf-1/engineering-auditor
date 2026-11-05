@@ -6,11 +6,11 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::{
-    ProviderFailureClass, QuestionAnswer, QuestionKind, RetrievalRecord, RouteTarget, StableId,
-    Usage,
+    ContentDigest, ProviderFailureClass, QuestionAnswer, QuestionKind, RetrievalRecord,
+    RouteTarget, StableId, Usage,
 };
 
-pub const ENGINEERING_REVIEW_SCHEMA_VERSION: u32 = 1;
+pub const ENGINEERING_REVIEW_SCHEMA_VERSION: u32 = 2;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -20,6 +20,12 @@ pub struct EngineeringReview {
     pub source_digest: String,
     pub template_bundle_digest: String,
     pub prompt_bundle_id: StableId,
+    /// The routes and the brief the review ran with, by canonical digest,
+    /// so qualification can hold the record to the same configuration.
+    pub routes_digest: String,
+    pub brief_digest: Option<String>,
+    /// Patch checks the review was allowed.
+    pub max_patch_checks: usize,
     pub orientation: ProjectionSummary,
     pub questions: Vec<QuestionRecord>,
     pub patch_checks: Vec<PatchCheckRecord>,
@@ -36,6 +42,18 @@ impl EngineeringReview {
             .iter()
             .filter_map(|question| question.answer.as_ref())
     }
+
+    /// The record's canonical digest, which a usefulness sheet binds.
+    pub fn digest(&self) -> String {
+        canonical_digest(self)
+    }
+}
+
+/// A configuration value's digest over its canonical JSON.
+pub fn canonical_digest(value: &impl Serialize) -> String {
+    ContentDigest::from_canonical_value(&serde_json::to_value(value).expect("serializable"))
+        .as_str()
+        .to_string()
 }
 
 /// A rendered model-visible document, by digest.

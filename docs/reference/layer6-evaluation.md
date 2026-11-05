@@ -1,124 +1,125 @@
-# Layer 6 Evaluation And Prompt Contract
+# Layer 6 Evaluation
 
-> **Being rebuilt (2026-11-03).** The v2 review protocol this page describes
-> was removed in the first pass of the Layer 6 rebuild; see
-> [Layer 6](./layer6-llm-review.md). The page is kept for reference until the
-> new path ships.
+How a provider route qualifies on the rebuilt engineering review (v1.6
+plan, step 6): recorded reviews of real repositories, checked offline by
+automatic gates, compared across runs, and scored for usefulness by a
+rubric. The v2 protocol's evaluation (the lifecycle corpus as release gate,
+the live lifecycle evaluator, the escalation evaluator, and the prompt
+candidate runner) was removed with that protocol; its results stay in the
+[qualification record](#qualification-record).
 
-Layer 6 quality is governed by checked-in prompts, a provenance-bearing corpus,
-metric-vector hard gates, repeated runs, and a manual offline-improvement
-process. Runtime review never modifies its own prompts.
+## Qualification Corpus
 
-V2 evaluation additionally proves the native conversation contract. Fixtures
-cover Chat Completions, Anthropic Messages, and OpenAI Responses request and
-response shapes; multiple task calls in one assistant response; completion
-after all task classes; assistant-call plus Markdown tool-result continuation;
-duplicate create calls; explicit full-record revisions; stale revisions;
-withdraw/reopen transitions; and prose accompanying valid calls. A static and
-runtime assertion rejects host-authored JSON in model-visible system, user, and
-tool-result messages. Repository JSON evidence remains verbatim evidence and
-is distinguished from host serialization by its typed source boundary.
+`config/auditor/review-qualification-corpus-v1.json`
+(`contracts/review-qualification-corpus-v1.schema.json`) fixes what a route
+qualifies on:
 
-Qualification covers positive, negative, unknown, conflicting-evidence, and
-forbidden-redesign semantics using the exact native tools production exposes.
-It cannot pass through strict structured output or a text fallback. The
-offline artifact verifier checks task dispositions, revision records, renderer
-projection audits, provider tool-call IDs, recomputes the typed case conclusion
-from admitted probe answers, and checks host-derived position/closure/challenge
-status without invoking a model.
+- `repositories`: real repositories from the application slice of the
+  ecosystem corpus, pinned by commit in `eval/ecosystem/manifest.json`;
+- `bindings`: the question templates, prompt bundle, and brief every run
+  must use, each by the SHA-256 of its file;
+- `route_sets`: the routes that may qualify, by file and digest
+  (`mistral_free`, `openrouter_free`; the anonymous OpenCode route is closed
+  by provider policy);
+- `run_plan`: runs per repository (two), the history window, and the
+  patch-check settings;
+- `stability`: how many top hotspots and plan steps two runs compare, and
+  the share they must have in common;
+- `usefulness.threshold`: the useful share of counted items a route must
+  reach, `null` until the first measured runs set it;
+- `protocol_suite`: the eight generated lifecycle repositories
+  (`tooling/review_eval/generate_lifecycle_repo.py`, by generator and
+  source digest), kept as a regression of the review mechanics rather than
+  as qualification.
 
-## Lifecycle Evaluation V2
+## Recording Runs
 
-`config/auditor/review-eval-corpus-v2.json` is the public lifecycle corpus for
-the case-oriented review path. Its eight generated repositories cover immutable
-equivalent input, intervening mutation, distinct consumer configurations,
-test-only repetition, freshness constraints, retention risk, missing evidence, and an
-unsupported numeric-benefit claim. Each case binds the public generator and
-source-tree digest and records typed expected candidates, probe answers,
-case conclusions, closures, optional-claim prohibitions, recommendation
-families, gaps, safety constraints, and human review provenance. Each case has
-one allowed typed-conclusion set. Runtime derives that conclusion from the
-admitted typed probe ledger; the model does not separately reclassify the same
-facts. Optional explanatory claims are not recall targets.
+`tooling/ecosystem/review_inputs.py prepare` fetches each repository at its
+pinned commit with a window of history, scans it with a repository map,
+writes a history digest, runs the review while the checkout exists, and
+deletes the checkout. `--review-runs N` runs the review command N times,
+with `{run}` numbering the outputs:
 
-The distinct-consumer fixture makes the behavioral boundary observable: each
-consumer applies its own replacement before ordering and receives the resulting
-snapshot. Hoisting one shared sort would therefore change returned behavior,
-even though a syntax-only detector cannot see the mutation hidden behind the
-helper call. This is the corpus sentinel for justified repetition rather than a
-second immutable-input case.
+```sh
+python3 tooling/ecosystem/review_inputs.py prepare --label L --window-days 365 \
+  --review-runs 2 --review-command "target/release/auditor review run \
+  --experimental-reviewer --report {report} --history {history} \
+  --routes tooling/live_provider/mistral_free_routes_v2.json \
+  --brief config/auditor/review-brief-general-v1.json --allow-hosted-review \
+  --check-patches --max-patch-checks 8 --repo-root {repo} \
+  --transcript {out}/transcript-{run}.json --output {out}/review-{run}.json"
+```
 
-An explicit source behavioral contract can establish a concrete mutation; a
-bare opaque-call invocation cannot. Optional claim uncertainty is retained in
-the claim dispositions and closure detail, but it does not replace a settled
-host-derived case conclusion or its conclusion-derived closure. A blocked
-recommendation premise still blocks that recommendation and therefore the
-action path.
+What stays per repository is the report, its map, the history digest, the
+review records, and their transcripts: enough to qualify offline.
 
-For lifecycle probes, a consumer is any use-site that observes the reviewed
-result, including an internal loop iteration as well as a downstream caller.
-Consumer distinction asks whether one unchanged precomputed result satisfies
-all of those observations; it does not ask whether public call signatures are
-uniform. Probes are independent rather than mutually exclusive: a destructive
-mutation can establish both intervening mutation and a later consumer's need
-for reconstructed state. A wider owner is admissible only if it satisfies
-explicit retention, destruction, privacy, freshness, and correctness
-constraints; lexical enclosure by itself is not an ownership proof.
+## Automatic Gates
 
-Source role is affirmative for model judgment only when a selected finding is
-classified as test or fixture code. The complete typed role fact remains in the
-host evidence packet for closure and auditability, but a production file path
-does not prove that a guarded operation executes in production. Coarse
-production-role metadata is therefore omitted from the model projection and
-operation-level source remains authoritative. The same projection strips
-duplicated extractor, origin, span-precision, evidence-key, and source-role
-metadata from host-generated evidence-graph nodes while preserving graph
-identity, relationships, decision fields, and repository evidence.
+`auditor review qualify` checks recorded runs of one repository against the
+report, map, and history they read
+(`contracts/review-qualification-v1.schema.json`). It reads only files, so
+it runs after the checkout is gone. It exits 1 with the result on stdout
+when a gate fails. Each run passes six gates:
 
-`tooling/live_provider/run_lifecycle_v2_eval.py` is the fail-closed gate runner.
-It verifies all bound source/configuration digests, rebuilds release binaries by
-default, generates a fresh repository, scans it, executes the v2 library
-service, verifies the resulting artifact offline, and records binary identities
-and typed metrics. The checkpoint identity also binds the evaluator metric
-contract version and evaluator source digest, so an evaluator change cannot
-silently reuse earlier metrics. Every completed run and the final aggregate
-recheck the full live identity, including both executable digests and all bound
-inputs, so a concurrent rebuild or configuration edit fails instead of
-publishing mixed-identity evidence. The runner also retains subprocess stdout/stderr
-received before an outer timeout. `--no-review-timeout` disables only that
-outer review-process limit for supervised long runs; provider calls still obey
-the route's per-call timeout and bounded retry policy, while build and scan
-retain the evaluator timeout. Gate eligibility uses a 16-run risk-weighted
-matrix: all eight cases run once, and positive action, mutation-negative
-closure, missing-evidence abstention, and unsupported-numeric safety run three
-times each.
-Schema/binding/citation/finding immutability, negative
-closure, typed-conclusion recall, abstention, repeated-run stability, challenge
-coverage, lifecycle action completeness, useful novelty, and trace safety are
-independent hard dimensions.
+- **binding**: the record's schema, source digest, template digest, prompt
+  bundle, routes digest, brief digest, and orientation pack are the ones the
+  inputs give, and its questions are the ones the view asks again;
+- **coverage**: every question was answered, so an empty run cannot pass;
+- **citations**: each answer passes its question's checks again against the
+  evidence the review showed it (the pack, the questions so far, every
+  retrieval result, and for the plan the earlier answers it depends on), and
+  every ID an answer cites or a retrieval call issued names a finding,
+  file, symbol, edge, entry point, module, dependency, cycle, detector, line
+  range, or history entry the inputs hold;
+- **contradictions**: no claim cites one ID both for and against itself, and
+  no claim gives a different number for a value a cited finding measured
+  (`cyclomatic complexity is 12` when the finding says 31). Whether a
+  judgment is right is the rubric's `correct`;
+- **patch checks**: every accepted recommendation with a patch carries the
+  host's check, with a verdict of verified or refuted;
+- **budget**: every call went to a route target; the recorded spend adds up
+  from the calls, with costs from the routes; the review's and each
+  question's provider budget, the output-token limit, the retrieval budget
+  (the brief tightens it), and the patch-check limit all hold.
 
-Evaluator metric contract v4 names the combined forbidden claim-slot or
-recommendation-family count `forbidden_outputs`. Forbidden recommendation
-families are also counted by the narrower `unsafe_recommendations` dimension;
-neither metric implies that a valid typed case conclusion was forbidden. Every
-qualified, executed run independently requires exact admitted probe boundaries
-through `probe_answers_valid` and every required accepted recommendation family
-through `required_recommendations_valid`. These checks apply to focused
-preflights as well as complete matrices. Aggregate `required_outcome_recall`
-remains diagnostic and cannot hide a per-run semantic miss.
+Across runs, **stability** compares each pair: every hotspot question's top
+`top` subjects, and the findings the plan's top `top` steps resolve (step
+IDs are content-derived, so findings are what two plans share), must
+overlap by at least `min_overlap`. A question one run answered and the
+other did not is a disagreement, and one run alone cannot pass.
 
-Required recommendation families are keyed to the host-derived conclusion:
-`lifecycle_mismatch_substantiated` requires `lifecycle_reownership`,
-`repetition_justified` requires `explicit_retention_avoidance`,
-`insufficient_evidence` requires `measurement_before_change`, and
-`impact_immaterial` accepts no recommendation. The evaluator scores that exact
-pairing per run instead of treating a generally safe recommendation as
-interchangeable with the required outcome.
+## Usefulness Rubric
 
-Repeated-run material stability compares the typed case conclusion and final
-accepted recommendation families. Optional explanatory claims and differences
-between corpus-allowed closure confidence states are not material flips; claim,
-closure, and typed-conclusion validity remain independently exact-gated.
+`auditor review rubric --review R` writes an unscored sheet
+(`contracts/review-usefulness-v1.schema.json`): one item per answered claim
+and recommendation, with its text, cited evidence, and patch verdict. A
+scorer marks each item on four criteria: correct, specific, actionable, and
+novel (not already stated by a finding). An item is useful when all four
+hold.
+
+A second model, blind to the first, may pre-label items. A model's score is
+a `pre_label` until a different model agrees (`corroborated`) or a person
+scores it (`final`). Scorers who disagree raise a dispute that only a person
+settles. No model the review ran on may score it. Only corroborated and
+final items count. `review qualify --scores S` checks each sheet against
+its review and reports the counts.
+
+## The Bar
+
+`review_inputs.py qualify --label L --route-set NAME` checks the corpus
+bindings, runs `auditor review qualify` on every corpus repository with the
+corpus route set, brief, and stability policy, and writes a summary with
+the gates per repository, the counted usefulness, and a decision. A route
+qualifies when the gates pass on every repository and the useful share
+meets the threshold. Until the threshold is set, the best decision is
+"gates pass; the usefulness bar is not set yet".
+
+Hermetic tests run the same harness on scripted reviews of a fixture scan
+(`crates/auditor-review/tests/review_qualification.rs`, over the fake
+provider of `review_driver.rs`). They prove the mechanics, not live
+quality.
+
+## Transcripts
 
 Transcript JSON sidecars are the lossless audit source. For provider debugging
 or human/agent review, render one without transport-envelope nesting:
@@ -168,131 +169,20 @@ environment cause, or `unknown`; do not label it provider quality. Availability
 and protocol-compatibility failures remain separate from semantic model
 quality even when the external endpoint is involved.
 
-## Prompt Bundle And Corpus V2
-
-`config/auditor/review-prompt-bundle-v2.json` contains independently bound
-reviewer, reconsideration, challenger, response, and comparison instructions.
-Its content-derived identity is recorded by every review.
-
-`config/auditor/review-eval-corpus-v2.json` defines generated lifecycle cases
-with expected and forbidden conclusions, closure, recommendation, evidence-gap,
-and human-review provenance. Public generators build real repositories under
-an operator-chosen destination; generated snapshots are not expected-output
-fixtures.
-
-Generators cannot be absolute, traverse parents, or escape the approved corpus
-root. Regeneration verifies the script digest, requires a new output directory,
-and executes the path directly without shell interpolation. Before/after pairs
-share a stable pair ID and state which snapshot is the before or after case.
-Human provenance identifies reviewer role, review time, and a rationale digest
-rather than private free-form notes.
-
-## Evaluation Gate
-
-An evaluation runner executes each case against a named prompt bundle and
-returns per-case conclusion/evidence results. The aggregate metric vector covers
-required conclusion recall, forbidden conclusion avoidance, evidence citation
-validity, abstention when proof is unavailable, materiality precision, critic
-coverage, and reproducibility.
-
-A release gate requires the complete risk-weighted matrix. Thresholds apply to each
-metric independently; averaging cannot trade one failed safety/correctness
-dimension for another. The report retains every run and its bundle/corpus
-identity so variance is visible. Scripted unit runners verify metric and gate
-mechanics but are not evidence of live model quality.
-
-Hermetic scripted-provider end-to-end tests
-(`crates/auditor-review/tests/review_driver.rs`) run the rebuilt review over
-a fixture scan, with a fake provider answering in each wire format.
-They prove the mechanics, not live
-quality.
-
-The live evaluator writes the identity-bound report atomically before the first
-run and checkpoints it after every fully validated run. An interrupted or
-failed report retains all completed run records and artifact digests. A later
-`--resume-from` invocation rechecks corpus, bindings, binary identities,
-artifacts, and recomputed metrics before reuse. A partially written run is
-moved to a numbered `.incomplete-N` sibling and retained for diagnosis before
-that run index is retried; it is never counted or overwritten.
-
-The current live gate is `tooling/live_provider/run_lifecycle_v2_eval.py`. It
-requires explicit egress opt-in, current corpus/template/route/prompt/
-adapter/evaluator identities, native role qualification, complete artifacts,
-and exact per-case outcome checks. It checkpoints complete runs and can resume
-only when every bound identity still matches.
-
-`--route-set` selects the route the matrix qualifies: `anonymous` (the default
-OpenCode route, opt-in `AUDITOR_LIVE_ANONYMOUS_EVAL=1`) or a corpus
-`keyed_free_routes` entry, a zero-cost route behind an operator key
-(`mistral_free`, `openrouter_free`; opt-in `AUDITOR_LIVE_HOSTED_EVAL=1`). Keyed
-routes are declared zero-cost with a zero spend budget, and only the
-hosted-review consent is passed for them.
-
-## Ensemble And Production Escalation
-
-`contracts/review-escalation-suite-v1.schema.json` and the checked-in suite
-define the full read-only escalation decision. The evaluator consumes complete
-v2 artifacts and compares production single-reviewer-plus-challenger results
-with shadow ensemble-plus-challenger results from the same cases. It measures
-pre/post evidence-union disagreement, useful incremental outcomes, failed or
-suppressed minority targets, role qualification, and exact per-template probe,
-conclusion, closure, and citation matrices.
-
-Promotion is manual and ordered: lifecycle Mode E, shared root,
-recommendation consolidation, then the optional comparator. The evaluator
-never writes active routes, prompts, or templates. Fewer than the configured
-minimum complete qualified runs, any safety regression, or no measured
-incremental value produces an explicit `remain_shadow` decision with unmet
-predicates. Insufficient-evidence decisions name the missing minimum-run,
-minimum-template-case, or alternative-comparison predicate in `failed_gates`;
-an empty failure list cannot mask absent evidence. Code completion alone is
-never promotion evidence. The current lifecycle evidence satisfies the
-read-only eligibility gates for manual Mode E approval, but does not activate
-it. Later owners remain independently evidence-gated and ordered.
-
 ## Offline Improvement
 
-Prompt and template wording changes only through a manual, evidence-gated
-candidate process (Spec 17). The v1 Pareto optimizer was removed with the v2
-pipeline; each candidate is now one minimal change to one owned asset,
-recorded in a tracked manifest under `eval/review-improvement/<id>/`:
-
-- the owned asset (file, case kind, probe slot, field) and the candidate
-  bundle file, both digest-bound; a wording-only change bumps the template
-  bundle version, while the template structure version stays a code constant;
-- the route file, prompt bundle, and release corpus shared by both arms;
-- training cases, drawn from the release corpus, that informed the candidate;
-- held-out cases from `tooling/review_eval/generate_lifecycle_heldout_repo.py`,
-  with expectations fixed before any candidate run;
-- pre-registered decision rules.
-
-`tooling/live_provider/compare_prompt_candidate.py` runs one arm (`baseline`
-or `candidate`) on one split with the release evaluator's per-run execution
-and metrics. Only runs whose route qualified and whose execution reached
-closure are scored; provider, budget, and qualification failures leave the
-host's fallback `unknown` answers and are rerun. Held-out cases run only after
-the manifest marks the candidate frozen. The reviewer accepts only its
-compiled-in template bundle, so the candidate arm uses binaries built from a
-clean export of the source with the candidate bundle substituted, under
-ignored `.auditor-review-optimization/`, which also holds run output.
-Promotion requires operator approval of the held-out expectations and the
-results, then a deliberate edit of the tracked bundle and its corpus binding.
-Private corpora belong under ignored `eval/private/`.
-
-## Release Evidence
-
-An active-bundle quality claim requires the exact tracked bundle and corpus,
-the required qualified live runs, every hard metric passing, held-out results that were
-not used to generate candidates, and human approval provenance. Credentials or
-network absence is a blocked qualification, not a pass. The environment status
-is recorded in the qualification record below rather than replaced by mock
-evidence.
+Prompt and template wording changes only by a deliberate, digest-bound edit
+of the checked-in bundle, reviewed like any other change, followed by a new
+corpus binding. The manifests under `eval/review-improvement/` record
+candidates tried on the v2 protocol; the tooling that ran them was removed
+with it.
 
 ## Qualification Record
 
 The dated record of what has and has not qualified, kept so a later run can
-be compared with it. As of 1.5.0 no route passes the free-route lifecycle
-matrix.
+be compared with it. The entries below were measured on the removed v2
+protocol and its lifecycle matrix; as of 1.5.0 no route passed that matrix.
+No route has yet qualified on the rebuilt review.
 
 ### Ensemble And Portfolio Promotion
 

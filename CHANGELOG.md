@@ -87,6 +87,25 @@
 - `findings_in` shows each finding's evidence values (counts, thresholds,
   matched patterns, clone locations) after its message, strings as code
   spans.
+- The rebuilt review's qualification harness (experimental). `review
+  qualify` checks recorded runs of one repository offline, against the
+  report, map, and history they read: each run's binding to those inputs and
+  to the routes and brief, that every question was answered, that every
+  answer passes its checks again and cites only evidence the inputs hold,
+  that no claim cites one ID both ways or misquotes a value a cited finding
+  measured, that every accepted patch carries the host's verdict, and that
+  the spend adds up and stays within every budget; across runs, that the
+  top hotspots and plan steps overlap (`--top`, `--min-overlap`). A failed
+  gate exits 1 with the result (`review-qualification-v1.schema.json`).
+  `review rubric` writes a usefulness sheet (`review-usefulness-v1`) that a
+  person, or a second model a person checks on disputes, scores correct,
+  specific, actionable, and novel; `review qualify --scores` counts it.
+  `config/auditor/review-qualification-corpus-v1.json` names the 30
+  application repositories, the bound templates, prompts, brief, and route
+  sets, two runs each, and a usefulness threshold left unset until the
+  first measured runs. `review_inputs.py prepare --review-runs N` records
+  several runs, and `review_inputs.py qualify` qualifies a route set on the
+  whole corpus.
 
 ### Changed
 
@@ -308,6 +327,11 @@
 
 ### Removed
 
+- The lifecycle evaluation corpus (`config/auditor/review-eval-corpus-v2.json`
+  and its schema), replaced by the qualification corpus; its eight
+  generated repositories stay as the corpus's protocol suite. Review
+  records move to schema 2, which binds the routes, the brief, and the
+  patch-check limit by digest.
 - What the rebuilt AI review does not use: the agenda selectors and
   candidates, case templates and engineering cases, evidence packets with
   their graph-neighborhood candidates and case lookups, the review input

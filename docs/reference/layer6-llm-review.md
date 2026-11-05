@@ -20,7 +20,9 @@
 > their triggers over the report and map, a history digest (`review
 > history`), a patch checker (`review check-patch`), and a driver that asks
 > each question over the route and checks the answers (`review run
-> --experimental-reviewer`, not yet qualified on any route)
+> --experimental-reviewer`, not yet qualified on any route), with an
+> offline qualification harness (`review qualify`, `review rubric`;
+> [Layer 6 evaluation](./layer6-evaluation.md))
 > ([`architecture.md`](../architecture.md#ai-review-experimental)). The rest
 > of this page describes the removed protocol and will be rewritten when the
 > new path ships.

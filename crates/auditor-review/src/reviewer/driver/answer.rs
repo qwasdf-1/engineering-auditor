@@ -470,7 +470,7 @@ pub(super) fn accepted_markdown(accepted: &Accepted) -> String {
 /// The answers the plan builds on: each claim with its ID, so a plan step
 /// can take it as a premise, and each recommendation with the findings it
 /// resolves. Rows cite the evidence the answers cited.
-pub(super) fn earlier_answers(
+pub(in crate::reviewer) fn earlier_answers(
     answers: &[(QuestionKind, &QuestionAnswer)],
     source_digest: &str,
 ) -> Result<super::super::document::Rendered, String> {
@@ -513,7 +513,7 @@ pub(super) fn earlier_answers(
 }
 
 /// A serde enum's wire name.
-pub(super) fn wire_name<T: serde::Serialize>(value: &T) -> String {
+pub(in crate::reviewer) fn wire_name<T: serde::Serialize>(value: &T) -> String {
     serde_json::to_value(value)
         .ok()
         .and_then(|value| value.as_str().map(str::to_string))

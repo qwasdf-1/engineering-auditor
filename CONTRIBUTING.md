@@ -52,8 +52,8 @@ needs a reviewer-approved reason.
 
 ## AI Review Changes
 
-Prompt and question-template wording changes only through the evaluated
-offline-improvement process in
+Prompt and question-template wording changes only by a reviewed edit of the
+checked-in bundle and a new qualification-corpus binding, as described in
 [`docs/reference/layer6-evaluation.md`](docs/reference/layer6-evaluation.md).
 
 ## Licensing

@@ -9,7 +9,8 @@
 - `layer6-llm-review.md`: review semantics and epistemic boundary.
 - `layer6-providers.md`: routes, adapters, consent, qualification, privacy, and
   retention.
-- `layer6-evaluation.md`: prompt/corpus/evaluation/optimizer contract.
+- `layer6-evaluation.md`: the qualification corpus, gates, and usefulness
+  rubric.
 - `mcp-interface.md`: typed asynchronous scan/review operations.
 - `stability.md`: stable, experimental, and internal surface classes and the
   versioning policy.

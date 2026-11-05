@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://engineering-auditor.dev/contracts/review-qualification-v1.schema.json",
+  "title": "Engineering Auditor Review Qualification v1",
+  "description": "The automatic gates over recorded engineering reviews of one repository (`review qualify`), checked offline against the report, map, and history they read: per run binding, coverage, citations, contradictions, patch checks, and budget; across runs, agreement on the top hotspots and plan steps; and, when usefulness sheets are given, their counts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source_digest", "runs", "stability", "usefulness", "passed"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "source_digest": { "type": "string" },
+    "runs": { "type": "array", "items": { "$ref": "#/$defs/run" } },
+    "stability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "pairs", "passed", "failures"],
+      "properties": {
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["top", "min_overlap"],
+          "properties": {
+            "top": { "type": "integer", "minimum": 1 },
+            "min_overlap": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "pairs": { "type": "array", "items": { "$ref": "#/$defs/pair" } },
+        "passed": { "type": "boolean" },
+        "failures": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "usefulness": { "oneOf": [{ "$ref": "#/$defs/usefulness" }, { "type": "null" }] },
+    "passed": { "type": "boolean", "description": "Every run passed every gate and the runs agree." }
+  },
+  "$defs": {
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "passed", "failures"],
+      "properties": {
+        "gate": { "enum": ["binding", "coverage", "citations", "contradictions", "patch_checks", "budget"] },
+        "passed": { "type": "boolean" },
+        "failures": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "review_digest", "questions", "answered", "gates", "passed"],
+      "properties": {
+        "label": { "type": "string" },
+        "review_digest": { "type": "string" },
+        "questions": { "type": "integer", "minimum": 0 },
+        "answered": { "type": "integer", "minimum": 0 },
+        "gates": { "type": "array", "items": { "$ref": "#/$defs/gate" } },
+        "passed": { "type": "boolean" }
+      }
+    },
+    "overlap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question_id", "shared", "compared"],
+      "properties": {
+        "question_id": { "type": "string" },
+        "shared": { "type": "integer", "minimum": 0 },
+        "compared": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "pair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runs", "hotspots", "plan"],
+      "properties": {
+        "runs": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "minItems": 2, "maxItems": 2 },
+        "hotspots": { "type": "array", "items": { "$ref": "#/$defs/overlap" } },
+        "plan": { "oneOf": [{ "$ref": "#/$defs/overlap" }, { "type": "null" }] }
+      }
+    },
+    "usefulness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sheets", "items", "pending", "pre_label", "disputed", "corroborated", "final_scores",
+        "counted", "useful", "correct", "specific", "actionable", "novel"
+      ],
+      "properties": {
+        "sheets": { "type": "integer", "minimum": 0 },
+        "items": { "type": "integer", "minimum": 0 },
+        "pending": { "type": "integer", "minimum": 0 },
+        "pre_label": { "type": "integer", "minimum": 0 },
+        "disputed": { "type": "integer", "minimum": 0 },
+        "corroborated": { "type": "integer", "minimum": 0 },
+        "final_scores": { "type": "integer", "minimum": 0 },
+        "counted": { "type": "integer", "minimum": 0 },
+        "useful": { "type": "integer", "minimum": 0 },
+        "correct": { "type": "integer", "minimum": 0 },
+        "specific": { "type": "integer", "minimum": 0 },
+        "actionable": { "type": "integer", "minimum": 0 },
+        "novel": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

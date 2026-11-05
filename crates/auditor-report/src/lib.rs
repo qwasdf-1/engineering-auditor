@@ -980,9 +980,11 @@ mod tests {
             "contextual-recommendation-v1",
             "engineering-claim-v1",
             "engineering-review-v1",
-            "review-eval-corpus-v2",
             "review-prompt-bundle-v2",
+            "review-qualification-corpus-v1",
+            "review-qualification-v1",
             "review-routes-v2",
+            "review-usefulness-v1",
         ] {
             let schema = fs::read_to_string(contract_root.join(format!("{name}.schema.json")))
                 .unwrap_or_else(|error| panic!("cannot read {name} schema: {error}"));

@@ -84,6 +84,15 @@ class PrepareTest(unittest.TestCase):
         summary = json.loads((self.cache / "review-inputs" / "t" / "summary.json").read_text())
         self.assertEqual([entry["id"] for entry in summary["repositories"]], ["demo"])
 
+    def test_each_review_run_gets_its_number(self):
+        command = f"{sys.executable} -c \"import sys; open(sys.argv[1],'w').write('x')\" {{out}}/review-{{run}}.json"
+        settings = review_inputs.Settings(self.auditor, 150, command, 2)
+        self.assertEqual(review_inputs.prepare([self.repository], settings, "runs", 1), 0)
+        out = self.cache / "review-inputs" / "runs" / "demo"
+        self.assertEqual(sorted(path.name for path in out.glob("review-*.json")),
+                         ["review-1.json", "review-2.json"])
+        self.assertEqual(len(json.loads((out / "inputs.json").read_text())["review_seconds"]), 2)
+
     def test_a_failure_is_recorded_and_still_deletes_the_checkout(self):
         missing = {**self.repository, "commit": "f" * 40}
         status = review_inputs.prepare([missing], review_inputs.Settings(self.auditor, 150), "bad", 1)
@@ -91,6 +100,105 @@ class PrepareTest(unittest.TestCase):
         summary = json.loads((self.cache / "review-inputs" / "bad" / "summary.json").read_text())
         self.assertEqual(summary["failures"][0]["id"], "demo")
         self.assertFalse((self.cache / "review-checkouts").exists())
+
+
+# Fails the citation gate of a run named review-bad.json; with
+# sheets, three of four counted items are useful.
+STUB_QUALIFY = """#!/usr/bin/env python3
+import json, sys
+args = sys.argv[1:]
+assert args[:2] == ["review", "qualify"], args
+reviews = [args[i + 1] for i, arg in enumerate(args) if arg == "--review"]
+scored = "--scores" in args
+bad = lambda review: review.endswith("review-bad.json")
+passed = not any(map(bad, reviews))
+result = {
+    "passed": passed,
+    "runs": [{"label": review, "gates": [{"gate": "citations", "passed": not bad(review)}]}
+             for review in reviews],
+    "stability": {"passed": True},
+    "usefulness": {"useful": 3, "counted": 4, "pending": 0, "disputed": 0} if scored else None,
+}
+open(args[args.index("--output") + 1], "w").write(json.dumps(result))
+print(json.dumps(result))
+sys.exit(0 if passed else 1)
+"""
+
+
+class CorpusTest(unittest.TestCase):
+    def test_the_corpus_binds_current_files_and_known_repositories(self):
+        corpus = review_inputs.load_corpus()
+        self.assertEqual(corpus["repositories"]["slice"], "applications")
+        self.assertEqual(len(set(corpus["repositories"]["ids"])), len(corpus["repositories"]["ids"]))
+        self.assertGreaterEqual(corpus["run_plan"]["runs_per_repository"], 2)
+        for case in corpus["protocol_suite"]:
+            generator = review_inputs.REPO_ROOT / case["generator"]
+            self.assertEqual(review_inputs.file_digest(generator), case["generator_digest"], case["id"])
+
+    def test_a_changed_binding_is_refused(self):
+        corpus = json.loads(review_inputs.CORPUS.read_text())
+        corpus["bindings"]["brief"]["digest"] = "sha256:" + "0" * 64
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "corpus.json"
+            path.write_text(json.dumps(corpus))
+            with self.assertRaises(SystemExit) as raised:
+                review_inputs.load_corpus(path)
+        self.assertIn("changed since the corpus bound it", str(raised.exception))
+
+
+class QualifyTest(unittest.TestCase):
+    def setUp(self):
+        self.temp = Path(tempfile.mkdtemp())
+        self.addCleanup(subprocess.run, ["rm", "-rf", str(self.temp)])
+        self.auditor = self.temp / "auditor"
+        self.auditor.write_text(STUB_QUALIFY)
+        self.auditor.chmod(0o755)
+        patcher = mock.patch.dict(os.environ, {"EA_ECOSYSTEM_CACHE": str(self.temp / "cache")})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.corpus = json.loads(review_inputs.CORPUS.read_text())
+        self.corpus["repositories"]["ids"] = ["one", "two"]
+        self.root = self.temp / "cache" / "review-inputs" / "t"
+
+    def record(self, repository, *names):
+        out = self.root / repository
+        out.mkdir(parents=True, exist_ok=True)
+        for name in names:
+            (out / name).write_text("{}")
+
+    def summary(self):
+        return json.loads((self.root / "qualification-mistral_free.json").read_text())
+
+    def run_qualify(self):
+        return review_inputs.qualify(self.corpus, "mistral_free", self.auditor, "t")
+
+    def test_a_failed_gate_or_a_missing_run_fails_the_route(self):
+        self.record("one", "review-1.json", "review-bad.json")
+        self.record("two", "review-1.json")
+        self.assertEqual(self.run_qualify(), 1)
+        summary = self.summary()
+        self.assertFalse(summary["gates_passed_everywhere"])
+        self.assertEqual(summary["decision"], "fails the automatic gates")
+        one, two = summary["repositories"]
+        self.assertEqual(one["failed_gates"], [f"{self.root / 'one' / 'review-bad.json'}: citations"])
+        self.assertFalse(one["passed"])
+        self.assertIn("1 recorded runs, 2 wanted", two["error"])
+
+    def test_the_decision_waits_for_a_threshold_then_compares_with_it(self):
+        for repository in ["one", "two"]:
+            self.record(repository, "review-1.json", "review-2.json", "usefulness-1.json")
+        self.assertEqual(self.run_qualify(), 1)
+        summary = self.summary()
+        self.assertTrue(summary["gates_passed_everywhere"])
+        self.assertEqual(summary["usefulness"], {"useful": 6, "counted": 8, "share": 0.75, "threshold": None})
+        self.assertEqual(summary["decision"], "gates pass; the usefulness bar is not set yet")
+        self.assertTrue((self.root / "one" / "qualification-mistral_free.json").exists())
+        self.corpus["usefulness"]["threshold"] = 0.7
+        self.assertEqual(self.run_qualify(), 0)
+        self.assertEqual(self.summary()["decision"], "qualifies")
+        self.corpus["usefulness"]["threshold"] = 0.8
+        self.assertEqual(self.run_qualify(), 1)
+        self.assertEqual(self.summary()["decision"], "below the usefulness bar")
 
 
 if __name__ == "__main__":

@@ -21,7 +21,8 @@ use serde_json::Value;
 
 use crate::review_command::{apply_consent, consume_arguments, parse_file, publish};
 
-const PROMPT_BUNDLE: &str = include_str!("../../../config/auditor/review-prompt-bundle-v2.json");
+pub(crate) const PROMPT_BUNDLE: &str =
+    include_str!("../../../config/auditor/review-prompt-bundle-v2.json");
 
 #[derive(Default)]
 struct Options {

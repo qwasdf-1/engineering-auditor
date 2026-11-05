@@ -62,7 +62,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `digest` | stable | Flags only; the digest text is human-oriented. |
 | `catalog` | stable | Output follows `detector-manifest.schema.json`. |
 | `version` | stable | |
-| `review transcript`, `review provider discover`, `review history`, `review check-patch`, `review run --experimental-reviewer` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed, and `review run` refuses to start without its flag. |
+| `review transcript`, `review provider discover`, `review history`, `review check-patch`, `review run --experimental-reviewer`, `review qualify`, `review rubric` | experimental | Layer 6 is being rebuilt (see [Layer 6](./layer6-llm-review.md)); `scan --review` and the other `review` subcommands were removed, and `review run` refuses to start without its flag. |
 | `donor check`, `donor sync` | internal | Development provenance tooling. |
 | Exit codes | stable | `0` success; `1` policy failure (`gate` failed, with the result on stdout); `2` usage, input, or runtime error (message on stderr). |
 
@@ -90,7 +90,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `.slop.toml` compatibility mapping | experimental | Read only when `auditor.toml` is absent. |
 | `.eaignore` audit-scope files (gitignore syntax, any directory) | experimental | Matched paths are not discovered. |
 | `auditor.toml` `[exclusions.<name>]` keys `paths`, `detectors` (comma-separated) | experimental | Drops the listed detectors' findings under the listed path prefixes. |
-| Layer 6 route, prompt-bundle, question-template, brief, and history-digest files | experimental | |
+| Layer 6 route, prompt-bundle, question-template, brief, history-digest, qualification-corpus, and usefulness-sheet files | experimental | |
 
 ## MCP
 
@@ -115,9 +115,11 @@ stable CLI.
 | `contextual-recommendation-v1.schema.json` | experimental |
 | `engineering-claim-v1.schema.json` | experimental |
 | `engineering-review-v1.schema.json` | experimental |
-| `review-eval-corpus-v2.schema.json` | experimental |
 | `review-prompt-bundle-v2.schema.json` | experimental |
+| `review-qualification-corpus-v1.schema.json` | experimental |
+| `review-qualification-v1.schema.json` | experimental |
 | `review-routes-v2.schema.json` | experimental |
+| `review-usefulness-v1.schema.json` | experimental |
 | `donor-manifest.schema.json` | internal |
 | `ecosystem-corpus.schema.json` | internal |
 | `ecosystem-labels.schema.json` | internal |

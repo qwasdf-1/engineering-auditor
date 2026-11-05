@@ -7,13 +7,16 @@
   "additionalProperties": false,
   "required": [
     "schema_version", "source_digest", "template_bundle_digest", "prompt_bundle_id",
-    "orientation", "questions", "patch_checks", "retrieval", "calls", "spend", "stopped"
+    "routes_digest", "brief_digest", "max_patch_checks", "orientation", "questions", "patch_checks", "retrieval", "calls", "spend", "stopped"
   ],
   "properties": {
-    "schema_version": { "type": "integer", "const": 1 },
+    "schema_version": { "type": "integer", "const": 2 },
     "source_digest": { "type": "string", "description": "The report, map, and history digest the review read." },
     "template_bundle_digest": { "type": "string" },
     "prompt_bundle_id": { "type": "string", "pattern": "^review-prompt-bundle:" },
+    "routes_digest": { "type": "string", "description": "Canonical-JSON digest of the routes the review ran with." },
+    "brief_digest": { "type": ["string", "null"], "description": "Canonical-JSON digest of the brief, or null without one." },
+    "max_patch_checks": { "type": "integer", "minimum": 0 },
     "orientation": {
       "type": "object",
       "additionalProperties": false,

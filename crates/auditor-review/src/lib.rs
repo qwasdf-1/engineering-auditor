@@ -38,15 +38,20 @@ pub use provider::{
     REVIEW_ROUTES_V2_SCHEMA_VERSION, TOOL_NOOP,
 };
 pub use repository_map::{
-    load_and_validate_repository_map, LookupBudget, RepositoryMap, RepositoryMapError,
-    SourceExcerpt, SourceLookup,
+    load_and_validate_repository_map, load_repository_map, LookupBudget, RepositoryMap,
+    RepositoryMapError, SourceExcerpt, SourceLookup,
 };
 pub use reviewer::{
-    retrieval_tool_specs, run_engineering_review, CheckRequester, EngineeringReview,
-    OrientationPack, PatchCheckRecord, ProjectionSummary, Question, QuestionAnswer, QuestionKind,
-    QuestionRecord, QuestionStatus, QuestionSubject, QuestionTemplate, QuestionTemplateBundle,
-    RecommendationChecker, RepositoryView, RetrievalBudget, RetrievalHost, RetrievalOutcome,
-    RetrievalRecord, ReviewCall, ReviewSetup, Spend, DEFAULT_PATCH_CHECKS,
-    ENGINEERING_REVIEW_SCHEMA_VERSION, MINIMUM_ORIENTATION_BYTES, QUESTION_SCHEMA_VERSION,
-    QUESTION_TEMPLATE_BUNDLE_SCHEMA_VERSION, RETRIEVAL_TOOL_NAMES, TARGET_ORIENTATION_BYTES,
+    canonical_digest, qualify_reviews, retrieval_tool_specs, run_engineering_review,
+    usefulness_sheet, CheckRequester, EngineeringReview, Gate, GateResult, ItemKind,
+    OrientationPack, PairStability, PatchCheckRecord, ProjectionSummary, QualificationInputs,
+    Question, QuestionAnswer, QuestionKind, QuestionRecord, QuestionStatus, QuestionSubject,
+    QuestionTemplate, QuestionTemplateBundle, RankingOverlap, RecommendationChecker,
+    RecordedReview, RepositoryView, RetrievalBudget, RetrievalHost, RetrievalOutcome,
+    RetrievalRecord, ReviewCall, ReviewQualification, ReviewSetup, RunQualification, ScoreCheck,
+    Spend, StabilityPolicy, StabilityResult, UsefulnessItem, UsefulnessScores, UsefulnessSheet,
+    UsefulnessStatus, UsefulnessSummary, DEFAULT_PATCH_CHECKS, ENGINEERING_REVIEW_SCHEMA_VERSION,
+    MINIMUM_ORIENTATION_BYTES, QUESTION_SCHEMA_VERSION, QUESTION_TEMPLATE_BUNDLE_SCHEMA_VERSION,
+    RETRIEVAL_TOOL_NAMES, REVIEW_QUALIFICATION_SCHEMA_VERSION, TARGET_ORIENTATION_BYTES,
+    USEFULNESS_SHEET_SCHEMA_VERSION,
 };

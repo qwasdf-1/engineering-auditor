@@ -28,14 +28,13 @@ use crate::{
     ReviewPromptBundleV2, ReviewRoutesV2, ToolSpec, TranscriptRecorder, Transport,
 };
 
-use answer::{
-    accept, accepted_markdown, answer_tool, earlier_answers, wire_name as name, ANSWER_TOOL,
-};
+use answer::{accept, accepted_markdown, answer_tool, wire_name as name, ANSWER_TOOL};
+pub(super) use answer::{earlier_answers, wire_name};
 pub(crate) use calls::REVIEWER_TURN;
 use calls::{Caller, QuestionSpend, TurnOutcome, REVIEW_STAGE};
 pub use record::{
-    CheckRequester, EngineeringReview, PatchCheckRecord, ProjectionSummary, QuestionRecord,
-    QuestionStatus, ReviewCall, Spend, ENGINEERING_REVIEW_SCHEMA_VERSION,
+    canonical_digest, CheckRequester, EngineeringReview, PatchCheckRecord, ProjectionSummary,
+    QuestionRecord, QuestionStatus, ReviewCall, Spend, ENGINEERING_REVIEW_SCHEMA_VERSION,
 };
 
 const CHECK_TOOL: &str = "check_patch";
@@ -116,6 +115,9 @@ pub fn run_engineering_review(
         source_digest: view.source_digest.clone(),
         template_bundle_digest: setup.templates.digest().as_str().to_string(),
         prompt_bundle_id: setup.prompts.bundle_id.clone(),
+        routes_digest: canonical_digest(setup.routes),
+        brief_digest: setup.brief.map(canonical_digest),
+        max_patch_checks: setup.max_patch_checks,
         orientation: ProjectionSummary {
             markdown_digest: pack.audit.markdown_digest.clone(),
             markdown_bytes: pack.audit.markdown_bytes,

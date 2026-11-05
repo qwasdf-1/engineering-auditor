@@ -181,6 +181,14 @@ history per file: commits, recent commits, authors, lines added and removed,
 and co-change partners. It names its `HEAD` commit, and a review refuses a
 digest of another commit.
 
+`engineering-review-v1` (schema 2) records one rebuilt review: the source,
+template, prompt, routes, and brief digests it ran with, its orientation
+pack and questions, every call, retrieval, and patch check, the answers,
+and what was spent. `review-qualification-v1` records the automatic gates
+over recorded reviews of one repository, `review-usefulness-v1` a rubric
+sheet for one review, and `review-qualification-corpus-v1` what a route
+qualifies on ([Layer 6 evaluation](./layer6-evaluation.md)).
+
 `review-routes-v2` (schema 4) and `review-prompt-bundle-v2` (schema 3) define
 the provider registry with its single reviewer chain, the review-wide and
 per-question budgets, and the content-bound prompts, without changing report

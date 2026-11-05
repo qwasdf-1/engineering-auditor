@@ -241,6 +241,16 @@ unanswered with the reason. The review record
 (`contracts/engineering-review-v1.schema.json`) holds each answer, every
 provider call and retrieval, the checks, and what the review spent.
 
+`reviewer/qualification/` checks recorded reviews offline, from the report,
+map, and history alone (`review qualify`). Each run must be bound to those
+inputs and to its routes and brief, answer every question, pass its answer
+checks again with every citation resolving in the inputs, contradict no
+measured value it cites, carry the host's verdict on every accepted patch,
+and add up to its recorded spend within every budget. Two runs must agree on
+the top hotspots and plan steps. `review rubric` writes the usefulness sheet
+a person, or a second model checked by a person, scores
+([`layer6-evaluation.md`](reference/layer6-evaluation.md)).
+
 Providers (OpenAI Responses, Anthropic Messages, Mistral, OpenCode, and
 OpenAI-compatible Chat Completions) are configured by routes that name the
 model, the credential's environment variable, privacy and cost classes, and
@@ -248,8 +258,8 @@ hard limits. Every request and response is recorded without secrets.
 [`layer6-llm-review.md`](reference/layer6-llm-review.md),
 [`layer6-providers.md`](reference/layer6-providers.md), and
 [`layer6-evaluation.md`](reference/layer6-evaluation.md) describe the
-provider boundary and the removed v2 protocol, kept for reference until the
-new path ships.
+provider boundary, the removed v2 protocol (kept for reference until the
+new path ships), and how a route qualifies on the rebuilt review.
 
 ## Tests
 

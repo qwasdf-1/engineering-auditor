@@ -167,3 +167,169 @@ fn review_check_patch_reports_a_verdict() {
     std::fs::remove_dir_all(&root).unwrap();
     std::fs::remove_dir_all(&scratch).unwrap();
 }
+
+/// A provider that refuses every request, so the review records no answer.
+struct Refusing;
+
+impl auditor_review::Transport for Refusing {
+    fn post(
+        &self,
+        _request: auditor_review::TransportRequest,
+    ) -> Result<auditor_review::TransportResponse, String> {
+        Ok(auditor_review::TransportResponse {
+            status: 403,
+            body: br#"{"error":{"message":"refused"}}"#.to_vec(),
+        })
+    }
+}
+
+#[test]
+fn review_qualify_fails_an_unanswered_run_offline_and_rubric_lists_no_items() {
+    let root = temp_dir("qualify");
+    std::fs::write(
+        root.join("app/store.py"),
+        "def record(event):\n    try:\n        print(event)\n    except:\n        pass\n",
+    )
+    .unwrap();
+    std::fs::write(
+        root.join("app/api.py"),
+        "from app.store import record\n\ndef handle(event):\n    record(event)\n",
+    )
+    .unwrap();
+    let scratch = temp_dir("qualify-artifacts");
+    let report = scratch.join("audit.json");
+    crate::scan_command::run_scan(&strings(&[
+        "--repo-root",
+        root.to_str().unwrap(),
+        "--profile",
+        "full",
+        "--output",
+        report.to_str().unwrap(),
+    ]))
+    .unwrap();
+    let mut provider = auditor_review::ProviderConfig::openai_compatible(
+        "fake",
+        "https://fake.invalid/v1",
+        None::<String>,
+        vec!["fake-model".to_string()],
+    );
+    provider.model_protocols = std::collections::BTreeMap::from([(
+        "fake-model".to_string(),
+        auditor_review::ProviderProtocol::ChatCompletions,
+    )]);
+    let budget = auditor_review::RouteBudget {
+        max_requests: 8,
+        max_input_bytes: 1 << 22,
+        max_output_tokens: 4096,
+        timeout_ms: 1000,
+        max_cost_microusd: 0,
+        allow_unknown_cost: true,
+    };
+    let routes = auditor_review::ReviewRoutesV2 {
+        schema_version: auditor_review::REVIEW_ROUTES_V2_SCHEMA_VERSION,
+        providers: vec![provider],
+        single_reviewer: auditor_review::V2ProviderChain {
+            targets: vec![auditor_review::RouteTarget {
+                provider_id: "fake".to_string(),
+                model: "fake-model".to_string(),
+            }],
+        },
+        review_budget: budget,
+        question_budget: budget,
+    };
+    let routes_path = scratch.join("routes.json");
+    std::fs::write(&routes_path, serde_json::to_string(&routes).unwrap()).unwrap();
+
+    let text = std::fs::read_to_string(&report).unwrap();
+    let reference = auditor_report::parse_repository_map_reference(&text).unwrap();
+    let map = auditor_review::load_repository_map(&report, &reference).unwrap();
+    let value: serde_json::Value = serde_json::from_str(&text).unwrap();
+    let view = auditor_review::RepositoryView::new(&value, &map).unwrap();
+    let review = auditor_review::run_engineering_review(
+        &view,
+        auditor_review::ReviewSetup {
+            repo_root: &root,
+            brief: None,
+            templates: &auditor_review::QuestionTemplateBundle::checked_in().unwrap(),
+            prompts: &auditor_review::ReviewPromptBundleV2::parse(crate::review_run::PROMPT_BUNDLE)
+                .unwrap(),
+            routes: &routes,
+            consent: auditor_review::HostedConsent {
+                allow_hosted: true,
+                allow_anonymous: false,
+            },
+            transport: &Refusing,
+            transcript: &auditor_review::TranscriptRecorder::null(),
+            checker: None,
+            max_patch_checks: 0,
+        },
+    )
+    .unwrap();
+    assert!(review.answered().next().is_none());
+    let review_path = scratch.join("review.json");
+    std::fs::write(&review_path, serde_json::to_string(&review).unwrap()).unwrap();
+    // The harness reads only the recorded files.
+    std::fs::remove_dir_all(&root).unwrap();
+
+    let sheet = super::review_command::run_review(&strings(&[
+        "rubric",
+        "--review",
+        review_path.to_str().unwrap(),
+    ]))
+    .unwrap();
+    let sheet: auditor_review::UsefulnessSheet = serde_json::from_str(&sheet).unwrap();
+    assert_eq!(sheet.review_digest, review.digest());
+    assert!(sheet.items.is_empty());
+
+    let output = scratch.join("qualification.json");
+    let review_path = review_path.to_str().unwrap();
+    let failure = super::review_command::run_review(&strings(&[
+        "qualify",
+        "--report",
+        report.to_str().unwrap(),
+        "--review",
+        review_path,
+        "--review",
+        review_path,
+        "--routes",
+        routes_path.to_str().unwrap(),
+        "--output",
+        output.to_str().unwrap(),
+    ]))
+    .unwrap_err();
+    let printed = failure
+        .strip_prefix(crate::gate_command::POLICY_FAILURE)
+        .expect("a failed gate exits as a policy failure");
+    let written = std::fs::read_to_string(&output).unwrap();
+    let qualification: auditor_review::ReviewQualification =
+        serde_json::from_str(&written).unwrap();
+    assert_eq!(
+        serde_json::from_str::<auditor_review::ReviewQualification>(printed).unwrap(),
+        qualification
+    );
+    let gates = &qualification.runs[0].gates;
+    assert!(
+        gates[0].passed,
+        "the run is bound to these inputs: {gates:?}"
+    );
+    assert!(!gates[1].passed && gates[1].failures[0].contains("was not answered"));
+    assert!(!qualification.passed);
+
+    let error = super::review_command::run_review(&strings(&[
+        "qualify",
+        "--report",
+        report.to_str().unwrap(),
+        "--review",
+        review_path,
+        "--routes",
+        routes_path.to_str().unwrap(),
+        "--min-overlap",
+        "2",
+    ]))
+    .unwrap_err();
+    assert!(error.contains("--min-overlap takes a share"), "{error}");
+    let error = super::review_command::run_review(&strings(&["qualify", "--report", "a.json"]))
+        .unwrap_err();
+    assert!(error.contains("requires --review"), "{error}");
+    std::fs::remove_dir_all(&scratch).unwrap();
+}

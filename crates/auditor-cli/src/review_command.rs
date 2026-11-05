@@ -16,8 +16,8 @@ use crate::arg_cursor::ArgCursor;
 
 /// The engineering review is being rebuilt (v1.6 plan): the subcommands of
 /// the v2 case protocol are gone. Provider discovery and transcript
-/// rendering remain, beside the new path's history digest, patch check, and
-/// `review run --experimental-reviewer`.
+/// rendering remain, beside the new path's history digest, patch check,
+/// `review run --experimental-reviewer`, and its offline qualification.
 const REMOVED_REVIEW_COMMANDS: [&str; 5] =
     ["plan", "inspect-case", "verify", "disposition", "gate"];
 
@@ -28,12 +28,15 @@ pub(crate) fn run_review(args: &[String]) -> Result<String, String> {
         Some("history") => run_review_history(&args[1..]),
         Some("check-patch") => run_check_patch(&args[1..]),
         Some("run") => crate::review_run::run(&args[1..]),
+        Some("qualify") => crate::review_qualify::run_qualify(&args[1..]),
+        Some("rubric") => crate::review_qualify::run_rubric(&args[1..]),
         Some(removed) if REMOVED_REVIEW_COMMANDS.contains(&removed) => Err(format!(
             "review {removed} was removed while the engineering review is rebuilt; see docs/reference/layer6-llm-review.md"
         )),
         Some(other) => Err(format!("unknown review command `{other}`")),
         None => Err(
-            "review requires transcript, provider, history, check-patch, or run".to_string(),
+            "review requires transcript, provider, history, check-patch, run, qualify, or rubric"
+                .to_string(),
         ),
     }
 }
