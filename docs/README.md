@@ -18,8 +18,9 @@
   review works and what it may and may not do.
 - [`reference/layer6-providers.md`](reference/layer6-providers.md): routes,
   providers, consent, privacy, and cost limits.
-- [`reference/layer6-evaluation.md`](reference/layer6-evaluation.md): how
-  review quality is measured and how prompts change.
+- [`reference/layer6-evaluation.md`](reference/layer6-evaluation.md): how a
+  provider route qualifies on the rebuilt review: the corpus, the offline
+  gates, and the usefulness rubric.
 - [`reference/mcp-interface.md`](reference/mcp-interface.md): the MCP scan
   and review tools.
 

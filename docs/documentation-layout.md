@@ -41,7 +41,7 @@ docs/
                                       deterministic layer references
     layer6-llm-review.md             evidence-constrained review semantics
     layer6-providers.md              provider, route, privacy, and consent contract
-    layer6-evaluation.md             prompt, corpus, gate, and improvement contract
+    layer6-evaluation.md             qualification corpus, gates, and usefulness rubric
     mcp-interface.md                 typed scan/review MCP lifecycle
     stability.md                     stable/experimental surface policy
     original-vision.md               non-normative historical motivation
