@@ -11,8 +11,8 @@ use std::collections::{BTreeMap, HashMap};
 use std::sync::Mutex;
 
 use auditor_review::{
-    run_engineering_review, CaseBudgetPolicy, CheckRequester, EngineeringReview, HostedConsent,
-    ProviderConfig, ProviderFailureClass, ProviderProtocol, Question, QuestionKind, QuestionStatus,
+    run_engineering_review, CheckRequester, EngineeringReview, HostedConsent, ProviderConfig,
+    ProviderFailureClass, ProviderProtocol, Question, QuestionKind, QuestionStatus,
     QuestionTemplateBundle, RecommendationChecker, ReviewBrief, ReviewPromptBundleV2,
     ReviewRoutesV2, ReviewSetup, RouteBudget, RouteTarget, TranscriptRecorder, Transport,
     TransportRequest, TransportResponse, V2ProviderChain, DEFAULT_PATCH_CHECKS,
@@ -359,10 +359,7 @@ fn routes(targets: &[(&str, ProviderProtocol)], review: usize, question: usize) 
                 .collect(),
         },
         review_budget: budget(review),
-        case_budgets: CaseBudgetPolicy {
-            defaults: budget(question),
-            per_template: BTreeMap::new(),
-        },
+        question_budget: budget(question),
     };
     routes.validate().unwrap();
     routes

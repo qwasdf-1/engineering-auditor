@@ -90,7 +90,7 @@ incompatible change. `language-support.md` lists every detector-language mode.
 | `.slop.toml` compatibility mapping | experimental | Read only when `auditor.toml` is absent. |
 | `.eaignore` audit-scope files (gitignore syntax, any directory) | experimental | Matched paths are not discovered. |
 | `auditor.toml` `[exclusions.<name>]` keys `paths`, `detectors` (comma-separated) | experimental | Drops the listed detectors' findings under the listed path prefixes. |
-| Layer 6 route, prompt-bundle, case-template, question-template, brief, and evidence files | experimental | |
+| Layer 6 route, prompt-bundle, question-template, brief, and history-digest files | experimental | |
 
 ## MCP
 
@@ -112,15 +112,9 @@ stable CLI.
 | `repository-map.schema.json` | experimental |
 | `review-brief.schema.json` | experimental |
 | `history-digest.schema.json` | experimental |
-| `case-template-bundle-v1.schema.json` | experimental |
-| `case-template-v1.schema.json` | experimental |
 | `contextual-recommendation-v1.schema.json` | experimental |
-| `engineering-case-v1.schema.json` | experimental |
 | `engineering-claim-v1.schema.json` | experimental |
 | `engineering-review-v1.schema.json` | experimental |
-| `evidence-packet-v1.schema.json` | experimental |
-| `review-agenda-v1.schema.json` | experimental |
-| `review-candidate-v1.schema.json` | experimental |
 | `review-eval-corpus-v2.schema.json` | experimental |
 | `review-prompt-bundle-v2.schema.json` | experimental |
 | `review-routes-v2.schema.json` | experimental |

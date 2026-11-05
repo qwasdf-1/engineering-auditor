@@ -1,13 +1,8 @@
 use auditor_review::{
     render_model_document, render_native_conversation, ModelDocument, ModelField, ModelSection,
-    ModelValue, NativeConversationMessage, NativeToolCall, ProviderProtocol, SemanticRecordLedger,
-    TaskCallProvenance, TaskLedgerError,
+    ModelValue, NativeConversationMessage, NativeToolCall, ProviderProtocol,
 };
 use serde_json::json;
-
-fn provenance<'a>(request_id: &'a str, tool_call_id: &'a str) -> TaskCallProvenance<'a> {
-    TaskCallProvenance::new(request_id, tool_call_id)
-}
 
 #[test]
 fn model_markdown_is_field_oriented_and_preserves_repository_json_only_as_evidence() {
@@ -107,94 +102,5 @@ fn native_conversation_preserves_assistant_calls_and_markdown_tool_results() {
     assert_eq!(
         responses[4]["output"],
         "## Admission\n\nThe answer was recorded."
-    );
-}
-
-#[test]
-fn semantic_ledger_preserves_creation_order_independently_of_local_ids() {
-    let mut ledger = SemanticRecordLedger::default();
-    ledger
-        .create(
-            "z-premise",
-            json!({"slot": "root"}),
-            provenance("request-1", "call-1"),
-        )
-        .expect("create premise");
-    ledger
-        .create(
-            "a-conclusion",
-            json!({"slot": "conclusion", "dependency_claim_refs": ["z-premise"]}),
-            provenance("request-1", "call-2"),
-        )
-        .expect("create conclusion");
-    assert_eq!(
-        ledger
-            .values_in_creation_order()
-            .into_iter()
-            .map(|record| record.reference.as_str())
-            .collect::<Vec<_>>(),
-        vec!["z-premise", "a-conclusion"]
-    );
-
-    let round_trip: SemanticRecordLedger =
-        serde_json::from_value(serde_json::to_value(&ledger).unwrap()).unwrap();
-    assert_eq!(
-        round_trip
-            .values_in_creation_order()
-            .into_iter()
-            .map(|record| record.reference.as_str())
-            .collect::<Vec<_>>(),
-        vec!["z-premise", "a-conclusion"]
-    );
-}
-
-#[test]
-fn semantic_records_are_create_only_and_revision_requires_current_revision() {
-    let mut ledger = SemanticRecordLedger::default();
-    ledger
-        .create(
-            "claim-a",
-            json!({"status": "substantiated"}),
-            provenance("request-1", "call-1"),
-        )
-        .expect("create first record");
-
-    assert_eq!(
-        ledger.create(
-            "claim-a",
-            json!({"status": "substantiated"}),
-            provenance("request-1", "call-2"),
-        ),
-        Err(TaskLedgerError::DuplicateReference("claim-a".to_string()))
-    );
-    assert_eq!(
-        ledger.revise(
-            "claim-a",
-            0,
-            "correct the status",
-            json!({"status": "partially_substantiated"}),
-            provenance("request-2", "call-3"),
-        ),
-        Err(TaskLedgerError::StaleRevision {
-            reference: "claim-a".to_string(),
-            expected: 0,
-            actual: 1,
-        })
-    );
-
-    ledger
-        .revise(
-            "claim-a",
-            1,
-            "account for the unresolved mutation boundary",
-            json!({"status": "partially_substantiated"}),
-            provenance("request-2", "call-4"),
-        )
-        .expect("revise current record");
-    assert_eq!(ledger.get("claim-a").expect("record").revision, 2);
-    assert_eq!(ledger.revisions().len(), 1);
-    assert_eq!(
-        ledger.revisions()[0].reason,
-        "account for the unresolved mutation boundary"
     );
 }

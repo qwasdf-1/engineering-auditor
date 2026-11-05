@@ -183,13 +183,12 @@ probes, ensemble, challenge and response stages, finalization, and offline
 verification, was removed. `auditor-review` keeps the parts the new reviewer
 builds on:
 
-1. **Input.** Validate the report, map, and live source hashes, and the case
-   templates, prompts, routes, and brief, into one immutable input.
-2. **Agenda and cases.** Select connected findings and instantiate engineering
-   cases from versioned templates.
-3. **Evidence packets.** Compile a bounded, digest-addressed packet of evidence
-   per case. Source lookups are limited to mapped symbol neighborhoods.
-4. **Claims and recommendations.** Typed records that cite evidence IDs the
+1. **Providers and routes.** Adapters, consent, transport, retry, and
+   transcripts, with a single-reviewer route chain and review-wide and
+   per-question budgets.
+2. **Repository map and history.** The map sidecar, checked against the
+   report and the live source, and the optional history digest.
+3. **Claims and recommendations.** Typed records that cite evidence IDs the
    host issued, with validators that reject unknown citations.
 
 The new reviewer is in `reviewer/`, run by `review run

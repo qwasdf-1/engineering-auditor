@@ -72,18 +72,12 @@ pub struct MapSpan {
 pub enum SourceExcerptKind {
     /// Excerpt resolved from a `symbol:` AST id via the repository map.
     Symbol,
-    /// Complete enclosing symbol (or complete file when no symbol contains
-    /// the location) resolved from a finding id at its verified `path:line`.
-    Finding,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SourceExcerpt {
-    /// Stable, unique id of the excerpt within a review. The id's
-    /// value is namespaced by `kind`:
-    /// - `SourceExcerptKind::Symbol` -> `symbol:<stable-digest>` (the
-    ///   `MapSymbol.id`).
-    /// - `SourceExcerptKind::Finding` -> `finding-excerpt:<path>:<start>-<end>`.
+    /// Stable, unique id of the excerpt within a review: the
+    /// `MapSymbol.id` (`symbol:<stable-digest>`).
     pub id: String,
     pub kind: SourceExcerptKind,
     pub path: String,
@@ -455,86 +449,6 @@ impl<'a> SourceLookup<'a> {
         })
     }
 
-    pub(crate) fn read_source_excerpt_for_finding(
-        &mut self,
-        finding_id: &str,
-        relative_path: &str,
-        line: Option<usize>,
-    ) -> Result<SourceExcerpt, RepositoryMapError> {
-        if self.excerpts >= self.budget.max_excerpts {
-            return Err(RepositoryMapError::LookupBudgetExceeded(
-                "source lookup excerpt count exceeds the configured budget".to_string(),
-            ));
-        }
-        let map_file = self
-            .map
-            .files
-            .iter()
-            .find(|file| file.path == relative_path)
-            .ok_or_else(|| {
-                RepositoryMapError::Contract(format!(
-                    "source file is absent from the repository map: finding {finding_id} path {relative_path}"
-                ))
-            })?;
-        let path = checked_source_path(&self.root, relative_path)?;
-        if digest_file(&path)? != map_file.sha256 {
-            return Err(RepositoryMapError::StaleSourceSnapshot(
-                map_file.path.clone(),
-            ));
-        }
-        let content = std::fs::read_to_string(&path)
-            .map_err(|error| RepositoryMapError::Io(error.to_string()))?;
-        let total_lines = content.lines().count();
-        if total_lines == 0 {
-            return Err(RepositoryMapError::Contract(format!(
-                "source file is empty: {}",
-                path.display()
-            )));
-        }
-        let target_line = line.unwrap_or(1);
-        if target_line == 0 || target_line > total_lines {
-            return Err(RepositoryMapError::Contract(format!(
-                "finding line {} is out of range for {} ({} lines)",
-                target_line,
-                path.display(),
-                total_lines
-            )));
-        }
-        if let Some(symbol) = self
-            .map
-            .symbols
-            .iter()
-            .filter(|symbol| {
-                symbol.file_id == map_file.id
-                    && symbol.span.start_line <= target_line
-                    && symbol.span.end_line >= target_line
-            })
-            .min_by_key(|symbol| symbol.span.end_byte.saturating_sub(symbol.span.start_byte))
-            .cloned()
-        {
-            let mut excerpt = self.read_symbol(&symbol)?;
-            excerpt.id = format!(
-                "finding-excerpt:{}:{}-{}",
-                map_file.path, excerpt.start_line, excerpt.end_line
-            );
-            excerpt.kind = SourceExcerptKind::Finding;
-            return Ok(excerpt);
-        }
-        let read_len = content.len();
-        self.check_byte_budget(read_len)?;
-        let id = format!("finding-excerpt:{}:{}-{}", map_file.path, 1, total_lines);
-        self.excerpts += 1;
-        self.bytes += read_len;
-        Ok(SourceExcerpt {
-            id,
-            kind: SourceExcerptKind::Finding,
-            path: map_file.path.clone(),
-            start_line: 1,
-            end_line: total_lines,
-            content,
-        })
-    }
-
     fn check_byte_budget(&self, bytes: usize) -> Result<(), RepositoryMapError> {
         if bytes > self.budget.max_excerpt_bytes {
             return Err(RepositoryMapError::LookupBudgetExceeded(
@@ -550,7 +464,7 @@ impl<'a> SourceLookup<'a> {
     }
 }
 
-pub(crate) fn map_symbol_neighborhood(
+fn map_symbol_neighborhood(
     map: &RepositoryMap,
     roots: &BTreeSet<String>,
     hops: usize,

@@ -3,25 +3,14 @@ use std::collections::{BTreeMap, BTreeSet};
 use super::{
     BenefitEvidenceMode, ContextualRecommendation, CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION,
 };
-use crate::{ClaimStatus, EngineeringCase, EngineeringClaim, RecommendationFamily, StableId};
+use crate::{ClaimStatus, EngineeringClaim, RecommendationFamily, StableId};
 
-/// What a case or a question lets its recommendations touch.
+/// What a question lets its recommendations touch.
 pub struct RecommendationBounds<'a> {
     pub case_id: &'a StableId,
     pub subject_ids: &'a [String],
     pub finding_ids: &'a [String],
     pub families: &'a [RecommendationFamily],
-}
-
-impl EngineeringCase {
-    pub fn recommendation_bounds(&self) -> RecommendationBounds<'_> {
-        RecommendationBounds {
-            case_id: &self.case_id,
-            subject_ids: &self.subject_ids,
-            finding_ids: &self.finding_ids,
-            families: &self.recommendation_families,
-        }
-    }
 }
 
 pub fn validate_recommendations(

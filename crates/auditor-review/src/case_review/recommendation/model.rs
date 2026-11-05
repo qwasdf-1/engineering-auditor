@@ -2,9 +2,26 @@ use serde::{Deserialize, Serialize};
 
 use super::VerificationStep;
 use crate::case_review::identity::case_draft_id;
-use crate::{ClaimConfidence, RecommendationFamily, StableId};
+use crate::{ClaimConfidence, StableId};
 
 pub const CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION: u32 = 2;
+
+/// The kind of change a recommendation proposes; a question template names
+/// the families its answer may use.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RecommendationFamily {
+    LifecycleReownership,
+    ExplicitRetentionAvoidance,
+    MeasurementBeforeChange,
+    SharedRootRemediation,
+    PreserveIndependentActions,
+    ConsolidatedRemediation,
+    SequencedRemediation,
+    NarrowedRemediation,
+    DeferredRemediation,
+    StructuralRefactor,
+}
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]

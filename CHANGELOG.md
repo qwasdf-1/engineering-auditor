@@ -308,6 +308,18 @@
 
 ### Removed
 
+- What the rebuilt AI review does not use: the agenda selectors and
+  candidates, case templates and engineering cases, evidence packets with
+  their graph-neighborhood candidates and case lookups, the review input
+  binding and verifier, the provider context compiler, the semantic record
+  ledger, and the case budget ledger. Their schemas
+  (`review-candidate-v1`, `review-agenda-v1`, `case-template-v1`,
+  `case-template-bundle-v1`, `engineering-case-v1`, `evidence-packet-v1`)
+  and `config/auditor/review-case-templates-v1.json` are deleted. Routes
+  move to schema 4: `case_budgets` (defaults plus per-template overrides)
+  becomes one `question_budget`, which may tighten `review_budget` but not
+  widen it. Claim slots and recommendation families now belong to the
+  claim and recommendation records.
 - The v2 Layer 6 review protocol, as the first pass of the Layer 6 rebuild
   (a reviewer that reads the repository through typed tools and cites every
   claim). Gone: probe definitions, resolvers, and admission rules; the

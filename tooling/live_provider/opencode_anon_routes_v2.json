@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "providers": [
     {
       "id": "opencode_anonymous",
@@ -30,15 +30,12 @@
     "max_cost_microusd": 0,
     "allow_unknown_cost": false
   },
-  "case_budgets": {
-    "defaults": {
-      "max_requests": 64,
-      "max_input_bytes": 8388608,
-      "max_output_tokens": 65536,
-      "timeout_ms": 360000,
-      "max_cost_microusd": 0,
-      "allow_unknown_cost": false
-    },
-    "per_template": {}
+  "question_budget": {
+    "max_requests": 64,
+    "max_input_bytes": 8388608,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 0,
+    "allow_unknown_cost": false
   }
 }

@@ -11,9 +11,11 @@
 > infrastructure the new reviewer builds on: provider adapters, routes,
 > consent, transport, retry, and transcripts (`review provider discover`,
 > `review transcript`); the repository map and source lookup; the Markdown
-> renderer and projection audit; case templates (without probes), the agenda
-> selectors, and evidence packets; and claim and recommendation records, which
-> now cite evidence IDs instead of probe answers. The new path is a
+> renderer and projection audit; and claim and recommendation records, which
+> now cite evidence IDs instead of probe answers. The agenda selectors, case
+> templates and cases, evidence packets, the review input binding, and
+> per-template case budgets followed on 2026-11-04 (routes schema 4 has one
+> `question_budget`). The new path is a
 > repository orientation pack, retrieval tools, question templates with
 > their triggers over the report and map, a history digest (`review
 > history`), a patch checker (`review check-patch`), and a driver that asks

@@ -52,7 +52,7 @@ needs a reviewer-approved reason.
 
 ## AI Review Changes
 
-Prompt and case-template wording changes only through the evaluated
+Prompt and question-template wording changes only through the evaluated
 offline-improvement process in
 [`docs/reference/layer6-evaluation.md`](docs/reference/layer6-evaluation.md).
 

@@ -9,10 +9,10 @@
     "providers",
     "single_reviewer",
     "review_budget",
-    "case_budgets"
+    "question_budget"
   ],
   "properties": {
-    "schema_version": { "type": "integer", "const": 3 },
+    "schema_version": { "type": "integer", "const": 4 },
     "providers": {
       "type": "array",
       "minItems": 1,
@@ -20,18 +20,7 @@
     },
     "single_reviewer": { "$ref": "#/$defs/chain" },
     "review_budget": { "$ref": "#/$defs/budget" },
-    "case_budgets": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["defaults", "per_template"],
-      "properties": {
-        "defaults": { "$ref": "#/$defs/budget" },
-        "per_template": {
-          "type": "object",
-          "additionalProperties": { "$ref": "#/$defs/budget" }
-        }
-      }
-    }
+    "question_budget": { "$ref": "#/$defs/budget" }
   },
   "$defs": {
     "provider": {

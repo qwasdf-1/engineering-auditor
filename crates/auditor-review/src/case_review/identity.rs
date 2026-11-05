@@ -147,10 +147,6 @@ impl<'de> Deserialize<'de> for StableId {
     }
 }
 
-pub trait CanonicalIdentity {
-    fn identity_fields(&self) -> Value;
-}
-
 pub(crate) fn case_draft_id<T: Serialize>(
     typed_prefix: &str,
     schema_version: u32,

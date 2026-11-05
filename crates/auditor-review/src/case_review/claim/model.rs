@@ -1,9 +1,40 @@
 use serde::{Deserialize, Serialize};
 
 use crate::case_review::identity::case_draft_id;
-use crate::{ClaimSlot, StableId};
+use crate::StableId;
 
 pub const ENGINEERING_CLAIM_SCHEMA_VERSION: u32 = 2;
+
+/// What a claim is about; a question template names the slots its answer
+/// may fill.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ClaimSlot {
+    Repetition,
+    InputEquivalence,
+    MutationBoundary,
+    MaterialImpact,
+    ConsumerRequirement,
+    WiderOwner,
+    InvalidationFeasibility,
+    RetentionRisk,
+    LifecycleConclusion,
+    Responsibility,
+    CausalOverlap,
+    IndependentActionability,
+    CouplingRisk,
+    RemediationBoundary,
+    Compatibility,
+    AbstractionLevel,
+    Supersession,
+    PropertyConflict,
+    RequiredOrdering,
+    Proportionality,
+    Deferral,
+    HotspotRisk,
+    IntendedStructure,
+    StructuralViolation,
+}
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]

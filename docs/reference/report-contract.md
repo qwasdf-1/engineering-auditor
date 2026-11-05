@@ -19,10 +19,7 @@ Which of these contracts are stable, experimental, or internal is defined in
 | Source role | 1 | Emission and context roles are both published. |
 | Repository map | 1 | The sidecar must match the report, live source snapshot, and artifact digest. |
 | Engineering review | 2 | The case artifact must bind all deterministic and policy inputs by digest and carry current offline verification. |
-| Evidence packet | 1 | The case-scoped semantic payload, typed items, indexes, closure, and budgets must match its canonical ID and digest. |
-| Probe definition/result | 1 | Case/template identity, compatible evidence classes, resolver authority, citations, and canonical result identity are revalidated. |
 | Standalone baseline | 2 | Report-shaped files, duplicate IDs, empty reasons, missing entry identity fields, and incompatible identities are rejected. |
-| Review dispositions | 1 | Current decisions are unique per material recommendation and bound to one review. |
 
 Finding identity v3 is frozen. Titles are `&'static str` at the
 `Finding::builder` boundary, so the compiler rejects a formatted title. The
@@ -149,39 +146,22 @@ policy output, not deterministic analysis. The v2 review artifact
 probe, challenge, response, ensemble-comparison, reviewer-case-review,
 qualification, and dispositions contracts were removed on 2026-11-03.
 
-## Engineering Review Input Foundation
-
-The review constructs an immutable `ReviewInput` before planning. Its `InputBinding` binds canonical SHA-256 identities
-for report v5, evidence graph v2, repository map v2, the live source snapshot,
-case-template bundle, prompt bundle, route configuration, an optional operator
-brief, and a sorted set of typed evidence attachments.
+## Engineering Review Records
 
 Content digests use `sha256:<64 lowercase hex>`. Host-owned IDs hash their
-typed prefix, schema version, and canonical identity fields. Object order and
-attachment set order cannot change identity; semantic array order remains
-significant. Paths, timestamps, call duration, provider usage, and
-presentation-only text are excluded from semantic identity.
+typed prefix, schema version, and canonical identity fields. Object order
+cannot change identity; semantic array order remains significant. Paths,
+timestamps, call duration, provider usage, and presentation-only text are
+excluded from semantic identity. Review publication changes only the
+supplemental engineering-review envelope; deterministic report identity and
+findings remain immutable.
 
-Template, prompt, route, and evidence inputs enter through typed validators;
-the verifier has no raw arbitrary-JSON or provider/network interface. It
-rejects unsupported versions, binding mismatches, duplicate attachment
-identity, missing adapters or mandatory inputs, unsafe paths, and stale source
-snapshots. Review publication changes only the supplemental engineering-review
-envelope; deterministic report identity and findings remain immutable.
-
-The case pipeline uses the following supplemental contracts without changing report v5:
-`review-candidate-v1`, `review-agenda-v1`, `case-template-v1`,
-`case-template-bundle-v1`, `engineering-case-v1`, and `evidence-packet-v1`.
-Agenda records cite existing finding and evidence-graph IDs. Engineering cases
-retain immutable finding references and selection provenance, bind the verified
-input and checked-in template bundle, and carry no replacement finding
-severity, confidence, or validity judgment.
-
-The case-template bundle is a mandatory typed `ReviewInput` contract. Runtime
-case construction requires its verified digest to match the input binding and
-its semantic content to equal the checked-in bundle. Template edits therefore
-change the input and case identities; runtime prompts cannot add or replace a
-template.
+The review input binding, agenda, case templates and cases, and evidence
+packets (`review-candidate-v1`, `review-agenda-v1`, `case-template-v1`,
+`case-template-bundle-v1`, `engineering-case-v1`, `evidence-packet-v1`) were
+removed on 2026-11-04: the rebuilt reviewer reads the report, repository
+map, and history digest through the orientation pack and retrieval tools,
+and question templates replace case templates.
 
 All maintained human-readable report surfaces use the shared typed Markdown
 document engine. `scan --format human` renders a freshly scanned report, and
@@ -189,21 +169,6 @@ document engine. `scan --format human` renders a freshly scanned report, and
 document from persisted machine output. The JSON report remains authoritative.
 Persisted Markdown is deterministic and intended for both operator inspection
 and the same evidence-reading workflow used by the model-facing projections.
-
-An evidence packet binds one engineering case and input binding. Its canonical
-semantic payload contains sorted typed evidence items, required, optional,
-blocking, counterevidence, and unavailable indexes, the authorized
-finding/graph/map neighborhood, monotonic budgets, closure, and every omission.
-The packet ID and content digest are recomputed from that payload, and
-validation rejects stale item digests, duplicate or mistyped IDs, dangling
-indexes, altered case templates, and packets beyond the hard byte ceiling.
-Runtime hard limits are code policy rather than schema compatibility constants.
-
-A case lookup names its case, typed request kind, target ID, and decision
-relevance; only selected
-finding IDs and repository-map symbols anchored inside the precomputed two-hop
-case neighborhood are accepted. Raw paths, grep/search expressions, duplicate
-requests, and ambient filesystem authority are absent from the API.
 
 Claims (`engineering-claim-v1`, schema 2) and recommendations
 (`contextual-recommendation-v1`, schema 2) cite evidence IDs: a claim's
@@ -216,9 +181,10 @@ history per file: commits, recent commits, authors, lines added and removed,
 and co-change partners. It names its `HEAD` commit, and a review refuses a
 digest of another commit.
 
-`review-routes-v2` (schema 3) and `review-prompt-bundle-v2` (schema 3) define
-the provider registry with its single reviewer chain and the content-bound
-prompts, without changing report v5.
+`review-routes-v2` (schema 4) and `review-prompt-bundle-v2` (schema 3) define
+the provider registry with its single reviewer chain, the review-wide and
+per-question budgets, and the content-bound prompts, without changing report
+v5.
 
 ## Provenance And Evidence Graph V2
 
@@ -232,27 +198,6 @@ Graph node kinds are `file`, `symbol`, `fact`, `measurement`, `finding`,
 `derived_from`, `supports`, and `produced_by`. Validation requires unique IDs,
 known kinds, valid endpoints, and support plus producer coverage for every
 finding. Support nodes retain evidence keys and a digest, never source text.
-
-## Engine-Resolved Evidence Refs (v0.9.17)
-
-The Layer 6 review engine resolves three kinds of evidence references from the
-provider's `source_requests` payload. The model emits `source_request.symbol_id`
-for all three; the engine dispatches by prefix:
-
-| Prefix | Engine resolution | Id format on `SourceExcerpt` |
-|---|---|---|
-| `symbol:` | `RepositoryMap.symbol_neighborhood` — AST-derived symbol graph walk, bounded by `max_hops`. | `symbol:<MapSymbol.id>` |
-| `EA-<hex16>` | Finding-id resolution — looks up the `FindingBrief` by id, reads a bounded source window at `path:line`. | `finding-excerpt:<path>:<start>-<end>` |
-| `audit-artifact:` | Documentation-only provenance prefix for review artifacts; not a `source_request` input. | N/A (egress only) |
-
-`SourceExcerpt` carries a `kind: SourceExcerptKind` enum (`symbol` / `finding`)
-to make the id's namespace explicit. The `SourceRequest.symbol_id` wire field
-is unchanged; only in-engine construction uses the typed id.
-
-Both `symbol:` and finding-id paths enforce the same budget ceiling
-(`max_excerpts`, `max_excerpt_bytes`, `max_total_bytes`) and digest-parity
-check (`digest_file` against the `MapFile.sha256`). Stale or missing source
-files fail closed with `StaleSourceSnapshot` or `Contract`.
 
 ## Baseline And Gates
 

@@ -977,15 +977,9 @@ mod tests {
 
         let contract_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../contracts");
         for name in [
-            "case-template-bundle-v1",
-            "case-template-v1",
             "contextual-recommendation-v1",
-            "engineering-case-v1",
             "engineering-claim-v1",
             "engineering-review-v1",
-            "evidence-packet-v1",
-            "review-agenda-v1",
-            "review-candidate-v1",
             "review-eval-corpus-v2",
             "review-prompt-bundle-v2",
             "review-routes-v2",

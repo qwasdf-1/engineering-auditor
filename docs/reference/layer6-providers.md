@@ -20,7 +20,8 @@ registry and ordered target-reference chains for `single_reviewer`,
 all-or-none three-slot ensemble. Every target must name a configured model.
 Ensemble absence is explicit and cannot fall back to the single-reviewer chain.
 
-The review-wide budget contains case defaults and per-template tightening.
+The routes carry a review-wide budget and a question budget that may tighten
+it but not widen it.
 Request, input-byte, and cost accounting is cumulative. `max_output_tokens` is
 a per-request response allowance: every initial, repair, and host-correction
 turn receives the complete configured allowance, regardless of earlier output.

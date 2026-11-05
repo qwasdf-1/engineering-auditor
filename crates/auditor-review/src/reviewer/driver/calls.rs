@@ -79,7 +79,7 @@ impl<'a> Caller<'a> {
 
     /// The budget one question may spend.
     pub(super) fn question_budget(&self) -> RouteBudget {
-        self.routes.case_budgets.defaults
+        self.routes.question_budget
     }
 
     /// Sends one request: retried on the same target while the provider

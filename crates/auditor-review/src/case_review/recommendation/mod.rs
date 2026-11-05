@@ -4,7 +4,7 @@ mod verification;
 
 pub use model::{
     BenefitEvidenceMode, ContextualRecommendation, DetectorAdviceRelationship, ExpectedBenefit,
-    Materiality, RecommendationAlternative, RecommendationDraft,
+    Materiality, RecommendationAlternative, RecommendationDraft, RecommendationFamily,
     CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION,
 };
 pub use validate::{validate_recommendations, RecommendationBounds};

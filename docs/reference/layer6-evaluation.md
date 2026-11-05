@@ -202,11 +202,9 @@ identity so variance is visible. Scripted unit runners verify metric and gate
 mechanics but are not evidence of live model quality.
 
 Hermetic scripted-provider end-to-end tests
-(`crates/auditor-review/tests/case_review_input/`) cover every mode on the
-production lifecycle template (single reviewer, challenger, and the shadow
-three-slot ensemble with shared reconsideration) and both shadow templates,
-`shared_root_cause` and `recommendation_consolidation`, through plan, review,
-publication, and offline verification. They prove the mechanics, not live
+(`crates/auditor-review/tests/review_driver.rs`) run the rebuilt review over
+a fixture scan, with a fake provider answering in each wire format.
+They prove the mechanics, not live
 quality.
 
 The live evaluator writes the identity-bound report atomically before the first
