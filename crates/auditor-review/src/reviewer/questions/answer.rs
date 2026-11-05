@@ -55,11 +55,15 @@ impl Question {
                 .filter(|earlier| self.depends_on.contains(&earlier.question_id))
                 .flat_map(|earlier| earlier.claims.iter().cloned()),
         );
-        let subject_ids = self
-            .subjects
-            .iter()
-            .map(|subject| subject.id.clone())
-            .collect::<Vec<_>>();
+        // The plan has no subjects; a step may touch anything shown.
+        let subject_ids = if self.kind == QuestionKind::RemediationPlan {
+            known.iter().cloned().collect()
+        } else {
+            self.subjects
+                .iter()
+                .map(|subject| subject.id.clone())
+                .collect::<Vec<_>>()
+        };
         let bounds = RecommendationBounds {
             case_id: &self.question_id,
             subject_ids: &subject_ids,
@@ -195,9 +199,31 @@ fn ranking_error<'a>(
     if distinct.len() == ranked.len() && distinct == expected {
         return None;
     }
-    Some(if expected.is_empty() {
-        "this question takes no ranking".to_string()
-    } else {
-        format!("the ranking must list every {noun} ID once and nothing else")
-    })
+    if expected.is_empty() {
+        return Some("this question takes no ranking; send an empty ranking".to_string());
+    }
+    let listed = |label: String, ids: Vec<&str>| {
+        (!ids.is_empty()).then(|| format!("{label} {}", ids.join(", ")))
+    };
+    let repeated = ranked
+        .iter()
+        .enumerate()
+        .filter(|(index, id)| ranked[..*index].contains(id))
+        .map(|(_, id)| *id)
+        .collect::<BTreeSet<_>>();
+    let parts = [
+        listed(
+            "missing".to_string(),
+            expected.difference(&distinct).copied().collect(),
+        ),
+        listed(
+            format!("not a {noun} ID"),
+            distinct.difference(&expected).copied().collect(),
+        ),
+        listed("repeated".to_string(), repeated.into_iter().collect()),
+    ];
+    Some(format!(
+        "the ranking must list every {noun} ID once and nothing else: {}",
+        parts.into_iter().flatten().collect::<Vec<_>>().join("; ")
+    ))
 }

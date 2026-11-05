@@ -189,7 +189,12 @@ impl RetrievalHost<'_, '_> {
     fn matching_symbols(&self, query: &str) -> Vec<usize> {
         let view = self.view;
         let query = query.trim();
-        if let Some(symbol) = view.symbol_by_id(query) {
+        // A bare digest is a symbol ID without its prefix.
+        let prefixed = format!("symbol:{query}");
+        if let Some(symbol) = view
+            .symbol_by_id(query)
+            .or_else(|| view.symbol_by_id(&prefixed))
+        {
             return vec![symbol];
         }
         let dotted = query.replace("::", ".");

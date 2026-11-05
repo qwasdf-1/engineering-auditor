@@ -82,10 +82,14 @@ pub(super) fn http_response_failure(
         .and_then(|value| error_envelope_failure(provider, model, value))
         .unwrap_or_else(|| http_failure(provider, model, status));
     let status_class = classify_http_status(status);
-    if !matches!(
-        status_class,
-        ProviderFailureClass::Configuration | ProviderFailureClass::Refusal
-    ) {
+    // An error body the rules do not recognize says less than its status:
+    // an HTTP error is never a model reply to correct.
+    if failure.class == ProviderFailureClass::InvalidOutput
+        || !matches!(
+            status_class,
+            ProviderFailureClass::Configuration | ProviderFailureClass::Refusal
+        )
+    {
         failure.class = status_class;
         failure.retryable_without_model_output = retryable_class(status_class);
     }
@@ -164,6 +168,11 @@ fn classify_error_description(description: &str) -> ProviderFailureClass {
             ProviderFailureClass::Unavailable,
         ),
         (
+            &["guardrail", "data policy"],
+            false,
+            ProviderFailureClass::Policy,
+        ),
+        (
             &["refusal", "safety", "content policy"],
             false,
             ProviderFailureClass::Refusal,
@@ -194,6 +203,30 @@ mod tests {
     use serde_json::json;
 
     use super::*;
+
+    #[test]
+    fn an_http_error_is_classed_by_its_body_or_else_its_status() {
+        let failure = |status, message: &str| {
+            let body = json!({"error": {"message": message, "code": status}});
+            http_response_failure("p", "m", status, Some(&body)).class
+        };
+        assert_eq!(
+            failure(
+                404,
+                "0 endpoints are available matching your guardrail restrictions and data policy"
+            ),
+            ProviderFailureClass::Policy
+        );
+        assert_eq!(
+            failure(404, "no such route"),
+            ProviderFailureClass::Configuration
+        );
+        assert_eq!(failure(503, "busy"), ProviderFailureClass::Unavailable);
+        assert_eq!(
+            failure(400, "the request is invalid"),
+            ProviderFailureClass::Configuration
+        );
+    }
 
     #[test]
     fn cached_prompt_tokens_are_read_from_each_protocol_usage_shape() {

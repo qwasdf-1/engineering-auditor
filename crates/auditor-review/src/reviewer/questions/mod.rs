@@ -306,7 +306,6 @@ impl RepositoryView<'_> {
         items.push(Item::notes(
             "Answer with",
             vec![
-                format!("question_id: {}", question_id.as_str()),
                 format!("claim slots: {}", names(&template.claim_slots)),
                 format!(
                     "recommendation families: {}",
@@ -317,7 +316,7 @@ impl RepositoryView<'_> {
         ));
         let rendered = BoundedDocument::new(
             format!("Question: {}", template.kind.title()),
-            vec![Section::new("Question", items)],
+            vec![Section::new(question_id.as_str(), items)],
         )
         .render(QUESTION_BYTES, &self.source_digest)?;
         if rendered.truncated {

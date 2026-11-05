@@ -295,15 +295,33 @@ fn the_retrieval_budget_bounds_calls_and_result_size() {
     let fixture = Fixture::scan(PYTHON_APP);
     let view = fixture.view();
     let mut brief = ReviewBrief::general();
-    brief.budgets.max_lookup_requests = Some(2);
+    brief.budgets.max_lookup_requests = Some(8);
     let budget = RetrievalBudget::default().tightened_by(Some(&brief));
-    assert_eq!(budget.max_calls, 2);
+    assert_eq!((budget.max_calls, budget.question_calls()), (8, 2));
     let mut host = RetrievalHost::new(&view, &fixture.repo, budget).unwrap();
     let search = || call("s", "search_symbols", json!({"query": "e"}));
+    for question in 0..3 {
+        host.start_question(false);
+        for _ in 0..2 {
+            assert!(!result_text(&host.answer(&search())).starts_with("# Tool error"));
+        }
+        let refused = result_text(&host.answer(&search())).to_string();
+        let spent = if question < 2 {
+            "this question's 2 retrieval calls are spent"
+        } else {
+            "kept for the remediation plan"
+        };
+        assert!(refused.contains(spent), "{refused}");
+    }
+    host.start_question(true);
     for _ in 0..2 {
         assert!(!result_text(&host.answer(&search())).starts_with("# Tool error"));
     }
-    assert!(result_text(&host.answer(&search())).contains("retrieval calls are spent"));
+    let spent = result_text(&host.answer(&search())).to_string();
+    assert!(
+        spent.contains("the review's 8 retrieval calls are spent"),
+        "{spent}"
+    );
 
     let tight = RetrievalBudget {
         max_calls: 8,

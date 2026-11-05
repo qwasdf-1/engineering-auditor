@@ -220,6 +220,24 @@ fn spent_budgets_and_failed_routes_leave_questions_unanswered_with_the_reason() 
     );
     assert_eq!(review.questions[3].reason, review.stopped);
 
+    // A reader that never answers: its last two requests offer only the
+    // answer tool, and the reads it asks for then are not run.
+    let four_requests = routes(&[("fake", ProviderProtocol::Messages)], 64, 4);
+    let reads = || Reply::Calls(vec![("findings_in", json!({"scope": "app/store/db.py"}))]);
+    let Run { review, bodies, .. } =
+        run(&fixture, &four_requests, Box::new(move |_| reads()), None);
+    assert_eq!(status(&review), [QuestionStatus::Unanswered; 4]);
+    assert_eq!(review.retrieval.len(), 8);
+    let offered = bodies
+        .iter()
+        .map(|(_, body)| body["tools"].as_array().map_or(0, Vec::len))
+        .collect::<Vec<_>>();
+    assert_eq!(offered.len(), 16);
+    for question in offered.chunks(4) {
+        assert!(question[0] > 1 && question[1] > 1, "{offered:?}");
+        assert_eq!(question[2..], [1, 1], "{offered:?}");
+    }
+
     let refused = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
     let Run { review, .. } = run(&fixture, &refused, Box::new(|_| Reply::Status(403)), None);
     assert_eq!(status(&review), [QuestionStatus::Unanswered; 4]);

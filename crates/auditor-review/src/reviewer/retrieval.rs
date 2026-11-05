@@ -23,9 +23,12 @@ pub const RETRIEVAL_TOOL_NAMES: [&str; 6] = [
     "history",
 ];
 
-const DEFAULT_CALLS: usize = 32;
+const DEFAULT_CALLS: usize = 64;
 const DEFAULT_RESULT_BYTES: usize = 16 * 1024;
-const DEFAULT_TOTAL_BYTES: usize = 256 * 1024;
+const DEFAULT_TOTAL_BYTES: usize = 512 * 1024;
+/// One question may take this share of the review's calls, and the
+/// questions before the plan, which is asked last, leave one share for it.
+const QUESTION_SHARE: usize = 4;
 /// Below this, a result has no room for more than its heading.
 const MINIMUM_RESULT_BYTES: usize = 512;
 
@@ -49,6 +52,11 @@ impl Default for RetrievalBudget {
 }
 
 impl RetrievalBudget {
+    /// The calls one question may make: a quarter of the review's.
+    pub fn question_calls(&self) -> usize {
+        (self.max_calls / QUESTION_SHARE).max(1)
+    }
+
     /// The brief's lookup-request and context-byte limits, where smaller.
     pub fn tightened_by(mut self, brief: Option<&ReviewBrief>) -> Self {
         if let Some(budgets) = brief.map(|brief| brief.budgets) {
@@ -209,6 +217,9 @@ pub struct RetrievalHost<'v, 'a> {
     pub(super) root: PathBuf,
     budget: RetrievalBudget,
     calls: usize,
+    question_calls: usize,
+    /// Calls the current question must leave for the plan.
+    reserved: usize,
     bytes: usize,
     issued: BTreeSet<String>,
     log: Vec<RetrievalRecord>,
@@ -234,6 +245,8 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
                 .map_err(|error| error.to_string())?,
             budget,
             calls: 0,
+            question_calls: 0,
+            reserved: 0,
             bytes: 0,
             issued: BTreeSet::new(),
             log: Vec::new(),
@@ -271,6 +284,17 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
         }
     }
 
+    /// Starts the next question's share of the calls; a question other
+    /// than the plan leaves one share for it.
+    pub fn start_question(&mut self, plan: bool) {
+        self.question_calls = 0;
+        self.reserved = if plan {
+            0
+        } else {
+            self.budget.question_calls()
+        };
+    }
+
     /// The tools this review offers.
     pub fn tool_specs(&self) -> Vec<ToolSpec> {
         retrieval_tool_specs(self.view.history.is_some())
@@ -285,22 +309,38 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
         &self.log
     }
 
-    fn execute(&mut self, call: &NativeToolCall) -> Result<(String, BTreeSet<String>), String> {
+    /// Counts one call against the budgets; the byte limit of its result.
+    fn admit(&mut self) -> Result<usize, String> {
+        const ANSWER: &str = "answer from the evidence already returned";
         if self.calls >= self.budget.max_calls {
             return Err(format!(
-                "the review's {} retrieval calls are spent; answer from the evidence already returned",
+                "the review's {} retrieval calls are spent; {ANSWER}",
                 self.budget.max_calls
             ));
         }
+        if self.calls + self.reserved >= self.budget.max_calls {
+            return Err(format!(
+                "the review's other retrieval calls are kept for the remediation plan; {ANSWER}"
+            ));
+        }
+        if self.question_calls >= self.budget.question_calls() {
+            return Err(format!(
+                "this question's {} retrieval calls are spent; {ANSWER}",
+                self.budget.question_calls()
+            ));
+        }
         self.calls += 1;
+        self.question_calls += 1;
         let remaining = self.budget.max_total_bytes.saturating_sub(self.bytes);
         let limit = self.budget.max_result_bytes.min(remaining);
         if limit < MINIMUM_RESULT_BYTES {
-            return Err(
-                "the review's retrieval bytes are spent; answer from the evidence already returned"
-                    .to_string(),
-            );
+            return Err(format!("the review's retrieval bytes are spent; {ANSWER}"));
         }
+        Ok(limit)
+    }
+
+    fn execute(&mut self, call: &NativeToolCall) -> Result<(String, BTreeSet<String>), String> {
+        let limit = self.admit()?;
         if let Some(error) = &call.validation_error {
             return Err(format!("invalid arguments: {error}"));
         }

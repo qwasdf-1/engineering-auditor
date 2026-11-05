@@ -161,6 +161,8 @@ struct Conversation<'q> {
     history: Vec<NativeConversationMessage>,
     spent: QuestionSpend,
     rejected: Vec<String>,
+    /// Set for the last requests, which take only an answer.
+    answering: bool,
 }
 
 impl Conversation<'_> {
@@ -194,6 +196,7 @@ impl Review<'_, '_> {
         view: &RepositoryView<'_>,
     ) -> Result<(), String> {
         self.known.extend(question.evidence_ids.iter().cloned());
+        host.start_question(question.kind == QuestionKind::RemediationPlan);
         let mut user = format!("{opening}\n{}", question.markdown);
         if question.kind == QuestionKind::RemediationPlan && !self.answers.is_empty() {
             let earlier = self
@@ -213,6 +216,7 @@ impl Review<'_, '_> {
             history: Vec::new(),
             spent: QuestionSpend::default(),
             rejected: Vec::new(),
+            answering: false,
         };
         let ending = match &self.stopped {
             Some(reason) => Ending::Unanswered(reason.clone()),
@@ -269,11 +273,22 @@ impl Review<'_, '_> {
         let mut turn_number = 0;
         loop {
             turn_number += 1;
+            // The last requests offer only the answer tool, so a question
+            // that read until its budget ran out still gets answered.
+            if !conversation.answering && caller.requests_left(&conversation.spent) <= FINAL_TURNS {
+                conversation.answering = true;
+                conversation.history.push(answer_now());
+            }
+            let tools = if conversation.answering {
+                vec![answer_tool(conversation.question)]
+            } else {
+                conversation.tools.clone()
+            };
             let request = conversation.request(turn_number, &self.system, caller);
             let input_bytes =
                 self.system.len() + conversation.user.len() + history_bytes(&conversation.history);
-            let dispatch = CallDispatch::tool_call(conversation.tools.clone())
-                .with_conversation(conversation.history.clone());
+            let dispatch =
+                CallDispatch::tool_call(tools).with_conversation(conversation.history.clone());
             let outcome = caller.turn(
                 &conversation.question.question_id,
                 &request,
@@ -322,6 +337,10 @@ impl Review<'_, '_> {
                     accepted = answer;
                     tool_result(call, markdown)
                 }
+                (None, _) if conversation.answering => tool_result(
+                    call,
+                    format!("Reading is over for this question; this call was not run. Answer with {ANSWER_TOOL}."),
+                ),
                 (None, CHECK_TOOL) => {
                     tool_result(call, self.check_call(conversation.question, call))
                 }
@@ -606,6 +625,17 @@ fn tool_result(call: &NativeToolCall, content_markdown: String) -> NativeConvers
 }
 
 /// Sent after a reply with no tool call, or one cut off.
+/// Requests at the end of a question's budget that only take an answer.
+const FINAL_TURNS: usize = 2;
+
+fn answer_now() -> NativeConversationMessage {
+    NativeConversationMessage::UserCorrection {
+        content_markdown: format!(
+            "This question's requests are nearly spent and reading is over: send your whole answer now with one {ANSWER_TOOL} call, from the evidence already returned."
+        ),
+    }
+}
+
 fn correction() -> NativeConversationMessage {
     NativeConversationMessage::UserCorrection {
         content_markdown: format!(

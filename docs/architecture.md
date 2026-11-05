@@ -198,7 +198,8 @@ than a third of the files). From it, the orientation pack renders shape,
 module structure and cycles, hotspots, finding distribution, and coverage
 within 24 KiB, and the retrieval tools (`read_source`, `symbol_info`,
 `search_symbols`, `findings_in`, `module_overview`) answer tool calls within
-a call and byte budget. Every row cites an evidence ID (`finding:`, `file:`,
+a review's call and byte budget, of which one question may take a quarter
+of the calls. Every row cites an evidence ID (`finding:`, `file:`,
 `symbol:`, `module:`, `edge:`, `entry:`, `source-span:`, and others) that
 only a shown row issues, and source reads re-check the file's hash.
 
@@ -232,7 +233,9 @@ claim IDs, so its steps can rest on them. The reviewer reads with the
 retrieval tools (`findings_in` shows each finding's evidence values) and
 answers with one `answer_question` call: claims and recommendations named by
 refs of its own, which the host turns into content-derived IDs before
-`check_answer`. A rejected answer goes back with its reasons. With a
+`check_answer`. A rejected answer goes back with its reasons, and a
+question's last two requests offer only the answer tool, so a reviewer that
+reads until its budget runs out still answers. With a
 checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way

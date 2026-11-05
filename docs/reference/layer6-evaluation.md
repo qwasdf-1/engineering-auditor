@@ -72,9 +72,10 @@ when a gate fails. Each run passes six gates:
   file, symbol, edge, entry point, module, dependency, cycle, detector, line
   range, or history entry the inputs hold;
 - **contradictions**: no claim cites one ID both for and against itself, and
-  no claim gives a different number for a value a cited finding measured
-  (`cyclomatic complexity is 12` when the finding says 31). Whether a
-  judgment is right is the rubric's `correct`;
+  no claim gives a number for a measured value that none of its cited
+  findings measured (`cyclomatic complexity is 12` when the only cited
+  finding says 31; a claim about two findings may give each one's value).
+  Whether a judgment is right is the rubric's `correct`;
 - **patch checks**: every accepted recommendation with a patch carries the
   host's check, with a verdict of verified or refuted;
 - **budget**: every call went to a route target; the recorded spend adds up

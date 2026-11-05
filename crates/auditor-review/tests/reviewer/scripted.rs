@@ -82,9 +82,7 @@ impl Transport for FakeProvider {
         let question = self
             .questions
             .iter()
-            .find(|question| {
-                user.contains(&format!("question_id: {}", question.question_id.as_str()))
-            })
+            .find(|question| user.contains(&format!("\n## {}\n", question.question_id.as_str())))
             .expect("every request asks one known question");
         let mut state = self.state.lock().unwrap();
         state.bodies.push((request.url.clone(), body));

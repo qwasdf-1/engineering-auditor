@@ -26,7 +26,8 @@
   findings by layer, detector, and symbol, and coverage gaps) rendered
   within 24 KiB, and five retrieval tools (`read_source`, `symbol_info`,
   `search_symbols`, `findings_in`, `module_overview`) with call and byte
-  budgets. Every row cites an evidence ID the host issues only for rows it
+  budgets (64 calls and 512 KiB a review; one question may take a quarter
+  of the calls, and the questions before the plan leave it one share). Every row cites an evidence ID the host issues only for rows it
   shows.
 - A patch checker for review recommendations (`review check-patch`,
   experimental). It applies a unified diff to a scratch copy of the files
@@ -77,7 +78,10 @@
   earlier answers' claims. The reviewer answers with one `answer_question`
   call whose claims and recommendations carry refs of its own; the host
   turns them into IDs and checks the answer, and a rejected answer goes
-  back with its reasons. With `--check-patches`, a `check_patch` tool runs
+  back with its reasons, naming what to change; a question's last two
+  requests offer only the answer tool. An HTTP error whose body the
+  provider rules do not recognize is classed by its status, so a refused
+  route fails over instead of being corrected as a model reply. With `--check-patches`, a `check_patch` tool runs
   the patch checker on a proposed diff, and every accepted recommendation
   with a patch is checked (at most 8 checks by default). A request that
   returned no model output is retried, a failing target gives way to the
@@ -92,8 +96,8 @@
   report, map, and history they read: each run's binding to those inputs and
   to the routes and brief, that every question was answered, that every
   answer passes its checks again and cites only evidence the inputs hold,
-  that no claim cites one ID both ways or misquotes a value a cited finding
-  measured, that every accepted patch carries the host's verdict, and that
+  that no claim cites one ID both ways or gives a measured value that none
+  of its cited findings measured, that every accepted patch carries the host's verdict, and that
   the spend adds up and stays within every budget; across runs, that the
   top hotspots and plan steps overlap (`--top`, `--min-overlap`). A failed
   gate exits 1 with the result (`review-qualification-v1.schema.json`).

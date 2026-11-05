@@ -124,7 +124,7 @@ fn validate_scope(
         .collect::<Vec<_>>();
     if !invalid_scope.is_empty() {
         return Err(format!(
-            "recommendation {} field scope_ids contains out-of-case values: {}",
+            "recommendation {} field scope_ids contains out-of-case values: {}; scope_ids takes only the IDs the question allows, exactly as shown",
             recommendation.recommendation_id,
             invalid_scope.join(", ")
         ));
@@ -139,7 +139,7 @@ fn validate_scope(
         Ok(())
     } else {
         Err(format!(
-            "recommendation {} field affected_finding_ids contains out-of-case values: {}",
+            "recommendation {} field affected_finding_ids contains out-of-case values: {}; only the question's finding IDs are allowed",
             recommendation.recommendation_id,
             invalid_findings.join(", ")
         ))

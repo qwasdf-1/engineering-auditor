@@ -126,6 +126,7 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
     let strings = |description: &str| json!({"type": "array", "items": {"type": "string"}, "description": description});
     let text = |description: &str| json!({"type": "string", "description": description});
     let choice = |values: Vec<String>| json!({"type": "string", "enum": values});
+    let described = |values: Vec<String>, description: &str| json!({"type": "string", "enum": values, "description": description});
     let object = |properties: Value, required: &[&str]| {
         json!({
             "type": "object",
@@ -137,11 +138,11 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
     let claim = object(
         json!({
             "ref": text("A name for this claim, unique in the answer, such as c1."),
-            "slot": choice(names(&question.claim_slots)),
-            "kind": choice(names(&CLAIM_KINDS)),
+            "slot": described(names(&question.claim_slots), "What the claim is about: one of this question's claim slots."),
+            "kind": described(names(&CLAIM_KINDS), "The claim's role, separate from its slot: root_cause names a cause behind findings, actionability says whether something can be acted on, recommendation_premise is a fact a recommendation rests on, expected_benefit is what a change gains."),
             "proposition": text("What the claim asserts, in one or two sentences."),
             "status": choice(names(&CLAIM_STATUSES)),
-            "supporting_evidence_ids": strings("Evidence IDs shown to you that support the claim."),
+            "supporting_evidence_ids": strings("Evidence IDs shown to you in brackets (finding:, file:, symbol:, source-span:, ...) that support the claim; never paths or claim IDs."),
             "counter_evidence_ids": strings("Evidence IDs shown to you that cut against it."),
             "depends_on": strings("Refs of other claims in this answer it rests on."),
             "assumptions": strings("What the claim assumes that no evidence shows."),
@@ -185,7 +186,7 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
             "ref": text("A name for this recommendation, unique in the answer, such as r1."),
             "family": choice(names(&question.recommendation_families)),
             "summary": text("What to do."),
-            "scope_ids": strings("Subject or finding IDs of this question the change touches."),
+            "scope_ids": strings(scope_description(question.kind)),
             "premises": strings("Refs of claims in this answer, or claim IDs from earlier answers, that justify it."),
             "resolves": strings("Finding IDs (finding:...) of this question the change resolves."),
             "detector_advice_relationship": choice(names(&RELATIONSHIPS)),
@@ -231,6 +232,15 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
             &["claims"],
         ),
         strict: false,
+    }
+}
+
+fn scope_description(kind: QuestionKind) -> &'static str {
+    match kind {
+        QuestionKind::RemediationPlan => {
+            "Evidence IDs shown to you that the change touches (finding:, file:, symbol:, module:, module-cycle:, ...), never paths."
+        }
+        _ => "IDs from this question's Subjects or Findings lists that the change touches, exactly as listed (file:..., symbol:..., finding:...), never paths.",
     }
 }
 
@@ -447,12 +457,33 @@ fn with_refs(
         .filter(|(_, id)| error.contains(id.as_str()))
         .map(|(reference, id)| format!("`{reference}` is {}", id.as_str()))
         .collect::<Vec<_>>();
-    if named.is_empty() {
+    let mut error = if named.is_empty() {
         error
     } else {
         format!("{error} ({})", named.join("; "))
+    };
+    // Unknown evidence is listed quoted; a claim's own ID is not.
+    if error.contains("cites unknown evidence") {
+        for (prefix, hint) in UNKNOWN_EVIDENCE_HINTS {
+            if error.contains(prefix) {
+                error.push_str(hint);
+            }
+        }
     }
+    error
 }
+
+/// What to do about an unknown cited ID of each kind.
+const UNKNOWN_EVIDENCE_HINTS: [(&str, &str); 2] = [
+    (
+        "\"engineering-claim:",
+        "; a claim ID from an earlier answer is a premise for a recommendation, not evidence for a claim: cite the evidence that claim cites",
+    ),
+    (
+        "\"source-span:",
+        "; a source-span ID names exactly the lines a read returned: cite the ID the read issued, or read those lines first",
+    ),
+];
 
 /// The tool result for an accepted answer.
 pub(super) fn accepted_markdown(accepted: &Accepted) -> String {

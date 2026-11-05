@@ -123,13 +123,24 @@ impl ContextualRecommendation {
         for step in &mut draft.verification_steps {
             normalize(&mut step.evidence_ids);
         }
-        if draft.summary.trim().is_empty()
-            || draft.scope_ids.is_empty()
-            || draft.premise_claim_ids.is_empty()
-            || draft.verification_steps.is_empty()
-            || draft.materiality_basis.trim().is_empty()
-        {
-            return Err("recommendation is missing required decision content".to_string());
+        let missing = [
+            ("summary", draft.summary.trim().is_empty()),
+            ("scope_ids", draft.scope_ids.is_empty()),
+            ("premises", draft.premise_claim_ids.is_empty()),
+            ("verification_steps", draft.verification_steps.is_empty()),
+            (
+                "materiality_basis",
+                draft.materiality_basis.trim().is_empty(),
+            ),
+        ]
+        .into_iter()
+        .filter_map(|(field, empty)| empty.then_some(field))
+        .collect::<Vec<_>>();
+        if !missing.is_empty() {
+            return Err(format!(
+                "recommendation is missing required decision content: {} must not be empty",
+                missing.join(", ")
+            ));
         }
         let recommendation_id = case_draft_id(
             "contextual-recommendation",

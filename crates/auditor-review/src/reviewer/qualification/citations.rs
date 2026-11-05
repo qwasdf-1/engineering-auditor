@@ -7,7 +7,7 @@
 //! finding measured (`cyclomatic_complexity 12` when the finding says 31).
 //! Whether a claim's judgment is right is the usefulness rubric's call.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::Value;
 
@@ -145,51 +145,57 @@ fn claim_contradictions(view: &RepositoryView<'_>, claim: &EngineeringClaim) -> 
         .filter(|cited| claim.counter_evidence_ids.contains(cited))
         .map(|cited| format!("claim {id} cites {cited} both for and against itself"));
     let proposition = claim.proposition.to_lowercase();
-    let misquotes = claim
+    let evidence = claim
         .supporting_evidence_ids
         .iter()
         .chain(&claim.counter_evidence_ids)
         .filter_map(|cited| {
             let finding = cited.strip_prefix("finding:")?;
-            let finding = view
-                .findings
+            view.findings
                 .iter()
-                .find(|candidate| candidate.id == finding)?;
-            Some((cited, &finding.evidence))
-        })
-        .flat_map(|(cited, evidence)| {
-            misquoted_values(&proposition, evidence).into_iter().map(
-                move |(key, said, measured)| {
-                    format!("claim {id} gives {key} as {said}, but {cited} measured {measured}")
-                },
-            )
+                .find(|candidate| candidate.id == finding)
+                .map(|finding| &finding.evidence)
         });
+    let misquotes =
+        misquoted_values(&proposition, evidence)
+            .into_iter()
+            .map(|(key, said, measured)| {
+                format!(
+                    "claim {id} gives {key} as {said}, but the cited findings measured {measured}"
+                )
+            });
     both.chain(misquotes).collect()
 }
 
-/// `(key, number the text gives, number measured)` for each numeric
-/// evidence value the text restates differently. Only specific keys (with
-/// an underscore, or eight characters or more) are matched, by their own
-/// name or with spaces for underscores, as whole words.
-fn misquoted_values(text: &str, evidence: &Value) -> Vec<(String, String, String)> {
-    let Some(values) = evidence.as_object() else {
-        return Vec::new();
-    };
-    let mut misquotes = Vec::new();
-    for (key, value) in values {
-        let Some(measured) = value.as_f64() else {
-            continue;
-        };
-        if !key.contains('_') && key.len() < 8 {
-            continue;
+/// `(key, number the text gives, numbers measured)` for each numeric
+/// evidence value the text restates as no cited finding measured it. A
+/// claim about two findings may give each one's value. Only specific keys
+/// (with an underscore, or eight characters or more) are matched, by
+/// their own name or with spaces for underscores, as whole words.
+fn misquoted_values<'e>(
+    text: &str,
+    evidence: impl IntoIterator<Item = &'e Value>,
+) -> Vec<(String, String, String)> {
+    let mut measured = BTreeMap::<&str, Vec<&Value>>::new();
+    for (key, value) in evidence.into_iter().filter_map(Value::as_object).flatten() {
+        if value.is_number() && (key.contains('_') || key.len() >= 8) {
+            measured.entry(key).or_default().push(value);
         }
+    }
+    let mut misquotes = Vec::new();
+    for (key, values) in measured {
         let spaced = key.replace('_', " ").to_lowercase();
         let forms = BTreeSet::from([key.to_lowercase(), spaced]);
-        for form in &forms {
-            for said in numbers_after(text, form) {
-                if (said - measured).abs() > f64::EPSILON * measured.abs().max(1.0) {
-                    misquotes.push((key.clone(), said.to_string(), value.to_string()));
-                }
+        let matches = |said: f64| {
+            values
+                .iter()
+                .filter_map(|value| value.as_f64())
+                .any(|measured| (said - measured).abs() <= f64::EPSILON * measured.abs().max(1.0))
+        };
+        for said in forms.iter().flat_map(|form| numbers_after(text, form)) {
+            if !matches(said) {
+                let listed = values.iter().map(ToString::to_string).collect::<Vec<_>>();
+                misquotes.push((key.to_string(), said.to_string(), listed.join(" or ")));
             }
         }
     }
@@ -241,7 +247,7 @@ mod tests {
     #[test]
     fn a_restated_measure_must_match_the_finding() {
         let evidence = json!({"cyclomatic_complexity": 31, "threshold": 10, "lines": 900});
-        let misquotes = |text: &str| misquoted_values(text, &evidence);
+        let misquotes = |text: &str| misquoted_values(text, [&evidence]);
         assert!(misquotes("cyclomatic_complexity=31 makes it risky").is_empty());
         assert!(misquotes("its cyclomatic complexity of 31 is high").is_empty());
         assert_eq!(
@@ -261,5 +267,14 @@ mod tests {
             "short keys are too generic to match"
         );
         assert!(misquotes("max_cyclomatic_complexity_total 3").is_empty());
+        let other = json!({"cyclomatic_complexity": 12});
+        assert!(
+            misquoted_values(
+                "cyclomatic complexity 31 in one, cyclomatic complexity 12 in the other",
+                [&evidence, &other]
+            )
+            .is_empty(),
+            "a claim about two findings may give each one's value"
+        );
     }
 }

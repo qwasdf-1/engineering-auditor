@@ -82,6 +82,16 @@ impl<'a> Caller<'a> {
         self.routes.question_budget
     }
 
+    /// Requests left before the question's or the review's budget is spent.
+    pub(super) fn requests_left(&self, question: &QuestionSpend) -> usize {
+        let review = self.routes.review_budget.max_requests;
+        let question_left = self
+            .question_budget()
+            .max_requests
+            .saturating_sub(question.requests);
+        question_left.min(review.saturating_sub(self.spend.requests))
+    }
+
     /// Sends one request: retried on the same target while the provider
     /// gives no model output, then on the next target.
     pub(super) fn turn(
