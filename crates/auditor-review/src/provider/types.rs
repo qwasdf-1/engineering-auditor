@@ -7,6 +7,7 @@ use serde_json::Value;
 pub const PROVIDER_ADAPTER_VERSION: u32 = 45;
 
 const HTTP_AUTHENTICATION_REQUIRED: u16 = 401;
+const HTTP_PAYMENT_REQUIRED: u16 = 402;
 const HTTP_AUTHORIZATION_DENIED: u16 = 403;
 const HTTP_BAD_REQUEST: u16 = 400;
 const HTTP_NOT_FOUND: u16 = 404;
@@ -56,6 +57,7 @@ impl ProviderKind {
 pub(super) fn classify_http_status(status: u16) -> ProviderFailureClass {
     match status {
         HTTP_AUTHENTICATION_REQUIRED => ProviderFailureClass::Authentication,
+        HTTP_PAYMENT_REQUIRED => ProviderFailureClass::Billing,
         HTTP_AUTHORIZATION_DENIED => ProviderFailureClass::Authorization,
         HTTP_REQUEST_TIMEOUT | HTTP_GATEWAY_TIMEOUT => ProviderFailureClass::Timeout,
         HTTP_CONTENT_TOO_LARGE => ProviderFailureClass::ContextOverflow,
@@ -526,6 +528,8 @@ pub struct ProviderResponse {
 pub enum ProviderFailureClass {
     Authentication,
     Authorization,
+    /// The account's credit or budget is spent; retrying will not help.
+    Billing,
     RateLimit,
     Timeout,
     Unavailable,

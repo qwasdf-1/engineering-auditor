@@ -83,13 +83,19 @@ pub(super) fn http_response_failure(
         .unwrap_or_else(|| http_failure(provider, model, status));
     let status_class = classify_http_status(status);
     // An error body the rules do not recognize says less than its status:
-    // an HTTP error is never a model reply to correct.
-    if failure.class == ProviderFailureClass::InvalidOutput
-        || !matches!(
+    // an HTTP error is never a model reply to correct. An account's spent
+    // budget or policy settings outrank any status they arrive with.
+    let body_decides = matches!(
+        failure.class,
+        ProviderFailureClass::Billing | ProviderFailureClass::Policy
+    ) || (failure.class != ProviderFailureClass::InvalidOutput
+        && matches!(
             status_class,
-            ProviderFailureClass::Configuration | ProviderFailureClass::Refusal
-        )
-    {
+            ProviderFailureClass::Configuration
+                | ProviderFailureClass::Refusal
+                | ProviderFailureClass::Billing
+        ));
+    if !body_decides {
         failure.class = status_class;
         failure.retryable_without_model_output = retryable_class(status_class);
     }
@@ -101,7 +107,13 @@ pub(super) fn error_envelope_failure(
     model: &str,
     value: &Value,
 ) -> Option<ProviderFailure> {
-    let error = value.get("error")?.as_object()?;
+    // Most providers wrap the error in `error`; Mistral sends it top-level
+    // as `{"object": "error", ...}`.
+    let error = match value.get("error") {
+        Some(error) => error.as_object()?,
+        None if value["object"] == "error" => value.as_object()?,
+        None => return None,
+    };
     let description = error_description(error);
     let class = classify_error_description(&description);
     let message = error
@@ -129,6 +141,11 @@ fn error_description(error: &serde_json::Map<String, Value>) -> String {
 
 fn classify_error_description(description: &str) -> ProviderFailureClass {
     const RULES: &[(&[&str], bool, ProviderFailureClass)] = &[
+        (
+            &["billing", "insufficient_quota", "credits"],
+            false,
+            ProviderFailureClass::Billing,
+        ),
         (
             &["rate", "too many", "quota"],
             false,
@@ -222,6 +239,17 @@ mod tests {
             ProviderFailureClass::Configuration
         );
         assert_eq!(failure(503, "busy"), ProviderFailureClass::Unavailable);
+        assert_eq!(
+            failure(429, "insufficient_quota: check your plan and billing"),
+            ProviderFailureClass::Billing
+        );
+        assert_eq!(failure(402, "no reason"), ProviderFailureClass::Billing);
+        let mistral = json!({"object": "error", "message": "API budget exhausted.",
+            "type": "billing_api_budget_exhausted", "code": "2303"});
+        let spent = http_response_failure("p", "m", 402, Some(&mistral));
+        assert_eq!(spent.class, ProviderFailureClass::Billing);
+        assert!(!spent.retryable_without_model_output);
+        assert_eq!(spent.message, "provider error: API budget exhausted.");
         assert_eq!(
             failure(400, "the request is invalid"),
             ProviderFailureClass::Configuration

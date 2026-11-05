@@ -81,7 +81,10 @@
   back with its reasons, naming what to change; a question's last two
   requests offer only the answer tool. An HTTP error whose body the
   provider rules do not recognize is classed by its status, so a refused
-  route fails over instead of being corrected as a model reply. With `--check-patches`, a `check_patch` tool runs
+  route fails over instead of being corrected as a model reply; a spent
+  account budget (HTTP 402, or a billing error body in either the wrapped
+  or Mistral's top-level shape) is a non-retryable `billing` failure.
+  With `--check-patches`, a `check_patch` tool runs
   the patch checker on a proposed diff, and every accepted recommendation
   with a patch is checked (at most 8 checks by default). A request that
   returned no model output is retried, a failing target gives way to the
