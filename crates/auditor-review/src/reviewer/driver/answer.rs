@@ -189,7 +189,7 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
             "scope_ids": strings(scope_description(question.kind)),
             "premises": strings("Refs of claims in this answer, or claim IDs from earlier answers, that justify it."),
             "resolves": strings("Finding IDs (finding:...) of this question the change resolves."),
-            "detector_advice_relationship": choice(names(&RELATIONSHIPS)),
+            "detector_advice_relationship": described(names(&RELATIONSHIPS), "How the change relates to what the detectors advise for the findings it resolves; not the family."),
             "preconditions": strings("What must hold first."),
             "expected_benefits": {"type": "array", "items": benefit},
             "risks": strings("Risks of the change."),

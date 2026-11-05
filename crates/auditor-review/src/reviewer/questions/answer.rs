@@ -113,7 +113,7 @@ impl Question {
                         .filter(|step| step.affected_finding_ids.is_empty())
                         .map(|step| {
                             format!(
-                                "plan step {} resolves no finding",
+                                "plan step {} resolves no finding: list the finding IDs it fixes in resolves, or drop the step",
                                 step.recommendation_id.as_str()
                             )
                         }),
