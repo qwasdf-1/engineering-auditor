@@ -462,6 +462,15 @@
       "path": "crates/auditor-review/src/reviewer/view.rs",
       "reason": "Reviewed 2026-11-04: the file is new in the window (9369327); the growth is the history digest (e07bbaa, 48 lines) and the findings_in detail row (b2ddc9f, 9 lines). History-dependent hotspot accepted under the operator-approved precedent until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-cd473a0466597fa3",
+      "identity": {},
+      "message": "crates/auditor-review/src/reviewer/driver/mod.rs is complex and growing (CCX=72, growth=+94 LOC).",
+      "path": "crates/auditor-review/src/reviewer/driver/mod.rs",
+      "reason": "Reviewed 2026-11-09: the file is new in the window (b2ddc9f); most of the growth is resuming a stopped review (b97e3bf, 140 net lines: the resume checks, the checkpoint, and the kept records), net of the prompt-cache split (dfca677, 120 lines out). History-dependent hotspot that surfaced only once committed; accepted under the operator-approved precedent until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
