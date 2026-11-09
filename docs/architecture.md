@@ -252,8 +252,13 @@ one a read returned. With a
 checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way
-to the next, and a spent question or review budget leaves questions
-unanswered with the reason. The review record
+to the next, an outage on the last target is waited out with resends every
+five minutes, and a spent question or review budget leaves questions
+unanswered with the reason. A request with no model output counts against
+the cost budget only, not the request or byte budgets. A review that
+stopped, or a run interrupted after its per-question checkpoint, resumes
+with `review run --resume`, keeping the questions answered before the stop.
+The review record
 (`contracts/engineering-review-v1.schema.json`) holds each answer, every
 provider call and retrieval, the checks, and what the review spent.
 

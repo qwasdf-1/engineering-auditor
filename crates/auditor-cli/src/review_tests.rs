@@ -262,6 +262,8 @@ fn review_qualify_fails_an_unanswered_run_offline_and_rubric_lists_no_items() {
             transcript: &auditor_review::TranscriptRecorder::null(),
             checker: None,
             max_patch_checks: 0,
+            resume: None,
+            checkpoint: None,
         },
     )
     .unwrap();

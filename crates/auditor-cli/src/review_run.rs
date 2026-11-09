@@ -1,6 +1,10 @@
 //! `review run --experimental-reviewer`: the rebuilt engineering review
 //! over a scan's report and repository map, behind an explicit flag until
 //! a route qualifies on it (v1.6 plan, Phase B).
+//!
+//! With `--output`, the record (and the transcript, with `--transcript`)
+//! is written after each question, marked stopped until the review ends,
+//! so `--resume` with that record continues an interrupted or stopped run.
 
 use std::collections::BTreeSet;
 use std::path::PathBuf;
@@ -12,9 +16,10 @@ use auditor_detectors::{
 };
 use auditor_report::parse_repository_map_reference;
 use auditor_review::{
-    load_and_validate_repository_map, load_history_digest, run_engineering_review, HostedConsent,
-    HttpTransport, QuestionTemplateBundle, RecommendationChecker, RepositoryView, ReviewBrief,
-    ReviewPromptBundleV2, ReviewRoutesV2, ReviewSetup, TranscriptRecorder, DEFAULT_PATCH_CHECKS,
+    load_and_validate_repository_map, load_history_digest, run_engineering_review,
+    EngineeringReview, HostedConsent, HttpTransport, QuestionTemplateBundle, RecommendationChecker,
+    RepositoryView, ReviewBrief, ReviewPromptBundleV2, ReviewRoutesV2, ReviewSetup,
+    TranscriptRecorder, DEFAULT_PATCH_CHECKS,
 };
 use auditor_scan::{PatchChecker, TestCommand};
 use serde_json::Value;
@@ -37,6 +42,7 @@ struct Options {
     include_references: bool,
     transcript: Option<PathBuf>,
     output: Option<PathBuf>,
+    resume: Option<PathBuf>,
     consent: HostedConsent,
 }
 
@@ -56,6 +62,7 @@ pub(crate) fn run(args: &[String]) -> Result<String, String> {
             "--history" => options.history = Some(path()?),
             "--transcript" => options.transcript = Some(path()?),
             "--output" => options.output = Some(path()?),
+            "--resume" => options.resume = Some(path()?),
             "--check-patches" => options.check_patches = true,
             "--include-references" => options.include_references = true,
             "--max-patch-checks" => {
@@ -143,11 +150,48 @@ fn review(options: Options) -> Result<String, String> {
     } else {
         None
     };
+    let prior = options
+        .resume
+        .map(|path| {
+            parse_file(&path, "review to resume", |text| {
+                serde_json::from_str::<EngineeringReview>(text)
+                    .map_err(|error| format!("invalid review to resume: {error}"))
+            })
+        })
+        .transpose()?;
+    // A resumed run's transcript continues the stopped run's.
+    let earlier_transcript = match (&prior, &options.transcript) {
+        (Some(_), Some(path)) if path.exists() => {
+            let recorded: Value =
+                parse_file(path, "transcript", |text| serde_json::from_str(text))?;
+            recorded["transcript"]
+                .as_array()
+                .cloned()
+                .unwrap_or_default()
+        }
+        _ => Vec::new(),
+    };
     let transport = HttpTransport::default();
     let transcript = if options.transcript.is_some() {
         TranscriptRecorder::enabled()
     } else {
         TranscriptRecorder::null()
+    };
+    let write_transcript = || -> Result<(), String> {
+        let Some(path) = &options.transcript else {
+            return Ok(());
+        };
+        let mut recorded = transcript.to_json(None);
+        if let Some(events) = recorded["transcript"].as_array_mut() {
+            events.splice(0..0, earlier_transcript.iter().cloned());
+        }
+        publish(Some(path.clone()), &recorded).map(drop)
+    };
+    let checkpoint = |review: &EngineeringReview| {
+        let written = publish(options.output.clone(), review).and_then(|_| write_transcript());
+        if let Err(error) = written {
+            eprintln!("auditor: the review checkpoint was not written: {error}");
+        }
     };
     let review = run_engineering_review(
         &view,
@@ -164,11 +208,14 @@ fn review(options: Options) -> Result<String, String> {
                 .as_ref()
                 .map(|checker| checker as &dyn RecommendationChecker),
             max_patch_checks: options.max_patch_checks.unwrap_or(DEFAULT_PATCH_CHECKS),
+            resume: prior.as_ref(),
+            checkpoint: options
+                .output
+                .is_some()
+                .then_some(&checkpoint as &dyn Fn(&EngineeringReview)),
         },
     )?;
-    if let Some(path) = options.transcript {
-        publish(Some(path), &transcript.to_json(None))?;
-    }
+    write_transcript()?;
     let published = publish(options.output, &review)?;
     match &review.stopped {
         Some(reason) if review.answered().next().is_none() => {

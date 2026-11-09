@@ -309,6 +309,18 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
         &self.log
     }
 
+    /// Continues a stopped review's retrieval: its calls stay logged, what
+    /// they returned stays citable, and every logged call counts against
+    /// the budget, so a resumed review never gets more calls than one run.
+    pub(crate) fn resume(&mut self, log: &[RetrievalRecord]) {
+        for record in log {
+            self.calls += 1;
+            self.bytes += record.result_bytes;
+            self.issued.extend(record.evidence_ids.iter().cloned());
+        }
+        self.log = log.to_vec();
+    }
+
     /// Counts one call against the budgets; the byte limit of its result.
     fn admit(&mut self) -> Result<usize, String> {
         const ANSWER: &str = "answer from the evidence already returned";

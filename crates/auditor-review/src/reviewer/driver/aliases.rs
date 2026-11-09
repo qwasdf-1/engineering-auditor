@@ -146,6 +146,28 @@ impl Aliases {
         &self.by_alias
     }
 
+    /// The table a stopped review recorded, so a resumed review keeps its
+    /// aliases and mints the next ones after them.
+    pub(super) fn restore(table: &BTreeMap<String, String>) -> Result<Self, String> {
+        let mut aliases = Self::default();
+        for (alias, id) in table {
+            let (kind, number) = KINDS
+                .iter()
+                .find_map(|(kind, _)| {
+                    let number = alias.strip_prefix(kind)?.strip_prefix(':')?;
+                    Some((*kind, number.parse::<usize>().ok()?))
+                })
+                .ok_or_else(|| {
+                    format!("the recorded alias `{alias}` is not one the review mints")
+                })?;
+            let minted = aliases.minted.entry(kind).or_default();
+            *minted = (*minted).max(number);
+            aliases.by_id.insert(id.clone(), alias.clone());
+            aliases.by_alias.insert(alias.clone(), id.clone());
+        }
+        Ok(aliases)
+    }
+
     /// Copies `text`, replacing each `kind:` token that `replace` accepts;
     /// `replace` gets the bytes after the colon and returns how many it
     /// consumed and what to write instead.

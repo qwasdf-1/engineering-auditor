@@ -15,7 +15,8 @@ use auditor_review::{
 };
 use fixture::{Fixture, PYTHON_APP};
 use scripted::{
-    good_answer, prompts, reviewer, routes, run, templates, FakeChecker, Reply, Script,
+    good_answer, prompts, resumable_run, reviewer, routes, run, templates, FakeChecker, Reply,
+    Script,
 };
 use serde_json::{json, Value};
 
@@ -109,6 +110,33 @@ fn two_scripted_runs_pass_every_gate_and_agree() {
         serde_json::from_str::<ReviewQualification>(&text).unwrap(),
         qualification
     );
+}
+
+#[test]
+fn a_review_resumed_after_an_outage_passes_every_gate() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = fake_routes();
+    // Eleven failed requests for the root-cause question stop the review;
+    // they count against neither its request budget nor the review's.
+    let down: Script = Box::new(|step| match step.question.kind {
+        QuestionKind::SharedRootCause => Reply::Status(503),
+        _ => reviewer(step),
+    });
+    let stopped = run(&fixture, &routes, down, None).review;
+    assert!(stopped.stopped.is_some());
+    let resumed = resumable_run(
+        &fixture,
+        &routes,
+        Box::new(reviewer),
+        None,
+        Some(&stopped),
+        None,
+    )
+    .unwrap()
+    .review;
+    assert!(resumed.questions[1].requests > routes.question_budget.max_requests);
+    let qualification = qualify(&fixture, &routes, &[resumed, good_review(&fixture)], &[]).unwrap();
+    assert!(qualification.passed, "{qualification:#?}");
 }
 
 #[test]

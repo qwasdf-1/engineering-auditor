@@ -34,8 +34,13 @@ pub struct EngineeringReview {
     pub retrieval: Vec<RetrievalRecord>,
     pub calls: Vec<ReviewCall>,
     pub spend: Spend,
-    /// Why the review stopped before its last question, if it did.
+    /// Why the review stopped before its last question, if it did. A
+    /// stopped review can be resumed.
     pub stopped: Option<String>,
+    /// Times the review was resumed after it stopped; each resume keeps
+    /// the questions answered before the stop and asks the rest again.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub resumed: u32,
     /// The short names the conversation used for hash IDs, alias to ID,
     /// so the transcript reads back against the record.
     pub id_aliases: BTreeMap<String, String>,
@@ -52,6 +57,10 @@ impl EngineeringReview {
     pub fn digest(&self) -> String {
         canonical_digest(self)
     }
+}
+
+fn is_zero(count: &u32) -> bool {
+    *count == 0
 }
 
 /// A configuration value's digest over its canonical JSON.
@@ -133,6 +142,25 @@ pub struct ReviewCall {
     pub finish_reason: Option<String>,
     pub failure: Option<ProviderFailureClass>,
     pub failure_detail: Option<String>,
+}
+
+impl ReviewCall {
+    /// A request the provider gave no model output for: a rate limit, an
+    /// outage, a transport failure, or a timeout, with no usage. It counts
+    /// in the spend and against the cost budget, which cannot tell whether
+    /// the provider billed it, but not against the request or input-byte
+    /// budgets, which bound the reviewer's turns.
+    pub fn produced_no_output(&self) -> bool {
+        self.failure.is_some_and(|class| {
+            matches!(
+                class,
+                ProviderFailureClass::RateLimit
+                    | ProviderFailureClass::Unavailable
+                    | ProviderFailureClass::Transport
+                    | ProviderFailureClass::Timeout
+            )
+        }) && self.usage == Usage::default()
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]

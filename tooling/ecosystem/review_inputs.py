@@ -21,6 +21,13 @@ per repository before its checkout is deleted; in each argument `{repo}`,
 `{report}`, `{history}`, and `{out}` become paths and `{run}` the run's
 number, so runs write `{out}/review-{run}.json`.
 
+Preparing a label again continues it: a repository whose inputs and runs
+are recorded is skipped, a prepared one keeps its report and digest, a
+finished run is kept, and a run whose record says it stopped (a provider
+outage outlasted the retries, or the run was interrupted after a
+checkpoint) is resumed with `--resume` on that record, so no answered
+question is paid for twice.
+
 `qualify` checks the recorded runs offline against the qualification
 corpus (config/auditor/review-qualification-corpus-v1.json): for each of
 its repositories, `auditor review qualify` over the kept report, history,
@@ -89,44 +96,76 @@ class Settings:
     review_runs: int = 1
 
 
-def prepare_repository(repository, settings: Settings, out_root: Path) -> dict:
-    """Fetch, scan, digest, optionally review, and delete one repository."""
-    auditor, window_days = settings.auditor, settings.window_days
-    out = out_root / repository["id"]
-    shutil.rmtree(out, ignore_errors=True)
-    out.mkdir(parents=True)
-    checkout = cache_root() / "review-checkouts" / repository["id"]
-    report, history = out / "audit.json", out / "history.json"
+def finished(record: Path) -> bool:
+    """A recorded run that did not stop; a stopped one resumes."""
+    return record.exists() and not json.loads(record.read_text(encoding="utf-8")).get("stopped")
+
+
+def write_json(path: Path, value) -> None:
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+
+
+def timed(action) -> float:
+    started = time.monotonic()
+    action()
+    return round(time.monotonic() - started, 1)
+
+
+def scan_inputs(repository, settings: Settings, checkout: Path, out: Path, fetch_seconds) -> dict:
+    """Record the scan report and history digest of a fresh checkout."""
+    auditor = settings.auditor
     inputs = {"id": repository["id"], "url": repository["url"], "commit": repository["commit"],
-              "window_days": window_days}
+              "window_days": settings.window_days, "fetch_seconds": fetch_seconds,
+              "checkout_bytes": directory_bytes(checkout), "reviews": []}
+    inputs["scan_seconds"] = timed(lambda: auditor_run(
+        [auditor, "scan", "--repo-root", checkout, "--profile", "full", "--format", "json",
+         "--output", out / "audit.json"]))
+    inputs["history_seconds"] = timed(lambda: auditor_run(
+        [auditor, "review", "history", "--repo-root", checkout, "--window-days",
+         settings.window_days, "--output", out / "history.json"]))
+    return inputs
+
+
+def prepare_repository(repository, settings: Settings, out_root: Path) -> dict:
+    """Fetch, scan, digest, optionally review, and delete one repository;
+    continue what an earlier preparation of the label left."""
+    out = out_root / repository["id"]
+    inputs_path = out / "inputs.json"
+    inputs = json.loads(inputs_path.read_text(encoding="utf-8")) if inputs_path.exists() else None
+    runs = range(1, settings.review_runs + 1) if settings.review_command else range(0)
+    # Without inputs the directory is wiped, so every run is pending.
+    pending = [run for run in runs if inputs is None or not finished(out / f"review-{run}.json")]
+    if inputs is not None and not pending:
+        return {**inputs, "stopped_runs": []}
+    checkout = cache_root() / "review-checkouts" / repository["id"]
     try:
-        started = time.monotonic()
-        fetch_window(repository["url"], repository["commit"], checkout, window_days)
-        inputs["fetch_seconds"] = round(time.monotonic() - started, 1)
-        inputs["checkout_bytes"] = directory_bytes(checkout)
-        started = time.monotonic()
-        auditor_run([auditor, "scan", "--repo-root", checkout, "--profile", "full",
-                     "--format", "json", "--output", report])
-        inputs["scan_seconds"] = round(time.monotonic() - started, 1)
-        started = time.monotonic()
-        auditor_run([auditor, "review", "history", "--repo-root", checkout,
-                     "--window-days", window_days, "--output", history])
-        inputs["history_seconds"] = round(time.monotonic() - started, 1)
-        if settings.review_command:
-            inputs["review_seconds"] = []
-            for run in range(1, settings.review_runs + 1):
-                places = {"repo": checkout, "report": report, "history": history, "out": out,
-                          "run": run}
-                command = [argument.format(**places)
-                           for argument in shlex.split(settings.review_command)]
-                started = time.monotonic()
-                subprocess.run(command, check=True)
-                inputs["review_seconds"].append(round(time.monotonic() - started, 1))
+        fetch_seconds = timed(lambda: fetch_window(
+            repository["url"], repository["commit"], checkout, settings.window_days))
+        if inputs is None:
+            shutil.rmtree(out, ignore_errors=True)
+            out.mkdir(parents=True)
+            inputs = scan_inputs(repository, settings, checkout, out, fetch_seconds)
+            write_json(inputs_path, inputs)
+        places = {"repo": checkout, "report": out / "audit.json",
+                  "history": out / "history.json", "out": out}
+        for run in pending:
+            record = out / f"review-{run}.json"
+            command = [argument.format(**places, run=run)
+                       for argument in shlex.split(settings.review_command)]
+            resumed = record.exists()
+            started = time.monotonic()
+            result = subprocess.run(command + ["--resume", str(record)] * resumed)
+            inputs["reviews"].append({"run": run, "resumed": resumed, "exit": result.returncode,
+                                      "seconds": round(time.monotonic() - started, 1)})
+            write_json(inputs_path, inputs)
+            result.check_returncode()
     finally:
         shutil.rmtree(checkout, ignore_errors=True)
     inputs["kept_bytes"] = directory_bytes(out)
-    (out / "inputs.json").write_text(json.dumps(inputs, indent=2) + "\n", encoding="utf-8")
-    return inputs
+    write_json(inputs_path, inputs)
+    records = [out / f"review-{run}.json" for run in pending]
+    stopped = [run for run, record in zip(pending, records) if record.exists() and not finished(record)]
+    return {**inputs, "stopped_runs": stopped}
 
 
 def prepare(repositories, settings: Settings, label: str, jobs: int) -> int:
@@ -139,6 +178,9 @@ def prepare(repositories, settings: Settings, label: str, jobs: int) -> int:
             inputs = prepare_repository(repository, settings, out_root)
             print(f"prepared {repository['id']}: fetch {inputs['fetch_seconds']}s, "
                   f"scan {inputs['scan_seconds']}s, kept {inputs['kept_bytes']} bytes")
+            if inputs["stopped_runs"]:
+                failures.append({"id": repository["id"],
+                                 "error": f"runs {inputs['stopped_runs']} stopped; prepare again to resume"})
             prepared.append(inputs)
         except (RuntimeError, OSError, ValueError, subprocess.CalledProcessError) as error:
             failures.append({"id": repository["id"], "error": str(error)[:500]})
@@ -152,7 +194,7 @@ def prepare(repositories, settings: Settings, label: str, jobs: int) -> int:
     summary = {"label": label, "window_days": settings.window_days,
                "repositories": sorted(prepared, key=lambda inputs: inputs["id"]),
                "failures": sorted(failures, key=lambda failure: failure["id"])}
-    (out_root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    write_json(out_root / "summary.json", summary)
     return 1 if failures else 0
 
 
@@ -240,8 +282,7 @@ def qualify(corpus: dict, route_set: str, auditor: Path, label: str) -> int:
                               "threshold": threshold},
                "decision": decision}
     out_root.mkdir(parents=True, exist_ok=True)
-    (out_root / f"qualification-{route_set}.json").write_text(
-        json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    write_json(out_root / f"qualification-{route_set}.json", summary)
     print(f"{route_set}: {decision} ({useful}/{counted} counted items useful)")
     return 0 if decision == "qualifies" else 1
 

@@ -412,6 +412,19 @@ pub fn run(
     script: Script,
     checker: Option<&dyn RecommendationChecker>,
 ) -> Run {
+    resumable_run(fixture, routes, script, checker, None, None).unwrap()
+}
+
+/// A run that may resume a stopped review and checkpoint after each
+/// question; the driver's error when it refuses to resume.
+pub fn resumable_run(
+    fixture: &Fixture,
+    routes: &ReviewRoutesV2,
+    script: Script,
+    checker: Option<&dyn RecommendationChecker>,
+    resume: Option<&EngineeringReview>,
+    checkpoint: Option<&dyn Fn(&EngineeringReview)>,
+) -> Result<Run, String> {
     let provider = FakeProvider::new(fixture, script);
     let transcript = TranscriptRecorder::enabled();
     let templates = templates();
@@ -434,14 +447,15 @@ pub fn run(
             transcript: &transcript,
             checker,
             max_patch_checks: DEFAULT_PATCH_CHECKS,
+            resume,
+            checkpoint,
         },
-    )
-    .unwrap();
-    Run {
+    )?;
+    Ok(Run {
         review,
         bodies: provider.bodies(),
         transcript,
-    }
+    })
 }
 
 pub fn status(review: &EngineeringReview) -> Vec<QuestionStatus> {

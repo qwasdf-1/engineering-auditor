@@ -3,7 +3,9 @@
 //! or refuted. The recorded spend must add up from the calls, with costs
 //! from the routes, and stay within the review's and each question's
 //! provider budget, the retrieval budget (the brief tightens it), and the
-//! review's patch-check limit; every call must go to a route target.
+//! review's patch-check limit; every call must go to a route target. A
+//! request that produced no model output counts against the cost budget
+//! only, as the driver counts it.
 
 use std::collections::BTreeMap;
 
@@ -60,9 +62,12 @@ pub(super) fn patch_check_failures(review: &EngineeringReview) -> Vec<String> {
     failures
 }
 
-/// What a set of calls spent, recomputed.
+/// What a set of calls spent, recomputed: every request sent, and the
+/// requests and input bytes the budgets count.
 #[derive(Default)]
 struct Tally {
+    sent: usize,
+    sent_bytes: usize,
     requests: usize,
     input_bytes: usize,
     cost_microusd: u64,
@@ -149,16 +154,20 @@ fn recount<'r>(routes: &ReviewRoutesV2, review: &'r EngineeringReview) -> Recoun
             &mut total,
             per_question.entry(call.question_id.as_str()).or_default(),
         ] {
-            tally.requests += 1;
-            tally.input_bytes += call.input_bytes;
+            tally.sent += 1;
+            tally.sent_bytes += call.input_bytes;
+            if !call.produced_no_output() {
+                tally.requests += 1;
+                tally.input_bytes += call.input_bytes;
+            }
             tally.cost_microusd += cost;
         }
         spend.input_tokens += call.usage.input_tokens;
         spend.cached_input_tokens += call.usage.cached_input_tokens;
         spend.output_tokens += call.usage.output_tokens;
     }
-    spend.requests = total.requests;
-    spend.input_bytes = total.input_bytes;
+    spend.requests = total.sent;
+    spend.input_bytes = total.sent_bytes;
     spend.cost_microusd = total.cost_microusd;
     spend.patch_checks = review.spend.patch_checks;
     Recount {
@@ -180,10 +189,10 @@ fn question_failures(
     for record in &review.questions {
         let id = record.question_id.as_str();
         let tally = per_question.remove(id).unwrap_or_default();
-        if tally.requests != record.requests {
+        if tally.sent != record.requests {
             failures.push(format!(
                 "{id} records {} requests, but {} calls name it",
-                record.requests, tally.requests
+                record.requests, tally.sent
             ));
         }
         if let Some(over) = tally.over(routes.question_budget) {

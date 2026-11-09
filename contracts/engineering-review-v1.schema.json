@@ -50,7 +50,8 @@
         "patch_checks": { "type": "integer", "minimum": 0, "description": "Checker runs; a repeated patch reuses its verdict." }
       }
     },
-    "stopped": { "type": ["string", "null"], "description": "Why the review stopped before its last question." },
+    "stopped": { "type": ["string", "null"], "description": "Why the review stopped before its last question; a stopped review can be resumed. A checkpoint written while the review runs says the run was interrupted." },
+    "resumed": { "type": "integer", "minimum": 1, "description": "Times the review was resumed after it stopped; absent when it never was. A resume keeps the questions answered before the stop, with the calls, spend, retrieval, aliases, and patch checks, and asks the rest again." },
     "id_aliases": {
       "type": "object",
       "additionalProperties": { "type": "string" },

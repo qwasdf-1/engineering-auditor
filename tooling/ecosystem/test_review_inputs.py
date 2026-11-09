@@ -85,13 +85,44 @@ class PrepareTest(unittest.TestCase):
         self.assertEqual([entry["id"] for entry in summary["repositories"]], ["demo"])
 
     def test_each_review_run_gets_its_number(self):
-        command = f"{sys.executable} -c \"import sys; open(sys.argv[1],'w').write('x')\" {{out}}/review-{{run}}.json"
+        command = f"{sys.executable} -c \"import sys; open(sys.argv[1],'w').write('{{{{}}}}')\" {{out}}/review-{{run}}.json"
         settings = review_inputs.Settings(self.auditor, 150, command, 2)
         self.assertEqual(review_inputs.prepare([self.repository], settings, "runs", 1), 0)
         out = self.cache / "review-inputs" / "runs" / "demo"
         self.assertEqual(sorted(path.name for path in out.glob("review-*.json")),
                          ["review-1.json", "review-2.json"])
-        self.assertEqual(len(json.loads((out / "inputs.json").read_text())["review_seconds"]), 2)
+        self.assertEqual([review["run"] for review in json.loads((out / "inputs.json").read_text())["reviews"]],
+                         [1, 2])
+
+    def test_preparing_again_resumes_a_stopped_run_and_keeps_the_rest(self):
+        # Run 1 stops unless resumed; every invocation is logged.
+        script = self.temp / "review.py"
+        script.write_text(
+            "import json, sys\n"
+            "record, log = sys.argv[1], sys.argv[2]\n"
+            "open(log, 'a').write(' '.join(sys.argv[1:]) + '\\n')\n"
+            "stops = record.endswith('review-1.json') and '--resume' not in sys.argv\n"
+            "json.dump({'stopped': 'outage'} if stops else {'stopped': None}, open(record, 'w'))\n")
+        command = f"{sys.executable} {script} {{out}}/review-{{run}}.json {self.temp}/calls.log"
+        settings = review_inputs.Settings(self.auditor, 150, command, 2)
+        self.assertEqual(review_inputs.prepare([self.repository], settings, "again", 1), 1)
+        out = self.cache / "review-inputs" / "again" / "demo"
+        summary = json.loads((out.parent / "summary.json").read_text())
+        self.assertIn("stopped", summary["failures"][0]["error"])
+        scanned = (out / "audit.json").stat().st_mtime_ns
+
+        self.assertEqual(review_inputs.prepare([self.repository], settings, "again", 1), 0)
+        calls = (self.temp / "calls.log").read_text().splitlines()
+        self.assertEqual(len(calls), 3)
+        self.assertTrue(calls[2].endswith(f"--resume {out / 'review-1.json'}"))
+        self.assertEqual((out / "audit.json").stat().st_mtime_ns, scanned)
+        reviews = json.loads((out / "inputs.json").read_text())["reviews"]
+        self.assertEqual([(review["run"], review["resumed"]) for review in reviews],
+                         [(1, False), (2, False), (1, True)])
+
+        self.assertEqual(review_inputs.prepare([self.repository], settings, "again", 1), 0)
+        self.assertEqual(len((self.temp / "calls.log").read_text().splitlines()), 3)
+        self.assertFalse((self.cache / "review-checkouts").exists())
 
     def test_a_failure_is_recorded_and_still_deletes_the_checkout(self):
         missing = {**self.repository, "commit": "f" * 40}

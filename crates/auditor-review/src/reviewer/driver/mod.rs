@@ -10,6 +10,11 @@
 //! a question is pointed at its earlier result instead of run again. What
 //! the reviewer sees names hash IDs by short aliases ([`aliases`]),
 //! expanded back before anything is checked or recorded.
+//!
+//! A review that stopped (every route target failed, or the run was
+//! interrupted after a checkpoint) can be resumed: the questions answered
+//! before the stop are kept, with the calls, spend, retrieval, aliases,
+//! and patch checks, and the rest are asked again.
 
 mod aliases;
 mod answer;
@@ -73,6 +78,11 @@ pub struct ReviewSetup<'a> {
     /// Offers `check_patch` and checks accepted patches when present.
     pub checker: Option<&'a dyn RecommendationChecker>,
     pub max_patch_checks: usize,
+    /// A stopped review of the same inputs and configuration to continue.
+    pub resume: Option<&'a EngineeringReview>,
+    /// Gets the review so far after each question, marked stopped, so an
+    /// interrupted run leaves a record it can be resumed from.
+    pub checkpoint: Option<&'a dyn Fn(&EngineeringReview)>,
 }
 
 /// Runs the review. Setup problems (consent, routes, a pack or question
@@ -114,37 +124,58 @@ pub fn run_engineering_review(
         records: Vec::new(),
         checks: Vec::new(),
         cache: BTreeMap::new(),
+        prior_checks: 0,
         stopped: None,
         aliases: Aliases::default(),
         setup: &setup,
     };
-    for question in &questions {
-        review.ask(question, &opening, &mut caller, &mut host, view)?;
-    }
-    let mut spend = caller.spend;
-    spend.patch_checks = review.cache.len();
-    Ok(EngineeringReview {
-        schema_version: ENGINEERING_REVIEW_SCHEMA_VERSION,
+    let header = Header {
         source_digest: view.source_digest.clone(),
         template_bundle_digest: setup.templates.digest().as_str().to_string(),
         prompt_bundle_id: setup.prompts.bundle_id.clone(),
         routes_digest: canonical_digest(setup.routes),
         brief_digest: setup.brief.map(canonical_digest),
-        max_patch_checks: setup.max_patch_checks,
         orientation: ProjectionSummary {
             markdown_digest: pack.audit.markdown_digest.clone(),
             markdown_bytes: pack.audit.markdown_bytes,
             evidence_ids: pack.evidence_ids.len(),
             truncated: pack.truncated,
         },
-        questions: review.records,
-        patch_checks: review.checks,
-        retrieval: host.log().to_vec(),
-        calls: caller.calls,
-        spend,
-        stopped: review.stopped,
-        id_aliases: review.aliases.table().clone(),
-    })
+        resumed: 0,
+    };
+    let (header, kept) = match setup.resume {
+        Some(prior) => {
+            let kept = review.resume(prior, &header, &questions, &mut caller, &mut host)?;
+            let resumed = prior.resumed + 1;
+            (Header { resumed, ..header }, kept)
+        }
+        None => (header, 0),
+    };
+    for (asked, question) in questions.iter().enumerate().skip(kept) {
+        review.ask(question, &opening, &mut caller, &mut host, view)?;
+        if let Some(checkpoint) = setup.checkpoint.filter(|_| asked + 1 < questions.len()) {
+            let interrupted = format!(
+                "the run was interrupted after question {} of {}",
+                asked + 1,
+                questions.len()
+            );
+            let stopped = review.stopped.clone().unwrap_or(interrupted);
+            checkpoint(&review.record(&header, &caller, &host, Some(stopped)));
+        }
+    }
+    let stopped = review.stopped.clone();
+    Ok(review.record(&header, &caller, &host, stopped))
+}
+
+/// What a review record says about its inputs and configuration.
+struct Header {
+    source_digest: String,
+    template_bundle_digest: String,
+    prompt_bundle_id: crate::StableId,
+    routes_digest: String,
+    brief_digest: Option<String>,
+    orientation: ProjectionSummary,
+    resumed: u32,
 }
 
 struct Review<'s, 'a> {
@@ -158,6 +189,9 @@ struct Review<'s, 'a> {
     checks: Vec<PatchCheckRecord>,
     /// Checker verdicts by patch digest and cited findings.
     cache: BTreeMap<(String, Vec<String>), Value>,
+    /// Checks a resumed review's earlier run made, which count against
+    /// the limit.
+    prior_checks: usize,
     stopped: Option<String>,
     aliases: Aliases,
     setup: &'s ReviewSetup<'a>,
@@ -170,6 +204,109 @@ enum Ending {
 }
 
 impl Review<'_, '_> {
+    /// The review record so far.
+    fn record(
+        &self,
+        header: &Header,
+        caller: &Caller<'_>,
+        host: &RetrievalHost<'_, '_>,
+        stopped: Option<String>,
+    ) -> EngineeringReview {
+        let mut spend = caller.spend;
+        spend.patch_checks = self.prior_checks + self.cache.len();
+        EngineeringReview {
+            schema_version: ENGINEERING_REVIEW_SCHEMA_VERSION,
+            source_digest: header.source_digest.clone(),
+            template_bundle_digest: header.template_bundle_digest.clone(),
+            prompt_bundle_id: header.prompt_bundle_id.clone(),
+            routes_digest: header.routes_digest.clone(),
+            brief_digest: header.brief_digest.clone(),
+            max_patch_checks: self.setup.max_patch_checks,
+            orientation: header.orientation.clone(),
+            questions: self.records.clone(),
+            patch_checks: self.checks.clone(),
+            retrieval: host.log().to_vec(),
+            calls: caller.calls.clone(),
+            spend,
+            stopped,
+            resumed: header.resumed,
+            id_aliases: self.aliases.table().clone(),
+        }
+    }
+
+    /// Takes over a stopped review: keeps its questions up to the one it
+    /// stopped on (all of them if it was interrupted between questions)
+    /// and the state they left; how many questions it kept.
+    fn resume(
+        &mut self,
+        prior: &EngineeringReview,
+        header: &Header,
+        questions: &[Question],
+        caller: &mut Caller<'_>,
+        host: &mut RetrievalHost<'_, '_>,
+    ) -> Result<usize, String> {
+        let Some(stopped) = &prior.stopped else {
+            return Err("the review to resume finished; only a stopped review resumes".to_string());
+        };
+        let same = [
+            (
+                "schema version",
+                prior.schema_version == ENGINEERING_REVIEW_SCHEMA_VERSION,
+            ),
+            ("source digest", prior.source_digest == header.source_digest),
+            (
+                "question templates",
+                prior.template_bundle_digest == header.template_bundle_digest,
+            ),
+            (
+                "prompt bundle",
+                prior.prompt_bundle_id == header.prompt_bundle_id,
+            ),
+            ("routes", prior.routes_digest == header.routes_digest),
+            ("brief", prior.brief_digest == header.brief_digest),
+            (
+                "patch-check limit",
+                prior.max_patch_checks == self.setup.max_patch_checks,
+            ),
+        ];
+        if let Some((what, _)) = same.iter().find(|(_, same)| !same) {
+            return Err(format!(
+                "the review to resume ran with a different {what}; resume only with the inputs and configuration it ran with"
+            ));
+        }
+        let kept = prior
+            .questions
+            .iter()
+            .take_while(|record| record.reason.as_ref() != Some(stopped))
+            .collect::<Vec<_>>();
+        if kept.len() > questions.len() {
+            return Err(
+                "the review to resume asked more questions than this review has".to_string(),
+            );
+        }
+        for (record, question) in kept.iter().zip(questions) {
+            if record.question_id != question.question_id {
+                return Err(format!(
+                    "the review to resume asked {} where this review asks {}",
+                    record.question_id, question.question_id
+                ));
+            }
+            self.known.extend(question.evidence_ids.iter().cloned());
+            if let Some(answer) = &record.answer {
+                self.answers.push((question.kind, answer.clone()));
+            }
+            self.records.push((*record).clone());
+        }
+        self.aliases = Aliases::restore(&prior.id_aliases)?;
+        self.checks = prior.patch_checks.clone();
+        self.prior_checks = prior.spend.patch_checks;
+        host.resume(&prior.retrieval);
+        self.known
+            .extend(host.issued_evidence_ids().iter().cloned());
+        caller.resume(prior);
+        Ok(kept.len())
+    }
+
     fn ask(
         &mut self,
         question: &Question,
@@ -194,6 +331,7 @@ impl Review<'_, '_> {
         }
         let tools = self.tools(question, host);
         let mut conversation = Conversation::new(question, self.aliases.shorten(&user), tools);
+        conversation.spent = caller.question_spend(&question.question_id);
         let ending = match &self.stopped {
             Some(reason) => Ending::Unanswered(reason.clone()),
             None => self.converse(&mut conversation, caller, host),
@@ -440,7 +578,9 @@ impl Review<'_, '_> {
         let key = (sha256_digest_bytes(patch.as_bytes()), cited.clone());
         let check = match self.cache.get(&key) {
             Some(check) => check.clone(),
-            None if self.cache.len() >= self.setup.max_patch_checks => return None,
+            None if self.prior_checks + self.cache.len() >= self.setup.max_patch_checks => {
+                return None
+            }
             None => {
                 let check = checker.check(patch, &cited);
                 self.cache.insert(key, check.clone());

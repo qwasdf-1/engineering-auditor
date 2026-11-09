@@ -53,6 +53,15 @@ python3 tooling/ecosystem/review_inputs.py prepare --label L --window-days 365 \
 What stays per repository is the report, its map, the history digest, the
 review records, and their transcripts: enough to qualify offline.
 
+Preparing the same label again continues it. A repository whose inputs and
+runs are all recorded is skipped; a prepared one keeps its report and
+digest and is fetched again only for its pending runs. A run whose record
+says it stopped (an outage outlasted the retries and resends, or the run
+was interrupted after the checkpoint `review run --output` writes after
+each question) is resumed with `--resume` on that record, so no answered
+question is asked, or paid for, twice. `prepare` exits nonzero while any
+run is still stopped.
+
 ## Automatic Gates
 
 `auditor review qualify` checks recorded runs of one repository against the
@@ -284,5 +293,5 @@ No route has yet qualified on the rebuilt review.
   MiniMax M3.1 Flash, where both arms answered every training case correctly)
   is archived. Mistral Small 4 is unusable on the free Mistral key: its 33,333
   tokens-per-minute limit is below one review run, and EA's bounded retry
-  (then about 7.5 seconds, now about 3.75 minutes) could not wait out a
-  per-minute window.
+  (then about 7.5 seconds; now 3.75 minutes of quick retries and then
+  resends every five minutes) could not wait out a per-minute window.

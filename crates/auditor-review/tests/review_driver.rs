@@ -16,8 +16,8 @@ use auditor_review::{
 };
 use fixture::{Fixture, PYTHON_APP};
 use scripted::{
-    good_answer, prompts, reviewer, routes, run, status, templates, FakeChecker, FakeProvider,
-    Reply, Run, Script, Step,
+    good_answer, prompts, resumable_run, reviewer, routes, run, status, templates, FakeChecker,
+    FakeProvider, Reply, Run, Script, Step,
 };
 use serde_json::json;
 
@@ -303,6 +303,155 @@ fn a_failed_request_is_retried_then_the_next_target_takes_over() {
 }
 
 #[test]
+fn an_outage_on_the_last_target_is_waited_out_outside_the_request_budget() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    // Three requests a question; the reviewer needs two once the outage
+    // ends, after the four quick retries and four of the six resends.
+    let tight = routes(&[("fake", ProviderProtocol::Messages)], 32, 3);
+    let outage: Script = Box::new(|step| match step.request {
+        0..=7 => Reply::Status(503),
+        _ => reviewer(step),
+    });
+    let Run { review, .. } = run(&fixture, &tight, outage, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    assert_eq!(
+        review.calls[..8]
+            .iter()
+            .map(|call| (call.retry, call.failure))
+            .collect::<Vec<_>>(),
+        (0..8)
+            .map(|retry| (retry, Some(ProviderFailureClass::Unavailable)))
+            .collect::<Vec<_>>()
+    );
+    assert!(review.calls[..8]
+        .iter()
+        .all(|call| call.produced_no_output()));
+    assert_eq!(review.questions[0].requests, 10);
+    assert_eq!(review.spend.requests, review.calls.len());
+
+    // An outage past the resends stops the review after eleven attempts.
+    let Run { review, .. } = run(&fixture, &tight, Box::new(|_| Reply::Status(503)), None);
+    assert_eq!(review.calls.len(), 11);
+    assert!(review
+        .stopped
+        .as_deref()
+        .is_some_and(|reason| reason.starts_with("every route target failed")));
+}
+
+/// A review that stops on the root-cause question: every request for it
+/// fails, so the hotspot answer is the only one.
+fn stopped_review(fixture: &Fixture, routes: &auditor_review::ReviewRoutesV2) -> EngineeringReview {
+    let down: Script = Box::new(|step| match step.question.kind {
+        QuestionKind::SharedRootCause => Reply::Status(503),
+        _ => reviewer(step),
+    });
+    let review = run(fixture, routes, down, None).review;
+    assert_eq!(
+        status(&review),
+        [
+            QuestionStatus::Answered,
+            QuestionStatus::Unanswered,
+            QuestionStatus::Unanswered,
+            QuestionStatus::Unanswered
+        ]
+    );
+    review
+}
+
+#[test]
+fn a_stopped_review_resumes_from_the_question_it_stopped_on() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
+    let stopped = stopped_review(&fixture, &routes);
+    assert_eq!(stopped.calls.len(), 2 + 11);
+
+    let Run { review, bodies, .. } = resumable_run(
+        &fixture,
+        &routes,
+        Box::new(reviewer),
+        None,
+        Some(&stopped),
+        None,
+    )
+    .unwrap();
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    assert_eq!((review.resumed, review.stopped.as_ref()), (1, None));
+    // The kept question is not asked again; the rest take two requests.
+    assert_eq!(review.questions[0], stopped.questions[0]);
+    assert_eq!(bodies.len(), 6);
+    assert_eq!(review.calls[..13], stopped.calls[..]);
+    assert_eq!(review.questions[1].requests, 11 + 2);
+    assert_eq!(review.spend.requests, review.calls.len());
+    assert_eq!(
+        review.retrieval[..stopped.retrieval.len()],
+        stopped.retrieval[..]
+    );
+    assert!(stopped
+        .id_aliases
+        .iter()
+        .all(|(alias, id)| review.id_aliases.get(alias) == Some(id)));
+
+    let refused = |prior: &EngineeringReview, routes: &auditor_review::ReviewRoutesV2| {
+        resumable_run(
+            &fixture,
+            routes,
+            Box::new(reviewer),
+            None,
+            Some(prior),
+            None,
+        )
+        .err()
+        .unwrap()
+    };
+    assert!(refused(&review, &routes).contains("only a stopped review resumes"));
+    let other = scripted::routes(&[("fake", ProviderProtocol::Messages)], 32, 9);
+    assert!(refused(&stopped, &other).contains("different routes"));
+}
+
+#[test]
+fn a_checkpoint_after_each_question_resumes_an_interrupted_run() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
+    let checkpoints = Mutex::new(Vec::new());
+    let keep = |review: &EngineeringReview| checkpoints.lock().unwrap().push(review.clone());
+    let Run { review, .. } = resumable_run(
+        &fixture,
+        &routes,
+        Box::new(reviewer),
+        None,
+        None,
+        Some(&keep),
+    )
+    .unwrap();
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    let checkpoints = checkpoints.into_inner().unwrap();
+    assert_eq!(checkpoints.len(), 3);
+    let second = &checkpoints[1];
+    assert_eq!(second.questions.len(), 2);
+    assert_eq!(
+        second.stopped.as_deref(),
+        Some("the run was interrupted after question 2 of 4")
+    );
+
+    let Run {
+        review: resumed,
+        bodies,
+        ..
+    } = resumable_run(
+        &fixture,
+        &routes,
+        Box::new(reviewer),
+        None,
+        Some(second),
+        None,
+    )
+    .unwrap();
+    assert_eq!(status(&resumed), [QuestionStatus::Answered; 4]);
+    assert_eq!(bodies.len(), 4);
+    assert_eq!(resumed.questions[..2], second.questions[..]);
+}
+
+#[test]
 fn spent_budgets_and_failed_routes_leave_questions_unanswered_with_the_reason() {
     let fixture = Fixture::scan(PYTHON_APP);
     let one_request = routes(&[("fake", ProviderProtocol::Messages)], 32, 1);
@@ -442,6 +591,8 @@ fn no_request_leaves_without_hosted_consent() {
             transcript: &transcript,
             checker: None,
             max_patch_checks: DEFAULT_PATCH_CHECKS,
+            resume: None,
+            checkpoint: None,
         },
     )
     .unwrap_err();

@@ -135,8 +135,25 @@
 ### Changed
 
 - A review request that fails on a rate limit or an outage waits 15, 30, 60
-  and 120 seconds before its four retries, so a review rides out an outage of
-  up to 3.75 minutes instead of 7.5 seconds.
+  and 120 seconds before its four retries instead of 7.5 seconds in all, and
+  on the route's last target it is then resent every five minutes, six
+  times, so the review waits out an outage of about half an hour, or an
+  hour when every request hangs to its timeout, instead of stopping. A
+  request that produced no model output counts against the cost budget
+  only, so an outage no longer uses up a question's requests.
+- `review run --resume RECORD` continues a review that stopped: the
+  questions answered before the stop are kept with the calls, spend,
+  retrieval, aliases, and patch checks, the rest are asked again, the
+  transcript continues the stopped run's, and the record counts the resume
+  (`resumed`). With `--output`, the record and transcript are written after
+  each question, so an interrupted run resumes too. The inputs and
+  configuration must match the stopped run's.
+- `review_inputs.py prepare` continues a label instead of starting over: it
+  skips recorded repositories and finished runs, keeps prepared reports, and
+  resumes stopped runs.
+- The live routes for Phase B run the reviewer on GLM 5.3 Flash, on
+  Mistral's API (`mistral_glm53_flash_routes_v2.json`) for tuning and on
+  NVIDIA NIM (`nvidia_nim_glm53_flash_routes_v2.json`) for the corpus.
 - A rejected answer no longer holds claims or recommendations that have no
   ref, which no revision could replace or remove, so one malformed item
   cannot make every later revision fail. A held item that is missing a field

@@ -1,17 +1,26 @@
 use std::time::Duration;
 
-/// Four retries (five total attempts) is the v2 provider recovery contract.
-/// Keep qualification and production on this shared ceiling so a route cannot
-/// qualify under a transient sequence that production would reject.
+/// Quick retries of a request on one target after a failure with no model
+/// output, before the next target takes over.
 pub(crate) const MAX_NO_MODEL_OUTPUT_RETRIES: u8 = 4;
+/// Further resends on the last target, which has no target after it: an
+/// outage is waited out rather than ending the review.
+pub(crate) const OUTAGE_RESENDS: u8 = 6;
 
 /// Hosted providers' rate limits and outages last minutes, not seconds: the
-/// waits are 15, 30, 60 and 120 s, so a review rides out up to 3.75 minutes.
+/// quick retries wait 15, 30, 60 and 120 s, and each outage resend waits 5
+/// minutes, so the last target rides out about 34 minutes of waiting plus
+/// the requests' own time (an hour when every request hangs to its timeout).
 const NO_MODEL_OUTPUT_RETRY_BASE_DELAY_MILLIS: u64 = 15_000;
 const NO_MODEL_OUTPUT_RETRY_MAX_DELAY_MILLIS: u64 = 120_000;
+const OUTAGE_RESEND_DELAY_MILLIS: u64 = 300_000;
 
+/// The wait before retry `retry_number` (0-based) of a request.
 pub(crate) fn no_model_output_retry_delay(retry_number: u8) -> Duration {
-    let multiplier = 1_u64 << u32::from(retry_number.min(MAX_NO_MODEL_OUTPUT_RETRIES - 1));
+    if retry_number >= MAX_NO_MODEL_OUTPUT_RETRIES {
+        return Duration::from_millis(OUTAGE_RESEND_DELAY_MILLIS);
+    }
+    let multiplier = 1_u64 << u32::from(retry_number);
     Duration::from_millis(
         NO_MODEL_OUTPUT_RETRY_BASE_DELAY_MILLIS
             .saturating_mul(multiplier)
@@ -24,18 +33,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn retry_delay_is_bounded_exponential_backoff() {
-        const BASE_DELAY: Duration = Duration::from_millis(NO_MODEL_OUTPUT_RETRY_BASE_DELAY_MILLIS);
-        const MAX_DELAY: Duration = Duration::from_millis(NO_MODEL_OUTPUT_RETRY_MAX_DELAY_MILLIS);
-        assert_eq!(no_model_output_retry_delay(0), Duration::from_secs(15));
-        assert_eq!(no_model_output_retry_delay(1), Duration::from_secs(30));
-        assert_eq!(no_model_output_retry_delay(2), Duration::from_secs(60));
-        assert_eq!(BASE_DELAY, Duration::from_secs(15));
-        assert_eq!(no_model_output_retry_delay(3), MAX_DELAY);
-        assert_eq!(
-            no_model_output_retry_delay(MAX_NO_MODEL_OUTPUT_RETRIES),
-            MAX_DELAY
-        );
-        assert_eq!(no_model_output_retry_delay(u8::MAX), MAX_DELAY);
+    fn quick_retries_back_off_then_outage_resends_wait_five_minutes() {
+        let delays = (0..MAX_NO_MODEL_OUTPUT_RETRIES + OUTAGE_RESENDS)
+            .map(|retry| no_model_output_retry_delay(retry).as_secs())
+            .collect::<Vec<_>>();
+        assert_eq!(delays, [15, 30, 60, 120, 300, 300, 300, 300, 300, 300]);
+        assert_eq!(no_model_output_retry_delay(u8::MAX).as_secs(), 300);
     }
 }
