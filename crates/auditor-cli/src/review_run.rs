@@ -5,10 +5,11 @@
 //! With `--output`, the record (and the transcript, with `--transcript`)
 //! is written after each question, marked stopped until the review ends,
 //! so `--resume` with that record continues an interrupted or stopped run.
+//! Progress (each question, each retry, each slow request) goes to stderr.
 
 use std::collections::BTreeSet;
 use std::path::PathBuf;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use auditor_detectors::{
     AnalysisMethod, AnalysisRequest, NoGraphProvider, ScanProfile, ScanScope,
@@ -193,6 +194,19 @@ fn review(options: Options) -> Result<String, String> {
             eprintln!("auditor: the review checkpoint was not written: {error}");
         }
     };
+    let started = Instant::now();
+    let label = options
+        .output
+        .as_ref()
+        .map_or_else(|| "review".to_string(), |path| path.display().to_string());
+    let progress = |line: &str| {
+        let seconds = started.elapsed().as_secs();
+        eprintln!(
+            "auditor: {label} [{}m{:02}s] {line}",
+            seconds / 60,
+            seconds % 60
+        );
+    };
     let review = run_engineering_review(
         &view,
         ReviewSetup {
@@ -213,6 +227,7 @@ fn review(options: Options) -> Result<String, String> {
                 .output
                 .is_some()
                 .then_some(&checkpoint as &dyn Fn(&EngineeringReview)),
+            progress: Some(&progress),
         },
     )?;
     write_transcript()?;

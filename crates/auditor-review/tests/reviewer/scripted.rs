@@ -415,6 +415,18 @@ pub fn run(
     resumable_run(fixture, routes, script, checker, None, None).unwrap()
 }
 
+/// A run and the progress lines it reported.
+pub fn logged_run(
+    fixture: &Fixture,
+    routes: &ReviewRoutesV2,
+    script: Script,
+) -> (Run, Vec<String>) {
+    let lines = Mutex::new(Vec::new());
+    let progress = |line: &str| lines.lock().unwrap().push(line.to_string());
+    let run = traced_run(fixture, routes, script, None, None, None, Some(&progress)).unwrap();
+    (run, lines.into_inner().unwrap())
+}
+
 /// A run that may resume a stopped review and checkpoint after each
 /// question; the driver's error when it refuses to resume.
 pub fn resumable_run(
@@ -424,6 +436,18 @@ pub fn resumable_run(
     checker: Option<&dyn RecommendationChecker>,
     resume: Option<&EngineeringReview>,
     checkpoint: Option<&dyn Fn(&EngineeringReview)>,
+) -> Result<Run, String> {
+    traced_run(fixture, routes, script, checker, resume, checkpoint, None)
+}
+
+fn traced_run(
+    fixture: &Fixture,
+    routes: &ReviewRoutesV2,
+    script: Script,
+    checker: Option<&dyn RecommendationChecker>,
+    resume: Option<&EngineeringReview>,
+    checkpoint: Option<&dyn Fn(&EngineeringReview)>,
+    progress: Option<&dyn Fn(&str)>,
 ) -> Result<Run, String> {
     let provider = FakeProvider::new(fixture, script);
     let transcript = TranscriptRecorder::enabled();
@@ -449,6 +473,7 @@ pub fn resumable_run(
             max_patch_checks: DEFAULT_PATCH_CHECKS,
             resume,
             checkpoint,
+            progress,
         },
     )?;
     Ok(Run {

@@ -264,6 +264,7 @@ fn review_qualify_fails_an_unanswered_run_offline_and_rubric_lists_no_items() {
             max_patch_checks: 0,
             resume: None,
             checkpoint: None,
+            progress: None,
         },
     )
     .unwrap();

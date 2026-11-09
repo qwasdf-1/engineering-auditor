@@ -60,7 +60,9 @@ says it stopped (an outage outlasted the retries and resends, or the run
 was interrupted after the checkpoint `review run --output` writes after
 each question) is resumed with `--resume` on that record, so no answered
 question is asked, or paid for, twice. `prepare` exits nonzero while any
-run is still stopped.
+run is still stopped. Each run's progress lines (questions, retries and
+their waits, target changes, slow requests) go to `prepare`'s stderr,
+labeled with the run's record path.
 
 ## Automatic Gates
 

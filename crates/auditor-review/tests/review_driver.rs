@@ -16,8 +16,8 @@ use auditor_review::{
 };
 use fixture::{Fixture, PYTHON_APP};
 use scripted::{
-    good_answer, prompts, resumable_run, reviewer, routes, run, status, templates, FakeChecker,
-    FakeProvider, Reply, Run, Script, Step,
+    good_answer, logged_run, prompts, resumable_run, reviewer, routes, run, status, templates,
+    FakeChecker, FakeProvider, Reply, Run, Script, Step,
 };
 use serde_json::json;
 
@@ -269,13 +269,25 @@ fn a_failed_request_is_retried_then_the_next_target_takes_over() {
         0 => Reply::Status(503),
         _ => reviewer(step),
     });
-    let Run { review, .. } = run(&fixture, &retried, script, None);
+    let (Run { review, .. }, lines) = logged_run(&fixture, &retried, script);
     assert_eq!(
         review.calls[0].failure,
         Some(ProviderFailureClass::Unavailable)
     );
     assert_eq!((review.calls[1].retry, review.calls[1].failure), (1, None));
     assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    // The log shows the retry and each question's start and end.
+    assert_eq!(lines[0], "question 1 of 4 (HotspotAssessment) started");
+    assert_eq!(
+        lines[1],
+        "question 1 of 4: request #1 failed (fake/fake-model: Unavailable: provider error: scripted failure); retry 1 of 10 in 15 s"
+    );
+    let first = &review.questions[0];
+    assert_eq!(
+        lines[2],
+        format!("question 1 of 4 Answered after {} requests", first.requests)
+    );
+    assert_eq!(lines.len(), 9);
 
     let chain = routes(
         &[
@@ -289,8 +301,17 @@ fn a_failed_request_is_retried_then_the_next_target_takes_over() {
         0 => Reply::Status(401),
         _ => reviewer(step),
     });
-    let Run { review, bodies, .. } = run(&fixture, &chain, provider_down, None);
+    let (Run { review, bodies, .. }, lines) = logged_run(&fixture, &chain, provider_down);
     assert!(bodies[0].0.ends_with("/responses") && bodies[1].0.ends_with("/messages"));
+    let down = &review.calls[0].target;
+    let up = &review.calls[1].target;
+    assert_eq!(
+        lines[1],
+        format!(
+            "question 1 of 4: down/{} failed for good; up/{} takes over",
+            down.model, up.model
+        )
+    );
     assert_eq!(
         review.calls[0].failure,
         Some(ProviderFailureClass::Authentication)
@@ -593,6 +614,7 @@ fn no_request_leaves_without_hosted_consent() {
             max_patch_checks: DEFAULT_PATCH_CHECKS,
             resume: None,
             checkpoint: None,
+            progress: None,
         },
     )
     .unwrap_err();

@@ -3,16 +3,20 @@
 //! when one fails for good, an outage on the last target waited out, and
 //! the review and question budgets.
 
+use std::time::Instant;
+
 use crate::provider::retry::{
     no_model_output_retry_delay, MAX_NO_MODEL_OUTPUT_RETRIES, OUTAGE_RESENDS,
 };
 use crate::{
-    BuiltinAdapter, CallDispatch, HostedConsent, NativeToolTurn, ProviderFailure,
+    BuiltinAdapter, CallDispatch, HostedConsent, NativeToolTurn, ProviderConfig, ProviderFailure,
     ProviderFailureClass, ProviderRequest, ProviderResponse, ReviewRoutesV2, RouteBudget,
     RouteTarget, StableId, TranscriptRecorder, Transport,
 };
 
+use super::progress::{Progress, SLOW_REQUEST_SECONDS};
 use super::record::{EngineeringReview, ReviewCall, Spend};
+use super::ReviewSetup;
 
 /// The output-schema name the adapters answer with the turn's tool calls.
 pub(crate) const REVIEWER_TURN: &str = "reviewer_turn";
@@ -29,6 +33,7 @@ pub(super) struct Caller<'a> {
     pub(super) calls: Vec<ReviewCall>,
     /// What the review's request and byte budgets count.
     counted: Counted,
+    pub(super) progress: Progress<'a>,
 }
 
 /// Requests and input bytes the budgets count: every request that got
@@ -68,12 +73,8 @@ pub(super) enum TurnOutcome {
 }
 
 impl<'a> Caller<'a> {
-    pub(super) fn new(
-        routes: &'a ReviewRoutesV2,
-        consent: HostedConsent,
-        transport: &'a dyn Transport,
-        transcript: &'a TranscriptRecorder,
-    ) -> Result<Self, String> {
+    pub(super) fn new(setup: &ReviewSetup<'a>) -> Result<Self, String> {
+        let (routes, consent) = (setup.routes, setup.consent);
         routes.validate()?;
         if !consent.allow_hosted {
             return Err("a review sends repository evidence to the route's providers; it needs explicit hosted-review consent".to_string());
@@ -92,12 +93,13 @@ impl<'a> Caller<'a> {
         Ok(Self {
             routes,
             consent,
-            transport,
-            transcript,
+            transport: setup.transport,
+            transcript: setup.transcript,
             target: 0,
             spend: Spend::default(),
             calls: Vec::new(),
             counted: Counted::default(),
+            progress: Progress::new(setup.progress),
         })
     }
 
@@ -180,6 +182,9 @@ impl<'a> Caller<'a> {
                 Err(failure) => last_failure = failure,
             }
             self.target += 1;
+            if let Some(next) = self.routes.single_reviewer.targets.get(self.target) {
+                self.progress.target_changed(&target, next);
+            }
         }
         TurnOutcome::Failed(format!("every route target failed; last: {last_failure}"))
     }
@@ -204,19 +209,16 @@ impl<'a> Caller<'a> {
         let mut last_failure = String::new();
         for retry in 0..=retries {
             if retry > 0 {
-                self.transport.wait(no_model_output_retry_delay(retry - 1));
+                let delay = no_model_output_retry_delay(retry - 1);
+                let request = &attempt.request.request_id;
+                self.progress
+                    .retry(request, &last_failure, (retry, retries), delay);
+                self.transport.wait(delay);
             }
             if let Some(reason) = self.exhausted(question, attempt.input_bytes, cost) {
                 return Ok(TurnOutcome::Spent(reason));
             }
-            let adapter = BuiltinAdapter::new(provider, self.transport, self.consent);
-            let result = adapter.execute_dispatched(
-                &target.model,
-                attempt.request,
-                attempt.dispatch,
-                self.transcript,
-                self.transcript.is_enabled(),
-            );
+            let result = self.send(attempt, provider);
             let call = attempt.record(retry, &result);
             question.charge(&call, cost);
             self.counted.add(&call);
@@ -242,6 +244,30 @@ impl<'a> Caller<'a> {
             }
         }
         Err(last_failure)
+    }
+
+    /// Sends the request once, reporting it when it was slow.
+    fn send(
+        &self,
+        attempt: &Attempt<'_>,
+        provider: &ProviderConfig,
+    ) -> Result<ProviderResponse, ProviderFailure> {
+        let target = attempt.target;
+        let adapter = BuiltinAdapter::new(provider, self.transport, self.consent);
+        let started = Instant::now();
+        let result = adapter.execute_dispatched(
+            &target.model,
+            attempt.request,
+            attempt.dispatch,
+            self.transcript,
+            self.transcript.is_enabled(),
+        );
+        let seconds = started.elapsed().as_secs();
+        if seconds >= SLOW_REQUEST_SECONDS {
+            self.progress
+                .slow(&attempt.request.request_id, target, seconds);
+        }
+        result
     }
 
     /// Why the next request would overrun the question's or the review's

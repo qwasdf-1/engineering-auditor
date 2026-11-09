@@ -148,6 +148,10 @@
   (`resumed`). With `--output`, the record and transcript are written after
   each question, so an interrupted run resumes too. The inputs and
   configuration must match the stopped run's.
+- `review run --experimental-reviewer` logs its progress to stderr: each
+  question's start and end, each retry with the failure and the wait, each
+  target change, and each request that took a minute or more. A run waiting
+  out an outage was silent until its next checkpoint.
 - `review_inputs.py prepare` continues a label instead of starting over: it
   skips recorded repositories and finished runs, keeps prepared reports, and
   resumes stopped runs.

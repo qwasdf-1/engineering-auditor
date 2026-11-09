@@ -20,6 +20,7 @@ mod aliases;
 mod answer;
 mod calls;
 mod conversation;
+mod progress;
 mod record;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -83,6 +84,9 @@ pub struct ReviewSetup<'a> {
     /// Gets the review so far after each question, marked stopped, so an
     /// interrupted run leaves a record it can be resumed from.
     pub checkpoint: Option<&'a dyn Fn(&EngineeringReview)>,
+    /// Gets a line as each question starts and ends, before each retry,
+    /// and after each slow request, so a log shows a run's progress.
+    pub progress: Option<&'a dyn Fn(&str)>,
 }
 
 /// Runs the review. Setup problems (consent, routes, a pack or question
@@ -92,12 +96,7 @@ pub fn run_engineering_review(
     view: &RepositoryView<'_>,
     setup: ReviewSetup<'_>,
 ) -> Result<EngineeringReview, String> {
-    let mut caller = Caller::new(
-        setup.routes,
-        setup.consent,
-        setup.transport,
-        setup.transcript,
-    )?;
+    let mut caller = Caller::new(&setup)?;
     let pack = view.orientation_pack(setup.brief)?;
     let questions = view.questions(setup.templates)?;
     let mut host = RetrievalHost::new(
@@ -152,6 +151,9 @@ pub fn run_engineering_review(
         None => (header, 0),
     };
     for (asked, question) in questions.iter().enumerate().skip(kept) {
+        caller
+            .progress
+            .question_started(asked + 1, questions.len(), question.kind);
         review.ask(question, &opening, &mut caller, &mut host, view)?;
         if let Some(checkpoint) = setup.checkpoint.filter(|_| asked + 1 < questions.len()) {
             let interrupted = format!(
@@ -347,6 +349,7 @@ impl Review<'_, '_> {
             }
             Ending::Unanswered(reason) => record.reason = Some(reason),
         }
+        caller.progress.question_ended(&record);
         self.records.push(record);
         Ok(())
     }
