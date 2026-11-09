@@ -25,6 +25,13 @@ const ENCLOSING_KINDS: [&str; 9] = [
     "enum",
 ];
 
+/// The path and line range a `source-span:path#Lstart-Lend` ID names.
+pub(super) fn source_span(id: &str) -> Option<(&str, usize, usize)> {
+    let (path, lines) = id.strip_prefix("source-span:")?.rsplit_once("#L")?;
+    let (start, end) = lines.split_once("-L")?;
+    Some((path, start.parse().ok()?, end.parse().ok()?))
+}
+
 /// Map edges by the node they leave or enter.
 type EdgeIndex<'a> = HashMap<&'a str, Vec<usize>>;
 

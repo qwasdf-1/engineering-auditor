@@ -87,7 +87,8 @@
   `id_aliases`. Every question's requests share one Mistral prompt cache
   key, over the system instruction and the shared pack and brief, so later
   questions reuse the cached opening; a retrieval call repeated within a
-  question is pointed at its earlier result instead of run again. An HTTP error whose body the
+  question is pointed at its earlier result instead of run again. A
+  citation may narrow a read's `source-span` to lines inside it. An HTTP error whose body the
   provider rules do not recognize is classed by its status, so a refused
   route fails over instead of being corrected as a model reply; a spent
   account budget (HTTP 402, or a billing error body in either the wrapped

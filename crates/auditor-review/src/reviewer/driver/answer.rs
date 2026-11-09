@@ -144,7 +144,7 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
             "kind": described(names(&CLAIM_KINDS), "The claim's role, separate from its slot: root_cause names a cause behind findings, actionability says whether something can be acted on, recommendation_premise is a fact a recommendation rests on, expected_benefit is what a change gains."),
             "proposition": text("What the claim asserts, in one or two sentences."),
             "status": choice(names(&CLAIM_STATUSES)),
-            "supporting_evidence_ids": strings("Evidence IDs shown to you in brackets (finding:, file:, symbol:, source-span:, ...) that support the claim; never paths or claim IDs."),
+            "supporting_evidence_ids": strings("Evidence IDs shown to you in brackets (finding:, file:, symbol:, source-span:, ...) that support the claim; a source-span may narrow to lines inside one a read returned; never paths or claim IDs."),
             "counter_evidence_ids": strings("Evidence IDs shown to you that cut against it."),
             "depends_on": strings("Refs of other claims in this answer it rests on."),
             "assumptions": strings("What the claim assumes that no evidence shows."),
@@ -559,7 +559,7 @@ const UNKNOWN_EVIDENCE_HINTS: [(&str, &str); 2] = [
     ),
     (
         "\"source-span:",
-        "; a source-span ID names exactly the lines a read returned: cite the ID the read issued, or read those lines first",
+        "; a source-span ID must lie within the lines one read returned: cite the ID the read issued or a range inside it, or read those lines first",
     ),
 ];
 

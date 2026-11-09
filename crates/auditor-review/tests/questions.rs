@@ -279,6 +279,28 @@ fn answers_that_break_their_kind_are_refused() {
         &["file:not-issued"],
     );
     assert!(refused(0, &hotspots, &[]).contains("cites unknown evidence"));
+    let mut read = known.clone();
+    read.insert("source-span:app/store/db.py#L8-L12".to_string());
+    for (span, inside) in [
+        ("#L8-L12", true),
+        ("#L9-L10", true),
+        ("#L7-L10", false),
+        ("#L10-L13", false),
+        ("#L10-L9", false),
+    ] {
+        let mut narrowed = answers[0].clone();
+        narrowed.claims[0] = claim(
+            &asked[0],
+            ClaimSlot::HotspotRisk,
+            EngineeringClaimKind::RecommendationPremise,
+            &[
+                &asked[0].subjects[0].id,
+                &format!("source-span:app/store/db.py{span}"),
+            ],
+        );
+        let checked = asked[0].check_answer(&narrowed, &read, &[]);
+        assert_eq!(checked.is_ok(), inside, "{span}: {checked:?}");
+    }
 
     let cluster = &asked[1];
     let lone = claim(

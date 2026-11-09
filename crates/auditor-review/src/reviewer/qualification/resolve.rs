@@ -4,7 +4,7 @@
 //! ran, a line range of a mapped file, or a file or co-change pair in the
 //! history digest. Each prefix is the one the view issues.
 
-use super::super::view::{co_change_id, RepositoryView};
+use super::super::view::{co_change_id, source_span, RepositoryView};
 
 type Resolver = fn(&RepositoryView<'_>, &str, &str) -> bool;
 
@@ -31,7 +31,7 @@ const RESOLVERS: [(&str, Resolver); 10] = [
     ("detector", |view, _, rest| {
         view.detectors.iter().any(|run| run.id == rest)
     }),
-    ("source-span", |view, _, rest| view.holds_span(rest)),
+    ("source-span", |view, id, _| view.holds_span(id)),
     ("history", |view, _, rest| {
         view.file_by_path(rest)
             .is_some_and(|file| view.file_history(file).is_some())
@@ -63,15 +63,9 @@ impl RepositoryView<'_> {
         }
     }
 
-    /// `path#Lstart-Lend` within the mapped file's lines.
-    fn holds_span(&self, span: &str) -> bool {
-        let Some((path, lines)) = span.rsplit_once("#L") else {
-            return false;
-        };
-        let Some((start, end)) = lines.split_once("-L") else {
-            return false;
-        };
-        let (Ok(start), Ok(end)) = (start.parse::<usize>(), end.parse::<usize>()) else {
+    /// A source span within the mapped file's lines.
+    fn holds_span(&self, id: &str) -> bool {
+        let Some((path, start, end)) = source_span(id) else {
             return false;
         };
         self.file_by_path(path)

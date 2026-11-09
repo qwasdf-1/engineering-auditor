@@ -245,7 +245,8 @@ the host expands them before any check, and the record keeps the table.
 Every request carries the shared pack and brief as its cache scope, so a
 provider that routes caches by key (Mistral) keeps one cache for the
 review, and a read repeated within a question gets a pointer to its
-earlier result. With a
+earlier result. A claim may cite a source span narrowed to lines inside
+one a read returned. With a
 checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way

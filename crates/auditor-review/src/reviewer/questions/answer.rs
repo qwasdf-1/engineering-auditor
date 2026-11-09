@@ -6,6 +6,7 @@ use std::collections::BTreeSet;
 
 use serde::{Deserialize, Serialize};
 
+use super::super::view::source_span;
 use super::{Question, QuestionKind};
 use crate::{
     validate_claims, validate_recommendations, ClaimSlot, ClaimStatus, ContextualRecommendation,
@@ -24,10 +25,52 @@ pub struct QuestionAnswer {
     pub ranking: Vec<String>,
 }
 
+impl QuestionAnswer {
+    /// Every evidence ID the answer's claims and recommendations cite.
+    pub(crate) fn cited_ids(&self) -> BTreeSet<&str> {
+        let claims = self.claims.iter().flat_map(|claim| {
+            claim
+                .supporting_evidence_ids
+                .iter()
+                .chain(&claim.counter_evidence_ids)
+        });
+        let recommendations = self.recommendations.iter().flat_map(|step| {
+            step.scope_ids
+                .iter()
+                .chain(&step.affected_finding_ids)
+                .chain(
+                    step.expected_benefits
+                        .iter()
+                        .flat_map(|benefit| &benefit.evidence_ids),
+                )
+                .chain(
+                    step.verification_steps
+                        .iter()
+                        .flat_map(|verification| &verification.evidence_ids),
+                )
+        });
+        claims.chain(recommendations).map(String::as_str).collect()
+    }
+}
+
+/// Whether `id` is a source span inside the lines one known span of the
+/// same file returned: the reviewer saw every line it names.
+fn within_known_span(known: &BTreeSet<String>, id: &str) -> bool {
+    let Some((path, start, end)) = source_span(id) else {
+        return false;
+    };
+    start <= end
+        && known
+            .iter()
+            .filter_map(|known| source_span(known))
+            .any(|(shown, from, to)| shown == path && from <= start && end <= to)
+}
+
 impl Question {
     /// Checks an answer: claims and recommendations pass the record
     /// validators within this question's slots, families, and scope,
-    /// citing only `known_evidence_ids` or what this question shows; then
+    /// citing only `known_evidence_ids`, what this question shows, or a
+    /// source span narrowed to lines inside a shown one; then
     /// the kind's shape. The plan's recommendations may rest on claims
     /// from `earlier` answers to the questions it depends on.
     pub fn check_answer(
@@ -43,10 +86,17 @@ impl Question {
                 self.question_id.as_str()
             ));
         }
-        let known = known_evidence_ids
+        let mut known = known_evidence_ids
             .union(&self.evidence_ids)
             .cloned()
             .collect::<BTreeSet<_>>();
+        let narrowed = answer
+            .cited_ids()
+            .into_iter()
+            .filter(|id| !known.contains(*id) && within_known_span(&known, id))
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+        known.extend(narrowed);
         validate_claims(&self.question_id, &self.claim_slots, &known, &answer.claims)?;
         let mut premises = answer.claims.clone();
         premises.extend(

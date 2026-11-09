@@ -92,38 +92,13 @@ fn answer_failures(
         failures.push(format!("{id}: {error}"));
     }
     failures.extend(
-        cited_ids(answer)
+        answer
+            .cited_ids()
             .into_iter()
             .filter(|cited| !view.holds_evidence(cited))
             .map(|cited| format!("{id} cites {cited}, which the inputs do not hold")),
     );
     failures
-}
-
-/// Every evidence ID an answer's claims and recommendations cite.
-fn cited_ids(answer: &QuestionAnswer) -> BTreeSet<&str> {
-    let claims = answer.claims.iter().flat_map(|claim| {
-        claim
-            .supporting_evidence_ids
-            .iter()
-            .chain(&claim.counter_evidence_ids)
-    });
-    let recommendations = answer.recommendations.iter().flat_map(|step| {
-        step.scope_ids
-            .iter()
-            .chain(&step.affected_finding_ids)
-            .chain(
-                step.expected_benefits
-                    .iter()
-                    .flat_map(|benefit| &benefit.evidence_ids),
-            )
-            .chain(
-                step.verification_steps
-                    .iter()
-                    .flat_map(|verification| &verification.evidence_ids),
-            )
-    });
-    claims.chain(recommendations).map(String::as_str).collect()
 }
 
 pub(super) fn contradiction_failures(
