@@ -5,8 +5,11 @@
 //! Each question is one conversation that opens with the orientation pack,
 //! the operator's brief, and the question (the plan also gets the earlier
 //! answers). Retrieval and its budget are shared by the whole review, so
-//! evidence one question read stays citable in the next.
+//! evidence one question read stays citable in the next. What the reviewer
+//! sees names hash IDs by short aliases ([`aliases`]), expanded back before
+//! anything is checked or recorded.
 
+mod aliases;
 mod answer;
 mod calls;
 mod record;
@@ -28,7 +31,11 @@ use crate::{
     ReviewPromptBundleV2, ReviewRoutesV2, ToolSpec, TranscriptRecorder, Transport,
 };
 
-use answer::{accept, accepted_markdown, answer_tool, wire_name as name, ANSWER_TOOL};
+use aliases::Aliases;
+use answer::{
+    accept, accepted_markdown, answer_tool, draft_answer, held_summary, wire_name as name,
+    ANSWER_TOOL,
+};
 pub(super) use answer::{earlier_answers, wire_name};
 pub(crate) use calls::REVIEWER_TURN;
 use calls::{Caller, QuestionSpend, TurnOutcome, REVIEW_STAGE};
@@ -103,6 +110,7 @@ pub fn run_engineering_review(
         checks: Vec::new(),
         cache: BTreeMap::new(),
         stopped: None,
+        aliases: Aliases::default(),
         setup: &setup,
     };
     for question in &questions {
@@ -130,6 +138,7 @@ pub fn run_engineering_review(
         calls: caller.calls,
         spend,
         stopped: review.stopped,
+        id_aliases: review.aliases.table().clone(),
     })
 }
 
@@ -143,6 +152,7 @@ struct Review<'s, 'a> {
     /// Checker verdicts by patch digest and cited findings.
     cache: BTreeMap<(String, Vec<String>), Value>,
     stopped: Option<String>,
+    aliases: Aliases,
     setup: &'s ReviewSetup<'a>,
 }
 
@@ -161,6 +171,8 @@ struct Conversation<'q> {
     history: Vec<NativeConversationMessage>,
     spent: QuestionSpend,
     rejected: Vec<String>,
+    /// The last rejected answer, which a revision builds on.
+    held: Option<Value>,
     /// Set for the last requests, which take only an answer.
     answering: bool,
 }
@@ -211,11 +223,12 @@ impl Review<'_, '_> {
         }
         let mut conversation = Conversation {
             question,
-            user,
+            user: self.aliases.shorten(&user),
             tools: self.tools(question, host),
             history: Vec::new(),
             spent: QuestionSpend::default(),
             rejected: Vec::new(),
+            held: None,
             answering: false,
         };
         let ending = match &self.stopped {
@@ -327,6 +340,11 @@ impl Review<'_, '_> {
             });
         let mut accepted = None;
         for call in &turn.tool_calls {
+            // The history keeps the call as sent; the host runs it on IDs.
+            let call = &NativeToolCall {
+                arguments: self.aliases.expand(&call.arguments),
+                ..call.clone()
+            };
             let message = match (&accepted, call.name.as_str()) {
                 (Some(_), _) => tool_result(
                     call,
@@ -351,9 +369,25 @@ impl Review<'_, '_> {
                     message
                 }
             };
-            conversation.history.push(message);
+            conversation.history.push(self.shown(message));
         }
         accepted
+    }
+
+    /// A tool result as the reviewer sees it, with hash IDs aliased.
+    fn shown(&mut self, message: NativeConversationMessage) -> NativeConversationMessage {
+        match message {
+            NativeConversationMessage::ToolResult {
+                call_id,
+                tool_name,
+                content_markdown,
+            } => NativeConversationMessage::ToolResult {
+                call_id,
+                tool_name,
+                content_markdown: self.aliases.shorten(&content_markdown),
+            },
+            other => other,
+        }
     }
 
     /// Ends the question unanswered; `stops` ends the review too.
@@ -365,17 +399,27 @@ impl Review<'_, '_> {
     }
 
     /// The reviewer's `answer_question` call: the accepted answer, or the
-    /// rejection recorded; with the tool result either way.
+    /// rejection recorded and the answer held for a revision; with the
+    /// tool result either way.
     fn answer_call(
         &self,
         conversation: &mut Conversation<'_>,
         call: &NativeToolCall,
     ) -> (Option<QuestionAnswer>, String) {
-        match self.answer(conversation.question, call) {
+        let draft = draft_answer(conversation.held.as_ref(), &call.arguments);
+        let checked = match &call.validation_error {
+            Some(error) => Err(format!("invalid arguments: {error}")),
+            None => self.answer(conversation.question, &draft),
+        };
+        match checked {
             Ok((answer, markdown)) => (Some(answer), markdown),
             Err(reason) => {
-                let markdown = format!("# Answer rejected\n\n{reason}\n");
+                let markdown = format!(
+                    "# Answer rejected\n\n{reason}\n\n{}\n",
+                    held_summary(&draft)
+                );
                 conversation.rejected.push(reason);
+                conversation.held = Some(draft);
                 (None, markdown)
             }
         }
@@ -384,17 +428,14 @@ impl Review<'_, '_> {
     fn answer(
         &self,
         question: &Question,
-        call: &NativeToolCall,
+        arguments: &Value,
     ) -> Result<(QuestionAnswer, String), String> {
-        if let Some(error) = &call.validation_error {
-            return Err(format!("invalid arguments: {error}"));
-        }
         let earlier = self
             .answers
             .iter()
             .map(|(_, answer)| answer.clone())
             .collect::<Vec<_>>();
-        let accepted = accept(question, &call.arguments, &self.known, &earlier)?;
+        let accepted = accept(question, arguments, &self.known, &earlier)?;
         let markdown = accepted_markdown(&accepted);
         Ok((accepted.answer, markdown))
     }

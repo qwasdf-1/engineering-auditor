@@ -1,7 +1,8 @@
 //! The `answer_question` tool: the reviewer sends one whole answer, naming
 //! its claims and recommendations with refs of its own choosing; the host
 //! turns refs into content-derived IDs and holds the answer to the
-//! question with [`Question::check_answer`].
+//! question with [`Question::check_answer`]. A rejected answer is held,
+//! and a revision sends only the items it replaces, adds, or removes.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -59,6 +60,7 @@ const MATERIALITIES: [Materiality; 3] = [Materiality::Low, Materiality::Medium, 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct AnswerArguments {
+    #[serde(default)]
     claims: Vec<ClaimArgument>,
     #[serde(default)]
     recommendations: Vec<RecommendationArgument>,
@@ -218,9 +220,11 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
     );
     ToolSpec {
         name: ANSWER_TOOL,
-        description: "Answer the question with typed claims and recommendations. Send the whole answer in one call; a rejected answer comes back with the reasons, and a corrected answer replaces it.",
+        description: "Answer the question with typed claims and recommendations. Send the whole answer in one call. A rejected answer comes back with the reasons and is held: fix it with revise set, sending only the claims and recommendations that change.",
         parameters: object(
             json!({
+                "revise": {"type": "boolean", "description": "Set to revise the held rejected answer: each claim or recommendation sent replaces the held one with the same ref or is added, refs in remove are dropped, a ranking sent replaces the held ranking, and everything else stays. Unset, the call is a whole new answer."},
+                "remove": strings("With revise: refs of held claims or recommendations to drop."),
                 "claims": {"type": "array", "items": claim},
                 "recommendations": {"type": "array", "items": recommendation},
                 "ranking": {
@@ -229,7 +233,7 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
                     "description": ranking_description(question.kind),
                 },
             }),
-            &["claims"],
+            &[],
         ),
         strict: false,
     }
@@ -266,6 +270,85 @@ fn names<T: serde::Serialize>(values: &[T]) -> Vec<String> {
                 .and_then(|value| value.as_str().map(str::to_string))
         })
         .collect()
+}
+
+/// The answer a call stands for: with `revise` and a held rejected answer,
+/// the held answer with the call's items merged in by ref; otherwise the
+/// call itself. The result has no `revise` or `remove` field.
+pub(super) fn draft_answer(held: Option<&Value>, arguments: &Value) -> Value {
+    let Some(fields) = arguments.as_object() else {
+        return arguments.clone();
+    };
+    let mut call = fields.clone();
+    let revise = call.remove("revise") == Some(Value::Bool(true));
+    let remove = call.remove("remove");
+    let Some(mut draft) = held.filter(|_| revise).and_then(Value::as_object).cloned() else {
+        return Value::Object(call);
+    };
+    let removed = remove
+        .as_ref()
+        .and_then(Value::as_array)
+        .map(|refs| {
+            refs.iter()
+                .filter_map(Value::as_str)
+                .collect::<BTreeSet<_>>()
+        })
+        .unwrap_or_default();
+    let ref_of = |item: &Value| item["ref"].as_str().map(str::to_string);
+    for list in ["claims", "recommendations"] {
+        let mut items = draft
+            .remove(list)
+            .and_then(|items| match items {
+                Value::Array(items) => Some(items),
+                _ => None,
+            })
+            .unwrap_or_default();
+        for item in call
+            .get(list)
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+        {
+            match items
+                .iter_mut()
+                .find(|held| ref_of(held).is_some() && ref_of(held) == ref_of(item))
+            {
+                Some(held) => *held = item.clone(),
+                None => items.push(item.clone()),
+            }
+        }
+        items.retain(|item| {
+            !ref_of(item).is_some_and(|reference| removed.contains(reference.as_str()))
+        });
+        draft.insert(list.to_string(), Value::Array(items));
+    }
+    if let Some(ranking) = call.remove("ranking") {
+        draft.insert("ranking".to_string(), ranking);
+    }
+    Value::Object(draft)
+}
+
+/// What a held answer holds, by ref, for the rejection message.
+pub(super) fn held_summary(draft: &Value) -> String {
+    let refs = |list: &str| {
+        draft[list]
+            .as_array()
+            .map(|items| {
+                items
+                    .iter()
+                    .filter_map(|item| item["ref"].as_str())
+                    .map(|reference| format!("`{reference}`"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            })
+            .filter(|refs| !refs.is_empty())
+            .unwrap_or_else(|| "none".to_string())
+    };
+    format!(
+        "The rejected answer is held (claims {}; recommendations {}). Fix it with one {ANSWER_TOOL} call with revise set, sending only the claims and recommendations that change, whole, under their refs; list refs to drop in remove. Do not resend the rest.",
+        refs("claims"),
+        refs("recommendations")
+    )
 }
 
 /// Builds the answer from the tool's arguments and checks it; the error
@@ -445,23 +528,18 @@ fn draft(claim: &ClaimArgument, ids: &BTreeMap<&str, StableId>) -> ClaimDraft {
     }
 }
 
-/// The checker's reasons name host IDs; say which ref each one is.
+/// The checker's reasons name host IDs; name the reviewer's refs instead.
 fn with_refs(
     error: String,
     claim_ids: &[(String, StableId)],
     recommendation_ids: &[(String, StableId)],
 ) -> String {
-    let named = claim_ids
+    let mut error = claim_ids
         .iter()
         .chain(recommendation_ids)
-        .filter(|(_, id)| error.contains(id.as_str()))
-        .map(|(reference, id)| format!("`{reference}` is {}", id.as_str()))
-        .collect::<Vec<_>>();
-    let mut error = if named.is_empty() {
-        error
-    } else {
-        format!("{error} ({})", named.join("; "))
-    };
+        .fold(error, |error, (reference, id)| {
+            error.replace(id.as_str(), &format!("`{reference}`"))
+        });
     // Unknown evidence is listed quoted; a claim's own ID is not.
     if error.contains("cites unknown evidence") {
         for (prefix, hint) in UNKNOWN_EVIDENCE_HINTS {

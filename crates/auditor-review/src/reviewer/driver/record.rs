@@ -2,6 +2,8 @@
 //! none, every provider call and retrieval, the patch checks, and what the
 //! review spent.
 
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -10,7 +12,7 @@ use crate::{
     RouteTarget, StableId, Usage,
 };
 
-pub const ENGINEERING_REVIEW_SCHEMA_VERSION: u32 = 2;
+pub const ENGINEERING_REVIEW_SCHEMA_VERSION: u32 = 3;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -34,6 +36,9 @@ pub struct EngineeringReview {
     pub spend: Spend,
     /// Why the review stopped before its last question, if it did.
     pub stopped: Option<String>,
+    /// The short names the conversation used for hash IDs, alias to ID,
+    /// so the transcript reads back against the record.
+    pub id_aliases: BTreeMap<String, String>,
 }
 
 impl EngineeringReview {

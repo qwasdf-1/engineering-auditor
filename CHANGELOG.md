@@ -78,8 +78,13 @@
   earlier answers' claims. The reviewer answers with one `answer_question`
   call whose claims and recommendations carry refs of its own; the host
   turns them into IDs and checks the answer, and a rejected answer goes
-  back with its reasons, naming what to change; a question's last two
-  requests offer only the answer tool. An HTTP error whose body the
+  back with its reasons, naming what to change by the reviewer's refs, and
+  is held, so a revision (`revise`) sends only the claims and
+  recommendations that change and the refs to `remove`; a question's last
+  two requests offer only the answer tool. The conversation names hash IDs
+  by short per-review aliases (`file:7`, `finding:12`), which the host
+  expands before checking; the record (schema 3) keeps the alias table in
+  `id_aliases`. An HTTP error whose body the
   provider rules do not recognize is classed by its status, so a refused
   route fails over instead of being corrected as a model reply; a spent
   account budget (HTTP 402, or a billing error body in either the wrapped

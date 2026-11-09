@@ -79,10 +79,12 @@ impl Transport for FakeProvider {
         }
         .unwrap()
         .to_string();
+        // The prompt names hash IDs by aliases, so match without IDs.
+        let shown = without_ids(&user);
         let question = self
             .questions
             .iter()
-            .find(|question| user.contains(&format!("\n## {}\n", question.question_id.as_str())))
+            .find(|question| shown.contains(&without_ids(&question.markdown)))
             .expect("every request asks one known question");
         let mut state = self.state.lock().unwrap();
         state.bodies.push((request.url.clone(), body));
@@ -270,7 +272,7 @@ pub fn good_answer(step: &Step<'_>) -> Value {
                 .collect::<Vec<_>>(),
         }),
         QuestionKind::RemediationPlan => {
-            let finding = first_token(step.user, "finding:EA-");
+            let finding = first_token(step.user, "finding:");
             let mut premises = vec!["c1".to_string()];
             premises.extend(earlier_claim(step.user));
             json!({
@@ -285,6 +287,38 @@ pub fn good_answer(step: &Step<'_>) -> Value {
             })
         }
     }
+}
+
+/// `text` with every hash ID or alias of an aliased kind blanked out.
+pub fn without_ids(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    let mut rest = text;
+    while let Some(position) = rest.find(':') {
+        let (head, tail) = rest.split_at(position + 1);
+        out.push_str(head);
+        let aliased = [
+            "file:",
+            "symbol:",
+            "finding:",
+            "engineering-case:",
+            "engineering-claim:",
+            "contextual-recommendation:",
+        ]
+        .iter()
+        .any(|kind| head.ends_with(kind));
+        let id = tail
+            .char_indices()
+            .find(|(_, character)| !(character.is_ascii_alphanumeric() || *character == '-'))
+            .map_or(tail.len(), |(end, _)| end);
+        if aliased && id > 0 {
+            out.push('#');
+            rest = &tail[id..];
+        } else {
+            rest = tail;
+        }
+    }
+    out.push_str(rest);
+    out
 }
 
 pub fn first_token(text: &str, prefix: &str) -> String {

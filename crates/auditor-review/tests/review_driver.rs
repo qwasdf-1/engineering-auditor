@@ -97,17 +97,24 @@ fn a_scripted_review_answers_every_question_on_each_protocol() {
 }
 
 #[test]
-fn a_rejected_answer_comes_back_with_its_reasons_and_a_correction_is_accepted() {
+fn a_rejected_answer_is_held_and_a_revision_sends_only_what_changes() {
     let fixture = Fixture::scan(PYTHON_APP);
     let routes = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
     let script: Script = Box::new(|step| match (step.question.kind, step.turn) {
         (QuestionKind::HotspotAssessment, 2) => {
             let mut answer = good_answer(step);
             answer["claims"][0]["supporting_evidence_ids"] = json!(["finding:EA-made-up"]);
+            let mut extra = good_answer(step)["claims"][0].clone();
+            extra["ref"] = json!("extra");
+            answer["claims"].as_array_mut().unwrap().push(extra);
             Reply::Calls(vec![("answer_question", answer)])
         }
         (QuestionKind::HotspotAssessment, 3) => {
-            Reply::Calls(vec![("answer_question", good_answer(step))])
+            let claim = good_answer(step)["claims"][0].clone();
+            Reply::Calls(vec![(
+                "answer_question",
+                json!({"revise": true, "claims": [claim], "remove": ["extra"]}),
+            )])
         }
         _ => reviewer(step),
     });
@@ -116,10 +123,45 @@ fn a_rejected_answer_comes_back_with_its_reasons_and_a_correction_is_accepted() 
     assert_eq!(hotspots.status, QuestionStatus::Answered);
     assert_eq!(hotspots.requests, 3);
     assert_eq!(hotspots.rejected_answers.len(), 1);
+    assert!(hotspots.rejected_answers[0].contains("claim `c0` (slot"));
     assert!(hotspots.rejected_answers[0].contains("cites unknown evidence"));
-    assert!(hotspots.rejected_answers[0].contains("`c0` is engineering-claim:"));
-    assert!(bodies[2].1.to_string().contains("Answer rejected"));
+    let rejection = bodies[2].1.to_string();
+    assert!(rejection.contains("Answer rejected") && rejection.contains("is held"));
+    // The held answer kept every claim and the ranking the revision did
+    // not touch, and dropped the claim it removed.
+    let subjects = hotspots.subject_ids.len();
+    let answer = hotspots.answer.as_ref().unwrap();
+    assert_eq!(answer.claims.len(), subjects);
+    assert_eq!(answer.ranking.len(), subjects);
     assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+}
+
+#[test]
+fn the_reviewer_sees_hash_ids_by_alias_and_the_record_keeps_the_ids() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    let Run { review, bodies, .. } = run(&fixture, &routes, Box::new(reviewer), None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    let shown = bodies
+        .iter()
+        .map(|(_, body)| body.to_string())
+        .collect::<String>();
+    assert!(!shown.contains("finding:EA-"), "finding IDs are aliased");
+    for (alias, id) in &review.id_aliases {
+        assert!(
+            !shown.contains(id.as_str()),
+            "{id} is shown only as {alias}"
+        );
+    }
+    // The plan cited the aliases it was shown; its record holds the IDs.
+    let plan = review.questions[3].answer.as_ref().unwrap();
+    let step = &plan.recommendations[0];
+    assert!(step.affected_finding_ids[0].starts_with("finding:EA-"));
+    assert!(step.premise_claim_ids.len() >= 2);
+    assert!(review
+        .id_aliases
+        .values()
+        .any(|id| id == &step.affected_finding_ids[0]));
 }
 
 #[test]

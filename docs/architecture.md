@@ -233,9 +233,15 @@ claim IDs, so its steps can rest on them. The reviewer reads with the
 retrieval tools (`findings_in` shows each finding's evidence values) and
 answers with one `answer_question` call: claims and recommendations named by
 refs of its own, which the host turns into content-derived IDs before
-`check_answer`. A rejected answer goes back with its reasons, and a
-question's last two requests offer only the answer tool, so a reviewer that
-reads until its budget runs out still answers. With a
+`check_answer`. A rejected answer goes back with its reasons, naming the
+reviewer's refs, and is held: a revision sends only the claims and
+recommendations it replaces or adds, and the refs it drops. A question's
+last two requests offer only the answer tool, so a reviewer that reads
+until its budget runs out still answers. What the reviewer sees names
+hash IDs (files, symbols, findings, cases, claims, recommendations) by
+short aliases such as `file:7`, numbered per kind in the order the review
+first shows them, so repeated openings stay identical for prompt caching;
+the host expands them before any check, and the record keeps the table. With a
 checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way

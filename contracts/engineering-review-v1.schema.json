@@ -7,10 +7,11 @@
   "additionalProperties": false,
   "required": [
     "schema_version", "source_digest", "template_bundle_digest", "prompt_bundle_id",
-    "routes_digest", "brief_digest", "max_patch_checks", "orientation", "questions", "patch_checks", "retrieval", "calls", "spend", "stopped"
+    "routes_digest", "brief_digest", "max_patch_checks", "orientation", "questions", "patch_checks", "retrieval", "calls", "spend", "stopped",
+    "id_aliases"
   ],
   "properties": {
-    "schema_version": { "type": "integer", "const": 2 },
+    "schema_version": { "type": "integer", "const": 3 },
     "source_digest": { "type": "string", "description": "The report, map, and history digest the review read." },
     "template_bundle_digest": { "type": "string" },
     "prompt_bundle_id": { "type": "string", "pattern": "^review-prompt-bundle:" },
@@ -49,7 +50,12 @@
         "patch_checks": { "type": "integer", "minimum": 0, "description": "Checker runs; a repeated patch reuses its verdict." }
       }
     },
-    "stopped": { "type": ["string", "null"], "description": "Why the review stopped before its last question." }
+    "stopped": { "type": ["string", "null"], "description": "Why the review stopped before its last question." },
+    "id_aliases": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "The short names the conversation used for hash IDs, alias (such as file:7) to ID, so the transcript reads back against the record."
+    }
   },
   "$defs": {
     "target": {
