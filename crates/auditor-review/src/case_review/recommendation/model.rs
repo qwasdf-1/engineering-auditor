@@ -12,7 +12,6 @@ pub const CONTEXTUAL_RECOMMENDATION_SCHEMA_VERSION: u32 = 2;
 #[serde(rename_all = "snake_case")]
 pub enum RecommendationFamily {
     LifecycleReownership,
-    ExplicitRetentionAvoidance,
     MeasurementBeforeChange,
     SharedRootRemediation,
     PreserveIndependentActions,

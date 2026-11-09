@@ -77,7 +77,9 @@
   `lifecycle_mismatch` case is not ported as a question of its own. New
   claim slots `hotspot_risk`,
   `intended_structure`, and `structural_violation`, and recommendation
-  family `structural_refactor`.
+  family `structural_refactor`. Recommendation family
+  `explicit_retention_avoidance`, which no question offers, is removed
+  from `contextual-recommendation-v1`.
 - The rebuilt review runs (`review run --experimental-reviewer`; record
   schema `engineering-review-v1.schema.json`). Each question is one
   conversation over the route's provider chain that opens with the
