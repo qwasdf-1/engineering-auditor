@@ -284,4 +284,5 @@ No route has yet qualified on the rebuilt review.
   MiniMax M3.1 Flash, where both arms answered every training case correctly)
   is archived. Mistral Small 4 is unusable on the free Mistral key: its 33,333
   tokens-per-minute limit is below one review run, and EA's bounded retry
-  (about 7.5 seconds) cannot wait out a per-minute window.
+  (then about 7.5 seconds, now about 3.75 minutes) could not wait out a
+  per-minute window.

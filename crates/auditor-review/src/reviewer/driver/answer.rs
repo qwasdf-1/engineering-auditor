@@ -360,7 +360,7 @@ pub(super) fn accept(
     earlier: &[QuestionAnswer],
 ) -> Result<Accepted, String> {
     let arguments: AnswerArguments = serde_json::from_value(arguments.clone())
-        .map_err(|error| format!("invalid arguments: {error}"))?;
+        .map_err(|error| format!("invalid arguments: {}", locate(arguments, error)))?;
     let built_claims = claims(question, &arguments.claims)?;
     let claim_ids = built_claims
         .iter()
@@ -454,6 +454,36 @@ pub(super) fn accept(
         claim_ids,
         recommendation_ids,
     })
+}
+
+/// The draft to hold after a rejection, without the claims and
+/// recommendations that have no ref: a revision addresses held items by ref,
+/// so one without a ref could be neither replaced nor removed.
+pub(super) fn addressable(mut draft: Value) -> Value {
+    for list in ["claims", "recommendations"] {
+        if let Some(items) = draft.get_mut(list).and_then(Value::as_array_mut) {
+            items.retain(|item| item["ref"].is_string());
+        }
+    }
+    draft
+}
+
+/// A field error inside a held claim or recommendation, prefixed with the
+/// item it is in.
+fn locate(arguments: &Value, error: serde_json::Error) -> String {
+    let failing = |list: &str, noun: &str| {
+        arguments[list].as_array()?.iter().find_map(|item| {
+            let error = match list {
+                "claims" => serde_json::from_value::<ClaimArgument>(item.clone()).err(),
+                _ => serde_json::from_value::<RecommendationArgument>(item.clone()).err(),
+            }?;
+            let reference = item["ref"].as_str().unwrap_or("?");
+            Some(format!("{noun} `{reference}`: {error}"))
+        })
+    };
+    failing("claims", "claim")
+        .or_else(|| failing("recommendations", "recommendation"))
+        .unwrap_or_else(|| error.to_string())
 }
 
 /// The claims by ref, in the order the refs were given. A claim's ID covers

@@ -134,6 +134,14 @@
 
 ### Changed
 
+- A review request that fails on a rate limit or an outage waits 15, 30, 60
+  and 120 seconds before its four retries, so a review rides out an outage of
+  up to 3.75 minutes instead of 7.5 seconds.
+- A rejected answer no longer holds claims or recommendations that have no
+  ref, which no revision could replace or remove, so one malformed item
+  cannot make every later revision fail. A held item that is missing a field
+  is named by its ref, and a recommendation resting on a not-substantiated or
+  blocked premise is told which claim it is and its status.
 - Churn reads non-ASCII paths as written: git quoted them, so their files
   never matched and had no churn.
 - The review prompt bundle is rewritten for the rebuilt reviewer, and claim

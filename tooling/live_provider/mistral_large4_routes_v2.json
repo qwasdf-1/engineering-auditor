@@ -1,0 +1,43 @@
+{
+  "schema_version": 4,
+  "providers": [
+    {
+      "id": "mistral_paid",
+      "kind": "mistral_chat",
+      "endpoint_base": "https://api.mistral.ai",
+      "api_key_env": "MISTRAL_API_KEY",
+      "models": [
+        "mistral-large-4"
+      ],
+      "model_protocols": {},
+      "chat_completions_path": null,
+      "cost_class": "known",
+      "estimated_cost_microusd_per_request": 27000,
+      "privacy_class": "hosted_commercial"
+    }
+  ],
+  "single_reviewer": {
+    "targets": [
+      {
+        "provider_id": "mistral_paid",
+        "model": "mistral-large-4"
+      }
+    ]
+  },
+  "review_budget": {
+    "max_requests": 96,
+    "max_input_bytes": 16777216,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 2592000,
+    "allow_unknown_cost": false
+  },
+  "question_budget": {
+    "max_requests": 24,
+    "max_input_bytes": 4194304,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 648000,
+    "allow_unknown_cost": false
+  }
+}

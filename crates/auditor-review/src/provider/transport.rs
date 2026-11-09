@@ -39,6 +39,11 @@ pub trait Transport: Send + Sync {
     fn get(&self, _request: TransportRequest) -> Result<TransportResponse, String> {
         Err("transport does not support model discovery".to_string())
     }
+
+    /// Waits before a request is retried after a failure with no model output.
+    fn wait(&self, delay: Duration) {
+        std::thread::sleep(delay);
+    }
 }
 
 #[derive(Default)]

@@ -36,8 +36,8 @@ use crate::{
 
 use aliases::Aliases;
 use answer::{
-    accept, accepted_markdown, answer_tool, draft_answer, held_summary, wire_name as name,
-    ANSWER_TOOL,
+    accept, accepted_markdown, addressable, answer_tool, draft_answer, held_summary,
+    wire_name as name, ANSWER_TOOL,
 };
 pub(super) use answer::{earlier_answers, wire_name};
 pub(crate) use calls::REVIEWER_TURN;
@@ -344,6 +344,7 @@ impl Review<'_, '_> {
         match checked {
             Ok((answer, markdown)) => (Some(answer), markdown),
             Err(reason) => {
+                let draft = addressable(draft);
                 let markdown = format!(
                     "# Answer rejected\n\n{reason}\n\n{}\n",
                     held_summary(&draft)

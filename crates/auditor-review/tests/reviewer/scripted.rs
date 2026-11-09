@@ -63,6 +63,8 @@ impl FakeProvider {
 }
 
 impl Transport for FakeProvider {
+    fn wait(&self, _delay: std::time::Duration) {}
+
     fn post(&self, request: TransportRequest) -> Result<TransportResponse, String> {
         let body: Value = serde_json::from_slice(&request.body).unwrap();
         let protocol = if request.url.ends_with("/responses") {

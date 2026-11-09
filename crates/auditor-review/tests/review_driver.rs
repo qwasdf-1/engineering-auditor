@@ -97,6 +97,52 @@ fn a_scripted_review_answers_every_question_on_each_protocol() {
 }
 
 #[test]
+fn a_held_item_without_a_ref_is_dropped_and_a_broken_held_item_is_named() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
+    let script: Script = Box::new(|step| match (step.question.kind, step.turn) {
+        (QuestionKind::HotspotAssessment, 2) => {
+            let mut answer = good_answer(step);
+            answer["claims"][0].as_object_mut().unwrap().remove("slot");
+            Reply::Calls(vec![("answer_question", answer)])
+        }
+        (QuestionKind::HotspotAssessment, 3) => {
+            let mut claim = good_answer(step)["claims"][1].clone();
+            claim.as_object_mut().unwrap().remove("ref");
+            Reply::Calls(vec![(
+                "answer_question",
+                json!({"revise": true, "claims": [claim]}),
+            )])
+        }
+        (QuestionKind::HotspotAssessment, 4) => Reply::Calls(vec![(
+            "answer_question",
+            json!({"revise": true, "ranking": good_answer(step)["ranking"]}),
+        )]),
+        (QuestionKind::HotspotAssessment, 5) => Reply::Calls(vec![(
+            "answer_question",
+            json!({"revise": true, "claims": [good_answer(step)["claims"][0]]}),
+        )]),
+        _ => reviewer(step),
+    });
+    let Run { review, .. } = run(&fixture, &routes, script, None);
+    let hotspots = &review.questions[0];
+    assert_eq!(hotspots.status, QuestionStatus::Answered);
+    assert_eq!(hotspots.requests, 5);
+    let reasons = &hotspots.rejected_answers;
+    assert_eq!(reasons.len(), 3, "{reasons:?}");
+    assert!(
+        reasons[1].contains("omits required field `ref`"),
+        "{reasons:?}"
+    );
+    // The claim with no ref was not held, so only the held claim that lost
+    // its slot is left to fix, and the reason names it.
+    assert!(
+        reasons[2].contains("claim `c0`: missing field `slot`"),
+        "{reasons:?}"
+    );
+}
+
+#[test]
 fn a_rejected_answer_is_held_and_a_revision_sends_only_what_changes() {
     let fixture = Fixture::scan(PYTHON_APP);
     let routes = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);

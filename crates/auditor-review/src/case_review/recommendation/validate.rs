@@ -151,17 +151,23 @@ fn validate_premises(
     claims: &BTreeMap<&StableId, &EngineeringClaim>,
 ) -> Result<(), String> {
     for premise_id in &recommendation.premise_claim_ids {
-        match claims.get(premise_id) {
-            Some(premise) if premise.status != ClaimStatus::NotSubstantiated => {
-                if premise.status != ClaimStatus::Blocked
-                    || recommendation.family == RecommendationFamily::MeasurementBeforeChange
-                {
-                    continue;
-                }
-                return Err("recommendation depends on an invalidated premise".to_string());
+        let Some(premise) = claims.get(premise_id) else {
+            return Err("recommendation has a dangling premise claim".to_string());
+        };
+        let invalidated = match premise.status {
+            ClaimStatus::NotSubstantiated => true,
+            ClaimStatus::Blocked => {
+                recommendation.family != RecommendationFamily::MeasurementBeforeChange
             }
-            Some(_) => return Err("recommendation depends on an invalidated premise".to_string()),
-            None => return Err("recommendation has a dangling premise claim".to_string()),
+            _ => false,
+        };
+        if invalidated {
+            let status = serde_json::to_value(premise.status).unwrap_or_default();
+            return Err(format!(
+                "recommendation {} depends on an invalidated premise: claim {premise_id} is {}; substantiate the claim with citations or drop it from premises, and drop the recommendation if no premise remains (a blocked premise suits only measurement_before_change)",
+                recommendation.recommendation_id,
+                status.as_str().unwrap_or("invalidated"),
+            ));
         }
     }
     Ok(())

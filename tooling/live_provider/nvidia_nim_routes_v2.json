@@ -1,0 +1,43 @@
+{
+  "schema_version": 4,
+  "providers": [
+    {
+      "id": "nvidia_nim",
+      "kind": "open_ai_compatible",
+      "endpoint_base": "https://integrate.api.nvidia.com/v1",
+      "api_key_env": "NVIDIA_API_KEY",
+      "models": [
+        "mistralai/mistral-large-4-1t-a52b"
+      ],
+      "model_protocols": {},
+      "chat_completions_path": "/chat/completions",
+      "cost_class": "zero",
+      "estimated_cost_microusd_per_request": null,
+      "privacy_class": "operator_configured"
+    }
+  ],
+  "single_reviewer": {
+    "targets": [
+      {
+        "provider_id": "nvidia_nim",
+        "model": "mistralai/mistral-large-4-1t-a52b"
+      }
+    ]
+  },
+  "review_budget": {
+    "max_requests": 96,
+    "max_input_bytes": 16777216,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 0,
+    "allow_unknown_cost": false
+  },
+  "question_budget": {
+    "max_requests": 24,
+    "max_input_bytes": 4194304,
+    "max_output_tokens": 65536,
+    "timeout_ms": 360000,
+    "max_cost_microusd": 0,
+    "allow_unknown_cost": false
+  }
+}

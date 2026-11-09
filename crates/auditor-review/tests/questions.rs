@@ -354,6 +354,18 @@ fn answers_that_break_their_kind_are_refused() {
         refused(3, &answers[3], &[]).contains("dangling premise"),
         "the plan's premise is a cluster claim, so it needs the earlier answers"
     );
+    let mut unsupported = answers[..3].to_vec();
+    let premise = &answers[3].recommendations[0].premise_claim_ids[0];
+    for claim in unsupported.iter_mut().flat_map(|answer| &mut answer.claims) {
+        if claim.claim_id == *premise {
+            claim.content.status = ClaimStatus::NotSubstantiated;
+        }
+    }
+    let invalidated = refused(3, &answers[3], &unsupported);
+    assert!(
+        invalidated.contains(&format!("claim {premise} is not_substantiated")),
+        "the reason names the premise and its status: {invalidated}"
+    );
     let mut draft = answers[3].recommendations[0].to_draft();
     draft.affected_finding_ids.clear();
     let unfounded = ContextualRecommendation::from_draft(plan.question_id.clone(), draft).unwrap();

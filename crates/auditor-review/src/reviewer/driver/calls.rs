@@ -2,7 +2,7 @@
 //! retried while the provider returned no model output, the next target
 //! when one fails for good, and the review and question budgets.
 
-use crate::provider::retry::{wait_before_no_model_output_retry, MAX_NO_MODEL_OUTPUT_RETRIES};
+use crate::provider::retry::{no_model_output_retry_delay, MAX_NO_MODEL_OUTPUT_RETRIES};
 use crate::{
     BuiltinAdapter, CallDispatch, HostedConsent, NativeToolTurn, ProviderFailure,
     ProviderFailureClass, ProviderRequest, ProviderResponse, ReviewRoutesV2, RouteBudget,
@@ -143,7 +143,7 @@ impl<'a> Caller<'a> {
         let mut last_failure = String::new();
         for retry in 0..=MAX_NO_MODEL_OUTPUT_RETRIES {
             if retry > 0 {
-                wait_before_no_model_output_retry(retry - 1);
+                self.transport.wait(no_model_output_retry_delay(retry - 1));
             }
             if let Some(reason) = self.exhausted(question, attempt.input_bytes, cost) {
                 return Ok(TurnOutcome::Spent(reason));
