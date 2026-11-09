@@ -208,10 +208,14 @@ fn classify_error_description(description: &str) -> ProviderFailureClass {
         .unwrap_or(ProviderFailureClass::InvalidOutput)
 }
 
+/// A rate limit, an outage, or a gateway timeout gave no model output, so
+/// the request can be sent again.
 fn retryable_class(class: ProviderFailureClass) -> bool {
     matches!(
         class,
-        ProviderFailureClass::RateLimit | ProviderFailureClass::Unavailable
+        ProviderFailureClass::RateLimit
+            | ProviderFailureClass::Unavailable
+            | ProviderFailureClass::Timeout
     )
 }
 
@@ -239,6 +243,9 @@ mod tests {
             ProviderFailureClass::Configuration
         );
         assert_eq!(failure(503, "busy"), ProviderFailureClass::Unavailable);
+        let gateway = http_response_failure("p", "m", 504, None);
+        assert_eq!(gateway.class, ProviderFailureClass::Timeout);
+        assert!(gateway.retryable_without_model_output);
         assert_eq!(
             failure(429, "insufficient_quota: check your plan and billing"),
             ProviderFailureClass::Billing

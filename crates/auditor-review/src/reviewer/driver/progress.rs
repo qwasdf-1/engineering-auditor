@@ -32,9 +32,20 @@ impl<'a> Progress<'a> {
         }
     }
 
-    pub(super) fn question_started(&mut self, number: usize, of: usize, kind: QuestionKind) {
+    /// A question about to be asked, or passed over because the review
+    /// already stopped.
+    pub(super) fn question_started(
+        &mut self,
+        (number, of): (usize, usize),
+        kind: QuestionKind,
+        stopped: bool,
+    ) {
         self.place = format!("question {number} of {of}");
-        self.report(|| format!(" ({kind:?}) started"));
+        if stopped {
+            self.report(|| format!(" ({kind:?}) not asked: the review stopped"));
+        } else {
+            self.report(|| format!(" ({kind:?}) started"));
+        }
     }
 
     pub(super) fn question_ended(&self, record: &QuestionRecord) {

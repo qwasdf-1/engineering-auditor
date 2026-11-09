@@ -134,7 +134,8 @@
 
 ### Changed
 
-- A review request that fails on a rate limit or an outage waits 15, 30, 60
+- A review request that fails on a rate limit, an outage, or a gateway
+  timeout (HTTP 408 or 504) waits 15, 30, 60
   and 120 seconds before its four retries instead of 7.5 seconds in all, and
   on the route's last target it is then resent every five minutes, six
   times, so the review waits out an outage of about half an hour, or an
@@ -150,8 +151,9 @@
   configuration must match the stopped run's.
 - `review run --experimental-reviewer` logs its progress to stderr: each
   question's start and end, each retry with the failure and the wait, each
-  target change, and each request that took a minute or more. A run waiting
-  out an outage was silent until its next checkpoint.
+  target change, each request that took a minute or more, and the questions
+  a stopped review did not ask. A run waiting out an outage was silent until
+  its next checkpoint.
 - `review_inputs.py prepare` continues a label instead of starting over: it
   skips recorded repositories and finished runs, keeps prepared reports, and
   resumes stopped runs.

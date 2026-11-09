@@ -151,9 +151,11 @@ pub fn run_engineering_review(
         None => (header, 0),
     };
     for (asked, question) in questions.iter().enumerate().skip(kept) {
-        caller
-            .progress
-            .question_started(asked + 1, questions.len(), question.kind);
+        caller.progress.question_started(
+            (asked + 1, questions.len()),
+            question.kind,
+            review.stopped.is_some(),
+        );
         review.ask(question, &opening, &mut caller, &mut host, view)?;
         if let Some(checkpoint) = setup.checkpoint.filter(|_| asked + 1 < questions.len()) {
             let interrupted = format!(
@@ -334,6 +336,7 @@ impl Review<'_, '_> {
         let tools = self.tools(question, host);
         let mut conversation = Conversation::new(question, self.aliases.shorten(&user), tools);
         conversation.spent = caller.question_spend(&question.question_id);
+        let asked = self.stopped.is_none();
         let ending = match &self.stopped {
             Some(reason) => Ending::Unanswered(reason.clone()),
             None => self.converse(&mut conversation, caller, host),
@@ -349,7 +352,9 @@ impl Review<'_, '_> {
             }
             Ending::Unanswered(reason) => record.reason = Some(reason),
         }
-        caller.progress.question_ended(&record);
+        if asked {
+            caller.progress.question_ended(&record);
+        }
         self.records.push(record);
         Ok(())
     }
