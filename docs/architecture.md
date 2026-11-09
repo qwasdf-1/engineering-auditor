@@ -224,7 +224,9 @@ renders its subjects with evidence IDs, and `Question::check_answer` holds
 an answer to it: the claim and recommendation validators within the
 question's slots, families, and scope, then the kind's shape (every subject
 cited, rankings complete, a shared cause explaining two or more findings,
-every plan step resolving one).
+every plan step resolving one). The hotspot and plan questions also offer
+`lifecycle_reownership` (repeated work moved to a wider owner) under the v2
+lifecycle case's limits, so that case needs no question of its own.
 
 The driver asks the questions in order, one conversation each, over the
 route's provider chain. A conversation opens with the pack, the operator's

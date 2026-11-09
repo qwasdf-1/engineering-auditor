@@ -68,7 +68,14 @@
   recommendations checked against the question: hotspot and architecture
   answers cite every subject, hotspots and plan steps are ranked, a root
   cause explains at least two findings with at most one shared fix, and
-  every plan step resolves a finding. New claim slots `hotspot_risk`,
+  every plan step resolves a finding. The hotspot and plan questions
+  (template version 2, bundle version 2) also offer
+  `lifecycle_reownership`, moving repeated work to a wider owner, with the
+  v2 lifecycle case's limits in their wording (inputs unchanged between
+  repetitions, no consumer needing a fresh result, nothing retained that
+  should be released) and a rejected alternative required; the v2
+  `lifecycle_mismatch` case is not ported as a question of its own. New
+  claim slots `hotspot_risk`,
   `intended_structure`, and `structural_violation`, and recommendation
   family `structural_refactor`.
 - The rebuilt review runs (`review run --experimental-reviewer`; record
@@ -380,6 +387,10 @@
   prompt bundle (schema 3) has a core and a reviewer instruction. The
   schemas of the removed artifacts are deleted, and release archives ship
   only `review/routes-example.json`.
+- The v2 offline prompt-improvement sets under `eval/review-improvement/`,
+  whose case templates, corpus, and routes were already deleted. Mode E is
+  not rebuilt: the run-to-run agreement gate and the usefulness rubric cover
+  what it was for.
 
 ## 1.5.0 - Inline Suppressions And Structural Detectors
 

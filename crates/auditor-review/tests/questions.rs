@@ -361,6 +361,21 @@ fn answers_that_break_their_kind_are_refused() {
     empty_step.ranking = vec![unfounded.recommendation_id.as_str().to_string()];
     empty_step.recommendations = vec![unfounded];
     assert!(refused(3, &empty_step, &answers[..3]).contains("resolves no finding"));
+
+    let lifecycle = |reason: Option<&str>| {
+        let mut draft = answers[3].recommendations[0].to_draft();
+        draft.family = RecommendationFamily::LifecycleReownership;
+        draft.no_alternative_reason = reason.map(str::to_string);
+        let step = ContextualRecommendation::from_draft(plan.question_id.clone(), draft).unwrap();
+        let mut moved = answers[3].clone();
+        moved.ranking = vec![step.recommendation_id.as_str().to_string()];
+        moved.recommendations = vec![step];
+        plan.check_answer(&moved, &known, &answers[..3])
+    };
+    assert!(lifecycle(None)
+        .unwrap_err()
+        .contains("requires an alternative"));
+    lifecycle(Some("the wider owner is the only one")).unwrap();
 }
 
 fn edited_bundle(edit: impl FnOnce(&mut Value)) -> Result<QuestionTemplateBundle, String> {
