@@ -5,13 +5,16 @@
 //! Each question is one conversation that opens with the orientation pack,
 //! the operator's brief, and the question (the plan also gets the earlier
 //! answers). Retrieval and its budget are shared by the whole review, so
-//! evidence one question read stays citable in the next. What the reviewer
-//! sees names hash IDs by short aliases ([`aliases`]), expanded back before
-//! anything is checked or recorded.
+//! evidence one question read stays citable in the next. Every conversation
+//! shares the opening as its prompt cache scope, and a read repeated within
+//! a question is pointed at its earlier result instead of run again. What
+//! the reviewer sees names hash IDs by short aliases ([`aliases`]),
+//! expanded back before anything is checked or recorded.
 
 mod aliases;
 mod answer;
 mod calls;
+mod conversation;
 mod record;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -27,8 +30,8 @@ use super::retrieval::{RetrievalBudget, RetrievalHost};
 use super::view::RepositoryView;
 use crate::{
     CallDispatch, HostedConsent, NativeConversationMessage, NativeToolCall, NativeToolTurn,
-    ProviderRequest, Question, QuestionAnswer, QuestionTemplateBundle, ReviewBrief,
-    ReviewPromptBundleV2, ReviewRoutesV2, ToolSpec, TranscriptRecorder, Transport,
+    Question, QuestionAnswer, QuestionTemplateBundle, ReviewBrief, ReviewPromptBundleV2,
+    ReviewRoutesV2, ToolSpec, TranscriptRecorder, Transport,
 };
 
 use aliases::Aliases;
@@ -38,7 +41,8 @@ use answer::{
 };
 pub(super) use answer::{earlier_answers, wire_name};
 pub(crate) use calls::REVIEWER_TURN;
-use calls::{Caller, QuestionSpend, TurnOutcome, REVIEW_STAGE};
+use calls::{Caller, TurnOutcome};
+use conversation::{answer_now, correction, repeated, tool_result, Conversation, FINAL_TURNS};
 pub use record::{
     canonical_digest, CheckRequester, EngineeringReview, PatchCheckRecord, ProjectionSummary,
     QuestionRecord, QuestionStatus, ReviewCall, Spend, ENGINEERING_REVIEW_SCHEMA_VERSION,
@@ -100,6 +104,7 @@ pub fn run_engineering_review(
         None => pack.markdown.clone(),
     };
     let mut review = Review {
+        cache_scope: opening.clone(),
         system: format!(
             "{}\n\n{}",
             setup.prompts.core_instruction, setup.prompts.reviewer_instruction
@@ -144,6 +149,8 @@ pub fn run_engineering_review(
 
 struct Review<'s, 'a> {
     system: String,
+    /// The pack and brief every question opens with.
+    cache_scope: String,
     /// Every evidence ID shown so far, by the pack, a question, or a tool.
     known: BTreeSet<String>,
     answers: Vec<(QuestionKind, QuestionAnswer)>,
@@ -160,42 +167,6 @@ struct Review<'s, 'a> {
 enum Ending {
     Answered(Box<QuestionAnswer>, crate::RouteTarget),
     Unanswered(String),
-}
-
-/// One question's conversation with the reviewer.
-struct Conversation<'q> {
-    question: &'q Question,
-    /// The opening user message: pack, brief, question, earlier answers.
-    user: String,
-    tools: Vec<ToolSpec>,
-    history: Vec<NativeConversationMessage>,
-    spent: QuestionSpend,
-    rejected: Vec<String>,
-    /// The last rejected answer, which a revision builds on.
-    held: Option<Value>,
-    /// Set for the last requests, which take only an answer.
-    answering: bool,
-}
-
-impl Conversation<'_> {
-    fn request(&self, turn_number: usize, system: &str, caller: &Caller<'_>) -> ProviderRequest {
-        let budget = caller.question_budget();
-        let question_id = &self.question.question_id;
-        ProviderRequest {
-            request_id: format!("{}#{turn_number}", question_id.as_str()),
-            stage: REVIEW_STAGE.to_string(),
-            system_instruction: system.to_string(),
-            context: json!({"question_id": question_id, "turn": turn_number}),
-            context_markdown: Some(self.user.clone()),
-            output_schema_name: REVIEWER_TURN.to_string(),
-            output_schema: json!({}),
-            max_input_bytes: budget.max_input_bytes,
-            max_output_tokens: budget
-                .max_output_tokens
-                .min(caller.routes.review_budget.max_output_tokens),
-            timeout_ms: budget.timeout_ms,
-        }
-    }
 }
 
 impl Review<'_, '_> {
@@ -221,39 +192,13 @@ impl Review<'_, '_> {
             self.known.extend(rendered.evidence_ids);
             user = format!("{user}\n{}", rendered.markdown);
         }
-        let mut conversation = Conversation {
-            question,
-            user: self.aliases.shorten(&user),
-            tools: self.tools(question, host),
-            history: Vec::new(),
-            spent: QuestionSpend::default(),
-            rejected: Vec::new(),
-            held: None,
-            answering: false,
-        };
+        let tools = self.tools(question, host);
+        let mut conversation = Conversation::new(question, self.aliases.shorten(&user), tools);
         let ending = match &self.stopped {
             Some(reason) => Ending::Unanswered(reason.clone()),
             None => self.converse(&mut conversation, caller, host),
         };
-        let mut record = QuestionRecord {
-            question_id: question.question_id.clone(),
-            kind: question.kind,
-            template_version: question.template_version,
-            subject_ids: question
-                .subjects
-                .iter()
-                .map(|subject| subject.id.clone())
-                .collect(),
-            finding_count: question.finding_ids.len(),
-            depends_on: question.depends_on.clone(),
-            markdown_digest: question.audit.markdown_digest.clone(),
-            status: QuestionStatus::Unanswered,
-            reason: None,
-            target: None,
-            requests: conversation.spent.requests,
-            rejected_answers: conversation.rejected,
-            answer: None,
-        };
+        let mut record = conversation.record();
         match ending {
             Ending::Answered(answer, target) => {
                 self.check_accepted(question, &answer);
@@ -297,9 +242,9 @@ impl Review<'_, '_> {
             } else {
                 conversation.tools.clone()
             };
-            let request = conversation.request(turn_number, &self.system, caller);
-            let input_bytes =
-                self.system.len() + conversation.user.len() + history_bytes(&conversation.history);
+            let request =
+                conversation.request(turn_number, &self.system, &self.cache_scope, caller);
+            let input_bytes = conversation.input_bytes(&self.system);
             let dispatch =
                 CallDispatch::tool_call(tools).with_conversation(conversation.history.clone());
             let outcome = caller.turn(
@@ -362,6 +307,7 @@ impl Review<'_, '_> {
                 (None, CHECK_TOOL) => {
                     tool_result(call, self.check_call(conversation.question, call))
                 }
+                (None, _) if conversation.repeats(call) => repeated(call),
                 (None, _) => {
                     let message = host.answer(call);
                     self.known
@@ -369,25 +315,9 @@ impl Review<'_, '_> {
                     message
                 }
             };
-            conversation.history.push(self.shown(message));
+            conversation.history.push(self.aliases.shown(message));
         }
         accepted
-    }
-
-    /// A tool result as the reviewer sees it, with hash IDs aliased.
-    fn shown(&mut self, message: NativeConversationMessage) -> NativeConversationMessage {
-        match message {
-            NativeConversationMessage::ToolResult {
-                call_id,
-                tool_name,
-                content_markdown,
-            } => NativeConversationMessage::ToolResult {
-                call_id,
-                tool_name,
-                content_markdown: self.aliases.shorten(&content_markdown),
-            },
-            other => other,
-        }
     }
 
     /// Ends the question unanswered; `stops` ends the review too.
@@ -633,54 +563,4 @@ fn brief_markdown(brief: &ReviewBrief, source_digest: &str) -> Result<String, St
     BoundedDocument::new("Operator brief", vec![Section::new("Brief", items)])
         .render(BRIEF_BYTES, source_digest)
         .map(|rendered| rendered.markdown)
-}
-
-fn history_bytes(history: &[NativeConversationMessage]) -> usize {
-    history
-        .iter()
-        .map(|message| match message {
-            NativeConversationMessage::Assistant { text, tool_calls } => {
-                text.as_ref().map_or(0, String::len)
-                    + tool_calls
-                        .iter()
-                        .map(|call| call.raw_arguments.len() + call.name.len())
-                        .sum::<usize>()
-            }
-            NativeConversationMessage::ToolResult {
-                content_markdown, ..
-            }
-            | NativeConversationMessage::UserCorrection { content_markdown }
-            | NativeConversationMessage::UserContinuation { content_markdown } => {
-                content_markdown.len()
-            }
-        })
-        .sum()
-}
-
-fn tool_result(call: &NativeToolCall, content_markdown: String) -> NativeConversationMessage {
-    NativeConversationMessage::ToolResult {
-        call_id: call.call_id.clone(),
-        tool_name: call.name.clone(),
-        content_markdown,
-    }
-}
-
-/// Sent after a reply with no tool call, or one cut off.
-/// Requests at the end of a question's budget that only take an answer.
-const FINAL_TURNS: usize = 2;
-
-fn answer_now() -> NativeConversationMessage {
-    NativeConversationMessage::UserCorrection {
-        content_markdown: format!(
-            "This question's requests are nearly spent and reading is over: send your whole answer now with one {ANSWER_TOOL} call, from the evidence already returned."
-        ),
-    }
-}
-
-fn correction() -> NativeConversationMessage {
-    NativeConversationMessage::UserCorrection {
-        content_markdown: format!(
-            "Your last reply made no tool call or was cut off. Read what you need with the tools, keep each reply short, and finish with one {ANSWER_TOOL} call."
-        ),
-    }
 }

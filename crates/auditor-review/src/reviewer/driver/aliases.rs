@@ -10,6 +10,8 @@ use std::collections::BTreeMap;
 
 use serde_json::Value;
 
+use crate::NativeConversationMessage;
+
 /// Kinds whose IDs are digests, with the digest's shape after the colon.
 const KINDS: [(&str, Shape); 6] = [
     ("contextual-recommendation", Shape::Hex64),
@@ -117,6 +119,25 @@ impl Aliases {
                     .collect(),
             ),
             other => other.clone(),
+        }
+    }
+
+    /// A tool result as the reviewer sees it, with hash IDs aliased.
+    pub(super) fn shown(
+        &mut self,
+        message: NativeConversationMessage,
+    ) -> NativeConversationMessage {
+        match message {
+            NativeConversationMessage::ToolResult {
+                call_id,
+                tool_name,
+                content_markdown,
+            } => NativeConversationMessage::ToolResult {
+                call_id,
+                tool_name,
+                content_markdown: self.shorten(&content_markdown),
+            },
+            other => other,
         }
     }
 

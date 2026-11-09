@@ -165,6 +165,31 @@ fn the_reviewer_sees_hash_ids_by_alias_and_the_record_keeps_the_ids() {
 }
 
 #[test]
+fn a_read_repeated_in_a_question_points_at_its_result_instead_of_running_again() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    let script: Script = Box::new(|step| match (step.question.kind, step.turn) {
+        (QuestionKind::HotspotAssessment, 2) => reviewer(&Step { turn: 1, ..*step }),
+        (QuestionKind::HotspotAssessment, turn) if turn > 2 => reviewer(&Step {
+            turn: turn - 1,
+            ..*step
+        }),
+        _ => reviewer(step),
+    });
+    let Run { review, bodies, .. } = run(&fixture, &routes, script, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    assert!(bodies[2]
+        .1
+        .to_string()
+        .contains("already answered in this conversation"));
+    assert_eq!(
+        review.retrieval.len(),
+        4,
+        "one read a question; the repeat is not run"
+    );
+}
+
+#[test]
 fn a_reply_without_a_tool_call_is_corrected_and_the_question_goes_on() {
     let fixture = Fixture::scan(PYTHON_APP);
     let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
@@ -263,13 +288,14 @@ fn spent_budgets_and_failed_routes_leave_questions_unanswered_with_the_reason() 
     assert_eq!(review.questions[3].reason, review.stopped);
 
     // A reader that never answers: its last two requests offer only the
-    // answer tool, and the reads it asks for then are not run.
+    // answer tool, and the reads it asks for then are not run; it repeats
+    // one read, which runs once a question.
     let four_requests = routes(&[("fake", ProviderProtocol::Messages)], 64, 4);
     let reads = || Reply::Calls(vec![("findings_in", json!({"scope": "app/store/db.py"}))]);
     let Run { review, bodies, .. } =
         run(&fixture, &four_requests, Box::new(move |_| reads()), None);
     assert_eq!(status(&review), [QuestionStatus::Unanswered; 4]);
-    assert_eq!(review.retrieval.len(), 8);
+    assert_eq!(review.retrieval.len(), 4);
     let offered = bodies
         .iter()
         .map(|(_, body)| body["tools"].as_array().map_or(0, Vec::len))

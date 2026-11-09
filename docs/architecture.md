@@ -241,7 +241,11 @@ until its budget runs out still answers. What the reviewer sees names
 hash IDs (files, symbols, findings, cases, claims, recommendations) by
 short aliases such as `file:7`, numbered per kind in the order the review
 first shows them, so repeated openings stay identical for prompt caching;
-the host expands them before any check, and the record keeps the table. With a
+the host expands them before any check, and the record keeps the table.
+Every request carries the shared pack and brief as its cache scope, so a
+provider that routes caches by key (Mistral) keeps one cache for the
+review, and a read repeated within a question gets a pointer to its
+earlier result. With a
 checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way

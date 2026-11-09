@@ -489,6 +489,10 @@ pub struct ProviderRequest {
     pub max_input_bytes: usize,
     pub max_output_tokens: usize,
     pub timeout_ms: u64,
+    /// The opening every conversation of one run shares, for providers
+    /// that route prompt caches by key; without it the key covers this
+    /// conversation's own opening.
+    pub cache_scope: Option<String>,
 }
 
 impl ProviderRequest {

@@ -28,9 +28,10 @@ pub(super) fn render_dispatch_body(
 
 /// Mistral prefix caching: requests that share a `prompt_cache_key` are routed
 /// to a cache holding their common prompt prefix (cached tokens bill at 10% of
-/// input). A case conversation keeps its system instruction and initial user
-/// context fixed and only appends turns, so a digest of that fixed opening is a
-/// stable per-conversation key that carries no identifiers or secrets.
+/// input). A conversation keeps its system instruction and initial user
+/// context fixed and only appends turns, so a digest of that fixed opening, or
+/// of the request's cache scope when the run's conversations share one, is a
+/// stable key that carries no identifiers or secrets.
 pub(super) fn apply_prompt_cache_key(
     kind: super::ProviderKind,
     body: &mut Value,
@@ -40,7 +41,8 @@ pub(super) fn apply_prompt_cache_key(
     if kind != super::ProviderKind::MistralChat {
         return;
     }
-    let opening = format!("{}\0{user_content}", request.system_instruction);
+    let shared = request.cache_scope.as_deref().unwrap_or(user_content);
+    let opening = format!("{}\0{shared}", request.system_instruction);
     let digest = sha256_digest_bytes(opening.as_bytes());
     let digest = digest.trim_start_matches("sha256:");
     body["prompt_cache_key"] = Value::String(format!("ea-{}", &digest[..32]));
@@ -138,6 +140,7 @@ mod assistant_output_tests {
             max_input_bytes: 1,
             max_output_tokens: 1,
             timeout_ms: 1,
+            cache_scope: None,
         }
     }
 
@@ -161,6 +164,29 @@ mod assistant_output_tests {
         let first = first.as_str().expect("string key");
         assert!(first.starts_with("ea-") && first.len() == 35);
         assert!(!first.contains("case:1"));
+        // Conversations of one run that share a cache scope share a key.
+        let scoped = |user: &str| {
+            let mut body = json!({});
+            let request = ProviderRequest {
+                cache_scope: Some("# Pack".to_string()),
+                ..request("base")
+            };
+            apply_prompt_cache_key(
+                super::super::ProviderKind::MistralChat,
+                &mut body,
+                &request,
+                user,
+            );
+            body["prompt_cache_key"].clone()
+        };
+        assert_eq!(
+            scoped("# Pack\n# Question 1"),
+            scoped("# Pack\n# Question 2")
+        );
+        assert_ne!(
+            scoped("# Pack\n# Question 1"),
+            Value::String(first.to_string())
+        );
         assert_eq!(
             key(
                 super::super::ProviderKind::OpenAiCompatible,
