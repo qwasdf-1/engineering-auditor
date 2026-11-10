@@ -121,6 +121,11 @@ pub struct ProviderConfig {
     pub estimated_cost_microusd_per_request: Option<u64>,
     #[serde(default = "default_privacy_class")]
     pub privacy_class: PrivacyClass,
+    /// Chat-completions responses arrive as a server-sent event stream, so
+    /// a gateway that cuts off a request still waiting for its whole reply
+    /// sees it progress.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub stream: bool,
 }
 
 struct ProviderSeed {
@@ -239,6 +244,7 @@ impl ProviderConfig {
             cost_class: seed.cost_class,
             estimated_cost_microusd_per_request: None,
             privacy_class: seed.privacy_class,
+            stream: false,
         }
     }
 
@@ -260,6 +266,7 @@ impl ProviderConfig {
         let models = validate_models(self)?;
         validate_protocols(self, &models)?;
         validate_chat_path(self)?;
+        validate_stream(self)?;
         validate_endpoint(self.kind, &self.endpoint_base)?;
         validate_security_classification(self)?;
         validate_cost(self)
@@ -340,6 +347,14 @@ fn validate_chat_path(config: &ProviderConfig) -> Result<(), String> {
             Err("chat-completions path is only valid for a custom compatible provider".to_string())
         }
     }
+}
+
+fn validate_stream(config: &ProviderConfig) -> Result<(), String> {
+    let chat = |model: &String| config.protocol_for(model) == ProviderProtocol::ChatCompletions;
+    if config.stream && !config.models.iter().all(chat) {
+        return Err("streaming is only supported for chat-completions models".to_string());
+    }
+    Ok(())
 }
 
 fn validate_security_classification(config: &ProviderConfig) -> Result<(), String> {

@@ -324,6 +324,36 @@ fn a_failed_request_is_retried_then_the_next_target_takes_over() {
 }
 
 #[test]
+fn a_streamed_chat_review_answers_every_question() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let mut routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    routes.providers[0].stream = true;
+    routes.validate().unwrap();
+    let Run { review, bodies, .. } = run(&fixture, &routes, Box::new(reviewer), None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    assert_eq!(review.spend.input_tokens, 8000);
+    assert!(
+        bodies
+            .iter()
+            .all(|(_, body)| body["stream"] == true
+                && body["stream_options"]["include_usage"] == true)
+    );
+
+    let mut messages = auditor_review::ProviderConfig::openai_compatible(
+        "m",
+        "https://fake.invalid/v1",
+        None::<String>,
+        vec!["fake-model".to_string()],
+    );
+    messages.model_protocols = [("fake-model".to_string(), ProviderProtocol::Messages)].into();
+    messages.stream = true;
+    assert!(messages
+        .validate()
+        .unwrap_err()
+        .contains("chat-completions"));
+}
+
+#[test]
 fn an_outage_on_the_last_target_is_waited_out_outside_the_request_budget() {
     let fixture = Fixture::scan(PYTHON_APP);
     // Three requests a question; the reviewer needs two once the outage

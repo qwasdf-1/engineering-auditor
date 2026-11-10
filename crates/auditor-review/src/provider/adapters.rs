@@ -20,6 +20,7 @@ use super::wire_response::{
 };
 
 mod render;
+mod stream;
 mod tool_calls;
 
 use render::{
@@ -155,7 +156,15 @@ impl<'a> BuiltinAdapter<'a> {
             .with_dispatch(dispatch.assessment_mode, dispatch.repair.is_some());
         let transport_response = self.transport.post(transport_request);
         match transport_response {
-            Ok(response) => {
+            Ok(mut response) => {
+                if let Some(completion) = self
+                    .config
+                    .stream
+                    .then(|| stream::assemble(&response.body))
+                    .flatten()
+                {
+                    response.body = serde_json::to_vec(&completion).expect("completion JSON");
+                }
                 let transcript_response = TranscriptTransportResponse {
                     status: response.status,
                     body_size: response.body.len(),
@@ -436,6 +445,11 @@ impl<'a> BuiltinAdapter<'a> {
         let mut body = render_dispatch_body(protocol, model, request, &user_content, dispatch);
         lower_tool_schemas(self.config.kind, &mut body);
         apply_prompt_cache_key(self.config.kind, &mut body, request, &user_content);
+        if self.config.stream {
+            stream::request_stream(self.config.kind, &mut body);
+        }
+        // A stream's events take several times its completion's bytes.
+        let output_bytes_per_token = if self.config.stream { 256 } else { 16 };
         let path = self.request_path(model, protocol)?;
         let headers = self.request_headers(model)?;
         Ok(TransportRequest {
@@ -445,7 +459,7 @@ impl<'a> BuiltinAdapter<'a> {
             timeout_ms: request.timeout_ms,
             max_response_bytes: request
                 .max_output_tokens
-                .saturating_mul(16)
+                .saturating_mul(output_bytes_per_token)
                 .saturating_add(64 * 1024)
                 .min(16 * 1024 * 1024),
         })

@@ -88,6 +88,7 @@ impl Transport for FakeProvider {
             .iter()
             .find(|question| shown.contains(&without_ids(&question.markdown)))
             .expect("every request asks one known question");
+        let streams = body["stream"] == true;
         let mut state = self.state.lock().unwrap();
         state.bodies.push((request.url.clone(), body));
         let request_index = state.bodies.len() - 1;
@@ -108,8 +109,52 @@ impl Transport for FakeProvider {
                 .turns
                 .insert(question.question_id.as_str().to_string(), turn);
         }
-        Ok(wire(protocol, request_index, reply))
+        let mut response = wire(protocol, request_index, reply);
+        if streams && response.status == 200 {
+            response.body = streamed(&serde_json::from_slice(&response.body).unwrap());
+        }
+        Ok(response)
     }
+}
+
+/// A chat completion as the event stream a provider sends when asked to
+/// stream: each tool call's arguments split across two chunks, and usage
+/// in a last chunk with no choice.
+fn streamed(completion: &Value) -> Vec<u8> {
+    let choice = &completion["choices"][0];
+    let message = &choice["message"];
+    let id = &completion["id"];
+    let chunk = |delta: Value, finish: Value| json!({"id": id, "choices": [{"index": 0, "delta": delta, "finish_reason": finish}]});
+    let mut chunks = vec![chunk(
+        json!({"role": "assistant", "content": message["content"]}),
+        Value::Null,
+    )];
+    for (index, call) in message["tool_calls"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .enumerate()
+    {
+        let arguments = call["function"]["arguments"].as_str().unwrap();
+        let (head, tail) = arguments.split_at(arguments.len() / 2);
+        chunks.push(chunk(
+            json!({"tool_calls": [{"index": index, "id": call["id"], "type": "function",
+                "function": {"name": call["function"]["name"], "arguments": head}}]}),
+            Value::Null,
+        ));
+        chunks.push(chunk(
+            json!({"tool_calls": [{"index": index, "function": {"arguments": tail}}]}),
+            Value::Null,
+        ));
+    }
+    chunks.push(chunk(json!({}), choice["finish_reason"].clone()));
+    chunks.push(json!({"id": id, "choices": [], "usage": completion["usage"]}));
+    let mut body = String::new();
+    for chunk in chunks {
+        body.push_str(&format!("data: {chunk}\n\n"));
+    }
+    body.push_str("data: [DONE]\n\n");
+    body.into_bytes()
 }
 
 /// The reply in the provider's wire format.

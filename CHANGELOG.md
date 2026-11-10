@@ -135,6 +135,13 @@
   several runs, and `review_inputs.py qualify` qualifies a route set on the
   whole corpus.
 
+- A provider's `stream` route option: a chat-completions provider (Mistral
+  or OpenAI-compatible) answers as a server-sent event stream, which the
+  adapter puts back together as the unstreamed completion, so a gateway
+  that cuts off a request still waiting for its whole reply (NVIDIA NIM's
+  504 at five minutes) sees it progress. The transcript records the
+  assembled completion; the request body shows `"stream": true`.
+
 ### Changed
 
 - A review request that fails on a rate limit or an outage waits 15, 30, 60
