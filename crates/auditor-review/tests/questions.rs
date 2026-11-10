@@ -386,7 +386,7 @@ fn answers_that_break_their_kind_are_refused() {
     };
     assert!(lifecycle(None)
         .unwrap_err()
-        .contains("requires an alternative"));
+        .contains("lifecycle_reownership, which requires an alternative: add one or more entries to its alternatives"));
     lifecycle(Some("the wider owner is the only one")).unwrap();
 }
 

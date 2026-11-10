@@ -182,7 +182,10 @@ fn validate_alternative(recommendation: &ContextualRecommendation) -> Result<(),
             .as_deref()
             .is_none_or(str::is_empty);
     if missing {
-        Err("architectural recommendation requires an alternative".to_string())
+        Err(format!(
+            "recommendation {} is lifecycle_reownership, which requires an alternative: add one or more entries to its alternatives, each a summary of another way to act and its tradeoffs, or, if there is no other way, say why in no_alternative_reason",
+            recommendation.recommendation_id
+        ))
     } else {
         Ok(())
     }

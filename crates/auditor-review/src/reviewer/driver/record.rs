@@ -147,9 +147,10 @@ pub struct ReviewCall {
 impl ReviewCall {
     /// A request the provider gave no model output for: a rate limit, an
     /// outage, a transport failure, or a timeout, with no usage. It counts
-    /// in the spend and against the cost budget, which cannot tell whether
-    /// the provider billed it, but not against the request or input-byte
-    /// budgets, which bound the reviewer's turns.
+    /// in the spend and, unless [`turned_away`](Self::turned_away), against
+    /// the cost budget, which cannot tell whether the provider billed it,
+    /// but not against the request or input-byte budgets, which bound the
+    /// reviewer's turns.
     pub fn produced_no_output(&self) -> bool {
         self.failure.is_some_and(|class| {
             matches!(
@@ -160,6 +161,23 @@ impl ReviewCall {
                     | ProviderFailureClass::Timeout
             )
         }) && self.usage == Usage::default()
+    }
+
+    /// A rate limit with no usage: the provider turned the request away
+    /// before the model ran, so it billed nothing and costs nothing against
+    /// the cost budget. A provider out of capacity can turn away many
+    /// requests in a row; counting them spent the budget on no answers.
+    pub fn turned_away(&self) -> bool {
+        self.failure == Some(ProviderFailureClass::RateLimit) && self.usage == Usage::default()
+    }
+
+    /// The call's estimated cost at the route's per-request estimate.
+    pub fn estimated_cost(&self, per_request_microusd: u64) -> u64 {
+        if self.turned_away() {
+            0
+        } else {
+            per_request_microusd
+        }
     }
 }
 

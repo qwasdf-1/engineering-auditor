@@ -124,7 +124,7 @@ impl<'a> Caller<'a> {
         {
             spent.requests += 1;
             spent.counted.add(call);
-            spent.cost_microusd += self.cost(&call.target);
+            spent.cost_microusd += call.estimated_cost(self.cost(&call.target));
         }
         spent
     }
@@ -221,9 +221,10 @@ impl<'a> Caller<'a> {
             }
             let result = self.send(attempt, provider);
             let call = attempt.record(retry, &result);
-            question.charge(&call, cost);
+            let charged = call.estimated_cost(cost);
+            question.charge(&call, charged);
             self.counted.add(&call);
-            self.spend.add_request(attempt.input_bytes, cost);
+            self.spend.add_request(attempt.input_bytes, charged);
             self.calls.push(call);
             let failure = match result {
                 Ok(response) => {

@@ -10,9 +10,9 @@ mod scripted;
 use std::sync::Mutex;
 
 use auditor_review::{
-    run_engineering_review, CheckRequester, EngineeringReview, HostedConsent, ProviderFailureClass,
-    ProviderProtocol, QuestionKind, QuestionStatus, ReviewSetup, TranscriptRecorder,
-    DEFAULT_PATCH_CHECKS,
+    run_engineering_review, CheckRequester, CostClass, EngineeringReview, HostedConsent,
+    ProviderFailureClass, ProviderProtocol, QuestionKind, QuestionStatus, ReviewSetup,
+    TranscriptRecorder, DEFAULT_PATCH_CHECKS,
 };
 use fixture::{Fixture, PYTHON_APP};
 use scripted::{
@@ -351,6 +351,35 @@ fn a_streamed_chat_review_answers_every_question() {
         .validate()
         .unwrap_err()
         .contains("chat-completions"));
+}
+
+#[test]
+fn a_provider_out_of_capacity_costs_nothing_against_the_cost_budget() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    // Each billed request is estimated at 10,000 µUSD and a question may
+    // spend 30,000: the four rate limits must not count, or the question's
+    // budget is spent before the reviewer's two requests.
+    let mut priced = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
+    priced.providers[0].cost_class = CostClass::Known;
+    priced.providers[0].estimated_cost_microusd_per_request = Some(10_000);
+    priced.question_budget.max_cost_microusd = 30_000;
+    priced.validate().unwrap();
+    let busy: Script = Box::new(|step| match step.request {
+        0..=3 => Reply::Status(429),
+        _ => reviewer(step),
+    });
+    let Run { review, .. } = run(&fixture, &priced, busy, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    assert!(review.calls[..4]
+        .iter()
+        .all(|call| call.turned_away() && call.failure == Some(ProviderFailureClass::RateLimit)));
+    let billed = review
+        .calls
+        .iter()
+        .filter(|call| !call.turned_away())
+        .count();
+    assert_eq!(review.spend.cost_microusd, 10_000 * billed as u64);
+    assert_eq!(review.spend.requests, review.calls.len());
 }
 
 #[test]

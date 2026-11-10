@@ -5,7 +5,8 @@
 //! provider budget, the retrieval budget (the brief tightens it), and the
 //! review's patch-check limit; every call must go to a route target. A
 //! request that produced no model output counts against the cost budget
-//! only, as the driver counts it.
+//! only, and a rate limit with no usage not even that, as the driver
+//! counts it.
 
 use std::collections::BTreeMap;
 
@@ -160,7 +161,7 @@ fn recount<'r>(routes: &ReviewRoutesV2, review: &'r EngineeringReview) -> Recoun
                 tally.requests += 1;
                 tally.input_bytes += call.input_bytes;
             }
-            tally.cost_microusd += cost;
+            tally.cost_microusd += call.estimated_cost(cost);
         }
         spend.input_tokens += call.usage.input_tokens;
         spend.cached_input_tokens += call.usage.cached_input_tokens;

@@ -154,7 +154,10 @@
   response still arriving at the request's timeout, which was counted as a
   broken connection. A
   request that produced no model output counts against the cost budget
-  only, so an outage no longer uses up a question's requests.
+  only, so an outage no longer uses up a question's requests, and a rate
+  limit with no usage, which the provider turned away unbilled, counts
+  against neither, so a provider out of capacity no longer uses up a
+  question's or the review's estimated cost.
 - `review run --resume RECORD` continues a review that stopped: the
   questions answered before the stop are kept with the calls, spend,
   retrieval, aliases, and patch checks, the rest are asked again, the
@@ -171,8 +174,9 @@
   skips recorded repositories and finished runs, keeps prepared reports, and
   resumes stopped runs.
 - The live routes for Phase B run the reviewer on GLM 5.3 Flash, on
-  Mistral's API (`mistral_glm53_flash_routes_v2.json`) for tuning and on
-  NVIDIA NIM (`nvidia_nim_glm53_flash_routes_v2.json`) for the corpus.
+  Mistral's API (`mistral_glm53_flash_routes_v2.json`, the corpus's
+  `mistral_glm` route set) for tuning and the corpus, or on NVIDIA NIM
+  (`nvidia_nim_glm53_flash_routes_v2.json`).
 - A rejected answer's reasons say how to fix it: which rule a claim's
   status breaks and the status that fits, the question's subject IDs when
   `scope_ids` names a file the reviewer read, what a numeric benefit lacks,
