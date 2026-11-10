@@ -1,13 +1,12 @@
 //! Provider calls for one review: the route's targets in order, a request
 //! retried while the provider returned no model output, the next target
-//! when one fails for good, an outage on the last target waited out, and
-//! the review and question budgets.
+//! when one fails for good, an outage on the last target waited out (a
+//! gateway timeout only retried twice), and the review and question
+//! budgets.
 
 use std::time::Instant;
 
-use crate::provider::retry::{
-    no_model_output_retry_delay, MAX_NO_MODEL_OUTPUT_RETRIES, OUTAGE_RESENDS,
-};
+use crate::provider::retry::{no_model_output_retry_delay, retries_allowed, target_retries};
 use crate::{
     BuiltinAdapter, CallDispatch, HostedConsent, NativeToolTurn, ProviderConfig, ProviderFailure,
     ProviderFailureClass, ProviderRequest, ProviderResponse, ReviewRoutesV2, RouteBudget,
@@ -205,14 +204,16 @@ impl<'a> Caller<'a> {
             .expect("validated routes name known providers");
         let cost = self.cost(target);
         let last_target = self.target + 1 == self.routes.single_reviewer.targets.len();
-        let retries = MAX_NO_MODEL_OUTPUT_RETRIES + if last_target { OUTAGE_RESENDS } else { 0 };
+        let retries = target_retries(last_target);
+        // The retries the last failure allows.
+        let mut allowed = retries;
         let mut last_failure = String::new();
         for retry in 0..=retries {
             if retry > 0 {
                 let delay = no_model_output_retry_delay(retry - 1);
                 let request = &attempt.request.request_id;
                 self.progress
-                    .retry(request, &last_failure, (retry, retries), delay);
+                    .retry(request, &last_failure, (retry, allowed), delay);
                 self.transport.wait(delay);
             }
             if let Some(reason) = self.exhausted(question, attempt.input_bytes, cost) {
@@ -239,7 +240,8 @@ impl<'a> Caller<'a> {
                 "{}/{}: {:?}: {}",
                 target.provider_id, target.model, failure.class, failure.message
             );
-            if !failure.retryable_without_model_output {
+            allowed = retries_allowed(&failure, retries);
+            if retry >= allowed {
                 break;
             }
         }

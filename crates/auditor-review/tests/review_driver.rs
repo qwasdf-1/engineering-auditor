@@ -350,12 +350,12 @@ fn an_outage_on_the_last_target_is_waited_out_outside_the_request_budget() {
     assert_eq!(review.questions[0].requests, 10);
     assert_eq!(review.spend.requests, review.calls.len());
 
-    // A gateway timeout is resent like an outage; past the resends it
-    // stops the review after eleven attempts, and the questions after are
+    // A gateway timeout is retried twice, not waited out like an outage:
+    // the review stops after three attempts, and the questions after are
     // logged as not asked.
     let gateway: Script = Box::new(|_| Reply::Status(504));
     let (Run { review, .. }, lines) = logged_run(&fixture, &tight, gateway);
-    assert_eq!(review.calls.len(), 11);
+    assert_eq!(review.calls.len(), 3);
     assert!(review
         .calls
         .iter()
@@ -364,9 +364,10 @@ fn an_outage_on_the_last_target_is_waited_out_outside_the_request_budget() {
         .stopped
         .as_deref()
         .is_some_and(|reason| reason.starts_with("every route target failed")));
-    assert_eq!(lines.len(), 1 + 10 + 1 + 3);
-    assert_eq!(lines[11], "question 1 of 4 Unanswered after 11 requests");
-    assert!(lines[12..]
+    assert_eq!(lines.len(), 1 + 2 + 1 + 3);
+    assert!(lines[1].ends_with("retry 1 of 2 in 15 s"), "{}", lines[1]);
+    assert_eq!(lines[3], "question 1 of 4 Unanswered after 3 requests");
+    assert!(lines[4..]
         .iter()
         .all(|line| line.ends_with(") not asked: the review stopped")));
 }

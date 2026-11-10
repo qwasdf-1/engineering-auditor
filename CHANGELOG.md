@@ -134,12 +134,13 @@
 
 ### Changed
 
-- A review request that fails on a rate limit, an outage, or a gateway
-  timeout (HTTP 408 or 504) waits 15, 30, 60
+- A review request that fails on a rate limit or an outage waits 15, 30, 60
   and 120 seconds before its four retries instead of 7.5 seconds in all, and
   on the route's last target it is then resent every five minutes, six
   times, so the review waits out an outage of about half an hour, or an
   hour when every request hangs to its timeout, instead of stopping. A
+  gateway timeout (HTTP 408 or 504) is retried twice, after 15 and 30
+  seconds, since a request too slow once is likely too slow again. A
   request that produced no model output counts against the cost budget
   only, so an outage no longer uses up a question's requests.
 - `review run --resume RECORD` continues a review that stopped: the
