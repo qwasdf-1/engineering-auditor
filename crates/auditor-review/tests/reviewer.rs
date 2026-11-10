@@ -458,3 +458,26 @@ fn a_history_digest_of_another_commit_is_refused() {
     let error = load_history_digest(&path, &fixture.repo).unwrap_err();
     assert!(error.contains("not the repository's HEAD"), "{error}");
 }
+
+#[test]
+fn one_replys_results_stop_at_its_allowance_and_the_next_reply_reads_again() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let view = fixture.view();
+    let mut host = RetrievalHost::new(&view, &fixture.repo, RetrievalBudget::default()).unwrap();
+    let read = || call("r", "read_source", json!({"path": "app/store/db.py"}));
+    host.start_reply();
+    let mut bytes = 0;
+    while !host.reply_spent() {
+        let text = result_text(&host.answer(&read())).to_string();
+        assert!(!text.starts_with("# Tool error"), "{text}");
+        bytes += text.len();
+    }
+    assert!((16 * 1024..24 * 1024).contains(&bytes), "{bytes}");
+    let calls = host.log().len();
+    let deferred = result_text(&host.deferred(&read())).to_string();
+    assert!(deferred.contains("16 KiB allowance") && deferred.contains("next reply"));
+    assert_eq!(host.log().len(), calls);
+    host.start_reply();
+    assert!(!host.reply_spent());
+    assert!(!result_text(&host.answer(&read())).starts_with("# Tool error"));
+}

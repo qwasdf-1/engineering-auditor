@@ -423,6 +423,7 @@ impl Review<'_, '_> {
         host: &mut RetrievalHost<'_, '_>,
         turn: NativeToolTurn,
     ) -> Option<QuestionAnswer> {
+        host.start_reply();
         conversation
             .history
             .push(NativeConversationMessage::Assistant {
@@ -453,6 +454,7 @@ impl Review<'_, '_> {
                 (None, CHECK_TOOL) => {
                     tool_result(call, self.check_call(conversation.question, call))
                 }
+                (None, _) if host.reply_spent() => host.deferred(call),
                 (None, _) if conversation.repeats(call) => repeated(call),
                 (None, _) => {
                     let message = host.answer(call);

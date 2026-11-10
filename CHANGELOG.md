@@ -26,9 +26,12 @@
   findings by layer, detector, and symbol, and coverage gaps) rendered
   within 24 KiB, and five retrieval tools (`read_source`, `symbol_info`,
   `search_symbols`, `findings_in`, `module_overview`) with call and byte
-  budgets (64 calls and 512 KiB a review; one question may take a quarter
-  of the calls, and the questions before the plan leave it one share). Every row cites an evidence ID the host issues only for rows it
-  shows.
+  budgets (64 calls and 512 KiB a review, 8 KiB a result; one question may
+  take a quarter of the calls, and the questions before the plan leave it
+  one share; a reply's calls run until their results reach 16 KiB, and the
+  rest are not run, so a reply asking for many reads does not grow every
+  later request by all of them). Every row cites an evidence ID the host
+  issues only for rows it shows.
 - A patch checker for review recommendations (`review check-patch`,
   experimental). It applies a unified diff to a scratch copy of the files
   the scan reads, re-scans the copy (churn still reads the original's

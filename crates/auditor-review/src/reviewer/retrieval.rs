@@ -24,7 +24,11 @@ pub const RETRIEVAL_TOOL_NAMES: [&str; 6] = [
 ];
 
 const DEFAULT_CALLS: usize = 64;
-const DEFAULT_RESULT_BYTES: usize = 16 * 1024;
+const DEFAULT_RESULT_BYTES: usize = 8 * 1024;
+/// A reply's calls run until their results reach this, so a reply asking
+/// for many reads does not grow every later request by all of them; the
+/// calls after are not run and cost nothing.
+const REPLY_RESULT_BYTES: usize = 16 * 1024;
 const DEFAULT_TOTAL_BYTES: usize = 512 * 1024;
 /// One question may take this share of the review's calls, and the
 /// questions before the plan, which is asked last, leave one share for it.
@@ -221,6 +225,8 @@ pub struct RetrievalHost<'v, 'a> {
     /// Calls the current question must leave for the plan.
     reserved: usize,
     bytes: usize,
+    /// Result bytes of the current reply's calls.
+    reply_bytes: usize,
     issued: BTreeSet<String>,
     log: Vec<RetrievalRecord>,
 }
@@ -248,6 +254,7 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
             question_calls: 0,
             reserved: 0,
             bytes: 0,
+            reply_bytes: 0,
             issued: BTreeSet::new(),
             log: Vec::new(),
         })
@@ -268,6 +275,7 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
             ),
         };
         self.bytes += markdown.len();
+        self.reply_bytes += markdown.len();
         self.issued.extend(evidence_ids.iter().cloned());
         self.log.push(RetrievalRecord {
             call_id: call.call_id.clone(),
@@ -281,6 +289,30 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
             call_id: call.call_id.clone(),
             tool_name: call.name.clone(),
             content_markdown: markdown,
+        }
+    }
+
+    /// Starts the next reply's result allowance.
+    pub fn start_reply(&mut self) {
+        self.reply_bytes = 0;
+    }
+
+    /// Whether the current reply's results used up its allowance.
+    pub fn reply_spent(&self) -> bool {
+        self.reply_bytes >= REPLY_RESULT_BYTES
+    }
+
+    /// The result for a call past the reply's allowance: not run, logged,
+    /// or counted, so asking again in the next reply reads it.
+    pub fn deferred(&self, call: &NativeToolCall) -> NativeConversationMessage {
+        NativeConversationMessage::ToolResult {
+            call_id: call.call_id.clone(),
+            tool_name: call.name.clone(),
+            content_markdown: format!(
+                "This reply's results reached their {} KiB allowance, so this {} call was not run and cost nothing; ask for it again in your next reply if you still need it.",
+                REPLY_RESULT_BYTES / 1024,
+                call.name
+            ),
         }
     }
 
