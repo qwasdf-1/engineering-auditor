@@ -124,9 +124,10 @@ fn validate_scope(
         .collect::<Vec<_>>();
     if !invalid_scope.is_empty() {
         return Err(format!(
-            "recommendation {} field scope_ids contains out-of-case values: {}; scope_ids takes only the IDs the question allows, exactly as shown",
+            "recommendation {} field scope_ids contains out-of-case values: {}; scope_ids takes only this question's subject IDs ({}) and finding IDs; a file or symbol you read is evidence, not scope",
             recommendation.recommendation_id,
-            invalid_scope.join(", ")
+            invalid_scope.join(", "),
+            context.bounds.subject_ids.join(", ")
         ));
     }
     let invalid_findings = recommendation
@@ -220,21 +221,22 @@ fn validate_benefit(
 }
 
 fn validate_numeric_benefit(benefit: &super::ExpectedBenefit) -> Result<(), String> {
-    let invalid = benefit.unit.as_deref().is_none_or(str::is_empty)
-        || !matches!(
-            benefit.evidence_mode,
-            BenefitEvidenceMode::DirectMeasurement | BenefitEvidenceMode::BoundedExtrapolation
-        )
-        || (benefit.evidence_mode == BenefitEvidenceMode::BoundedExtrapolation
-            && benefit
-                .extrapolation_model
-                .as_deref()
-                .is_none_or(str::is_empty));
-    if invalid {
-        Err("numeric benefit mode, unit, or extrapolation model is invalid".to_string())
-    } else {
-        Ok(())
-    }
+    let missing = |field: &Option<String>| field.as_deref().is_none_or(str::is_empty);
+    let error = match benefit.evidence_mode {
+        BenefitEvidenceMode::DirectMeasurement | BenefitEvidenceMode::BoundedExtrapolation
+            if missing(&benefit.unit) =>
+        {
+            "a numeric benefit value needs its unit"
+        }
+        BenefitEvidenceMode::BoundedExtrapolation if missing(&benefit.extrapolation_model) => {
+            "a bounded_extrapolation benefit needs the extrapolation_model it was made with"
+        }
+        BenefitEvidenceMode::DirectMeasurement | BenefitEvidenceMode::BoundedExtrapolation => {
+            return Ok(())
+        }
+        _ => "a numeric benefit value needs evidence_mode direct_measurement or bounded_extrapolation; for any other mode, drop numeric_value and state the size in the description",
+    };
+    Err(error.to_string())
 }
 
 fn validate_verification(
@@ -253,5 +255,44 @@ fn validate_verification(
         Err("recommendation verification is invalid".to_string())
     } else {
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn numeric(
+        mode: BenefitEvidenceMode,
+        unit: Option<&str>,
+        model: Option<&str>,
+    ) -> Result<(), String> {
+        validate_numeric_benefit(&super::super::ExpectedBenefit {
+            description: "Fewer branches.".to_string(),
+            evidence_mode: mode,
+            numeric_value: Some("3".to_string()),
+            unit: unit.map(str::to_string),
+            extrapolation_model: model.map(str::to_string),
+            evidence_ids: Vec::new(),
+        })
+    }
+
+    #[test]
+    fn a_numeric_benefit_error_names_what_to_add_or_drop() {
+        use BenefitEvidenceMode::{BoundedExtrapolation, DirectMeasurement, StructuralInference};
+        assert_eq!(numeric(DirectMeasurement, Some("branches"), None), Ok(()));
+        assert_eq!(
+            numeric(BoundedExtrapolation, Some("calls"), Some("per entry")),
+            Ok(())
+        );
+        assert!(numeric(DirectMeasurement, None, None)
+            .unwrap_err()
+            .ends_with("needs its unit"));
+        assert!(numeric(BoundedExtrapolation, Some("calls"), None)
+            .unwrap_err()
+            .contains("needs the extrapolation_model"));
+        assert!(numeric(StructuralInference, Some("findings"), None)
+            .unwrap_err()
+            .contains("drop numeric_value and state the size in the description"));
     }
 }

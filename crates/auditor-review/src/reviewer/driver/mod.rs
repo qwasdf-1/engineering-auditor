@@ -541,7 +541,13 @@ impl Review<'_, '_> {
                 .to_string();
         }
         match self.check(question, &arguments.patch, &arguments.resolves, None) {
-            Some(check) => check_markdown(&check),
+            Some((check, repeated)) => {
+                let mut markdown = check_markdown(&check);
+                if repeated {
+                    markdown.push_str(REPEATED_CHECK);
+                }
+                markdown
+            }
             None => "# Check refused\n\nThe review's patch checks are spent.\n".to_string(),
         }
     }
@@ -569,15 +575,15 @@ impl Review<'_, '_> {
         }
     }
 
-    /// Runs (or reuses) one check and records it; `None` once the budget
-    /// is spent.
+    /// Runs (or reuses) one check and records it, saying whether it was
+    /// reused; `None` once the budget is spent.
     fn check(
         &mut self,
         question: &Question,
         patch: &str,
         resolves: &[String],
         recommendation_id: Option<crate::StableId>,
-    ) -> Option<Value> {
+    ) -> Option<(Value, bool)> {
         let checker = self.setup.checker?;
         let cited = resolves
             .iter()
@@ -586,15 +592,15 @@ impl Review<'_, '_> {
             .into_iter()
             .collect::<Vec<_>>();
         let key = (sha256_digest_bytes(patch.as_bytes()), cited.clone());
-        let check = match self.cache.get(&key) {
-            Some(check) => check.clone(),
+        let (check, repeated) = match self.cache.get(&key) {
+            Some(check) => (check.clone(), true),
             None if self.prior_checks + self.cache.len() >= self.setup.max_patch_checks => {
                 return None
             }
             None => {
                 let check = checker.check(patch, &cited);
                 self.cache.insert(key, check.clone());
-                check
+                (check, false)
             }
         };
         self.checks.push(PatchCheckRecord {
@@ -608,14 +614,20 @@ impl Review<'_, '_> {
             cited_findings: cited,
             check: check.clone(),
         });
-        Some(check)
+        Some((check, repeated))
     }
 }
+
+/// After a patch that did not apply: what to change before checking again.
+const NOT_APPLIED: &str = "\nThe patch was not applied, so nothing was scanned. Read the lines the reason names, correct the hunk's context and removed lines to match them exactly, and check again; split a long hunk into small ones.\n";
+
+/// After a patch identical to one already checked.
+const REPEATED_CHECK: &str = "\nThis is the patch an earlier check already ran, so this is that verdict again and cost no check. Change the patch before checking it again.\n";
 
 fn check_tool() -> ToolSpec {
     ToolSpec {
         name: CHECK_TOOL,
-        description: "Check a unified diff before proposing it: EA applies it to a scratch copy, re-scans, and runs the operator's tests if any are configured. Verified means every finding it resolves is gone, none is added, and the tests pass. Each check is a full scan, and a review has few.",
+        description: "Check a unified diff before proposing it: EA applies it to a scratch copy, re-scans, and runs the operator's tests if any are configured. Verified means every finding it resolves is gone, none is added, and the tests pass. Each check is a full scan, and a review has few. A hunk applies only where its context and removed lines equal the file's, so copy them from a read rather than from memory and keep about three lines of context around each change.",
         parameters: json!({
             "type": "object",
             "additionalProperties": false,
@@ -660,6 +672,9 @@ fn check_markdown(check: &Value) -> String {
         if let Some(value) = check[field].as_str() {
             markdown.push_str(&format!("- **{field}:** {value}\n"));
         }
+    }
+    if check["step"] == "apply" {
+        markdown.push_str(NOT_APPLIED);
     }
     for (label, field) in [
         ("Resolved", "resolved_findings"),

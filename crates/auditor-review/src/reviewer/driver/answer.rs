@@ -577,9 +577,13 @@ fn with_refs(
                 error.push_str(hint);
             }
         }
+        error.push_str(UNKNOWN_EVIDENCE);
     }
     error
 }
+
+/// For any unknown cited ID: what counts as evidence.
+const UNKNOWN_EVIDENCE: &str = "; cite only IDs shown to you in brackets, copied whole (finding:12, not EA-... or 12); a tool name, a tool call, or a path is not evidence, and a finding the scan does not report has no ID: say so in the proposition or assumptions instead";
 
 /// What to do about an unknown cited ID of each kind.
 const UNKNOWN_EVIDENCE_HINTS: [(&str, &str); 2] = [

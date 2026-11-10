@@ -590,6 +590,10 @@ fn a_patch_is_checked_when_the_reviewer_asks_and_again_from_the_cache_when_accep
                 "check_patch",
                 json!({"patch": PATCH, "resolves": ["finding:EA-elsewhere"]}),
             ),
+            (
+                "check_patch",
+                json!({"patch": PATCH, "resolves": step.question.finding_ids[..2]}),
+            ),
         ]),
         (QuestionKind::SharedRootCause, _) => {
             let mut answer = good_answer(step);
@@ -607,7 +611,7 @@ fn a_patch_is_checked_when_the_reviewer_asks_and_again_from_the_cache_when_accep
     assert_eq!(
         checked.len(),
         1,
-        "the accepted patch reuses the reviewer's check"
+        "the repeated and the accepted patch reuse the reviewer's check"
     );
     assert!(checked[0].1.iter().all(|id| id.starts_with("EA-")));
     assert_eq!(review.spend.patch_checks, 1);
@@ -616,10 +620,17 @@ fn a_patch_is_checked_when_the_reviewer_asks_and_again_from_the_cache_when_accep
         .iter()
         .map(|check| check.requested_by)
         .collect::<Vec<_>>();
-    assert_eq!(requesters, [CheckRequester::Reviewer, CheckRequester::Host]);
+    assert_eq!(
+        requesters,
+        [
+            CheckRequester::Reviewer,
+            CheckRequester::Reviewer,
+            CheckRequester::Host
+        ]
+    );
     let cluster = review.questions[1].answer.as_ref().unwrap();
     assert_eq!(
-        review.patch_checks[1].recommendation_id.as_ref(),
+        review.patch_checks[2].recommendation_id.as_ref(),
         Some(&cluster.recommendations[0].recommendation_id)
     );
     let second = bodies
@@ -629,6 +640,11 @@ fn a_patch_is_checked_when_the_reviewer_asks_and_again_from_the_cache_when_accep
         .unwrap();
     assert!(second.contains("**Verdict:** verified"));
     assert!(second.contains("must list finding IDs of this question"));
+    assert_eq!(
+        second.matches("cost no check").count(),
+        1,
+        "only the repeat says it reused a check"
+    );
 }
 
 #[test]

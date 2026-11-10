@@ -94,32 +94,40 @@ fn status_error(
     let supported = !claim.supporting_evidence_ids.is_empty() || !dependencies.is_empty();
     let countered =
         !claim.counter_evidence_ids.is_empty() || dependencies.contains(&ClaimStatus::Contested);
-    let valid = match claim.status {
-        ClaimStatus::Substantiated => {
-            supported
-                && claim.counter_evidence_ids.is_empty()
-                && dependencies
-                    .iter()
-                    .all(|status| *status == ClaimStatus::Substantiated)
-        }
-        ClaimStatus::PartiallySubstantiated => {
-            supported
-                && dependencies.iter().all(|status| {
-                    matches!(
-                        status,
-                        ClaimStatus::Substantiated | ClaimStatus::PartiallySubstantiated
-                    )
-                })
-        }
-        ClaimStatus::Contested => countered,
-        ClaimStatus::Blocked | ClaimStatus::NotSubstantiated => true,
+    let partial_dependencies = || {
+        dependencies.iter().all(|status| {
+            matches!(
+                status,
+                ClaimStatus::Substantiated | ClaimStatus::PartiallySubstantiated
+            )
+        })
     };
-    (!valid).then(|| {
-        format!(
-            "claim {} (slot {:?}) status {:?} is not supported by its citations and dependencies {:?}",
-            claim.claim_id, claim.slot, claim.status, dependencies
-        )
-    })
+    let why = match claim.status {
+        ClaimStatus::Substantiated | ClaimStatus::PartiallySubstantiated if !supported => {
+            "it cites no supporting evidence and depends on no claim; cite the evidence it rests on, or mark it not_substantiated"
+        }
+        ClaimStatus::Substantiated if !claim.counter_evidence_ids.is_empty() => {
+            "it cites counter-evidence; a claim with evidence on both sides is partially_substantiated or contested"
+        }
+        ClaimStatus::Substantiated
+            if dependencies
+                .iter()
+                .any(|status| *status != ClaimStatus::Substantiated) =>
+        {
+            "it depends on a claim that is not substantiated; it is at most as strong as that claim, so mark it partially_substantiated"
+        }
+        ClaimStatus::PartiallySubstantiated if !partial_dependencies() => {
+            "it depends on a claim that is contested, blocked, or not substantiated"
+        }
+        ClaimStatus::Contested if !countered => {
+            "it cites no counter-evidence and depends on no contested claim"
+        }
+        _ => return None,
+    };
+    Some(format!(
+        "claim {} (slot {:?}) status {:?} is not supported: {why}",
+        claim.claim_id, claim.slot, claim.status
+    ))
 }
 
 #[cfg(test)]

@@ -279,11 +279,13 @@ fn apply_hunks(content: &str, hunks: &[Hunk], path: &str) -> Result<String, Stri
     let mut drift = 0isize;
     for (number, hunk) in hunks.iter().enumerate() {
         let hint = (hunk.old_start.saturating_sub(1) as isize + drift).max(0) as usize;
-        let at = locate(&lines, &hunk.old_lines(), cursor, hint).ok_or_else(|| {
+        let old = hunk.old_lines();
+        let at = locate(&lines, &old, cursor, hint).ok_or_else(|| {
             format!(
-                "hunk {} of `{path}` does not match the file near line {}",
+                "hunk {} of `{path}` does not match the file near line {}{}",
                 number + 1,
-                hunk.old_start
+                hunk.old_start,
+                first_difference(&lines, &old, cursor, hint)
             )
         })?;
         drift = at as isize - hunk.old_start.saturating_sub(1) as isize;
@@ -357,18 +359,53 @@ fn locate(lines: &[&str], old: &[&str], cursor: usize, hint: usize) -> Option<us
     if old.is_empty() {
         return Some(hint.min(lines.len()));
     }
-    let matches_at = |at: usize| {
-        old.iter().enumerate().all(|(offset, expected)| {
-            lines[at + offset]
-                .trim_end_matches('\n')
-                .trim_end_matches('\r')
-                == *expected
-        })
-    };
     let last = lines.len().checked_sub(old.len())?;
     (cursor..=last)
-        .filter(|at| matches_at(*at))
+        .filter(|at| matching_lines(lines, old, *at) == old.len())
         .min_by_key(|at| (at.abs_diff(hint), *at))
+}
+
+/// How many of `old`'s lines match the file's at `at`.
+fn matching_lines(lines: &[&str], old: &[&str], at: usize) -> usize {
+    old.iter()
+        .zip(&lines[at..])
+        .filter(|(expected, line)| line_text(line) == **expected)
+        .count()
+}
+
+fn line_text(line: &str) -> &str {
+    line.trim_end_matches('\n').trim_end_matches('\r')
+}
+
+/// For a hunk that matches nowhere, its first line that differs from the
+/// file where most of it matches, so whoever wrote it can correct it.
+fn first_difference(lines: &[&str], old: &[&str], cursor: usize, hint: usize) -> String {
+    let Some(last) = lines.len().checked_sub(old.len()) else {
+        return format!(": its {} old lines run past the end of the file", old.len());
+    };
+    let best = (cursor.min(last)..=last).max_by_key(|at| {
+        (
+            matching_lines(lines, old, *at),
+            std::cmp::Reverse(at.abs_diff(hint)),
+        )
+    });
+    let Some((at, offset)) = best.and_then(|at| {
+        let offset = old
+            .iter()
+            .zip(&lines[at..])
+            .position(|(expected, line)| line_text(line) != *expected)?;
+        Some((at, offset))
+    }) else {
+        return String::new();
+    };
+    let quoted = |text: &str| text.chars().take(160).collect::<String>();
+    format!(
+        ": its line {} reads `{}` where line {} of the file reads `{}`",
+        offset + 1,
+        quoted(old[offset]),
+        at + offset + 1,
+        quoted(line_text(lines[at + offset]))
+    )
 }
 
 #[cfg(test)]
@@ -392,6 +429,23 @@ mod tests {
         let patch = "--- a/f.py\n+++ b/f.py\n@@ -1,2 +1,2 @@\n x\n-b\n+B\n";
         let error = patched("a\nb\n", patch).unwrap_err();
         assert!(error.contains("hunk 1 of `f.py` does not match"), "{error}");
+    }
+
+    #[test]
+    fn a_mismatch_names_the_line_that_differs_where_most_of_the_hunk_matches() {
+        let content = "a\nb\n// see #well-known\nc\nd\n";
+        let patch = "--- a/f.go\n+++ b/f.go\n@@ -9,4 +9,4 @@\n b\n // see #wellknown\n c\n-d\n+D\n";
+        let error = patched(content, patch).unwrap_err();
+        assert!(
+            error.ends_with(
+                "near line 9: its line 2 reads `// see #wellknown` where line 3 of the file reads `// see #well-known`"
+            ),
+            "{error}"
+        );
+        let long = "--- a/f.go\n+++ b/f.go\n@@ -1,6 +1,6 @@\n a\n b\n c\n d\n e\n-f\n+F\n";
+        assert!(patched(content, long)
+            .unwrap_err()
+            .ends_with(": its 6 old lines run past the end of the file"));
     }
 
     #[test]

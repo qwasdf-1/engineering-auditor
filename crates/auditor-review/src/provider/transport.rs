@@ -137,7 +137,17 @@ fn read_bounded_body(reader: &mut impl Read, max_response_bytes: usize) -> Resul
     Read::by_ref(reader)
         .take(max_response_bytes.saturating_add(1) as u64)
         .read_to_end(&mut body)
-        .map_err(|error| format!("failed to read HTTP response: {error}"))?;
+        .map_err(|error| {
+            // The request's deadline covers its body: a stream still
+            // arriving when it passes is a timeout, not a broken connection.
+            let timed_out = error.kind() == std::io::ErrorKind::TimedOut
+                || error
+                    .get_ref()
+                    .and_then(|inner| inner.downcast_ref::<reqwest::Error>())
+                    .is_some_and(reqwest::Error::is_timeout);
+            let kind = if timed_out { "timed out" } else { "failed" };
+            format!("reading the HTTP response {kind}: {error}")
+        })?;
     if body.len() > max_response_bytes {
         return Err(format!(
             "HTTP response exceeds {max_response_bytes} byte budget"
@@ -214,6 +224,29 @@ mod tests {
         );
         let error = read_bounded_body(&mut Cursor::new(b"12345"), 4).unwrap_err();
         assert!(error.contains("exceeds 4 byte budget"));
+    }
+
+    #[test]
+    fn a_body_still_arriving_at_the_deadline_is_a_timeout() {
+        struct Stalled(std::io::ErrorKind);
+        impl Read for Stalled {
+            fn read(&mut self, _: &mut [u8]) -> std::io::Result<usize> {
+                Err(std::io::Error::new(
+                    self.0,
+                    "request or response body error",
+                ))
+            }
+        }
+        let error = read_bounded_body(&mut Stalled(std::io::ErrorKind::TimedOut), 4).unwrap_err();
+        assert!(
+            error.starts_with("reading the HTTP response timed out"),
+            "{error}"
+        );
+        let error = read_bounded_body(&mut Stalled(std::io::ErrorKind::Other), 4).unwrap_err();
+        assert!(
+            error.starts_with("reading the HTTP response failed"),
+            "{error}"
+        );
     }
 
     #[test]

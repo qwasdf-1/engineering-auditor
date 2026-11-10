@@ -218,8 +218,8 @@ impl Question {
                 .count();
             if explained < 2 {
                 errors.push(format!(
-                    "root cause \"{}\" cites {explained} of the findings; a shared cause explains at least two",
-                    claim.proposition
+                    "root cause claim {} cites {explained} of this question's findings; a shared cause explains at least two, so cite each finding it explains in supporting_evidence_ids, and state a cause behind one finding, or behind findings outside this question, as another kind of claim",
+                    claim.claim_id.as_str()
                 ));
             }
         }

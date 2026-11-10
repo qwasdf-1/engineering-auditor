@@ -150,7 +150,9 @@
   times, so the review waits out an outage of about half an hour, or an
   hour when every request hangs to its timeout, instead of stopping. A
   gateway timeout (HTTP 408 or 504) is retried twice, after 15 and 30
-  seconds, since a request too slow once is likely too slow again. A
+  seconds, since a request too slow once is likely too slow again; so is a
+  response still arriving at the request's timeout, which was counted as a
+  broken connection. A
   request that produced no model output counts against the cost budget
   only, so an outage no longer uses up a question's requests.
 - `review run --resume RECORD` continues a review that stopped: the
@@ -171,6 +173,14 @@
 - The live routes for Phase B run the reviewer on GLM 5.3 Flash, on
   Mistral's API (`mistral_glm53_flash_routes_v2.json`) for tuning and on
   NVIDIA NIM (`nvidia_nim_glm53_flash_routes_v2.json`) for the corpus.
+- A rejected answer's reasons say how to fix it: which rule a claim's
+  status breaks and the status that fits, the question's subject IDs when
+  `scope_ids` names a file the reviewer read, what a numeric benefit lacks,
+  what counts as evidence when a cited ID is unknown, and the root cause by
+  its ref instead of its whole proposition. A patch that does not apply
+  names its first line that differs from the file where most of the hunk
+  matches; the reviewer is told to correct the hunk from a read, and a
+  patch checked before is answered from that check and says so.
 - A rejected answer no longer holds claims or recommendations that have no
   ref, which no revision could replace or remove, so one malformed item
   cannot make every later revision fail. A held item that is missing a field

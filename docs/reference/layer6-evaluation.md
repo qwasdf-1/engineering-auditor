@@ -19,8 +19,9 @@ qualifies on:
 - `bindings`: the question templates, prompt bundle, and brief every run
   must use, each by the SHA-256 of its file;
 - `route_sets`: the routes that may qualify, by file and digest
-  (`mistral_free`, `openrouter_free`; the anonymous OpenCode route is closed
-  by provider policy);
+  (`mistral_glm`, Mistral's paid GLM 5.3 Flash streamed; `mistral_free`;
+  `openrouter_free`; the anonymous OpenCode route is closed by provider
+  policy);
 - `run_plan`: runs per repository (two), the history window, and the
   patch-check settings;
 - `stability`: how many top hotspots and plan steps two runs compare, and

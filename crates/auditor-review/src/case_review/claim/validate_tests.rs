@@ -91,7 +91,11 @@ fn counter_evidence_rules_out_substantiated_but_allows_contested() {
         &["symbol:c"],
         &[],
     );
-    assert!(validate(&[substantiated]).is_err());
+    let error = validate(&[substantiated]).expect_err("countered");
+    assert!(
+        error.ends_with("is not supported: it cites counter-evidence; a claim with evidence on both sides is partially_substantiated or contested"),
+        "{error}"
+    );
     let contested = claim(ClaimStatus::Contested, &["finding:a"], &["symbol:c"], &[]);
     assert_eq!(validate(&[contested]), Ok(()));
 }
@@ -107,7 +111,17 @@ fn contested_dependency_supports_contested_and_blocks_substantiated() {
         &[],
         &[&dependency],
     );
-    assert!(validate(&[dependency, substantiated]).is_err());
+    let error = validate(&[dependency, substantiated]).expect_err("weak dependency");
+    assert!(
+        error.contains("it depends on a claim that is not substantiated"),
+        "{error}"
+    );
+    let uncountered = claim(ClaimStatus::Contested, &["finding:a"], &[], &[]);
+    let error = validate(&[uncountered]).expect_err("nothing contests it");
+    assert!(
+        error.ends_with("it cites no counter-evidence and depends on no contested claim"),
+        "{error}"
+    );
 }
 
 #[test]
