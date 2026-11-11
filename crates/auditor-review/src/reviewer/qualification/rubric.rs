@@ -151,7 +151,15 @@ pub fn usefulness_sheet(review: &EngineeringReview) -> UsefulnessSheet {
                 step.recommendation_id.as_str(),
                 ItemKind::Recommendation,
                 format!("{}: {}", wire(&step.family), step.summary),
-                step.affected_finding_ids.clone(),
+                // What it acts on, which for a module cycle or a co-change
+                // pair is no finding, and the findings it resolves.
+                step.scope_ids
+                    .iter()
+                    .chain(&step.affected_finding_ids)
+                    .cloned()
+                    .collect::<BTreeSet<_>>()
+                    .into_iter()
+                    .collect(),
             );
             entry.patch_verdict = step.patch.as_ref().map(|_| {
                 review

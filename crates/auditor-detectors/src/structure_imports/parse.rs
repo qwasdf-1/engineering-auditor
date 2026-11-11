@@ -28,6 +28,7 @@ pub(crate) fn parse_import(language: &Language, raw: &str) -> StructureImport {
         imported: parts.imported,
         alias: parts.alias,
         resolved_path: None,
+        used_paths: Vec::new(),
         owner: None,
         line: 0,
         dynamic: false,

@@ -34,7 +34,7 @@ use declared_metrics::collect_function_metrics;
 use hierarchy::TypeHierarchy;
 #[cfg(test)]
 use imports::normalize_path;
-use imports::{first_quoted, import_bindings, parse_import, resolve_imports};
+use imports::{first_quoted, import_bindings, parse_import, resolve_imports, GoPackageNames};
 use spans::{
     import_has_documented_reason, module_name, python_guarded_import_spans, python_memoized_spans,
     python_overload_spans, python_type_checking_spans, rust_associated_spans,
@@ -104,6 +104,10 @@ pub(crate) struct StructureImport {
     pub(crate) imported: Option<String>,
     pub(crate) alias: Option<String>,
     pub(crate) resolved_path: Option<String>,
+    /// For a Go or Java wildcard import, whose resolved path stands in for a
+    /// package: the package's files that declare a name this file uses
+    /// through it. Empty when it names none.
+    pub(crate) used_paths: Vec<String>,
     pub(crate) owner: Option<u32>,
     pub(crate) line: usize,
     pub(crate) dynamic: bool,
@@ -278,6 +282,9 @@ pub(crate) struct StructureFile {
     pub(crate) function_metrics: BTreeMap<u32, StructureFunctionMetrics>,
     /// The Go module a Go file belongs to, from its nearest `go.mod`.
     pub(crate) go_module: Option<GoModule>,
+    /// A Go file's package-level declarations and qualified uses; empty for
+    /// other languages.
+    pub(crate) go_names: GoPackageNames,
     /// Callbacks that run on a shared asynchronous executor (a Java lambda
     /// passed to `CompletableFuture.supplyAsync` without an executor).
     pub(crate) async_spans: Vec<SourceSpan>,

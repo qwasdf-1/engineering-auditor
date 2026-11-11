@@ -10,7 +10,7 @@ pub(crate) fn resolve_imports(files: &mut [StructureFile]) {
         .iter()
         .map(|file| file.path.clone())
         .collect::<BTreeSet<_>>();
-    for file in files {
+    for file in files.iter_mut() {
         let go_module = file.go_module.clone();
         let is_java = file.language == Language::Java;
         for import in &mut file.imports {
@@ -30,6 +30,7 @@ pub(crate) fn resolve_imports(files: &mut [StructureFile]) {
                 });
         }
     }
+    super::uses::resolve_used_paths(files);
 }
 
 /// A Go import under the file's own module resolves to its package
@@ -153,20 +154,28 @@ fn rust_module_candidates(current: &str, module: &str, candidates: &mut Vec<Path
     }
 }
 
+/// A Python module: absolute from the scan root, or relative with one
+/// leading dot for the file's own package and each further dot one package
+/// up (`..logger` in `pkg/utils/disk.py` is `pkg/logger`). A package resolves
+/// to its `__init__.py`.
 fn python_module_candidates(current: &str, module: &str, candidates: &mut Vec<PathBuf>) {
-    let mut base = if module.starts_with('.') {
-        Path::new(current)
-            .parent()
-            .unwrap_or(Path::new(""))
-            .to_path_buf()
-    } else {
-        PathBuf::new()
-    };
-    for segment in module.trim_start_matches('.').split('.') {
-        if !segment.is_empty() {
-            base.push(segment);
+    let name = module.trim_start_matches('.');
+    let mut base = PathBuf::new();
+    let levels = module.len() - name.len();
+    if levels > 0 {
+        let mut package = Path::new(current).parent();
+        for _ in 1..levels {
+            package = package.and_then(Path::parent);
         }
+        let Some(package) = package else {
+            return;
+        };
+        base = package.to_path_buf();
     }
+    for segment in name.split('.').filter(|segment| !segment.is_empty()) {
+        base.push(segment);
+    }
+    candidates.push(base.join("__init__.py"));
     push_source_candidates(base, &["py"], candidates);
 }
 

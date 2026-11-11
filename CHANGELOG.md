@@ -144,6 +144,29 @@
 
 ### Changed
 
+- The repository map's edge for a Go import, or a Java wildcard import,
+  reaches each file of the package that declares a name the importer uses
+  through it, not the package's first file, which took the whole package's
+  fan-in (miniflux's `internal/model/api_key.go` showed 129 importers; 4
+  files use it). The review counts a module's imports by import statement.
+  Detectors still resolve the import to the package, so findings are
+  unchanged.
+- A Python relative import climbs one package for each dot after the first
+  (`from ..logger import logger` in `pkg/utils/disk.py` is `pkg/logger.py`),
+  and a package import resolves to its `__init__.py`; both were unresolved,
+  so apprise's map showed one import from `apprise/utils` back into
+  `apprise` where there are 22, and 1139 of its imports resolve that did
+  not.
+- The reviewer is told that each claim and recommendation must add what the
+  findings do not say, from code it read; to leave out recommendations that
+  repeat a finding and claims about its own answer; and to read the code
+  before building on a finding, which may not hold or may not be worth
+  acting on, or proposing a shape the code may already have. A spot check of
+  50 corpus items found 6 that repeated a finding, 7 that described the
+  review itself, and 6 wrong on facts.
+- A usefulness sheet's recommendation lists the IDs it is scoped to as well
+  as the findings it resolves, so one acting on a module cycle or a co-change
+  pair no longer shows no evidence.
 - A review request that fails on a rate limit or an outage waits 15, 30, 60
   and 120 seconds before its four retries instead of 7.5 seconds in all, and
   on the route's last target it is then resent every five minutes, six

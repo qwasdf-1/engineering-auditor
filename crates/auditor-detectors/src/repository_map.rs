@@ -134,7 +134,7 @@ fn write_temporary_map(
         edge_count +=
             write_containment_edges(&mut writer, &mut first, file_index, file, &symbol_ids)?;
         let imports = write_import_edges(&mut writer, &mut first, file)?;
-        edge_count += imports.resolved;
+        edge_count += imports.edges;
         unresolved_imports += imports.unresolved;
         dynamic_imports += imports.dynamic;
     }
@@ -230,7 +230,7 @@ fn write_symbol_entries(
 }
 
 struct ImportCounts {
-    resolved: usize,
+    edges: usize,
     unresolved: usize,
     dynamic: usize,
 }
@@ -242,27 +242,36 @@ fn write_import_edges(
     file: &StructureFile,
 ) -> io::Result<ImportCounts> {
     let mut counts = ImportCounts {
-        resolved: 0,
+        edges: 0,
         unresolved: 0,
         dynamic: 0,
     };
     for import in &file.imports {
         counts.dynamic += usize::from(import.dynamic);
-        let Some(target) = import.resolved_path.as_deref() else {
+        let Some(stand_in) = import.resolved_path.as_deref() else {
             counts.unresolved += 1;
             continue;
         };
-        write_separator(writer, first)?;
-        write_json(
-            writer,
-            &json!({
-                "from": file_id(&file.path),
-                "kind": "imports",
-                "line": import.line,
-                "to": file_id(target),
-            }),
-        )?;
-        counts.resolved += 1;
+        // A package import reaches the files whose names it uses; one that
+        // names none (a blank import) keeps the package's stand-in file.
+        let targets = if import.used_paths.is_empty() {
+            vec![stand_in]
+        } else {
+            import.used_paths.iter().map(String::as_str).collect()
+        };
+        for target in targets {
+            write_separator(writer, first)?;
+            write_json(
+                writer,
+                &json!({
+                    "from": file_id(&file.path),
+                    "kind": "imports",
+                    "line": import.line,
+                    "to": file_id(target),
+                }),
+            )?;
+            counts.edges += 1;
+        }
     }
     Ok(counts)
 }

@@ -712,16 +712,23 @@ fn module_imports(
     files: &HashMap<&str, usize>,
     modules: &Modules,
 ) -> BTreeMap<(usize, usize), usize> {
-    let mut imports = BTreeMap::new();
+    // An import statement counts once, though a package import has an edge
+    // to each file whose names it uses.
+    let mut statements = BTreeSet::new();
     for edge in map.edges.iter().filter(|edge| edge.kind == "imports") {
         let (Some(from), Some(to)) = (files.get(edge.from.as_str()), files.get(edge.to.as_str()))
         else {
             continue;
         };
-        let (from, to) = (modules.of_file(*from), modules.of_file(*to));
-        if from != to {
-            *imports.entry((from, to)).or_insert(0) += 1;
+        let (from_module, to_module) = (modules.of_file(*from), modules.of_file(*to));
+        if from_module != to_module {
+            let statement = edge.line.ok_or(*to);
+            statements.insert((from_module, to_module, *from, statement));
         }
+    }
+    let mut imports = BTreeMap::new();
+    for (from, to, _, _) in statements {
+        *imports.entry((from, to)).or_insert(0) += 1;
     }
     imports
 }

@@ -111,8 +111,12 @@ and edge counts. The map contains:
   type's `external_base` when its first base is declared outside the
   repository (`multiprocessing.Process`);
 - `contains`, resolved-import (`imports`), `calls`, and `inherits` edges:
-  calls are the call graph's resolved targets, at most 32 per caller, and
-  `inherits` links a type to the repository type its first base resolves to;
+  calls are the call graph's resolved targets, at most 32 per caller,
+  `inherits` links a type to the repository type its first base resolves to,
+  and a Go or Java wildcard import, which names a package, has an edge to
+  each of the package's files that declares a name the importer uses through
+  it (`model.APIKey` reaches `model/api_key.go`), or to the package's first
+  file when it names none (a blank import), with the import's line on each;
 - `entry_points`: each `main`, `cli_command`, `http_handler`, `process_run`,
   or `signal_handler` with its file, line, symbol (null for a block, a
   lambda, or an unresolved handler), and a detail such as `GET /users`;
