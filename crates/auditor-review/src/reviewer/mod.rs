@@ -23,7 +23,7 @@ pub use driver::{
 };
 pub use orientation::{OrientationPack, MINIMUM_ORIENTATION_BYTES, TARGET_ORIENTATION_BYTES};
 pub use qualification::{
-    qualify_reviews, usefulness_sheet, Gate, GateResult, ItemKind, PairStability,
+    qualify_reviews, usefulness_sheet, Gate, GateResult, ItemKind, Novelty, PairStability,
     QualificationInputs, RankingOverlap, RecordedReview, ReviewQualification, RunQualification,
     ScoreCheck, StabilityPolicy, StabilityResult, UsefulnessItem, UsefulnessScores,
     UsefulnessSheet, UsefulnessStatus, UsefulnessSummary, REVIEW_QUALIFICATION_SCHEMA_VERSION,

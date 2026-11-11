@@ -40,6 +40,7 @@ the corpus threshold, which stays unset until the first measured runs.
 import argparse
 import hashlib
 import json
+import operator
 import shlex
 import shutil
 import subprocess
@@ -249,6 +250,7 @@ def qualify_repository(corpus: dict, route_set: str, auditor: Path, out: Path) -
                                 for gate in run["gates"] if not gate["passed"]}),
         "stability_passed": qualification["stability"]["passed"],
         "useful": usefulness.get("useful", 0),
+        "useful_beyond_report": usefulness.get("useful_beyond_report", 0),
         "counted": usefulness.get("counted", 0),
         "pending": usefulness.get("pending", 0),
         "disputed": usefulness.get("disputed", 0),
@@ -264,26 +266,30 @@ def qualify(corpus: dict, route_set: str, auditor: Path, label: str) -> int:
     repositories = [qualify_repository(corpus, route_set, auditor, out_root / repository)
                     for repository in corpus["repositories"]["ids"]]
     gates_passed = all(repository["passed"] for repository in repositories)
-    useful = sum(repository.get("useful", 0) for repository in repositories)
-    counted = sum(repository.get("counted", 0) for repository in repositories)
-    threshold = corpus["usefulness"]["threshold"]
-    share = useful / counted if counted else None
+    useful, beyond, counted = (sum(repository.get(key, 0) for repository in repositories)
+                               for key in ("useful", "useful_beyond_report", "counted"))
+    bar = corpus["usefulness"]
+    thresholds = [bar["threshold"], bar["beyond_report_threshold"]]
+    shares = [count / counted if counted else None for count in (useful, beyond)]
     if not gates_passed:
         decision = "fails the automatic gates"
-    elif threshold is None:
+    elif None in thresholds:
         decision = "gates pass; the usefulness bar is not set yet"
-    elif share is not None and share >= threshold:
+    elif counted and all(map(operator.ge, shares, thresholds)):
         decision = "qualifies"
     else:
         decision = "below the usefulness bar"
     summary = {"corpus_id": corpus["corpus_id"], "label": label, "route_set": route_set,
                "repositories": repositories, "gates_passed_everywhere": gates_passed,
-               "usefulness": {"useful": useful, "counted": counted, "share": share,
-                              "threshold": threshold},
+               "usefulness": {"useful": useful, "useful_beyond_report": beyond, "counted": counted,
+                              "share": shares[0], "beyond_report_share": shares[1],
+                              "threshold": thresholds[0],
+                              "beyond_report_threshold": thresholds[1]},
                "decision": decision}
     out_root.mkdir(parents=True, exist_ok=True)
     write_json(out_root / f"qualification-{route_set}.json", summary)
-    print(f"{route_set}: {decision} ({useful}/{counted} counted items useful)")
+    print(f"{route_set}: {decision} ({useful}/{counted} counted items useful, "
+          f"{beyond} beyond the report)")
     return 0 if decision == "qualifies" else 1
 
 

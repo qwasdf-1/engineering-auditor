@@ -127,11 +127,13 @@
   gate exits 1 with the result (`review-qualification-v1.schema.json`).
   `review rubric` writes a usefulness sheet (`review-usefulness-v1`) that a
   person, or a second model a person checks on disputes, scores correct,
-  specific, actionable, and novel; `review qualify --scores` counts it.
+  specific, actionable, and by novelty against the report (restates a
+  finding, adds detail that follows from it, or goes beyond what the
+  report can say); `review qualify --scores` counts it.
   `config/auditor/review-qualification-corpus-v1.json` names the 30
   application repositories, the bound templates, prompts, brief, and route
-  sets, two runs each, and a usefulness threshold left unset until the
-  first measured runs. `review_inputs.py prepare --review-runs N` records
+  sets, two runs each, and usefulness thresholds (useful, and useful
+  beyond the report) left unset until the first measured runs. `review_inputs.py prepare --review-runs N` records
   several runs, and `review_inputs.py qualify` qualifies a route set on the
   whole corpus.
 

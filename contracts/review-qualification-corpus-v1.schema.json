@@ -52,9 +52,10 @@
     "usefulness": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["threshold"],
+      "required": ["threshold", "beyond_report_threshold"],
       "properties": {
-        "threshold": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Useful share of counted items a route must reach; null until the first measured runs set it." }
+        "threshold": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Useful share of counted items a route must reach; null until the first measured runs set it." },
+        "beyond_report_threshold": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "Share of counted items that are useful and go beyond the report a route must reach; null until the first measured runs set it." }
       }
     },
     "protocol_suite": {

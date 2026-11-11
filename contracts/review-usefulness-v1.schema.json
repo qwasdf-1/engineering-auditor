@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://engineering-auditor.dev/contracts/review-usefulness-v1.schema.json",
   "title": "Engineering Auditor Review Usefulness Sheet v1",
-  "description": "Usefulness scores for one engineering review (`review rubric` writes it unscored): one item per answered claim and recommendation, each scored correct, specific, actionable, and novel (not already stated by a finding); an item is useful when all four hold. A model's score is a pre_label until a second, different model agrees (corroborated) or a person scores it (final); a disagreeing check is a dispute only a person settles. Only corroborated and final items count. No scoring model may be one the review ran on.",
+  "description": "Usefulness scores for one engineering review (`review rubric` writes it unscored): one item per answered claim and recommendation, each scored correct, specific, actionable, and by its novelty against the report (restates a finding, adds detail that follows from the report and the code, or goes beyond what the report can say); an item is useful when it is correct, specific, and actionable and does not merely restate a finding. A model's score is a pre_label until a second, different model agrees (corroborated) or a person scores it (final); a disagreeing check is a dispute only a person settles. Only corroborated and final items count. No scoring model may be one the review ran on.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "review_digest", "source_digest", "items"],
@@ -17,12 +17,12 @@
     "scores": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["correct", "specific", "actionable", "novel"],
+      "required": ["correct", "specific", "actionable", "novelty"],
       "properties": {
         "correct": { "type": "boolean" },
         "specific": { "type": "boolean" },
         "actionable": { "type": "boolean" },
-        "novel": { "type": "boolean", "description": "Not already stated by a finding." }
+        "novelty": { "enum": ["restates", "adds_detail", "beyond_report"], "description": "restates: a finding or its own recommendation says it already; adds_detail: detail that follows from the report and a look at the code, such as where and how to apply the report's own fix or its facts assembled; beyond_report: what the report cannot say (why a finding exists or how much it matters, a better fix than the report's, which findings are benign)." }
       }
     },
     "item": {

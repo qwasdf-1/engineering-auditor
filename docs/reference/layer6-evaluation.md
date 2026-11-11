@@ -26,8 +26,9 @@ qualifies on:
   patch-check settings;
 - `stability`: how many top hotspots and plan steps two runs compare, and
   the share they must have in common;
-- `usefulness.threshold`: the useful share of counted items a route must
-  reach, `null` until the first measured runs set it;
+- `usefulness.threshold` and `usefulness.beyond_report_threshold`: the
+  share of counted items a route must have useful, and useful and beyond
+  the report, both `null` until the first measured runs set them;
 - `protocol_suite`: the eight generated lifecycle repositories
   (`tooling/review_eval/generate_lifecycle_repo.py`, by generator and
   source digest), kept as a regression of the review mechanics rather than
@@ -106,9 +107,21 @@ other did not is a disagreement, and one run alone cannot pass.
 `auditor review rubric --review R` writes an unscored sheet
 (`contracts/review-usefulness-v1.schema.json`): one item per answered claim
 and recommendation, with its text, cited evidence, and patch verdict. A
-scorer marks each item on four criteria: correct, specific, actionable, and
-novel (not already stated by a finding). An item is useful when all four
-hold.
+scorer marks each item correct, specific, and actionable, and grades its
+novelty against the report:
+
+- `restates`: a finding, or a finding's own recommendation, says it already;
+- `adds_detail`: detail that follows from the report and a look at the
+  code, such as where and how to apply the report's own fix (which existing
+  helper to reuse, which lines to change) or its facts assembled into a
+  picture;
+- `beyond_report`: what the report cannot say: why a finding exists or how
+  much it matters, a fix better than the report's, or which findings are
+  benign.
+
+An item is useful when it is correct, specific, and actionable and does not
+merely restate a finding. The summary counts the useful items, and among
+them the ones that go beyond the report.
 
 A second model, blind to the first, may pre-label items. A model's score is
 a `pre_label` until a different model agrees (`corroborated`) or a person
@@ -123,8 +136,8 @@ its review and reports the counts.
 bindings, runs `auditor review qualify` on every corpus repository with the
 corpus route set, brief, and stability policy, and writes a summary with
 the gates per repository, the counted usefulness, and a decision. A route
-qualifies when the gates pass on every repository and the useful share
-meets the threshold. Until the threshold is set, the best decision is
+qualifies when the gates pass on every repository and both shares meet
+their thresholds. Until both are set, the best decision is
 "gates pass; the usefulness bar is not set yet".
 
 Hermetic tests run the same harness on scripted reviews of a fixture scan

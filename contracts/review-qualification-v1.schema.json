@@ -81,7 +81,8 @@
       "additionalProperties": false,
       "required": [
         "sheets", "items", "pending", "pre_label", "disputed", "corroborated", "final_scores",
-        "counted", "useful", "correct", "specific", "actionable", "novel"
+        "counted", "useful", "correct", "specific", "actionable", "adds_detail",
+        "beyond_report", "useful_beyond_report"
       ],
       "properties": {
         "sheets": { "type": "integer", "minimum": 0 },
@@ -96,7 +97,9 @@
         "correct": { "type": "integer", "minimum": 0 },
         "specific": { "type": "integer", "minimum": 0 },
         "actionable": { "type": "integer", "minimum": 0 },
-        "novel": { "type": "integer", "minimum": 0 }
+        "adds_detail": { "type": "integer", "minimum": 0 },
+        "beyond_report": { "type": "integer", "minimum": 0 },
+        "useful_beyond_report": { "type": "integer", "minimum": 0, "description": "Useful items whose novelty is beyond_report." }
       }
     }
   }

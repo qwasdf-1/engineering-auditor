@@ -23,8 +23,8 @@ use super::{OrientationPack, QuestionTemplateBundle};
 use crate::{ReviewBrief, ReviewPromptBundleV2, ReviewRoutesV2, ENGINEERING_REVIEW_SCHEMA_VERSION};
 
 pub use rubric::{
-    usefulness_sheet, ItemKind, ScoreCheck, UsefulnessItem, UsefulnessScores, UsefulnessSheet,
-    UsefulnessStatus, UsefulnessSummary, USEFULNESS_SHEET_SCHEMA_VERSION,
+    usefulness_sheet, ItemKind, Novelty, ScoreCheck, UsefulnessItem, UsefulnessScores,
+    UsefulnessSheet, UsefulnessStatus, UsefulnessSummary, USEFULNESS_SHEET_SCHEMA_VERSION,
 };
 pub use stability::{PairStability, RankingOverlap, StabilityPolicy, StabilityResult};
 

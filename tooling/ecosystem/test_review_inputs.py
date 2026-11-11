@@ -148,7 +148,8 @@ result = {
     "runs": [{"label": review, "gates": [{"gate": "citations", "passed": not bad(review)}]}
              for review in reviews],
     "stability": {"passed": True},
-    "usefulness": {"useful": 3, "counted": 4, "pending": 0, "disputed": 0} if scored else None,
+    "usefulness": {"useful": 3, "useful_beyond_report": 1, "counted": 4, "pending": 0,
+                   "disputed": 0} if scored else None,
 }
 open(args[args.index("--output") + 1], "w").write(json.dumps(result))
 print(json.dumps(result))
@@ -221,15 +222,22 @@ class QualifyTest(unittest.TestCase):
         self.assertEqual(self.run_qualify(), 1)
         summary = self.summary()
         self.assertTrue(summary["gates_passed_everywhere"])
-        self.assertEqual(summary["usefulness"], {"useful": 6, "counted": 8, "share": 0.75, "threshold": None})
+        self.assertEqual(summary["usefulness"], {
+            "useful": 6, "useful_beyond_report": 2, "counted": 8, "share": 0.75,
+            "beyond_report_share": 0.25, "threshold": None, "beyond_report_threshold": None})
         self.assertEqual(summary["decision"], "gates pass; the usefulness bar is not set yet")
         self.assertTrue((self.root / "one" / "qualification-mistral_free.json").exists())
-        self.corpus["usefulness"]["threshold"] = 0.7
+        bar = self.corpus["usefulness"]
+        bar["threshold"] = 0.7
+        self.assertEqual(self.run_qualify(), 1)
+        self.assertEqual(self.summary()["decision"], "gates pass; the usefulness bar is not set yet")
+        bar["beyond_report_threshold"] = 0.25
         self.assertEqual(self.run_qualify(), 0)
         self.assertEqual(self.summary()["decision"], "qualifies")
-        self.corpus["usefulness"]["threshold"] = 0.8
-        self.assertEqual(self.run_qualify(), 1)
-        self.assertEqual(self.summary()["decision"], "below the usefulness bar")
+        for useful, beyond in [(0.8, 0.25), (0.7, 0.3)]:
+            bar["threshold"], bar["beyond_report_threshold"] = useful, beyond
+            self.assertEqual(self.run_qualify(), 1)
+            self.assertEqual(self.summary()["decision"], "below the usefulness bar")
 
 
 if __name__ == "__main__":

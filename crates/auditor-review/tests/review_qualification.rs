@@ -8,7 +8,7 @@ mod fixture;
 mod scripted;
 
 use auditor_review::{
-    qualify_reviews, usefulness_sheet, EngineeringReview, Gate, ProviderProtocol,
+    qualify_reviews, usefulness_sheet, EngineeringReview, Gate, Novelty, ProviderProtocol,
     QualificationInputs, QuestionKind, RecordedReview, ReviewBrief, ReviewQualification,
     ReviewRoutesV2, ScoreCheck, StabilityPolicy, UsefulnessScores, UsefulnessSheet,
     UsefulnessStatus,
@@ -275,12 +275,12 @@ fn runs_must_agree_and_one_run_is_not_enough() {
     assert!(!plans.stability.passed);
 }
 
-fn scores(useful: bool) -> UsefulnessScores {
+fn scores(novelty: Novelty) -> UsefulnessScores {
     UsefulnessScores {
         correct: true,
         specific: true,
         actionable: true,
-        novel: useful,
+        novelty,
     }
 }
 
@@ -306,24 +306,27 @@ fn usefulness_counts_only_corroborated_and_final_scores() {
         .unwrap();
     assert_eq!(recommendation.patch_verdict, None);
 
-    let check = |scorer: &str, useful| ScoreCheck {
+    let check = |scorer: &str, novelty| ScoreCheck {
         scorer: scorer.to_string(),
-        scores: scores(useful),
+        scores: scores(novelty),
         reason: "read the cited code".to_string(),
     };
     let mut sheet = blank.clone();
     let items = &mut sheet.items;
     items[0].status = UsefulnessStatus::PreLabel;
-    items[0].scores = Some(scores(true));
+    items[0].scores = Some(scores(Novelty::BeyondReport));
     items[0].scorer = Some("model:judge-a".to_string());
-    items[0].checks = vec![check("model:judge-b", false)];
+    items[0].checks = vec![check("model:judge-b", Novelty::Restates)];
     items[1].status = UsefulnessStatus::Corroborated;
-    items[1].scores = Some(scores(true));
+    items[1].scores = Some(scores(Novelty::BeyondReport));
     items[1].scorer = Some("model:judge-a".to_string());
-    items[1].checks = vec![check("model:judge-b", true)];
+    items[1].checks = vec![check("model:judge-b", Novelty::BeyondReport)];
     items[2].status = UsefulnessStatus::Final;
-    items[2].scores = Some(scores(false));
+    items[2].scores = Some(scores(Novelty::Restates));
     items[2].scorer = Some("human:operator".to_string());
+    items[3].status = UsefulnessStatus::Final;
+    items[3].scores = Some(scores(Novelty::AddsDetail));
+    items[3].scorer = Some("human:operator".to_string());
 
     let reviews = [good.clone(), good_review(&fixture)];
     let summary = qualify(&fixture, &routes, &reviews, &[sheet.clone()])
@@ -338,21 +341,29 @@ fn usefulness_counts_only_corroborated_and_final_scores() {
             summary.pre_label,
             summary.disputed
         ),
-        (1, blank.items.len(), blank.items.len() - 3, 1, 1)
+        (1, blank.items.len(), blank.items.len() - 4, 1, 1)
     );
     assert_eq!(
         (summary.corroborated, summary.final_scores, summary.counted),
-        (1, 1, 2)
+        (1, 2, 3)
     );
-    assert_eq!((summary.useful, summary.correct, summary.novel), (1, 2, 1));
+    assert_eq!((summary.useful, summary.correct), (2, 3));
+    assert_eq!(
+        (
+            summary.adds_detail,
+            summary.beyond_report,
+            summary.useful_beyond_report
+        ),
+        (1, 1, 1)
+    );
 
     let mut by_reviewer = sheet.clone();
-    by_reviewer.items[1].checks = vec![check("model:fake-model", true)];
+    by_reviewer.items[1].checks = vec![check("model:fake-model", Novelty::BeyondReport)];
     let error = qualify(&fixture, &routes, &reviews, &[by_reviewer]).unwrap_err();
     assert!(error.contains("ran the review"), "{error}");
 
     let mut self_corroborated = sheet.clone();
-    self_corroborated.items[1].checks = vec![check("model:judge-a", true)];
+    self_corroborated.items[1].checks = vec![check("model:judge-a", Novelty::BeyondReport)];
     assert!(qualify(&fixture, &routes, &reviews, &[self_corroborated]).is_err());
 
     let mut restated = sheet.clone();

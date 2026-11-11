@@ -1,7 +1,11 @@
 //! The usefulness rubric (`contracts/review-usefulness-v1.schema.json`):
-//! one item per answered claim and recommendation, scored on four
-//! criteria: correct, specific, actionable, and novel (not already stated
-//! by a finding). An item is useful when all four hold. As with the
+//! one item per answered claim and recommendation, scored correct,
+//! specific, actionable, and by its novelty against the report: it restates
+//! a finding, adds detail that follows from the report and the code, or says
+//! what the report cannot (a diagnosis, a better fix, which findings are
+//! benign). An item is
+//! useful when it is correct, specific, and actionable and does not merely
+//! restate a finding. As with the
 //! precision labels, a model's score is a pre-label until a second,
 //! different model agrees (corroborated) or a person scores it (final);
 //! scorers disagreeing is a dispute only a person settles. No scoring
@@ -32,19 +36,32 @@ pub enum UsefulnessStatus {
     Final,
 }
 
+/// What an item adds to the report it reviews.
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Novelty {
+    /// A finding, or a finding's own recommendation, says it already.
+    Restates,
+    /// Detail that follows from the report and a look at the code: where
+    /// and how to apply the report's own fix, or its facts assembled.
+    AddsDetail,
+    /// What the report cannot say: why a finding exists or how much it
+    /// matters, a fix better than the report's, or which findings are benign.
+    BeyondReport,
+}
+
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct UsefulnessScores {
     pub correct: bool,
     pub specific: bool,
     pub actionable: bool,
-    /// Not already stated by a finding.
-    pub novel: bool,
+    pub novelty: Novelty,
 }
 
 impl UsefulnessScores {
     fn useful(self) -> bool {
-        self.correct && self.specific && self.actionable && self.novel
+        self.correct && self.specific && self.actionable && self.novelty != Novelty::Restates
     }
 }
 
@@ -109,7 +126,10 @@ pub struct UsefulnessSummary {
     pub correct: usize,
     pub specific: usize,
     pub actionable: usize,
-    pub novel: usize,
+    pub adds_detail: usize,
+    pub beyond_report: usize,
+    /// Useful items that go beyond the report.
+    pub useful_beyond_report: usize,
 }
 
 /// An unscored sheet for one review.
@@ -283,7 +303,10 @@ fn count_item(
     summary.correct += usize::from(scores.correct);
     summary.specific += usize::from(scores.specific);
     summary.actionable += usize::from(scores.actionable);
-    summary.novel += usize::from(scores.novel);
+    summary.adds_detail += usize::from(scores.novelty == Novelty::AddsDetail);
+    let beyond = scores.novelty == Novelty::BeyondReport;
+    summary.beyond_report += usize::from(beyond);
+    summary.useful_beyond_report += usize::from(beyond && scores.useful());
     Ok(())
 }
 

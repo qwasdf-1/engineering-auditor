@@ -43,7 +43,7 @@ pub use repository_map::{
 };
 pub use reviewer::{
     canonical_digest, qualify_reviews, retrieval_tool_specs, run_engineering_review,
-    usefulness_sheet, CheckRequester, EngineeringReview, Gate, GateResult, ItemKind,
+    usefulness_sheet, CheckRequester, EngineeringReview, Gate, GateResult, ItemKind, Novelty,
     OrientationPack, PairStability, PatchCheckRecord, ProjectionSummary, QualificationInputs,
     Question, QuestionAnswer, QuestionKind, QuestionRecord, QuestionStatus, QuestionSubject,
     QuestionTemplate, QuestionTemplateBundle, RankingOverlap, RecommendationChecker,
