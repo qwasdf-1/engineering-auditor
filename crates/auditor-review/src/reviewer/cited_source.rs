@@ -1,8 +1,8 @@
 //! The source a question's findings sit in, attached to the question so the
 //! reviewer has read the code a recommendation would change. Each finding
 //! brings its enclosing function or type, or the lines around it outside
-//! one; a symbol too long to attach, or past the question's budget, is
-//! named so the reviewer can read the part it needs.
+//! one or inside one too long to attach whole; source past the question's
+//! budget is named so the reviewer can read the part it needs.
 
 use std::collections::hash_map::{Entry, HashMap};
 
@@ -11,13 +11,15 @@ use super::questions::{Question, QuestionKind};
 use super::retrieval::RetrievalHost;
 use super::view::{severity_rank, ReportFinding};
 
-/// Source one symbol may add; a longer one is named instead.
+/// Source one span may add; a longer symbol gives the lines around each
+/// finding instead.
 const SYMBOL_BYTES: usize = 4 * 1024;
 /// Source one question may carry.
 const QUESTION_SOURCE_BYTES: usize = 16 * 1024;
 /// Room for the headings, labels, and names around the source.
 const FRAME_BYTES: usize = 4 * 1024;
-/// Lines either side of a finding outside any function or type.
+/// Lines either side of a finding outside any function or type, or inside
+/// one too long to attach.
 const CONTEXT_LINES: usize = 10;
 
 /// One range of source, its text, and the findings in it.
@@ -26,6 +28,8 @@ struct Span {
     start: usize,
     end: usize,
     symbol: Option<usize>,
+    /// The symbol's lines when the span is only part of it.
+    part_of: Option<(usize, usize)>,
     findings: Vec<String>,
     content: String,
 }
@@ -75,7 +79,8 @@ impl RetrievalHost<'_, '_> {
     }
 
     /// One span per finding with a line, most severe first; a finding
-    /// inside an earlier span joins it.
+    /// inside an earlier span joins it, and overlapping parts of one symbol
+    /// merge.
     fn cited_spans(&self, question: &Question) -> Result<Vec<Span>, String> {
         let mut findings = question
             .finding_ids
@@ -96,35 +101,49 @@ impl RetrievalHost<'_, '_> {
             let Some(span) = self.span(finding, file, &lines) else {
                 continue;
             };
-            match spans.iter_mut().find(|known| {
-                known.file == file && known.start <= span.start && span.end <= known.end
-            }) {
-                Some(known) => known.findings.extend(span.findings),
+            match spans
+                .iter_mut()
+                .find(|known| known.file == file && joins(known, &span, &lines))
+            {
+                Some(known) => {
+                    known.start = known.start.min(span.start);
+                    known.end = known.end.max(span.end);
+                    known.content = lines[known.start - 1..known.end].concat();
+                    known.findings.extend(span.findings);
+                }
                 None => spans.push(span),
             }
         }
         Ok(spans)
     }
 
-    /// The finding's enclosing symbol, or the lines around it, within the
-    /// file's `lines`; none for an empty file.
+    /// The finding's enclosing symbol, or the lines around it outside one
+    /// or inside one too long to attach, within the file's `lines`; none
+    /// for an empty file.
     fn span(&self, finding: &ReportFinding, file: usize, lines: &[&str]) -> Option<Span> {
         let count = lines.len();
-        let line = finding.line.expect("filtered").min(count);
-        let (start, end) = match finding.symbol {
-            Some(symbol) => {
-                let span = self.view.symbol(symbol).span;
-                (span.start_line, span.end_line)
-            }
-            None => (line.saturating_sub(CONTEXT_LINES), line + CONTEXT_LINES),
-        };
-        let end = end.min(count);
-        let start = start.clamp(1, end.max(1));
-        (count > 0).then(|| Span {
+        if count == 0 {
+            return None;
+        }
+        let line = finding.line.expect("filtered").clamp(1, count);
+        let symbol = finding.symbol.map(|symbol| {
+            let span = self.view.symbol(symbol).span;
+            let end = span.end_line.clamp(1, count);
+            (span.start_line.clamp(1, end), end)
+        });
+        let whole =
+            symbol.filter(|(start, end)| lines[start - 1..*end].concat().len() <= SYMBOL_BYTES);
+        let (low, high) = symbol.unwrap_or((1, count));
+        let (start, end) = whole.unwrap_or((
+            line.saturating_sub(CONTEXT_LINES).max(low),
+            (line + CONTEXT_LINES).min(high),
+        ));
+        Some(Span {
             file,
             start,
             end,
             symbol: finding.symbol,
+            part_of: symbol.filter(|_| whole.is_none()),
             findings: vec![finding.evidence_id()],
             content: lines[start - 1..end].concat(),
         })
@@ -165,11 +184,27 @@ impl RetrievalHost<'_, '_> {
     }
 
     fn subject(&self, span: &Span) -> String {
-        match span.symbol {
-            Some(symbol) => self.view.qualified_name(symbol),
-            None => "Around the finding".to_string(),
+        match (span.symbol, span.part_of) {
+            (Some(symbol), Some((start, end))) => format!(
+                "Part of {} (lines {start}-{end})",
+                self.view.qualified_name(symbol)
+            ),
+            (Some(symbol), None) => self.view.qualified_name(symbol),
+            (None, _) => "Around the finding".to_string(),
         }
     }
+}
+
+/// Whether `span` lies inside `known`, or both are parts of one symbol
+/// that touch or overlap and together still fit one span.
+fn joins(known: &Span, span: &Span, lines: &[&str]) -> bool {
+    let inside = known.start <= span.start && span.end <= known.end;
+    let touching = known.part_of.is_some()
+        && known.part_of == span.part_of
+        && span.start <= known.end + 1
+        && known.start <= span.end + 1;
+    let (start, end) = (known.start.min(span.start), known.end.max(span.end));
+    inside || (touching && lines[start - 1..end].concat().len() <= SYMBOL_BYTES)
 }
 
 fn lines_of(span: &Span, path: &str) -> String {

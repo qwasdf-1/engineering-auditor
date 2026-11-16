@@ -225,6 +225,37 @@ fn long_audit() -> Vec<(&'static str, String)> {
 }
 
 #[test]
+fn a_finding_inside_a_long_function_brings_the_lines_around_it() {
+    let padding = "x".repeat(5000);
+    let filler = "    print(event)\n".repeat(15);
+    // Far enough from the import that its lines leave the docstring out.
+    let blank = "\n".repeat(12);
+    let audit = format!(
+        "from app.store.db import Store\n{blank}def record(event, value):\n    \"\"\"{padding}\"\"\"\n{filler}    try:\n        print(event, value)\n    except:\n        pass\n\n\ndef default_store():\n    return Store()\n"
+    );
+    let files = PYTHON_APP
+        .iter()
+        .map(|(path, text)| match *path {
+            "app/core/audit.py" => (*path, audit.as_str()),
+            _ => (*path, *text),
+        })
+        .collect::<Vec<_>>();
+    let fixture = Fixture::scan(&files);
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    let script: Script =
+        Box::new(|step| Reply::Calls(vec![("answer_question", good_answer(step))]));
+    let Run { review, bodies, .. } = run(&fixture, &routes, script, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    let body = bodies
+        .iter()
+        .map(|(_, body)| body.to_string())
+        .find(|body| body.contains("Part of record (lines 14-"))
+        .unwrap();
+    assert!(body.contains("except:"), "{body}");
+    assert!(!body.contains(&padding), "{body}");
+}
+
+#[test]
 fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read() {
     let files = long_audit();
     let files = files
