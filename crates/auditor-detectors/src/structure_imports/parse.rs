@@ -2,6 +2,20 @@ use crate::Language;
 
 use super::super::{compact_text, ImportForm, StructureImport};
 
+/// The imports one declaration makes: a Rust `use` tree gives one per leaf
+/// (`use crate::{a::B, c::*}` imports `crate::a::B` and `crate::c::*`), any
+/// other declaration one.
+pub(crate) fn parse_imports(language: &Language, raw: &str) -> Vec<StructureImport> {
+    if *language != Language::Rust {
+        return vec![parse_import(language, raw)];
+    }
+    crate::rust_api_identity::use_leaves(raw)
+        .iter()
+        .map(|leaf| parse_import(language, leaf))
+        .collect()
+}
+
+/// One import: a Rust `use` tree's first leaf.
 pub(crate) fn parse_import(language: &Language, raw: &str) -> StructureImport {
     let normalized = compact_text(raw);
     let form = match language {
@@ -39,6 +53,7 @@ pub(crate) fn parse_import(language: &Language, raw: &str) -> StructureImport {
         value_names,
         branches: Vec::new(),
         macro_epoch: 0,
+        inline_modules: 0,
     }
 }
 
@@ -87,25 +102,21 @@ struct ImportParts {
     module: Option<String>,
 }
 
+/// A Rust `use` tree's first leaf; a glob imports `*` from its module.
 fn rust_import_parts(normalized: &str) -> ImportParts {
-    let body = normalized
-        .strip_prefix("pub use ")
-        .or_else(|| normalized.strip_prefix("use "))
-        .unwrap_or(normalized)
-        .trim_end_matches(';');
-    let (path, alias) = split_alias(body);
-    let segments = path.split("::").collect::<Vec<_>>();
-    let (module, imported) = if !path.contains('{') && !path.ends_with('*') {
-        (
-            (segments.len() > 1).then(|| segments[..segments.len() - 1].join("::")),
-            segments.last().map(|segment| segment.trim().to_string()),
-        )
-    } else {
-        (path.split("::{").next().map(str::to_string), None)
-    };
+    let leaf = crate::rust_api_identity::use_leaves(normalized)
+        .into_iter()
+        .next()
+        .unwrap_or_default();
+    let (path, alias) = split_alias(&leaf);
+    let (module, imported) = path
+        .rsplit_once("::")
+        .map_or((None, path), |(module, name)| {
+            (Some(module.to_string()), name)
+        });
     ImportParts {
-        canonical: Some(path.to_string()),
-        imported,
+        canonical: (!path.is_empty()).then(|| path.to_string()),
+        imported: (!imported.is_empty()).then(|| imported.to_string()),
         alias,
         module,
     }

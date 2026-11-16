@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs::{self, File};
 use std::io::{self, BufReader, BufWriter, Read, Write};
 use std::path::Path;
@@ -246,6 +246,9 @@ fn write_import_edges(
         unresolved: 0,
         dynamic: 0,
     };
+    // One statement can import several paths from one file (`use
+    // crate::a::{B, C}`); it is one edge.
+    let mut written = BTreeSet::new();
     for import in &file.imports {
         counts.dynamic += usize::from(import.dynamic);
         let Some(stand_in) = import.resolved_path.as_deref() else {
@@ -260,6 +263,9 @@ fn write_import_edges(
             import.used_paths.iter().map(String::as_str).collect()
         };
         for target in targets {
+            if !written.insert((import.line, target)) {
+                continue;
+            }
             write_separator(writer, first)?;
             write_json(
                 writer,

@@ -112,9 +112,14 @@ pub(crate) fn function_local_import_findings(index: &StructureIndex) -> Vec<Find
             let Some(function) = file.symbols.get(owner as usize) else {
                 continue;
             };
+            // A Rust `use` tree is one statement however many paths it
+            // imports.
             let lines = imports
                 .iter()
-                .map(|import| import.line.to_string())
+                .map(|import| import.line)
+                .collect::<std::collections::BTreeSet<_>>()
+                .into_iter()
+                .map(|line| line.to_string())
                 .collect::<Vec<_>>();
             findings.push(
                 auditor_core::finding!(
@@ -124,7 +129,7 @@ pub(crate) fn function_local_import_findings(index: &StructureIndex) -> Vec<Find
                     format!(
                         "Function `{}` contains {} local import(s).",
                         function.name,
-                        imports.len()
+                        lines.len()
                     ),
                     Severity::Medium,
                     Confidence::High,
@@ -135,7 +140,7 @@ pub(crate) fn function_local_import_findings(index: &StructureIndex) -> Vec<Find
                     "Hoist stable imports to module scope unless lazy loading is required and documented.",
                 )
                 .with_evidence("function", function.name.clone())
-                .with_evidence("count", imports.len())
+                .with_evidence("count", lines.len())
                 .with_evidence("lines", lines),
             );
         }

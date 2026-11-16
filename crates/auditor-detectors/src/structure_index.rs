@@ -34,7 +34,9 @@ use declared_metrics::collect_function_metrics;
 use hierarchy::TypeHierarchy;
 #[cfg(test)]
 use imports::normalize_path;
-use imports::{first_quoted, import_bindings, parse_import, resolve_imports, GoPackageNames};
+use imports::{
+    first_quoted, import_bindings, parse_import, parse_imports, resolve_imports, GoPackageNames,
+};
 use spans::{
     import_has_documented_reason, module_name, python_guarded_import_spans, python_memoized_spans,
     python_overload_spans, python_type_checking_spans, rust_associated_spans,
@@ -127,6 +129,9 @@ pub(crate) struct StructureImport {
     /// header included again after one changes is an X-macro expansion
     /// (`#define OP(x) ..` then `#include "opcode_list.h"`), not a repeat.
     pub(crate) macro_epoch: usize,
+    /// Rust: the inline `mod name { .. }` blocks around the `use`, which its
+    /// `self` and `super` count from.
+    pub(crate) inline_modules: usize,
 }
 
 /// Import shapes that cannot share one declaration: TypeScript keeps

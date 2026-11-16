@@ -273,30 +273,51 @@ fn collect_imports(
     if file.language == Language::Go {
         return go_imports(tree);
     }
+    let inline_modules = rust_inline_modules(file, tree);
     let mut imports = facts
         .imports
         .iter()
-        .map(|import| {
-            let mut parsed = parse_import(&file.language, tree.text_for_span(import.span));
-            parsed.owner = nearest_function_owner(symbols, import.owner);
-            parsed.line = import.span.start_line;
-            parsed.justified = guarded.iter().any(|span| {
+        .flat_map(|import| {
+            let within = |span: &auditor_ast::SourceSpan| {
                 span.start_byte <= import.span.start_byte && import.span.end_byte <= span.end_byte
-            }) || import_has_documented_reason(tree, parsed.line);
-            parsed.reexport = import_is_reexport(&file.language, tree.text_for_span(import.span));
-            if type_checking.iter().any(|span| {
-                span.start_byte <= import.span.start_byte && import.span.end_byte <= span.end_byte
-            }) {
-                parsed.form = crate::structure_index::ImportForm::Type;
-            }
-            if matches!(file.language, Language::C | Language::Cpp) {
-                parsed.branches = preprocessor_branches(tree, import.span);
-                parsed.macro_epoch = macro_changes
-                    .iter()
-                    .filter(|start| **start < import.span.start_byte)
-                    .count();
-            }
-            parsed
+            };
+            let text = tree.text_for_span(import.span);
+            let line = import.span.start_line;
+            let justified = guarded.iter().any(within) || import_has_documented_reason(tree, line);
+            let reexport = import_is_reexport(&file.language, text);
+            let type_only = type_checking.iter().any(within);
+            let preprocessor = matches!(file.language, Language::C | Language::Cpp).then(|| {
+                (
+                    preprocessor_branches(tree, import.span),
+                    macro_changes
+                        .iter()
+                        .filter(|start| **start < import.span.start_byte)
+                        .count(),
+                )
+            });
+            let modules = inline_modules
+                .iter()
+                .filter(|(start, end)| {
+                    *start <= import.span.start_byte && import.span.end_byte <= *end
+                })
+                .count();
+            parse_imports(&file.language, text)
+                .into_iter()
+                .map(move |mut parsed| {
+                    parsed.owner = nearest_function_owner(symbols, import.owner);
+                    parsed.line = line;
+                    parsed.justified = justified;
+                    parsed.reexport = reexport;
+                    parsed.inline_modules = modules;
+                    if type_only {
+                        parsed.form = crate::structure_index::ImportForm::Type;
+                    }
+                    if let Some((branches, epoch)) = preprocessor.clone() {
+                        parsed.branches = branches;
+                        parsed.macro_epoch = epoch;
+                    }
+                    parsed
+                })
         })
         .collect::<Vec<_>>();
     imports.extend(dynamic_imports(tree, facts, symbols));
@@ -315,6 +336,21 @@ fn collect_imports(
             && left.dynamic == right.dynamic
     });
     imports
+}
+
+/// The bodies of a Rust file's inline `mod name { .. }` blocks.
+fn rust_inline_modules(
+    file: &crate::AuditedFile,
+    tree: &auditor_ast::AstTree,
+) -> Vec<(usize, usize)> {
+    if file.language != Language::Rust {
+        return Vec::new();
+    }
+    crate::ast_scan::nodes_of_kind(tree.root_node(), &["mod_item"])
+        .into_iter()
+        .filter_map(|node| node.child_by_field_name("body"))
+        .map(|body| (body.start_byte(), body.end_byte()))
+        .collect()
 }
 
 /// The preprocessor branches enclosing `span`, outermost first: each
@@ -405,6 +441,7 @@ fn dynamic_imports(
                     value_names: None,
                     branches: Vec::new(),
                     macro_epoch: 0,
+                    inline_modules: 0,
                 }
             })
         })

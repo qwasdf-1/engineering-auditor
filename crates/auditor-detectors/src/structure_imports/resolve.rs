@@ -4,13 +4,35 @@ use std::path::{Component, Path, PathBuf};
 use crate::Language;
 
 use super::super::{GoModule, StructureFile, StructureImport};
+use super::rust::RustModules;
 
 pub(crate) fn resolve_imports(files: &mut [StructureFile]) {
     let known = files
         .iter()
         .map(|file| file.path.clone())
         .collect::<BTreeSet<_>>();
-    for file in files.iter_mut() {
+    let modules = RustModules::new(files, &known);
+    let rust = files
+        .iter()
+        .map(|file| {
+            (file.language == Language::Rust).then(|| {
+                file.imports
+                    .iter()
+                    .map(|import| {
+                        let canonical = import.canonical.as_deref()?;
+                        modules.resolve(&file.path, canonical, import.inline_modules)
+                    })
+                    .collect::<Vec<_>>()
+            })
+        })
+        .collect::<Vec<_>>();
+    for (file, rust) in files.iter_mut().zip(rust) {
+        if let Some(resolved) = rust {
+            for (import, resolved) in file.imports.iter_mut().zip(resolved) {
+                import.resolved_path = resolved;
+            }
+            continue;
+        }
         let go_module = file.go_module.clone();
         let is_java = file.language == Language::Java;
         for import in &mut file.imports {
@@ -102,7 +124,6 @@ fn resolve_module(
 ) -> Option<String> {
     let mut candidates = Vec::new();
     match language {
-        Language::Rust => rust_module_candidates(current, module, &mut candidates),
         Language::Python => python_module_candidates(current, module, &mut candidates),
         Language::JavaScript | Language::TypeScript => {
             relative_module_candidates(current, module, &mut candidates)
@@ -113,45 +134,6 @@ fn resolve_module(
         .into_iter()
         .map(|candidate| normalize_path(&candidate))
         .find(|candidate| known.contains(candidate))
-}
-
-fn rust_module_candidates(current: &str, module: &str, candidates: &mut Vec<PathBuf>) {
-    let current_path = Path::new(current);
-    let parts = current_path
-        .components()
-        .filter_map(|component| component.as_os_str().to_str())
-        .collect::<Vec<_>>();
-    let src = parts.iter().rposition(|part| *part == "src");
-    let mut base = src.map_or_else(PathBuf::new, |index| parts[..=index].iter().collect());
-    let mut segments = module.split("::").filter(|segment| !segment.is_empty());
-    let first = segments.clone().next();
-    match first {
-        Some("crate") => {
-            segments.next();
-        }
-        Some("self") => {
-            segments.next();
-            base = current_path.parent().unwrap_or(Path::new("")).to_path_buf();
-        }
-        Some("super") => {
-            segments.next();
-            base = current_path
-                .parent()
-                .and_then(Path::parent)
-                .unwrap_or(Path::new(""))
-                .to_path_buf();
-        }
-        _ => {}
-    }
-    for segment in segments {
-        base.push(segment);
-    }
-    push_source_candidates(base, &["rs"], candidates);
-    if let Some(package) = first.filter(|part| !matches!(*part, "crate" | "self" | "super")) {
-        for root in ["crates", "packages", "apps"] {
-            candidates.push(PathBuf::from(root).join(package).join("src/lib.rs"));
-        }
-    }
 }
 
 /// A Python module: absolute from the scan root, or relative with one

@@ -157,3 +157,58 @@ fn a_python_relative_import_climbs_one_package_per_extra_dot() {
     );
     std::fs::remove_dir_all(root).unwrap();
 }
+
+#[test]
+fn a_rust_path_resolves_through_the_module_tree_the_files_imply() {
+    let root = root("rust");
+    let files = vec![
+        file(
+            &root,
+            "src/lib.rs",
+            Language::Rust,
+            "pub mod a;\npub mod messages;\npub use a::Thing;\npub fn root_fn() {}\n",
+        ),
+        file(
+            &root,
+            "src/a.rs",
+            Language::Rust,
+            "pub mod b;\npub struct Thing;\npub fn helper() {}\n",
+        ),
+        file(
+            &root,
+            "src/a/b.rs",
+            Language::Rust,
+            "use super::Thing;\nuse super::super::messages::*;\nuse self::c::Deep;\nuse crate::{a::helper, messages, root_fn, Thing as Again};\nuse crate::a::Missing;\nuse std::collections::HashMap;\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n    use super::super::helper;\n}\n",
+        ),
+        file(&root, "src/a/b/c.rs", Language::Rust, "pub struct Deep;\n"),
+        file(&root, "src/messages.rs", Language::Rust, "pub fn send() {}\n"),
+        file(
+            &root,
+            "src/main.rs",
+            Language::Rust,
+            "use my_tool::run;\nuse crate::a::helper;\n",
+        ),
+        file(&root, "tools/my-tool/src/lib.rs", Language::Rust, "pub fn run() {}\n"),
+    ];
+    assert_eq!(
+        used(&files, "src/a/b.rs"),
+        [
+            "src/a.rs -> []",
+            "src/messages.rs -> []",
+            "src/a/b/c.rs -> []",
+            "src/lib.rs -> []",
+            "src/a.rs -> []",
+            "src/messages.rs -> []",
+            "src/lib.rs -> []",
+            "- -> []",
+            "- -> []",
+            "- -> []",
+            "src/a.rs -> []",
+        ]
+    );
+    assert_eq!(
+        used(&files, "src/main.rs"),
+        ["tools/my-tool/src/lib.rs -> []", "src/a.rs -> []"]
+    );
+    std::fs::remove_dir_all(root).unwrap();
+}

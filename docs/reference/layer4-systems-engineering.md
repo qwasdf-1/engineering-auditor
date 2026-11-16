@@ -39,7 +39,16 @@ re-exports and inheritance edges, groups packages, and canonicalizes strongly
 connected components deterministically. A Go import under the module path of
 the file's nearest `go.mod` resolves to its package directory, and a Java
 import resolves to the file its package path names under any source root
-(`com.acme.Model` to `.../com/acme/Model.java`; a static import to its class). A supplied authoritative graph remains
+(`com.acme.Model` to `.../com/acme/Model.java`; a static import to its class).
+A Rust `use` tree imports each of its leaves (`use crate::{a::B, c::*}` is
+`crate::a::B` and `crate::c::*`), and a leaf resolves through the module tree
+the file layout implies: `crate` is the crate's `src`, `self` the file's own
+module, each `super` one module up after leaving any inline `mod` around the
+`use`, and a first segment naming a workspace crate's directory that crate.
+The longest prefix naming a module file wins, so `use crate::messages;` and
+`use crate::messages::*;` reach `src/messages.rs`; an item path resolves only
+when that file declares, imports, or glob re-exports the item. Modules placed
+by `#[path]` resolve by where their file sits. A supplied authoritative graph remains
 authoritative. Unresolved local imports or symbols reduce completeness and fail
 closed for findings that require that edge.
 
@@ -54,7 +63,10 @@ import named nowhere in code but its own declaration, such as one kept for a
 javadoc `{@link}`, is no edge. A cycle must close through runtime edges: a
 TypeScript `import type`, an import whose names all resolve to interfaces or
 type aliases, and a lazy `import(..)` do not close one (operator decision,
-2026-10-27).
+2026-10-27). A Rust module and the modules it declares beneath it are one unit
+for cycles: its edges into its own descendants (`mod jsx; use jsx::f;`, a
+crate root's `pub use`) close none, though layer rules still see them
+(operator decision, 2026-11-16).
 
 ### `loop_artifact_rewrite` (Rust full-only)
 

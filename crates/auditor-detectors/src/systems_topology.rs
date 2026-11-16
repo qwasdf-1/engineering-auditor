@@ -44,7 +44,7 @@ pub(super) fn build_topology(structure: &StructureIndex) -> TopologyParts {
             &collector
                 .edges
                 .iter()
-                .filter(|edge| edge.kind.is_runtime())
+                .filter(|edge| edge.kind.is_runtime() && !into_own_module(edge))
                 .cloned()
                 .collect::<Vec<_>>(),
         ),
@@ -93,14 +93,17 @@ impl<'a> TopologyCollector<'a> {
                 continue;
             }
             self.candidates += 1;
-            let Some(target) =
-                resolved_import_target(import, self.known_paths, self.structure_files)
-            else {
+            let Some(target) = resolved_import_target(
+                &file.language,
+                import,
+                self.known_paths,
+                self.structure_files,
+            ) else {
                 *self.unresolved.entry(file.path.clone()).or_default() += 1;
                 continue;
             };
-            // `pub use self::{..}` re-exports, or an external crate that shares
-            // the local crate's name, resolve to the importing file itself.
+            // An external crate that shares the local crate's name resolves
+            // to the importing file itself.
             if *target == file.path || doc_only_java_import(file, import) {
                 continue;
             }
@@ -169,7 +172,26 @@ fn doc_only_java_import(file: &StructureFile, import: &StructureImport) -> bool 
         })
 }
 
+/// A Rust module's edge into a module it declares beneath it (`mod jsx;
+/// use jsx::f;`, a crate root's `pub use`): a module and its children are
+/// one unit for cycles, so a child using its parent's items back is the
+/// module idiom, not a dependency cycle (operator decision, 2026-11-16).
+/// Layering rules still see the edge.
+fn into_own_module(edge: &TopologyEdge) -> bool {
+    let Some(stem) = edge.source.strip_suffix(".rs") else {
+        return false;
+    };
+    let children = ["/mod", "/lib", "/main"]
+        .iter()
+        .find_map(|root| stem.strip_suffix(root))
+        .unwrap_or(stem);
+    edge.target
+        .strip_prefix(children)
+        .is_some_and(|rest| rest.starts_with('/'))
+}
+
 fn resolved_import_target<'a>(
+    language: &Language,
     import: &'a StructureImport,
     known_paths: &BTreeSet<String>,
     structure_files: &BTreeMap<&str, &StructureFile>,
@@ -178,9 +200,11 @@ fn resolved_import_target<'a>(
         .resolved_path
         .as_ref()
         .filter(|target| known_paths.contains(*target))?;
+    // A Rust path resolves only to a file exposing the item it names.
     let exports_symbol = import
         .imported
         .as_deref()
+        .filter(|_| *language != Language::Rust)
         .is_none_or(|name| target_exports_symbol(structure_files, target, name));
     exports_symbol.then_some(target)
 }

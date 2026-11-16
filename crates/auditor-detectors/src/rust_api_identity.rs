@@ -4,8 +4,9 @@
 //! `use md5::{Digest, Md5};`, `Md5::new()` is `md5::Md5::new`.
 //!
 //! Bindings come from plain, aliased (`as`), and grouped (`{..}`, `self`)
-//! `use` trees; globs bind nothing a path can name. Method calls on values
-//! have no path and are matched by method name in the API tables.
+//! `use` trees, read by [`use_leaves`]; globs bind nothing a path can name.
+//! Method calls on values have no path and are matched by method name in
+//! the API tables.
 
 use std::collections::BTreeMap;
 
@@ -20,59 +21,20 @@ pub(crate) struct RustScope {
 
 impl RustScope {
     pub(crate) fn new(root: AstNode<'_>) -> Self {
-        let mut scope = Self {
-            bindings: BTreeMap::new(),
-        };
+        let mut bindings = BTreeMap::new();
         for declaration in ast_scan::nodes_of_kind(root, &["use_declaration"]) {
-            if let Some(tree) = declaration.child_by_field_name("argument") {
-                scope.bind(tree, "");
+            for leaf in use_leaves(declaration.text()) {
+                let (path, alias) = leaf
+                    .rsplit_once(" as ")
+                    .map_or((leaf.as_str(), None), |(path, alias)| (path, Some(alias)));
+                if path.ends_with('*') {
+                    continue;
+                }
+                let local = alias.unwrap_or_else(|| path.rsplit("::").next().unwrap_or_default());
+                bindings.insert(local.to_string(), path.to_string());
             }
         }
-        scope
-    }
-
-    fn bind(&mut self, tree: AstNode<'_>, prefix: &str) {
-        let join = |path: &str| {
-            if prefix.is_empty() {
-                path.to_string()
-            } else {
-                format!("{prefix}::{path}")
-            }
-        };
-        match tree.kind() {
-            "identifier" | "scoped_identifier" => {
-                let full = join(tree.text());
-                let local = full.rsplit("::").next().unwrap_or_default().to_string();
-                self.bindings.insert(local, full);
-            }
-            "use_as_clause" => {
-                if let (Some(path), Some(alias)) =
-                    (tree.named_child(0), tree.child_by_field_name("alias"))
-                {
-                    self.bindings
-                        .insert(alias.text().to_string(), join(path.text()));
-                }
-            }
-            "scoped_use_list" => {
-                let nested = tree
-                    .named_children()
-                    .find(|child| child.kind() != "use_list")
-                    .map_or_else(|| prefix.to_string(), |path| join(path.text()));
-                for item in tree
-                    .named_children()
-                    .filter(|child| child.kind() == "use_list")
-                    .flat_map(|list| list.named_children())
-                {
-                    if item.kind() == "self" {
-                        let local = nested.rsplit("::").next().unwrap_or_default().to_string();
-                        self.bindings.insert(local, nested.clone());
-                    } else {
-                        self.bind(item, &nested);
-                    }
-                }
-            }
-            _ => {}
-        }
+        Self { bindings }
     }
 
     /// The resolved path of an identifier or scoped path: its head through a
@@ -103,6 +65,100 @@ impl RustScope {
             self.resolve(call.child_by_field_name("function")?)
         })
     }
+}
+
+/// The paths one `use` declaration imports, each `path` or `path as
+/// alias`: braces expand, `a::{self}` is `a`, and a glob keeps its `*`.
+/// Comments inside the tree are dropped.
+pub(crate) fn use_leaves(declaration: &str) -> Vec<String> {
+    let text = without_comments(declaration);
+    let mut leaves = Vec::new();
+    expand("", use_tree(&text), &mut leaves);
+    leaves
+}
+
+/// `text` without `//` and `/* */` comments, its whitespace collapsed; a
+/// `use` tree has no other `/`.
+fn without_comments(text: &str) -> String {
+    let mut kept = String::with_capacity(text.len());
+    let mut characters = text.chars().peekable();
+    while let Some(character) = characters.next() {
+        match (character, characters.peek()) {
+            ('/', Some('/')) => {
+                characters.by_ref().find(|character| *character == '\n');
+                kept.push(' ');
+            }
+            ('/', Some('*')) => {
+                characters.next();
+                let mut last = ' ';
+                characters.by_ref().find(|character| {
+                    let closes = last == '*' && *character == '/';
+                    last = *character;
+                    closes
+                });
+                kept.push(' ');
+            }
+            _ => kept.push(character),
+        }
+    }
+    kept.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+/// The tree after `use`, without its visibility or `;`.
+fn use_tree(declaration: &str) -> &str {
+    let text = declaration.trim().trim_end_matches(';').trim();
+    let text = match text.strip_prefix("pub") {
+        Some(rest) if rest.starts_with('(') => rest.split_once(')').map_or(rest, |(_, rest)| rest),
+        Some(rest) if rest.starts_with(' ') => rest,
+        _ => text,
+    }
+    .trim_start();
+    text.strip_prefix("use ").unwrap_or(text).trim()
+}
+
+fn expand(prefix: &str, tree: &str, leaves: &mut Vec<String>) {
+    let tree = tree.trim();
+    if tree.is_empty() {
+        return;
+    }
+    let join = |path: &str| match (prefix.is_empty(), path.is_empty()) {
+        (true, _) => path.to_string(),
+        (false, true) => prefix.to_string(),
+        (false, false) => format!("{prefix}::{path}"),
+    };
+    let Some(open) = tree.find('{') else {
+        let (path, alias) = tree
+            .rsplit_once(" as ")
+            .map_or((tree, None), |(path, alias)| {
+                (path.trim(), Some(alias.trim()))
+            });
+        let path = if path == "self" {
+            prefix.to_string()
+        } else {
+            join(path.strip_suffix("::self").unwrap_or(path))
+        };
+        if !path.is_empty() {
+            leaves.push(alias.map_or_else(|| path.clone(), |alias| format!("{path} as {alias}")));
+        }
+        return;
+    };
+    let prefix = join(tree[..open].trim().trim_end_matches("::"));
+    let body = tree[open + 1..].trim_end();
+    let body = body.strip_suffix('}').unwrap_or(body);
+    let mut depth = 0_i32;
+    let mut start = 0;
+    for (index, character) in body.char_indices() {
+        match character {
+            '{' => depth += 1,
+            '}' => depth -= 1,
+            ',' if depth == 0 => {
+                expand(&prefix, &body[start..index], leaves);
+                start = index + 1;
+            }
+            _ => {}
+        }
+    }
+    expand(&prefix, &body[start..], leaves);
 }
 
 /// The argument expressions of a call.
@@ -154,6 +210,17 @@ fn run() {
     builder.arg("-c");
 }
 "#;
+
+    #[test]
+    fn a_use_tree_imports_each_leaf() {
+        assert_eq!(
+            use_leaves(
+                "pub(crate) use crate::{\n    a::{B as C, self}, // the module\n    d::*, /* all */ e,\n};"
+            ),
+            ["crate::a::B as C", "crate::a", "crate::d::*", "crate::e"]
+        );
+        assert_eq!(use_leaves("use super::*;"), ["super::*"]);
+    }
 
     #[test]
     fn rust_paths_resolve_through_use_trees() {
