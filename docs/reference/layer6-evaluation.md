@@ -19,16 +19,18 @@ qualifies on:
 - `bindings`: the question templates, prompt bundle, and brief every run
   must use, each by the SHA-256 of its file;
 - `route_sets`: the routes that may qualify, by file and digest
-  (`mistral_glm`, Mistral's paid GLM 5.3 Flash streamed; `mistral_free`;
-  `openrouter_free`; the anonymous OpenCode route is closed by provider
-  policy);
+  (`mistral_glm`, Mistral's paid GLM 5.3 Flash streamed; `nvidia_glm`,
+  the same model free on NVIDIA NIM; `mistral_free`; `openrouter_free`; the
+  anonymous OpenCode route is closed by provider policy, and its free
+  models refuse API clients once a small quota is spent);
 - `run_plan`: runs per repository (two), the history window, and the
   patch-check settings;
 - `stability`: how many top hotspots and plan steps two runs compare, and
   the share they must have in common;
 - `usefulness.threshold` and `usefulness.beyond_report_threshold`: the
-  share of counted items a route must have useful, and useful and beyond
-  the report, both `null` until the first measured runs set them;
+  share of counted items a route must have useful (0.5), and useful and
+  beyond the report (0.25), set from the first measured corpus runs (121
+  sampled items over ten paid GLM reviews scored 0.60 and 0.33);
 - `protocol_suite`: the eight generated lifecycle repositories
   (`tooling/review_eval/generate_lifecycle_repo.py`, by generator and
   source digest), kept as a regression of the review mechanics rather than
@@ -137,7 +139,7 @@ bindings, runs `auditor review qualify` on every corpus repository with the
 corpus route set, brief, and stability policy, and writes a summary with
 the gates per repository, the counted usefulness, and a decision. A route
 qualifies when the gates pass on every repository and both shares meet
-their thresholds. Until both are set, the best decision is
+their thresholds. With a threshold unset, the best decision is
 "gates pass; the usefulness bar is not set yet".
 
 Hermetic tests run the same harness on scripted reviews of a fixture scan
