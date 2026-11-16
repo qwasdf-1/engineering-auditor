@@ -335,7 +335,25 @@ fn the_retrieval_budget_bounds_calls_and_result_size() {
         json!({"path": "app/store/db.py"}),
     )))
     .to_string();
-    assert!(whole.contains("line range"), "{whole}");
+    assert!(whole.len() <= 600, "{whole}");
+    let (shown, next) = whole
+        .split_once("source-span:app/store/db.py#L1-L")
+        .and_then(|(_, rest)| rest.split_once(|c: char| !c.is_ascii_digit()))
+        .map(|(last, _)| last.parse::<usize>().unwrap())
+        .map(|last| (last, format!("at line {}:", last + 1)))
+        .unwrap();
+    assert!(shown >= 1 && whole.contains(&next), "{whole}");
+    let rest = result_text(&host.answer(&call(
+        "r2",
+        "read_source",
+        json!({"path": "app/store/db.py", "start_line": shown + 1}),
+    )))
+    .to_string();
+    assert!(
+        rest.contains(&format!("source-span:app/store/db.py#L{}-L", shown + 1)),
+        "{rest}"
+    );
+    let mut host = RetrievalHost::new(&view, &fixture.repo, tight).unwrap();
     let listed = result_text(&host.answer(&search())).to_string();
     assert!(listed.len() <= 600 && listed.contains("(top "), "{listed}");
     assert!(RetrievalHost::new(

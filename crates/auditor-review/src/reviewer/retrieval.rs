@@ -111,7 +111,7 @@ pub fn retrieval_tool_specs(with_history: bool) -> Vec<ToolSpec> {
     vec![
         ToolSpec {
             name: "read_source",
-            description: "Read a mapped repository file, or lines of it. Returns the text with a source-span evidence ID. Large files need a line range.",
+            description: "Read a mapped repository file, or lines of it. Returns the text with a source-span evidence ID. A read too long for one result returns the lines from the first that fit and the line the rest continues at.",
             parameters: object(
                 json!({
                     "path": string("Repository-relative path of a mapped file."),

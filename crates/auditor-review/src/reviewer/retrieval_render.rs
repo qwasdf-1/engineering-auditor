@@ -10,6 +10,8 @@ use super::view::{co_change_id, count, RepositoryView, LOCAL_KINDS};
 use crate::repository_map::checked_source_path;
 
 impl RetrievalHost<'_, '_> {
+    /// The requested lines, or as many from the first as fit `limit`, with
+    /// the line the rest continues at.
     pub(super) fn read_source(
         &self,
         request: &ReadSource,
@@ -19,27 +21,59 @@ impl RetrievalHost<'_, '_> {
         let file = view
             .file_by_path(request.path.trim_start_matches("./"))
             .ok_or_else(|| format!("`{}` is not a mapped file", request.path))?;
-        let mapped = view.file(file);
-        if request.start_line.is_none()
-            && request.end_line.is_none()
-            && mapped.bytes as usize > limit
-        {
-            return Err(format!(
-                "`{}` has {} bytes in {} lines, over the {limit}-byte result limit; request a line range",
-                mapped.path, mapped.bytes, mapped.lines
-            ));
-        }
+        let path = &view.file(file).path;
         let text = self.source_text(file)?;
         let lines = text.split_inclusive('\n').collect::<Vec<_>>();
         let start = request.start_line.unwrap_or(1);
         let end = request.end_line.unwrap_or(lines.len()).min(lines.len());
         if start == 0 || start > end {
             return Err(format!(
-                "lines {start}-{end} are outside `{}`, which has {} lines",
-                mapped.path,
+                "lines {start}-{end} are outside `{path}`, which has {} lines",
                 lines.len()
             ));
         }
+        let fits = |last: usize| {
+            self.source_page(file, &lines, start..=last, end)
+                .render(limit, &view.source_digest)
+                .is_ok()
+        };
+        // The longest page whose text alone fits, then the longest whose
+        // document does.
+        let mut bytes = 0;
+        let mut high = start - 1;
+        while high < end && bytes + lines[high].len() <= limit {
+            bytes += lines[high].len();
+            high += 1;
+        }
+        if high < start || !fits(start) {
+            return Err(format!(
+                "line {start} of `{path}` alone does not fit the {limit}-byte result limit"
+            ));
+        }
+        let mut low = start;
+        while low < high {
+            let middle = (low + high).div_ceil(2);
+            if fits(middle) {
+                low = middle;
+            } else {
+                high = middle - 1;
+            }
+        }
+        Ok(self.source_page(file, &lines, start..=low, end))
+    }
+
+    /// Lines `page` of a file, saying where the rest continues when the
+    /// page stops before `end`.
+    fn source_page(
+        &self,
+        file: usize,
+        lines: &[&str],
+        page: std::ops::RangeInclusive<usize>,
+        end: usize,
+    ) -> BoundedDocument {
+        let view = self.view;
+        let mapped = view.file(file);
+        let (start, last) = (*page.start(), *page.end());
         let symbols = view
             .symbols_in_file(file)
             .iter()
@@ -47,35 +81,40 @@ impl RetrievalHost<'_, '_> {
             .filter(|symbol| {
                 let symbol = view.symbol(*symbol);
                 !LOCAL_KINDS.contains(&symbol.kind.as_str())
-                    && (start..=end).contains(&symbol.span.start_line)
+                    && page.contains(&symbol.span.start_line)
             })
             .map(|symbol| view.symbol_row(symbol));
-        Ok(BoundedDocument::new(
-            format!("Source of {}", mapped.path),
-            vec![Section::new(
-                "Source",
-                vec![
-                    Item::text(
-                        "Range",
-                        format!(
-                            "lines {start}-{end} of {}, {}",
-                            lines.len(),
-                            mapped.language
-                        ),
-                    ),
-                    Item::Source {
-                        label: "Text".to_string(),
-                        language: mapped.language.clone(),
-                        content: lines[start - 1..end].concat(),
-                        ids: vec![
-                            format!("source-span:{}#L{start}-L{end}", mapped.path),
-                            mapped.id.clone(),
-                        ],
-                    },
-                    Item::rows("Symbols starting here", symbols, 20),
+        let mut items = vec![
+            Item::text(
+                "Range",
+                format!(
+                    "lines {start}-{last} of {}, {}",
+                    lines.len(),
+                    mapped.language
+                ),
+            ),
+            Item::Source {
+                label: "Text".to_string(),
+                language: mapped.language.clone(),
+                content: lines[start - 1..last].concat(),
+                ids: vec![
+                    format!("source-span:{}#L{start}-L{last}", mapped.path),
+                    mapped.id.clone(),
                 ],
-            )],
-        ))
+            },
+        ];
+        if last < end {
+            let next = last + 1;
+            items.push(Item::text(
+                "Continues",
+                format!("at line {next}: the rest did not fit the result limit; read lines {next}-{end} for it"),
+            ));
+        }
+        items.push(Item::rows("Symbols starting here", symbols, 20));
+        BoundedDocument::new(
+            format!("Source of {}", mapped.path),
+            vec![Section::new("Source", items)],
+        )
     }
 
     /// A mapped file's text, checked against the digest the map holds.

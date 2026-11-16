@@ -201,7 +201,9 @@ within 24 KiB, and the retrieval tools (`read_source`, `symbol_info`,
 a review's call and byte budget, of which one question may take a quarter
 of the calls. Every row cites an evidence ID (`finding:`, `file:`,
 `symbol:`, `module:`, `edge:`, `entry:`, `source-span:`, and others) that
-only a shown row issues, and source reads re-check the file's hash.
+only a shown row issues, and source reads re-check the file's hash. A
+read too long for one result returns the lines from its first that fit,
+with the line the rest continues at; its source span covers only those.
 
 Two commands feed the reviewer. `review history` writes a history digest:
 per-file commits, growth, and co-change partners over a window of `HEAD`'s
@@ -255,7 +257,8 @@ naming the unread lines. Each question but the plan comes with the
 source its findings sit in, most severe first: the enclosing function or
 type, or ten lines either side of a finding outside one, up to 4 KiB a
 span and 16 KiB a question; a span over either limit is named, so the
-reviewer reads the lines it needs. With a checker, `check_patch` runs the patch checker on a proposed diff, and the
+reviewer reads the lines it needs.
+With a checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way
 to the next, an outage on the last target is waited out with resends every
