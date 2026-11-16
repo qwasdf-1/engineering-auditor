@@ -252,7 +252,10 @@ pub fn wire(protocol: ProviderProtocol, index: usize, reply: Reply) -> Transport
 /// A reviewer that reads the store's findings, then answers well.
 pub fn reviewer(step: &Step<'_>) -> Reply {
     match step.turn {
-        1 => Reply::Calls(vec![("findings_in", json!({"scope": "app/store/db.py"}))]),
+        1 => Reply::Calls(vec![
+            ("findings_in", json!({"scope": "app/store/db.py"})),
+            ("read_source", json!({"path": "app/core/audit.py"})),
+        ]),
         _ => Reply::Calls(vec![("answer_question", good_answer(step))]),
     }
 }

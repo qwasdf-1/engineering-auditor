@@ -228,6 +228,11 @@ impl<'a> RepositoryView<'a> {
         &self.map.symbols[index]
     }
 
+    pub(super) fn finding_by_evidence_id(&self, id: &str) -> Option<&ReportFinding> {
+        let id = id.strip_prefix("finding:")?;
+        self.findings.iter().find(|finding| finding.id == id)
+    }
+
     pub(super) fn file_by_id(&self, id: &str) -> Option<usize> {
         self.file_by_id.get(id).copied()
     }

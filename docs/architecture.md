@@ -248,8 +248,10 @@ Every request carries the shared pack and brief as its cache scope, so a
 provider that routes caches by key (Mistral) keeps one cache for the
 review, and a read repeated within a question gets a pointer to its
 earlier result. A claim may cite a source span narrowed to lines inside
-one a read returned. With a
-checker, `check_patch` runs the patch checker on a proposed diff, and the
+one a read returned. A recommendation must have seen the code it changes:
+each finding it resolves that has a line must lie in a source span the
+review has shown, by a read or in a question, or the answer is rejected
+naming the unread lines. With a checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way
 to the next, an outage on the last target is waited out with resends every

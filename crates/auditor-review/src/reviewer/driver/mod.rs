@@ -443,7 +443,7 @@ impl Review<'_, '_> {
                     "The question is already answered; this call was not run.".to_string(),
                 ),
                 (None, ANSWER_TOOL) => {
-                    let (answer, markdown) = self.answer_call(conversation, call);
+                    let (answer, markdown) = self.answer_call(conversation, call, host.view);
                     accepted = answer;
                     tool_result(call, markdown)
                 }
@@ -483,11 +483,12 @@ impl Review<'_, '_> {
         &self,
         conversation: &mut Conversation<'_>,
         call: &NativeToolCall,
+        view: &RepositoryView<'_>,
     ) -> (Option<QuestionAnswer>, String) {
         let draft = draft_answer(conversation.held.as_ref(), &call.arguments);
         let checked = match &call.validation_error {
             Some(error) => Err(format!("invalid arguments: {error}")),
-            None => self.answer(conversation.question, &draft),
+            None => self.answer(conversation.question, &draft, view),
         };
         match checked {
             Ok((answer, markdown)) => (Some(answer), markdown),
@@ -508,13 +509,14 @@ impl Review<'_, '_> {
         &self,
         question: &Question,
         arguments: &Value,
+        view: &RepositoryView<'_>,
     ) -> Result<(QuestionAnswer, String), String> {
         let earlier = self
             .answers
             .iter()
             .map(|(_, answer)| answer.clone())
             .collect::<Vec<_>>();
-        let accepted = accept(question, arguments, &self.known, &earlier)?;
+        let accepted = accept(question, arguments, view, &self.known, &earlier)?;
         let markdown = accepted_markdown(&accepted);
         Ok((accepted.answer, markdown))
     }

@@ -11,6 +11,7 @@ use serde_json::{json, Value};
 
 use super::super::document::{BoundedDocument, Item, Row, Section};
 use super::super::questions::QuestionKind;
+use super::super::view::{source_span, RepositoryView};
 use crate::{
     BenefitEvidenceMode, ClaimConfidence, ClaimDraft, ClaimSlot, ClaimStatus,
     ContextualRecommendation, DetectorAdviceRelationship, EngineeringClaim, EngineeringClaimKind,
@@ -356,6 +357,7 @@ pub(super) fn held_summary(draft: &Value) -> String {
 pub(super) fn accept(
     question: &Question,
     arguments: &Value,
+    view: &RepositoryView<'_>,
     known_evidence_ids: &BTreeSet<String>,
     earlier: &[QuestionAnswer],
 ) -> Result<Accepted, String> {
@@ -448,6 +450,7 @@ pub(super) fn accept(
     };
     question
         .check_answer(&answer, known_evidence_ids, earlier)
+        .and_then(|()| unread_changes(&answer, view, known_evidence_ids))
         .map_err(|error| with_refs(error, &claim_ids, &recommendation_ids))?;
     Ok(Accepted {
         answer,
@@ -455,6 +458,58 @@ pub(super) fn accept(
         recommendation_ids,
     })
 }
+
+/// A recommendation changes the code of the findings it resolves, so each
+/// such finding's line must lie in a source span the review has shown: a
+/// read, or a span a question carried. Findings with no line (a file's
+/// size, a module's shape) need no read.
+fn unread_changes(
+    answer: &QuestionAnswer,
+    view: &RepositoryView<'_>,
+    known_evidence_ids: &BTreeSet<String>,
+) -> Result<(), String> {
+    let shown = known_evidence_ids
+        .iter()
+        .filter_map(|id| source_span(id))
+        .collect::<Vec<_>>();
+    let read = |path: &str, line: usize| {
+        shown
+            .iter()
+            .any(|(shown, from, to)| *shown == path && (*from..=*to).contains(&line))
+    };
+    let errors = answer
+        .recommendations
+        .iter()
+        .filter_map(|recommendation| {
+            let unread = recommendation
+                .affected_finding_ids
+                .iter()
+                .filter_map(|id| view.finding_by_evidence_id(id))
+                .filter_map(|finding| match (&finding.path, finding.line) {
+                    (Some(path), Some(line)) if !read(path, line) => {
+                        Some(format!("{} at {path}:{line}", finding.evidence_id()))
+                    }
+                    _ => None,
+                })
+                .collect::<Vec<_>>();
+            (!unread.is_empty()).then(|| {
+                format!(
+                    "recommendation {} resolves findings whose lines no read has shown: {}",
+                    recommendation.recommendation_id.as_str(),
+                    unread.join(", ")
+                )
+            })
+        })
+        .collect::<Vec<_>>();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("{}{UNREAD_CHANGE}", errors.join("; ")))
+    }
+}
+
+/// For a recommendation that changes lines it has not read.
+const UNREAD_CHANGE: &str = "; a change rests on the code it changes: read those lines with read_source before recommending it, or drop the finding from resolves";
 
 /// The draft to hold after a rejection, without the claims and
 /// recommendations that have no ref: a revision addresses held items by ref,

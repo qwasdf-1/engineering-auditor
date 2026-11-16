@@ -61,7 +61,7 @@ fn a_scripted_review_answers_every_question_on_each_protocol() {
         assert_eq!((review.calls.len(), review.spend.requests), (8, 8));
         assert_eq!(review.spend.input_tokens, 8000);
         assert_eq!(transcript.events().len(), 8);
-        assert_eq!(review.retrieval.len(), 4);
+        assert_eq!(review.retrieval.len(), 8);
         assert!(review.stopped.is_none());
 
         // The plan rests on a claim from an earlier answer.
@@ -183,6 +183,51 @@ fn a_rejected_answer_is_held_and_a_revision_sends_only_what_changes() {
 }
 
 #[test]
+fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    let findings_only = || Reply::Calls(vec![("findings_in", json!({"scope": "app/store/db.py"}))]);
+    let script: Script = Box::new(move |step| match (step.question.kind, step.turn) {
+        (QuestionKind::SharedRootCause, 3) => {
+            Reply::Calls(vec![("read_source", json!({"path": "app/core/audit.py"}))])
+        }
+        (QuestionKind::SharedRootCause, 4) => {
+            Reply::Calls(vec![("answer_question", good_answer(step))])
+        }
+        (_, 1) => findings_only(),
+        _ => Reply::Calls(vec![("answer_question", good_answer(step))]),
+    });
+    let Run { review, bodies, .. } = run(&fixture, &routes, script, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    let shared = &review.questions[1];
+    assert_eq!(shared.kind, QuestionKind::SharedRootCause);
+    assert_eq!(shared.requests, 4);
+    assert_eq!(shared.rejected_answers.len(), 1);
+    let reason = &shared.rejected_answers[0];
+    assert!(
+        reason.contains("recommendation `r1` resolves findings whose lines no read has shown")
+            && reason.contains("at app/core/audit.py:"),
+        "{reason}"
+    );
+    // The reviewer is told what to read, by the aliases it sees.
+    let body = bodies
+        .iter()
+        .map(|(_, body)| body.to_string())
+        .find(|body| body.contains("no read has shown"))
+        .unwrap();
+    let told = body
+        .split("# Answer rejected")
+        .nth(1)
+        .and_then(|rest| rest.split("The rejected answer is held").next())
+        .unwrap();
+    assert!(
+        told.contains("finding:") && told.contains("read those lines with read_source"),
+        "{told}"
+    );
+    assert!(!told.contains("EA-"), "{told}");
+}
+
+#[test]
 fn the_reviewer_sees_hash_ids_by_alias_and_the_record_keeps_the_ids() {
     let fixture = Fixture::scan(PYTHON_APP);
     let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
@@ -230,8 +275,8 @@ fn a_read_repeated_in_a_question_points_at_its_result_instead_of_running_again()
         .contains("already answered in this conversation"));
     assert_eq!(
         review.retrieval.len(),
-        4,
-        "one read a question; the repeat is not run"
+        8,
+        "two reads a question; the repeats are not run"
     );
 }
 
