@@ -183,13 +183,65 @@ fn a_rejected_answer_is_held_and_a_revision_sends_only_what_changes() {
 }
 
 #[test]
-fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read() {
+fn a_question_shows_the_source_its_findings_sit_in() {
     let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    // No reads at all: the attached source is enough to recommend on.
+    let script: Script =
+        Box::new(|step| Reply::Calls(vec![("answer_question", good_answer(step))]));
+    let Run { review, bodies, .. } = run(&fixture, &routes, script, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    assert!(review
+        .questions
+        .iter()
+        .all(|question| question.rejected_answers.is_empty()));
+    let first = bodies
+        .iter()
+        .map(|(_, body)| body.to_string())
+        .find(|body| body.contains("Source of the cited findings"))
+        .unwrap();
+    assert!(first.contains("source-span:app/core/audit.py#L"), "{first}");
+    assert!(first.contains("def record(event, value):"), "{first}");
+    // The plan builds on the other answers and attaches nothing.
+    let plan = bodies.last().unwrap().1.to_string();
+    assert!(!plan.contains("Source of the cited findings"));
+}
+
+/// [`PYTHON_APP`] with `audit.py`'s findings in spans too long to attach.
+fn long_audit() -> Vec<(&'static str, String)> {
+    let padding = "x".repeat(5000);
+    PYTHON_APP
+        .iter()
+        .map(|(path, text)| match *path {
+            "app/core/audit.py" => (
+                *path,
+                format!(
+                    "from app.store.db import Store\n# {padding}\n\n\ndef record(event, value):\n    \"\"\"{padding}\"\"\"\n    try:\n        print(event, value)\n    except:\n        pass\n\n\ndef default_store():\n    return Store()\n"
+                ),
+            ),
+            _ => (*path, (*text).to_string()),
+        })
+        .collect()
+}
+
+#[test]
+fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read() {
+    let files = long_audit();
+    let files = files
+        .iter()
+        .map(|(path, text)| (*path, text.as_str()))
+        .collect::<Vec<_>>();
+    let fixture = Fixture::scan(&files);
     let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
     let findings_only = || Reply::Calls(vec![("findings_in", json!({"scope": "app/store/db.py"}))]);
     let script: Script = Box::new(move |step| match (step.question.kind, step.turn) {
         (QuestionKind::SharedRootCause, 3) => {
-            Reply::Calls(vec![("read_source", json!({"path": "app/core/audit.py"}))])
+            let read = |start: usize, end: usize| {
+                let range =
+                    json!({"path": "app/core/audit.py", "start_line": start, "end_line": end});
+                ("read_source", range)
+            };
+            Reply::Calls(vec![read(1, 1), read(7, 14)])
         }
         (QuestionKind::SharedRootCause, 4) => {
             Reply::Calls(vec![("answer_question", good_answer(step))])
@@ -225,6 +277,8 @@ fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read()
         "{told}"
     );
     assert!(!told.contains("EA-"), "{told}");
+    // The question named the spans it could not attach.
+    assert!(body.contains("too long to attach"), "{body}");
 }
 
 #[test]

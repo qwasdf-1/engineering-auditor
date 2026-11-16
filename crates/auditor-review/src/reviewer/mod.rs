@@ -3,6 +3,7 @@
 //! report, the repository map, and hash-checked mapped source, and every row
 //! they render cites an evidence ID the host issued.
 
+mod cited_source;
 mod document;
 mod driver;
 mod evidence;

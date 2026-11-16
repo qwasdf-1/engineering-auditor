@@ -29,17 +29,7 @@ impl RetrievalHost<'_, '_> {
                 mapped.path, mapped.bytes, mapped.lines
             ));
         }
-        let path =
-            checked_source_path(&self.root, &mapped.path).map_err(|error| error.to_string())?;
-        let bytes = std::fs::read(path).map_err(|error| error.to_string())?;
-        if sha256_digest_bytes(&bytes) != mapped.sha256 {
-            return Err(format!(
-                "`{}` changed since the scan; it no longer matches the map",
-                mapped.path
-            ));
-        }
-        let text =
-            String::from_utf8(bytes).map_err(|_| format!("`{}` is not UTF-8 text", mapped.path))?;
+        let text = self.source_text(file)?;
         let lines = text.split_inclusive('\n').collect::<Vec<_>>();
         let start = request.start_line.unwrap_or(1);
         let end = request.end_line.unwrap_or(lines.len()).min(lines.len());
@@ -86,6 +76,21 @@ impl RetrievalHost<'_, '_> {
                 ],
             )],
         ))
+    }
+
+    /// A mapped file's text, checked against the digest the map holds.
+    pub(super) fn source_text(&self, file: usize) -> Result<String, String> {
+        let mapped = self.view.file(file);
+        let path =
+            checked_source_path(&self.root, &mapped.path).map_err(|error| error.to_string())?;
+        let bytes = std::fs::read(path).map_err(|error| error.to_string())?;
+        if sha256_digest_bytes(&bytes) != mapped.sha256 {
+            return Err(format!(
+                "`{}` changed since the scan; it no longer matches the map",
+                mapped.path
+            ));
+        }
+        String::from_utf8(bytes).map_err(|_| format!("`{}` is not UTF-8 text", mapped.path))
     }
 
     pub(super) fn symbol_info(&self, query: &str) -> Result<BoundedDocument, String> {

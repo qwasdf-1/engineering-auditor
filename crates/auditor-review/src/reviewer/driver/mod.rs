@@ -296,6 +296,9 @@ impl Review<'_, '_> {
                 ));
             }
             self.known.extend(question.evidence_ids.iter().cloned());
+            if let Some(source) = host.cited_source(question)? {
+                self.known.extend(source.evidence_ids);
+            }
             if let Some(answer) = &record.answer {
                 self.answers.push((question.kind, answer.clone()));
             }
@@ -322,6 +325,10 @@ impl Review<'_, '_> {
         self.known.extend(question.evidence_ids.iter().cloned());
         host.start_question(question.kind == QuestionKind::RemediationPlan);
         let mut user = format!("{opening}\n{}", question.markdown);
+        if let Some(source) = host.cited_source(question)? {
+            self.known.extend(source.evidence_ids);
+            user = format!("{user}\n{}", source.markdown);
+        }
         if question.kind == QuestionKind::RemediationPlan && !self.answers.is_empty() {
             let earlier = self
                 .answers
