@@ -367,6 +367,46 @@ fn the_retrieval_budget_bounds_calls_and_result_size() {
     .is_err());
 }
 
+#[test]
+fn text_search_cites_mapped_lines_and_shows_other_tracked_files_as_context() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let view = fixture.view();
+    std::fs::write(
+        fixture.repo.join("Dockerfile"),
+        "COPY app /app\nRUN pip install store\n",
+    )
+    .unwrap();
+    let search = |query: &str| call("t", "search_text", json!({"query": query}));
+    // Outside a git work tree only the mapped files are searched.
+    let mut host = RetrievalHost::new(&view, &fixture.repo, RetrievalBudget::default()).unwrap();
+    let mapped_only = result_text(&host.answer(&search("store"))).to_string();
+    assert!(!mapped_only.contains("Dockerfile"), "{mapped_only}");
+    git(&fixture.repo, &["init", "-q"], "2026-01-01T00:00:00Z");
+    git(&fixture.repo, &["add", "-A"], "2026-01-01T00:00:00Z");
+    let found = result_text(&host.answer(&search("store"))).to_string();
+    assert!(
+        found.contains("app/core/audit.py:1: from app.store.db import Store [source-span:app/core/audit.py#L1-L1"),
+        "{found}"
+    );
+    assert!(
+        found.contains("Dockerfile:2: RUN pip install store []"),
+        "{found}"
+    );
+    assert!(found.contains("context only"), "{found}");
+    let scoped = result_text(&host.answer(&call(
+        "t",
+        "search_text",
+        json!({"query": "store", "path": "app/core"}),
+    )))
+    .to_string();
+    assert!(
+        !scoped.contains("Dockerfile") && scoped.contains("app/core/audit.py:1"),
+        "{scoped}"
+    );
+    let short = result_text(&host.answer(&search("st"))).to_string();
+    assert!(short.contains("at least 3 characters"), "{short}");
+}
+
 fn git(repo: &Path, args: &[&str], date: &str) {
     let status = std::process::Command::new("git")
         .args(["-c", "user.name=t", "-c", "user.email=t@example.com"])

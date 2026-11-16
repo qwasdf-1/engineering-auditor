@@ -14,6 +14,7 @@ mod questions;
 mod rankings;
 mod retrieval;
 mod retrieval_render;
+mod text_search;
 mod view;
 
 pub(crate) use driver::REVIEWER_TURN;

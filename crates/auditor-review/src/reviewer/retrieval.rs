@@ -14,8 +14,9 @@ use super::document::BoundedDocument;
 use super::view::RepositoryView;
 use crate::{NativeConversationMessage, NativeToolCall, ReviewBrief, ToolSpec};
 
-pub const RETRIEVAL_TOOL_NAMES: [&str; 6] = [
+pub const RETRIEVAL_TOOL_NAMES: [&str; 7] = [
     "read_source",
+    "search_text",
     "symbol_info",
     "search_symbols",
     "findings_in",
@@ -123,6 +124,18 @@ pub fn retrieval_tool_specs(with_history: bool) -> Vec<ToolSpec> {
             strict: false,
         },
         ToolSpec {
+            name: "search_text",
+            description: "Find lines containing a plain, case-sensitive text in the repository's tracked files, including tests, build files, and configuration the map leaves out. Shows up to 50 lines with their paths; a line in a mapped file cites a source-span evidence ID, and one in a file the map leaves out is context only, which no claim can cite.",
+            parameters: object(
+                json!({
+                    "query": string("The text, one line of at least 3 characters."),
+                    "path": string("Optional file or directory to search under."),
+                }),
+                &["query"],
+            ),
+            strict: false,
+        },
+        ToolSpec {
             name: "symbol_info",
             description: "Describe a symbol: kind, location, metrics, parent and members, base and subtypes, callers and callees from the call graph, entry points, and findings inside it.",
             parameters: object(
@@ -182,6 +195,13 @@ pub(super) struct ReadSource {
     pub(super) path: String,
     pub(super) start_line: Option<usize>,
     pub(super) end_line: Option<usize>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct TextQuery {
+    pub(super) query: String,
+    pub(super) path: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -390,6 +410,7 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
         }
         let document = match call.name.as_str() {
             "read_source" => self.read_source(&arguments(call)?, limit)?,
+            "search_text" => self.search_text(&arguments(call)?)?,
             "symbol_info" => self.symbol_info(&arguments::<SymbolQuery>(call)?.symbol)?,
             "search_symbols" => self.search_symbols(&arguments(call)?)?,
             "findings_in" => self.findings_in(&arguments::<ScopeQuery>(call)?.scope)?,
