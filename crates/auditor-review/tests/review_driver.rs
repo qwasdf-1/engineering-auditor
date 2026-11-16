@@ -256,6 +256,53 @@ fn a_finding_inside_a_long_function_brings_the_lines_around_it() {
 }
 
 #[test]
+fn a_rejected_change_to_unshown_lines_brings_their_source() {
+    // Twenty functions of about 3 KiB, each with findings: more source
+    // than the questions carry, so the plan resolves some none showed.
+    let padding = "x".repeat(3000);
+    let many = (0..20)
+        .map(|index| {
+            format!("def f{index}(event, value):\n    \"\"\"{padding}\"\"\"\n    try:\n        print(event, value)\n    except:\n        pass\n\n\n")
+        })
+        .collect::<String>();
+    let mut files = PYTHON_APP.to_vec();
+    files.push(("app/core/many.py", many.as_str()));
+    let fixture = Fixture::scan(&files);
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    // The plan resolves every finding, some on lines no question showed.
+    let script: Script = Box::new(|step| {
+        let mut answer = good_answer(step);
+        if step.question.kind == QuestionKind::RemediationPlan {
+            answer["recommendations"][0]["resolves"] = json!(step.question.finding_ids);
+        }
+        Reply::Calls(vec![("answer_question", answer)])
+    });
+    let Run { review, bodies, .. } = run(&fixture, &routes, script, None);
+    assert!(status(&review)
+        .iter()
+        .all(|status| *status == QuestionStatus::Answered));
+    let plan = review.questions.last().unwrap();
+    assert_eq!(plan.kind, QuestionKind::RemediationPlan);
+    // Each rejection brings what fits of the source, so fewer lines stay
+    // unshown each time, until the same answer is accepted.
+    let unshown = plan
+        .rejected_answers
+        .iter()
+        .map(|reason| reason.matches(" at app/").count())
+        .collect::<Vec<_>>();
+    assert!(
+        unshown.len() >= 2 && unshown.windows(2).all(|pair| pair[1] < pair[0]),
+        "{unshown:?}"
+    );
+    let rejected = bodies
+        .iter()
+        .map(|(_, body)| body.to_string())
+        .find(|body| body.contains("Source of the lines to change"))
+        .unwrap();
+    assert!(rejected.contains("source-span:"), "{rejected}");
+}
+
+#[test]
 fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read() {
     let files = long_audit();
     let files = files
@@ -304,7 +351,7 @@ fn a_recommendation_on_lines_no_read_has_shown_is_rejected_until_they_are_read()
         .and_then(|rest| rest.split("The rejected answer is held").next())
         .unwrap();
     assert!(
-        told.contains("finding:") && told.contains("read those lines with read_source"),
+        told.contains("finding:") && told.contains("read any lines named instead with read_source"),
         "{told}"
     );
     assert!(!told.contains("EA-"), "{told}");

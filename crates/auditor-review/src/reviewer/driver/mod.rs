@@ -43,7 +43,7 @@ use crate::{
 use aliases::Aliases;
 use answer::{
     accept, accepted_markdown, addressable, answer_tool, draft_answer, held_summary,
-    wire_name as name, ANSWER_TOOL,
+    unread_findings, wire_name as name, ANSWER_TOOL,
 };
 pub(super) use answer::{earlier_answers, wire_name};
 pub(crate) use calls::REVIEWER_TURN;
@@ -450,7 +450,7 @@ impl Review<'_, '_> {
                     "The question is already answered; this call was not run.".to_string(),
                 ),
                 (None, ANSWER_TOOL) => {
-                    let (answer, markdown) = self.answer_call(conversation, call, host.view);
+                    let (answer, markdown) = self.answer_call(conversation, call, host);
                     accepted = answer;
                     tool_result(call, markdown)
                 }
@@ -487,28 +487,59 @@ impl Review<'_, '_> {
     /// rejection recorded and the answer held for a revision; with the
     /// tool result either way.
     fn answer_call(
-        &self,
+        &mut self,
         conversation: &mut Conversation<'_>,
         call: &NativeToolCall,
-        view: &RepositoryView<'_>,
+        host: &RetrievalHost<'_, '_>,
     ) -> (Option<QuestionAnswer>, String) {
         let draft = draft_answer(conversation.held.as_ref(), &call.arguments);
         let checked = match &call.validation_error {
             Some(error) => Err(format!("invalid arguments: {error}")),
-            None => self.answer(conversation.question, &draft, view),
+            None => self.answer(conversation.question, &draft, host.view),
         };
         match checked {
             Ok((answer, markdown)) => (Some(answer), markdown),
             Err(reason) => {
+                let source = self.unread_source(&draft, host);
                 let draft = addressable(draft);
                 let markdown = format!(
-                    "# Answer rejected\n\n{reason}\n\n{}\n",
+                    "# Answer rejected\n\n{reason}\n\n{source}{}\n",
                     held_summary(&draft)
                 );
                 conversation.rejected.push(reason);
                 conversation.held = Some(draft);
                 (None, markdown)
             }
+        }
+    }
+
+    /// The source of the lines the draft's recommendations would change
+    /// that nothing has shown yet, now counted as shown; empty when there
+    /// are none.
+    fn unread_source(&mut self, draft: &Value, host: &RetrievalHost<'_, '_>) -> String {
+        let resolves = draft["recommendations"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .flat_map(|recommendation| recommendation["resolves"].as_array().into_iter().flatten())
+            .filter_map(Value::as_str)
+            .map(ToString::to_string)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        let unread = unread_findings(&resolves, host.view, &self.known)
+            .into_iter()
+            .map(|finding| finding.evidence_id())
+            .collect::<Vec<_>>();
+        if unread.is_empty() {
+            return String::new();
+        }
+        match host.findings_source(&unread, "Source of the lines to change") {
+            Ok(Some(source)) => {
+                self.known.extend(source.evidence_ids);
+                format!("{}\n", source.markdown)
+            }
+            _ => String::new(),
         }
     }
 

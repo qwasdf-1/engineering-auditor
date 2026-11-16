@@ -42,7 +42,17 @@ impl RetrievalHost<'_, '_> {
         if question.kind == QuestionKind::RemediationPlan {
             return Ok(None);
         }
-        let spans = self.cited_spans(question)?;
+        self.findings_source(&question.finding_ids, "Source of the cited findings")
+    }
+
+    /// The source of `finding_ids`, most severe first, under `title`; none
+    /// when no finding has a line.
+    pub(super) fn findings_source(
+        &self,
+        finding_ids: &[String],
+        title: &str,
+    ) -> Result<Option<Rendered>, String> {
+        let spans = self.cited_spans(finding_ids)?;
         if spans.is_empty() {
             return Ok(None);
         }
@@ -67,23 +77,19 @@ impl RetrievalHost<'_, '_> {
                 usize::MAX,
             ));
         }
-        BoundedDocument::new(
-            "Source of the cited findings",
-            vec![Section::new("Source", items)],
-        )
-        .render(
-            QUESTION_SOURCE_BYTES + FRAME_BYTES,
-            &self.view.source_digest,
-        )
-        .map(Some)
+        BoundedDocument::new(title, vec![Section::new("Source", items)])
+            .render(
+                QUESTION_SOURCE_BYTES + FRAME_BYTES,
+                &self.view.source_digest,
+            )
+            .map(Some)
     }
 
     /// One span per finding with a line, most severe first; a finding
     /// inside an earlier span joins it, and overlapping parts of one symbol
     /// merge.
-    fn cited_spans(&self, question: &Question) -> Result<Vec<Span>, String> {
-        let mut findings = question
-            .finding_ids
+    fn cited_spans(&self, finding_ids: &[String]) -> Result<Vec<Span>, String> {
+        let mut findings = finding_ids
             .iter()
             .filter_map(|id| self.view.finding_by_evidence_id(id))
             .filter(|finding| finding.file.is_some() && finding.line.is_some())
