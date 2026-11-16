@@ -20,6 +20,7 @@ mod aliases;
 mod answer;
 mod calls;
 mod conversation;
+mod import_facts;
 mod progress;
 mod record;
 

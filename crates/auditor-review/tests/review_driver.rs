@@ -183,6 +183,54 @@ fn a_rejected_answer_is_held_and_a_revision_sends_only_what_changes() {
 }
 
 #[test]
+fn a_claim_s_wrong_import_fact_is_rejected_with_the_map_s_edges() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let routes = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
+    let fact =
+        |from: &str, to: &str, imports: bool| json!({"from": from, "to": to, "imports": imports});
+    let script: Script = Box::new(move |step| match (step.question.kind, step.turn) {
+        (QuestionKind::HotspotAssessment, 2) => {
+            let mut answer = good_answer(step);
+            answer["claims"][0]["imports"] = json!([
+                fact("app/core/audit.py", "app/store/db.py", false),
+                fact("app/store/base.py", "app/main.py", true),
+                fact("app/nowhere.py", "app/main.py", true),
+            ]);
+            Reply::Calls(vec![("answer_question", answer)])
+        }
+        (QuestionKind::HotspotAssessment, 3) => {
+            let mut answer = good_answer(step);
+            answer["claims"][0]["imports"] = json!([
+                fact("app/core/audit.py", "app/store/db.py", true),
+                fact("app/store/base.py", "app/main.py", false),
+            ]);
+            Reply::Calls(vec![("answer_question", answer)])
+        }
+        _ => reviewer(step),
+    });
+    let Run { review, .. } = run(&fixture, &routes, script, None);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    let hotspots = &review.questions[0];
+    assert_eq!(hotspots.requests, 3);
+    assert_eq!(hotspots.rejected_answers.len(), 1);
+    let reason = &hotspots.rejected_answers[0];
+    assert!(
+        reason.contains("states that `app/core/audit.py` does not import `app/store/db.py`, but the map has one: app/core/audit.py:1 -> app/store/db.py"),
+        "{reason}"
+    );
+    assert!(
+        reason.contains(
+            "states that `app/store/base.py` imports `app/main.py`, but the map has no import"
+        ),
+        "{reason}"
+    );
+    assert!(
+        reason.contains("about `app/nowhere.py`, which names no mapped file or module"),
+        "{reason}"
+    );
+}
+
+#[test]
 fn a_question_shows_the_source_its_findings_sit_in() {
     let fixture = Fixture::scan(PYTHON_APP);
     let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);

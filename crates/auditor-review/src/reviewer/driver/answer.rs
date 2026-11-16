@@ -12,6 +12,7 @@ use serde_json::{json, Value};
 use super::super::document::{BoundedDocument, Item, Row, Section};
 use super::super::questions::QuestionKind;
 use super::super::view::{source_span, ReportFinding, RepositoryView};
+use super::import_facts::{wrong_import_facts, ImportFact};
 use crate::{
     BenefitEvidenceMode, ClaimConfidence, ClaimDraft, ClaimSlot, ClaimStatus,
     ContextualRecommendation, DetectorAdviceRelationship, EngineeringClaim, EngineeringClaimKind,
@@ -86,6 +87,8 @@ struct ClaimArgument {
     #[serde(default)]
     assumptions: Vec<String>,
     confidence: ClaimConfidence,
+    #[serde(default)]
+    imports: Vec<ImportFact>,
 }
 
 #[derive(Deserialize)]
@@ -150,6 +153,18 @@ pub(super) fn answer_tool(question: &Question) -> ToolSpec {
             "depends_on": strings("Refs of other claims in this answer it rests on."),
             "assumptions": strings("What the claim assumes that no evidence shows."),
             "confidence": choice(names(&CONFIDENCES)),
+            "imports": {
+                "type": "array",
+                "items": object(
+                    json!({
+                        "from": text("A mapped file's path or file: ID, or a module's name or module: ID."),
+                        "to": text("The same, for the other end."),
+                        "imports": {"type": "boolean", "description": "Whether from imports to: any file of it importing any file of to."},
+                    }),
+                    &["from", "to", "imports"],
+                ),
+                "description": "One fact for each import the proposition states or denies between files or modules; EA checks each against the map's import edges and rejects a wrong one.",
+            },
         }),
         &[
             "ref",
@@ -451,6 +466,20 @@ pub(super) fn accept(
     question
         .check_answer(&answer, known_evidence_ids, earlier)
         .and_then(|()| unread_changes(&answer, view, known_evidence_ids))
+        .and_then(|()| {
+            let wrong = wrong_import_facts(
+                arguments
+                    .claims
+                    .iter()
+                    .map(|claim| (claim.reference.as_str(), claim.imports.as_slice())),
+                view,
+            );
+            if wrong.is_empty() {
+                Ok(())
+            } else {
+                Err(wrong.join("; "))
+            }
+        })
         .map_err(|error| with_refs(error, &claim_ids, &recommendation_ids))?;
     Ok(Accepted {
         answer,

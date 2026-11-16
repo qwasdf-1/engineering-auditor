@@ -265,7 +265,12 @@ type, or ten lines either side of a finding outside one or inside one over
 4 KiB, up to 4 KiB a span and 16 KiB a question; a span over either limit
 is named, so the reviewer reads the lines it needs. An answer rejected for
 unread lines brings their source the same way, which is how the plan,
-asked with none, sees the code its steps change.
+asked with none, sees the code its steps change. A claim whose
+proposition says one file or module does, or does not, import another
+states it as an import fact (`from`, `to`, `imports`), which the host
+checks against the map's import edges: a fact the edges contradict, or
+one naming no mapped file or module, rejects the answer with the edges
+the map holds.
 With a checker, `check_patch` runs the patch checker on a proposed diff, and the
 host checks every accepted recommendation that carries one. A request that
 returns no model output is retried, a target that fails for good gives way
