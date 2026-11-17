@@ -257,6 +257,31 @@ fn a_question_shows_the_source_its_findings_sit_in() {
     assert!(!plan.contains("Source of the cited findings"));
 }
 
+#[test]
+fn a_question_whose_source_cannot_be_attached_is_unanswered_and_the_review_goes_on() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    // Changed after the scan, so its findings' source no longer matches the map.
+    std::fs::write(fixture.repo.join("app/core/audit.py"), "changed = True\n").unwrap();
+    let routes = routes(&[("fake", ProviderProtocol::ChatCompletions)], 32, 8);
+    let script: Script =
+        Box::new(|step| Reply::Calls(vec![("answer_question", good_answer(step))]));
+    let Run { review, .. } = run(&fixture, &routes, script, None);
+    // Every question but the plan cites audit.py, so none of them is sent.
+    let (plan, cited) = review.questions.split_last().unwrap();
+    for question in cited {
+        assert_eq!(question.status, QuestionStatus::Unanswered);
+        assert_eq!(question.requests, 0);
+        let reason = question.reason.as_deref().unwrap_or_default();
+        assert!(
+            reason.contains("could not be built: `app/core/audit.py` changed since the scan"),
+            "{reason}"
+        );
+    }
+    // The review goes on: the plan, which attaches no source, is still asked.
+    assert_eq!(plan.kind, QuestionKind::RemediationPlan);
+    assert!(plan.requests > 0);
+}
+
 /// [`PYTHON_APP`] with `audit.py`'s findings in spans too long to attach.
 fn long_audit() -> Vec<(&'static str, String)> {
     let padding = "x".repeat(5000);

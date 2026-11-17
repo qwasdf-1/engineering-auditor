@@ -157,7 +157,7 @@ pub fn run_engineering_review(
             question.kind,
             review.stopped.is_some(),
         );
-        review.ask(question, &opening, &mut caller, &mut host, view)?;
+        review.ask(question, &opening, &mut caller, &mut host, view);
         if let Some(checkpoint) = setup.checkpoint.filter(|_| asked + 1 < questions.len()) {
             let interrupted = format!(
                 "the run was interrupted after question {} of {}",
@@ -322,32 +322,26 @@ impl Review<'_, '_> {
         caller: &mut Caller<'_>,
         host: &mut RetrievalHost<'_, '_>,
         view: &RepositoryView<'_>,
-    ) -> Result<(), String> {
+    ) {
         self.known.extend(question.evidence_ids.iter().cloned());
         host.start_question(question.kind == QuestionKind::RemediationPlan);
-        let mut user = format!("{opening}\n{}", question.markdown);
-        if let Some(source) = host.cited_source(question)? {
-            self.known.extend(source.evidence_ids);
-            user = format!("{user}\n{}", source.markdown);
-        }
-        if question.kind == QuestionKind::RemediationPlan && !self.answers.is_empty() {
-            let earlier = self
-                .answers
-                .iter()
-                .filter(|(_, answer)| question.depends_on.contains(&answer.question_id))
-                .map(|(kind, answer)| (*kind, answer))
-                .collect::<Vec<_>>();
-            let rendered = earlier_answers(&earlier, &view.source_digest)?;
-            self.known.extend(rendered.evidence_ids);
-            user = format!("{user}\n{}", rendered.markdown);
-        }
+        let (user, unbuilt) = match self.question_message(question, opening, host, view) {
+            Ok(user) => (user, None),
+            Err(error) => (
+                format!("{opening}\n{}", question.markdown),
+                Some(format!(
+                    "the question's message could not be built: {error}"
+                )),
+            ),
+        };
         let tools = self.tools(question, host);
         let mut conversation = Conversation::new(question, self.aliases.shorten(&user), tools);
         conversation.spent = caller.question_spend(&question.question_id);
         let asked = self.stopped.is_none();
-        let ending = match &self.stopped {
-            Some(reason) => Ending::Unanswered(reason.clone()),
-            None => self.converse(&mut conversation, caller, host),
+        let ending = match (&self.stopped, unbuilt) {
+            (Some(reason), _) => Ending::Unanswered(reason.clone()),
+            (None, Some(reason)) => Ending::Unanswered(reason),
+            (None, None) => self.converse(&mut conversation, caller, host),
         };
         let mut record = conversation.record();
         match ending {
@@ -364,7 +358,38 @@ impl Review<'_, '_> {
             caller.progress.question_ended(&record);
         }
         self.records.push(record);
-        Ok(())
+    }
+
+    /// The question's first message: the opening, the question, its
+    /// findings' source, and for the plan the answers it builds on. A
+    /// document that cannot be built leaves this question unanswered, not
+    /// the review stopped.
+    fn question_message(
+        &mut self,
+        question: &Question,
+        opening: &str,
+        host: &RetrievalHost<'_, '_>,
+        view: &RepositoryView<'_>,
+    ) -> Result<String, String> {
+        let mut user = format!("{opening}\n{}", question.markdown);
+        let mut shown = BTreeSet::new();
+        if let Some(source) = host.cited_source(question)? {
+            shown.extend(source.evidence_ids);
+            user = format!("{user}\n{}", source.markdown);
+        }
+        if question.kind == QuestionKind::RemediationPlan && !self.answers.is_empty() {
+            let earlier = self
+                .answers
+                .iter()
+                .filter(|(_, answer)| question.depends_on.contains(&answer.question_id))
+                .map(|(kind, answer)| (*kind, answer))
+                .collect::<Vec<_>>();
+            let rendered = earlier_answers(&earlier, &view.source_digest)?;
+            shown.extend(rendered.evidence_ids);
+            user = format!("{user}\n{}", rendered.markdown);
+        }
+        self.known.extend(shown);
+        Ok(user)
     }
 
     fn tools(&self, question: &Question, host: &RetrievalHost<'_, '_>) -> Vec<ToolSpec> {

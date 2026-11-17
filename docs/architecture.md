@@ -279,7 +279,8 @@ five minutes, a retry waits at least what a failed response's
 `Retry-After` asks (up to ten minutes), a provider's
 `min_request_interval_ms` spaces the starts of its requests in each
 review process, and a spent question or review budget leaves questions
-unanswered with the reason. A request with no model output counts against
+unanswered with the reason, as does a question whose source or earlier
+answers cannot be built, which is not sent while the review goes on. A request with no model output counts against
 the cost budget only, not the request or byte budgets. A review that
 stopped, or a run interrupted after its per-question checkpoint, resumes
 with `review run --resume`, keeping the questions answered before the stop.
