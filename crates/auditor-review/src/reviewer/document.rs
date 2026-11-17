@@ -54,7 +54,27 @@ pub(super) enum Item {
     },
 }
 
+/// Markup a source item adds around its label, IDs, and content: the
+/// bullet, bold label, and fence, counted high.
+const SOURCE_MARKUP_BYTES: usize = 24;
+
 impl Item {
+    /// The bytes a source item adds to a rendered document, counted high;
+    /// none for any other item.
+    pub(super) fn source_bytes(&self) -> Option<usize> {
+        let Self::Source {
+            label,
+            language,
+            content,
+            ids,
+        } = self
+        else {
+            return None;
+        };
+        let ids = ids.iter().map(|id| id.len() + 2).sum::<usize>();
+        Some(label.len() + ids + language.len() + content.len() + SOURCE_MARKUP_BYTES)
+    }
+
     pub(super) fn text(label: impl Into<String>, value: impl Into<String>) -> Self {
         Self::Text {
             label: label.into(),
@@ -272,6 +292,31 @@ mod tests {
             .evidence_ids
             .iter()
             .all(|id| small.markdown.contains(id.as_str())));
+    }
+
+    #[test]
+    fn a_source_item_adds_no_more_than_its_counted_bytes() {
+        let source = Item::Source {
+            label: "Part of record (lines 1-40), lines 3-9 of app/core/audit.py".to_string(),
+            language: "python".to_string(),
+            content: "def record(event, value):\r\n    pass".to_string(),
+            ids: vec![
+                "source-span:app/core/audit.py#L3-L9".to_string(),
+                "finding:a".to_string(),
+            ],
+        };
+        let bytes = source.source_bytes().unwrap();
+        let summary = || Item::text("Summary", "one span");
+        let rendered = |items| {
+            BoundedDocument::new("Test", vec![Section::new("Source", items)])
+                .render(64 * 1024, "sha256:test")
+                .unwrap()
+                .markdown
+                .len()
+        };
+        let added = rendered(vec![summary(), source]) - rendered(vec![summary()]);
+        assert!(added <= bytes, "{added} > {bytes}");
+        assert!(summary().source_bytes().is_none());
     }
 
     #[test]

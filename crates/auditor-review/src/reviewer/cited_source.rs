@@ -14,9 +14,10 @@ use super::view::{severity_rank, ReportFinding};
 /// Source one span may add; a longer symbol gives the lines around each
 /// finding instead.
 const SYMBOL_BYTES: usize = 4 * 1024;
-/// Source one question may carry.
+/// Source one question may carry, each span counted with its label and
+/// IDs.
 const QUESTION_SOURCE_BYTES: usize = 16 * 1024;
-/// Room for the headings, labels, and names around the source.
+/// Room for the headings and the spans named instead of attached.
 const FRAME_BYTES: usize = 4 * 1024;
 /// Lines either side of a finding outside any function or type, or inside
 /// one too long to attach.
@@ -60,14 +61,17 @@ impl RetrievalHost<'_, '_> {
         let mut named = Vec::new();
         let mut budget = QUESTION_SOURCE_BYTES;
         for span in spans {
-            let bytes = span.content.len();
-            if bytes <= SYMBOL_BYTES.min(budget) {
-                budget -= bytes;
-                items.push(self.source_item(span));
-            } else if bytes > SYMBOL_BYTES {
+            if span.content.len() > SYMBOL_BYTES {
                 named.push(self.named_row(&span, "too long to attach"));
-            } else {
-                named.push(self.named_row(&span, "past this question's source budget"));
+                continue;
+            }
+            let item = self.source_item(&span);
+            match item.source_bytes().filter(|bytes| *bytes <= budget) {
+                Some(bytes) => {
+                    budget -= bytes;
+                    items.push(item);
+                }
+                None => named.push(self.named_row(&span, "past this question's source budget")),
             }
         }
         if !named.is_empty() {
@@ -155,18 +159,18 @@ impl RetrievalHost<'_, '_> {
         })
     }
 
-    fn source_item(&self, span: Span) -> Item {
+    fn source_item(&self, span: &Span) -> Item {
         let mapped = self.view.file(span.file);
-        let label = format!("{}, {}", self.subject(&span), lines_of(&span, &mapped.path));
+        let label = format!("{}, {}", self.subject(span), lines_of(span, &mapped.path));
         let mut ids = vec![format!(
             "source-span:{}#L{}-L{}",
             mapped.path, span.start, span.end
         )];
-        ids.extend(span.findings);
+        ids.extend(span.findings.iter().cloned());
         Item::Source {
             label,
             language: mapped.language.clone(),
-            content: span.content,
+            content: span.content.clone(),
             ids,
         }
     }
