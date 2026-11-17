@@ -60,7 +60,8 @@
         "privacy_class": {
           "enum": ["hosted_commercial", "hosted_anonymous", "operator_configured"]
         },
-        "stream": { "type": "boolean" }
+        "stream": { "type": "boolean" },
+        "min_request_interval_ms": { "type": ["integer", "null"], "minimum": 0 }
       }
     },
     "target": {

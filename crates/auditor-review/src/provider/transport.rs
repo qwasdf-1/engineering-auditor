@@ -4,7 +4,7 @@ use std::sync::OnceLock;
 use std::time::Duration;
 
 use reqwest::blocking::{Client, Request};
-use reqwest::header::{HeaderName, HeaderValue};
+use reqwest::header::{HeaderName, HeaderValue, RETRY_AFTER};
 use reqwest::{redirect, Method};
 
 pub struct TransportRequest {
@@ -31,6 +31,9 @@ pub enum TransportHeader {
 pub struct TransportResponse {
     pub status: u16,
     pub body: Vec<u8>,
+    /// How long the provider asked to be left alone (`Retry-After` in
+    /// seconds); none when it did not say, or said it as a date.
+    pub retry_after: Option<Duration>,
 }
 
 pub trait Transport: Send + Sync {
@@ -40,7 +43,8 @@ pub trait Transport: Send + Sync {
         Err("transport does not support model discovery".to_string())
     }
 
-    /// Waits before a request is retried after a failure with no model output.
+    /// Waits before a request is retried after a failure with no model
+    /// output, or before one the provider's request interval holds back.
     fn wait(&self, delay: Duration) {
         std::thread::sleep(delay);
     }
@@ -83,8 +87,17 @@ impl HttpTransport {
             format!("HTTP transport request {kind}: {}", error.without_url())
         })?;
         let status = response.status().as_u16();
+        let retry_after = response
+            .headers()
+            .get(RETRY_AFTER)
+            .and_then(|value| value.to_str().ok())
+            .and_then(retry_after_seconds);
         let body = read_bounded_body(&mut response, max_response_bytes)?;
-        Ok(TransportResponse { status, body })
+        Ok(TransportResponse {
+            status,
+            body,
+            retry_after,
+        })
     }
 
     fn build_request(
@@ -154,6 +167,11 @@ fn read_bounded_body(reader: &mut impl Read, max_response_bytes: usize) -> Resul
         ));
     }
     Ok(body)
+}
+
+/// A `Retry-After` value in delay seconds.
+fn retry_after_seconds(value: &str) -> Option<Duration> {
+    value.trim().parse().ok().map(Duration::from_secs)
 }
 
 fn resolve_header(header: TransportHeader) -> Result<(HeaderName, HeaderValue), String> {
@@ -256,5 +274,11 @@ mod tests {
             .err()
             .unwrap();
         assert!(error.contains("response budget must be positive"));
+    }
+
+    #[test]
+    fn retry_after_is_read_in_seconds_and_a_date_is_ignored() {
+        assert_eq!(retry_after_seconds(" 30 "), Some(Duration::from_secs(30)));
+        assert_eq!(retry_after_seconds("Wed, 21 Oct 2026 07:28:00 GMT"), None);
     }
 }

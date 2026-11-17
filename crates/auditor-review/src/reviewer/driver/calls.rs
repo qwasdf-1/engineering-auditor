@@ -1,12 +1,13 @@
 //! Provider calls for one review: the route's targets in order, a request
 //! retried while the provider returned no model output, the next target
 //! when one fails for good, an outage on the last target waited out (a
-//! gateway timeout only retried twice), and the review and question
-//! budgets.
+//! gateway timeout only retried twice), each provider's requests spaced by
+//! its interval, and the review and question budgets.
 
-use std::time::Instant;
+use std::collections::BTreeMap;
+use std::time::{Duration, Instant};
 
-use crate::provider::retry::{no_model_output_retry_delay, retries_allowed, target_retries};
+use crate::provider::retry::{pacing_wait, retries_allowed, retry_delay, target_retries};
 use crate::{
     BuiltinAdapter, CallDispatch, HostedConsent, NativeToolTurn, ProviderConfig, ProviderFailure,
     ProviderFailureClass, ProviderRequest, ProviderResponse, ReviewRoutesV2, RouteBudget,
@@ -32,6 +33,9 @@ pub(super) struct Caller<'a> {
     pub(super) calls: Vec<ReviewCall>,
     /// What the review's request and byte budgets count.
     counted: Counted,
+    /// When the last request to each provider started, for its
+    /// [`ProviderConfig::min_request_interval_ms`].
+    last_sent: BTreeMap<String, Instant>,
     pub(super) progress: Progress<'a>,
 }
 
@@ -98,6 +102,7 @@ impl<'a> Caller<'a> {
             spend: Spend::default(),
             calls: Vec::new(),
             counted: Counted::default(),
+            last_sent: BTreeMap::new(),
             progress: Progress::new(setup.progress),
         })
     }
@@ -208,9 +213,10 @@ impl<'a> Caller<'a> {
         // The retries the last failure allows.
         let mut allowed = retries;
         let mut last_failure = String::new();
+        let mut retry_after = None;
         for retry in 0..=retries {
             if retry > 0 {
-                let delay = no_model_output_retry_delay(retry - 1);
+                let delay = retry_delay(retry - 1, retry_after);
                 let request = &attempt.request.request_id;
                 self.progress
                     .retry(request, &last_failure, (retry, allowed), delay);
@@ -242,6 +248,7 @@ impl<'a> Caller<'a> {
                 target.provider_id, target.model, failure.class, failure.message
             );
             allowed = retries_allowed(&failure, retries);
+            retry_after = failure.retry_after();
             if retry >= allowed {
                 break;
             }
@@ -249,15 +256,25 @@ impl<'a> Caller<'a> {
         Err(last_failure)
     }
 
-    /// Sends the request once, reporting it when it was slow.
+    /// Sends the request once, no sooner after the provider's last than
+    /// its interval allows, reporting it when it was slow.
     fn send(
-        &self,
+        &mut self,
         attempt: &Attempt<'_>,
         provider: &ProviderConfig,
     ) -> Result<ProviderResponse, ProviderFailure> {
         let target = attempt.target;
+        if let (Some(interval), Some(last)) = (
+            provider.min_request_interval_ms,
+            self.last_sent.get(&provider.id),
+        ) {
+            if let Some(wait) = pacing_wait(Duration::from_millis(interval), last.elapsed()) {
+                self.transport.wait(wait);
+            }
+        }
         let adapter = BuiltinAdapter::new(provider, self.transport, self.consent);
         let started = Instant::now();
+        self.last_sent.insert(provider.id.clone(), started);
         let result = adapter.execute_dispatched(
             &target.model,
             attempt.request,

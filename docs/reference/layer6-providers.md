@@ -76,6 +76,13 @@ Specific nested request, schema, grammar, or unsupported-capability evidence
 takes precedence over generic outer `upstream` wording; only a genuine
 availability failure is retryable.
 
+A failed response's `Retry-After` header, in seconds, sets the least wait
+before its retry (honored up to ten minutes; a date is ignored). A provider
+entry's optional `min_request_interval_ms` is the least time between the
+starts of two requests to it. Each review process keeps it alone, so for a
+requests-per-minute cap shared by `n` reviews running at once it is about
+`60_000 * n / cap`.
+
 ## Consent And Egress
 
 Hosted commercial/operator routes require `--allow-hosted-review`. Anonymous

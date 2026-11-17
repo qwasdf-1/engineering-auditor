@@ -20,6 +20,9 @@ const TIMEOUT_RETRIES: u8 = 2;
 const NO_MODEL_OUTPUT_RETRY_BASE_DELAY_MILLIS: u64 = 15_000;
 const NO_MODEL_OUTPUT_RETRY_MAX_DELAY_MILLIS: u64 = 120_000;
 const OUTAGE_RESEND_DELAY_MILLIS: u64 = 300_000;
+/// The longest `Retry-After` honored: a provider asking for more is waited
+/// out by the resends instead.
+const MAX_RETRY_AFTER_MILLIS: u64 = 600_000;
 
 /// The retries of a request on a target; the last target, which has no
 /// target after it, also waits out an outage.
@@ -37,8 +40,23 @@ pub(crate) fn retries_allowed(failure: &ProviderFailure, retries: u8) -> u8 {
     }
 }
 
+/// The wait before retry `retry_number` (0-based) of a request: the
+/// backoff, or longer when the provider asked for longer.
+pub(crate) fn retry_delay(retry_number: u8, retry_after: Option<Duration>) -> Duration {
+    let asked = retry_after.map_or(Duration::ZERO, |asked| {
+        asked.min(Duration::from_millis(MAX_RETRY_AFTER_MILLIS))
+    });
+    no_model_output_retry_delay(retry_number).max(asked)
+}
+
+/// What is left of `interval` since the last request started `elapsed`
+/// ago; none when it has passed.
+pub(crate) fn pacing_wait(interval: Duration, elapsed: Duration) -> Option<Duration> {
+    interval.checked_sub(elapsed).filter(|left| !left.is_zero())
+}
+
 /// The wait before retry `retry_number` (0-based) of a request.
-pub(crate) fn no_model_output_retry_delay(retry_number: u8) -> Duration {
+fn no_model_output_retry_delay(retry_number: u8) -> Duration {
     if retry_number >= MAX_NO_MODEL_OUTPUT_RETRIES {
         return Duration::from_millis(OUTAGE_RESEND_DELAY_MILLIS);
     }
@@ -61,6 +79,23 @@ mod tests {
             .collect::<Vec<_>>();
         assert_eq!(delays, [15, 30, 60, 120, 300, 300, 300, 300, 300, 300]);
         assert_eq!(no_model_output_retry_delay(u8::MAX).as_secs(), 300);
+    }
+
+    #[test]
+    fn a_longer_retry_after_outranks_the_backoff_up_to_ten_minutes() {
+        let secs = Duration::from_secs;
+        assert_eq!(retry_delay(0, None), secs(15));
+        assert_eq!(retry_delay(0, Some(secs(5))), secs(15));
+        assert_eq!(retry_delay(0, Some(secs(90))), secs(90));
+        assert_eq!(retry_delay(4, Some(secs(3_600))), secs(600));
+    }
+
+    #[test]
+    fn pacing_waits_out_what_is_left_of_the_interval() {
+        let millis = Duration::from_millis;
+        assert_eq!(pacing_wait(millis(1_500), millis(400)), Some(millis(1_100)));
+        assert_eq!(pacing_wait(millis(1_500), millis(1_500)), None);
+        assert_eq!(pacing_wait(millis(1_500), millis(9_000)), None);
     }
 
     #[test]

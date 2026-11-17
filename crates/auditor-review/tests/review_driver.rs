@@ -8,6 +8,7 @@ mod fixture;
 mod scripted;
 
 use std::sync::Mutex;
+use std::time::Duration;
 
 use auditor_review::{
     run_engineering_review, CheckRequester, CostClass, EngineeringReview, HostedConsent,
@@ -34,6 +35,7 @@ fn a_scripted_review_answers_every_question_on_each_protocol() {
             review,
             bodies,
             transcript,
+            ..
         } = run(&fixture, &routes, Box::new(reviewer), None);
         assert_eq!(
             status(&review),
@@ -484,6 +486,28 @@ fn a_reply_without_a_tool_call_is_corrected_and_the_question_goes_on() {
     );
     assert!(bodies[3].1.to_string().contains("made no tool call"));
     assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+}
+
+#[test]
+fn a_rate_limit_s_retry_after_and_the_provider_s_interval_space_out_requests() {
+    let fixture = Fixture::scan(PYTHON_APP);
+    let mut paced = routes(&[("fake", ProviderProtocol::Messages)], 32, 8);
+    paced.providers[0].min_request_interval_ms = Some(2_000);
+    let script: Script = Box::new(|step| match step.request {
+        0 => Reply::RateLimited(90),
+        _ => reviewer(step),
+    });
+    let (Run { review, waits, .. }, lines) = logged_run(&fixture, &paced, script);
+    assert_eq!(status(&review), [QuestionStatus::Answered; 4]);
+    // The retry waits the 90 s the provider asked for, not the 15 s
+    // backoff; every request after the first then waits out what is left
+    // of the interval since the one before.
+    assert!(lines[1].ends_with("retry 1 of 10 in 90 s"), "{}", lines[1]);
+    assert_eq!(waits[0], Duration::from_secs(90));
+    assert_eq!(waits.len(), review.calls.len());
+    assert!(waits[1..]
+        .iter()
+        .all(|wait| (Duration::from_millis(1_500)..=Duration::from_secs(2)).contains(wait)));
 }
 
 #[test]

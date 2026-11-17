@@ -179,6 +179,7 @@ impl auditor_review::Transport for Refusing {
         Ok(auditor_review::TransportResponse {
             status: 403,
             body: br#"{"error":{"message":"refused"}}"#.to_vec(),
+            retry_after: None,
         })
     }
 }

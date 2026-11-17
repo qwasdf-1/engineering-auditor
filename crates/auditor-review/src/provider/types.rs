@@ -126,6 +126,11 @@ pub struct ProviderConfig {
     /// sees it progress.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub stream: bool,
+    /// The least time between the starts of two requests to the provider,
+    /// kept by each review process, so a requests-per-minute cap is not
+    /// hit: about `60_000 / cap` times the reviews run at once.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min_request_interval_ms: Option<u64>,
 }
 
 struct ProviderSeed {
@@ -245,6 +250,7 @@ impl ProviderConfig {
             estimated_cost_microusd_per_request: None,
             privacy_class: seed.privacy_class,
             stream: false,
+            min_request_interval_ms: None,
         }
     }
 
@@ -569,6 +575,10 @@ pub struct ProviderFailure {
     pub retryable_without_model_output: bool,
     pub message: String,
     pub usage: Usage,
+    /// The seconds the provider asked to wait before the next request;
+    /// `u16` seconds fit in the failure's padding, within clippy's
+    /// `result_large_err` bound (longer waits are capped anyway).
+    pub(crate) retry_after_seconds: Option<u16>,
     /// Boxed so the failure stays within clippy's `result_large_err` bound.
     pub(crate) prior_assistant_output: Option<Box<str>>,
     pub(crate) assessment_mode: super::native_tool_adapter::AssessmentModeRecorded,
@@ -589,6 +599,7 @@ impl ProviderFailure {
             retryable_without_model_output,
             message: message.into(),
             usage: Usage::default(),
+            retry_after_seconds: None,
             prior_assistant_output: None,
             assessment_mode: Default::default(),
         }
@@ -602,6 +613,18 @@ impl ProviderFailure {
         self.prior_assistant_output = Some(prior_assistant_output.into_boxed_str());
         self.assessment_mode = assessment_mode;
         self
+    }
+
+    pub(crate) fn with_retry_after(mut self, retry_after: Option<std::time::Duration>) -> Self {
+        self.retry_after_seconds =
+            retry_after.map(|wait| u16::try_from(wait.as_secs()).unwrap_or(u16::MAX));
+        self
+    }
+
+    /// The wait the provider asked for before the next request.
+    pub(crate) fn retry_after(&self) -> Option<std::time::Duration> {
+        self.retry_after_seconds
+            .map(|seconds| std::time::Duration::from_secs(u64::from(seconds)))
     }
 
     pub(crate) fn with_output_usage(mut self, usage: Usage) -> Self {

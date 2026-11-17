@@ -32,6 +32,8 @@ pub enum Reply {
     Calls(Vec<(&'static str, Value)>),
     Text(&'static str),
     Status(u16),
+    /// HTTP 429 with `Retry-After` in seconds.
+    RateLimited(u64),
 }
 
 pub type Script = Box<dyn Fn(&Step<'_>) -> Reply + Send + Sync>;
@@ -46,6 +48,7 @@ pub struct FakeProvider {
 pub struct FakeState {
     pub turns: HashMap<String, usize>,
     pub bodies: Vec<(String, Value)>,
+    pub waits: Vec<std::time::Duration>,
 }
 
 impl FakeProvider {
@@ -60,10 +63,16 @@ impl FakeProvider {
     pub fn bodies(&self) -> Vec<(String, Value)> {
         self.state.lock().unwrap().bodies.clone()
     }
+
+    pub fn waits(&self) -> Vec<std::time::Duration> {
+        self.state.lock().unwrap().waits.clone()
+    }
 }
 
 impl Transport for FakeProvider {
-    fn wait(&self, _delay: std::time::Duration) {}
+    fn wait(&self, delay: std::time::Duration) {
+        self.state.lock().unwrap().waits.push(delay);
+    }
 
     fn post(&self, request: TransportRequest) -> Result<TransportResponse, String> {
         let body: Value = serde_json::from_slice(&request.body).unwrap();
@@ -104,7 +113,7 @@ impl Transport for FakeProvider {
             request: request_index,
             user: &user,
         });
-        if !matches!(reply, Reply::Status(_)) {
+        if !matches!(reply, Reply::Status(_) | Reply::RateLimited(_)) {
             state
                 .turns
                 .insert(question.question_id.as_str().to_string(), turn);
@@ -164,6 +173,14 @@ pub fn wire(protocol: ProviderProtocol, index: usize, reply: Reply) -> Transport
             return TransportResponse {
                 status,
                 body: br#"{"error":{"message":"scripted failure"}}"#.to_vec(),
+                retry_after: None,
+            }
+        }
+        Reply::RateLimited(seconds) => {
+            return TransportResponse {
+                status: 429,
+                body: br#"{"error":{"message":"scripted failure"}}"#.to_vec(),
+                retry_after: Some(std::time::Duration::from_secs(seconds)),
             }
         }
         Reply::Calls(calls) => (calls, None),
@@ -246,6 +263,7 @@ pub fn wire(protocol: ProviderProtocol, index: usize, reply: Reply) -> Transport
     TransportResponse {
         status: 200,
         body: serde_json::to_vec(&body).unwrap(),
+        retry_after: None,
     }
 }
 
@@ -451,6 +469,8 @@ pub fn routes(
 pub struct Run {
     pub review: EngineeringReview,
     pub bodies: Vec<(String, Value)>,
+    /// Every wait the driver asked the transport for.
+    pub waits: Vec<std::time::Duration>,
     pub transcript: TranscriptRecorder,
 }
 
@@ -527,6 +547,7 @@ fn traced_run(
     Ok(Run {
         review,
         bodies: provider.bodies(),
+        waits: provider.waits(),
         transcript,
     })
 }

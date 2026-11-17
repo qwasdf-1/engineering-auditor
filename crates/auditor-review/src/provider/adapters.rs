@@ -214,7 +214,8 @@ impl<'a> BuiltinAdapter<'a> {
                 model,
                 response.status,
                 parsed_value.as_ref().ok(),
-            );
+            )
+            .with_retry_after(response.retry_after);
             call.finish_failure(
                 &failure,
                 TranscriptFailureDetails::default().with_transport_response(transcript_response),
