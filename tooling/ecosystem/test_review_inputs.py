@@ -219,6 +219,8 @@ class QualifyTest(unittest.TestCase):
     def test_the_decision_waits_for_a_threshold_then_compares_with_it(self):
         for repository in ["one", "two"]:
             self.record(repository, "review-1.json", "review-2.json", "usefulness-1.json")
+        bar = self.corpus["usefulness"]
+        bar["threshold"] = bar["beyond_report_threshold"] = None
         self.assertEqual(self.run_qualify(), 1)
         summary = self.summary()
         self.assertTrue(summary["gates_passed_everywhere"])
@@ -227,7 +229,6 @@ class QualifyTest(unittest.TestCase):
             "beyond_report_share": 0.25, "threshold": None, "beyond_report_threshold": None})
         self.assertEqual(summary["decision"], "gates pass; the usefulness bar is not set yet")
         self.assertTrue((self.root / "one" / "qualification-mistral_free.json").exists())
-        bar = self.corpus["usefulness"]
         bar["threshold"] = 0.7
         self.assertEqual(self.run_qualify(), 1)
         self.assertEqual(self.summary()["decision"], "gates pass; the usefulness bar is not set yet")

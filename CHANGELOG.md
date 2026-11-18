@@ -202,8 +202,9 @@
   Mistral's API (`mistral_glm53_flash_routes_v2.json`, the corpus's
   `mistral_glm` route set) for tuning and the corpus, or on NVIDIA NIM
   (`nvidia_nim_glm53_flash_routes_v2.json`). Kimi K3.1 Pro on NIM
-  (`nvidia_nim_kimi_k31_pro_routes_v2.json`) is the tuning route while
-  those GLM routes do not answer.
+  (`nvidia_nim_kimi_k31_pro_routes_v2.json`, the corpus's `nvidia_kimi`
+  route set) is the tuning route while those GLM routes do not answer. The
+  corpus binds `nvidia_glm` by its current digest.
 - A rejected answer's reasons say how to fix it: which rule a claim's
   status breaks and the status that fits, the question's subject IDs when
   `scope_ids` names a file the reviewer read, what a numeric benefit lacks,

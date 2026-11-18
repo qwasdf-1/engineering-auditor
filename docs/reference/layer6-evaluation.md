@@ -20,7 +20,8 @@ qualifies on:
   must use, each by the SHA-256 of its file;
 - `route_sets`: the routes that may qualify, by file and digest
   (`mistral_glm`, Mistral's paid GLM 5.3 Flash streamed; `nvidia_glm`,
-  the same model free on NVIDIA NIM; `mistral_free`; `openrouter_free`; the
+  the same model free on NVIDIA NIM; `nvidia_kimi`, Kimi K3.1 Pro free on
+  NIM; `mistral_free`; `openrouter_free`; the
   anonymous OpenCode route is closed by provider policy, and its free
   models refuse API clients once a small quota is spent);
 - `run_plan`: runs per repository (two), the history window, and the
