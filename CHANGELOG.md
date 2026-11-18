@@ -439,6 +439,10 @@
   switch of its own, so libuv's `uv__getaddrinfo_translate_error`, one
   switch with 16 guarded arms, counted 17 returns; it now leaves. jq and
   zlib are unchanged.
+- Dependencies: rustls 0.23.46, rustls-webpki 0.103.17, webpki-roots 1.0.12,
+  tokio 1.54.1, and crossbeam-epoch 0.9.21, for their published security
+  advisories. quinn-proto and quinn-udp, which only the lockfile lists, move
+  to 0.11.19 and 0.5.16.
 
 ### Removed
 
