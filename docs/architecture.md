@@ -198,8 +198,9 @@ than a third of the files). From it, the orientation pack renders shape,
 module structure and cycles, hotspots, finding distribution, and coverage
 within 24 KiB, and the retrieval tools (`read_source`, `search_text`,
 `symbol_info`, `search_symbols`, `findings_in`, `module_overview`) answer tool calls within
-a review's call and byte budget, of which one question may take a quarter
-of the calls. Every row cites an evidence ID (`finding:`, `file:`,
+a review's call and byte budget (128 calls, 1 MiB). Each question may take
+an equal part of what the review has left, at most 16 calls, so early
+questions cannot spend what later ones need. Every row cites an evidence ID (`finding:`, `file:`,
 `symbol:`, `module:`, `edge:`, `entry:`, `source-span:`, and others) that
 only a shown row issues, and source reads re-check the file's hash. A
 read too long for one result returns the lines from its first that fit,

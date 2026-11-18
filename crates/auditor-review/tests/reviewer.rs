@@ -297,31 +297,44 @@ fn the_retrieval_budget_bounds_calls_and_result_size() {
     let mut brief = ReviewBrief::general();
     brief.budgets.max_lookup_requests = Some(8);
     let budget = RetrievalBudget::default().tightened_by(Some(&brief));
-    assert_eq!((budget.max_calls, budget.question_calls()), (8, 2));
+    assert_eq!((budget.max_calls, budget.question_calls()), (8, 8));
     let mut host = RetrievalHost::new(&view, &fixture.repo, budget).unwrap();
     let search = || call("s", "search_symbols", json!({"query": "e"}));
-    for question in 0..3 {
-        host.start_question(false);
-        for _ in 0..2 {
+    // Four questions share eight calls; what the first leaves passes on.
+    for (questions_left, used, share) in [(4, 1, 2), (3, 3, 3), (2, 2, 2), (1, 2, 2)] {
+        host.start_question(questions_left);
+        for _ in 0..used {
             assert!(!result_text(&host.answer(&search())).starts_with("# Tool error"));
         }
-        let refused = result_text(&host.answer(&search())).to_string();
-        let spent = if question < 2 {
-            "this question's 2 retrieval calls are spent"
-        } else {
-            "kept for the remediation plan"
-        };
-        assert!(refused.contains(spent), "{refused}");
-    }
-    host.start_question(true);
-    for _ in 0..2 {
-        assert!(!result_text(&host.answer(&search())).starts_with("# Tool error"));
+        if used == share && questions_left > 1 {
+            let refused = result_text(&host.answer(&search())).to_string();
+            let spent = format!("this question's {share} retrieval calls are spent");
+            assert!(refused.contains(&spent), "{refused}");
+        }
     }
     let spent = result_text(&host.answer(&search())).to_string();
     assert!(
         spent.contains("the review's 8 retrieval calls are spent"),
         "{spent}"
     );
+
+    // Result bytes are shared the same way.
+    let shared = RetrievalBudget {
+        max_calls: 8,
+        max_result_bytes: 600,
+        max_total_bytes: 1_600,
+    };
+    let mut host = RetrievalHost::new(&view, &fixture.repo, shared).unwrap();
+    host.start_question(2);
+    let read = || call("r", "read_source", json!({"path": "app/store/db.py"}));
+    assert!(!result_text(&host.answer(&read())).starts_with("# Tool error"));
+    let refused = result_text(&host.answer(&read())).to_string();
+    assert!(
+        refused.contains("this question's retrieval bytes are spent"),
+        "{refused}"
+    );
+    host.start_question(1);
+    assert!(!result_text(&host.answer(&read())).starts_with("# Tool error"));
 
     let tight = RetrievalBudget {
         max_calls: 8,

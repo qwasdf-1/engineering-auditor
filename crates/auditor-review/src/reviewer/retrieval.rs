@@ -24,16 +24,17 @@ pub const RETRIEVAL_TOOL_NAMES: [&str; 7] = [
     "history",
 ];
 
-const DEFAULT_CALLS: usize = 64;
+/// Room for every question of a full review to take its calls.
+const DEFAULT_CALLS: usize = 128;
 const DEFAULT_RESULT_BYTES: usize = 8 * 1024;
 /// A reply's calls run until their results reach this, so a reply asking
 /// for many reads does not grow every later request by all of them; the
 /// calls after are not run and cost nothing.
 const REPLY_RESULT_BYTES: usize = 16 * 1024;
-const DEFAULT_TOTAL_BYTES: usize = 512 * 1024;
-/// One question may take this share of the review's calls, and the
-/// questions before the plan, which is asked last, leave one share for it.
-const QUESTION_SHARE: usize = 4;
+/// Every default call at its full result size.
+const DEFAULT_TOTAL_BYTES: usize = DEFAULT_CALLS * DEFAULT_RESULT_BYTES;
+/// The most calls one question may make.
+const QUESTION_CALLS: usize = 16;
 /// Below this, a result has no room for more than its heading.
 const MINIMUM_RESULT_BYTES: usize = 512;
 
@@ -57,9 +58,9 @@ impl Default for RetrievalBudget {
 }
 
 impl RetrievalBudget {
-    /// The calls one question may make: a quarter of the review's.
+    /// The most calls one question may make.
     pub fn question_calls(&self) -> usize {
-        (self.max_calls / QUESTION_SHARE).max(1)
+        QUESTION_CALLS.min(self.max_calls)
     }
 
     /// The brief's lookup-request and context-byte limits, where smaller.
@@ -235,16 +236,24 @@ pub(super) struct HistoryQuery {
     pub(super) path: String,
 }
 
+/// What the current question may retrieve.
+struct Allowance {
+    calls: usize,
+    bytes: usize,
+    calls_before: usize,
+    bytes_before: usize,
+}
+
 /// Answers the reviewer's tool calls over one repository view.
 pub struct RetrievalHost<'v, 'a> {
     pub(super) view: &'v RepositoryView<'a>,
     pub(super) root: PathBuf,
     budget: RetrievalBudget,
     calls: usize,
-    question_calls: usize,
-    /// Calls the current question must leave for the plan.
-    reserved: usize,
     bytes: usize,
+    /// The current question's calls and result bytes: what it may take,
+    /// and the review's totals when it started.
+    allowance: Allowance,
     /// Result bytes of the current reply's calls.
     reply_bytes: usize,
     issued: BTreeSet<String>,
@@ -271,9 +280,13 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
                 .map_err(|error| error.to_string())?,
             budget,
             calls: 0,
-            question_calls: 0,
-            reserved: 0,
             bytes: 0,
+            allowance: Allowance {
+                calls: budget.max_calls,
+                bytes: budget.max_total_bytes,
+                calls_before: 0,
+                bytes_before: 0,
+            },
             reply_bytes: 0,
             issued: BTreeSet::new(),
             log: Vec::new(),
@@ -336,14 +349,21 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
         }
     }
 
-    /// Starts the next question's share of the calls; a question other
-    /// than the plan leaves one share for it.
-    pub fn start_question(&mut self, plan: bool) {
-        self.question_calls = 0;
-        self.reserved = if plan {
-            0
-        } else {
-            self.budget.question_calls()
+    /// Starts the next question's share of what the review has left:
+    /// an equal part for each of the `questions_left`, this one included,
+    /// so the first questions cannot spend what the later ones need.
+    /// What a question leaves passes to the ones after it.
+    pub fn start_question(&mut self, questions_left: usize) {
+        let questions_left = questions_left.max(1);
+        let calls = self.budget.max_calls.saturating_sub(self.calls);
+        let bytes = self.budget.max_total_bytes.saturating_sub(self.bytes);
+        self.allowance = Allowance {
+            calls: calls
+                .div_ceil(questions_left)
+                .min(self.budget.question_calls()),
+            bytes: bytes.div_ceil(questions_left),
+            calls_before: self.calls,
+            bytes_before: self.bytes,
         };
     }
 
@@ -362,11 +382,12 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
     }
 
     /// Continues a stopped review's retrieval: its calls stay logged, what
-    /// they returned stays citable, and every logged call counts against
-    /// the budget, so a resumed review never gets more calls than one run.
+    /// they returned stays citable, and they count against the budget as
+    /// they did when made (answered calls and every result's bytes), so a
+    /// resumed review gets the same calls as one run.
     pub(crate) fn resume(&mut self, log: &[RetrievalRecord]) {
         for record in log {
-            self.calls += 1;
+            self.calls += usize::from(record.outcome == RetrievalOutcome::Answered);
             self.bytes += record.result_bytes;
             self.issued.extend(record.evidence_ids.iter().cloned());
         }
@@ -382,24 +403,25 @@ impl<'v, 'a> RetrievalHost<'v, 'a> {
                 self.budget.max_calls
             ));
         }
-        if self.calls + self.reserved >= self.budget.max_calls {
-            return Err(format!(
-                "the review's other retrieval calls are kept for the remediation plan; {ANSWER}"
-            ));
-        }
-        if self.question_calls >= self.budget.question_calls() {
+        let allowance = &self.allowance;
+        if self.calls - allowance.calls_before >= allowance.calls {
             return Err(format!(
                 "this question's {} retrieval calls are spent; {ANSWER}",
-                self.budget.question_calls()
+                allowance.calls
             ));
         }
-        self.calls += 1;
-        self.question_calls += 1;
-        let remaining = self.budget.max_total_bytes.saturating_sub(self.bytes);
-        let limit = self.budget.max_result_bytes.min(remaining);
-        if limit < MINIMUM_RESULT_BYTES {
+        let review_bytes = self.budget.max_total_bytes.saturating_sub(self.bytes);
+        if review_bytes < MINIMUM_RESULT_BYTES {
             return Err(format!("the review's retrieval bytes are spent; {ANSWER}"));
         }
+        let question_bytes = (allowance.bytes_before + allowance.bytes).saturating_sub(self.bytes);
+        if question_bytes < MINIMUM_RESULT_BYTES {
+            return Err(format!(
+                "this question's retrieval bytes are spent; {ANSWER}"
+            ));
+        }
+        let limit = self.budget.max_result_bytes.min(question_bytes);
+        self.calls += 1;
         Ok(limit)
     }
 

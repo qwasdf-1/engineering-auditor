@@ -32,6 +32,7 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 
 use super::document::{BoundedDocument, Item, Section};
+use super::orientation::OrientationPack;
 use super::questions::QuestionKind;
 use super::retrieval::{RetrievalBudget, RetrievalHost};
 use super::view::RepositoryView;
@@ -90,6 +91,38 @@ pub struct ReviewSetup<'a> {
     pub progress: Option<&'a dyn Fn(&str)>,
 }
 
+impl Header {
+    /// A fresh run's header: its inputs' digests and the pack it showed.
+    fn new(view: &RepositoryView<'_>, setup: &ReviewSetup<'_>, pack: &OrientationPack) -> Self {
+        Self {
+            source_digest: view.source_digest.clone(),
+            template_bundle_digest: setup.templates.digest().as_str().to_string(),
+            prompt_bundle_id: setup.prompts.bundle_id.clone(),
+            routes_digest: canonical_digest(setup.routes),
+            brief_digest: setup.brief.map(canonical_digest),
+            orientation: ProjectionSummary {
+                markdown_digest: pack.audit.markdown_digest.clone(),
+                markdown_bytes: pack.audit.markdown_bytes,
+                evidence_ids: pack.evidence_ids.len(),
+                truncated: pack.truncated,
+            },
+            resumed: 0,
+        }
+    }
+}
+
+/// What every question opens with: the pack, then the brief if any.
+fn opening(
+    pack: &str,
+    brief: Option<&ReviewBrief>,
+    view: &RepositoryView<'_>,
+) -> Result<String, String> {
+    Ok(match brief {
+        Some(brief) => format!("{pack}\n{}", brief_markdown(brief, &view.source_digest)?),
+        None => pack.to_string(),
+    })
+}
+
 /// Runs the review. Setup problems (consent, routes, a pack or question
 /// that cannot be built) are errors; a provider that fails or a budget
 /// that runs out leaves questions unanswered, with the reason recorded.
@@ -105,44 +138,9 @@ pub fn run_engineering_review(
         setup.repo_root,
         RetrievalBudget::default().tightened_by(setup.brief),
     )?;
-    let opening = match setup.brief {
-        Some(brief) => format!(
-            "{}\n{}",
-            pack.markdown,
-            brief_markdown(brief, &view.source_digest)?
-        ),
-        None => pack.markdown.clone(),
-    };
-    let mut review = Review {
-        cache_scope: opening.clone(),
-        system: format!(
-            "{}\n\n{}",
-            setup.prompts.core_instruction, setup.prompts.reviewer_instruction
-        ),
-        known: pack.evidence_ids.clone(),
-        answers: Vec::new(),
-        records: Vec::new(),
-        checks: Vec::new(),
-        cache: BTreeMap::new(),
-        prior_checks: 0,
-        stopped: None,
-        aliases: Aliases::default(),
-        setup: &setup,
-    };
-    let header = Header {
-        source_digest: view.source_digest.clone(),
-        template_bundle_digest: setup.templates.digest().as_str().to_string(),
-        prompt_bundle_id: setup.prompts.bundle_id.clone(),
-        routes_digest: canonical_digest(setup.routes),
-        brief_digest: setup.brief.map(canonical_digest),
-        orientation: ProjectionSummary {
-            markdown_digest: pack.audit.markdown_digest.clone(),
-            markdown_bytes: pack.audit.markdown_bytes,
-            evidence_ids: pack.evidence_ids.len(),
-            truncated: pack.truncated,
-        },
-        resumed: 0,
-    };
+    let opening = opening(&pack.markdown, setup.brief, view)?;
+    let mut review = Review::new(&setup, &opening, &pack);
+    let header = Header::new(view, &setup, &pack);
     let (header, kept) = match setup.resume {
         Some(prior) => {
             let kept = review.resume(prior, &header, &questions, &mut caller, &mut host)?;
@@ -157,6 +155,7 @@ pub fn run_engineering_review(
             question.kind,
             review.stopped.is_some(),
         );
+        host.start_question(questions.len() - asked);
         review.ask(question, &opening, &mut caller, &mut host, view);
         if let Some(checkpoint) = setup.checkpoint.filter(|_| asked + 1 < questions.len()) {
             let interrupted = format!(
@@ -206,6 +205,28 @@ struct Review<'s, 'a> {
 enum Ending {
     Answered(Box<QuestionAnswer>, crate::RouteTarget),
     Unanswered(String),
+}
+
+impl<'s, 'a> Review<'s, 'a> {
+    /// A review that has asked nothing yet.
+    fn new(setup: &'s ReviewSetup<'a>, opening: &str, pack: &OrientationPack) -> Self {
+        Self {
+            cache_scope: opening.to_string(),
+            system: format!(
+                "{}\n\n{}",
+                setup.prompts.core_instruction, setup.prompts.reviewer_instruction
+            ),
+            known: pack.evidence_ids.clone(),
+            answers: Vec::new(),
+            records: Vec::new(),
+            checks: Vec::new(),
+            cache: BTreeMap::new(),
+            prior_checks: 0,
+            stopped: None,
+            aliases: Aliases::default(),
+            setup,
+        }
+    }
 }
 
 impl Review<'_, '_> {
@@ -324,7 +345,6 @@ impl Review<'_, '_> {
         view: &RepositoryView<'_>,
     ) {
         self.known.extend(question.evidence_ids.iter().cloned());
-        host.start_question(question.kind == QuestionKind::RemediationPlan);
         let (user, unbuilt) = match self.question_message(question, opening, host, view) {
             Ok(user) => (user, None),
             Err(error) => (

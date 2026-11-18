@@ -146,6 +146,12 @@
 
 ### Changed
 
+- A review's retrieval budget is 128 calls and 1 MiB (was 64 and 512 KiB),
+  and each question takes an equal part of what is left, at most 16 calls.
+  Before, only the remediation plan kept a share: on Kimi K3.1 Pro the
+  first three questions of pgcat, zaproxy and lychee spent the rest, and
+  the next four read no source. A resumed review counts only its answered
+  calls, as the run that made them did.
 - The repository map's edge for a Go import, or a Java wildcard import,
   reaches each file of the package that declares a name the importer uses
   through it, not the package's first file, which took the whole package's
