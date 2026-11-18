@@ -56,6 +56,12 @@ What Engineering Auditor does not do, or does only partly, as of 1.5.0.
   detectors are Tier 1 only. Ruby, Julia, and Shell get
   structural metrics only. NPath complexity is unavailable for Kotlin, Ruby,
   Julia, and Shell, and Halstead metrics for Kotlin and Shell.
+- Java `out_parameter` reports a method that writes a field of an entity it
+  is handed, such as a game engine's player whose state the engine owns
+  (`player.experienceLevel = ..`), and the visited and assignment arrays a
+  recursive helper threads through its own calls to avoid allocating per
+  call. Both are deliberate in-place updates, not results returned through
+  a parameter.
 
 ## Inputs
 
@@ -81,21 +87,22 @@ What Engineering Auditor does not do, or does only partly, as of 1.5.0.
 
 ## AI Review (Experimental)
 
-- The 16-run lifecycle qualification matrix passed once, on an OpenCode free
-  route that has since closed to EA; no route available now passes it.
-  Mistral Medium 3.5 completes reviews but answers one probe inconsistently (about a third of
-  runs answer `unknown` although the evidence is visible). Four candidate
-  rewordings of that probe were tested and rejected. OpenCode's free
-  tier refuses clients other than OpenCode, and other free routes are rate
-  limited below one evaluation matrix.
-  [`reference/layer6-evaluation.md`](reference/layer6-evaluation.md#qualification-record)
-  keeps the dated record.
-- Mode E (three blind reviewers plus comparison), the shared-root and
-  consolidation case templates, and the comparator are implemented but stay
-  in shadow until their evidence and manual approval are recorded.
-- Provider calls are synchronous. A timeout bounds each request, and
-  cancelling a review stops later stages, but cannot interrupt a request
-  already in flight.
+- No route has qualified on the rebuilt review. The corpus is being
+  recorded on Kimi K3.1 Pro on NVIDIA NIM after NIM's GLM 5.3 Flash
+  stopped answering; free tiers elsewhere are closed to API clients or
+  rate limited below one corpus run.
+  [`reference/layer6-evaluation.md`](reference/layer6-evaluation.md) keeps
+  the record.
+- Usefulness scores come from one model's pre-labels until a person, or a
+  second model checked by a person, corroborates them.
+- The question set is built before any request, so a question whose own
+  text (its wording and subjects) is over 8 KiB stops the review before it
+  starts. A question whose attached source or earlier answers cannot be
+  built is left unanswered and the review goes on.
+- The brief's documents are not shown to the reviewer, and its document
+  and lookup-hop budgets are ignored.
+- Provider calls are synchronous. A timeout bounds each request, but
+  stopping a review cannot interrupt a request already in flight.
 - Cost ceilings are exact only for routes that declare a per-request cost or
   are free. A route with unknown cost needs explicit consent and is bounded
   by call and token counts, not money.
@@ -114,9 +121,10 @@ What Engineering Auditor does not do, or does only partly, as of 1.5.0.
 - The AI review produces assessments and recommendations, never findings. It
   cannot suppress, relabel, or change deterministic results, and scans and
   gates never need it.
-- The review has no open-ended tools, arbitrary file access, open
-  conversations, hidden fallback routes, or self-modifying prompts. Its only
-  tools are EA's typed assessment, bounded symbol lookup, and `noop`.
+- The review has no open-ended tools, arbitrary file access, hidden
+  fallback routes, or self-modifying prompts. Its only tools are the
+  host's bounded retrieval tools over the mapped and tracked files, its
+  `answer_question` call, and, with patch checks, `check_patch`.
 - Static expected-output snapshots do not count as detector capability or
   donor parity. Grammar fixtures exist only where a stable parser input is
   needed.
