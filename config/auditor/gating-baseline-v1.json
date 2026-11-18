@@ -471,6 +471,33 @@
       "path": "crates/auditor-review/src/reviewer/driver/mod.rs",
       "reason": "Reviewed 2026-11-09: the file is new in the window (b2ddc9f); most of the growth is resuming a stopped review (b97e3bf, 140 net lines: the resume checks, the checkpoint, and the kept records), net of the prompt-cache split (dfca677, 120 lines out). History-dependent hotspot that surfaced only once committed; accepted under the operator-approved precedent until it leaves the 14-day window.",
       "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-52846d0b7480977d",
+      "identity": {},
+      "message": "crates/auditor-review/src/reviewer/driver/answer.rs is complex and growing (CCX=40, growth=+245 LOC).",
+      "path": "crates/auditor-review/src/reviewer/driver/answer.rs",
+      "reason": "Reviewed 2026-11-18: the file is new in the window (b2ddc9f). Its growth is held answers revised under ID aliases (78aad0a, 78 net lines), the read-code check and the unread lines' source (f4be46c, 4c3a738, 73), held answers kept revisable across outages (7b1e0be, 30), import facts (12f81dd, 29), and live tuning (546d465, 31). History-dependent hotspot; the operator approved baselining it (2026-11-18) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-045f90562f99cdaa",
+      "identity": {},
+      "message": "crates/auditor-review/src/reviewer/driver/calls.rs is complex and growing (CCX=40, growth=+117 LOC).",
+      "path": "crates/auditor-review/src/reviewer/driver/calls.rs",
+      "reason": "Reviewed 2026-11-18: the file is new in the window (b2ddc9f). Its growth is waiting out outages and resuming stopped reviews (b97e3bf, 61 net lines), progress logging (79cf698, 26), Retry-After and per-provider request spacing (99d1891, 17), and live tuning (546d465, 10). History-dependent hotspot; the operator approved baselining it (2026-11-18) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
+    },
+    {
+      "detector": "churn_complexity_hotspot",
+      "id": "EA-34a33c398102257e",
+      "identity": {},
+      "message": "tooling/ecosystem/review_inputs.py is complex and growing (CCX=41, growth=+165 LOC).",
+      "path": "tooling/ecosystem/review_inputs.py",
+      "reason": "Reviewed 2026-11-18: the growth is the qualification harness's prepare and qualify commands (2b01210, 118 net lines), continuing a label and resuming stopped runs (b97e3bf, 41), and novelty grading (22078b3, 6). History-dependent hotspot; the operator approved baselining it (2026-11-18) until it leaves the 14-day window.",
+      "title": "Growth-weighted file complexity hotspot"
     }
   ],
   "evidence_graph_schema_version": 2,
