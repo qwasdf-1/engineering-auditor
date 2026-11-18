@@ -6,7 +6,8 @@ use std::path::{Path, PathBuf};
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::finding_via::through_calls;
-use crate::systems_facts::{EffectKind, SystemEffect, SystemsIndex};
+use crate::systems_facts::{EffectKind, SystemEffect};
+use crate::systems_index::SystemsIndex;
 use crate::AuditedFile;
 
 pub(crate) fn loop_artifact_rewrite_findings(index: &SystemsIndex) -> Vec<Finding> {

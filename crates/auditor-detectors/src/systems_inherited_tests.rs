@@ -5,7 +5,7 @@ use crate::ast_scan::AstScan;
 use crate::call_graph::CallGraph;
 use crate::structure_index::StructureIndex;
 use crate::systems::{blocking_io_in_async_context_findings, loop_artifact_rewrite_findings};
-use crate::systems_facts::SystemsIndex;
+use crate::systems_index::SystemsIndex;
 use crate::{util, Language, SourceRole};
 
 fn root(name: &str) -> PathBuf {

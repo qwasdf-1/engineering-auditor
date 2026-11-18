@@ -2,8 +2,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Map, Value};
 
-use crate::graph_validation;
-
+#[path = "graph_validation.rs"]
+mod graph_validation;
 #[path = "parser_validation.rs"]
 mod validation;
 use crate::{

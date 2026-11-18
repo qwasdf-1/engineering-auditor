@@ -12,7 +12,6 @@ mod baseline_match;
 mod coverage;
 mod evidence_graph;
 mod evidence_support;
-mod graph_validation;
 mod human;
 mod json;
 mod parser;

@@ -1,8 +1,18 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::ast_scan::{self, AstScan};
-use crate::dead_code::{SymbolDef, MIN_NAME_LENGTH};
 use crate::{util, Language};
+
+pub(super) const MIN_NAME_LENGTH: usize = 4;
+
+#[derive(Clone, Debug, PartialEq)]
+pub(super) struct SymbolDef {
+    pub(super) name: String,
+    pub(super) kind: &'static str,
+    pub(super) file: String,
+    pub(super) line: usize,
+    pub(super) language: Language,
+}
 
 pub(super) fn collect_definitions(scan: AstScan<'_, '_>) -> Vec<SymbolDef> {
     let mut definitions = Vec::new();

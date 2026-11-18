@@ -6,7 +6,8 @@ use std::path::Path;
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::config::{AuditorConfig, LayeringConfig};
-use crate::systems_facts::{SystemsIndex, TopologyEdge};
+use crate::systems_facts::TopologyEdge;
+use crate::systems_index::SystemsIndex;
 
 enum Collector {
     Glob(String),

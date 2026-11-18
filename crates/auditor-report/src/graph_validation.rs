@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use serde_json::{Map, Value};
 
-use crate::parser::{required_object, required_object_field, required_string, ParsedFinding};
+use super::{required_object, required_object_field, required_string, ParsedFinding};
 
 pub(super) fn validate_graph(
     report: &Map<String, Value>,

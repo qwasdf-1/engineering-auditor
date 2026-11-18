@@ -61,13 +61,15 @@ Representative module boundaries:
 - `correctness.rs`: semantic assertion, TODO, and eval owners
 - `control_flow.rs`: separate unreachable-code and constant-condition
   constructors over the shared visitor
-- `dead_code_semantic.rs`: findings-free Rust definition/reference index;
-  `dead_code.rs`: detector-owned confidence and finding construction
+- `dead_code_semantic.rs`: findings-free Rust definition/reference index and
+  the definition record; `dead_code.rs`: detector-owned confidence and
+  finding construction
 - `security_rules.rs`: independent security capability constructors over
   semantic Python calls/assignments plus bounded exact lexical owners
 - `security_api_rules.rs`: the call-based security owners (Python callee
   text plus each language's API-identity site finder); `security_rules.rs`
-  keeps the literal and lexical owners and the shared rule metadata
+  keeps the lexical owners and the shared rule metadata, which the API and
+  literal owners import, and the dispatcher calls each owner's module
 - `security_sql.rs`, `security_crypto.rs`, `security_process.rs`: semantic Go,
   Java, and Python owners with no detector-private parser or file-read fallback.
   `security_sql_names.rs` decides whether a query's runtime values only shape
@@ -117,7 +119,8 @@ Representative module boundaries:
   `<algorithm>` package calls as collection methods);
   `algorithmic_cost.rs` and `algorithmic_cost_model.rs`: exhaustive cost
   catalog plus typed source-spanned sum/max/product expressions
-- `systems_facts.rs`: findings-free Layer 4 index boundary and typed facts;
+- `systems_facts.rs`: findings-free Layer 4 typed facts; `systems_index.rs`:
+  the index built from them, which the owners read;
   `systems_effects.rs` and `systems_effect_classification.rs`: effect extraction,
   context, receiver/value lineage, and classification; `systems_topology.rs`:
   resolved package, inheritance, re-export, cycle, completeness, and provenance

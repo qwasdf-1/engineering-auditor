@@ -451,27 +451,27 @@ fn run_correctness_owner(
             correctness::eval_in_production_findings(context.ast_scan())
         }
         DetectorOwner::HardcodedCredential => {
-            security_rules::hardcoded_credential_findings(context.ast_scan(), config)
+            security_literal_rules::hardcoded_credential_findings(context.ast_scan(), config)
         }
         DetectorOwner::UnsafeDeserialization => {
-            security_rules::unsafe_deserialization_findings(context.ast_scan(), config)
+            security_api_rules::unsafe_deserialization_findings(context.ast_scan(), config)
         }
         DetectorOwner::BindAllInterfaces => {
-            security_rules::bind_all_interfaces_findings(context.ast_scan(), config)
+            security_api_rules::bind_all_interfaces_findings(context.ast_scan(), config)
         }
         DetectorOwner::TryExceptPass => {
             security_rules::try_except_pass_findings(context.files, context.cache, context.config)
         }
         DetectorOwner::WorldWritableFile => {
-            security_rules::world_writable_file_findings(context.ast_scan(), config)
+            security_api_rules::world_writable_file_findings(context.ast_scan(), config)
         }
         DetectorOwner::HardcodedTmpDirectory => {
-            security_rules::hardcoded_tmp_directory_findings(context.ast_scan(), config)
+            security_literal_rules::hardcoded_tmp_directory_findings(context.ast_scan(), config)
         }
         DetectorOwner::FlaskDebugTrue => {
             security_rules::flask_debug_true_findings(context.files, context.cache, context.config)
         }
-        DetectorOwner::RandomForSecurity => security_rules::random_for_security_findings(
+        DetectorOwner::RandomForSecurity => security_api_rules::random_for_security_findings(
             ast_scan::AstScan::new(
                 context.files,
                 context.method,
@@ -485,16 +485,16 @@ fn run_correctness_owner(
             ),
         ),
         DetectorOwner::RequestNoCertVerify => {
-            security_rules::request_no_cert_verify_findings(context.ast_scan(), config)
+            security_api_rules::request_no_cert_verify_findings(context.ast_scan(), config)
         }
         DetectorOwner::XmlXxeVulnerable => {
-            security_rules::xml_xxe_vulnerable_findings(context.ast_scan(), config)
+            security_api_rules::xml_xxe_vulnerable_findings(context.ast_scan(), config)
         }
         DetectorOwner::SslWithBadDefaults => {
-            security_rules::ssl_with_bad_defaults_findings(context.ast_scan(), config)
+            security_api_rules::ssl_with_bad_defaults_findings(context.ast_scan(), config)
         }
         DetectorOwner::SshNoHostKeyVerification => {
-            security_rules::ssh_no_host_key_verification_findings(context.ast_scan(), config)
+            security_api_rules::ssh_no_host_key_verification_findings(context.ast_scan(), config)
         }
         _ => return None,
     })

@@ -113,6 +113,7 @@ mod systems_binding;
 mod systems_effect_classification;
 mod systems_effects;
 mod systems_facts;
+mod systems_index;
 mod systems_inherited;
 mod systems_topology;
 mod testing_quality;
@@ -286,7 +287,7 @@ struct DetectorContext<'a> {
     complexity: Option<cognitive::ComplexityIndex>,
     algorithmic: Option<algorithmic_facts::AlgorithmicIndex>,
     optimization: Option<optimization_facts::OptimizationIndex>,
-    systems: Option<systems_facts::SystemsIndex>,
+    systems: Option<systems_index::SystemsIndex>,
     structure: Option<structure_index::StructureIndex>,
     /// Built with the first index that follows calls; released with
     /// `structure`.

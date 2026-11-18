@@ -133,7 +133,7 @@ impl ScanRun<'_> {
                     Some(algorithmic_facts::AlgorithmicIndex::build(structure, graph));
             }
             if systems {
-                context.systems = Some(systems_facts::SystemsIndex::build(structure, graph));
+                context.systems = Some(systems_index::SystemsIndex::build(structure, graph));
             }
         }
     }

@@ -5,11 +5,9 @@ use std::collections::{BTreeSet, HashMap};
 use auditor_core::{Confidence, Finding, Severity};
 
 use crate::ast_scan::AstScan;
-use crate::dead_code_semantic;
+use crate::dead_code_semantic::{self, SymbolDef, MIN_NAME_LENGTH};
 use crate::util;
 use crate::{AnalysisMethod, AuditedFile, Language};
-
-pub(super) const MIN_NAME_LENGTH: usize = 4;
 
 const COMMON_NAMES: &[&str] = &[
     "run", "main", "setup", "init", "start", "stop", "get", "set", "update", "create", "delete",
@@ -22,15 +20,6 @@ const DYNAMIC_LANGUAGES: &[Language] = &[
     Language::TypeScript,
     Language::Ruby,
 ];
-
-#[derive(Clone, Debug, PartialEq)]
-pub(super) struct SymbolDef {
-    pub(super) name: String,
-    pub(super) kind: &'static str,
-    pub(super) file: String,
-    pub(super) line: usize,
-    pub(super) language: Language,
-}
 
 #[cfg(test)]
 pub(crate) fn dead_code_findings(files: &[AuditedFile], cache: &util::FileCache) -> Vec<Finding> {

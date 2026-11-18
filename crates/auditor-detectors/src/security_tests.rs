@@ -1,14 +1,15 @@
 mod tests {
     use super::*;
-    use crate::security_literal_rules::shannon_entropy;
-    use crate::security_rules::{
-        bind_all_interfaces_findings, flask_debug_true_findings,
-        hardcoded_credential_findings, hardcoded_tmp_directory_findings,
-        random_for_security_findings, request_no_cert_verify_findings,
-        ssh_no_host_key_verification_findings, ssl_with_bad_defaults_findings,
-        try_except_pass_findings, unsafe_deserialization_findings,
+    use crate::security_api_rules::{
+        bind_all_interfaces_findings, random_for_security_findings,
+        request_no_cert_verify_findings, ssh_no_host_key_verification_findings,
+        ssl_with_bad_defaults_findings, unsafe_deserialization_findings,
         world_writable_file_findings, xml_xxe_vulnerable_findings,
     };
+    use crate::security_literal_rules::{
+        hardcoded_credential_findings, hardcoded_tmp_directory_findings, shannon_entropy,
+    };
+    use crate::security_rules::{flask_debug_true_findings, try_except_pass_findings};
     use std::fs;
     use std::time::{SystemTime, UNIX_EPOCH};
 

@@ -2,15 +2,6 @@ use auditor_core::{Confidence, Finding, Severity};
 
 use crate::{util, AuditedFile, AuditorConfig};
 
-pub(crate) use crate::security_api_rules::{
-    bind_all_interfaces_findings, random_for_security_findings, request_no_cert_verify_findings,
-    ssh_no_host_key_verification_findings, ssl_with_bad_defaults_findings,
-    unsafe_deserialization_findings, world_writable_file_findings, xml_xxe_vulnerable_findings,
-};
-pub(crate) use crate::security_literal_rules::{
-    hardcoded_credential_findings, hardcoded_tmp_directory_findings,
-};
-
 #[derive(Clone, Copy)]
 pub(crate) struct Rule {
     pub(crate) id: &'static str,
