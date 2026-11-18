@@ -31,6 +31,7 @@
 | [`architecture.md`](architecture.md) | Pipeline, crates, and resource boundaries. |
 | [`project-reference.md`](project-reference.md) | Compact product and repository summary. |
 | [`current-state.md`](current-state.md) | Detailed implemented behavior. |
+| [`other-project-issues/`](other-project-issues/) | Concise, evidence-backed detector or workflow issues reported by downstream projects. |
 | [`reference/detector-architecture.md`](reference/detector-architecture.md) | How a detector is defined, registered, and tested. |
 | [`reference/detector-promotion.md`](reference/detector-promotion.md) | How a detector moves between the `full` and `gating` profiles. |
 | [`donor-policy.md`](donor-policy.md), [`reference/donor-parity-spec.md`](reference/donor-parity-spec.md), [`reference/donor-gaps.md`](reference/donor-gaps.md) | External reference tools, their licenses, and parity tests. |

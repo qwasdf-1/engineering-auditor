@@ -27,6 +27,7 @@ docs/
   architecture.md                 system design and crate responsibilities
   current-state.md                compact present-tense repo reality
   known-gaps.md                   explicit residual and unsupported behavior
+  other-project-issues/           reviewed, actionable downstream issue notes
   donor-policy.md                 donor license tiers and runtime rules
   distribution.md                 public/local repository boundary
   reference/                      current reference material
@@ -54,6 +55,9 @@ docs/
 - Present status goes in `docs/current-state.md`.
 - Known limitations and environment-blocked qualification go in
   `docs/known-gaps.md`.
+- A concise downstream report that identifies an actionable product issue
+  with reproducible evidence may go in `docs/other-project-issues/`. Do not use
+  this folder as a general issue ledger or include private project data.
 - Implementation plans go in the docs/v1/plans folder; they are excluded from the
   published repository, so maintained docs must not depend on them.
 - Issue ledgers, work registers, raw research, and historical notes are local

@@ -61,7 +61,8 @@ What Engineering Auditor does not do, or does only partly, as of 1.5.0.
   (`player.experienceLevel = ..`), and the visited and assignment arrays a
   recursive helper threads through its own calls to avoid allocating per
   call. Both are deliberate in-place updates, not results returned through
-  a parameter.
+  a parameter
+  ([report](other-project-issues/platform-constrained-parameters-and-mutations.md)).
 
 ## Inputs
 

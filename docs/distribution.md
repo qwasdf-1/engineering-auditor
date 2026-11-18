@@ -14,7 +14,9 @@ historical notes,
 donor checkouts, private integration adapters, private evaluation corpora, and
 optimizer/run output are intentionally ignored. They may exist in a developer
 worktree but must not be required to build, test, or operate the tracked
-product.
+product. The narrow `docs/other-project-issues/` section is an exception for
+reviewed, actionable downstream product reports; it is not a general issue
+ledger and must contain no private project data.
 
 The public Layer 6 boundary deliberately tracks reviewed prompt bundles,
 machine-readable public corpus manifests, and reproducible corpus generators.
