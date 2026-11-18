@@ -178,136 +178,41 @@ points, never source text. The AI review needs it.
 
 ## AI Review (Experimental)
 
-The AI review is being rebuilt (v1.6 plan): the v2 case protocol, with its
-probes, ensemble, challenge and response stages, finalization, and offline
-verification, was removed. `auditor-review` keeps the parts the new reviewer
-builds on:
+`auditor-review` holds the engineering review, rebuilt in v1.6 after the v2
+case protocol was removed. It runs only as `review run
+--experimental-reviewer` until a route qualifies on it.
 
-1. **Providers and routes.** Adapters, consent, transport, retry, and
-   transcripts, with a single-reviewer route chain and review-wide and
-   per-question budgets.
-2. **Repository map and history.** The map sidecar, checked against the
-   report and the live source, and the optional history digest.
-3. **Claims and recommendations.** Typed records that cite evidence IDs the
-   host issued, with validators that reject unknown citations.
+1. **Providers and routes** (`provider/`). Adapters for OpenAI Responses,
+   Anthropic Messages, Mistral, OpenCode, and OpenAI-compatible Chat
+   Completions, with consent, transport, retry, and transcripts. Routes name
+   the model, the credential's environment variable, privacy and cost
+   classes, a single-reviewer target chain, and review and per-question
+   budgets. Every request and response is recorded without secrets.
+2. **Inputs** (`repository_map.rs`, `history.rs`, `brief.rs`). The map
+   sidecar, checked against the report and the live source; the optional
+   history digest (`review history`); the operator brief.
+3. **Records** (`case_review/`). Claims and recommendations that cite
+   evidence IDs the host issued, with validators that reject unknown
+   citations.
+4. **The reviewer** (`reviewer/`). `RepositoryView` joins the report with the
+   map and divides the repository into modules; the orientation pack and
+   the retrieval tools render it under budget, each row citing an evidence
+   ID only a shown row issues. `questions/` builds the questions from
+   checked-in templates and triggers and checks each answer. `driver/` asks
+   them one conversation each over the route, held to their checks, and
+   writes the review record (`contracts/engineering-review-v1.schema.json`);
+   a stopped review resumes from it. `qualification/` checks recorded
+   reviews offline (`review qualify`) and writes the usefulness sheet
+   (`review rubric`).
+5. **Patch checks** (`auditor-scan`). `review check-patch` applies a
+   recommendation's diff to a scratch copy, re-scans it, and runs the
+   brief's test command.
 
-The new reviewer is in `reviewer/`, run by `review run
---experimental-reviewer` until a route qualifies on it. `RepositoryView` joins the report's findings with the map and
-divides the repository into modules (directories, split while one holds more
-than a third of the files). From it, the orientation pack renders shape,
-module structure and cycles, hotspots, finding distribution, and coverage
-within 24 KiB, and the retrieval tools (`read_source`, `search_text`,
-`symbol_info`, `search_symbols`, `findings_in`, `module_overview`) answer tool calls within
-a review's call and byte budget (128 calls, 1 MiB). Each question may take
-an equal part of what the review has left, at most 16 calls, so early
-questions cannot spend what later ones need. Every row cites an evidence ID (`finding:`, `file:`,
-`symbol:`, `module:`, `edge:`, `entry:`, `source-span:`, and others) that
-only a shown row issues, and source reads re-check the file's hash. A
-read too long for one result returns the lines from its first that fit,
-with the line the rest continues at; its source span covers only those.
-`search_text` finds a plain text in the files `git ls-files` lists (the
-mapped files outside a work tree), up to 50 lines. A line in a mapped file
-cites a source span, read through the hash check; a line in a file the map
-leaves out, such as a Dockerfile, is shown as context only, without an ID,
-since nothing in the review's inputs could confirm it once the checkout is
-gone.
-
-Two commands feed the reviewer. `review history` writes a history digest:
-per-file commits, growth, and co-change partners over a window of `HEAD`'s
-first-parent line, so a review can rank change hotspots and coupling no
-import shows after the clone is gone. With a digest of the repository's
-`HEAD`, the pack adds those rankings, and a seventh tool, `history`, answers
-for one file (`history:` and `co-change:` IDs). `review check-patch` judges
-a recommendation's patch in `auditor-scan`: it applies the diff to a scratch
-copy, re-scans it against a scan of an unpatched copy, and runs the brief's
-test command in a cleared environment. The verdict is verified only when the
-cited findings are gone, none is added, and the tests pass.
-
-Questions come from checked-in templates
-(`config/auditor/review-question-templates-v1.json`: wording, limits, claim
-slots, recommendation families) and triggers over the same view: the top
-production files of each hotspot ranking, symbols whose findings come from
-two or more detectors, module cycles and structure findings, and always,
-last, a remediation plan that depends on the other questions. A question
-renders its subjects with evidence IDs, and `Question::check_answer` holds
-an answer to it: the claim and recommendation validators within the
-question's slots, families, and scope, then the kind's shape (every subject
-cited, rankings complete, a shared cause explaining two or more findings,
-every plan step resolving one). The hotspot and plan questions also offer
-`lifecycle_reownership` (repeated work moved to a wider owner) under the v2
-lifecycle case's limits, so that case needs no question of its own.
-
-The driver asks the questions in order, one conversation each, over the
-route's provider chain. A conversation opens with the pack, the operator's
-brief, and the question; the plan also sees the earlier answers, with their
-claim IDs, so its steps can rest on them. The reviewer reads with the
-retrieval tools (`findings_in` shows each finding's evidence values) and
-answers with one `answer_question` call: claims and recommendations named by
-refs of its own, which the host turns into content-derived IDs before
-`check_answer`. A rejected answer goes back with its reasons, naming the
-reviewer's refs, and is held: a revision sends only the claims and
-recommendations it replaces or adds, and the refs it drops. A question's
-last two requests offer only the answer tool, so a reviewer that reads
-until its budget runs out still answers. What the reviewer sees names
-hash IDs (files, symbols, findings, cases, claims, recommendations) by
-short aliases such as `file:7`, numbered per kind in the order the review
-first shows them, so repeated openings stay identical for prompt caching;
-the host expands them before any check, and the record keeps the table.
-Every request carries the shared pack and brief as its cache scope, so a
-provider that routes caches by key (Mistral) keeps one cache for the
-review, and a read repeated within a question gets a pointer to its
-earlier result. A claim may cite a source span narrowed to lines inside
-one a read returned. A recommendation must have seen the code it changes:
-each finding it resolves that has a line must lie in a source span the
-review has shown, by a read or in a question, or the answer is rejected
-naming the unread lines. Each question but the plan comes with the
-source its findings sit in, most severe first: the enclosing function or
-type, or ten lines either side of a finding outside one or inside one over
-4 KiB, up to 4 KiB a span and 16 KiB a question counting each span's
-label and IDs; a span over either limit is named, so the reviewer reads the lines it needs. An answer rejected for
-unread lines brings their source the same way, which is how the plan,
-asked with none, sees the code its steps change. A claim whose
-proposition says one file or module does, or does not, import another
-states it as an import fact (`from`, `to`, `imports`), which the host
-checks against the map's import edges: a fact the edges contradict, or
-one naming no mapped file or module, rejects the answer with the edges
-the map holds.
-With a checker, `check_patch` runs the patch checker on a proposed diff, and the
-host checks every accepted recommendation that carries one. A request that
-returns no model output is retried, a target that fails for good gives way
-to the next, an outage on the last target is waited out with resends every
-five minutes, a retry waits at least what a failed response's
-`Retry-After` asks (up to ten minutes), a provider's
-`min_request_interval_ms` spaces the starts of its requests in each
-review process, and a spent question or review budget leaves questions
-unanswered with the reason, as does a question whose source or earlier
-answers cannot be built, which is not sent while the review goes on. A request with no model output counts against
-the cost budget only, not the request or byte budgets. A review that
-stopped, or a run interrupted after its per-question checkpoint, resumes
-with `review run --resume`, keeping the questions answered before the stop.
-The review record
-(`contracts/engineering-review-v1.schema.json`) holds each answer, every
-provider call and retrieval, the checks, and what the review spent.
-
-`reviewer/qualification/` checks recorded reviews offline, from the report,
-map, and history alone (`review qualify`). Each run must be bound to those
-inputs and to its routes and brief, answer every question, pass its answer
-checks again with every citation resolving in the inputs, contradict no
-measured value it cites, carry the host's verdict on every accepted patch,
-and add up to its recorded spend within every budget. Two runs must agree on
-the top hotspots and plan steps. `review rubric` writes the usefulness sheet
-a person, or a second model checked by a person, scores
-([`layer6-evaluation.md`](reference/layer6-evaluation.md)).
-
-Providers (OpenAI Responses, Anthropic Messages, Mistral, OpenCode, and
-OpenAI-compatible Chat Completions) are configured by routes that name the
-model, the credential's environment variable, privacy and cost classes, and
-hard limits. Every request and response is recorded without secrets.
-[`layer6-llm-review.md`](reference/layer6-llm-review.md),
-[`layer6-providers.md`](reference/layer6-providers.md), and
-[`layer6-evaluation.md`](reference/layer6-evaluation.md) describe the
-provider boundary, the removed v2 protocol (kept for reference until the
-new path ships), and how a route qualifies on the rebuilt review.
+[`layer6-llm-review.md`](reference/layer6-llm-review.md) describes the
+review's behavior, [`layer6-providers.md`](reference/layer6-providers.md)
+the provider boundary, and
+[`layer6-evaluation.md`](reference/layer6-evaluation.md) how a route
+qualifies.
 
 ## Tests
 

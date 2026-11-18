@@ -94,22 +94,25 @@ of 29 each).
 
 ## AI Review (Experimental)
 
-- **Implemented.** The full staged review described in
-  [`architecture.md`](architecture.md#ai-review-experimental): case planning,
-  bounded evidence packets, deterministic probes, single-reviewer review,
-  independent challenge and response, host-owned finalization, offline
-  verification, report-last publication, dispositions, and transcripts.
-  Mode E (three blind reviewers and a structural comparison), the shared-root
-  and consolidation templates, and portfolio ordering are implemented and in
-  shadow.
+- **Implemented.** The rebuilt review
+  ([`layer6-llm-review.md`](reference/layer6-llm-review.md)), run by
+  `review run --experimental-reviewer`. It has an orientation pack,
+  retrieval tools over the map and the tracked files, and up to eight
+  questions from checked-in templates: hotspots, shared root causes,
+  architecture, and a remediation plan. Answers are checked for citations,
+  shape, read code, and import facts. It adds optional patch checks, a
+  history digest, resume, and offline qualification (`review qualify`,
+  `review rubric`). The v2 case protocol, Mode E, and the dispositions
+  ledger were removed.
 - **Providers.** OpenAI Responses, Anthropic Messages, Mistral, keyed and
   anonymous OpenCode, and OpenAI-compatible Chat Completions, all through
   provider-native tool calls. Mistral requests carry a prompt-cache key.
-- **Quality.** The 16-run lifecycle matrix passed once, on a free route that
-  has since closed to Engineering Auditor; no available route passes it now.
-  [`layer6-evaluation.md`](reference/layer6-evaluation.md#qualification-record)
-  keeps the record. Prompt and template wording changes only through the
-  manual offline-improvement process described there.
+- **Quality.** No route has qualified yet. The usefulness bar is 0.5
+  useful and 0.25 beyond the report. The corpus is being recorded on Kimi
+  K3.1 Pro on NVIDIA NIM (`nvidia_kimi`), since the GLM 5.3 Flash routes
+  stopped answering ([`layer6-evaluation.md`](reference/layer6-evaluation.md)).
+  Prompt and template wording changes only through the offline-improvement
+  process described there.
 - **Safety.** Nothing is sent without `--allow-hosted-review` (and
   `--allow-anonymous-provider` for anonymous routes). Requests are bounded in
   count, tokens, time, and cost, and records keep hashes and counts, never
